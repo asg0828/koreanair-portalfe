@@ -1,46 +1,110 @@
-# Getting Started with Create React App
+# Getting Started
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Prerequisite
 
-## Available Scripts
+- [install Node(v16), NPM](https://nodejs.org/en/download/)
+- [install yarn](https://classic.yarnpkg.com/en/docs/install#windows-stable)
+- [install git](https://git-scm.com/downloads)
+- [install vscode](https://code.visualstudio.com/)
 
-In the project directory, you can run:
+## 로컬 환경 구성
 
-### `yarn start`
+로컬 React 환경 구성
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Project Structure
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```bash
+├─ node_modules/                     # Project dependencies
+├─ public/                           # 정적 파일 관리
+├─ build/                            # 빌드 output
+├─┬ src
+│ ├─ api/                            # Api 호출 모듈
+│ ├─ assets ─┬
+│            ├─ fonts/               # font 관리
+│            ├─ icons/               # icon 이미지 관리
+│            ├─ styles/              # App 공통 (application.scss), 공통 변수(variables.scss)
+│ ├─ components                      # component 관리
+│ ├─ locales                         # 다국어 처리 (default: ko)
+│ ├─ models                          # model 관리
+│ ├─ pages/                          # page 관리
+│ ├─ reducer ─┬                      # redux toolkit slice 관리
+│             ├─ index.ts            # combine reducer 관리
+│ ├─ router/                         # React Router 관리
+│ ├─ utils/                          # 공통 모듈성 Util 관리
+│ ├─ App.tsx                         # 최상위 component
+│ ├─ index.tsx                       # root element에 App.tsx 컴포넌트를 렌더링
+|- .env-cmdrc                        # App 환경변수 관리
+|- .eslintrc.yml                     # eslint config 설정
+|- .prettierrc.yml                   # prettier config 설정
+|- package.json                      # 프로젝트 정보 및 의존성(dependencies)을 관리
+|- tsconfig.json                     # typescript config 설정
+```
 
-### `yarn test`
+## Node
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+16.16.x
 
-### `yarn build`
+1. npm cache clean -f
+2. npm install -g n
+3. sudo n 16.16.0
+4. node -v
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+<br><br>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## UI Framework
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+material design을 사용할 수 있는 https://mui.com/ 를 표준으로 사용<br><br>
 
-### `yarn eject`
+## Redux Toolkit
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+전역 상태 관리로 Redux Toolkit을 사용.<br><br>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Style
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+sass 를 개발 표준으로 하며 src/assets/styles 와 component 폴더에서 .scss 파일명으로 관리를 한다.<br><br>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## CI - 소스관리
+
+- GitLab 계정 발급
+- GitLab에서 소스코드 clone: git clone http://tbd.git
+- [git clone 사용방법](https://www.atlassian.com/git/tutorials/setting-up-a-repository/git-clone)
+- [Git 설정 참고](https://git-scm.com/book/ko/v2/Git%EB%A7%9E%EC%B6%A4-Git-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0)
+- [Git CRLF 개행 설정](https://www.lesstif.com/gitbook/git-crlf-20776404.html)<br><br>
+
+## Prerequisite
+
+- [Install Yarn](https://classic.yarnpkg.com/lang/en/docs/install/)
+- brew 로 설치 brew install yarn --ignore-dependencies (node가 있는경우 dependency 제외 옵션 사용)<br><br>
+
+## Install dependendies
+
+```
+yarn install
+```
+
+<br><br>
+
+## Start application
+
+```
+yarn run start
+```
+
+Open http://localhost:3000 in a browser.<br><br>
+
+## Lint
+
+```
+(for MacOS) yarn run lint
+(for Windows) yarn run lint:win
+```
+
+<br><br>
 
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
+To learn Redux Toolkit, check out the [Redux Toolkit documentation](https://redux-toolkit.js.org/).

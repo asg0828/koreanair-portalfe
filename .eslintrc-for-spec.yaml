@@ -1,0 +1,33 @@
+---
+env:
+  browser: true
+  cypress/globals: true
+  es6: true
+  node: true
+  jest: true
+extends:
+  - eslint:recommended
+  - plugin:@typescript-eslint/recommended
+  - plugin:@typescript-eslint/recommended-requiring-type-checking
+  - plugin:cypress/recommended
+  - plugin:react/recommended
+  - plugin:prettier/recommended
+  - prettier
+  - react-app
+parser: '@typescript-eslint/parser'
+parserOptions:
+  project: 'tsconfig.json'
+  ecmaVersion: 6
+  ecmaFeatures:
+    jsx: true
+  sourceType: module
+plugins:
+  - '@typescript-eslint'
+  - prettier
+  - react
+  - react-hooks
+rules:
+  prettier/prettier: error
+  '@typescript-eslint/prefer-regexp-exec': off
+  '@typescript-eslint/no-unused-vars': off
+  '@typescript-eslint/no-explicit-any': off
