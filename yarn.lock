@@ -3179,6 +3179,18 @@
     "@typescript-eslint/types" "5.62.0"
     eslint-visitor-keys "^3.3.0"
 
+"@uiw/react-watermark@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uiw/react-watermark/-/react-watermark-1.0.0.tgz#43f1edd09d98ceb20125927f4ac420c10dcee046"
+  integrity sha512-xtiuzCKCN8kbXFIjLMUFYLt08o7Ux6+re4a3NCcrZXmKwtC/X7bVdczIYmjI9+aHWS39WFLUfV7bqkiQv7AOTQ==
+  dependencies:
+    "@uiw/watermark.js" "1.0.0"
+
+"@uiw/watermark.js@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@uiw/watermark.js/-/watermark.js-1.0.0.tgz#da3cd644f2c77bd8158a53fff760b42a7605db88"
+  integrity sha512-aHxL9rU1ynDa7MiualJsX+B3UDAUDGIi3IxcMmBrZWCVHbTDFN1SseJfLF/4GTS6c3Eq8a+cj/pXYY+bNieMnw==
+
 "@webassemblyjs/ast@1.11.6", "@webassemblyjs/ast@^1.11.5":
   version "1.11.6"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.6.tgz#db046555d3c413f8966ca50a95176a0e2c642e24"
