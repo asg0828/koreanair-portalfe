@@ -3,7 +3,7 @@ import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { RowsInfo } from '@/models/components/Table';
 import { Pagination, TR, TH, TD, Button, Stack, TextField, Select, SelectOption, Label } from '@components/ui';
-import { listColumns as columns, listRows as rows } from './data';
+import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData'
 
 const List = () => {
   const navigate = useNavigate();

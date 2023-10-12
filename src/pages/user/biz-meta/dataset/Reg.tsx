@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Typography, TR, TH, TD, Button, Stack, TextField, Label } from '@components/ui';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { regColumns as columns, regRows as rows } from './data';
+import { regColumns as columns, regRows as rows } from '@/utils/data/tableSampleData'
 import VerticalTable from '@components/table/VerticalTable';
 
 const Reg = () => {

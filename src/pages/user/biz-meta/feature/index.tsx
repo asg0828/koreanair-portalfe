@@ -16,7 +16,7 @@ import {
   DatePicker,
   Label,
 } from '@components/ui';
-import { listColumns as columns, listRows as rows } from './data';
+import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData'
 
 const List = () => {
   const navigate = useNavigate();
