@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router-dom';
-import Home from '@pages/Home';
+import Home from '@/pages/user/Home';
 import Main from '@components/layout/Main';
 import QuickMenu from '@components/layout/QuickMenu';
 import { Stack } from '@components/ui';

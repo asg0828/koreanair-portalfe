@@ -1,40 +1,39 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import RootLayout from '@components/layout';
-import Home from '@pages/Home';
 import Test from '@pages/Test';
 import Error from '@pages/Error';
-import DataSet from '@pages/biz-meta/dataset';
-import DataSetDetail from '@pages/biz-meta/dataset/Detail';
-import DataSetReg from '@pages/biz-meta/dataset/Reg';
-import DataSetEdit from '@pages/biz-meta/dataset/Edit';
-import Feature from '@pages/biz-meta/feature';
-import FeatureDetail from '@pages/biz-meta/feature/Detail';
-import FeatureReg from '@pages/biz-meta/feature/Reg';
-import FeatureEdit from '@pages/biz-meta/feature/Edit';
-import Notice from '@pages/board/notice';
-import NoticeDetail from '@pages/board/notice/Detail';
-import NoticeReg from '@pages/board/notice/Reg';
-import NoticeEdit from '@pages/board/notice/Edit';
-import Faq from '@pages/board/faq';
-import FaqDetail from '@pages/board/faq/Detail';
-import FaqReg from '@pages/board/faq/Reg';
-import FaqEdit from '@pages/board/faq/Edit';
-import Qna from '@pages/board/qna';
-import QnaDetail from '@pages/board/qna/Detail';
-import QnaReg from '@pages/board/qna/Reg';
-import QnaEdit from '@pages/board/qna/Edit';
-import Help from '@pages/board/help';
-import HelpDetail from '@pages/board/help/Detail';
-import HelpReg from '@pages/board/help/Reg';
-import HelpEdit from '@pages/board/help/Edit';
-import Archive from '@pages/board/archive';
-import ArchiveDetail from '@pages/board/archive/Detail';
-import ArchiveReg from '@pages/board/archive/Reg';
-import ArchiveEdit from '@pages/board/archive/Edit';
-import InterestFeature from '@pages/feature/interest';
-import PopularFeature from '@pages/feature/popular';
+import Home from '@pages/user/Home';
+import DataSet from '@pages/user/biz-meta/dataset';
+import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
+import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
+import DataSetEdit from '@pages/user/biz-meta/dataset/Edit';
+import Feature from '@pages/user/biz-meta/feature';
+import FeatureDetail from '@pages/user/biz-meta/feature/Detail';
+import FeatureReg from '@pages/user/biz-meta/feature/Reg';
+import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
+import Notice from '@pages/user/board/notice';
+import NoticeDetail from '@pages/user/board/notice/Detail';
+import NoticeReg from '@pages/user/board/notice/Reg';
+import NoticeEdit from '@pages/user/board/notice/Edit';
+import Faq from '@pages/user/board/faq';
+import FaqDetail from '@pages/user/board/faq/Detail';
+import FaqReg from '@pages/user/board/faq/Reg';
+import FaqEdit from '@pages/user/board/faq/Edit';
+import Qna from '@pages/user/board/qna';
+import QnaDetail from '@pages/user/board/qna/Detail';
+import QnaReg from '@pages/user/board/qna/Reg';
+import QnaEdit from '@pages/user/board/qna/Edit';
+import Help from '@pages/user/board/help';
+import HelpDetail from '@pages/user/board/help/Detail';
+import HelpReg from '@pages/user/board/help/Reg';
+import HelpEdit from '@pages/user/board/help/Edit';
+import Archive from '@pages/user/board/archive';
+import ArchiveDetail from '@pages/user/board/archive/Detail';
+import ArchiveReg from '@pages/user/board/archive/Reg';
+import ArchiveEdit from '@pages/user/board/archive/Edit';
+import InterestFeature from '@pages/user/feature/interest';
+import PopularFeature from '@pages/user/feature/popular';
 
-const router = createBrowserRouter([
+export const userRouter = [
   {
     path: '/',
     element: <RootLayout />,
@@ -153,9 +152,4 @@ const router = createBrowserRouter([
       },
     ],
   },
-]);
-
-const Route = () => {
-  return <RouterProvider router={router} />;
-};
-export default Route;
+];

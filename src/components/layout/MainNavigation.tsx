@@ -13,6 +13,9 @@ const indexPath: indexPathMap = {
   '/feature': '/feature/popular',
   '/customer-info': '/customer-info/dashboard',
   '/self-feature': '/self-feature/self-feature',
+  '/admin/user-management': '/admin/user-management/user-management',
+  '/admin/user-portal-management': '/admin/user-portal-management/menu-management',
+  '/admin/admin-portal-management': '/admin/admin-portal-management/menu-management',
 };
 
 const MainNavigation = () => {
@@ -45,7 +48,6 @@ const MainNavigation = () => {
 
     const menuObj = getMenuRecursive(menuList, path);
     let name = menuObj ? menuObj.name : 'UnKown headerName';
-
     path = indexPath[path] || path;
 
     return [name, path];
@@ -57,7 +59,7 @@ const MainNavigation = () => {
         <BreadcrumbItem isCurrentPage={false}>
           <BreadcrumbLink href={'/'}>Home</BreadcrumbLink>
         </BreadcrumbItem>
-        {pathnames.map((path, index) => (
+        {pathnames.map((path, index) => path !== 'admin' && (
           <BreadcrumbItem key={`${path}-${index}`} isCurrentPage={pathnames.length - 1 === index ? true : false}>
             {(() => {
               const [name, path] = getMenuInfo(index);
