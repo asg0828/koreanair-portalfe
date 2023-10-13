@@ -114,7 +114,7 @@ const userMenuList = [
     path: '/customer-info',
     children: [
       {
-        name: '대시보드',
+        name: '고객대시보드',
         path: '/customer-info/dashboard',
         children: [],
       },
