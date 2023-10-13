@@ -120,6 +120,17 @@ const userMenuList = [
       },
     ],
   },
+  {
+    name: 'Self Feature',
+    path: '/self-feature',
+    children: [
+      {
+        name: 'Self Feature',
+        path: '/self-feature/self-feature',
+        children: [],
+      },
+    ],
+  },
 ];
 
 export default userMenuList;
