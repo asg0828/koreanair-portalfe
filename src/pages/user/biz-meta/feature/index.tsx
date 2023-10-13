@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import VerticalTable from '@components/table/VerticalTable';
-import HorizontalTable from '@components/table/HorizontalTable';
+import SearchForm from '@/components/form/SearchForm';
+import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
 import {
-  Pagination,
   TR,
   TH,
   TD,
@@ -13,8 +12,6 @@ import {
   Checkbox,
   Select,
   SelectOption,
-  DatePicker,
-  Label,
 } from '@components/ui';
 import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData'
 
@@ -34,8 +31,8 @@ const List = () => {
   };
 
   return (
-    <Stack direction="Vertical" gap="MD" className="height-100">
-      <HorizontalTable>
+    <>
+      <SearchForm>
         <TR>
           <TH align="right">대구분</TH>
           <TD>
@@ -80,42 +77,25 @@ const List = () => {
             </Stack>
           </TD>
         </TR>
-      </HorizontalTable>
+      </SearchForm>
 
-      <Stack gap="SM" justifyContent="Center">
-        <Button priority="Primary" appearance="Contained" size="LG">
-          검색
-        </Button>
-        <Button size="LG">초기화</Button>
-      </Stack>
-
-      <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
-        <Label>총 373 건</Label>
-        <VerticalTable
-          columns={columns}
-          rows={rows}
-          enableSort={true}
-          clickable={true}
-          onClick={clickRow}
-        />
-        <Stack className="pagination-layout">
-          <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
-            <SelectOption value={10}>10</SelectOption>
-            <SelectOption value={30}>30</SelectOption>
-            <SelectOption value={50}>50</SelectOption>
-          </Select>
-
-          <Pagination size="LG" className="pagination" />
-
-          <Stack justifyContent="End" gap="SM" className="width-100">
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        enableSort={true}
+        clickable={true}
+        onClick={clickRow}
+        onChange={undefined}
+        buttonChildren={
+          <>
             <Button size="LG">엑셀다운로드</Button>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
               등록
             </Button>
-          </Stack>
-        </Stack>
-      </Stack>
-    </Stack>
+          </>
+        }
+      />
+    </>
   );
 };
 export default List;

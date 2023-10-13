@@ -1,6 +1,6 @@
 import RootLayout from '@components/layout';
 import Test from '@pages/Test';
-import Error from '@pages/Error';
+import Error from '@/pages/Error';
 import Home from '@pages/user/Home';
 import DataSet from '@pages/user/biz-meta/dataset';
 import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
@@ -39,10 +39,11 @@ export const userRouter = [
     element: <RootLayout />,
     errorElement: <Error />,
     children: [
-      { path: 'home', element: <Home /> },
+      { index: true, element: <Home /> },
       {
         path: 'board',
         children: [
+          { index: true, element: <Notice /> },
           {
             path: 'notice',
             children: [
@@ -93,6 +94,7 @@ export const userRouter = [
       {
         path: 'biz-meta',
         children: [
+          { index: true, element: <DataSet /> },
           {
             path: 'dataset',
             children: [

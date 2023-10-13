@@ -1,4 +1,4 @@
-import { CommonProps } from '@/models/common/Props';
+import { CommonProps } from '@/models/components/CommonProps';
 import { Align } from '../common/Design';
 
 export interface ColumnsInfo {

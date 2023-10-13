@@ -1,6 +1,6 @@
 export interface AuthInfo {
-  isLogin: boolean;
-  userInfo: UserInfo;
+  isAdminPage: boolean;
+  userInfo?: UserInfo;
 }
 
 export interface UserInfo {
@@ -9,4 +9,5 @@ export interface UserInfo {
   pstnCode?: string;
   detpCode?: string;
   authId?: string;
+  isAdmin?: boolean;
 }

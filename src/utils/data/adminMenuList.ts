@@ -41,6 +41,54 @@ const adminMenulist = [
         path: '/admin/user-portal-management/menu-auth-management',
         children: [],
       },
+      {
+        name: '게시물 관리',
+        path: '/admin/user-portal-management/board-management',
+        children: [
+          {
+            name: '게시물 관리',
+            path: '/admin/user-portal-management/board-management',
+            children: [
+              {
+                name: '공지사항',
+                path: '/admin/user-portal-management/board-management/notice',
+                children: [
+                  { name: '공지사항 등록', path: '/admin/user-portal-management/board-management/notice/reg', children: [] },
+                  { name: '공지사항 상세', path: '/admin/user-portal-management/board-management/notice/detail', children: [] },
+                  { name: '공지사항 수정', path: '/admin/user-portal-management/board-management/notice/edit', children: [] },
+                ],
+              },
+              {
+                name: 'FAQ',
+                path: '/board/faq',
+                children: [
+                  { name: 'FAQ 등록', path: '/admin/user-portal-management/board-management/faq/reg', children: [] },
+                  { name: 'FAQ 상세', path: '/admin/user-portal-management/board-management/faq/detail', children: [] },
+                  { name: 'FAQ 수정', path: '/admin/user-portal-management/board-management/faq/edit', children: [] },
+                ],
+              },
+              {
+                name: 'Q&A',
+                path: '/admin/user-portal-management/board-management/qna',
+                children: [
+                  { name: 'Q&A 등록', path: '/admin/user-portal-management/board-management/qna/reg', children: [] },
+                  { name: 'Q&A 상세', path: '/admin/user-portal-management/board-management/qna/detail', children: [] },
+                  { name: 'Q&A 수정', path: '/admin/user-portal-management/board-management/qna/edit', children: [] },
+                ],
+              },
+              {
+                name: '자료실',
+                path: '/admin/user-portal-management/board-management/archive',
+                children: [
+                  { name: '도움말 등록', path: '/admin/user-portal-management/board-management/archive/reg', children: [] },
+                  { name: '도움말 상세', path: '/admin/user-portal-management/board-management/archive/detail', children: [] },
+                  { name: '도움말 수정', path: '/admin/user-portal-management/board-management/archive/edit', children: [] },
+                ],
+              },
+            ]
+          },
+        ],
+      },
     ],
   },
   {

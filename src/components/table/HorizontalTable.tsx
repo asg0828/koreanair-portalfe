@@ -1,7 +1,9 @@
 import { Table, TBody } from "@components/ui";
 import { HorizontalTableProps } from "@/models/components/Table";
 
-const HorizontalTable = (props: HorizontalTableProps) => {
+const HorizontalTable: React.FC<HorizontalTableProps> = ({
+  children
+}) => {
   return (
     <Table
       variant="horizontal"
@@ -9,7 +11,7 @@ const HorizontalTable = (props: HorizontalTableProps) => {
       align="center"
     >
       <TBody>
-        {props.children}
+        {children}
       </TBody>
     </Table>
   )

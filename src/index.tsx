@@ -1,20 +1,26 @@
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import rootReducer from '@reducers';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import { Providers } from '@components/ui';
 
 const reduxStore = configureStore({
   reducer: rootReducer,
   devTools: process.env.REACT_APP_NODE_ENV !== 'prod',
 });
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
+root.render(
   <Provider store={reduxStore}>
-    <App />
+    <Providers>
+      <App />
+    </Providers>
   </Provider>,
-  document.getElementById("root") as HTMLElement
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -8,12 +8,12 @@ import './Header.scss';
 
 const Header = () => {
   const menuList = useSelector((state: ReducerType) => state.menu.menuList);
+  const isAdminPage = useSelector((state: ReducerType) => state.auth.isAdminPage);
   const navigate = useNavigate();
-
   const [activeIndex, setActiveIndex] = useState<number>(-1);
 
   const goToHome = () => {
-    navigate('/');
+    navigate(isAdminPage ? '/admin' : '/');
   };
 
   const handleTrigger = (index: number) => {
@@ -36,7 +36,7 @@ const Header = () => {
 
         <Stack className="menu-wrap">
           {menuList?.map((menu, index: number) => (
-            <DropdownMenu.Root modal={false}>
+            <DropdownMenu.Root modal={false} key={`root-${index}`}>
               <DropdownMenu.Trigger
                 className={`dropdown-trigger ${activeIndex === index ? 'triger-active' : ''}`}
                 onMouseOver={() => handleTrigger(index)}

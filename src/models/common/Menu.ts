@@ -8,6 +8,6 @@ export interface MenuItem {
   children: Array<MenuItem> | [],
 }
 
-export interface indexPathMap {
+export interface defaultPathInfo {
   [key: string]: string,
 }

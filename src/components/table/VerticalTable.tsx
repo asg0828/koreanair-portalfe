@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { VerticalTableProps, RowsInfo } from '@/models/components/Table';
 import { CheckedState, SortDirection, SortDirectionCode, AlignCode } from '@/models/common/Design';
-import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD, Label } from '@components/ui';
+import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD } from '@components/ui';
 import '@components/table/VerticalTable.scss';
 
 const VerticalTable: React.FC<VerticalTableProps> = ({

@@ -5,8 +5,6 @@ import QuickMenu from '@components/layout/QuickMenu';
 import { Stack } from '@components/ui';
 import './Body.scss';
 
-const homePath = ['/', '/home'];
-
 const Body = () => {
   const location = useLocation();
 
@@ -14,7 +12,7 @@ const Body = () => {
     <Stack id="body" direction="Horizontal" alignItems="Start">
       <QuickMenu />
 
-      {homePath.includes(location.pathname) ? <Home /> : <Main />}
+      {location.pathname === '/' ? <Home /> : <Main />}
     </Stack>
   );
 };

@@ -1,8 +1,10 @@
-const ErrorPage = () => {
+import EmptyState from '@/components/emptyState/EmptyState';
+
+const NotFound = () => {
   return (
     <>
-      <h1>에러 페이지입니다.</h1>
+      <EmptyState type="warning" description="페이지가 존재하지 않습니다." />
     </>
   )
 }
-export default ErrorPage;
+export default NotFound;

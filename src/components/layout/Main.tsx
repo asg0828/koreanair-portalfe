@@ -2,7 +2,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ReducerType } from '@reducers';
 import MainNavigation from '@components/layout/MainNavigation';
-import { Stack, Typography, Button } from '@components/ui';
+import { Stack, Typography } from '@components/ui';
 import { MenuItem } from '@models/common/Menu';
 import { StarBorderIcon } from '@/assets/icons';
 import './Main.scss';
@@ -39,7 +39,10 @@ const Main = () => {
           <Typography>{title}</Typography>
           <StarBorderIcon  />
         </Stack>
-        <Outlet />
+
+        <Stack direction="Vertical" gap="MD" className="height-100">
+          <Outlet />
+        </Stack>
       </Stack>
     </main>
   );

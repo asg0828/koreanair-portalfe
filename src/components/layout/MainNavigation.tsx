@@ -1,27 +1,15 @@
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { MenuItem } from '@models/common/Menu';
 import { ReducerType } from '@reducers';
-import { indexPathMap } from '@models/common/Menu';
-import { Stack, Breadcrumb, BreadcrumbItem, BreadcrumbLink, Button } from '@components/ui';
-
-const indexPath: indexPathMap = {
-  '/board': '/board/notice',
-  '/biz-meta': '/biz-meta/dataset',
-  '/self-bi': '/self-bi/tableau',
-  '/structured-report': '/structured-report/structured-report',
-  '/feature': '/feature/popular',
-  '/customer-info': '/customer-info/dashboard',
-  '/self-feature': '/self-feature/self-feature',
-  '/admin/user-management': '/admin/user-management/user-management',
-  '/admin/user-portal-management': '/admin/user-portal-management/menu-management',
-  '/admin/admin-portal-management': '/admin/admin-portal-management/menu-management',
-};
+import { Stack, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@components/ui';
 
 const MainNavigation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const pathnames = location.pathname.split('/').filter((path) => path);
   const menuList = useSelector((state: ReducerType) => state.menu.menuList)!;
+  const isAdminPage = useSelector((state: ReducerType) => state.auth.isAdminPage);
 
   const getMenuRecursive = (menuList: MenuItem[], path: string): MenuItem | undefined => {
     for (let i = 0; i < menuList.length; i++) {
@@ -48,25 +36,35 @@ const MainNavigation = () => {
 
     const menuObj = getMenuRecursive(menuList, path);
     let name = menuObj ? menuObj.name : 'UnKown headerName';
-    path = indexPath[path] || path;
 
     return [name, path];
   };
+
+  const goToHome = () => {
+    navigate(isAdminPage ? '/admin' : '/');
+  };
+
+  const goToMenu = (path: string) => {
+    navigate(path);
+  }
 
   return (
     <Stack>
       <Breadcrumb seperator="Arrow" showHomeIcon={true}>
         <BreadcrumbItem isCurrentPage={false}>
-          <BreadcrumbLink href={'/'}>Home</BreadcrumbLink>
+          <BreadcrumbLink onClick={goToHome}>Home</BreadcrumbLink>
         </BreadcrumbItem>
-        {pathnames.map((path, index) => path !== 'admin' && (
-          <BreadcrumbItem key={`${path}-${index}`} isCurrentPage={pathnames.length - 1 === index ? true : false}>
-            {(() => {
-              const [name, path] = getMenuInfo(index);
-              return <BreadcrumbLink href={path}>{name}</BreadcrumbLink>;
-            })()}
-          </BreadcrumbItem>
-        ))}
+        {pathnames.map(
+          (path, index) =>
+            path !== 'admin' && (
+              <BreadcrumbItem key={`${path}-${index}`} isCurrentPage={pathnames.length - 1 === index ? true : false}>
+                {(() => {
+                  const [name, path] = getMenuInfo(index);
+                  return <BreadcrumbLink onClick={() => goToMenu(path)}>{name}</BreadcrumbLink>;
+                })()}
+              </BreadcrumbItem>
+            )
+        )}
       </Breadcrumb>
     </Stack>
   );

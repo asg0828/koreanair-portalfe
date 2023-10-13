@@ -1,10 +1,7 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { userRouter } from '@router/user';
-import { adminRouter } from '@router/admin';
+import { CustomRouterProps } from '@/models/components/Router';
 
-const Router = () => {
-  const router = createBrowserRouter([...userRouter, ...adminRouter]);
-  
-  return <RouterProvider router={router} />;
+const CustomRouter: React.FC<CustomRouterProps> = ({ router }) => {
+  return <RouterProvider router={createBrowserRouter(router)} />;
 };
-export default Router;
+export default CustomRouter;
