@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { ReducerType } from '@reducers';
-import { MenuOutlinedIcon, LogoutOutlinedIcon } from '@/assets/icons';
+import { MenuOutlinedIcon, LogoutOutlinedIcon, KeyboardArrowDownIcon } from '@/assets/icons';
 import { Avatar, Typography, Stack, DropdownMenu, Divider } from '@/components/ui';
 import './Header.scss';
 
@@ -29,7 +29,8 @@ const Header = () => {
           </span>
           <Divider direction="Vertical" size="XS" className="divider" />
           <Typography variant="body2" className="logo-title">
-            Customer<br/>
+            Customer
+            <br />
             Data Portal
           </Typography>
         </Stack>
@@ -42,23 +43,51 @@ const Header = () => {
                 onMouseOver={() => handleTrigger(index)}
               >
                 <NavLink to={menu.path} end>
-                  <Typography variant="h4" className="menu-title">{menu.name}</Typography>
+                  <Typography variant="h4" className="menu-title">
+                    {menu.name}
+                  </Typography>
                 </NavLink>
               </DropdownMenu.Trigger>
 
               {menu.children.length > 0 && (
                 <DropdownMenu.Portal forceMount={index === activeIndex ? true : undefined}>
-                  <DropdownMenu.Content
-                    className="dropdown-content"
-                    onMouseLeave={() => handleTrigger(-1)}
-                  >
-                    {menu.children.map((subMenu, index: number) => (
-                      <DropdownMenu.Item key={`subMenu-${index}`} className="dropdown-item" disabled>
-                        <NavLink to={subMenu.path} end>
-                          {({ isActive }) => <Typography variant="body1">{subMenu.name}</Typography>}
-                        </NavLink>
-                      </DropdownMenu.Item>
-                    ))}
+                  <DropdownMenu.Content className="dropdown-content" onMouseLeave={() => handleTrigger(-1)}>
+                    <DropdownMenu.Sub>
+
+                      {menu.children.map((subMenu, index: number) => (
+                        <>
+                        {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
+                          <DropdownMenu.Item key={`subMenu-${index}`} className="dropdown-item" disabled>
+                            <NavLink to={subMenu.path} end>
+                              {({ isActive }) => <Typography variant="body1" className={isActive ? 'path-active' : ''}>{subMenu.name}</Typography>}
+                            </NavLink>
+                          </DropdownMenu.Item>
+                        ):
+                        (
+                          <>
+                            <DropdownMenu.SubTrigger className="dropdown-item">
+                              <Stack>
+                                <Typography variant="body1">{subMenu.name}</Typography>
+                                <KeyboardArrowDownIcon />
+                              </Stack>
+                            </DropdownMenu.SubTrigger>
+
+                            <DropdownMenu.Portal>
+                              <DropdownMenu.SubContent className="dropdown-content">
+                                {subMenu.children.map((subMenuSecond, index: number) => (
+                                  <DropdownMenu.Item key={`subMenuSecond-${index}`} className="dropdown-item">
+                                    <NavLink to={subMenuSecond.path} end>
+                                      {({ isActive }) => <Typography variant="body1" className={isActive ? 'path-active' : ''}>{subMenuSecond.name}</Typography>}
+                                    </NavLink>
+                                  </DropdownMenu.Item>
+                                ))}
+                              </DropdownMenu.SubContent>
+                            </DropdownMenu.Portal>
+                          </>
+                        )}
+                        </>
+                      ))}
+                    </DropdownMenu.Sub>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
               )}

@@ -8,6 +8,7 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 export {
   SettingsOutlinedIcon,
@@ -20,4 +21,5 @@ export {
   ErrorOutlineIcon,
   WarningAmberIcon,
   CheckCircleOutlineIcon,
+  KeyboardArrowDownIcon,
 };

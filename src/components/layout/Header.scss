@@ -68,12 +68,23 @@
 
 .dropdown-item {
   p {
+    width: 100%;
     padding: 10px;
 
     &:hover {
+      cursor: pointer;
       color: #0F3E86;
       font-weight: bold;
       background-color: #D7F1FA;
     }
   }
+
+  svg {
+    position: absolute;
+    right: 0;
+  }
+}
+
+.path-active {
+  background-color: #DADADA;
 }

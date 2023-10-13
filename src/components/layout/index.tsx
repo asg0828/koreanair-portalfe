@@ -16,6 +16,7 @@ const defaultPath: defaultPathInfo = {
   '/admin/user-management': '/admin/user-management/user-management',
   '/admin/user-portal-management': '/admin/user-portal-management/menu-management',
   '/admin/admin-portal-management': '/admin/admin-portal-management/menu-management',
+  '/admin/user-portal-management/board-management': '/admin/user-portal-management/board-management/notice',
 };
 
 const RootLayout = () => {
