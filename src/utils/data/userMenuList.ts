@@ -127,7 +127,10 @@ const userMenuList = [
       {
         name: 'Self Feature',
         path: '/self-feature/self-feature',
-        children: [],
+        children: [
+          { name: 'Self Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
+          { name: 'Self Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
+          { name: 'Self Feature 수정', path: '/self-feature/self-feature/edit', children: [] },],
       },
     ],
   },

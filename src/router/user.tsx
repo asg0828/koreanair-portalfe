@@ -32,6 +32,10 @@ import ArchiveReg from '@pages/user/board/archive/Reg';
 import ArchiveEdit from '@pages/user/board/archive/Edit';
 import InterestFeature from '@pages/user/feature/interest';
 import PopularFeature from '@pages/user/feature/popular';
+import SelfFeature from '@pages/user/self-feature';
+import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
+import SelfFeatureReg from '@pages/user/self-feature/Reg';
+import SelfFeatureEdit from '@pages/user/self-feature/Edit';
 
 export const userRouter = [
   {
@@ -148,8 +152,16 @@ export const userRouter = [
       {
         path: 'self-feature',
         children: [
-          { index: true, element: <Test /> },
-          { path: 'self-feature', element: <Test /> },
+          { index: true, element: <SelfFeature /> },
+          {
+            path: 'self-feature',
+            children: [
+              { index: true, element: <SelfFeature /> },
+              { path: 'detail', element: <SelfFeatureDetail /> },
+              { path: 'reg', element: <SelfFeatureReg /> },
+              { path: 'edit', element: <SelfFeatureEdit /> },
+            ],
+          },
         ],
       },
     ],
