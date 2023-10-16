@@ -35,7 +35,7 @@ const Header = () => {
           </Typography>
         </Stack>
 
-        <Stack className="menu-wrap">
+        <Stack className="menu-wrap" onMouseLeave={() => handleTrigger(-1)}>
           {menuList?.map((menu, index: number) => (
             <DropdownMenu.Root modal={false} key={`root-${index}`}>
               <DropdownMenu.Trigger
