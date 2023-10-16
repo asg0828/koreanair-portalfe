@@ -91,10 +91,23 @@
 //   );
 // }
 
+import { Modal, Button } from '@components/ui';
+
 const TestPage = () => {
   return (
     <>
       <h1>임시 페이지입니다.</h1>
+{/* 
+      <Modal open={true} >
+        <Modal.Header>Title</Modal.Header>
+        <Modal.Body>content here</Modal.Body>
+        <Modal.Footer>
+          <Button priority="Primary" appearance="Contained">
+            Submit
+          </Button>
+          <Button>Cancel</Button>
+        </Modal.Footer>
+      </Modal> */}
     </>
   )
 }

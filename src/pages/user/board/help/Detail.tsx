@@ -16,14 +16,14 @@ const Detail = () => {
   };
 
   return (
-    <Stack direction="Vertical" gap="MD">
+    <Stack direction="Vertical" gap="MD" className="height-100">
       <HorizontalTable>
         <TR>
           <TH colSpan={4} className="headerName">
             <Typography variant="h3">도움말 테스트</Typography>
           </TH>
         </TR>
-        <TR>
+        <TR className="height-100">
           <TD colSpan={4} className="content"></TD>
         </TR>
         <TR>

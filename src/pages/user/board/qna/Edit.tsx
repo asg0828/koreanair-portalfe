@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { TR, TH, TD, Button, Stack, Label, Radio, TextField, Select, SelectOption } from '@components/ui';
+import { TR, TH, TD, Button, Stack, Radio, TextField, Select, SelectOption } from '@components/ui';
 import HorizontalTable from '@components/table/HorizontalTable';
+import TinyEditor from '@/components/editor/TinyEditor';
 import '@/assets/styles/Board.scss';
 
 const Edit = () => {
@@ -12,7 +13,7 @@ const Edit = () => {
   };
 
   return (
-    <Stack direction="Vertical" gap="MD">
+    <Stack direction="Vertical" gap="MD" className="height-100">
       <HorizontalTable>
         <TR>
           <TH colSpan={1}>제목</TH>
@@ -39,9 +40,11 @@ const Edit = () => {
             </Stack>
           </TD>
         </TR>
-        <TR>
+        <TR className="height-100">
           <TH colSpan={1}>내용</TH>
-          <TD colSpan={3} className="content"></TD>
+          <TD colSpan={3} className="content">
+            <TinyEditor />
+          </TD>
         </TR>
         <TR>
           <TH colSpan={1}>첨부파일</TH>

@@ -14,6 +14,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^13.0.0",
     "@testing-library/user-event": "^13.2.1",
+    "@tinymce/tinymce-react": "^4.3.0",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
@@ -23,6 +24,7 @@
     "buffer": "^6.0.3",
     "env-cmd": "^10.1.0",
     "export-from-json": "^1.6.0",
+    "fs-extra": "^11.1.1",
     "i18next": "^21.6.14",
     "i18next-browser-languagedetector": "^6.1.3",
     "jwt-decode": "^3.1.2",
@@ -35,6 +37,7 @@
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.1",
     "rsuite": "^5.15.0",
+    "tinymce": "^6.7.0",
     "typescript": "^4.5.5",
     "web-vitals": "^2.1.4"
   },
@@ -80,7 +83,8 @@
     "lint:spec:noFix": "eslint --config .eslintrc-for-spec.yaml './src/**/*.spec.{ts,tsx}'",
     "lint:noFix:win": "yarn run lint:src:noFix:win && yarn run lint:spec:noFix:win",
     "lint:src:noFix:win": "eslint --config .eslintrc-for-source.yaml --ignore-pattern \"*.spec.*\" \"src\\**\\*.{ts,tsx}\"",
-    "lint:spec:noFix:win": "eslint --config .eslintrc-for-spec.yaml \"src\\**\\*.spec.{ts,tsx}\""
+    "lint:spec:noFix:win": "eslint --config .eslintrc-for-spec.yaml \"src\\**\\*.spec.{ts,tsx}\"",
+    "postinstall": "node ./postinstall.js"
   },
   "eslintConfig": {
     "extends": [
