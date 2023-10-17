@@ -4,7 +4,7 @@ import UserManagement from '@pages/admin/user-management/user-management';
 import UserManagementDetail from '@pages/admin/user-management/user-management/Detail';
 import AuthGroupManagement from '@pages/admin/user-management/auth-group-management';
 import DepartmentGroupManagement from '@pages/admin/user-management/department-group-management';
-import VirtualGroupManagement from '@pages/admin/user-management/virtual-group-management';
+import UserExceptionManagement from '@pages/admin/user-management/user-exception-management';
 import MenuManagement from '@pages/admin/user-portal-management/menu-management';
 import MenuAuthManagement from '@pages/admin/user-portal-management/menu-auth-management';
 import AdminMenuManagement from '@pages/admin/admin-portal-management/menu-management';
@@ -49,7 +49,7 @@ export const adminRouter = [
               },
               { path: 'auth-group-management', element: <AuthGroupManagement /> },
               { path: 'department-management', element: <DepartmentGroupManagement /> },
-              { path: 'virtual-group-management', element: <VirtualGroupManagement /> },
+              { path: 'user-exception-management', element: <UserExceptionManagement /> },
             ],
           },
           {

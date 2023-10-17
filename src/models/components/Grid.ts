@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 import { VerticalTableProps } from './Table';
 import { PageProps } from './Page';
 

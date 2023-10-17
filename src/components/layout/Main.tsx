@@ -40,7 +40,7 @@ const Main = () => {
           <StarBorderIcon  />
         </Stack>
 
-        <Stack direction="Vertical" gap="MD" className="height-100">
+        <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
           <Outlet />
         </Stack>
       </Stack>

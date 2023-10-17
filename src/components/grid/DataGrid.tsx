@@ -19,7 +19,7 @@ const DataGrid: React.FC<DatagridProps> = ({
   buttonChildren,
 }) => {
   return (
-    <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
+    <Stack direction="Vertical" gap="MD">
       <Label>{`총 ${totalCount} 건`}</Label>
       <VerticalTable
         columns={columns}

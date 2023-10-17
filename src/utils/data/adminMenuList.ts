@@ -21,8 +21,8 @@ const adminMenulist = [
         children: [],
       },
       {
-        name: '가상그룹 관리',
-        path: '/admin/user-management/virtual-group-management',
+        name: '사용자예외 관리',
+        path: '/admin/user-management/user-exception-management',
         children: [],
       },
     ],
@@ -95,7 +95,7 @@ const adminMenulist = [
         children: [],
       },
       {
-        name: '권한그룹 관리',
+        name: '권한그룹 관리 (관리자)',
         path: '/admin/admin-portal-management/auth-group-management',
         children: [],
       },

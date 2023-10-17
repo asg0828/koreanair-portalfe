@@ -16,29 +16,31 @@ const Detail = () => {
   };
 
   return (
-    <Stack direction="Vertical" gap="MD" className="height-100">
-      <HorizontalTable>
-        <TR>
-          <TH colSpan={4} className="headerName">
-            <Typography variant="h3">FAQ 테스트</Typography>
-          </TH>
-        </TR>
-        <TR className="height-100">
-          <TD colSpan={4} className="content"></TD>
-        </TR>
-        <TR>
-          <TH colSpan={1} className="attachFile">첨부파일</TH>
-          <TD colSpan={3}></TD>
-        </TR>
-        <TR>
-          <TH colSpan={1}>다음</TH>
-          <TD colSpan={3}></TD>
-        </TR>
-        <TR>
-          <TH colSpan={1}>이전</TH>
-          <TD colSpan={3}></TD>
-        </TR>
-      </HorizontalTable>
+    <>
+      <Stack direction="Vertical" gap="MD" className="height-100">
+        <HorizontalTable>
+          <TR>
+            <TH colSpan={4} className="headerName">
+              <Typography variant="h3">FAQ 테스트</Typography>
+            </TH>
+          </TR>
+          <TR className="height-100">
+            <TD colSpan={4} className="content"></TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} className="attachFile">첨부파일</TH>
+            <TD colSpan={3}></TD>
+          </TR>
+          <TR>
+            <TH colSpan={1}>다음</TH>
+            <TD colSpan={3}></TD>
+          </TR>
+          <TR>
+            <TH colSpan={1}>이전</TH>
+            <TD colSpan={3}></TD>
+          </TR>
+        </HorizontalTable>
+      </Stack>
 
       <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
@@ -51,7 +53,7 @@ const Detail = () => {
           목록
         </Button>
       </Stack>
-    </Stack>
+    </>
   );
 };
 export default Detail;

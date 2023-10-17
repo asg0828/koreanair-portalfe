@@ -22,7 +22,7 @@ const Header = () => {
 
   return (
     <header id="header" className="primary-500">
-      <Stack direction="Horizontal" justifyContent="Start">
+      <Stack direction="Horizontal">
         <Stack gap="XL" className="logo-wrap">
           <span className="home-logo" onClick={goToHome}>
             대한항공 Customer Data Portal

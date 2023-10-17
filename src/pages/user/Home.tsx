@@ -38,8 +38,8 @@ const rows = [
 
 const Home = () => {
   return (
-    <Stack id="home" direction="Vertical" gap="XL" justifyContent="Between" className="width-100">
-      <Stack direction="Horizontal" gap="XL" justifyContent="Start" className="width-100">
+    <Stack id="home" direction="Vertical" gap="MD" justifyContent="Between" className="width-100">
+      <Stack direction="Horizontal" gap="MD" className="width-100">
         <Stack direction="Vertical" className="box1">
           <Typography className="font-white">BIZ메타 전체</Typography>
 
@@ -78,7 +78,7 @@ const Home = () => {
         </Stack>
       </Stack>
 
-      <Stack direction="Horizontal" gap="XL" justifyContent="Start">
+      <Stack direction="Horizontal" gap="XL">
         <Tabs defaultValue={'0'} className="width-100">
           <TabList>
             <Tab value={'0'}>공지사항</Tab>
