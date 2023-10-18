@@ -114,7 +114,7 @@ const userMenuList = [
     path: '/customer-info',
     children: [
       {
-        name: '고객대시보드',
+        name: '고객360대시보드',
         path: '/customer-info/dashboard',
         children: [],
       },
@@ -130,7 +130,8 @@ const userMenuList = [
         children: [
           { name: 'Self Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
           { name: 'Self Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
-          { name: 'Self Feature 수정', path: '/self-feature/self-feature/edit', children: [] },],
+          { name: 'Self Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
+        ],
       },
     ],
   },

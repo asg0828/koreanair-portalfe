@@ -20,7 +20,7 @@ export default function Profile() {
             <Stack>
               <h3>Profile</h3>
               <div style={{ marginLeft: '130px', marginTop: '20px' }} className="componentWrapper">
-                <Avatar fallbackText="Gil-dong" imageSrc="" size="LG" />
+                <Avatar imageSrc="" size="LG" />
               </div>
             </Stack>
             {Object.keys(profile).map((key, index) => (
