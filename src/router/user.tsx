@@ -36,6 +36,7 @@ import SelfFeature from '@pages/user/self-feature';
 import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
 import SelfFeatureReg from '@pages/user/self-feature/Reg';
 import SelfFeatureEdit from '@pages/user/self-feature/Edit';
+import CustomerInfo from '@pages/user/customer-info/dashboard';
 
 export const userRouter = [
   {
@@ -145,8 +146,8 @@ export const userRouter = [
       {
         path: 'customer-info',
         children: [
-          { index: true, element: <Test /> },
-          { path: 'dashboard', element: <Test /> },
+          { index: true, element: <CustomerInfo /> },
+          { path: 'dashboard', element: <CustomerInfo /> },
         ],
       },
       {
