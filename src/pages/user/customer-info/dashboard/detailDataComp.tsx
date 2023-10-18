@@ -13,9 +13,9 @@ export default function DetailData(props: any) {
             minHeight: '175px',
           }}
         >
-          {flag === 'homepage' && <h1>Homepage</h1>}
-          {flag === 'contribution' && <h1>Contribution</h1>}
-          {flag === 'analysisResult' && <h1>AnalysisResult</h1>}
+          {flag === 'homepage' && <h2>Homepage</h2>}
+          {flag === 'contribution' && <h2>Contribution</h2>}
+          {flag === 'analysisResult' && <h2>AnalysisResult</h2>}
           {Object.keys(data).map((key, index) => (
             <Typography variant="body2" key={index}>
               {key} : {data[key]}

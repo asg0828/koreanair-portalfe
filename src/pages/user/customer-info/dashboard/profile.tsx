@@ -13,41 +13,47 @@ export default function Profile() {
         }}
       >
         <Stack alignItems="center">
-          <h1>Gil-Dong GO</h1>
+          <h2>Gil-Dong GO</h2>
         </Stack>
-        <Stack direction="Vertical">
-          <Stack wrap={true}>
-            <h2>Profile</h2>
-            <div style={{ marginLeft: '130px', marginTop: '20px' }} className="componentWrapper">
-              <Avatar fallbackText="Gil-dong" imageSrc="" size="LG" />
-            </div>
+        <div>
+          <Stack direction="Vertical">
+            <Stack>
+              <h3>Profile</h3>
+              <div style={{ marginLeft: '130px', marginTop: '20px' }} className="componentWrapper">
+                <Avatar fallbackText="Gil-dong" imageSrc="" size="LG" />
+              </div>
+            </Stack>
+            {Object.keys(profile).map((key, index) => (
+              <Typography variant="body2" key={index}>
+                {key} : {profile[key]}
+              </Typography>
+            ))}
           </Stack>
-          {Object.keys(profile).map((key, index) => (
-            <Typography variant="body2" key={index}>
-              {key} : {profile[key]}
-            </Typography>
-          ))}
-        </Stack>
-        <Stack direction="Vertical">
-          <Stack>
-            <h2>FFP</h2>
+        </div>
+        <div style={{ marginTop: 20 }}>
+          <Stack direction="Vertical">
+            <Stack>
+              <h3>FFP</h3>
+            </Stack>
+            {Object.keys(ffp).map((key, index) => (
+              <Typography variant="body2" key={index}>
+                {key} : {ffp[key]}
+              </Typography>
+            ))}
           </Stack>
-          {Object.keys(ffp).map((key, index) => (
-            <Typography variant="body2" key={index}>
-              {key} : {ffp[key]}
-            </Typography>
-          ))}
-        </Stack>
-        <Stack direction="Vertical">
-          <Stack>
-            <h2>Mileage</h2>
+        </div>
+        <div style={{ marginTop: 20 }}>
+          <Stack direction="Vertical">
+            <Stack>
+              <h3>Mileage</h3>
+            </Stack>
+            {Object.keys(mileage).map((key, index) => (
+              <Typography variant="body2" key={index}>
+                {key} : {mileage[key]}
+              </Typography>
+            ))}
           </Stack>
-          {Object.keys(mileage).map((key, index) => (
-            <Typography variant="body2" key={index}>
-              {key} : {mileage[key]}
-            </Typography>
-          ))}
-        </Stack>
+        </div>
       </div>
     </Stack>
   );
