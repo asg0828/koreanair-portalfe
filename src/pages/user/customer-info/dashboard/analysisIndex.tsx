@@ -8,7 +8,7 @@ export default function AnalysisIndex() {
   const analysisList = useSelector((state) => analysisIndexList);
 
   return (
-    <div style={{ maxHeight: 500, overflowY: 'scroll' }}>
+    <div style={{ minHeight: 520, maxHeight: 520, overflowY: 'scroll' }}>
       <Stack direction="Vertical" wrap={true}>
         <h1>Anaylsis Index</h1>
         <Accordion align="Right" size="MD" type="multiple">

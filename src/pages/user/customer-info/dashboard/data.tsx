@@ -40,11 +40,11 @@ const analysisResultData: AnalysisResultData = {
 };
 
 const pnrTickerColumn: PnrTickerColumn[] = [
-  { headerName: 'PNR Number', field: 'pnrNumber' },
+  { headerName: 'PNR Num', field: 'pnrNumber' },
   { headerName: 'Travel Date', field: 'travelDate' },
   { headerName: 'Route', field: 'route' },
-  { headerName: 'Baggage Count', field: 'baggageCnt' },
-  { headerName: 'Baggage Weight', field: 'baggageWgt' },
+  { headerName: 'Baggage Cnt', field: 'baggageCnt' },
+  { headerName: 'Baggage Wgt', field: 'baggageWgt' },
 ];
 
 const pnrData: PnrData[] = [
