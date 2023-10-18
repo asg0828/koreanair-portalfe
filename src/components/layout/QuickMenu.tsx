@@ -8,7 +8,7 @@ const QuickLink = () => {
         <Typography variant="h4">Quick Menu</Typography>
 
         <Stack direction="Vertical" alignItems="Center">
-          <Typography variant="body2">데이터셋</Typography>
+          <Typography variant="body2">테이블정의서</Typography>
           <Typography variant="body2">Q&A</Typography>
           <Typography variant="body2">FAQ</Typography>
         </Stack>

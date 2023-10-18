@@ -9,6 +9,13 @@ import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import FolderOpenTwoToneIcon from '@mui/icons-material/FolderOpenTwoTone';
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
+import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 
 export {
   SettingsOutlinedIcon,
@@ -22,4 +29,11 @@ export {
   WarningAmberIcon,
   CheckCircleOutlineIcon,
   KeyboardArrowDownIcon,
+  DescriptionOutlinedIcon,
+  FolderOpenTwoToneIcon,
+  FolderRoundedIcon,
+  CreateNewFolderOutlinedIcon,
+  DeleteOutlineOutlinedIcon,
+  KeyboardArrowRightOutlinedIcon,
+  KeyboardArrowDownOutlinedIcon,
 };

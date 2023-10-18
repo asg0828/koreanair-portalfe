@@ -1,70 +1,36 @@
-import { useNavigate } from 'react-router-dom';
-import DataGrid from '@/components/grid/DataGrid';
-import { RowsInfo } from '@/models/components/Table';
-import HorizontalTable from '@components/table/HorizontalTable';
-import { TR, TH, TD, Stack, TextField, Typography, Button } from '@components/ui';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import TableSearchForm from '@/components/form/TableSearchForm';
+import TreeMenuForm from '@/components/form/TreeSearchForm';
+import { Stack } from '@components/ui';
+
+const columns = [
+  { headerName: '권한ID', field: 'column1' },
+  { headerName: '권한명', field: 'column2' },
+];
+
+const rows = [
+  {
+    column1: 'au2000000000001',
+    column2: '관리자',
+  },
+  {
+    column1: 'au2000000000002',
+    column2: '분석관리자',
+  },
+  {
+    column1: 'au2000000000003',
+    column2: '모니터링',
+  },
+];
 
 const List = () => {
-  const navigate = useNavigate();
-
-  const goToReg = () => {
-    navigate('reg');
-  };
-
-  const goToDetail = (row: RowsInfo) => {
-    navigate('detail', { state: row });
-  };
-
-  const clickRow = (row: RowsInfo, index: number) => {
-    goToDetail(row);
-  };
-
   return (
-    <>
-      <DataGrid
+    <Stack>
+      <TableSearchForm
         columns={columns}
         rows={rows}
-        enableSort={true}
-        clickable={true}
-        onClick={clickRow}
-        onChange={undefined}
       />
-      
-      <Stack direction="Vertical" gap="MD">
-        <Typography variant="h3">권한그룹 등록</Typography>
-        <HorizontalTable>
-          <TR>
-            <TH>권한그룹 ID</TH>
-            <TD>
-              <TextField disabled className="width-100" />
-            </TD>
-            <TH>권한그룹명</TH>
-            <TD>
-              <TextField className="width-100" />
-            </TD>
-          </TR>
-          <TR>
-            <TH colSpan={1}>비고</TH>
-            <TD colSpan={3}>
-              <TextField className="width-100" />
-            </TD>
-          </TR>
-        </HorizontalTable>
-      </Stack>
-
-      <Stack gap="SM" justifyContent="End">
-        <Button size="LG">
-          신규
-        </Button>
-        <Button priority="Normal" appearance="Contained" size="LG">
-          저장
-        </Button>
-        <Button priority="Primary" appearance="Contained" size="LG">
-          삭제
-        </Button>
-      </Stack>
-    </>
+      <TreeMenuForm />
+    </Stack>
   );
 };
 export default List;

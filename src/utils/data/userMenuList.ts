@@ -55,12 +55,12 @@ const userMenuList = [
     path: '/biz-meta',
     children: [
       {
-        name: '데이터셋',
+        name: '테이블정의서',
         path: '/biz-meta/dataset',
         children: [
-          { name: '데이터셋 등록', path: '/biz-meta/dataset/reg', children: [] },
-          { name: '데이터셋 상세', path: '/biz-meta/dataset/detail', children: [] },
-          { name: '데이터셋 수정', path: '/biz-meta/dataset/edit', children: [] },
+          { name: '테이블정의서 등록', path: '/biz-meta/dataset/reg', children: [] },
+          { name: '테이블정의서 상세', path: '/biz-meta/dataset/detail', children: [] },
+          { name: '테이블정의서 수정', path: '/biz-meta/dataset/edit', children: [] },
         ],
       },
       {
