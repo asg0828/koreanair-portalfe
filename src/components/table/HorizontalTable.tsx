@@ -9,7 +9,6 @@ const HorizontalTable: React.FC<HorizontalTableProps> = ({
       variant="horizontal"
       size="normal"
       align="center"
-      className="height-100"
     >
       <TBody
         className="height-100"

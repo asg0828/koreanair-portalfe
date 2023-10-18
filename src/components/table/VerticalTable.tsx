@@ -17,7 +17,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const isCheckbox = typeof rowSelection === 'function';
   const [checkedAll, setCheckedAll] = useState<boolean>(false);
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
-  const [sortRows, setSortRows] = useState<Array<RowsInfo>>(rows);
+  const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
 
   const handleCheckedChangeAll = (checked: boolean): void => {
     let newCheckedList: Array<number> = []; 
@@ -93,9 +93,9 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
           </TR>
         </THead>
       )}
-      {sortRows?.length > 0 && (
+      {rows?.length > 0 && (
         <TBody clickable={clickable}>
-          {sortRows.map((row, index) => (
+          {rows.map((row, index) => (
             <TR
               key={`row-${index}`}
               selected={checkedList.includes(index)}
@@ -109,7 +109,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                 </TD>
               )}
 
-              {Object.keys(row).map((column, index) => (
+              {Object.keys(columns).map((column, index) => (
                 <TD
                   key={`column-${index}`}
                   colSpan={columns[index].colSpan ? columns[index].colSpan : 1}
