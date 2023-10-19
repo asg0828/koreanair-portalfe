@@ -1,11 +1,14 @@
+import { CommonFormProps } from '@/models/components/Form';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { SearchFormProps } from '@/models/components/Form';
 import {
   Button,
   Stack,
 } from '@components/ui';
 
-const SearchForm: React.FC<SearchFormProps> = ({
+export interface SearchCommonFormProps extends CommonFormProps {
+}
+
+const SearchForm: React.FC<SearchCommonFormProps> = ({
   onSearch,
   onClear,
   children

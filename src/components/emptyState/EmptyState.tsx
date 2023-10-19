@@ -1,17 +1,22 @@
-import { EmptyStateProps } from '@/models/components/EmptyState';
+import { ReactNode } from "react";
 import { Stack, Typography } from '@components/ui';
 import { CheckCircleOutlineIcon, ErrorOutlineIcon, WarningAmberIcon } from '@/assets/icons';
 import './EmptyState.scss';
 
+export interface EmptyStateProps {
+  type: "complete" | "error" | "warning",
+  description?: string,
+  buttonChildren?: ReactNode, 
+}
+
 const sx = {
-  fontSize: 72
+  fontSize: 72,
 }
 
 const EmptyState: React.FC<EmptyStateProps> = ({
   type,
   description,
   buttonChildren,
-  className = ''
 }) => {
   return (
     <Stack
@@ -19,7 +24,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({
       gap="LG"
       justifyContent="Center"
       alignItems="Center"
-      className={`width-100 height-100 ${className}`}
+      className="width-100 height-100"
     >
       {(() => {
         let icon;

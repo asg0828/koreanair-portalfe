@@ -16,6 +16,8 @@ import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutl
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
+import UploadIcon from '@mui/icons-material/Upload';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 export {
   SettingsOutlinedIcon,
@@ -36,4 +38,6 @@ export {
   DeleteOutlineOutlinedIcon,
   KeyboardArrowRightOutlinedIcon,
   KeyboardArrowDownOutlinedIcon,
+  UploadIcon,
+  HighlightOffIcon,
 };

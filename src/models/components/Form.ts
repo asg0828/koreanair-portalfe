@@ -1,10 +1,7 @@
-import { CommonProps } from '@/models/components/CommonProps';
-import { VerticalTableProps } from './Table';
+import { ReactNode } from "react";
 
-export interface SearchFormProps extends CommonProps {
+export interface CommonFormProps {
   onSearch?: Function,
   onClear?: Function,
-}
-
-export interface TableSearchFormProps extends VerticalTableProps {
+  children?: ReactNode,
 }

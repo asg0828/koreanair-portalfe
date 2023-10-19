@@ -1,16 +1,20 @@
 import VerticalTable from '../table/VerticalTable';
-import { TableSearchFormProps } from '@/models/components/Form';
+import { CommonFormProps } from '@/models/components/Form';
+import { VerticalTableProps } from '../table/VerticalTable';
 import { Stack, Select, SelectOption, Typography, Button, TextField } from '@components/ui';
 import {
   DeleteOutlineOutlinedIcon,
   CreateNewFolderOutlinedIcon,
 } from '@/assets/icons';
 
+export interface TableSearchCommonFormProps extends CommonFormProps, VerticalTableProps {
+}
+
 const menuIconSx = {
   width: 30,
 }
 
-const TableSearchForm: React.FC<TableSearchFormProps> = ({
+const TableSearchForm: React.FC<TableSearchCommonFormProps> = ({
   columns,
   rows,
 }) => {

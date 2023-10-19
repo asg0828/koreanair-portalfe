@@ -1,11 +1,21 @@
-import { useState } from 'react';
-import { VerticalTableProps, RowsInfo } from '@/models/components/Table';
+import { useState, ReactNode } from 'react';
+import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { CheckedState, SortDirection, SortDirectionCode, AlignCode } from '@/models/common/Design';
 import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD } from '@components/ui';
 import '@components/table/VerticalTable.scss';
 
+export interface VerticalTableProps {
+  columns: Array<ColumnsInfo>;
+  rows: Array<RowsInfo>;
+  showHeader?: boolean;
+  enableSort?: boolean;
+  clickable?: boolean;
+  rowSelection?: Function;
+  onClick?: Function;
+  children?: ReactNode;
+}
+
 const VerticalTable: React.FC<VerticalTableProps> = ({
-  className = '',
   columns = [],
   rows = [],
   showHeader = true,
@@ -71,7 +81,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   };
 
   return (
-    <Table variant="vertical" size="normal" align="center" className={`verticalTable ${className}`}>
+    <Table variant="vertical" size="normal" align="center" className="verticalTable">
       {showHeader && columns?.length > 0 && (
         <THead>
           <TR>

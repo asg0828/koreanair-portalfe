@@ -1,5 +1,6 @@
+import { ReactNode } from 'react';
 import VerticalTable from '@components/table/VerticalTable';
-import { DatagridProps } from '@/models/components/Grid';
+import { VerticalTableProps } from '@components/table/VerticalTable';
 import {
   Pagination,
   Stack,
@@ -7,6 +8,12 @@ import {
   SelectOption,
   Label,
 } from '@components/ui';
+
+export interface DatagridProps extends VerticalTableProps {
+  totalCount?: number;
+  buttonChildren?: ReactNode;
+  onChange?: (e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null, value: any) => void,
+}
 
 const DataGrid: React.FC<DatagridProps> = ({
   totalCount = 0,

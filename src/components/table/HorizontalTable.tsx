@@ -1,5 +1,9 @@
+import { ReactNode } from "react";
 import { Table, TBody } from "@components/ui";
-import { HorizontalTableProps } from "@/models/components/Table";
+
+export interface HorizontalTableProps {
+  children?: ReactNode;
+}
 
 const HorizontalTable: React.FC<HorizontalTableProps> = ({
   children
