@@ -1,24 +1,9 @@
-import { useNavigate } from 'react-router-dom';
 import DataGrid from '@/components/grid/DataGrid';
-import { RowsInfo } from '@/models/components/Table';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { TR, TH, TD, Stack, TextField, Typography, Button } from '@components/ui';
 import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
 
 const List = () => {
-  const navigate = useNavigate();
-
-  const goToReg = () => {
-    navigate('reg');
-  };
-
-  const goToDetail = (row: RowsInfo) => {
-    navigate('detail', { state: row });
-  };
-
-  const clickRow = (row: RowsInfo, index: number) => {
-    goToDetail(row);
-  };
 
   return (
     <>
@@ -27,7 +12,6 @@ const List = () => {
         rows={rows}
         enableSort={true}
         clickable={true}
-        onClick={clickRow}
         onChange={undefined}
       />
       

@@ -15,7 +15,7 @@ const Edit = () => {
   return (
     <>
       <Stack direction="Vertical" gap="MD" className="height-100">
-        <HorizontalTable>
+        <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={1}>제목</TH>
             <TD colSpan={3}>
