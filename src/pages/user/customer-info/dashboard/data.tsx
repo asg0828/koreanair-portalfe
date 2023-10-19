@@ -1,6 +1,7 @@
 import {
   AnalysisIndexList,
   AnalysisResultData,
+  CartData,
   ContributeData,
   Ffp,
   HomepageData,
@@ -8,6 +9,7 @@ import {
   PnrData,
   PnrTickerColumn,
   Profile,
+  VocData,
 } from '@/models/customer-info/CustomerInfo';
 
 const analysisIndexList: AnalysisIndexList[] = [
@@ -40,11 +42,11 @@ const analysisResultData: AnalysisResultData = {
 };
 
 const pnrTickerColumn: PnrTickerColumn[] = [
-  { headerName: 'PNR Number', field: 'pnrNumber' },
+  { headerName: 'PNR Num', field: 'pnrNumber' },
   { headerName: 'Travel Date', field: 'travelDate' },
   { headerName: 'Route', field: 'route' },
-  { headerName: 'Baggage Count', field: 'baggageCnt' },
-  { headerName: 'Baggage Weight', field: 'baggageWgt' },
+  { headerName: 'Baggage Cnt', field: 'baggageCnt' },
+  { headerName: 'Baggage Wgt', field: 'baggageWgt' },
 ];
 
 const pnrData: PnrData[] = [
@@ -115,6 +117,35 @@ const homepageData: HomepageData = {
   status: 'A',
 };
 
+const vocData: VocData[] = [
+  {
+    vocNo: 'C20190930027',
+    status: 'Closed',
+    lastUpdDate: 'Oct 2,2019',
+    replRqst: 'N',
+  },
+  {
+    vocNo: 'C20190930027',
+    status: 'Closed',
+    lastUpdDate: 'Oct 2,2019',
+    replRqst: 'N',
+  },
+];
+
+const cartData: CartData[] = [
+  {
+    route: 'FUK-ICN',
+    flightNo: 'TF49W5',
+    onewayTrip: 'Y',
+    travelDate: 'Oct 2,2019',
+  },
+  {
+    route: 'FUK-ICN',
+    flightNo: 'TF49W5',
+    onewayTrip: 'Y',
+    travelDate: 'Oct 2,2019',
+  },
+];
 export {
   analysisIndexList,
   analysisResultData,
@@ -125,4 +156,6 @@ export {
   mileage,
   contributeData,
   homepageData,
+  vocData,
+  cartData,
 };

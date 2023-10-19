@@ -59,3 +59,17 @@ export interface HomepageData {
   lastLoginDt: string;
   status: string;
 }
+
+export interface VocData {
+  vocNo: string;
+  status: string;
+  lastUpdDate: string;
+  replRqst: string;
+}
+
+export interface CartData {
+  route: string;
+  flightNo: string;
+  onewayTrip: string;
+  travelDate: string;
+}

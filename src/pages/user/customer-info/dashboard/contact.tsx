@@ -7,14 +7,14 @@ export default function Contact() {
     <Stack wrap={true}>
       <Stack direction="vertical" wrap={true}>
         <div style={{ width: 500, marginRight: 15 }}>
-          <h2>Email</h2>
+          <h3>Email</h3>
           <VerticalTable columns={pnrTickerColumn} rows={pnrData} showHeader={false} />
         </div>
       </Stack>
       <Stack direction="vertical" wrap={true}>
         <div style={{ width: 500, marginRight: 15 }}>
           <Stack direction="horizontal">
-            <h2>SMS</h2>
+            <h3>SMS</h3>
           </Stack>
           <Stack>
             <VerticalTable columns={pnrTickerColumn} rows={pnrData} showHeader={false} />
@@ -23,7 +23,7 @@ export default function Contact() {
       </Stack>
       <Stack direction="vertical" wrap={true}>
         <div style={{ width: 500 }}>
-          <h2>PUSH</h2>
+          <h3>PUSH</h3>
           <VerticalTable columns={pnrTickerColumn} rows={pnrData} showHeader={false} />
         </div>
       </Stack>

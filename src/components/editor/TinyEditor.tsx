@@ -6,7 +6,7 @@ const TinyEditor = () => {
   const editorRef = useRef(null);
 
   const initEditorContentStyle = () => {
-    const iframe = (document.querySelector(".tox-edit-area iframe") as HTMLIFrameElement).contentWindow;
+    const iframe = (document.querySelector('.tox-edit-area iframe') as HTMLIFrameElement).contentWindow;
     const html = iframe?.document.querySelector('html');
     const body = iframe?.document.querySelector('body');
 
@@ -17,7 +17,7 @@ const TinyEditor = () => {
     if (body) {
       body.style.height = '95%';
     }
-  }
+  };
 
   return (
     <Editor
@@ -74,7 +74,7 @@ const TinyEditor = () => {
               });
             };
             reader.readAsDataURL(file);
-          }
+          };
         },
         // images_upload_handler: (blobInfo) => {
         //   return new Promise((resolve, reject) => {
@@ -86,7 +86,7 @@ const TinyEditor = () => {
         // },
       }}
     />
-  )
-}
+  );
+};
 
 export default TinyEditor;

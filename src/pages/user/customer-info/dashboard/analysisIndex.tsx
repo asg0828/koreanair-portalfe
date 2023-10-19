@@ -8,9 +8,9 @@ export default function AnalysisIndex() {
   const analysisList = useSelector((state) => analysisIndexList);
 
   return (
-    <div style={{ maxHeight: 500, overflowY: 'scroll' }}>
+    <div style={{ minHeight: 520, maxHeight: 520, overflowY: 'scroll' }}>
       <Stack direction="Vertical" wrap={true}>
-        <h1>Anaylsis Index</h1>
+        <h2>Anaylsis Index</h2>
         <Accordion align="Right" size="MD" type="multiple">
           {analysisList.map((analysis, index) => (
             <AccordionItem key={`${uniqueId}-analysis-${index}`} title={analysis.name} value={analysis.name}>

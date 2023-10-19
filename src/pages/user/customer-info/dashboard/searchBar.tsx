@@ -65,7 +65,7 @@ export default function SearchBar() {
 
   return (
     <Stack>
-      <div className="componentWrapper" style={{ width: 470 }}>
+      <div className="componentWrapper" style={{ width: 495 }}>
         <TextField
           value={skypassNum}
           appearance="Outline"
@@ -78,7 +78,7 @@ export default function SearchBar() {
           autoFocus
         />
       </div>
-      <div className="componentWrapper" style={{ width: 470 }}>
+      <div className="componentWrapper" style={{ width: 495 }}>
         <TextField
           value={oneId}
           appearance="Outline"
@@ -90,7 +90,7 @@ export default function SearchBar() {
           ref={oneIdId}
         />
       </div>
-      <div className="componentWrapper" style={{ width: 470 }}>
+      <div className="componentWrapper" style={{ width: 495 }}>
         <TextField
           value={passengerNm}
           appearance="Outline"

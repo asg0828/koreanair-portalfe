@@ -1,14 +1,169 @@
+import { RowsInfo } from "@/models/components/Table";
+
+export const listColumns = [
+    { headerName: 'Feature 명', field: 'name', colSpan: 4 },
+    { headerName: '최종 수정 일시', field: 'lastUpdDttm', colSpan: 1 },
+    { headerName: '진행 상태', field: 'submissionStatus', colSpan: 2 },
+    { headerName: '최종 수정 사용자', field: 'lastUpdUserNm', colSpan: 1 },
+    { headerName: '사용 여부', field: 'useYn', colSpan: 1 },
+]
+
+export const divisionTypes = {
+    ATTR: 'ATTR',
+    FEAT: 'FEAT',
+    BEHV: 'BEHV',
+}
+
+export interface MstrSgmtTableandColMetaInfo {
+    rslnRuleId: string,
+    behaviors: [
+        {
+            //Required: tbCoMetaTblClmnInfoList
+            metaTblId: string,
+            metaTblLogiNm: string,
+            tbCoMetaTbInfo: {
+                //Required: dbNm,metaTblDesc,metaTblDvCd,metaTblLogiNm,metaTblPhysNm
+                metaTblId: string,
+                metaTblPhysNm: string,
+                //example: 메타테이블물리명
+                metaTblLogiNm: string,
+                //example: 메타테이블논리명
+                metaTblDesc: string,
+                //example: 메타테이블설명
+                dbNm: string,
+                //example: 데이터베이스명
+                dataClaCd: string,
+                //example: 데이터계층코드
+                dataSrcDvCd: string,
+                //example: 데이터원천구분코드(행동/Legacy)
+                keepCylcCd: string,
+                //example: 보관주기코드, default = A
+                metaTblUseYn: string,
+                //Pattern: Y|N
+                //example: 메타테이블 사용여부, default = Y
+                metaTblDvCd: string,
+                //example: 메타테이블구분코드(ATTR/BEHV)
+                rtmTblYn: string,
+                //Pattern: Y|N
+                //example: 메타테이블 사용여부, default = N
+                topicId: string,
+                //example: 토픽 ID
+                frstRegDttm: string,
+                //example: 등록일시
+                frstRegUserId: string,
+                //example: 등록자 id
+                lastUpdDttm: string,
+                //example: 수정일시
+                lastUpdUserId: string,
+                //example: 수정자 id
+            },
+            tbCoMetaTblClmnInfoList: [
+                {
+                rtmTblYn: string,
+                metaTblId: string,
+                metaTblClmnId: string,
+                metaTblClmnPhysNm: string,
+                //example: 메타테이블컬럼물리명
+                metaTblClmnLogiNm: string,
+                //example: 메타테이블컬럼논리명
+                metaTblClmnDesc: string,
+                //example: 메타테이블컬럼설명
+                dtpCd: string,
+                //example: 데이터타입코드
+                dtpLenVal: string,
+                //example: 데이터타입길이값
+                pkYn: string,
+                //example: pk여부
+                nullYn: string,
+                //example: NULL 가능여부
+                defltVal: string,
+                //example: Default 값
+                clmnUseYn: string,
+                //example: 컬럼사용여부
+                clmnSortOrd: number,
+                frstRegDttm: string,
+                //example: 등록일시
+                frstRegUserId: string,
+                //example: 등록자 id
+                lastUpdDttm: string,
+                //example: 수정일시
+                lastUpdUserId: string,
+                //example: 수정자 id
+                chgDtpCd: string,
+                //example: 변환 데이터타입 코드
+                dataFormat: string,
+                //example: 데이터 포멧
+                baseTimeYn: string,
+                //Pattern: [Y|N]
+                //example: 기준 시간 여부 = Y
+                maskingRuleCd: string,
+                //example: 마스킹룰 구분코드
+                dataTypeCategory: string,
+                //example: 데이터 타입 유형
+                },
+            ],
+            rtmTblYn: string,
+        },
+    ],
+    attributes: [
+        {
+            rtmTblYn: string,
+            metaTblId: string,
+            metaTblClmnId: string,
+            metaTblClmnPhysNm: string,
+            //example: 메타테이블컬럼물리명
+            metaTblClmnLogiNm: string,
+            //example: 메타테이블컬럼논리명
+            metaTblClmnDesc: string,
+            //example: 메타테이블컬럼설명
+            dtpCd: string,
+            //example: 데이터타입코드
+            dtpLenVal: string,
+            //example: 데이터타입길이값
+            pkYn: string,
+            //example: pk여부
+            nullYn: string,
+            //example: NULL 가능여부
+            defltVal: string,
+            //example: Default 값
+            clmnUseYn: string,
+            //example: 컬럼사용여부
+            clmnSortOrd: number,
+            frstRegDttm: string,
+            //example: 등록일시
+            frstRegUserId: string,
+            //example: 등록자 id
+            lastUpdDttm: string,
+            //example: 수정일시
+            lastUpdUserId: string,
+            //example: 수정자 id
+            chgDtpCd: string,
+            //example: 변환 데이터타입 코드
+            dataFormat: string,
+            //example: 데이터 포멧
+            baseTimeYn: string,
+            //Pattern: [Y|N]
+            //example: 기준 시간 여부 = Y
+            maskingRuleCd: string,
+            //example: 마스킹룰 구분코드
+            dataTypeCategory: string,
+            //example: 데이터 타입 유형
+        },
+    ]
+}
+
 //Required: tbRsCustFeatRule,tbRsCustFeatRuleCalc
 export interface FeatureInfo {
     //Required: category,description,mstrSgmtRuleId,name,useYn
-    tbRsCustFeatRule: TbRsCustFeatRule | {},
-    tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc | {},
-    tbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt> | [],
-    tbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgtFilter> | [],
-    tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase> | [],
+    tbRsCustFeatRule: TbRsCustFeatRule,//기본정보
+    tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc,//계산식
+    //대상선택정보
+    tbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt>,
+    tbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>,
+    tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase>,
 }
 
-export interface TbRsCustFeatRule {
+export interface TbRsCustFeatRule extends RowsInfo {
     //example: Customer Feature Rule ID (Auto Increment)
     id: string,
     //example: Customer Feature 이름

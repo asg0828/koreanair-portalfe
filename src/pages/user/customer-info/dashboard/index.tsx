@@ -37,8 +37,9 @@ export default function List() {
           <AnalysisIndex />
         </Stack>
       </Stack>
-
-      <Contact></Contact>
+      <div style={{ marginBottom: 20 }}>
+        <Contact></Contact>
+      </div>
     </Stack>
   );
 }
