@@ -22,7 +22,7 @@ const FeatDragItem = (props: any) => {
     return (
         <TextField
             ref={(featDragItem)}
-            style={{ opacity: featOpacity }}
+            style={{ opacity: featOpacity, backgroundColor: '#ff77ff', color: 'black' }}
             appearance="Filled"
             defaultValue={props.dragItem.content} 
             placeholder="" 

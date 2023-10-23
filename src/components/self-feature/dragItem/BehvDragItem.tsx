@@ -1,12 +1,13 @@
 import { TextField } from "@components/ui"
 import { useDrag } from "react-dnd"
 import { divisionTypes } from '@/models/selfFeature/FeatureInfo'
+import { cloneDeep } from "lodash"
 
 const BehvDragItem = (props: any) => {
 
     const [{ isBehvDragging }, behvDragItem] = useDrag(() => ({
         type: divisionTypes.BEHV,
-        item: props.dragItem,
+        item: Object.assign({ divisionCode: divisionTypes.BEHV }, cloneDeep(props.behvTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 
@@ -20,17 +21,21 @@ const BehvDragItem = (props: any) => {
     const behvOpacity = isBehvDragging ? 0.4 : 1
 
     return (
-        <TextField
-            ref={(behvDragItem)}
-            style={{ opacity: behvOpacity }}
-            appearance="Filled"
-            defaultValue={props.dragItem.content} 
-            placeholder="" 
-            readOnly
-            shape="Round"
-            size="LG"
-            validation="Default"
-        />
+        <>
+            {props.behvTblClmnInfo &&
+                <TextField
+                    ref={(behvDragItem)}
+                    style={{ opacity: behvOpacity, backgroundColor: '#e0ffff', color: 'black' }}
+                    appearance="Filled"
+                    defaultValue={props.behvTblClmnInfo.metaTblClmnLogiNm} 
+                    placeholder="" 
+                    readOnly
+                    shape="Round"
+                    size="LG"
+                    validation="Default"
+                />
+            }
+        </>
     )
 }
 

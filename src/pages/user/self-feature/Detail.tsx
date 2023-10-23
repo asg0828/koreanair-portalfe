@@ -16,38 +16,27 @@ import {
     Typography,
     Page,
   } from '@components/ui';
-import { FeatureInfo, TbRsCustFeatRule, TbRsCustFeatRuleTrgt } from '@/models/selfFeature/FeatureInfo';
+import { FeatureInfo, TbRsCustFeatRule, TbRsCustFeatRuleTrgt, TbRsCustFeatRuleTrgtFilter } from '@/models/selfFeature/FeatureInfo';
 import { cloneDeep } from "lodash";
 import DropList from '@/components/self-feature/DropList';
 import DragList from '@/components/self-feature/DragList';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { initSelfFeatureInfo } from './data';
 
 const SelfFeatureDetail = () => {
 
     const location = useLocation()
     const navigate = useNavigate()
 
-    const [ featureInfo, setFeatureInfo ] = useState<FeatureInfo | undefined>()
+    const [ featureInfo, setFeatureInfo ] = useState<FeatureInfo>(initSelfFeatureInfo)
     const [ featureStatus, setFeatureStatus ] = useState<string>("")
-    const [ dropList, setDropList ] = useState<Array<any>>([])
+    
     const [ dragList, setDragList ] = useState<Array<any>>([
       { divisionCode: 'ATTR', content: '속성데이터' },
       { divisionCode: 'FEAT', content: '픽쳐데이터' },
       { divisionCode: 'BEHV', content: '행동데이터', colList: [{ content: '행동칼럼데이터', colNm: '행동 컬럼 데이터' }] },
     ])
-
-    //const dropList: Array<any> = [{...location.state, divisionCode: "ATTR"}]
-
-    /*
-    useEffect(() => {
-      setFeatureStatus(location.state.submissionStatus)
-      retrieveFeatureInfo()
-    }, [])
-    */
-    useEffect(() => {
-      console.log("dropList update! ", dropList)
-    }, [dropList])
 
     const onClickPageMovHandler = (pageNm: string) => {
         if (pageNm === "list")
@@ -59,13 +48,26 @@ const SelfFeatureDetail = () => {
       e.preventDefault()
     }
     
-    const getDropList = (list: Array<any>) => {
+    const getTargetList = (list: Array<TbRsCustFeatRuleTrgt>) => {
       console.log(list)
-      setDropList(list)
+      setFeatureInfo((state: FeatureInfo) => {
+        let temp = cloneDeep(state)
+        temp.tbRsCustFeatRuleTrgtList = list
+        return temp
+      })
+    }
+
+    const getTrgtFilterList = (list: Array<TbRsCustFeatRuleTrgtFilter>) => {
+      console.log(list)
+      setFeatureInfo((state: FeatureInfo) => {
+        let temp = cloneDeep(state)
+        temp.tbRsCustFeatRuleTrgtFilterList = list
+        return temp
+      })
     }
     
     const retrieveFeatureInfo = () => {
-      setFeatureInfo((prevState: FeatureInfo | undefined) => {
+      setFeatureInfo((prevState: FeatureInfo) => {
         let featRule: TbRsCustFeatRule = {...{
           id: location.state.id? location.state.id : '',
           name: location.state.name? location.state.name : '',
@@ -169,12 +171,12 @@ const SelfFeatureDetail = () => {
                   gap="MD"
                   justifyContent="Between"
                   style={{
-                    height: '30%',
+                    height: '220px',
                   }}
               >
                 <DndProvider backend={HTML5Backend}>
                   {/* drop 영역 */}
-                  <DropList dropList={dropList} getDropList={getDropList} />
+                  <DropList getTargetList={getTargetList} getTrgtFilterList={getTrgtFilterList} />
                   {/* drop 영역 */}
 
                   {/* drag 영역 */}

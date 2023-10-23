@@ -1,28 +1,11 @@
-import { Button, Page, Stack, TextField } from "@components/ui"
-import { useEffect, useState } from "react"
+import { Button, Page, Stack, Typography } from "@components/ui"
 import { useDrop } from "react-dnd"
 import { cloneDeep } from 'lodash'
-import { divisionTypes } from '@/models/selfFeature/FeatureInfo'
+import { TbCoMetaTblClmnInfo, TbRsCustFeatRuleTrgtFilter, divisionTypes } from '@/models/selfFeature/FeatureInfo'
+import { initTbCoMetaTblClmnInfo, initTbRsCustFeatRuleTrgtFilter } from "@/pages/user/self-feature/data"
+import BehvColDropItem from "./BehvColDropItem"
 
 const BehvDropItem = (props: any) => {
-
-    const [ behvColList, setBehvColList ] = useState<Array<any>>([])
-
-    useEffect(()=> {
-        if (behvColList.length < 1) return
-
-        console.log(`DropList component behvColList update :: `, behvColList)
-
-    }, [behvColList])
-
-    useEffect(()=> {
-        if (props.dropItem.length < 1) return
-
-        console.log(`DropList component behvColList update :: `, behvColList)
-
-        setBehvColList(cloneDeep(props.dropItem))
-
-    }, [props.dropItem])
 
     const [, behvDrop] = useDrop(() => ({
         accept: divisionTypes.BEHV,
@@ -30,10 +13,22 @@ const BehvDropItem = (props: any) => {
             const didDrop = monitor.didDrop()
 
             if (!didDrop) {
-                setBehvColList((state: Array<any>) => {
+                let targetObj: TbCoMetaTblClmnInfo = Object.assign(initTbCoMetaTblClmnInfo, item)
+
+                let targetId = cloneDeep(props.targetId)
+                let tableId  = targetId.split('_')[0]
+
+                if (tableId !== targetObj.metaTblId) {
+                    alert("같은 테이블 조건이 아닙니다.")
+                    return null
+                }
+
+                props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     let tl = cloneDeep(state)
-                    tl.push(item)
-                    props.getBehvColDropList(props.itemIdx, tl)
+                    let trgtFilter = initTbRsCustFeatRuleTrgtFilter
+                    trgtFilter.targetId  = targetId // 고정
+                    trgtFilter.columnName = targetObj.metaTblClmnLogiNm
+                    tl.push(trgtFilter)
                     return tl
                 })
             }
@@ -44,21 +39,29 @@ const BehvDropItem = (props: any) => {
         },
     }), [])
     
-    const onClickColDeleteHandler = (idx: number) => {
-        setBehvColList((state: Array<any>) => {
-            let newDropList = cloneDeep(state)
-            newDropList.splice(idx, 1)
-            props.getBehvColDropList(props.itemIdx, newDropList)
-            return newDropList
+    const deleteTrgtFilterInfo = (idx: number) => {
+        
+        props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+            let newTrgtFilterList = cloneDeep(state)
+
+            let removeTrgetFilterList = []
+            removeTrgetFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === props.targetId)
+            removeTrgetFilterList.splice(idx, 1)
+
+            newTrgtFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== props.targetId)
+            newTrgtFilterList = [...newTrgtFilterList, ...removeTrgetFilterList]
+
+            return newTrgtFilterList
         })
     }
 
     const onClickDeleteHandler = () => {
-        props.deleteInfo(props.itemIdx)
+        props.delTargetInfo(props.itemIdx, props.targetId)
     }
 
     return (
         <Stack justifyContent="Start" gap="SM" className="width-100">
+            <Typography variant="h6">{props.targetItem.tableName}</Typography>
             <Page
                 ref={(behvDrop)}
                 style={{
@@ -68,27 +71,13 @@ const BehvDropItem = (props: any) => {
                     borderRadius: '5px',
                 }}
             >
-                {behvColList.map((colItem: any, index: number) => (
-                    <Stack 
+                {props.trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
+                    <BehvColDropItem 
                         key={index}
-                        justifyContent="Start"
-                        gap="SM"
-                        className="width-100"
-                    >
-                        <TextField 
-                            style={{backgroundColor: '##e0ffff', color: 'white'}}
-                            appearance="Filled"
-                            defaultValue={colItem.content}
-                            placeholder=""
-                            disabled
-                            readOnly
-                            shape="Round"
-                            size="SM"
-                        />
-                        <Button priority="Primary" appearance="Contained" size="SM" onClick={() => onClickColDeleteHandler(index)}>
-                        컬럼삭제
-                        </Button>
-                    </Stack>
+                        itemIdx={index}
+                        deleteTrgtFilterInfo={deleteTrgtFilterInfo}
+                        trgtFilterItem={trgtFilterItem}
+                    />
                 ))}
             </Page>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>

@@ -1,12 +1,13 @@
 import { TextField } from "@components/ui"
 import { useDrag } from "react-dnd"
 import { divisionTypes } from '@/models/selfFeature/FeatureInfo'
+import { cloneDeep } from "lodash"
 
-const AttrfeatDragItem = (props: any) => {
+const AttrDragItem = (props: any) => {
 
     const [{ isAttrDragging }, attrDragItem] = useDrag(() => ({
         type: divisionTypes.ATTR,
-        item: props.dragItem,
+        item: Object.assign({ divisionCode: divisionTypes.ATTR }, cloneDeep(props.attrTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 
@@ -22,9 +23,9 @@ const AttrfeatDragItem = (props: any) => {
     return (
         <TextField
             ref={(attrDragItem)}
-            style={{ opacity: attrOpacity }}
+            style={{ opacity: attrOpacity, backgroundColor: '#FF9999', color: 'black' }}
             appearance="Filled"
-            defaultValue={props.dragItem.content} 
+            defaultValue={props.attrTblClmnInfo.metaTblClmnLogiNm} 
             placeholder="" 
             readOnly
             shape="Round"
@@ -34,4 +35,4 @@ const AttrfeatDragItem = (props: any) => {
     )
 }
 
-export default AttrfeatDragItem
+export default AttrDragItem
