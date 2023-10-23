@@ -4,6 +4,7 @@ import reportWebVitals from './reportWebVitals';
 import rootReducer from '@reducers';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
+import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Providers } from '@components/ui';
 
 const reduxStore = configureStore({
@@ -15,10 +16,23 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // staleTime: 0,
+      // cacheTime: 0,
+      // suspense: true,
+      enabled: false,
+    },
+  },
+});
+
 root.render(
   <Provider store={reduxStore}>
     <Providers>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </Providers>
   </Provider>,
 );

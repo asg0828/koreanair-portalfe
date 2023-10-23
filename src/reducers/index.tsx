@@ -1,11 +1,16 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import authReducer from '@reducers/authSlice';
-import menuReducer from '@reducers/menuSlice';
+import authSlice from '@reducers/authSlice';
+import menuSlice from '@reducers/menuSlice';
 
 const rootReducer = combineReducers({
-  auth: authReducer,
-  menu: menuReducer,
+  auth: authSlice.reducer,
+  menu: menuSlice.reducer,
 });
 
 export default rootReducer;
 export type ReducerType = ReturnType<typeof rootReducer>;
+
+export {
+  authSlice,
+  menuSlice,
+}

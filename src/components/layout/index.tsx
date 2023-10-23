@@ -9,7 +9,7 @@ const defaultPath: defaultPathInfo = {
   '/biz-meta': '/biz-meta/dataset',
   '/self-bi': '/self-bi/tableau',
   '/structured-report': '/structured-report/structured-report',
-  '/feature': '/feature/popular',
+  '/feature': '/feature/interest',
   '/customer-info': '/customer-info/dashboard',
   '/self-feature': '/self-feature/self-feature',
   '/admin': '/admin/user-management/user-management',
@@ -17,6 +17,7 @@ const defaultPath: defaultPathInfo = {
   '/admin/user-portal-management': '/admin/user-portal-management/menu-management',
   '/admin/admin-portal-management': '/admin/admin-portal-management/menu-management',
   '/admin/user-portal-management/board-management': '/admin/user-portal-management/board-management/notice',
+  '/test': '/test/api',
 };
 
 const RootLayout = () => {

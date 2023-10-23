@@ -1,5 +1,5 @@
 import RootLayout from '@components/layout';
-import Test from '@pages/Test';
+import TempPage from '@/pages/TempPage';
 import Error from '@/pages/Error';
 import Home from '@pages/user/Home';
 import DataSet from '@pages/user/biz-meta/dataset';
@@ -38,7 +38,7 @@ import SelfFeatureReg from '@pages/user/self-feature/Reg';
 import SelfFeatureEdit from '@pages/user/self-feature/Edit';
 import CustomerInfo from '@pages/user/customer-info/dashboard';
 
-export const userRouter = [
+const userRouter = [
   {
     path: '/',
     element: <RootLayout />,
@@ -123,16 +123,16 @@ export const userRouter = [
       {
         path: 'self-bi',
         children: [
-          { index: true, element: <Test /> },
-          { path: 'tableau', element: <Test /> },
-          { path: 'unstructured-report', element: <Test /> },
+          { index: true, element: <TempPage /> },
+          { path: 'tableau', element: <TempPage /> },
+          { path: 'unstructured-report', element: <TempPage /> },
         ],
       },
       {
         path: 'structured-report',
         children: [
-          { index: true, element: <Test /> },
-          { path: 'structured-report', element: <Test /> },
+          { index: true, element: <TempPage /> },
+          { path: 'structured-report', element: <TempPage /> },
         ],
       },
       {
@@ -168,3 +168,5 @@ export const userRouter = [
     ],
   },
 ];
+
+export default userRouter;

@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { MenuInfo, MenuItem } from '@/models/common/Menu';
 
-
 const initialState: MenuInfo = {
   menuList: [],
 };
@@ -15,5 +14,4 @@ const menuSlice = createSlice({
     },
   },
 });
-export const menuActions = menuSlice.actions;
-export default menuSlice.reducer;
+export default menuSlice;

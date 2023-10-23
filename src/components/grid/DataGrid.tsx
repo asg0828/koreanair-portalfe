@@ -34,7 +34,7 @@ const DataGrid: React.FC<DatagridProps> = ({
         enableSort={enableSort}
         clickable={clickable}
         onClick={onClick}
-      />
+        />
       <Stack className="pagination-layout">
         <Select
           appearance="Outline"
@@ -42,7 +42,7 @@ const DataGrid: React.FC<DatagridProps> = ({
           className="select-page"
           defaultValue={10}
           onChange={onChange}
-        >
+          >
           <SelectOption value={10}>10건</SelectOption>
           <SelectOption value={30}>30건</SelectOption>
           <SelectOption value={50}>30건</SelectOption>

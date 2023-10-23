@@ -1,32 +1,45 @@
+
 import { useDispatch, useSelector } from 'react-redux';
-import CustomRouter from '@/router';
+import CustomRouter, { userRouter, adminRouter, testRouter } from '@/router';
 import { ReducerType } from '@reducers';
-import { authActions } from '@/reducers/authSlice';
-import { menuActions } from '@/reducers/menuSlice';
-import userMenuList from '@utils/data/userMenuList';
-import adminMenuList from '@utils/data/adminMenuList';
+import { authSlice, menuSlice } from '@/reducers';
+import userMenuList from '@/router/data/userMenuList';
+import adminMenuList from '@/router/data/adminMenuList';
+import testMenulist from '@/router/data/testMenuList';
 import { Stack, Loader } from '@components/ui';
 import NotFound from '@/pages/Error';
-import { userRouter } from '@router/user';
-import { adminRouter } from '@router/admin';
 
 const Login = () => {
   const auth = useSelector((state: ReducerType) => state.auth);
   const dispatch = useDispatch();
   const isAdminPage = window.location.pathname.substring(0, 6) === '/admin';
+  const isTestPage = window.location.pathname.substring(0, 5) === '/test';
 
   if (auth.userInfo) {
-    if (isAdminPage) {
-      if (auth.userInfo.isAdmin) {
-        dispatch(menuActions.setMenuList(adminMenuList));
-        return <CustomRouter router={adminRouter} />;
+    let router;
+    let component;
+
+    if (auth.userInfo.isAdmin) {
+      if (isAdminPage) {
+        dispatch(menuSlice.actions.setMenuList(adminMenuList));
+        router = adminRouter;
+      } else if (isTestPage) {
+        dispatch(menuSlice.actions.setMenuList(testMenulist));
+        router = testRouter;
       } else {
-        return <NotFound />;
+        dispatch(menuSlice.actions.setMenuList(userMenuList));
+        router = userRouter;
       }
+      component = <CustomRouter router={router} />;
     } else {
-      dispatch(menuActions.setMenuList(userMenuList));
-      return <CustomRouter router={userRouter} />;
+      if (isAdminPage || isTestPage) {
+        component = <NotFound />;
+      } else {
+        component = <CustomRouter router={userMenuList} />;
+      }
     }
+
+    return component;
   } else {
     setTimeout(() => {
       const authInfo = {
@@ -40,7 +53,7 @@ const Login = () => {
           isAdmin: true,
         },
       };
-      dispatch(authActions.login(authInfo));
+      dispatch(authSlice.actions.login(authInfo));
     }, 1000);
   }
 

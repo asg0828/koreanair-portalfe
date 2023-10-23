@@ -27,7 +27,7 @@ import ArchiveDetail from '@pages/user/board/archive/Detail';
 import ArchiveReg from '@pages/user/board/archive/Reg';
 import ArchiveEdit from '@pages/user/board/archive/Edit';
 
-export const adminRouter = [
+const adminRouter = [
   {
     path: '/',
     element: <RootLayout />,
@@ -113,6 +113,8 @@ export const adminRouter = [
           },
         ],
       },
-    ]
-  }
+    ],
+  },
 ];
+
+export default adminRouter;
