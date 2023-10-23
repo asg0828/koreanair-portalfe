@@ -1,6 +1,6 @@
 import AttrDragItem from "./dragItem/AttrDragItem"
 import BehvDragItem from "./dragItem/BehvDragItem"
-import { Accordion, AccordionItem, Button, Page, TextField } from "@components/ui"
+import { Accordion, AccordionItem, Button, Page, Stack, TextField } from "@components/ui"
 
 import { 
   Behavior,
@@ -17,21 +17,25 @@ const DragList = (props: any) => {
     const [ srchBehvRsltList, setSrchBehvRsltList ] = useState<Array<Behavior>>([])
 
     useEffect(() => {
+        if (props.attributes.length < 1) return
+
         let attrList: Array<Attribute> = cloneDeep(props.attributes)
         setSrchAttrRsltList(attrList)
     }, [props.attributes])
 
     useEffect(() => {
+        if (props.behaviors.length < 1) return
+        
         let behvList: Array<Behavior> = cloneDeep(props.behaviors)
         setSrchBehvRsltList(behvList)
     }, [props.behaviors])
 
     useEffect(() => {
-
+        console.log("update attr list :: ", srchAttrRsltList)
     }, [srchAttrRsltList])
 
     useEffect(() => {
-        
+        console.log("update behv list :: ", srchBehvRsltList)
     }, [srchBehvRsltList])
 
     const searchAttrList = (keyword: string) => {
@@ -59,7 +63,7 @@ const DragList = (props: any) => {
         setSrchBehvRsltList(behvList)
     }
 
-    const onClickSearchHandler = () => {
+    const onClickTrgtSrchHandler = () => {
         searchAttrList(keyword)
         searchBehvList(keyword)
     }
@@ -73,65 +77,73 @@ const DragList = (props: any) => {
                 borderRadius: '5px',
             }}
         >
-            {/* 자체 검색 기능 추가 필요 */}
-            <TextField className="width-100" value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
-            <Button priority="Primary" appearance="Contained" size="XS" onClick={onClickSearchHandler}>
-                검색
-            </Button>
-
+            <Stack direction="Horizontal" gap="MD" justifyContent="Between" >
+                <TextField size="SM" value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+                <Button priority="Primary" appearance="Contained" size="XS" onClick={onClickTrgtSrchHandler}>
+                    검색
+                </Button>
+            </Stack>
+            {srchAttrRsltList.length > 0 &&
             <Accordion
                 align="Right"
-                size="SM"
+                size="MD"
                 type="multiple"
             >
                 <AccordionItem
                     title='속성 정보'
                     value='속성 정보'
                 >
-                {srchAttrRsltList && srchAttrRsltList.map((attribute: Attribute, index: number) => {
+                <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                {srchAttrRsltList.map((attribute: Attribute, index: number) => {
                     return <AttrDragItem
                         key={index}
                         attrTblClmnInfo={attribute}
                     />
                 })}
+                </Stack>
                 </AccordionItem>
             </Accordion>
+            }
             {/* Feature 정보
             {props.features.map(() => {
 
             })}
             */}
+            {srchBehvRsltList.length > 0 &&
             <Accordion
                 align="Right"
-                size="SM"
+                size="MD"
                 type="multiple"
             >
                 <AccordionItem
                     title='행동 정보'
                     value='행동 정보'
                 >
-                {srchBehvRsltList && srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
+                {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
                     <Accordion
                         key={behvIdx}
                         align="Right"
-                        size="SM"
+                        size="MD"
                         type="multiple"
                     >
                         <AccordionItem
                             title={behavior.metaTblLogiNm}
                             value={behavior.metaTblLogiNm}
                         >
+                        <Stack direction="Vertical" justifyContent="Center" gap="SM" >
                         {behavior.tbCoMetaTblClmnInfoList.map((tbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo, clmnIdx: number) => (
                             <BehvDragItem
                                 key={clmnIdx}
                                 behvTblClmnInfo={tbCoMetaTblClmnInfo}
                             />
                         ))}
+                        </Stack>
                         </AccordionItem>
                     </Accordion>
                 ))}
                 </AccordionItem>
             </Accordion>
+            }
         </Page>
     )
 }

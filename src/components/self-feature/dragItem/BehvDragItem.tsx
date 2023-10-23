@@ -1,4 +1,4 @@
-import { TextField } from "@components/ui"
+import { Typography } from "@components/ui"
 import { useDrag } from "react-dnd"
 import { divisionTypes } from '@/models/selfFeature/FeatureInfo'
 import { cloneDeep } from "lodash"
@@ -16,24 +16,20 @@ const BehvDragItem = (props: any) => {
         collect: (monitor) => ({
             isBehvDragging: monitor.isDragging(),
         }),
-    }))
+    }), [props.behvTblClmnInfo])
 
     const behvOpacity = isBehvDragging ? 0.4 : 1
 
     return (
         <>
             {props.behvTblClmnInfo &&
-                <TextField
+                <Typography 
                     ref={(behvDragItem)}
-                    style={{ opacity: behvOpacity, backgroundColor: '#e0ffff', color: 'black' }}
-                    appearance="Filled"
-                    defaultValue={props.behvTblClmnInfo.metaTblClmnLogiNm} 
-                    placeholder="" 
-                    readOnly
-                    shape="Round"
-                    size="LG"
-                    validation="Default"
-                />
+                    style={{ opacity: behvOpacity, backgroundColor: '#e0ffff', color: 'black' }} 
+                    variant="h6"
+                >
+                    {props.behvTblClmnInfo.metaTblClmnLogiNm}
+                </Typography>
             }
         </>
     )

@@ -8,10 +8,13 @@ const FeatDropItem = (props: any) => {
 
     return (
         <Stack justifyContent="Start" gap="SM" className="width-100">
+            <Typography variant="h6">T{props.itemIdx + 1}</Typography>
             <Typography variant="h6">{props.targetItem.columnName}</Typography>
+            {props.delTargetInfo &&
             <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>
             삭제
             </Button>
+            }
         </Stack>
     )
 }

@@ -6,8 +6,20 @@ import BehvDropItem from './dropItem/BehvDropItem'
 import FeatDropItem from './dropItem/FeatDropItem'
 import { Page, Stack } from '@components/ui'
 
-import { TbRsCustFeatRuleTrgt, TbRsCustFeatRuleTrgtFilter, divisionTypes, TbCoMetaTblClmnInfo, Attribute } from '@/models/selfFeature/FeatureInfo'
-import { initAttribute, initTbCoMetaTblClmnInfo, initTbRsCustFeatRuleTrgt, initTbRsCustFeatRuleTrgtFilter } from '@/pages/user/self-feature/data'
+import { 
+    TbRsCustFeatRuleTrgt, 
+    TbRsCustFeatRuleTrgtFilter, 
+    divisionTypes, 
+    TbCoMetaTblClmnInfo, 
+    Attribute, 
+    subFeatStatus 
+} from '@/models/selfFeature/FeatureInfo'
+import { 
+    initAttribute, 
+    initTbCoMetaTblClmnInfo, 
+    initTbRsCustFeatRuleTrgt, 
+    initTbRsCustFeatRuleTrgtFilter 
+} from '@/pages/user/self-feature/data'
 
 const DropList = (props: any) => {
 
@@ -21,10 +33,12 @@ const DropList = (props: any) => {
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo | Attribute
 
+                console.log(item)
+
                 if (targetType === divisionTypes.ATTR) {
-                    targetObj = Object.assign(initAttribute, item)
+                    targetObj = Object.assign(cloneDeep(initAttribute), item)
                 } else if (targetType === divisionTypes.BEHV) {
-                    targetObj = Object.assign(initTbCoMetaTblClmnInfo, item)
+                    targetObj = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
                 }
 
                 let target: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
@@ -32,7 +46,7 @@ const DropList = (props: any) => {
                 props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
-                    target = initTbRsCustFeatRuleTrgt
+                    target = cloneDeep(initTbRsCustFeatRuleTrgt)
                     target.tableName = String(targetObj.metaTblId)
                     target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)
@@ -44,7 +58,7 @@ const DropList = (props: any) => {
                 props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
-                    target = initTbRsCustFeatRuleTrgtFilter
+                    target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
                     target.tableName = String(targetObj.metaTblId)
                     target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)
@@ -100,36 +114,67 @@ const DropList = (props: any) => {
                         }
                     })
                     if (targetItem.divisionCode === divisionTypes.ATTR) {
-                        return <AttrDropItem 
-                            key={`dropItem-${index}`}
-                            itemIdx={index}
-                            trgtFilterList={tfList}
-                            targetItem={targetItem} 
-                            setTargetList={props.setTargetList} 
-                            setTrgtFilterList={props.setTrgtFilterList} 
-                            delTargetInfo={deleteInfo}
-                        />
+                        if (props.featureStatus === subFeatStatus.REG || props.featureStatus === subFeatStatus.SUBREG)
+                            return <AttrDropItem 
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                trgtFilterList={tfList}
+                                targetItem={targetItem} 
+                                setTargetList={props.setTargetList} 
+                                setTrgtFilterList={props.setTrgtFilterList} 
+                            />
+                        else
+                            return <AttrDropItem 
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                trgtFilterList={tfList}
+                                targetItem={targetItem} 
+                                setTargetList={props.setTargetList} 
+                                setTrgtFilterList={props.setTrgtFilterList} 
+                                delTargetInfo={deleteInfo}
+                            />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {
-                        return <FeatDropItem
-                            key={`dropItem-${index}`}
-                            itemIdx={index}
-                            trgtFilterList={tfList}
-                            targetItem={targetItem}
-                            setTargetList={props.setTargetList} 
-                            setTrgtFilterList={props.setTrgtFilterList} 
-                            delTargetInfo={deleteInfo}
-                        />
+                        if (props.featureStatus === subFeatStatus.REG || props.featureStatus === subFeatStatus.SUBREG)
+                            return <FeatDropItem
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                trgtFilterList={tfList}
+                                targetItem={targetItem}
+                                setTargetList={props.setTargetList} 
+                                setTrgtFilterList={props.setTrgtFilterList}
+                            />
+                        else
+                            return <FeatDropItem
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                trgtFilterList={tfList}
+                                targetItem={targetItem}
+                                setTargetList={props.setTargetList} 
+                                setTrgtFilterList={props.setTrgtFilterList} 
+                                delTargetInfo={deleteInfo}
+                            />
                     } else if (targetItem.divisionCode === divisionTypes.BEHV) {
-                        return <BehvDropItem 
-                            key={`dropItem-${index}`}
-                            itemIdx={index}
-                            targetItem={targetItem}
-                            targetId={targetItem.targetId}
-                            trgtFilterList={tfList}
-                            setTargetList={props.setTargetList} 
-                            setTrgtFilterList={props.setTrgtFilterList} 
-                            delTargetInfo={deleteInfo}
-                        />
+                        if (props.featureStatus === subFeatStatus.REG || props.featureStatus === subFeatStatus.SUBREG)
+                            return <BehvDropItem 
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                targetItem={targetItem}
+                                targetId={targetItem.targetId}
+                                trgtFilterList={tfList}
+                                setTargetList={props.setTargetList} 
+                                setTrgtFilterList={props.setTrgtFilterList} 
+                            />
+                        else
+                            return <BehvDropItem 
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                targetItem={targetItem}
+                                targetId={targetItem.targetId}
+                                trgtFilterList={tfList}
+                                setTargetList={props.setTargetList} 
+                                setTrgtFilterList={props.setTrgtFilterList} 
+                                delTargetInfo={deleteInfo}
+                            />
                     }
                 })
             }

@@ -14,6 +14,11 @@ export const divisionTypes = {
     BEHV: 'BEHV',
 }
 
+export const subFeatStatus = {
+    REG: 'reg',
+    SUBREG: 'sub_reg',
+}
+
 export interface MstrSgmtTableandColMetaInfo {
     [key: string]: string | Array<Behavior> | Array<Attribute>
     rslnRuleId: string,

@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SelectValue } from '@mui/base/useSelect';
+import { cloneDeep } from "lodash";
+
 import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { listColumns as columns, TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
@@ -18,8 +21,10 @@ import {
     DatePicker,
     Label,
   } from '@components/ui';
-import { SelectValue } from '@mui/base/useSelect';
-import { cloneDeep } from "lodash";
+
+import { 
+  initTbRsCustFeatRule 
+} from "./data";
 
 const SelfFeature = () => {
 
@@ -55,35 +60,15 @@ const SelfFeature = () => {
 
     useEffect(() => {
       // 공통 코드 API CALL && 초기 LIST 조회 API CALL
-      retrieveSelfFeatureList()
+      retrieveCustFeatRules()
     }, [])
 
-    const retrieveSelfFeatureList = () => {
+    const retrieveCustFeatRules = () => {
       console.log(`RETRIEVE API CALL!`)
       let list: Array<TbRsCustFeatRule> = []
       for (let i = 0; i < 10; i++) {
-        let selfFeature: TbRsCustFeatRule = {...{
-          id: '',
-          name: '',
-          description: '',
-          rslnRuleId: '',
-          mstrSgmtRuleId: '',
-          mstrSgmtRuleNm: '',
-          useYn: '',
-          batManualExecTestCnt: 0,
-          frstRegDttm: '',
-          frstRegUserId: '',
-          lastUpdDttm: '',
-          lastUpdUserId: '',
-          category: '',
-          dataType: '',
-          frstRegUserNm: '',
-          lastUpdUserNm: '',
-          submissionStatus: '',
-          metaTblId: '',
-          lastUpdLginId: ''
-        }}
-        selfFeature.id = `ID_${String(i)}`
+        let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
+        selfFeature.id = `ID_${String(i)}` //custFeatRuleId
         selfFeature.name = `NAME_${String(i)}`
         selfFeature.description = `DESCRIPTION_${String(i)}`
         selfFeature.lastUpdDttm = `2023-10-16 10:11:1${String(i)}`
@@ -93,7 +78,7 @@ const SelfFeature = () => {
           selfFeature.submissionStatus = `reg`
         } else {
           selfFeature.useYn = "N"
-          selfFeature.submissionStatus = `sub_reg`
+          selfFeature.submissionStatus = `subInfo`
         }
         list.push(selfFeature)
       }
@@ -125,7 +110,7 @@ const SelfFeature = () => {
       e.preventDefault()
       console.log(`SEARCH PARAM INFO :: `, searchInfo)
       console.log(`SEARCH RETRIEVE API CALL!`)
-      retrieveSelfFeatureList()
+      //retrieveSelfFeatureList()
     }
 
     const getCheckList = (checkedList: Array<number>) => {
@@ -143,6 +128,7 @@ const SelfFeature = () => {
 
     return (
       <Stack direction="Vertical" gap="MD" className="height-100">
+        {/* 검색 영역 */}
         <form onSubmit={onsubmitHandler}>
           <HorizontalTable>
             <TR>
@@ -217,7 +203,8 @@ const SelfFeature = () => {
             </Button>
           </Stack>
         </form>
-  
+        {/* 검색 영역 */}
+
         <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
           <Label>총 {selfFeatureList.length} 건</Label>
           <VerticalTable

@@ -15,9 +15,11 @@ const BehvColDropItem = (props: any) => {
                 className="width-100"
             >  
                 <Typography variant="h6">{props.trgtFilterItem.columnName}</Typography>
-                <Button priority="Primary" appearance="Contained" size="SM" onClick={onClickTrgtFilterDeleteHandler}>
-                컬럼삭제
-                </Button>
+                {props.deleteTrgtFilterInfo &&
+                    <Button priority="Primary" appearance="Contained" size="SM" onClick={onClickTrgtFilterDeleteHandler}>
+                    컬럼삭제
+                    </Button>
+                }
             </Stack>
         }
         </>

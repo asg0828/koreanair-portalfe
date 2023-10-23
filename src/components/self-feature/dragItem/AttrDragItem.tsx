@@ -1,4 +1,4 @@
-import { TextField } from "@components/ui"
+import { Typography } from "@components/ui"
 import { useDrag } from "react-dnd"
 import { divisionTypes } from '@/models/selfFeature/FeatureInfo'
 import { cloneDeep } from "lodash"
@@ -16,22 +16,18 @@ const AttrDragItem = (props: any) => {
         collect: (monitor) => ({
             isAttrDragging: monitor.isDragging(),
         }),
-    }))
+    }), [props.attrTblClmnInfo])
 
     const attrOpacity = isAttrDragging ? 0.4 : 1
 
     return (
-        <TextField
+        <Typography 
             ref={(attrDragItem)}
-            style={{ opacity: attrOpacity, backgroundColor: '#FF9999', color: 'black' }}
-            appearance="Filled"
-            defaultValue={props.attrTblClmnInfo.metaTblClmnLogiNm} 
-            placeholder="" 
-            readOnly
-            shape="Round"
-            size="LG"
-            validation="Default"
-        />
+            style={{ opacity: attrOpacity, backgroundColor: '#FF9999', color: 'black' }} 
+            variant="h6"
+        >
+            {props.attrTblClmnInfo.metaTblClmnLogiNm}
+        </Typography>
     )
 }
 

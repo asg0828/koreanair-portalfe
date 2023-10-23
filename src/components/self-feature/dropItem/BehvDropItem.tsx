@@ -13,7 +13,7 @@ const BehvDropItem = (props: any) => {
             const didDrop = monitor.didDrop()
 
             if (!didDrop) {
-                let targetObj: TbCoMetaTblClmnInfo = Object.assign(initTbCoMetaTblClmnInfo, item)
+                let targetObj: TbCoMetaTblClmnInfo = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
 
                 let targetId = cloneDeep(props.targetId)
                 let tableId  = targetId.split('_')[0]
@@ -61,7 +61,8 @@ const BehvDropItem = (props: any) => {
 
     return (
         <Stack justifyContent="Start" gap="SM" className="width-100">
-            <Typography variant="h6">{props.targetItem.tableName}</Typography>
+            <Typography variant="h6">T{props.itemIdx + 1}</Typography>
+            <Typography variant="h6">{props.targetItem.columnName}</Typography>
             <Page
                 ref={(behvDrop)}
                 style={{
@@ -72,17 +73,26 @@ const BehvDropItem = (props: any) => {
                 }}
             >
                 {props.trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
-                    <BehvColDropItem 
-                        key={index}
-                        itemIdx={index}
-                        deleteTrgtFilterInfo={deleteTrgtFilterInfo}
-                        trgtFilterItem={trgtFilterItem}
-                    />
+                    props.delTargetInfo ?
+                        <BehvColDropItem 
+                            key={index}
+                            itemIdx={index}
+                            deleteTrgtFilterInfo={deleteTrgtFilterInfo}
+                            trgtFilterItem={trgtFilterItem}
+                        />
+                    :
+                        <BehvColDropItem 
+                            key={index}
+                            itemIdx={index}
+                            trgtFilterItem={trgtFilterItem}
+                        />
                 ))}
             </Page>
+            {props.delTargetInfo &&
             <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>
             삭제
             </Button>
+            }
         </Stack>
     )
 }

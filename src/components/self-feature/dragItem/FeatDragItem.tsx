@@ -1,12 +1,13 @@
-import { TextField } from "@components/ui"
+import { Typography } from "@components/ui"
 import { useDrag } from "react-dnd"
 import { divisionTypes } from '@/models/selfFeature/FeatureInfo'
+import { cloneDeep } from "lodash"
 
 const FeatDragItem = (props: any) => {
 
     const [{ isFeatDragging }, featDragItem] = useDrag(() => ({
         type: divisionTypes.FEAT,
-        item: props.dragItem,
+        item: Object.assign({ divisionCode: divisionTypes.FEAT }, cloneDeep(props.featTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 
@@ -15,22 +16,18 @@ const FeatDragItem = (props: any) => {
         collect: (monitor) => ({
             isFeatDragging: monitor.isDragging(),
         }),
-    }))
+    }), [props.featTblClmnInfo])
 
     const featOpacity = isFeatDragging ? 0.4 : 1
 
     return (
-        <TextField
+        <Typography 
             ref={(featDragItem)}
-            style={{ opacity: featOpacity, backgroundColor: '#ff77ff', color: 'black' }}
-            appearance="Filled"
-            defaultValue={props.dragItem.content} 
-            placeholder="" 
-            readOnly
-            shape="Round"
-            size="LG"
-            validation="Default"
-        />
+            style={{ opacity: featOpacity, backgroundColor: '#ff77ff', color: 'black' }} 
+            variant="h6"
+        >
+            {props.featTblClmnInfo.metaTblClmnLogiNm}
+        </Typography>
     )
 }
 
