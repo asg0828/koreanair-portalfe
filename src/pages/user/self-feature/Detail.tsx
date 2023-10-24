@@ -27,9 +27,10 @@ import {
   TbRsCustFeatRule, 
   TbRsCustFeatRuleTrgt, 
   TbRsCustFeatRuleTrgtFilter, 
+  selfFeatPgPpNm, 
   subFeatStatus 
 } from '@/models/selfFeature/FeatureInfo';
-import { initSelfFeatureInfo, initTbRsCustFeatRule } from './data';
+import { initSelfFeatureInfo, initTbRsCustFeatRule, initTbRsCustFeatRuleTrgt, initTbRsCustFeatRuleTrgtFilter } from './data';
 
 const SelfFeatureDetail = () => {
 
@@ -60,12 +61,14 @@ const SelfFeatureDetail = () => {
     }, [featureInfo])
 
     const onClickPageMovHandler = (pageNm: string) => {
-        if (pageNm === "list") {
+        if (pageNm === selfFeatPgPpNm.LIST) {
           navigate('..')
-        } else if (pageNm === "subInfo") {
+        } else if (pageNm === selfFeatPgPpNm.SUBINFO) {
           console.log("승인확인 버튼")
-        } else if (pageNm === "subConfirm") {
+        } else if (pageNm === selfFeatPgPpNm.SUBMCFRM) {
           console.log("승인요청 버튼")
+        } else if (pageNm === selfFeatPgPpNm.EDIT) {
+          navigate(`../${pageNm}`, { state: featureInfo })
         } else {
           navigate(`../${pageNm}`)
         }
@@ -75,13 +78,58 @@ const SelfFeatureDetail = () => {
       // apiUrl :: /api/v1/customerfeatures/{custFeatRuleId(location.state.id)}
       setFeatureInfo((state: FeatureInfo) => {
         let rtn = cloneDeep(state)
-        let tbRsCustFeatRule : TbRsCustFeatRule = Object.assign(cloneDeep(initTbRsCustFeatRule), location.state)
+        let tbRsCustFeatRule : TbRsCustFeatRule = Object.assign(cloneDeep(initTbRsCustFeatRule), cloneDeep(location.state))
         rtn.tbRsCustFeatRule = tbRsCustFeatRule
+
+        let tbRsCustFeatRuleTrgtList = []
+        let tbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = Object.assign(
+          cloneDeep(initTbRsCustFeatRuleTrgt), 
+          {
+            columnName:"속성컬럼논리명1",
+            divisionCode:"ATTR",
+            tableName:"featureAttrTable1",
+            targetId:"featureAttrTable1_202392593229538",
+          }
+        )
+        tbRsCustFeatRuleTrgtList.push(tbRsCustFeatRuleTrgt)
+        tbRsCustFeatRuleTrgt = Object.assign(
+          cloneDeep(initTbRsCustFeatRuleTrgt), 
+          {
+            columnName:"컬럼 논리명2",
+            divisionCode:"BEHV",
+            tableName:"featureBehvTable1",
+            targetId:"featureBehvTable1_2023925124157637",
+          }
+        )
+        tbRsCustFeatRuleTrgtList.push(tbRsCustFeatRuleTrgt)
+        rtn.tbRsCustFeatRuleTrgtList = tbRsCustFeatRuleTrgtList
+        
+        let tbRsCustFeatRuleTrgtFilterList = []
+        let tbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = Object.assign(
+          cloneDeep(initTbRsCustFeatRuleTrgtFilter), 
+          {
+            columnName:"속성컬럼논리명1",
+            tableName:"featureAttrTable1",
+            targetId:"featureAttrTable1_202392593229538",
+          }
+        )
+        tbRsCustFeatRuleTrgtFilterList.push(tbRsCustFeatRuleTrgtFilter)
+        tbRsCustFeatRuleTrgtFilter = Object.assign(
+          cloneDeep(initTbRsCustFeatRuleTrgtFilter), 
+          {
+            columnName:"컬럼 논리명2",
+            tableName:"featureBehvTable1",
+            targetId:"featureBehvTable1_2023925124157637",
+          }
+        )
+        tbRsCustFeatRuleTrgtFilterList.push(tbRsCustFeatRuleTrgtFilter)
+        rtn.tbRsCustFeatRuleTrgtFilterList = tbRsCustFeatRuleTrgtFilterList
+
         return rtn
       })
     }
 
-    const DetailBttnComponent = () => {
+    const DetailBtnComponent = () => {
       /**
        * 등록 / 품의 저장 -> 목록,수정,승인요청 버튼
        * 승인요청/결제진행/승인완료/반려 -> 목록,승인 확인 버튼
@@ -89,13 +137,13 @@ const SelfFeatureDetail = () => {
       if (location.state.submissionStatus === subFeatStatus.REG || location.state.submissionStatus === subFeatStatus.SUBREG) {
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler('list')}>
+            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
-            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler('edit')}>
+            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
               수정
             </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler('subConfirm')}>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
               승인요청
             </Button>
           </Stack>
@@ -103,10 +151,10 @@ const SelfFeatureDetail = () => {
       } else {
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler('list')}>
+            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler('subInfo')}>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBINFO)}>
               승인확인
             </Button>
           </Stack>
@@ -196,7 +244,7 @@ const SelfFeatureDetail = () => {
                 <DndProvider backend={HTML5Backend}>
                   {/* drop 영역 */}
                   <DropList 
-                    featureStatus={location.state.submissionStatus}
+                    featStatus={selfFeatPgPpNm.DETL}
                     targetList={targetList} 
                     trgtFilterList={trgtFilterList} 
                     setTargetList={setTargetList} 
@@ -222,7 +270,7 @@ const SelfFeatureDetail = () => {
             등록 / 품의 저장 -> 목록,수정,승인요청 버튼
             승인요청/결제진행/승인완료/반려 -> 목록,승인 확인 버튼
           */}
-          <DetailBttnComponent/>
+          <DetailBtnComponent/>
         </Stack>
       {/* 버튼 영역 */}
       </Stack>

@@ -7,6 +7,7 @@ import { SelectValue } from '@mui/base/useSelect';
 
 import DragList from '@/components/self-feature/DragList';
 import DropList from '@/components/self-feature/DropList';
+import CalcValid from '@/components/self-feature/CalcValid';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography } from '@components/ui'
 
@@ -18,6 +19,8 @@ import {
   TbRsCustFeatRuleTrgtFilter,
   TbRsCustFeatRuleCase,
   MstrSgmtTableandColMetaInfo,
+  subFeatStatus,
+  selfFeatPgPpNm,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
@@ -29,8 +32,21 @@ import {
   initTbRsCustFeatRuleCalc,
   initTbRsCustFeatRuleCase
 } from './data'
-import ClacValid from '@/components/self-feature/CalcValid';
 
+const lCategory = [
+  { value: '', text: '선택' },
+  { value: '1', text: '회원' },
+  { value: '2', text: '항공' },
+]
+const mCategory = [
+  { value: '', text: '선택' },
+  { value: '1', text: '항공권' },
+]
+const calcUnit = [
+  { value: '', text: '선택' },
+  { value: '1', text: '원' },
+  { value: '2', text: '명' },
+]
 
 const SelfFeatureReg = () => {
 
@@ -50,21 +66,6 @@ const SelfFeatureReg = () => {
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
 
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
-
-  const lCategory = [
-    { value: '', text: '선택' },
-    { value: '1', text: '회원' },
-    { value: '2', text: '항공' },
-  ]
-  const mCategory = [
-    { value: '', text: '선택' },
-    { value: '1', text: '항공권' },
-  ]
-  const calcUnit = [
-    { value: '', text: '선택' },
-    { value: '1', text: '원' },
-    { value: '2', text: '명' },
-  ]
 
   useEffect(() => {
     // 초기 setting API Call
@@ -222,7 +223,7 @@ const SelfFeatureReg = () => {
   }
 
   const onClickPageMovHandler = (pageNm: string) => {
-      if (pageNm === "list")
+      if (pageNm === selfFeatPgPpNm.LIST)
         navigate('..')
       else
         navigate(`../${pageNm}`)
@@ -362,6 +363,7 @@ const SelfFeatureReg = () => {
             <DndProvider backend={HTML5Backend}>
               {/* drop 영역 */}
               <DropList 
+                featStatus={subFeatStatus.REG}
                 targetList={targetList} 
                 trgtFilterList={trgtFilterList} 
                 setTargetList={setTargetList} 
@@ -383,7 +385,7 @@ const SelfFeatureReg = () => {
           {/* 계산식 */}
           <Typography variant="h2">3. 계산식</Typography>
           {formulaTrgtList.length > 0 &&
-            <ClacValid
+            <CalcValid
               isValidFormula={isValidFormula}
               formulaTrgtList={formulaTrgtList}
               setCustFeatRuleCalc={setCustFeatRuleCalc}
@@ -400,7 +402,7 @@ const SelfFeatureReg = () => {
           <Button type="submit" priority="Primary" appearance="Contained" size="LG">
             저장
           </Button>
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler('list')}>
+          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
             취소
           </Button>
         </Stack> 

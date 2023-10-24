@@ -1,9 +1,12 @@
-import { Button, Page, Stack, Typography } from "@components/ui"
 import { useDrop } from "react-dnd"
 import { cloneDeep } from 'lodash'
+
+import { Button, Page, Stack, Typography } from "@components/ui"
+import BehvColDropItem from "./BehvColDropItem"
+
 import { TbCoMetaTblClmnInfo, TbRsCustFeatRuleTrgtFilter, divisionTypes } from '@/models/selfFeature/FeatureInfo'
 import { initTbCoMetaTblClmnInfo, initTbRsCustFeatRuleTrgtFilter } from "@/pages/user/self-feature/data"
-import BehvColDropItem from "./BehvColDropItem"
+
 
 const BehvDropItem = (props: any) => {
 
@@ -73,22 +76,16 @@ const BehvDropItem = (props: any) => {
                 }}
             >
                 {props.trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
-                    props.delTargetInfo ?
-                        <BehvColDropItem 
-                            key={index}
-                            itemIdx={index}
-                            deleteTrgtFilterInfo={deleteTrgtFilterInfo}
-                            trgtFilterItem={trgtFilterItem}
-                        />
-                    :
-                        <BehvColDropItem 
-                            key={index}
-                            itemIdx={index}
-                            trgtFilterItem={trgtFilterItem}
-                        />
+                    <BehvColDropItem 
+                        key={index}
+                        itemIdx={index}
+                        isPossibleEdit={props.isPossibleEdit}
+                        deleteTrgtFilterInfo={deleteTrgtFilterInfo}
+                        trgtFilterItem={trgtFilterItem}
+                    />
                 ))}
             </Page>
-            {props.delTargetInfo &&
+            {props.isPossibleEdit &&
             <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>
             삭제
             </Button>

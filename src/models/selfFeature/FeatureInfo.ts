@@ -1,5 +1,19 @@
 import { RowsInfo } from "@/models/components/Table";
 
+export const selfFeatPgPpNm = {
+    LIST: 'list', // 목록
+    DETL: 'detail',  // 상세
+    REG:  'reg',  // 등록
+    EDIT: 'edit',  // 수정
+    SUBMCFRM: 'subConfirm', // 승인 요청 팝업
+    SUBINFO:  'subInfo',  // 승인 확인 팝업
+}
+// feat 상태
+export const subFeatStatus = {
+    REG: 'reg', // 등록
+    SUBREG: 'sub_reg', // 품의 저장
+}
+
 export const listColumns = [
     { headerName: 'Feature 명', field: 'name', colSpan: 4 },
     { headerName: '최종 수정 일시', field: 'lastUpdDttm', colSpan: 1 },
@@ -12,11 +26,6 @@ export const divisionTypes = {
     ATTR: 'ATTR',
     FEAT: 'FEAT',
     BEHV: 'BEHV',
-}
-
-export const subFeatStatus = {
-    REG: 'reg',
-    SUBREG: 'sub_reg',
 }
 
 export interface MstrSgmtTableandColMetaInfo {

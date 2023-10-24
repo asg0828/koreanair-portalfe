@@ -31,11 +31,9 @@ const DragList = (props: any) => {
     }, [props.behaviors])
 
     useEffect(() => {
-        console.log("update attr list :: ", srchAttrRsltList)
     }, [srchAttrRsltList])
 
     useEffect(() => {
-        console.log("update behv list :: ", srchBehvRsltList)
     }, [srchBehvRsltList])
 
     const searchAttrList = (keyword: string) => {

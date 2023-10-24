@@ -1,5 +1,5 @@
 import {HelperText, TextField, Typography} from '@components/ui'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { cloneDeep } from 'lodash'
 import { TbRsCustFeatRuleCalc } from '@/models/selfFeature/FeatureInfo'
@@ -7,11 +7,6 @@ import { TbRsCustFeatRuleCalc } from '@/models/selfFeature/FeatureInfo'
 const ClacValid = (props: any) => {
 
     const [ formula, setFormula ] = useState<string>('')
-    const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
-
-    useEffect(() => {
-        setFormulaTrgtList(props.formulaTrgtList)
-    }, [props.formulaTrgtList])
 
     const validationFormula = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
@@ -97,7 +92,7 @@ const ClacValid = (props: any) => {
             if (!isNaN(Number(t))) {
 
                 let chkTrgt = `T${t}`
-                if (formulaTrgtList.indexOf(chkTrgt) < 0) return Number('False')
+                if (props.formulaTrgtList.indexOf(chkTrgt) < 0) return Number('False')
 
                 stack.push(Number(t))
             } else {

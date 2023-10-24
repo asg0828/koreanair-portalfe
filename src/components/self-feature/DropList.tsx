@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useDrop } from 'react-dnd'
 import { cloneDeep } from 'lodash'
 
@@ -12,7 +13,8 @@ import {
     divisionTypes, 
     TbCoMetaTblClmnInfo, 
     Attribute, 
-    subFeatStatus 
+    subFeatStatus, 
+    selfFeatPgPpNm
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initAttribute, 
@@ -23,6 +25,22 @@ import {
 
 const DropList = (props: any) => {
 
+    const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
+
+    useEffect(() => {
+        // 등록, 품의저장인 상태이면서 상세페이지가 아닌 경우 수정가능
+        if (
+            (props.featStatus === subFeatStatus.REG 
+            || props.featStatus === subFeatStatus.SUBREG )
+            && props.featStatus !== selfFeatPgPpNm.DETL
+        ) {
+            setIsPossibleEdit(true)
+        } else {
+            setIsPossibleEdit(false)
+        }
+
+    }, [props.featStatus])
+
     const [, drop] = useDrop(() => ({
         accept: Object.values(divisionTypes),
         drop(item, monitor) {
@@ -32,8 +50,6 @@ const DropList = (props: any) => {
             const trgtUniqKey = `${date.getFullYear()}${date.getMonth()}${date.getDate()+1}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo | Attribute
-
-                console.log(item)
 
                 if (targetType === divisionTypes.ATTR) {
                     targetObj = Object.assign(cloneDeep(initAttribute), item)
@@ -114,67 +130,39 @@ const DropList = (props: any) => {
                         }
                     })
                     if (targetItem.divisionCode === divisionTypes.ATTR) {
-                        if (props.featureStatus === subFeatStatus.REG || props.featureStatus === subFeatStatus.SUBREG)
-                            return <AttrDropItem 
-                                key={`dropItem-${index}`}
-                                itemIdx={index}
-                                trgtFilterList={tfList}
-                                targetItem={targetItem} 
-                                setTargetList={props.setTargetList} 
-                                setTrgtFilterList={props.setTrgtFilterList} 
-                            />
-                        else
-                            return <AttrDropItem 
-                                key={`dropItem-${index}`}
-                                itemIdx={index}
-                                trgtFilterList={tfList}
-                                targetItem={targetItem} 
-                                setTargetList={props.setTargetList} 
-                                setTrgtFilterList={props.setTrgtFilterList} 
-                                delTargetInfo={deleteInfo}
-                            />
+                        return <AttrDropItem 
+                            key={`dropItem-${index}`}
+                            itemIdx={index}
+                            isPossibleEdit={isPossibleEdit}
+                            trgtFilterList={tfList}
+                            targetItem={targetItem} 
+                            setTargetList={props.setTargetList} 
+                            setTrgtFilterList={props.setTrgtFilterList} 
+                            delTargetInfo={deleteInfo}
+                        />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {
-                        if (props.featureStatus === subFeatStatus.REG || props.featureStatus === subFeatStatus.SUBREG)
-                            return <FeatDropItem
-                                key={`dropItem-${index}`}
-                                itemIdx={index}
-                                trgtFilterList={tfList}
-                                targetItem={targetItem}
-                                setTargetList={props.setTargetList} 
-                                setTrgtFilterList={props.setTrgtFilterList}
-                            />
-                        else
-                            return <FeatDropItem
-                                key={`dropItem-${index}`}
-                                itemIdx={index}
-                                trgtFilterList={tfList}
-                                targetItem={targetItem}
-                                setTargetList={props.setTargetList} 
-                                setTrgtFilterList={props.setTrgtFilterList} 
-                                delTargetInfo={deleteInfo}
-                            />
+                        return <FeatDropItem
+                            key={`dropItem-${index}`}
+                            itemIdx={index}
+                            isPossibleEdit={isPossibleEdit}
+                            trgtFilterList={tfList}
+                            targetItem={targetItem}
+                            setTargetList={props.setTargetList} 
+                            setTrgtFilterList={props.setTrgtFilterList}
+                            delTargetInfo={deleteInfo}
+                        />
                     } else if (targetItem.divisionCode === divisionTypes.BEHV) {
-                        if (props.featureStatus === subFeatStatus.REG || props.featureStatus === subFeatStatus.SUBREG)
-                            return <BehvDropItem 
-                                key={`dropItem-${index}`}
-                                itemIdx={index}
-                                targetItem={targetItem}
-                                targetId={targetItem.targetId}
-                                trgtFilterList={tfList}
-                                setTargetList={props.setTargetList} 
-                                setTrgtFilterList={props.setTrgtFilterList} 
-                            />
-                        else
-                            return <BehvDropItem 
-                                key={`dropItem-${index}`}
-                                itemIdx={index}
-                                targetItem={targetItem}
-                                targetId={targetItem.targetId}
-                                trgtFilterList={tfList}
-                                setTargetList={props.setTargetList} 
-                                setTrgtFilterList={props.setTrgtFilterList} 
-                                delTargetInfo={deleteInfo}
-                            />
+                        return <BehvDropItem 
+                            key={`dropItem-${index}`}
+                            itemIdx={index}
+                            isPossibleEdit={isPossibleEdit}
+                            targetItem={targetItem}
+                            targetId={targetItem.targetId}
+                            trgtFilterList={tfList}
+                            setTargetList={props.setTargetList} 
+                            setTrgtFilterList={props.setTrgtFilterList} 
+                            delTargetInfo={deleteInfo}
+                        />
                     }
                 })
             }

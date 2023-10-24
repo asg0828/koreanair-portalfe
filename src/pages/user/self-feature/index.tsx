@@ -5,7 +5,7 @@ import { cloneDeep } from "lodash";
 
 import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { listColumns as columns, TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
+import { listColumns as columns, selfFeatPgPpNm, TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import {
     Pagination,
@@ -89,7 +89,7 @@ const SelfFeature = () => {
     }
 
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
-        if (pageNm === 'detail' || pageNm === 'edit')
+        if (pageNm === selfFeatPgPpNm.DETL)
             navigate(pageNm, { state: rows })
         else
             navigate(pageNm)
@@ -226,7 +226,7 @@ const SelfFeature = () => {
   
             <Stack justifyContent="End" gap="SM" className="width-100">
               {/* <Button size="LG">엑셀다운로드</Button> */}
-              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler('reg')}>
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
                 등록
               </Button>
               <Button priority="Primary" appearance="Contained" size="LG" onClick={deleteSelfFeature}>
