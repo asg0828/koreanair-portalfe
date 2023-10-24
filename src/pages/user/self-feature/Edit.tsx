@@ -86,7 +86,7 @@ const SelfFeatureEdit = () => {
   useEffect(() => {
     setUpdtFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRule = custFeatRule
+      rtn.tbRsCustFeatRule = cloneDeep(custFeatRule)
       return rtn
     })
   }, [custFeatRule])
@@ -95,7 +95,7 @@ const SelfFeatureEdit = () => {
   useEffect(() => {
     setUpdtFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleTrgtList = targetList
+      rtn.tbRsCustFeatRuleTrgtList = cloneDeep(targetList)
       return rtn
     })
     // 계산식 validation을 위한 대상 list 추출
@@ -109,7 +109,7 @@ const SelfFeatureEdit = () => {
   useEffect(() => {
     setUpdtFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
+      rtn.tbRsCustFeatRuleTrgtFilterList = cloneDeep(trgtFilterList)
       return rtn
     })
   }, [trgtFilterList])
@@ -118,14 +118,14 @@ const SelfFeatureEdit = () => {
   useEffect(() => {
     setUpdtFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleCalc = custFeatRuleCalc
+      rtn.tbRsCustFeatRuleCalc = cloneDeep(custFeatRuleCalc)
       return rtn
     })
   }, [custFeatRuleCalc])
   useEffect(() => {
     setUpdtFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleCaseList = custFeatRuleCaseList
+      rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
       return rtn
     })
   }, [custFeatRuleCaseList])
@@ -144,6 +144,8 @@ const SelfFeatureEdit = () => {
 
   const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     console.log(`속성/Feature/행동 데이터 API CALL!`)
+    // getTableandColumnMetaInfoByMstrSgmtRuleId
+    // api url :: (GET)/api/v1/mastersegment/table-columns-meta-info/{mstrSgmtRuleId}
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
       let temp = cloneDeep(state)
       let attributes = []
@@ -227,6 +229,8 @@ const SelfFeatureEdit = () => {
         navigate(`../${pageNm}`)
   }
   const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    // updateCustFeatRule
+    // api url :: (PUT)/api/v1/customerfeatures/{custFeatRuleId}
     e.preventDefault()
     /*
     if (!isValidFormula) {
@@ -238,11 +242,49 @@ const SelfFeatureEdit = () => {
     console.log("Self Feature update data :: ", updtFeatureInfo)
   }
 
+  const onClickFeatQueryRsltHandler = (type: number) => {
+    if (type === 1) {
+      // runScheduleByManually
+      // api url :: (POST)/api/v1/airflow/runSchedule/{id}
+      console.log("수동 실행")
+    } else if (type === 2) {
+      // 팝업 component mount시 호출
+      // retrieveSampleData
+      // api url :: (GET)/api/v1/customerfeatures/sample/{custFeatRuleId}?rslnId=
+      console.log("샘플 확인 팝업 open")
+    } else if (type === 3) {
+      // 팝업 component mount시 호출
+      // retrieveBatchExecuteLogs
+      // api url :: (GET)/api/v1/batchdb/logs/{ruleId}
+      console.log("실행 내역 팝업 open")
+    } else if (type === 4) {
+      // 팝업 component mount시 호출
+      // readSql
+      // api url :: (GET)/api/v1/customerfeatures/read-sql/{custFeatRuleId}
+      console.log("쿼리 확인 팝업 open")
+    }
+  }
+
   return (
     <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
     {/* 정보 영역 */}
       <form onSubmit={onsubmitHandler}>
-      <Stack direction="Vertical" gap="MD">
+      <Stack direction="Vertical" gap="MD" >
+        {/* 상단 버튼 영역 */}
+        <Stack direction="Horizontal" gap="MD" justifyContent="End">
+          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(1)}>
+            수동 실행
+          </Button>
+          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(2)}>
+            샘플 확인
+          </Button>
+          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(3)}>
+            실행 내역
+          </Button>
+          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(4)}>
+            쿼리 확인
+          </Button>
+        </Stack>
         {/* 기본 정보 */}
         <Typography variant="h2">1. Feature 기본 정보</Typography>
         <HorizontalTable>
@@ -411,7 +453,10 @@ const SelfFeatureEdit = () => {
           <CalcValid
             isValidFormula={isValidFormula}
             formulaTrgtList={formulaTrgtList}
+            custFeatRuleCalc={location.state.tbRsCustFeatRuleCalc}
+            custFeatRuleCaseList={location.state.tbRsCustFeatRuleCaseList}
             setCustFeatRuleCalc={setCustFeatRuleCalc}
+            setCustFeatRuleCaseList={setCustFeatRuleCaseList}
             setIsValidFormula={setIsValidFormula}
           />
         }

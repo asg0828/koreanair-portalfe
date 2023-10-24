@@ -7,6 +7,7 @@ export const selfFeatPgPpNm = {
     EDIT: 'edit',  // 수정
     SUBMCFRM: 'subConfirm', // 승인 요청 팝업
     SUBINFO:  'subInfo',  // 승인 확인 팝업
+    PRNTCHLD: 'parentChildList'
 }
 // feat 상태
 export const subFeatStatus = {

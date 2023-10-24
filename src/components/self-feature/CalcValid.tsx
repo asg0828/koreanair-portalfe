@@ -6,7 +6,7 @@ import { TbRsCustFeatRuleCalc } from '@/models/selfFeature/FeatureInfo'
 
 const ClacValid = (props: any) => {
 
-    const [ formula, setFormula ] = useState<string>('')
+    const [ formula, setFormula ] = useState<string>(cloneDeep(props.custFeatRuleCalc.formula))
 
     const validationFormula = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
@@ -118,22 +118,24 @@ const ClacValid = (props: any) => {
 
 
     return (
+        // check box 선택시 case문 조건 설정 항목 show/hide 필요
         <div className='flex row'>
-          <TextField className="width-100" value={formula} onChange={validationFormula} validation={!props.isValidFormula ? 'Error' : 'Default'}/>
-          <div className='flex space-between'>
-            <div>
-              {!props.isValidFormula ? (
-                <HelperText showIcon={false} type='Error'>
-                  계산식을 확인해주세요
-                </HelperText>
-              ) : (
-                ''
-              )}
+            <TextField 
+                value={formula} 
+                onChange={validationFormula} 
+                validation={!props.isValidFormula ? 'Error' : 'Default'}
+            />
+            <div className='flex space-between'>
+                <div>
+                {!props.isValidFormula ? (
+                    <HelperText showIcon={false} type='Error'>
+                    계산식을 확인해주세요
+                    </HelperText>
+                ) : (
+                    ''
+                )}
+                </div>
             </div>
-            <div>
-              <Typography variant='caption'>{}</Typography>
-            </div>
-          </div>
         </div>
     )
 }

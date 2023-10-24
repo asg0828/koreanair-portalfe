@@ -26,6 +26,26 @@ import {
   initTbRsCustFeatRule 
 } from "./data";
 
+const category = [
+  { value: '', text: '선택' },
+  { value: '1', text: 'cate1' },
+  { value: '2', text: 'cate2' },
+]
+const useYn = [
+  { value: '', text: '선택' },
+  { value: 'USE_Y', text: '사용' },
+  { value: 'USE_N', text: '미사용' },
+]
+const submissionStatus = [
+  { value: '', text: '전체' },
+  { value: '1', text: '등록' },
+  { value: '2', text: '승인 요청 정보 등록' },
+  { value: '3', text: '승인 요청' },
+  { value: '4', text: '승인 요청 취소' },
+  { value: '5', text: '승인 완료' },
+  { value: '6', text: '반려' },
+]
+
 const SelfFeature = () => {
 
     const navigate = useNavigate();
@@ -38,25 +58,6 @@ const SelfFeature = () => {
     })
     const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
     const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
-    const category = [
-      { value: '', text: '선택' },
-      { value: '1', text: 'cate1' },
-      { value: '2', text: 'cate2' },
-    ]
-    const useYn = [
-      { value: '', text: '선택' },
-      { value: 'USE_Y', text: '사용' },
-      { value: 'USE_N', text: '미사용' },
-    ]
-    const submissionStatus = [
-      { value: '', text: '전체' },
-      { value: '1', text: '등록' },
-      { value: '2', text: '승인 요청 정보 등록' },
-      { value: '3', text: '승인 요청' },
-      { value: '4', text: '승인 요청 취소' },
-      { value: '5', text: '승인 완료' },
-      { value: '6', text: '반려' },
-    ]
 
     useEffect(() => {
       // 공통 코드 API CALL && 초기 LIST 조회 API CALL
@@ -65,6 +66,9 @@ const SelfFeature = () => {
 
     const retrieveCustFeatRules = () => {
       console.log(`RETRIEVE API CALL!`)
+      // retrieveCustFeatRules
+      // api Url :: (GET)/api/v1/customerfeatures?mstrSgmtRuleId=&custFeatRuleName=&useYn=&category=&submissionStatus=
+
       let list: Array<TbRsCustFeatRule> = []
       for (let i = 0; i < 10; i++) {
         let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
@@ -89,10 +93,16 @@ const SelfFeature = () => {
     }
 
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
-        if (pageNm === selfFeatPgPpNm.DETL)
-            navigate(pageNm, { state: rows })
-        else
-            navigate(pageNm)
+      if (pageNm === selfFeatPgPpNm.DETL) {
+          navigate(pageNm, { state: rows })
+      } else if (pageNm === selfFeatPgPpNm.PRNTCHLD) {
+        // 팝업 component mount시 호출
+        // retrieveCustFeatParentChildList
+        // api Url :: (GET)/api/v1/customerfeatures/parent-child?mstrSgmtRuleId=&custFeatRuleName=
+        console.log("Feature 선후행 관계 팝업 open!")
+      } else {
+          navigate(pageNm)
+      }
     }
 
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,6 +138,11 @@ const SelfFeature = () => {
 
     return (
       <Stack direction="Vertical" gap="MD" className="height-100">
+        <Stack direction="Horizontal" gap="MD" justifyContent="End">
+          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.PRNTCHLD)}>
+            Feature 선후행 관계
+          </Button>
+        </Stack>
         {/* 검색 영역 */}
         <form onSubmit={onsubmitHandler}>
           <HorizontalTable>
@@ -213,7 +228,7 @@ const SelfFeature = () => {
             enableSort={true}
             clickable={true}
             rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
-            onClick={(rows: RowsInfo) => onClickPageMovHandler('detail', rows)}
+            onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
           />
           <Stack className="pagination-layout">
             <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">

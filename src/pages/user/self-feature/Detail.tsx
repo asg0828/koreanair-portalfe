@@ -25,12 +25,20 @@ import {
 import { 
   FeatureInfo, 
   TbRsCustFeatRule, 
+  TbRsCustFeatRuleCalc, 
+  TbRsCustFeatRuleCase, 
   TbRsCustFeatRuleTrgt, 
   TbRsCustFeatRuleTrgtFilter, 
   selfFeatPgPpNm, 
   subFeatStatus 
 } from '@/models/selfFeature/FeatureInfo';
-import { initSelfFeatureInfo, initTbRsCustFeatRule, initTbRsCustFeatRuleTrgt, initTbRsCustFeatRuleTrgtFilter } from './data';
+import { 
+  initSelfFeatureInfo, 
+  initTbRsCustFeatRule, 
+  initTbRsCustFeatRuleCalc, 
+  initTbRsCustFeatRuleTrgt, 
+  initTbRsCustFeatRuleTrgtFilter 
+} from './data';
 
 const SelfFeatureDetail = () => {
 
@@ -40,6 +48,8 @@ const SelfFeatureDetail = () => {
     const [ featureInfo, setFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
     const [ targetList, setTargetList ] = useState<Array<TbRsCustFeatRuleTrgt>>([])
     const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
+    const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
+    const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
 
     useEffect(() => {
       // 초기 상세 정보 조회 API CALL
@@ -58,24 +68,28 @@ const SelfFeatureDetail = () => {
     useEffect(() => {
       setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
       setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
+      setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
+      setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
     }, [featureInfo])
 
     const onClickPageMovHandler = (pageNm: string) => {
         if (pageNm === selfFeatPgPpNm.LIST) {
           navigate('..')
-        } else if (pageNm === selfFeatPgPpNm.SUBINFO) {
-          console.log("승인확인 버튼")
-        } else if (pageNm === selfFeatPgPpNm.SUBMCFRM) {
-          console.log("승인요청 버튼")
         } else if (pageNm === selfFeatPgPpNm.EDIT) {
           navigate(`../${pageNm}`, { state: featureInfo })
+        } else if (pageNm === selfFeatPgPpNm.SUBINFO || pageNm === selfFeatPgPpNm.SUBMCFRM) {
+          // 팝업 component mount시 호출
+          // retrieveSubmission1
+          // api url :: (GET)/api/v1/submissions/{submissionId}
+          console.log("승인 팝업 open!")
         } else {
           navigate(`../${pageNm}`)
         }
     }
     
     const retrieveCustFeatRuleInfos = () => {
-      // apiUrl :: /api/v1/customerfeatures/{custFeatRuleId(location.state.id)}
+      // retrieveCustFeatRuleInfos
+      // apiUrl :: (GET)/api/v1/customerfeatures/{custFeatRuleId(location.state.id)}
       setFeatureInfo((state: FeatureInfo) => {
         let rtn = cloneDeep(state)
         let tbRsCustFeatRule : TbRsCustFeatRule = Object.assign(cloneDeep(initTbRsCustFeatRule), cloneDeep(location.state))
@@ -124,6 +138,9 @@ const SelfFeatureDetail = () => {
         )
         tbRsCustFeatRuleTrgtFilterList.push(tbRsCustFeatRuleTrgtFilter)
         rtn.tbRsCustFeatRuleTrgtFilterList = tbRsCustFeatRuleTrgtFilterList
+
+        let tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = Object.assign(cloneDeep(initTbRsCustFeatRuleCalc), {formula: "T1"})
+        rtn.tbRsCustFeatRuleCalc = tbRsCustFeatRuleCalc
 
         return rtn
       })

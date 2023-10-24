@@ -65,7 +65,12 @@ const BehvDropItem = (props: any) => {
     return (
         <Stack justifyContent="Start" gap="SM" className="width-100">
             <Typography variant="h6">T{props.itemIdx + 1}</Typography>
-            <Typography variant="h6">{props.targetItem.columnName}</Typography>
+            <Typography variant="h6">행동</Typography>
+            <Typography variant="h6">{props.targetItem.tableName}</Typography>
+            {/* 
+                props.targetItem.filterLogiOption / props.targetItem.filterLogiExpsn
+                -> select box 필요(필터 조인 조건 선택-and,or...)
+            */}
             <Page
                 ref={(behvDrop)}
                 style={{
@@ -85,6 +90,10 @@ const BehvDropItem = (props: any) => {
                     />
                 ))}
             </Page>
+            {/* 
+                props.targetItem.filterLogiOption / props.targetItem.filterLogiExpsn
+                -> select box 필요(컬럼 및 집계함수 선택-sum...)
+            */}
             {props.isPossibleEdit &&
             <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>
             삭제

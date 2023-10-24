@@ -85,7 +85,7 @@ const SelfFeatureReg = () => {
   useEffect(() => {
     setFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRule = custFeatRule
+      rtn.tbRsCustFeatRule = cloneDeep(custFeatRule)
       return rtn
     })
   }, [custFeatRule])
@@ -94,7 +94,7 @@ const SelfFeatureReg = () => {
   useEffect(() => {
     setFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleTrgtList = targetList
+      rtn.tbRsCustFeatRuleTrgtList = cloneDeep(targetList)
       return rtn
     })
     // 계산식 validation을 위한 대상 list 추출
@@ -109,7 +109,7 @@ const SelfFeatureReg = () => {
   useEffect(() => {
     setFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
+      rtn.tbRsCustFeatRuleTrgtFilterList = cloneDeep(trgtFilterList)
       return rtn
     })
   }, [trgtFilterList])
@@ -118,7 +118,7 @@ const SelfFeatureReg = () => {
   useEffect(() => {
     setFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleCalc = custFeatRuleCalc
+      rtn.tbRsCustFeatRuleCalc = cloneDeep(custFeatRuleCalc)
       return rtn
     })
   }, [custFeatRuleCalc])
@@ -126,7 +126,7 @@ const SelfFeatureReg = () => {
   useEffect(() => {
     setFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
-      rtn.tbRsCustFeatRuleCaseList = custFeatRuleCaseList
+      rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
       return rtn
     })
   }, [custFeatRuleCaseList])
@@ -145,6 +145,8 @@ const SelfFeatureReg = () => {
 
   const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     console.log(`속성/Feature/행동 데이터 API CALL!`)
+    // getTableandColumnMetaInfoByMstrSgmtRuleId
+    // api url :: (GET)/api/v1/mastersegment/table-columns-meta-info/{mstrSgmtRuleId}
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
       let temp = cloneDeep(state)
       let attributes = []
@@ -229,6 +231,8 @@ const SelfFeatureReg = () => {
         navigate(`../${pageNm}`)
   }
   const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    // createCustFeatRule
+    // api Url :: (POST)/api/v1/customerfeatures
     e.preventDefault()
     /*
     if (!isValidFormula) {
@@ -388,7 +392,10 @@ const SelfFeatureReg = () => {
             <CalcValid
               isValidFormula={isValidFormula}
               formulaTrgtList={formulaTrgtList}
+              custFeatRuleCalc={custFeatRuleCalc}
+              custFeatRuleCaseList={custFeatRuleCaseList}
               setCustFeatRuleCalc={setCustFeatRuleCalc}
+              setCustFeatRuleCaseList={setCustFeatRuleCaseList}
               setIsValidFormula={setIsValidFormula}
             />
           }

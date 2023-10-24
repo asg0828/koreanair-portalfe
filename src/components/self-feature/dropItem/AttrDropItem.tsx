@@ -7,23 +7,24 @@ const AttrDropItem = (props: any) => {
     }
 
     return (
-        <>
+        <Stack justifyContent="Start" gap="SM" className="width-100">
+            <Typography variant="h6">T{props.itemIdx + 1}</Typography>
+            <Typography variant="h6">속성</Typography>
+            <Typography variant="h6">{props.targetItem.columnName}</Typography>
+                {/* 변환식 함수, 변수1, 변수2, 변수3 */}
+            <Typography variant="h6">{props.targetItem.function}</Typography>
+            <Typography variant="h6">{props.targetItem.variable1}</Typography>
+            <Typography variant="h6">{props.targetItem.variable2}</Typography>
+            <Typography variant="h6">{props.targetItem.variable3}</Typography>
         {props.isPossibleEdit ? (
-            <Stack justifyContent="Start" gap="SM" className="width-100">
-                <Typography variant="h6">T{props.itemIdx + 1}</Typography>
-                <Typography variant="h6">{props.targetItem.columnName}</Typography>
-                <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>
-                삭제
-                </Button>
-            </Stack>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>
+            삭제
+            </Button>
         ) : (
-            <Stack justifyContent="Start" gap="SM" className="width-100">
-                <Typography variant="h6">T{props.itemIdx + 1}</Typography>
-                <Typography variant="h6">{props.targetItem.columnName}</Typography>
-            </Stack>
+            <></>
         )
         }
-        </>
+        </Stack>
     )
 }
 
