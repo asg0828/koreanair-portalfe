@@ -9,6 +9,9 @@ import HorizontalTable from "@/components/table/HorizontalTable"
 import CalcValid from '@/components/self-feature/CalcValid';
 import DropList from "@/components/self-feature/DropList";
 import DragList from "@/components/self-feature/DragList";
+import QuerySampleDataPop from "@/components/self-feature/QuerySampleDataPop";
+import BatchExecuteLogsPop from "@/components/self-feature/BatchExecuteLogsPop";
+import ReadSqlPop from "@/components/self-feature/ReadSqlPop";
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography } from '@components/ui'
 
 import { 
@@ -272,16 +275,16 @@ const SelfFeatureEdit = () => {
       <Stack direction="Vertical" gap="MD" >
         {/* 상단 버튼 영역 */}
         <Stack direction="Horizontal" gap="MD" justifyContent="End">
-          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(1)}>
+          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(1)}>
             수동 실행
           </Button>
-          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(2)}>
+          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(2)}>
             샘플 확인
           </Button>
-          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(3)}>
+          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(3)}>
             실행 내역
           </Button>
-          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickFeatQueryRsltHandler(4)}>
+          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(4)}>
             쿼리 확인
           </Button>
         </Stack>

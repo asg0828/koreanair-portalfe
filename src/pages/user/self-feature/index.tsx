@@ -5,6 +5,7 @@ import { cloneDeep } from "lodash";
 
 import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
+import CustFeatParentChildListPop from "@/components/self-feature/CustFeatParentChildListPop";
 import { listColumns as columns, selfFeatPgPpNm, TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import {

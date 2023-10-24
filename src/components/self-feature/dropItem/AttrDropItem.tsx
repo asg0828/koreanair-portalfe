@@ -7,7 +7,16 @@ const AttrDropItem = (props: any) => {
     }
 
     return (
-        <Stack justifyContent="Start" gap="SM" className="width-100">
+        <Stack 
+            justifyContent="Start" 
+            gap="SM" 
+            className="width-100"
+            style={{
+                backgroundColor: '#FF9999',
+                border: '0.1em solid',
+                borderRadius: '5px',
+            }}
+        >
             <Typography variant="h6">T{props.itemIdx + 1}</Typography>
             <Typography variant="h6">속성</Typography>
             <Typography variant="h6">{props.targetItem.columnName}</Typography>
@@ -16,13 +25,13 @@ const AttrDropItem = (props: any) => {
             <Typography variant="h6">{props.targetItem.variable1}</Typography>
             <Typography variant="h6">{props.targetItem.variable2}</Typography>
             <Typography variant="h6">{props.targetItem.variable3}</Typography>
-        {props.isPossibleEdit ? (
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickDeleteHandler}>
-            삭제
-            </Button>
-        ) : (
-            <></>
-        )
+            {props.isPossibleEdit ? (
+                <Button size="SM" onClick={onClickDeleteHandler}>
+                삭제
+                </Button>
+            ) : (
+                <></>
+            )
         }
         </Stack>
     )
