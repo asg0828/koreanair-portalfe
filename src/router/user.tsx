@@ -1,5 +1,4 @@
 import RootLayout from '@components/layout';
-import TempPage from '@/pages/TempPage';
 import Error from '@/pages/Error';
 import Home from '@pages/user/Home';
 import DataSet from '@pages/user/biz-meta/dataset';
@@ -37,6 +36,9 @@ import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
 import SelfFeatureReg from '@pages/user/self-feature/Reg';
 import SelfFeatureEdit from '@pages/user/self-feature/Edit';
 import CustomerInfo from '@pages/user/customer-info/dashboard';
+import StructuredReport from '@pages/user/report/structured-report';
+import UnStructuredReport from '@pages/user/report/unstructured-report';
+import Tableau from '@pages/user/tableau';
 
 const userRouter = [
   {
@@ -45,6 +47,68 @@ const userRouter = [
     errorElement: <Error />,
     children: [
       { index: true, element: <Home /> },
+      {
+        path: 'biz-meta',
+        children: [
+          { index: true, element: <Feature /> },
+          {
+            path: 'feature',
+            children: [
+              { index: true, element: <Feature /> },
+              { path: 'detail', element: <FeatureDetail /> },
+              { path: 'reg', element: <FeatureReg /> },
+              { path: 'edit', element: <FeatureEdit /> },
+            ],
+          },
+          {
+            path: 'dataset',
+            children: [
+              { index: true, element: <DataSet /> },
+              { path: 'detail', element: <DataSetDetail /> },
+              { path: 'reg', element: <DataSetReg /> },
+              { path: 'edit', element: <DataSetEdit /> },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'customer-info',
+        children: [
+          { index: true, element: <CustomerInfo /> },
+          { path: 'dashboard', element: <CustomerInfo /> },
+        ],
+      },
+      {
+        path: 'report',
+        children: [
+          { index: true, element: <StructuredReport /> },
+          { path: 'structured-report', element: <StructuredReport /> },
+          { path: 'unstructured-report', element: <UnStructuredReport /> },
+        ]
+      },
+      {
+        path: 'self-feature',
+        children: [
+          { index: true, element: <SelfFeature /> },
+          {
+            path: 'self-feature',
+            children: [
+              { index: true, element: <SelfFeature /> },
+              { path: 'detail', element: <SelfFeatureDetail /> },
+              { path: 'reg', element: <SelfFeatureReg /> },
+              { path: 'edit', element: <SelfFeatureEdit /> },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'feature',
+        children: [
+          { index: true, element: <InterestFeature /> },
+          { path: 'interest', element: <InterestFeature /> },
+          { path: 'popular', element: <PopularFeature /> },
+        ],
+      },
       {
         path: 'board',
         children: [
@@ -97,72 +161,9 @@ const userRouter = [
         ],
       },
       {
-        path: 'biz-meta',
+        path: 'tableau',
         children: [
-          { index: true, element: <DataSet /> },
-          {
-            path: 'dataset',
-            children: [
-              { index: true, element: <DataSet /> },
-              { path: 'detail', element: <DataSetDetail /> },
-              { path: 'reg', element: <DataSetReg /> },
-              { path: 'edit', element: <DataSetEdit /> },
-            ],
-          },
-          {
-            path: 'feature',
-            children: [
-              { index: true, element: <Feature /> },
-              { path: 'detail', element: <FeatureDetail /> },
-              { path: 'reg', element: <FeatureReg /> },
-              { path: 'edit', element: <FeatureEdit /> },
-            ],
-          },
-        ],
-      },
-      {
-        path: 'self-bi',
-        children: [
-          { index: true, element: <TempPage /> },
-          { path: 'tableau', element: <TempPage /> },
-          { path: 'unstructured-report', element: <TempPage /> },
-        ],
-      },
-      {
-        path: 'structured-report',
-        children: [
-          { index: true, element: <TempPage /> },
-          { path: 'structured-report', element: <TempPage /> },
-        ],
-      },
-      {
-        path: 'feature',
-        children: [
-          { index: true, element: <InterestFeature /> },
-          { path: 'interest', element: <InterestFeature /> },
-          { path: 'popular', element: <PopularFeature /> },
-        ],
-      },
-      {
-        path: 'customer-info',
-        children: [
-          { index: true, element: <CustomerInfo /> },
-          { path: 'dashboard', element: <CustomerInfo /> },
-        ],
-      },
-      {
-        path: 'self-feature',
-        children: [
-          { index: true, element: <SelfFeature /> },
-          {
-            path: 'self-feature',
-            children: [
-              { index: true, element: <SelfFeature /> },
-              { path: 'detail', element: <SelfFeatureDetail /> },
-              { path: 'reg', element: <SelfFeatureReg /> },
-              { path: 'edit', element: <SelfFeatureEdit /> },
-            ],
-          },
+          { index: true, element: <Tableau /> },
         ],
       },
     ],

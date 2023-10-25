@@ -1,5 +1,79 @@
 const userMenuList = [
   {
+    name: 'BiZ 메타',
+    path: '/biz-meta',
+    children: [
+      {
+        name: 'Feature',
+        path: '/biz-meta/feature',
+        children: [
+          { name: 'Feature 등록', path: '/biz-meta/feature/reg', children: [] },
+          { name: 'Feature 상세', path: '/biz-meta/feature/detail', children: [] },
+          { name: 'Feature 수정', path: '/biz-meta/feature/edit', children: [] },
+        ],
+      },
+      {
+        name: '테이블정의서',
+        path: '/biz-meta/dataset',
+        children: [
+          { name: '테이블정의서 등록', path: '/biz-meta/dataset/reg', children: [] },
+          { name: '테이블정의서 상세', path: '/biz-meta/dataset/detail', children: [] },
+          { name: '테이블정의서 수정', path: '/biz-meta/dataset/edit', children: [] },
+        ],
+      },
+    ],
+  },
+  {
+    name: '고객통합정보조회',
+    path: '/customer-info',
+    children: [
+      {
+        name: '고객360대시보드',
+        path: '/customer-info/dashboard',
+        children: [],
+      },
+    ],
+  },
+  {
+    name: '보고서',
+    path: '/report',
+    children: [
+      {
+        name: '정형 보고서',
+        path: '/report/structured-report',
+        children: [],
+      },
+      {
+        name: '비정형 보고서',
+        path: '/report/unstructured-report',
+        children: [],
+      },
+    ],
+  },
+  {
+    name: 'Self Feature',
+    path: '/self-feature',
+    children: [
+      {
+        name: 'Self Feature',
+        path: '/self-feature/self-feature',
+        children: [
+          { name: 'Self Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
+          { name: 'Self Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
+          { name: 'Self Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
+        ],
+      },
+    ],
+  },
+  {
+    name: 'Feature 현황',
+    path: '/feature',
+    children: [
+      { name: '관심 Feature', path: '/feature/interest', children: [] },
+      { name: '인기 Feature', path: '/feature/popular', children: [] },
+    ],
+  },
+  {
     name: '이용안내',
     path: '/board',
     children: [
@@ -51,89 +125,9 @@ const userMenuList = [
     ],
   },
   {
-    name: 'BiZ 메타',
-    path: '/biz-meta',
-    children: [
-      {
-        name: '테이블정의서',
-        path: '/biz-meta/dataset',
-        children: [
-          { name: '테이블정의서 등록', path: '/biz-meta/dataset/reg', children: [] },
-          { name: '테이블정의서 상세', path: '/biz-meta/dataset/detail', children: [] },
-          { name: '테이블정의서 수정', path: '/biz-meta/dataset/edit', children: [] },
-        ],
-      },
-      {
-        name: 'Feature',
-        path: '/biz-meta/feature',
-        children: [
-          { name: 'Feature 등록', path: '/biz-meta/feature/reg', children: [] },
-          { name: 'Feature 상세', path: '/biz-meta/feature/detail', children: [] },
-          { name: 'Feature 수정', path: '/biz-meta/feature/edit', children: [] },
-        ],
-      },
-    ],
-  },
-  {
-    name: 'Self-BI',
-    path: '/self-bi',
-    children: [
-      {
-        name: 'Tableau',
-        path: '/self-bi/tableau',
-        children: [],
-      },
-      {
-        name: '보고서 (비정형)',
-        path: '/self-bi/unstructured-report',
-        children: [],
-      },
-    ],
-  },
-  {
-    name: '보고서(정형)',
-    path: '/structured-report',
-    children: [
-      {
-        name: '정형 보고서',
-        path: '/structured-report/structured-report',
-        children: [],
-      },
-    ],
-  },
-  {
-    name: 'Feature 현황',
-    path: '/feature',
-    children: [
-      { name: '관심 Feature', path: '/feature/interest', children: [] },
-      { name: '인기 Feature', path: '/feature/popular', children: [] },
-    ],
-  },
-  {
-    name: '고객통합정보조회',
-    path: '/customer-info',
-    children: [
-      {
-        name: '고객360대시보드',
-        path: '/customer-info/dashboard',
-        children: [],
-      },
-    ],
-  },
-  {
-    name: 'Self Feature',
-    path: '/self-feature',
-    children: [
-      {
-        name: 'Self Feature',
-        path: '/self-feature/self-feature',
-        children: [
-          { name: 'Self Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
-          { name: 'Self Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
-          { name: 'Self Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
-        ],
-      },
-    ],
+    name: 'Tableau',
+    path: '/tableau',
+    children: [],
   },
 ];
 

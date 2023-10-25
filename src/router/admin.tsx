@@ -26,6 +26,18 @@ import Archive from '@pages/user/board/archive';
 import ArchiveDetail from '@pages/user/board/archive/Detail';
 import ArchiveReg from '@pages/user/board/archive/Reg';
 import ArchiveEdit from '@pages/user/board/archive/Edit';
+import DataSet from '@pages/user/biz-meta/dataset';
+import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
+import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
+import DataSetEdit from '@pages/user/biz-meta/dataset/Edit';
+import Feature from '@pages/user/biz-meta/feature';
+import FeatureDetail from '@pages/user/biz-meta/feature/Detail';
+import FeatureReg from '@pages/user/biz-meta/feature/Reg';
+import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
+import OneIdMain from '@pages/admin/admin-report/one-id-main';
+import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
+import OneIdReport from '@pages/admin/admin-report/one-id-report';
+import DataConversion from '@pages/admin/admin-report/data-conversion';
 
 const adminRouter = [
   {
@@ -36,6 +48,43 @@ const adminRouter = [
       {
         path: 'admin',
         children: [
+          {
+            path: 'biz-meta-management',
+            children: [
+              { index: true, element: <Feature /> },
+              {
+                path: 'feature',
+                children: [
+                  { index: true, element: <Feature /> },
+                  { path: 'detail', element: <FeatureDetail /> },
+                  { path: 'reg', element: <FeatureReg /> },
+                  { path: 'edit', element: <FeatureEdit /> },
+                ],
+              },
+              {
+                path: 'dataset',
+                children: [
+                  { index: true, element: <DataSet /> },
+                  { path: 'detail', element: <DataSetDetail /> },
+                  { path: 'reg', element: <DataSetReg /> },
+                  { path: 'edit', element: <DataSetEdit /> },
+                ],
+              },
+            ],
+          },
+          {
+            path: 'structured-report-management',
+            children: [],
+          },
+          {
+            path: 'admin-report',
+            children: [
+              { path: 'one-id-main', element: <OneIdMain /> },
+              { path: 'one-id-error-history', element: <OneIdErrorHistory /> },
+              { path: 'one-id-report', element: <OneIdReport /> },
+              { path: 'data-conversion', element: <DataConversion /> },
+            ],
+          },
           {
             path: 'user-management',
             children: [

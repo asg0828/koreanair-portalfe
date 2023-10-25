@@ -1,14 +1,51 @@
 const adminMenulist = [
   {
+    name: 'BIZ 메타 관리',
+    path: '/admin/biz-meta-management',
+    children: [
+      {
+        name: 'Feature',
+        path: '/admin/biz-meta-management/feature',
+        children: [
+          { name: 'Feature 등록', path: '/admin/biz-meta-management/feature/reg', children: [] },
+          { name: 'Feature 상세', path: '/admin/biz-meta-management/feature/detail', children: [] },
+          { name: 'Feature 수정', path: '/admin/biz-meta-management/feature/edit', children: [] },
+        ],
+      },
+      {
+        name: '테이블정의서',
+        path: '/admin/biz-meta-management/dataset',
+        children: [
+          { name: '테이블정의서 등록', path: '/admin/biz-meta-management/dataset/reg', children: [] },
+          { name: '테이블정의서 상세', path: '/admin/biz-meta-management/dataset/detail', children: [] },
+          { name: '테이블정의서 수정', path: '/admin/biz-meta-management/dataset/edit', children: [] },
+        ],
+      },
+    ],
+  },
+  {
+    name: '정형보고서 관리',
+    path: '/admin/structured-report-management',
+    children: [],
+  },
+  {
+    name: '관리자 보고서',
+    path: '/admin/admin-report',
+    children: [
+      { name: 'One-ID Main', path: '/admin/admin-report/one-id-main', children: [] },
+      { name: 'One-ID 에러 이력', path: '/admin/admin-report/one-id-error-history', children: [] },
+      { name: 'One-ID Report', path: '/admin/admin-report/one-id-report', children: [] },
+      { name: '데이터 변환', path: '/admin/admin-report/data-conversion', children: [] },
+    ],
+  },
+  {
     name: '사용자 관리',
     path: '/admin/user-management',
     children: [
       {
         name: '사용자 관리',
         path: '/admin/user-management/user-management',
-        children: [
-          { name: '사용자 관리 상세', path: '/admin/user-management/user-management/detail', children: [] },
-        ],
+        children: [{ name: '사용자 관리 상세', path: '/admin/user-management/user-management/detail', children: [] }],
       },
       {
         name: '권한그룹 관리',
@@ -49,9 +86,21 @@ const adminMenulist = [
             name: '공지사항',
             path: '/admin/user-portal-management/board-management/notice',
             children: [
-              { name: '공지사항 등록', path: '/admin/user-portal-management/board-management/notice/reg', children: [] },
-              { name: '공지사항 상세', path: '/admin/user-portal-management/board-management/notice/detail', children: [] },
-              { name: '공지사항 수정', path: '/admin/user-portal-management/board-management/notice/edit', children: [] },
+              {
+                name: '공지사항 등록',
+                path: '/admin/user-portal-management/board-management/notice/reg',
+                children: [],
+              },
+              {
+                name: '공지사항 상세',
+                path: '/admin/user-portal-management/board-management/notice/detail',
+                children: [],
+              },
+              {
+                name: '공지사항 수정',
+                path: '/admin/user-portal-management/board-management/notice/edit',
+                children: [],
+              },
             ],
           },
           {
@@ -77,8 +126,16 @@ const adminMenulist = [
             path: '/admin/user-portal-management/board-management/archive',
             children: [
               { name: '도움말 등록', path: '/admin/user-portal-management/board-management/archive/reg', children: [] },
-              { name: '도움말 상세', path: '/admin/user-portal-management/board-management/archive/detail', children: [] },
-              { name: '도움말 수정', path: '/admin/user-portal-management/board-management/archive/edit', children: [] },
+              {
+                name: '도움말 상세',
+                path: '/admin/user-portal-management/board-management/archive/detail',
+                children: [],
+              },
+              {
+                name: '도움말 수정',
+                path: '/admin/user-portal-management/board-management/archive/edit',
+                children: [],
+              },
             ],
           },
         ],
