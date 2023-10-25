@@ -1,10 +1,44 @@
 #aside {
   padding: 20px;
   height: 100%;
-  border-right: 1px solid #DADADA;
+  
 
   .quickMenu-wrap {
-    width: 240px;
+    width: 170px;
     height: 100%;
+    background: #fff;
+    padding:9px 24px 17px;
+    border-radius: 16px;
   }
+  .quickMenuTop{
+    line-height: 44px;
+    border-bottom: 1px solid #eeeeee;
+    cursor: pointer;
+  }
+}
+.quickLinkWrap{
+  margin-top: 12px;
+  .quickLinkItem{
+    border-bottom: 1px solid transparent;
+    .icon{
+      width: 7px;
+      height: 11px;
+      background: url('/assets/images/arrowIcon.png');
+    }
+  }
+  .quickLinkItem .text{
+    display: inline-block;
+    border-bottom: 1px solid transparent;
+  }
+  .quickLinkItem:hover .text{
+    border-bottom: 1px solid #000;
+  }
+  .quickLinkItem:hover .icon{
+    background: url('/assets/images/arrowIcon_hover.png');
+  }
+}
+.quickMenuTopIcon{
+  width: 25px;
+  height: 25px;
+  background: url('/assets/images/quickLink_arrow.png');
 }
