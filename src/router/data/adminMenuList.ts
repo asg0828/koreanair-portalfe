@@ -32,9 +32,40 @@ const adminMenulist = [
     name: '관리자 보고서',
     path: '/admin/admin-report',
     children: [
-      { name: 'One-ID Main', path: '/admin/admin-report/one-id-main', children: [] },
+      {
+        name: 'One-ID Main',
+        path: '/admin/admin-report/one-id-main',
+        children: [
+          {
+            name: 'OneID 마스터 History',
+            path: '/admin/admin-report/one-id-main/master-history',
+            children: [
+              { name: 'OneID 마스터 History', path: '/admin/admin-report/one-id-main/master-history', children: [] },
+            ],
+          },
+          { name: 'OneID PAX 매핑', path: '/admin/admin-report/one-id-main/pax-mapping', children: [] },
+          { name: '대리점 추정 모바일 번호', path: '/admin/admin-report/one-id-main/mobile-number', children: [] },
+          {
+            name: 'OneID관계이력테이블',
+            path: '/admin/admin-report/one-id-main/relationship-history-table',
+            children: [],
+          },
+        ],
+      },
       { name: 'One-ID 에러 이력', path: '/admin/admin-report/one-id-error-history', children: [] },
-      { name: 'One-ID Report', path: '/admin/admin-report/one-id-report', children: [] },
+      {
+        name: 'One-ID Report',
+        path: '/admin/admin-report/one-id-report',
+        children: [
+          {
+            name: 'OneId Daily Report',
+            path: '/admin/admin-report/one-id-report/daily',
+            children: [{ name: 'OneId Daily Report', path: '/admin/admin-report/one-id-report/daily', children: [] }],
+          },
+          { name: 'OneId CTI/VOC Report', path: '/admin/admin-report/one-id-report/ctivoc', children: [] },
+          { name: 'OneId SamePnrUcild Report', path: '/admin/admin-report/one-id-report/same-pnr-ucild', children: [] },
+        ],
+      },
       { name: '데이터 변환', path: '/admin/admin-report/data-conversion', children: [] },
     ],
   },
