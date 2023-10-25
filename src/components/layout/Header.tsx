@@ -11,6 +11,7 @@ const Header = () => {
   const isAdminPage = useSelector((state: ReducerType) => state.auth.isAdminPage);
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState<number>(-1);
+  const [subActiveIndex, setSubActiveIndex] = useState<number>(-1);
 
   const goToHome = () => {
     navigate(isAdminPage ? '/admin' : '/');
@@ -18,6 +19,15 @@ const Header = () => {
 
   const handleTrigger = (index: number) => {
     setActiveIndex(index);
+  }
+
+  const handleSubTrigger = (index: number) => {
+    setSubActiveIndex(index);
+  }
+
+  const handleClearTrigger = () => {
+    setActiveIndex(-1);
+    setSubActiveIndex(-1);
   }
 
   return (
@@ -35,7 +45,7 @@ const Header = () => {
           </Typography>
         </Stack>
 
-        <Stack className="menu-wrap" onMouseLeave={() => handleTrigger(-1)}>
+        <Stack className="menu-wrap" onMouseLeave={handleClearTrigger}>
           {menuList?.map((menu, index: number) => (
             <DropdownMenu.Root modal={false} key={`root-${index}`}>
               <DropdownMenu.Trigger
@@ -51,31 +61,32 @@ const Header = () => {
 
               {menu.children.length > 0 && (
                 <DropdownMenu.Portal forceMount={index === activeIndex ? true : undefined}>
-                  <DropdownMenu.Content className="dropdown-content" onMouseLeave={() => handleTrigger(-1)}>
-                    <DropdownMenu.Sub>
-
+                  <DropdownMenu.Content className="dropdown-content" onMouseLeave={handleClearTrigger}>
                       {menu.children.map((subMenu, index: number) => (
                         <>
                         {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
-                          <DropdownMenu.Item key={`subMenu-${index}`} className="dropdown-item" disabled>
+                          <DropdownMenu.Item key={`subMenu-${index}`} className="dropdown-item" disabled onMouseOver={() => handleSubTrigger(-1)}>
                             <NavLink to={subMenu.path} end>
                               {({ isActive }) => <Typography variant="body1" className={isActive ? 'path-active' : ''}>{subMenu.name}</Typography>}
                             </NavLink>
                           </DropdownMenu.Item>
                         ):
                         (
-                          <>
-                            <DropdownMenu.SubTrigger className="dropdown-item">
+                          <DropdownMenu.Sub>
+                            <DropdownMenu.SubTrigger
+                              className="dropdown-item"
+                              onMouseOver={() => handleSubTrigger(index)}
+                            >
                               <Stack>
                                 <Typography variant="body1">{subMenu.name}</Typography>
                                 <KeyboardArrowDownIcon />
                               </Stack>
                             </DropdownMenu.SubTrigger>
 
-                            <DropdownMenu.Portal>
+                            <DropdownMenu.Portal forceMount={index === subActiveIndex ? true : undefined}>
                               <DropdownMenu.SubContent className="dropdown-content">
                                 {subMenu.children.map((subMenuSecond, index: number) => (
-                                  <DropdownMenu.Item key={`subMenuSecond-${index}`} className="dropdown-item">
+                                  <DropdownMenu.Item key={`subMenuSecond-${index}`} className="dropdown-item" disabled>
                                     <NavLink to={subMenuSecond.path} end>
                                       {({ isActive }) => <Typography variant="body1" className={isActive ? 'path-active' : ''}>{subMenuSecond.name}</Typography>}
                                     </NavLink>
@@ -83,11 +94,10 @@ const Header = () => {
                                 ))}
                               </DropdownMenu.SubContent>
                             </DropdownMenu.Portal>
-                          </>
+                          </DropdownMenu.Sub>
                         )}
                         </>
                       ))}
-                    </DropdownMenu.Sub>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
               )}

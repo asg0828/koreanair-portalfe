@@ -34,9 +34,14 @@ import Feature from '@pages/user/biz-meta/feature';
 import FeatureDetail from '@pages/user/biz-meta/feature/Detail';
 import FeatureReg from '@pages/user/biz-meta/feature/Reg';
 import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
-import OneIdMain from '@pages/admin/admin-report/one-id-main';
+import MasterHistory from '@pages/admin/admin-report/one-id-main/master-history';
+import MobileNumber from '@pages/admin/admin-report/one-id-main/mobile-number';
+import PaxMapping from '@pages/admin/admin-report/one-id-main/pax-mapping';
+import RelationshipHistoryTable from '@pages/admin/admin-report/one-id-main/relationship-history-table';
 import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
-import OneIdReport from '@pages/admin/admin-report/one-id-report';
+import Ctivoc from '@pages/admin/admin-report/one-id-report/ctivoc';
+import Daily from '@pages/admin/admin-report/one-id-report/daily';
+import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 
 const adminRouter = [
@@ -79,9 +84,26 @@ const adminRouter = [
           {
             path: 'admin-report',
             children: [
-              { path: 'one-id-main', element: <OneIdMain /> },
+              {
+                path: 'one-id-main',
+                children: [
+                  { index: true, element: <MasterHistory /> },
+                  { path: 'master-history', element: <MasterHistory /> },
+                  { path: 'mobile-number', element: <MobileNumber /> },
+                  { path: 'pax-mapping', element: <PaxMapping /> },
+                  { path: 'relationship-history-table', element: <RelationshipHistoryTable /> },
+                ],
+              },
               { path: 'one-id-error-history', element: <OneIdErrorHistory /> },
-              { path: 'one-id-report', element: <OneIdReport /> },
+              {
+                path: 'one-id-report',
+                children: [
+                  { index: true, element: <Daily /> },
+                  { path: 'daily', element: <Daily /> },
+                  { path: 'ctivoc', element: <Ctivoc /> },
+                  { path: 'same-pnr-ucild', element: <SamePnrUcild /> },
+                ],
+              },
               { path: 'data-conversion', element: <DataConversion /> },
             ],
           },
