@@ -335,7 +335,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="id" 
-                defaultValue={location.state.tbRsCustFeatRule.id}
+                value={custFeatRule.id}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -344,7 +344,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="dataType"
-                defaultValue={location.state.tbRsCustFeatRule.dataType}
+                value={custFeatRule.dataType}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -355,7 +355,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="name" 
-                defaultValue={location.state.tbRsCustFeatRule.name}
+                value={custFeatRule.name}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -364,7 +364,7 @@ const SelfFeatureEdit = () => {
               {/* <TextField 
                 className="width-100" 
                 id="name" 
-                defaultValue={location.state.tbRsCustFeatRule.name}
+                value={custFeatRule.name}
                 onChange={onchangeInputHandler}
               /> */}
             </TD>
@@ -375,7 +375,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="description" 
-                defaultValue={location.state.tbRsCustFeatRule.description}
+                value={custFeatRule.description}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -457,7 +457,7 @@ const SelfFeatureEdit = () => {
             isValidFormula={isValidFormula}
             formulaTrgtList={formulaTrgtList}
             custFeatRuleCalc={location.state.tbRsCustFeatRuleCalc}
-            custFeatRuleCaseList={location.state.tbRsCustFeatRuleCaseList}
+            custFeatRuleCaseList={custFeatRuleCaseList}
             setCustFeatRuleCalc={setCustFeatRuleCalc}
             setCustFeatRuleCaseList={setCustFeatRuleCaseList}
             setIsValidFormula={setIsValidFormula}

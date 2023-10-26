@@ -27,6 +27,7 @@ const DropList = (props: any) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
 
+    // 수정가능 여부 판단
     useEffect(() => {
         // 등록, 품의저장인 상태이면서 상세페이지가 아닌 경우 수정가능
         if (
@@ -48,6 +49,7 @@ const DropList = (props: any) => {
             const targetType = monitor.getItemType()
             const date: Date = new Date()
             const trgtUniqKey = `${date.getFullYear()}${date.getMonth()}${date.getDate()+1}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`
+            
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo | Attribute
 
@@ -58,24 +60,25 @@ const DropList = (props: any) => {
                 }
 
                 let target: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
-
                 props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
                     target.tableName = String(targetObj.metaTblId)
+                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)
                     target.divisionCode = String(targetType)
                     tl.push(target)
                     return tl
                 })
-
+                // 행동 데이터의 경우에만 해당일까?
                 props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
                     target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
                     target.tableName = String(targetObj.metaTblId)
+                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)
                     tl.push(target)
@@ -90,12 +93,14 @@ const DropList = (props: any) => {
         
     }), [])
 
+    // 대상 선택 정보 삭제시
     const deleteInfo = (delIdx: number, delTrgtId: string) => {
         props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let newTargetList = cloneDeep(state)
             newTargetList.splice(delIdx, 1)
             return newTargetList
         })
+        // target에 해당되는 target filter 리스트도 같이 삭제
         props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let newTrgtFilterList = cloneDeep(state)
             newTrgtFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== delTrgtId)
@@ -121,7 +126,8 @@ const DropList = (props: any) => {
             >
             {
                 props.targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
-
+                    
+                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     let targetId = targetItem.targetId
                     let tfList: Array<TbRsCustFeatRuleTrgtFilter> = []
                     props.trgtFilterList.map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
@@ -134,8 +140,8 @@ const DropList = (props: any) => {
                             key={`dropItem-${index}`}
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
-                            trgtFilterList={tfList}
                             targetItem={targetItem} 
+                            trgtFilterList={tfList}
                             setTargetList={props.setTargetList} 
                             setTrgtFilterList={props.setTrgtFilterList} 
                             delTargetInfo={deleteInfo}
@@ -145,8 +151,8 @@ const DropList = (props: any) => {
                             key={`dropItem-${index}`}
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
-                            trgtFilterList={tfList}
                             targetItem={targetItem}
+                            trgtFilterList={tfList}
                             setTargetList={props.setTargetList} 
                             setTrgtFilterList={props.setTrgtFilterList}
                             delTargetInfo={deleteInfo}
@@ -157,7 +163,6 @@ const DropList = (props: any) => {
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
                             targetItem={targetItem}
-                            targetId={targetItem.targetId}
                             trgtFilterList={tfList}
                             setTargetList={props.setTargetList} 
                             setTrgtFilterList={props.setTrgtFilterList} 

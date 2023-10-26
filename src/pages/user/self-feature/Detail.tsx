@@ -36,6 +36,7 @@ import {
   initSelfFeatureInfo, 
   initTbRsCustFeatRule, 
   initTbRsCustFeatRuleCalc, 
+  initTbRsCustFeatRuleCase, 
   initTbRsCustFeatRuleTrgt, 
   initTbRsCustFeatRuleTrgtFilter 
 } from './data';
@@ -112,7 +113,7 @@ const SelfFeatureDetail = () => {
             columnName:"컬럼 논리명2",
             divisionCode:"BEHV",
             tableName:"featureBehvTable1",
-            targetId:"featureBehvTable1_2023925124157637",
+            targetId:"featureBehvTable1_2023925124157637"
           }
         )
         tbRsCustFeatRuleTrgtList.push(tbRsCustFeatRuleTrgt)
@@ -141,6 +142,27 @@ const SelfFeatureDetail = () => {
 
         let tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = Object.assign(cloneDeep(initTbRsCustFeatRuleCalc), {formula: "T1"})
         rtn.tbRsCustFeatRuleCalc = tbRsCustFeatRuleCalc
+
+        let tbRsCustFeatRuleCaseList = []
+        let tbRsCustFeatRuleCase: TbRsCustFeatRuleCase = Object.assign(
+          cloneDeep(initTbRsCustFeatRuleCase), 
+          {
+            whenYn: "Y",
+            targetFormula: "T1",
+            operator: "",
+          }
+        )
+        tbRsCustFeatRuleCaseList.push(tbRsCustFeatRuleCase)
+        tbRsCustFeatRuleCase = Object.assign(
+          cloneDeep(initTbRsCustFeatRuleCase), 
+          {
+            whenYn: "N",
+            targetFormula: "T2",
+            operator: "",
+          }
+        )
+        tbRsCustFeatRuleCaseList.push(tbRsCustFeatRuleCase)
+        rtn.tbRsCustFeatRuleCaseList = tbRsCustFeatRuleCaseList
 
         return rtn
       })
