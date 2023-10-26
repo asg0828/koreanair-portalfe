@@ -18,7 +18,7 @@ export interface PnrData {
   baggageCnt: string;
   baggageWgt: string;
 }
-export interface PnrTickerColumn {
+export interface Column {
   headerName: string;
   field: string;
 }

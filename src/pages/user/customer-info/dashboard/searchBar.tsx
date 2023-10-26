@@ -33,7 +33,11 @@ export default function SearchBar() {
   //     passengerNmId.current.firstElementChild.focus();
   //   }
   // }
-
+  // axios(url, {
+  //   method: "get",
+  //   headers: {},
+  //   data: {},
+  // });
   function validation() {
     // 검색 조건 미입력 시 modal
     if (skypassNum.trim() === '' || oneId.trim() === '' || passengerNm.trim() === '') {
@@ -42,10 +46,6 @@ export default function SearchBar() {
   }
 
   function searchButton() {
-    console.log('skypassNum: ' + skypassNum);
-    console.log('oneId: ' + oneId);
-    console.log('passengerNm: ' + passengerNm);
-
     // 검색 조건 유효성검사
     validation();
 
