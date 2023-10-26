@@ -2,12 +2,12 @@ import {
   AnalysisIndexList,
   AnalysisResultData,
   CartData,
+  Column,
   ContributeData,
   Ffp,
   HomepageData,
   Mileage,
   PnrData,
-  PnrTickerColumn,
   Profile,
   VocData,
 } from '@/models/customer-info/CustomerInfo';
@@ -41,7 +41,7 @@ const analysisResultData: AnalysisResultData = {
   ticketingIndex: '6.13',
 };
 
-const pnrTickerColumn: PnrTickerColumn[] = [
+const pnrTickerColumn: Column[] = [
   { headerName: 'PNR Num', field: 'pnrNumber' },
   { headerName: 'Travel Date', field: 'travelDate' },
   { headerName: 'Route', field: 'route' },
@@ -146,6 +146,7 @@ const cartData: CartData[] = [
     travelDate: 'Oct 2,2019',
   },
 ];
+
 export {
   analysisIndexList,
   analysisResultData,

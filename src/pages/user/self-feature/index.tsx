@@ -29,8 +29,12 @@ import {
 
 const category = [
   { value: '', text: '선택' },
-  { value: '1', text: 'cate1' },
-  { value: '2', text: 'cate2' },
+  { value: 'PROPORTION', text: '비율' },
+  { value: 'SUM', text: '합계' },
+  { value: 'TOP_N', text: 'Top N' },
+  { value: 'CASE', text: 'Case문 사용' },
+  { value: 'COUNT', text: '건수' },
+  { value: 'AVG', text: '평균' },
 ]
 const useYn = [
   { value: '', text: '선택' },

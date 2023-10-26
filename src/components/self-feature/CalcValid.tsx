@@ -1,12 +1,16 @@
-import {HelperText, TextField, Typography} from '@components/ui'
+import {Button, Checkbox, Stack, Typography} from '@components/ui'
 import { useState } from 'react'
 
 import { cloneDeep } from 'lodash'
-import { TbRsCustFeatRuleCalc } from '@/models/selfFeature/FeatureInfo'
+import { TbRsCustFeatRuleCalc, TbRsCustFeatRuleCase } from '@/models/selfFeature/FeatureInfo'
+import { initTbRsCustFeatRuleCase } from '@/pages/user/self-feature/data';
+import CaseComponent from './CaseComponent';
+import FormulaComponent from './FormulaComponent';
 
 const ClacValid = (props: any) => {
 
     const [ formula, setFormula ] = useState<string>(cloneDeep(props.custFeatRuleCalc.formula))
+    const [ formulaChecked, setFormulaChecked ] = useState(false)
 
     const validationFormula = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
@@ -116,26 +120,71 @@ const ClacValid = (props: any) => {
         return result
     }
 
+    const onCheckedChange = () => {
+        setFormulaChecked(!formulaChecked)
+
+        if (!formulaChecked) {
+            console.log("checked")
+        } else {
+            console.log("unchecked")
+        }
+    }
+
+    const onClickAddRuleCaseHandler = () => {
+        props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
+            let rtn = cloneDeep(state)
+            let addRuleCase: TbRsCustFeatRuleCase = initTbRsCustFeatRuleCase
+            addRuleCase.whenYn = "Y"
+            rtn.push(addRuleCase)
+            return rtn
+        })
+    }
 
     return (
         // check box 선택시 case문 조건 설정 항목 show/hide 필요
         <div className='flex row'>
-            <TextField 
-                value={formula} 
-                onChange={validationFormula} 
-                validation={!props.isValidFormula ? 'Error' : 'Default'}
-            />
-            <div className='flex space-between'>
-                <div>
-                {!props.isValidFormula ? (
-                    <HelperText showIcon={false} type='Error'>
-                    계산식을 확인해주세요
-                    </HelperText>
-                ) : (
-                    ''
-                )}
-                </div>
-            </div>
+            <Stack 
+                direction="Horizontal"
+                justifyContent="Start" 
+                gap="MD" 
+            >
+                <Typography variant='h6'>CASE 사용</Typography>
+                <Checkbox
+                    checked={formulaChecked}
+                    onCheckedChange={onCheckedChange}
+                />
+            </Stack>
+            {!formulaChecked && 
+                <FormulaComponent 
+                    formula={formula}
+                    validationFormula={validationFormula}
+                    isValidFormula={props.isValidFormula}
+                />}
+            {formulaChecked &&
+                <>
+                <Stack 
+                    direction="Horizontal"
+                    justifyContent="Start" 
+                    gap="MD" 
+                >
+                    <Typography variant='h6'>CASE</Typography>
+                    <Button size="SM" onClick={onClickAddRuleCaseHandler}>
+                        추가
+                    </Button>
+                </Stack>
+                {props.custFeatRuleCaseList.map((ruleCase: TbRsCustFeatRuleCase, index: number) => {
+                    return <CaseComponent
+                        key={`ruleCase-${index}`}
+                        index={index}
+                        ruleCase={ruleCase}
+                        validationFormula={validationFormula}
+                        isValidFormula={props.isValidFormula}
+                        setCustFeatRuleCaseList={props.setCustFeatRuleCaseList}
+                        
+                    />
+                })}
+                </>
+            }
         </div>
     )
 }

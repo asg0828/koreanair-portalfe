@@ -14,6 +14,46 @@ export const subFeatStatus = {
     REG: 'reg', // 등록
     SUBREG: 'sub_reg', // 품의 저장
 }
+// 필터 옵션
+export const filterOption = [
+    { value: 'ALL', text: '아래 조건을 모두 만족하는 경우' },
+    { value: 'ANY', text: '아래 조건중 하나라도 만족하는 경우' },
+    { value: 'CUS', text: '조건 사이의 관계를 직접 입력' },
+]
+// 연산자 목록
+export const operatorOption = [
+    { value: '', text: '연산자 선택' },
+    { value: 'match', text: 'Match' },
+    { value: 'not match', text: 'Not Match' },
+    { value: 'start with', text: 'Start With' },
+    { value: 'not start with', text: 'Not Start With' },
+    { value: 'in_str', text: 'In' },
+    { value: 'not_in_str', text: 'Not in' },
+    { value: 'contains', text: 'Contains' },
+    { value: 'not contains', text: 'Not Contains' },
+]
+// 구분자 목록
+export const delimiterOption = [
+    { value: ',', text: ',' },
+    { value: '/', text: '/' },
+    { value: ':', text: ':' },
+]
+// 집계함수 목록
+export const aggregateOption = [
+    { value: '', text: '집계함수 선택' },
+    { value: 'count', text: 'Count' },
+    { value: 'max', text: 'Max' },
+    { value: 'min', text: 'Min' },
+    { value: 'distinct_count', text: 'Distinct Count' },
+    { value: 'first', text: 'First' },
+    { value: 'last', text: 'Last' },
+    { value: 'top', text: 'Top' },
+]
+
+export const whenYn = [
+    { value: 'Y', text: 'WHEN' },
+    { value: 'N', text: 'ELSE' },
+]
 
 export const listColumns = [
     { headerName: 'Feature 명', field: 'name', colSpan: 4 },
@@ -252,15 +292,15 @@ export interface TbRsCustFeatRuleTrgt {
     divisionCode: string,
     //Pattern: [\w-.]+ example: 테이블명
     tableName: string,
-    //Pattern: ALL|ANY|CUS example: 필터옵션(ALL/ANY/CUS)
+    //Pattern: ALL|ANY|CUS example: 필터옵션(ALL/ANY/CUS)-행동데이터
     filterLogiOption: string,
-    //example: 필터논리표현식
+    //example: 필터논리표현식(A and B 등등)-행동데이터
     filterLogiExpsn: string,
-    //example: 연산자
+    //example: 연산자-행동데이터(집계함수)
     operator: string,
-    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자1
+    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자1(Top연산자의 경우)
     operand1: string,
-    //Pattern: [\w-]+ example: 컬럼명
+    //Pattern: [\w-]+ example: 컬럼명-속성데이터의 컬럼명 / 행동데이터의 집계대상컬럼명
     columnName: string,
     //example: 최초등록 일시: default=CURRENT_TIMESTAMP
     frstRegDttm: string,
@@ -270,19 +310,19 @@ export interface TbRsCustFeatRuleTrgt {
     lastUpdDttm: string,
     //example: 최종수정 사용자ID
     lastUpdUserId: string,
-    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자2
+    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자2(Top연산자의 경우)
     operand2: string,
-    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자3
+    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자3(Top연산자의 경우)
     operand3: string,
-    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자4
+    //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)* example: 피연산자4(Top연산자의 경우)
     operand4: string,
-    //example: 변환식 함수
+    //example: 변환식 함수(팝업)-속성데이터
     function: string,
-    //example: 변수1
+    //example: 변수1(팝업)-속성데이터
     variable1: string,
-    //example: 변수2
+    //example: 변수2(팝업)-속성데이터
     variable2: string,
-    //example: 변수3
+    //example: 변수3(팝업)-속성데이터
     variable3: string,
     //example: 대상 데이터 타입
     targetDataType: string,
@@ -321,7 +361,7 @@ export interface TbRsCustFeatRuleTrgtFilter {
     lastUpdUserId: string,
     //example: 최종수정 사용자ID
     delimiter: string,
-    //example: 구분자
+    //example: 구분자(연산자의 In/not in 선택시 select box)
     operand3: string,
     //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)*
     //example: 피연산자3
@@ -335,13 +375,13 @@ export interface TbRsCustFeatRuleTrgtFilter {
     //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)*
     //example: 피연산자6
     function: string,
-    //example: 변환식 함수
+    //example: 변환식 함수(팝업에 필요한 항목)행동데이터
     variable1: string,
-    //example: 변수1
+    //example: 변수1(팝업에 필요한 항목)행동데이터
     variable2: string,
-    //example: 변수2
+    //example: 변수2(팝업에 필요한 항목)행동데이터
     variable3: string,
-    //example: 변수3
+    //example: 변수3(팝업에 필요한 항목)행동데이터
 }
 
 export interface TbRsCustFeatRuleCase {
@@ -361,7 +401,7 @@ export interface TbRsCustFeatRuleCase {
     operator: string,
     //example: 연산자
     delimiter: string,
-    //example: 구분자
+    //example: 구분자(연산자가 in / not in 인 경우)
     operand1: string,
     //Pattern: (?i)((?!select|from|delete|update|merge|insert|create|union|drop|/\*|--).)*
     //example: 피연산자1

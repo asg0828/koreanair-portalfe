@@ -12,6 +12,8 @@ import {
     Attribute
 } from "@/models/selfFeature/FeatureInfo";
 
+export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
+
 export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     id: '',
     name: '',
@@ -50,7 +52,7 @@ export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     targetId: '',
     divisionCode: '',
     tableName: '',
-    filterLogiOption: '',
+    filterLogiOption: 'ALL',
     filterLogiExpsn: '',
     operator: '',
     operand1: '',
