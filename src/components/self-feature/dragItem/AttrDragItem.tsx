@@ -23,8 +23,8 @@ const AttrDragItem = (props: any) => {
     return (
         <Typography 
             ref={(attrDragItem)}
-            style={{ opacity: attrOpacity,background:'#eff9f0',color:'#00b21e',padding:"0.3rem"}}
-            variant="body2"
+            style={{ opacity: attrOpacity, backgroundColor: '#FF9999', color: 'black' }} 
+            variant="h6"
         >
             {props.attrTblClmnInfo.metaTblClmnLogiNm}
         </Typography>

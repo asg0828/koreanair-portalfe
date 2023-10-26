@@ -12,8 +12,8 @@ const FeatDropItem = (props: any) => {
             gap="SM" 
             className="width-100"
             style={{
-                background:'#ffe5d0',
-                color:"#e66e36",
+                backgroundColor: '#ff77ff',
+                border: '0.1em solid',
                 borderRadius: '5px',
             }}
         >

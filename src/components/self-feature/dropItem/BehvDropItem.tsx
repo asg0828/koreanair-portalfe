@@ -78,20 +78,18 @@ const BehvDropItem = (props: any) => {
     }
 
     return (
-        <Stack gap="SM">
         <Stack 
             direction="Horizontal"
             justifyContent="Start" 
             gap="SM" 
             className="width-100"
             style={{
-                backgroundColor: '#e6f9ff', 
-                color: '#00256c',
+                backgroundColor: '#e0ffff',
+                border: '0.1em solid',
                 borderRadius: '5px',
-                padding:'0.5rem'
             }}
         >
-            
+            <Typography variant="h6">T{props.itemIdx + 1}</Typography>
             <Stack
                 direction="Vertical"
                 justifyContent="Start" 
@@ -104,14 +102,11 @@ const BehvDropItem = (props: any) => {
                     gap="SM" 
                     className="width-100"
                     style={{
+                        marginTop: '1%',
                     }}
                 >
-                    <Typography variant="h6" style={{color:"inherit"}}>T{props.itemIdx + 1}</Typography>
-                    <div className="dragItemLocation">
-                        행동
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.29498 16.59L12.875 12L8.29498 7.41L9.70498 6L15.705 12L9.70498 18L8.29498 16.59Z" fill="currentColor"></path></svg>
-                    </div>
-                    <Typography variant="body2" style={{color:"inherit"}}>{props.targetItem.tableName}</Typography>
+                    <Typography variant="h6">행동</Typography>
+                    <Typography variant="h6">{props.targetItem.tableName}</Typography>
                 </Stack>
                 <Stack
                     direction="Vertical"
@@ -119,19 +114,24 @@ const BehvDropItem = (props: any) => {
                     gap="SM" 
                     className="width-100"
                     style={{
-                        border:"1px solid rgb(218, 218, 218)'",
+                        marginTop: '1%',
+                        marginBottom: '1%',
+                        border: '0.1em solid',
                         borderRadius: '5px',
                     }}
                 >   
                     <Stack
                         direction="Horizontal"
-                        justifyContent="Between" 
+                        justifyContent="Start" 
                         gap="SM" 
                         className="width-100"
                         style={{
+                            marginLeft: '1%',
+                            marginTop: '1%',
+                            marginBottom: '1%',
                         }}
                     >
-                        <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
+                        <Typography variant="h6">필터 선택</Typography>
                         {/* 
                             props.targetItem.filterLogiOption / props.targetItem.filterLogiExpsn
                             -> select box 필요(필터 조인 조건 선택-and,or...)
@@ -166,13 +166,15 @@ const BehvDropItem = (props: any) => {
                         <Page
                             ref={(behvDrop)}
                             style={{
-                                
-                                padding:"0.5rem",
-                                border:"1px solid rgb(218, 218, 218)",
+                                overflowY: 'scroll',
+                                height: '110px',
+                                border: '0.1em solid',
                                 borderRadius: '5px',
+                                marginLeft: '1%',
+                                marginRight: '1%',
+                                marginBottom: '1%',
                             }}
                         >
-                            <Stack direction="Vertical" gap="SM">
                             {props.trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
                                 <BehvColDropItem 
                                     key={index}
@@ -182,7 +184,6 @@ const BehvDropItem = (props: any) => {
                                     trgtFilterItem={trgtFilterItem}
                                 />
                             ))}
-                            </Stack>
                         </Page>
                     </Stack>
                 </Stack>
@@ -190,13 +191,13 @@ const BehvDropItem = (props: any) => {
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
-                    gap="MD" 
+                    gap="SM" 
                     className="width-100"
                     style={{
                         marginBottom: '1%',
                     }}
                 >
-                    <Typography variant="h6" style={{color:"inherit"}}>연산자 및 컬럼</Typography>
+                    <Typography variant="h6">연산자 및 컬럼</Typography>
                     <Select 
                         appearance="Outline"
                         defaultValue="1"
@@ -240,13 +241,11 @@ const BehvDropItem = (props: any) => {
                 </Stack>
             </Stack>
             
-
-        </Stack>
-        {props.isPossibleEdit &&
-            <Button size="MD" onClick={onClickDeleteHandler}>
+            {props.isPossibleEdit &&
+            <Button size="SM" onClick={onClickDeleteHandler}>
             삭제
             </Button>
-        }
+            }
         </Stack>
     )
 }
