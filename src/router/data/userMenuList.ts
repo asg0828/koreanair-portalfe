@@ -127,6 +127,7 @@ const userMenuList = [
   {
     name: 'Tableau',
     path: '/tableau',
+    isPopup: true,
     children: [],
   },
 ];

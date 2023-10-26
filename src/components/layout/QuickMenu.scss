@@ -1,10 +1,65 @@
 #aside {
-  padding: 20px;
-  height: 100%;
-  border-right: 1px solid #DADADA;
-
+  padding: 1rem;
+  position: absolute;
+  left: 0;
+  transform: translateX(-100%);
   .quickMenu-wrap {
-    width: 240px;
+    width: 170px;
     height: 100%;
+    background: #fff;
+    padding:17px 24px 17px;
+    border-radius: 16px;
+    position: sticky;
+    top: 0;
+  }
+  .quickMenuTop{
+    line-height: 1;
+    border-bottom: 1px solid #eeeeee;
+    cursor: pointer;
+    padding:8px 0;
+  }
+}
+.quickLinkWrap{
+  .quickLinkItem{
+    border-bottom: 1px solid transparent;
+    .icon{
+      width: 7px;
+      height: 11px;
+      background: url('/assets/images/arrowIcon.png');
+    }
+  }
+  .quickLinkItem .text{
+    display: inline-block;
+    border-bottom: 1px solid transparent;
+  }
+  .quickLinkItem:hover .text{
+    border-bottom: 1px solid #000;
+  }
+  .quickLinkItem:hover .icon{
+    background: url('/assets/images/arrowIcon_hover.png');
+  }
+}
+.quickMenuTopIcon{
+  width: 25px;
+  height: 25px;
+  background: url('/assets/images/quickLink_arrow.png');
+}
+#aside.open{
+  .quickMenuTop{
+    display: block;
+  }
+  .quickLinkWrap{
+    margin-top: 12px;
+  }
+}
+#aside.close{
+  .quickMenuTop{
+    border-bottom: 0 !important;
+    .quickMenuTopIcon{
+      transform: rotate(180deg);
+    }
+  }
+  .quickLinkWrap{
+    display: none;
   }
 }

@@ -43,6 +43,7 @@ import Ctivoc from '@pages/admin/admin-report/one-id-report/ctivoc';
 import Daily from '@pages/admin/admin-report/one-id-report/daily';
 import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
+import StructuredReportManagement from '@pages/admin/structured-report-management';
 
 const adminRouter = [
   {
@@ -79,6 +80,7 @@ const adminRouter = [
           },
           {
             path: 'structured-report-management',
+            element: <StructuredReportManagement />,
             children: [],
           },
           {

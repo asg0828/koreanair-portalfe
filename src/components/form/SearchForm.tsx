@@ -29,6 +29,7 @@ const SearchForm: React.FC<SearchCommonFormProps> = ({
 
       <Stack gap="SM" justifyContent="Center">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSearch}>
+          <span className="searchIcon"></span>
           검색
         </Button>
         <Button size="LG" onClick={handleClear}>초기화</Button>

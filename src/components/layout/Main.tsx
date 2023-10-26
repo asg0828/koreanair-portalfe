@@ -36,8 +36,10 @@ const Main = () => {
         <MainNavigation />
 
         <Stack className="width-100" gap="MD">
-          <Typography>{title}</Typography>
-          <StarBorderIcon  />
+          <Typography variant='h1'>{title}</Typography>
+          <span className="star"></span>
+          {/* <span className="star active"></span> */}
+          {/* <StarBorderIcon  /> */}
         </Stack>
 
         <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">

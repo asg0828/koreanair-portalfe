@@ -84,7 +84,7 @@ const userRouter = [
           { index: true, element: <StructuredReport /> },
           { path: 'structured-report', element: <StructuredReport /> },
           { path: 'unstructured-report', element: <UnStructuredReport /> },
-        ]
+        ],
       },
       {
         path: 'self-feature',
@@ -162,9 +162,11 @@ const userRouter = [
       },
       {
         path: 'tableau',
-        children: [
-          { index: true, element: <Tableau /> },
-        ],
+        children: [{ index: true, element: <Tableau /> }],
+      },
+      {
+        path: 'popup',
+        children: [{ path: 'tableau', element: <Tableau /> }],
       },
     ],
   },
