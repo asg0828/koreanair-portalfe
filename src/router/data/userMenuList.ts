@@ -105,15 +105,6 @@ const userMenuList = [
         ],
       },
       {
-        name: '도움말',
-        path: '/board/help',
-        children: [
-          { name: '도움말 등록', path: '/board/help/reg', children: [] },
-          { name: '도움말 상세', path: '/board/help/detail', children: [] },
-          { name: '도움말 수정', path: '/board/help/edit', children: [] },
-        ],
-      },
-      {
         name: '자료실',
         path: '/board/archive',
         children: [

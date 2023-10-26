@@ -21,10 +21,6 @@ import Qna from '@pages/user/board/qna';
 import QnaDetail from '@pages/user/board/qna/Detail';
 import QnaReg from '@pages/user/board/qna/Reg';
 import QnaEdit from '@pages/user/board/qna/Edit';
-import Help from '@pages/user/board/help';
-import HelpDetail from '@pages/user/board/help/Detail';
-import HelpReg from '@pages/user/board/help/Reg';
-import HelpEdit from '@pages/user/board/help/Edit';
 import Archive from '@pages/user/board/archive';
 import ArchiveDetail from '@pages/user/board/archive/Detail';
 import ArchiveReg from '@pages/user/board/archive/Reg';
@@ -138,15 +134,6 @@ const userRouter = [
               { path: 'detail', element: <QnaDetail /> },
               { path: 'reg', element: <QnaReg /> },
               { path: 'edit', element: <QnaEdit /> },
-            ],
-          },
-          {
-            path: 'help',
-            children: [
-              { index: true, element: <Help /> },
-              { path: 'detail', element: <HelpDetail /> },
-              { path: 'reg', element: <HelpReg /> },
-              { path: 'edit', element: <HelpEdit /> },
             ],
           },
           {
