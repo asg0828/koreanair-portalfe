@@ -154,10 +154,10 @@ const SelfFeatureDetail = () => {
       if (location.state.submissionStatus === subFeatStatus.REG || location.state.submissionStatus === subFeatStatus.SUBREG) {
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
-            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
+            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
               수정
             </Button>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
@@ -168,7 +168,7 @@ const SelfFeatureDetail = () => {
       } else {
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBINFO)}>
