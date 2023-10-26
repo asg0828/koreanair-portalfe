@@ -1,12 +1,23 @@
 import { Link } from 'react-router-dom';
 import { Stack, Typography } from '@components/ui';
+import { useState } from "react";
 import './QuickMenu.scss';
 
 const QuickLink = () => {
+  const [isToggleOpen ,setIsToggleOpen] = useState("open");
+
+  const quickLinkToggle = () => {
+    if(isToggleOpen === "open"){
+      setIsToggleOpen("close");
+    }
+    else if(isToggleOpen === "close"){
+      setIsToggleOpen("open");
+    }
+  }
   return (
-    <aside id="aside">
+    <aside id="aside" className={isToggleOpen}>
       <Stack direction="Vertical" alignItems="Left" className="quickMenu-wrap shadowBox1">
-        <Typography variant="h4" className='quickMenuTop'>
+        <Typography variant="h4" className='quickMenuTop' onClick={quickLinkToggle}>
           <Stack justifyContent='Between' className="width-100">
             <div className="text">
               Quick Link

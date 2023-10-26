@@ -11,18 +11,21 @@ const Body = () => {
   return (
     <>
     {location.pathname === '/' ? 
-    <Stack id="body" style={{background:'#f8f9fc',paddingBottom:'14px'}} direction="Horizontal" alignItems="Start">
-      <Page style={{padding:'0 20px'}} fixedSize={true}>
-        <Stack alignItems="Start">
+    <Stack id="body" style={{background:'#f8f9fc',paddingBottom:'0.875rem'}} direction="Horizontal" alignItems="Start">
+      <Page style={{padding:'0 1rem'}} fixedSize={true}>
+        <Stack alignItems="Start" style={{position:"relative"}}>
           <QuickMenu />
           <Home /> 
         </Stack>
       </Page>
     </Stack>
     : 
-    <Stack id="body" direction="Horizontal" alignItems="Start">
-      <Page style={{padding:'0 20px'}} fixedSize={true}>
-        <Main />
+    <Stack id="body" style={{paddingBottom:'0.875rem'}} direction="Horizontal" alignItems="Start">
+      <Page style={{padding:'0 1rem',}} fixedSize={true}>
+        <Stack alignItems="Start" style={{position:"relative"}}>
+          <QuickMenu />
+          <Main />
+        </Stack>
       </Page>
     </Stack>
     }
