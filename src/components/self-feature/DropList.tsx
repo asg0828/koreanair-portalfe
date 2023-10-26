@@ -107,11 +107,12 @@ const DropList = (props: any) => {
         <Page
             ref={(drop)}
             style={{
-                overflowY: 'scroll',
-                width: '850%',
+                overflowY: 'auto',
+                width: '80%',
                 height: '100%',
-                border: '0.1em solid',
+                border: '0.1em solid rgb(218, 218, 218)',
                 borderRadius: '5px',
+                padding:"1rem"
             }}
         >
             <Stack 

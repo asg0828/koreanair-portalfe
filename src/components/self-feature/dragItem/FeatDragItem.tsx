@@ -23,7 +23,7 @@ const FeatDragItem = (props: any) => {
     return (
         <Typography 
             ref={(featDragItem)}
-            style={{ opacity: featOpacity, backgroundColor: '#ff77ff', color: 'black' }} 
+            style={{ opacity: featOpacity,background:'#ffe5d0',color:"#e66e36" }}
             variant="h6"
         >
             {props.featTblClmnInfo.metaTblClmnLogiNm}

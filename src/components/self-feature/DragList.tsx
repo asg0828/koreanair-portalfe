@@ -69,16 +69,21 @@ const DragList = (props: any) => {
     return (
         <Page
             style={{
-                overflowY: 'scroll',
+                overflowY: 'auto',
+                width:"20%",
                 height: '100%',
-                border: '0.1em solid',
+                border: '0.1em solid rgb(218, 218, 218)',
                 borderRadius: '5px',
+                padding:"1rem"
             }}
         >
+            <Stack direction="Vertical" gap="SM">
+
+            
             <Stack direction="Horizontal" gap="MD" justifyContent="Between" >
-                <TextField size="SM" value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
-                <Button priority="Primary" appearance="Contained" size="XS" onClick={onClickTrgtSrchHandler}>
-                    검색
+                <TextField size="MD" value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+                <Button priority="Primary" appearance="Contained" size="MD" onClick={onClickTrgtSrchHandler}>
+                    <span className="searchIcon"></span>
                 </Button>
             </Stack>
             {srchAttrRsltList.length > 0 &&
@@ -142,6 +147,7 @@ const DragList = (props: any) => {
                 </AccordionItem>
             </Accordion>
             }
+            </Stack>
         </Page>
     )
 }
