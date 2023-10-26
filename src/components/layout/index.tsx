@@ -1,4 +1,4 @@
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, Navigate, Outlet } from 'react-router-dom';
 import Header from '@components/layout/Header';
 import Body from '@components/layout/Body';
 import Footer from '@components/layout/Footer';
@@ -25,16 +25,23 @@ export const defaultPath: defaultPathInfo = {
 
 const RootLayout = () => {
   const location = useLocation();
-  const pathname = location.pathname.replace(/\/\s*$/, "");
+  const pathname = location.pathname.replace(/\/\s*$/, '');
   const routePath = defaultPath[pathname];
+  const isPopup = pathname.includes('/popup');
 
   return (
     <>
       {routePath && <Navigate to={routePath} replace={true} />}
 
-      <Header />
-      <Body />
-      <Footer />
+      {isPopup ? (
+        <Outlet />
+      ) : (
+        <>
+          <Header />
+          <Body />
+          <Footer />
+        </>
+      )}
     </>
   );
 };
