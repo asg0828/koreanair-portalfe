@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, NavLink } from 'react-router-dom';
 import { ReducerType } from '@reducers';
+import { MenuItem } from '@/models/common/Menu';
 import { MenuOutlinedIcon, LogoutOutlinedIcon, KeyboardArrowDownIcon } from '@/assets/icons';
 import { Avatar, Typography, Stack, DropdownMenu, Page } from '@/components/ui';
 import './Header.scss';
@@ -19,26 +20,32 @@ const Header = () => {
 
   const handleTrigger = (index: number) => {
     setActiveIndex(index);
-  }
+  };
 
   const handleSubTrigger = (index: number) => {
     setSubActiveIndex(index);
-  }
+  };
 
   const handleClearTrigger = () => {
     setActiveIndex(-1);
     setSubActiveIndex(-1);
-  }
+  };
+
+  const handleNaviLink = (e: any, menu: MenuItem) => {
+    if (menu.isPopup) {
+      e.preventDefault();
+      window.open(`/popup${menu.path}`, '_blank', 'noopener, noreferrer');
+    }
+  };
 
   return (
     <header id="header">
-      <Page fixedSize={true} style={{padding:'0 20px'}}>
+      <Page fixedSize={true} style={{ padding: '0 20px' }}>
         <Stack direction="Horizontal" justifyContent="Between">
           <Stack gap="XL" className="logo-wrap">
             <span className="home-logo" onClick={goToHome}>
               대한항공 Customer Data Portal
             </span>
-            
           </Stack>
 
           <Stack className="menu-wrap" onMouseLeave={handleClearTrigger}>
@@ -48,7 +55,7 @@ const Header = () => {
                   className={`dropdown-trigger ${activeIndex === index ? 'triger-active' : ''}`}
                   onMouseOver={() => handleTrigger(index)}
                 >
-                  <NavLink to={menu.path} end>
+                  <NavLink to={menu.path} end onClick={(e) => handleNaviLink(e, menu)}>
                     <Typography variant="h4" className="menu-title">
                       {menu.name}
                     </Typography>
@@ -58,16 +65,24 @@ const Header = () => {
                 {menu.children.length > 0 && (
                   <DropdownMenu.Portal forceMount={index === activeIndex ? true : undefined}>
                     <DropdownMenu.Content className="dropdown-content" onMouseLeave={handleClearTrigger}>
-                        {menu.children.map((subMenu, index: number) => (
-                          <>
+                      {menu.children.map((subMenu, index: number) => (
+                        <>
                           {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
-                            <DropdownMenu.Item key={`subMenu-${index}`} className="dropdown-item" disabled onMouseOver={() => handleSubTrigger(-1)}>
+                            <DropdownMenu.Item
+                              key={`subMenu-${index}`}
+                              className="dropdown-item"
+                              disabled
+                              onMouseOver={() => handleSubTrigger(-1)}
+                            >
                               <NavLink to={subMenu.path} end>
-                                {({ isActive }) => <Typography variant="body1" className={isActive ? 'path-active' : ''}>{subMenu.name}</Typography>}
+                                {({ isActive }) => (
+                                  <Typography variant="body1" className={isActive ? 'path-active' : ''}>
+                                    {subMenu.name}
+                                  </Typography>
+                                )}
                               </NavLink>
                             </DropdownMenu.Item>
-                          ):
-                          (
+                          ) : (
                             <DropdownMenu.Sub>
                               <DropdownMenu.SubTrigger
                                 className="dropdown-item"
@@ -82,9 +97,17 @@ const Header = () => {
                               <DropdownMenu.Portal forceMount={index === subActiveIndex ? true : undefined}>
                                 <DropdownMenu.SubContent className="dropdown-content">
                                   {subMenu.children.map((subMenuSecond, index: number) => (
-                                    <DropdownMenu.Item key={`subMenuSecond-${index}`} className="dropdown-item" disabled>
+                                    <DropdownMenu.Item
+                                      key={`subMenuSecond-${index}`}
+                                      className="dropdown-item"
+                                      disabled
+                                    >
                                       <NavLink to={subMenuSecond.path} end>
-                                        {({ isActive }) => <Typography variant="body1" className={isActive ? 'path-active' : ''}>{subMenuSecond.name}</Typography>}
+                                        {({ isActive }) => (
+                                          <Typography variant="body1" className={isActive ? 'path-active' : ''}>
+                                            {subMenuSecond.name}
+                                          </Typography>
+                                        )}
                                       </NavLink>
                                     </DropdownMenu.Item>
                                   ))}
@@ -92,8 +115,8 @@ const Header = () => {
                               </DropdownMenu.Portal>
                             </DropdownMenu.Sub>
                           )}
-                          </>
-                        ))}
+                        </>
+                      ))}
                     </DropdownMenu.Content>
                   </DropdownMenu.Portal>
                 )}
