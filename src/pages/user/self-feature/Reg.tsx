@@ -970,7 +970,7 @@ const SelfFeatureReg = () => {
                   </svg>
                     저장
                   </Button>
-                  <Button priority="Primary" appearance="Contained" size="LG">
+                  <Button priority="Normal" appearance="Outline" size="LG">
                     승인 요청
                   </Button>
                 </Modal.Footer>
