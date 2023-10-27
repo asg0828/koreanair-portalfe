@@ -1,7 +1,7 @@
 import VerticalTable from '@/components/table/VerticalTable';
 import { Button, Pagination, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField } from '@ke-design/components';
 import { useState } from 'react';
-import { Typography, radioClasses } from '@mui/material';
+import { Typography } from '@mui/material';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { onIdPaxData, oneIdPaxColumn, reason } from '../../one-id-main/data';
 import { SelectValue } from '@mui/base/useSelect';
@@ -38,8 +38,8 @@ export default function Daily() {
     // OneID 변경 이유 코드
     formData.append('reason', value);
     // 조회기준
-
-    // formData.append('criterion',  );
+    // const criterionVal = criterion.value;
+    // formData.append('criterion', criterionVal);
     // for (const x of formData.entries()) {
     //   console.log(x);
     // }
@@ -57,7 +57,6 @@ export default function Daily() {
   return (
     <div style={{ width: '1200px' }}>
       <div>
-        <Typography variant="h4">OneID Daily Report</Typography>
         <Stack>
           <HorizontalTable>
             <TR>

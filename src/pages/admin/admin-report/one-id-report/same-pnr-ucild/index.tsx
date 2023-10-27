@@ -57,7 +57,6 @@ export default function SamePnrUcild() {
   return (
     <div style={{ width: '1200px' }}>
       <div>
-        <Typography variant="h4">OneID SamePnrReport</Typography>
         <Stack>
           <HorizontalTable></HorizontalTable>
         </Stack>

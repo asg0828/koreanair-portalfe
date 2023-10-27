@@ -57,7 +57,6 @@ export default function Ctivoc() {
   return (
     <div style={{ width: '1200px' }}>
       <div>
-        <Typography variant="h4">OneID CTI/VOC Report</Typography>
         <Stack>
           <HorizontalTable>
             <TR>

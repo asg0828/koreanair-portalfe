@@ -42,8 +42,6 @@ export default function DataConversion() {
 
   return (
     <Stack direction="Vertical">
-      <Typography variant="h2">☞ 데이터 변환</Typography>
-
       <Stack direction="Vertical">
         <Typography variant="h4">1. CleansingRule / Hash 변환 결과</Typography>
         <HorizontalTable>
