@@ -9,10 +9,16 @@ import {
     TbCoMetaTblClmnInfo,
     TbCoMetaTbInfo,
     Behavior,
-    Attribute
+    Attribute,
+    FormulaValidRslt,
 } from "@/models/selfFeature/FeatureInfo";
 
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
+
+export const initFormulaValidRslt: FormulaValidRslt = {
+    isValidFormula: true,
+    text:  '',
+}
 
 export const selfFeatPgPpNm = {
     LIST: 'list', // 목록

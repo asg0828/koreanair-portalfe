@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { cloneDeep } from 'lodash'
 
 import { 
@@ -6,19 +7,35 @@ import {
 } from '@/components/ui'
 
 import { 
+    FormulaValidRslt,
     TbRsCustFeatRuleCalc,
 } from '@/models/selfFeature/FeatureInfo'
-
+import { 
+    initFormulaValidRslt,
+} from '@/pages/user/self-feature/data'
+import { ValidationFormula } from '@/utils/self-feature/formulaValidUtil';
 
 const FormulaComponent = (props: any) => {
 
+    const [ formulaValidRslt, setFormulaValidRslt ] = useState<FormulaValidRslt>(cloneDeep(initFormulaValidRslt))
+
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
+        
         props.setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
             let rtn = cloneDeep(state)
-            rtn[id] = value
+            rtn[id] = value.toUpperCase()
             return rtn
         })
+    }
+
+    const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+        const { id, value } = e.target
+        
+        setFormulaValidRslt(ValidationFormula({
+            formula: value,
+            targetList: props.formulaTrgtList,
+        }))
     }
 
     return (
@@ -29,21 +46,20 @@ const FormulaComponent = (props: any) => {
             value={props.custFeatRuleCalc.formula}
             id="formula"
             onChange={onchangeInputHandler} 
-            //validation={!props.isValidFormula ? 'Error' : 'Default'}
+            onBlur={onblurInputHandler}
+            validation={!formulaValidRslt.isValidFormula ? 'Error' : 'Default'}
         />
-        {/*
         <div className='flex space-between'>
             <div>
-            {!props.isValidFormula ? (
+            {!formulaValidRslt.isValidFormula ? (
                 <HelperText showIcon={false} type='Error'>
-                계산식을 확인해주세요
+                {formulaValidRslt.text}
                 </HelperText>
             ) : (
                 ''
             )}
             </div>
         </div>
-        */}
         </>
     )
 }

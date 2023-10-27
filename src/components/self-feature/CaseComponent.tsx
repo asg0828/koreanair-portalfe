@@ -3,16 +3,21 @@ import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from 'lodash'
 
 import { Button, Select, SelectOption, Stack, TextField, Typography, HelperText } from '@/components/ui'
-import { TbRsCustFeatRuleCase, } from '@/models/selfFeature/FeatureInfo';
+
+import { FormulaValidRslt, TbRsCustFeatRuleCase, } from '@/models/selfFeature/FeatureInfo';
 import { 
     delimiterOption, 
+    initFormulaValidRslt, 
     operatorOption, 
     whenYn, 
 } from '@/pages/user/self-feature/data'
+import { ValidationFormula } from '@/utils/self-feature/formulaValidUtil';
 
 const CaseComponent = (props: any) => {
 
     const [ trgtFormulaInput, setTrgtFormulaInput ] = useState<Boolean>(false)
+    const [ formulaValidRslt, setFormulaValidRslt ] = useState<FormulaValidRslt>(cloneDeep(initFormulaValidRslt))
+
     const [ delimiterSelected, setDelimiterSelected ] = useState<Boolean>(false)
     const [ elseSelected, setElseSelected ] = useState<Boolean>(false)
 
@@ -52,10 +57,12 @@ const CaseComponent = (props: any) => {
         const { id, value } = e.target
 
         let t = false
+        let inputValue = cloneDeep(value)
 
         if (id === "targetFormula" && value !== "") {
             //입력값이 있는 경우
             setTrgtFormulaInput(true)
+            inputValue = inputValue.toUpperCase()
             t = false
         } else if (id === "targetFormula" && value === "") {
             //입력값이 없는 경우
@@ -65,7 +72,7 @@ const CaseComponent = (props: any) => {
 
         props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
-            rtn[props.index][id] = value
+            rtn[props.index][id] = inputValue
             if (t) {
                 rtn[props.index]["targetFormula"] = ''
                 rtn[props.index]["operator"] = ''
@@ -124,6 +131,15 @@ const CaseComponent = (props: any) => {
         })
     }
 
+    const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
+        const { id, value } = e.target
+
+        setFormulaValidRslt(ValidationFormula({
+            formula: value,
+            targetList: props.formulaTrgtList,
+        }))
+    }
+    
     return (
         <Stack
             direction="Horizontal"
@@ -172,27 +188,28 @@ const CaseComponent = (props: any) => {
                 </>
             }
             {!elseSelected &&
+            <>
             <TextField 
                 disabled={!props.isPossibleEdit}
                 placeholder="Target/계산식 입력"
                 value={props.custFeatRuleCase.targetFormula}
                 id='targetFormula'
                 onChange={onchangeInputHandler} 
-                //validation={!props.isValidFormula ? 'Error' : 'Default'}
+                onBlur={onblurInputHandler}
+                validation={!formulaValidRslt.isValidFormula ? 'Error' : 'Default'}
             />
-            /*
             <div className='flex space-between'>
                 <div>
-                {!props.isValidFormula ? (
+                {!formulaValidRslt.isValidFormula ? (
                     <HelperText showIcon={false} type='Error'>
-                    계산식을 확인해주세요
+                    {formulaValidRslt.text}
                     </HelperText>
                 ) : (
                     ''
                 )}
                 </div>
             </div>
-            */
+            </>
             }
             {!elseSelected &&
             <Select 
