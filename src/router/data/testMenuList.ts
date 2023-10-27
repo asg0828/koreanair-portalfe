@@ -13,6 +13,11 @@ const testMenulist = [
         path: '/test/modal',
         children: [],
       },
+      {
+        name: '인증 테스트',
+        path: '/test/auth',
+        children: [],
+      },
     ],
   },
 ];
