@@ -230,10 +230,10 @@ const SelfFeatureReg = () => {
       else
         navigate(`../${pageNm}`)
   }
-  const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const onSubmitInsertHandler = () => {
     // createCustFeatRule
     // api Url :: (POST)/api/v1/customerfeatures
-    e.preventDefault()
     /*
     if (!isValidFormula) {
       alert("계산식을 확인해주세요.")
@@ -247,7 +247,6 @@ const SelfFeatureReg = () => {
   return (
     <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
     {/* 정보 영역 */}
-      <form onSubmit={onsubmitHandler}>
       <Stack direction="Vertical" gap="MD">
           {/* 기본 정보 */}
           <Typography variant="h2">1. Feature 기본 정보</Typography>
@@ -406,16 +405,15 @@ const SelfFeatureReg = () => {
     {/* 버튼 영역 */}
       <Stack direction="Vertical" gap="MD" justifyContent="End">
         <Stack justifyContent="End" gap="SM" className="width-100">
-          <Button type="submit" priority="Primary" appearance="Contained" size="LG">
+          <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitInsertHandler}>
             저장
           </Button>
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+          <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
             취소
           </Button>
         </Stack> 
       </Stack>
     {/* 버튼 영역 */}
-    </form>
     </Stack>
   )
 

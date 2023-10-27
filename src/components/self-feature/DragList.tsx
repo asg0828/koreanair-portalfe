@@ -66,6 +66,12 @@ const DragList = (props: any) => {
         searchBehvList(keyword)
     }
 
+    const onKeyPressTrgtSrchHandler = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            onClickTrgtSrchHandler()
+        }
+    }
+
     return (
         <Page
             style={{
@@ -76,12 +82,16 @@ const DragList = (props: any) => {
             }}
         >
             <Stack direction="Horizontal" gap="MD" justifyContent="Between" >
-                <TextField size="SM" value={keyword} onChange={(e) => setKeyword(e.target.value)}/>
+                <TextField 
+                    size="SM" 
+                    value={keyword} 
+                    onChange={(e) => setKeyword(e.target.value)}
+                    onKeyDown={onKeyPressTrgtSrchHandler}
+                />
                 <Button priority="Primary" appearance="Contained" size="XS" onClick={onClickTrgtSrchHandler}>
                     검색
                 </Button>
             </Stack>
-            {srchAttrRsltList.length > 0 &&
             <Accordion
                 align="Right"
                 size="MD"
@@ -91,6 +101,7 @@ const DragList = (props: any) => {
                     title='속성 정보'
                     value='속성 정보'
                 >
+                {srchAttrRsltList.length > 0 &&
                 <Stack direction="Vertical" justifyContent="Center" gap="SM" >
                 {srchAttrRsltList.map((attribute: Attribute, index: number) => {
                     return <AttrDragItem
@@ -99,9 +110,9 @@ const DragList = (props: any) => {
                     />
                 })}
                 </Stack>
+                }
                 </AccordionItem>
             </Accordion>
-            }
             {/* Feature 정보
             {props.features.map(() => {
 

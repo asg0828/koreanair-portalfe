@@ -31,22 +31,18 @@ import {
   initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
-  initTbRsCustFeatRuleCase,
   subFeatStatus,
   selfFeatPgPpNm,
 } from './data'
 
 const lCategory = [
-  { value: '', text: '선택' },
   { value: '1', text: '회원' },
   { value: '2', text: '항공' },
 ]
 const mCategory = [
-  { value: '', text: '선택' },
   { value: '1', text: '항공권' },
 ]
 const calcUnit = [
-  { value: '', text: '선택' },
   { value: '1', text: '원' },
   { value: '2', text: '명' },
 ]
@@ -233,10 +229,10 @@ const SelfFeatureEdit = () => {
       else
         navigate(`../${pageNm}`)
   }
-  const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+
+  const onSubmitUpdateHandler = () => {
     // updateCustFeatRule
     // api url :: (PUT)/api/v1/customerfeatures/{custFeatRuleId}
-    e.preventDefault()
     /*
     if (!isValidFormula) {
       alert("계산식을 확인해주세요.")
@@ -273,7 +269,6 @@ const SelfFeatureEdit = () => {
   return (
     <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
     {/* 정보 영역 */}
-      <form onSubmit={onsubmitHandler}>
       <Stack direction="Vertical" gap="MD" >
         {/* 상단 버튼 영역 */}
         <Stack direction="Horizontal" gap="MD" justifyContent="End">
@@ -298,7 +293,7 @@ const SelfFeatureEdit = () => {
             <TD colSpan={3}>
               <Select 
                 appearance="Outline" 
-                placeholder="선택" 
+                placeholder="대구분" 
                 className="width-100" 
                 onChange={(
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -316,7 +311,7 @@ const SelfFeatureEdit = () => {
             <TD colSpan={3}>
               <Select 
                 appearance="Outline" 
-                placeholder="선택" 
+                placeholder="중구분" 
                 className="width-100" 
                 onChange={(
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -387,7 +382,7 @@ const SelfFeatureEdit = () => {
             <TD colSpan={3}>
               <Select 
                 appearance="Outline" 
-                placeholder="선택" 
+                placeholder="산출 단위" 
                 className="width-100" 
                 onChange={(
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -473,16 +468,15 @@ const SelfFeatureEdit = () => {
       {/* 버튼 영역 */}
         <Stack direction="Vertical" gap="MD" justifyContent="End">
           <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button type="submit" priority="Primary" appearance="Contained" size="LG">
+            <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitUpdateHandler}>
               수정
             </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               취소
             </Button>
           </Stack> 
         </Stack>
       {/* 버튼 영역 */}
-      </form>
     </Stack>
   )
 }
