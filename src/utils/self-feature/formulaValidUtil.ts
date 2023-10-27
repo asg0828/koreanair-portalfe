@@ -143,38 +143,34 @@ export const ValidationFormula = (props: any) => {
     if (props.formula === "") {
         validRslt = cloneDeep(initFormulaValidRslt)
         return validRslt
-    }
-    /* 
-        잘못된 문자열 입력 체크
-        변수할당이 아닌 정규식 그대로 적용
-          -> 변수 할당시 이전 test의 lastindex를 가지고 있기 때문에 결과값이 다름
-    */
-    if (/([^()+\-*/T0-9])+/g.test(props.formula)) {
-        validRslt.isValidFormula = false
-        validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
-        return validRslt
-    }
-    /*
-        입력한 target ID 존재 여부 체크
-    */
-    if (!targetIdExistCheck()) return validRslt
-
-    /* 
-        괄호 체크
-    */
-    if (!parenthesisCheck()) {
-        validRslt.isValidFormula = false
-        validRslt.text = `괄호가 올바르게 열리고 닫히지 않았습니다.`
-        return validRslt
-    }
-
-    if (isNaN(formulaValid(props.formula))) {
+    } else if (isNaN(formulaValid(props.formula))) {
         validRslt.isValidFormula = false
 
         if (validRslt.text === '') {
             validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
         }
         
+    } else if (/([^()+\-*/T0-9])+/g.test(props.formula)) {
+        /* 
+            잘못된 문자열 입력 체크
+            변수할당이 아닌 정규식 그대로 적용
+              -> 변수 할당시 이전 test의 lastindex를 가지고 있기 때문에 결과값이 다름
+        */
+        validRslt.isValidFormula = false
+        validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
+        return validRslt
+    } else if (!targetIdExistCheck()) {
+        /*
+            입력한 target ID 존재 여부 체크
+        */
+        return validRslt
+    } else if (!parenthesisCheck()) {
+        /* 
+            괄호 체크
+        */
+        validRslt.isValidFormula = false
+        validRslt.text = `괄호가 올바르게 열리고 닫히지 않았습니다.`
+        return validRslt
     } else {
         validRslt.isValidFormula = true
         validRslt.text = ''
