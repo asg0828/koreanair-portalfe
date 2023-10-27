@@ -89,7 +89,7 @@ const Home = () => {
           </div>
           <Typography variant='h2' style={{lineHeight:'50px',marginBottom:'12px'}}>내 부서</Typography>
           <Link to="/" className="box6 leftIconBox n1">
-            <Typography variant='h3'>Feature</Typography>
+            <Typography variant='h3'>신청/등록 Feature</Typography>
             <span className="smallBox_title"></span>
             <Stack justifyContent="End" alignItems="Center">
               <span className="number">226</span>
@@ -98,9 +98,9 @@ const Home = () => {
           </Link>
           <Stack direction="Vertical" className="">
             <Link to="/" className="box6 leftIconBox n2">
-              <Typography variant='h3'>테이블정의</Typography>
+              <Typography variant='h3'>관심 Feature</Typography>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number">226</span>
+                <span className="number">55</span>
                 <span className="count">건</span>
               </Stack>
             </Link>
