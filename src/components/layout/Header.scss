@@ -27,7 +27,6 @@
   }
 
   .menu-title {
-    color: #00256C;
   }
 }
 
@@ -81,4 +80,57 @@
 // }
 .path-active {
   background-color: #DADADA;
+}
+.dropDownMenu{
+  position: absolute;
+  background:#FFF;
+  width: 100%;
+  padding: 1rem;
+  z-index: 81;
+  border-bottom: 1px solid #dadada;
+  border-top: 1px solid #dadada;
+  box-shadow: rgba(0, 37, 108, 0.1) 0.125rem 0.625rem 1rem;
+  
+}
+.dropDownMenu.close{
+  display: none;
+}
+.dropDownMenu.open{
+  display: block;
+}
+.dropDownMenu .dropDownWrap{
+  display: flex;
+  margin-top: 2rem;
+  padding: 0 20px;
+}
+.dropDownMenu .dropDownItem{
+  flex: 1;
+  border-right: 1px solid rgb(218, 218, 218);
+  padding:0 1rem;
+}
+.dropDownMenu .dropDownItem .depth1{
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+  color: rgb(52, 52, 52);
+  display: block;
+}
+.dropDownMenu .dropDownItem .depth2{
+  cursor: pointer;
+  padding: 0.75rem 0px;
+  font-weight: 400; 
+  font-size: 0.8125rem;
+  color: rgb(52, 52, 52);
+  display: block;
+}
+.dropDownMenu .dropDownItem>div div:last-child{
+  padding-bottom: 60px;
+}
+.dropDownMenu .dropDownItem a:hover{
+  font-weight: 500;
+  color: rgb(0, 37, 108);
+}
+.dropDownMenu .dropDownItem:last-child{
+  border-right: 0;
 }
