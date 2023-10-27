@@ -1,5 +1,6 @@
 export interface MenuInfo {
   menuList: Array<MenuItem>;
+  isDropMenu: boolean;
 }
 
 export interface MenuItem {

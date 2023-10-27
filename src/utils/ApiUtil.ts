@@ -56,7 +56,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
   axios.defaults.headers.post['Content-Type'] = 'application/json';
   axios.defaults.headers.put['Content-Type'] = 'application/json';
   axios.defaults.headers.patch['Content-Type'] = 'application/json';
-  // axios.defaults.withCredentials = true;
+  axios.defaults.withCredentials = true;
   const apiUrl = process.env.REACT_APP_API_URL ? JSON.parse(process.env.REACT_APP_API_URL) : {};
 
   let baseURL: string = apiUrl['KAL_BE'] || '';
@@ -78,82 +78,82 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
     params: params || {},
   });
 
-  // // 공통 요청 처리
-  // instance.interceptors.request.use(
-  //   (config: AxiosRequestConfig): AxiosRequestConfig => {
-  //     if (config?.headers) {
-  //       const accessToken: string | undefined = sessionUtil.getAccessTokenRefreshTokenInfo().accessToken;
+  // 공통 요청 처리
+  instance.interceptors.request.use(
+    (config: AxiosRequestConfig): AxiosRequestConfig => {
+      if (config?.headers) {
+        const accessToken: string | undefined = sessionUtil.getAccessTokenRefreshTokenInfo().accessToken;
 
-  //       if (accessToken) config.headers['authorization'] = `Bearer ${accessToken}`;
+        if (accessToken) config.headers['authorization'] = `Bearer ${accessToken}`;
 
-  //       if (sessionUtil.getSessionInfo().sessionId) {
-  //         config.headers['x-session-id'] = sessionUtil.getSessionInfo().sessionId || '';
-  //       }
-  //       if (isFile) {
-  //         config['responseType'] = 'blob';
-  //         config.headers['accept'] = 'application/octet-stream';
-  //       } else {
-  //         config.headers['x-correlation-id'] =
-  //           window.location.pathname === '/'
-  //             ? 'root'.concat('_').concat(uuidv4())
-  //             : window.location.pathname?.concat('_').concat(uuidv4()) || '';
-  //         config.headers['Content-Type'] = 'application/json';
-  //       }
-  //     }
-  //     return config;
-  //   },
-  //   (error: any): Promise<any> => {
-  //     return Promise.reject(error);
-  //   }
-  // );
+        if (sessionUtil.getSessionInfo().sessionId) {
+          config.headers['x-session-id'] = sessionUtil.getSessionInfo().sessionId || '';
+        }
+        if (isFile) {
+          config['responseType'] = 'blob';
+          config.headers['accept'] = 'application/octet-stream';
+        } else {
+          config.headers['x-correlation-id'] =
+            window.location.pathname === '/'
+              ? 'root'.concat('_').concat(uuidv4())
+              : window.location.pathname?.concat('_').concat(uuidv4()) || '';
+          config.headers['Content-Type'] = 'application/json';
+        }
+      }
+      return config;
+    },
+    (error: any): Promise<any> => {
+      return Promise.reject(error);
+    }
+  );
 
-  // // success / error 공통 처리
-  // instance.interceptors.response.use(
-  //   (response: any): any => {
-  //     const commonResponse: CommonResponse = response.data as CommonResponse;
-  //     commonResponse.header = response?.headers;
-  //     if (isLoading) {
-  //       // @ts-ignore
-  //       // eslint-disable-next-line
-  //       window.loadingSpinner.setMinus();
-  //     }
+  // success / error 공통 처리
+  instance.interceptors.response.use(
+    (response: any): any => {
+      const commonResponse: CommonResponse = response.data as CommonResponse;
+      commonResponse.header = response?.headers;
+      if (isLoading) {
+        // @ts-ignore
+        // eslint-disable-next-line
+        window.loadingSpinner.setMinus();
+      }
 
-  //     return commonResponse;
-  //   },
+      return commonResponse;
+    },
 
-  //   (error: any): any => {
-  //     if (isLoading) {
-  //       // @ts-ignore
-  //       // eslint-disable-next-line
-  //       window.loadingSpinner.setMinus();
-  //     }
+    (error: any): any => {
+      if (isLoading) {
+        // @ts-ignore
+        // eslint-disable-next-line
+        window.loadingSpinner.setMinus();
+      }
 
-  //     const unknownError: CommonResponse = {
-  //       successOrNot: 'N',
-  //       statusCode: StatusCode.UNKNOWN_ERROR,
-  //       data: {},
-  //     };
-  //     // eslint-disable-next-line
-  //     if (error.response && error.response.status.toString().indexOf('40') === 0) {
-  //       // eslint-disable-next-line
-  //       if (error.response.status.toString() === '403' && error.response.data.errorCode.toString() === '301') {
-  //         return sessionApis.accessTokenRequset().then((newAccessTokenResponse) => {
-  //           const originalRequest = error.config;
-  //           originalRequest.headers['authorization'] = `Bearer ${
-  //             JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
-  //           }`;
-  //           return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
-  //             return retryResponse.data as CommonResponse;
-  //           });
-  //         });
-  //       } else {
-  //         sessionUtil.deleteSessionInfo();
-  //         sessionApis.oauthLogin();
-  //       }
-  //     }
-  //     return unknownError;
-  //   }
-  // );
+      const unknownError: CommonResponse = {
+        successOrNot: 'N',
+        statusCode: StatusCode.UNKNOWN_ERROR,
+        data: {},
+      };
+      // eslint-disable-next-line
+      if (error.response && error.response.status.toString().indexOf('40') === 0) {
+        // eslint-disable-next-line
+        if (error.response.status.toString() === '403' && error.response.data.errorCode.toString() === '301') {
+          return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
+            const originalRequest = error.config;
+            originalRequest.headers['authorization'] = `Bearer ${
+              JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
+            }`;
+            return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
+              return retryResponse.data as CommonResponse;
+            });
+          });
+        } else {
+          sessionUtil.deleteSessionInfo();
+          sessionApis.oauthLogin();
+        }
+      }
+      return unknownError;
+    }
+  );
 
   return instance;
 };

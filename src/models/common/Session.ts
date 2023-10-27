@@ -43,3 +43,8 @@ export enum RoleType {
   ADMIN = 'admin',
   NORMAL_USER = 'normal_user',
 }
+
+export interface SessionRequest {
+  googleAccessToken: string;
+  googleIdToken: string;
+}

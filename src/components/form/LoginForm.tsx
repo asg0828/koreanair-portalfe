@@ -1,4 +1,3 @@
-
 import { useDispatch, useSelector } from 'react-redux';
 import CustomRouter, { userRouter, adminRouter, testRouter } from '@/router';
 import { ReducerType } from '@reducers';
@@ -9,11 +8,11 @@ import testMenulist from '@/router/data/testMenuList';
 import { Stack, Loader } from '@components/ui';
 import NotFound from '@/pages/Error';
 
-const Login = () => {
+const LoginForm = () => {
   const auth = useSelector((state: ReducerType) => state.auth);
-  const dispatch = useDispatch();
   const isAdminPage = window.location.pathname.substring(0, 6) === '/admin';
   const isTestPage = window.location.pathname.substring(0, 5) === '/test';
+  const dispatch = useDispatch();
 
   if (auth.userInfo) {
     let router;
@@ -63,4 +62,4 @@ const Login = () => {
     </Stack>
   );
 };
-export default Login;
+export default LoginForm;

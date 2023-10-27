@@ -52,12 +52,6 @@ const getInstance = (
   isAccessToken?: boolean,
   isLogout?: boolean
 ): AxiosInstance => {
-  if (isLoading) {
-    // @ts-ignore
-    // eslint-disable-next-line
-    window.loadingSpinner.setAdd();
-  }
-
   axios.defaults.headers.post['Content-Type'] = 'application/json';
   axios.defaults.withCredentials = true;
   // axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
@@ -69,7 +63,7 @@ const getInstance = (
 
   // const authHeader = btoa(process.env.REACT_APP_CLIENT_ID + ':' + process.env.REACT_APP_CLIENT_SECRET);
   const authenticationHeader = Buffer.from(
-    String(process.env.REACT_APP_CLIENT_ID) + ':' + String(process.env.REACT_APP_CLIENT_SECRET)
+    String(process.env.REACT_APP_CLIENT_ID) + ':' + String(process.env.REACT_APP_CLIENT_ID)
   ).toString('base64');
   const accessToken = sessionUtil.getAccessToken();
   if (process.env.REACT_APP_NODE_ENV === 'local') {
@@ -126,30 +120,17 @@ const getInstance = (
         data: JSON.stringify(response),
         header: response?.headers,
       };
-      if (isLoading) {
-        // @ts-ignore
-        // eslint-disable-next-line
-            window.loadingSpinner.setMinus();
-      }
       return commonResponse;
     },
 
     (error: any): any => {
-      if (isLoading) {
-        // @ts-ignore
-        // eslint-disable-next-line
-        window.loadingSpinner.setMinus();
-      }
-
       const unknownError: CommonResponse = {
         successOrNot: 'N',
         statusCode: StatusCode.UNKNOWN_ERROR,
         data: {},
       };
 
-      // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
-        // eslint-disable-next-line
         if (error.response.status.toString() === '403' && error.response.data.errorCode.toString() === '302') {
           sessionUtil.deleteSessionInfo();
           sessionApis.oauthLogin();

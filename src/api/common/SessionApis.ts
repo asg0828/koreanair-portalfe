@@ -21,7 +21,6 @@ export default class SessionApis {
     });
   };
 
-  // public oauthLogin = async () => {
   public oauthLogin() {
     const apiUrl = process.env.REACT_APP_API_URL ? JSON.parse(process.env.REACT_APP_API_URL) : {};
     const baseURL: string = apiUrl['APIGEE_BE'] || '';
@@ -32,9 +31,6 @@ export default class SessionApis {
 
     fetch(googleOAuthUrl, {
       redirect: 'manual',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
     })
       .then((response) => {
         if (response.type === 'opaqueredirect') {
@@ -42,11 +38,9 @@ export default class SessionApis {
           window.location.href = response.url;
         }
       })
-      .catch(function (err) {
-        // console.error('when redirected error is occurred. The error message is ' , err.message);
-      });
-    // return;
+      .catch(function (err) {});
   }
+
   public accessTokenRefreshTokenRequset = async (
     accessTokenRefreshTokenReqeust: AccessTokenRefreshTokenRequest,
     isLoading = true,
@@ -61,7 +55,7 @@ export default class SessionApis {
 
     let accessTokenRefreshTokenResponse: CommonResponse = {
       successOrNot: 'N',
-      statusCode: 'N', // StatusCode.UNKNOWN_ERROR,
+      statusCode: 'N',
       data: {},
     };
 
@@ -70,7 +64,6 @@ export default class SessionApis {
       url: '/oauth2/v1/token',
       method: OAuthMethod.POST,
       params: {
-        //  queryParams: {...accessTokenRefreshTokenReqeust},
         bodyParams: accessTokenRefreshTokenParameter,
       },
       config: {
@@ -79,8 +72,8 @@ export default class SessionApis {
       },
     });
 
+
     const accessTokenRefreshTokenJson = JSON.parse(accessTokenRefreshTokenResponse.data as string);
-    // eslint-disable-next-line
     const { given_name }: any = jwtDecode(accessTokenRefreshTokenJson.data.google_id_token);
 
     const accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo = {
@@ -93,14 +86,14 @@ export default class SessionApis {
     return accessTokenRefreshTokenResponse;
   };
 
-  public accessTokenRequset = async (isLoading = true, isAccessToken = true) => {
+  public accessTokenRequest = async (isLoading = true, isAccessToken = true) => {
     const sessionUtil = new SessionUtil();
     const accessTokenParameter = `grant_type=refresh_token&refresh_token=${
       sessionUtil.getAccessTokenRefreshTokenInfo().refreshToken?.toString() || ''
     }`;
     let newAccessTokenResponse: CommonResponse = {
       successOrNot: 'N',
-      statusCode: 'N', // StatusCode.UNKNOWN_ERROR,
+      statusCode: 'N',
       data: {},
     };
 
@@ -125,7 +118,7 @@ export default class SessionApis {
     const logoutParameter = `client_id=${process.env.REACT_APP_CLIENT_ID || ''}&grant_type=revoke_token`;
     let logoutResponse: CommonResponse = {
       successOrNot: 'N',
-      statusCode: 'N', // StatusCode.UNKNOWN_ERROR,
+      statusCode: 'N',
       data: {},
     };
 
@@ -134,7 +127,6 @@ export default class SessionApis {
       url: '/oauth2/v1/revoketoken',
       method: OAuthMethod.POST,
       params: {
-        //  queryParams: {...accessTokenRefreshTokenReqeust},
         bodyParams: logoutParameter,
       },
       config: {
