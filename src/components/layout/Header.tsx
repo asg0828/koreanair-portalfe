@@ -1,16 +1,21 @@
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { useNavigate, NavLink,Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate, NavLink, Link } from 'react-router-dom';
 import { ReducerType } from '@reducers';
+import SessionApis from '@api/common/SessionApis';
 import { MenuItem } from '@/models/common/Menu';
+import { menuSlice } from '@/reducers';
 import { MenuOutlinedIcon, LogoutOutlinedIcon, KeyboardArrowDownIcon } from '@/assets/icons';
 import { Avatar, Typography, Stack, DropdownMenu, Page } from '@/components/ui';
 import './Header.scss';
 
 const Header = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const sessionApis = new SessionApis();
+  const isDropMenu = useSelector((state: ReducerType) => state.menu.isDropMenu);
   const menuList = useSelector((state: ReducerType) => state.menu.menuList);
   const isAdminPage = useSelector((state: ReducerType) => state.auth.isAdminPage);
-  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [subActiveIndex, setSubActiveIndex] = useState<number>(-1);
 
@@ -19,7 +24,9 @@ const Header = () => {
   };
 
   const handleTrigger = (index: number) => {
-    setActiveIndex(index);
+    if (!isDropMenu) {
+      setActiveIndex(index);
+    }
   };
 
   const handleSubTrigger = (index: number) => {
@@ -37,13 +44,15 @@ const Header = () => {
       window.open(`/popup${menu.path}`, '_blank', 'noopener, noreferrer');
     }
   };
-  const [isAllMenuOpen,setIsAllMenuOpen] = useState("close");
-  const allMenuOpen = () => {
-    setIsAllMenuOpen("open");
-  }
-  const allMenuClose = () => {
-    setIsAllMenuOpen("close");
-  }
+
+  const handleLogout = async () => {
+    await sessionApis.logoutRequset();
+    window.location.reload();
+  };
+
+  const handleDropMenu = () => {
+    dispatch(menuSlice.actions.setIsDropMenu(!isDropMenu));
+  };
 
   return (
     <header id="header">
@@ -133,46 +142,37 @@ const Header = () => {
 
           <Stack justifyContent="End" gap="XL" className="user-info-wrap">
             <Avatar status="01" />
-            <LogoutOutlinedIcon color="action" />
-            <MenuOutlinedIcon color="action" onClick={allMenuOpen}/>
+            <LogoutOutlinedIcon color="action" onClick={handleLogout} />
+            <MenuOutlinedIcon color="action" onClick={handleDropMenu} />
           </Stack>
         </Stack>
-        
-
       </Page>
-      <div className={"dropDownMenu" +" "+ isAllMenuOpen}>
+
+      <div className={`dropDownMenu ${isDropMenu ? 'open' : 'close'}`}>
         <Page fixedSize={true} style={{ padding: '0 20px' }}>
-          <Stack justifyContent="End" className='width-100' style={{padding:"0 1rem"}}>
-              <button type='button' onClick={allMenuClose}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"></path></svg>
-              </button>
-            </Stack>
-            <div className='dropDownWrap'>
+          <div className="dropDownWrap">
             {menuList?.map((menu, index: number) => (
-              <div key={`menu-${index}`} className='dropDownItem'>
-                <Link to={menu.path} className='depth1' onClick={allMenuClose}>{menu.name}</Link>
+              <div key={`menu-${index}`} className="dropDownItem">
+                <Link to={menu.path} className="depth1">
+                  {menu.name}
+                </Link>
                 {menu.children.length > 0 && (
                   <div>
                     {menu.children.map((subMenu, index: number) => (
                       <div key={`subMenu-${index}`}>
                         {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
-                          <Link to={subMenu.path} className='depth2' onClick={allMenuClose}>
+                          <Link to={subMenu.path} className="depth2">
                             {subMenu.name}
                           </Link>
                         ) : (
                           <div>
                             <Typography variant="body1">{subMenu.name}</Typography>
                             {subMenu.children.map((subMenuSecond, index: number) => (
-                              <div
-                                key={`subMenuSecond-${index}`}
-                                className="dropdown-item"
-                              >
-                              <Link to={subMenuSecond.path}  onClick={allMenuClose}>
-                                  <Typography variant="body1" >
-                                    {subMenuSecond.name}
-                                  </Typography>
-                              </Link>
-                              </div> 
+                              <div key={`subMenuSecond-${index}`} className="dropdown-item">
+                                <Link to={subMenuSecond.path}>
+                                  <Typography variant="body1">{subMenuSecond.name}</Typography>
+                                </Link>
+                              </div>
                             ))}
                           </div>
                         )}
@@ -182,10 +182,9 @@ const Header = () => {
                 )}
               </div>
             ))}
-            </div>
-          </Page>
-          
-        </div>
+          </div>
+        </Page>
+      </div>
     </header>
   );
 };

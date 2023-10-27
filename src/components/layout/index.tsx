@@ -1,4 +1,8 @@
+import { useEffect } from 'react';
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { ReducerType } from '@reducers';
+import { menuSlice } from '@/reducers';
 import Header from '@components/layout/Header';
 import Body from '@components/layout/Body';
 import Footer from '@components/layout/Footer';
@@ -28,6 +32,15 @@ const RootLayout = () => {
   const pathname = location.pathname.replace(/\/\s*$/, '');
   const routePath = defaultPath[pathname];
   const isPopup = pathname.includes('/popup');
+
+  const dispatch = useDispatch();
+  const isDropMenu = useSelector((state: ReducerType) => state.menu.isDropMenu);
+
+  useEffect(() => {
+    if (isDropMenu) {
+      dispatch(menuSlice.actions.setIsDropMenu(!isDropMenu));
+    }
+  }, [location, dispatch]);
 
   return (
     <>
