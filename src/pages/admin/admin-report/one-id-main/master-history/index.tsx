@@ -80,7 +80,6 @@ export default function MasterHistory() {
   return (
     <div style={{ width: '1200px' }}>
       <div>
-        <Typography variant="h4">OneID 마스터 History</Typography>
         <Stack>
           <HorizontalTable>
             <TR>
@@ -168,7 +167,7 @@ export default function MasterHistory() {
               <TD>
                 <TextField
                   onChange={(e) => onSearchChangeHandler(e, 'oneId')}
-                  placeholder="이름을 입력하세요."
+                  placeholder="이름을 입력하세요.1"
                   value={oneIdNum}
                 />
               </TD>

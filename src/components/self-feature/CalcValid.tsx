@@ -1,16 +1,49 @@
 import {Button, Checkbox, Stack, Typography} from '@components/ui'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { cloneDeep } from 'lodash'
-import { TbRsCustFeatRuleCalc, TbRsCustFeatRuleCase } from '@/models/selfFeature/FeatureInfo'
+import { TbRsCustFeatRuleCalc, TbRsCustFeatRuleCase, selfFeatPgPpNm, subFeatStatus } from '@/models/selfFeature/FeatureInfo'
 import { initTbRsCustFeatRuleCase } from '@/pages/user/self-feature/data';
 import CaseComponent from './CaseComponent';
 import FormulaComponent from './FormulaComponent';
 
 const ClacValid = (props: any) => {
 
+    const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
     const [ formula, setFormula ] = useState<string>(cloneDeep(props.custFeatRuleCalc.formula))
     const [ formulaChecked, setFormulaChecked ] = useState(false)
+    const [ elseSelected, setElseSelected ] = useState<Boolean>(false)
+
+    // 수정가능 여부 판단
+    useEffect(() => {
+        // 등록, 품의저장인 상태이면서 상세페이지가 아닌 경우 수정가능
+        if (
+            (props.featStatus === subFeatStatus.REG 
+            || props.featStatus === subFeatStatus.SUBREG )
+            && props.featStatus !== selfFeatPgPpNm.DETL
+        ) {
+            setIsPossibleEdit(true)
+        } else {
+            setIsPossibleEdit(false)
+        }
+
+    }, [props.featStatus])
+
+    useEffect(() => {
+        if (props.custFeatRuleCaseList.length < 1) return
+
+        if (props.custFeatRuleCaseList.length > 1)
+            setFormulaChecked(true)
+
+        for (let i = 0; i < props.custFeatRuleCaseList.length; i++) {
+            if (props.custFeatRuleCaseList[i].whenYn === "N") {
+                setElseSelected(true)
+                break
+            } else {
+                setElseSelected(false)
+            }
+        }
+    }, [props.custFeatRuleCaseList])
 
     const validationFormula = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
@@ -126,7 +159,11 @@ const ClacValid = (props: any) => {
         if (!formulaChecked) {
             console.log("checked")
         } else {
-            console.log("unchecked")
+            props.setCustFeatRuleCaseList((state: TbRsCustFeatRuleCase) => {
+                let rtn = [cloneDeep(initTbRsCustFeatRuleCase)]
+                return rtn
+            })
+
         }
     }
 
@@ -142,17 +179,26 @@ const ClacValid = (props: any) => {
 
     return (
         // check box 선택시 case문 조건 설정 항목 show/hide 필요
+        <>
+        <Stack
+            direction="Horizontal"
+            justifyContent="Start" 
+            gap="MD" 
+        >
+            <Typography variant="h2">3. 계산식</Typography>
+            <Typography variant='body2'>CASE 사용</Typography>
+            <Checkbox
+                disabled={!isPossibleEdit}
+                checked={formulaChecked}
+                onCheckedChange={onCheckedChange}
+            />
+        </Stack>
         <div className='flex row'>
             <Stack 
                 direction="Horizontal"
                 justifyContent="Start" 
                 gap="MD" 
             >
-                <Typography variant='h6'>CASE 사용</Typography>
-                <Checkbox
-                    checked={formulaChecked}
-                    onCheckedChange={onCheckedChange}
-                />
             </Stack>
             {!formulaChecked && 
                 <FormulaComponent 
@@ -168,15 +214,16 @@ const ClacValid = (props: any) => {
                     gap="MD" 
                 >
                     <Typography variant='h6'>CASE</Typography>
-                    <Button size="SM" onClick={onClickAddRuleCaseHandler}>
+                    {!elseSelected && <Button size="SM" onClick={onClickAddRuleCaseHandler}>
                         추가
-                    </Button>
+                    </Button>}
                 </Stack>
                 {props.custFeatRuleCaseList.map((ruleCase: TbRsCustFeatRuleCase, index: number) => {
                     return <CaseComponent
                         key={`ruleCase-${index}`}
                         index={index}
                         ruleCase={ruleCase}
+                        lastIdx={props.custFeatRuleCaseList.length}
                         validationFormula={validationFormula}
                         isValidFormula={props.isValidFormula}
                         setCustFeatRuleCaseList={props.setCustFeatRuleCaseList}
@@ -186,6 +233,7 @@ const ClacValid = (props: any) => {
                 </>
             }
         </div>
+        </>
     )
 }
 

@@ -6,6 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import HorizontalTable from '@components/table/HorizontalTable';
 import DropList from '@/components/self-feature/DropList';
+import CalcValid from '@/components/self-feature/CalcValid';
 import {
     TR,
     TH,
@@ -46,6 +47,8 @@ const SelfFeatureDetail = () => {
     const location = useLocation()
     const navigate = useNavigate()
 
+    const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
+
     const [ featureInfo, setFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
     const [ targetList, setTargetList ] = useState<Array<TbRsCustFeatRuleTrgt>>([])
     const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
@@ -72,6 +75,16 @@ const SelfFeatureDetail = () => {
       setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
       setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
     }, [featureInfo])
+
+    useEffect(() => {
+      // 계산식 validation을 위한 대상 list 추출
+      let fList = []
+      for (let i = 0; i < targetList.length; i++) {
+        let t = i + 1
+        fList.push(`T${t}`)
+      }
+      setFormulaTrgtList(fList)
+    }, [targetList])
 
     const onClickPageMovHandler = (pageNm: string) => {
         if (pageNm === selfFeatPgPpNm.LIST) {
@@ -157,8 +170,6 @@ const SelfFeatureDetail = () => {
           cloneDeep(initTbRsCustFeatRuleCase), 
           {
             whenYn: "N",
-            targetFormula: "T2",
-            operator: "",
           }
         )
         tbRsCustFeatRuleCaseList.push(tbRsCustFeatRuleCase)
@@ -298,7 +309,16 @@ const SelfFeatureDetail = () => {
             {/* 대상 선택 */}
 
             {/* 계산식 */}
-            <Typography variant="h2">3. 계산식</Typography>
+            {formulaTrgtList.length > 0 &&
+              <CalcValid
+                featStatus={selfFeatPgPpNm.DETL}
+                formulaTrgtList={formulaTrgtList}
+                custFeatRuleCalc={custFeatRuleCalc}
+                custFeatRuleCaseList={custFeatRuleCaseList}
+                setCustFeatRuleCalc={setCustFeatRuleCalc}
+                setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+              />
+            }
             {/* 계산식 */}
         </Stack>
       {/* 정보 영역 */}

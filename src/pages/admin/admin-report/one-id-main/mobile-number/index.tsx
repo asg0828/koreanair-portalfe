@@ -12,8 +12,6 @@ export default function MobileNumber() {
   const [pnrNum, setPnrNum] = useState('');
   const [uciid, setUciid] = useState('');
 
-  const today = new Date();
-
   function onSearchChangeHandler(e: any, target: string) {
     let currVal = e.target.value;
     if (target === 'oneId') {
@@ -50,30 +48,31 @@ export default function MobileNumber() {
   }
 
   return (
-    <div style={{ width: '1200px' }}>
+    <div>
       <div>
-        <Typography variant="h4">대리점 추정 모바일 번호</Typography>
         <Stack>
-          <HorizontalTable>
-            <TR>
-              <TH align="right">OneId 번호</TH>
-              <TD>
-                <TextField
-                  onChange={(e) => onSearchChangeHandler(e, 'oneId')}
-                  placeholder="검색어를 입력하세요."
-                  value={oneIdNum}
-                />
-              </TD>
-              <TH align="right">PNR 번호</TH>
-              <TD>
-                <TextField
-                  placeholder="검색어를 입력하세요."
-                  value={pnrNum}
-                  onChange={(e) => onSearchChangeHandler(e, 'pnrNum')}
-                />
-              </TD>
-            </TR>
-          </HorizontalTable>
+          <div style={{ width: '1200px' }}>
+            <HorizontalTable>
+              <TR>
+                <TH align="right">OneId 번호</TH>
+                <TD>
+                  <TextField
+                    onChange={(e) => onSearchChangeHandler(e, 'oneId')}
+                    placeholder="검색어를 입력하세요."
+                    value={oneIdNum}
+                  />
+                </TD>
+                <TH align="right">PNR 번호</TH>
+                <TD>
+                  <TextField
+                    placeholder="검색어를 입력하세요."
+                    value={pnrNum}
+                    onChange={(e) => onSearchChangeHandler(e, 'pnrNum')}
+                  />
+                </TD>
+              </TR>
+            </HorizontalTable>
+          </div>
         </Stack>
         <div style={{ marginLeft: 1080 }}>
           <Stack>

@@ -101,7 +101,7 @@ export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
     id: 0,
     custFeatRuleId: '',
     caseId: '',
-    whenYn: '',
+    whenYn: 'Y',
     targetFormula: '',
     operator: '',
     delimiter: '',

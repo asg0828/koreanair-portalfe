@@ -17,7 +17,6 @@ import {
 import { initTbCoMetaTblClmnInfo, initTbRsCustFeatRuleTrgtFilter, trgtFilterTit } from "@/pages/user/self-feature/data"
 
 const columnList = [
-    { value: '', text: '컬럼 선택' },
     { value: 'colum1', text: 'colum1' },
     { value: 'colum2', text: 'colum2' },
     { value: 'colum3', text: 'colum3' },
@@ -249,6 +248,7 @@ const BehvDropItem = (props: any) => {
                         <Typography variant="h6">필터 선택</Typography>
                         <TextField 
                             disabled={!props.isPossibleEdit}
+                            placeholder="논리 표현식" 
                             value={filterExpsn}
                             id="filterLogiExpsn"
                             onChange={onchangeInputHandler}
@@ -318,6 +318,7 @@ const BehvDropItem = (props: any) => {
                 >
                     <Select 
                         disabled={!props.isPossibleEdit}
+                        placeholder="집계할 컬럼" 
                         appearance="Outline"
                         value={props.targetItem.columnName}
                         shape="Square"
@@ -340,6 +341,7 @@ const BehvDropItem = (props: any) => {
                     </Select>
                     <Select 
                         disabled={!props.isPossibleEdit}
+                        placeholder="집계 함수 선택" 
                         appearance="Outline"
                         value={props.targetItem.operator}
                         shape="Square"
@@ -363,6 +365,7 @@ const BehvDropItem = (props: any) => {
                         <>
                         <Select 
                             disabled={!props.isPossibleEdit}
+                            placeholder="Top 기준 함수" 
                             appearance="Outline"
                             value={props.targetItem.operand1}
                             shape="Square"
@@ -379,7 +382,6 @@ const BehvDropItem = (props: any) => {
                                 onchangeSelectHandler(e, value, "operand1")
                             }}
                         >
-                            <SelectOption value="">선택</SelectOption>
                             <SelectOption value="count">count</SelectOption>
                             <SelectOption value="last">last</SelectOption>
                         </Select>
@@ -393,6 +395,7 @@ const BehvDropItem = (props: any) => {
                         <Select 
                             appearance="Outline"
                             disabled={!props.isPossibleEdit}
+                            placeholder="동률일 때 기준 컬럼" 
                             value={props.targetItem.operand3}
                             shape="Square"
                             size="MD"
@@ -415,6 +418,7 @@ const BehvDropItem = (props: any) => {
                         <Select 
                             appearance="Outline"
                             disabled={!props.isPossibleEdit}
+                            placeholder="동률일 때 기준 정렬" 
                             value={props.targetItem.operand4}
                             shape="Square"
                             size="MD"
@@ -430,7 +434,6 @@ const BehvDropItem = (props: any) => {
                                 onchangeSelectHandler(e, value, "operand4")
                             }}
                         >
-                            <SelectOption value="">선택</SelectOption>
                             <SelectOption value="asc">오름차순</SelectOption>
                             <SelectOption value="desc">내림차순</SelectOption>
                         </Select>

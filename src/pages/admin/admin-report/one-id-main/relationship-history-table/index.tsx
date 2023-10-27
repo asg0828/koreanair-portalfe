@@ -68,7 +68,6 @@ export default function RelationshipHistoryTable() {
   return (
     <div style={{ width: '1200px' }}>
       <div>
-        <Typography variant="h4">OneID-PAX 매핑</Typography>
         <Stack>
           <HorizontalTable>
             <TR>

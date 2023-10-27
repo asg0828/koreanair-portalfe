@@ -22,7 +22,6 @@ export const filterOption = [
 ]
 // 연산자 목록
 export const operatorOption = [
-    { value: '', text: '연산자 선택' },
     { value: 'match', text: 'Match' },
     { value: 'not match', text: 'Not Match' },
     { value: 'start with', text: 'Start With' },
@@ -40,7 +39,6 @@ export const delimiterOption = [
 ]
 // 집계함수 목록
 export const aggregateOption = [
-    { value: '', text: '집계함수 선택' },
     { value: 'count', text: 'Count' },
     { value: 'max', text: 'Max' },
     { value: 'min', text: 'Min' },

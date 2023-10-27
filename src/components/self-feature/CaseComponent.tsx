@@ -7,6 +7,7 @@ import { TbRsCustFeatRuleCase, delimiterOption, operatorOption, whenYn } from '@
 
 const CaseComponent = (props: any) => {
 
+    const [ trgtFormulaInput, setTrgtFormulaInput ] = useState<Boolean>(false)
     const [ delimiterSelected, setDelimiterSelected ] = useState<Boolean>(false)
     const [ elseSelected, setElseSelected ] = useState<Boolean>(false)
 
@@ -26,19 +27,46 @@ const CaseComponent = (props: any) => {
         }
     }, [props.ruleCase.whenYn])
 
-    const onClickDeleteHandler = (index: number) => {
+    useEffect(() => {
+        if (props.ruleCase.targetFormula !== "") {
+            setTrgtFormulaInput(true)
+        } else {
+            setTrgtFormulaInput(false)
+        }
+    }, [props.ruleCase.targetFormula])
+
+    const onClickDeleteHandler = () => {
         props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
-            rtn.splice(index, 1)
+            rtn.splice(props.index, 1)
             return rtn
         })
     }
 
-    const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
+
+        let t = false
+
+        if (id === "targetFormula" && value !== "") {
+            //입력값이 있는 경우
+            setTrgtFormulaInput(true)
+            t = false
+        } else if (id === "targetFormula" && value === "") {
+            //입력값이 없는 경우
+            setTrgtFormulaInput(false)
+            t = true
+        }
+
         props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
-            rtn[index][id] = value
+            rtn[props.index][id] = value
+            if (t) {
+                rtn[props.index]["targetFormula"] = ''
+                rtn[props.index]["operator"] = ''
+                rtn[props.index]["delimiter"] = ''
+                rtn[props.index]["operand1"] = ''
+            }
             return rtn
         })
 
@@ -47,8 +75,7 @@ const CaseComponent = (props: any) => {
     const onchangeSelectHandler = (
         e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
         value: SelectValue<{}, false>,
-        id?: String,
-        index?: number
+        id?: String
     ) => {
         let keyNm = String(id)
         let v = String(value)
@@ -78,15 +105,15 @@ const CaseComponent = (props: any) => {
 
         props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
-            rtn[index!][keyNm] = v
+            rtn[props.index][keyNm] = v
             if (!t) {
-                rtn[index!]["delimiter"] = ''
+                rtn[props.index]["delimiter"] = ''
             }
             if (t2) {
-                rtn[index!]["targetFormula"] = ''
-                rtn[index!]["operator"] = ''
-                rtn[index!]["delimiter"] = ''
-                rtn[index!]["operand1"] = ''
+                rtn[props.index]["targetFormula"] = ''
+                rtn[props.index]["operator"] = ''
+                rtn[props.index]["delimiter"] = ''
+                rtn[props.index]["operand1"] = ''
             }
             return rtn
         })
@@ -102,13 +129,13 @@ const CaseComponent = (props: any) => {
                 <Typography variant='h5'>WHEN</Typography>
             ) : (
                 <>
-                <Button size="SM" onClick={()=>onClickDeleteHandler(props.index)}>
+                <Button size="SM" onClick={onClickDeleteHandler}>
                 삭제
                 </Button>
                 <Select 
+                    disabled={!((props.lastIdx-1) === props.index) ? true : false}
                     value={props.ruleCase.whenYn}
-                    appearance="Outline" 
-                    placeholder="선택" 
+                    appearance="Outline"
                     shape="Square"
                     size="MD"
                     status="default"
@@ -119,7 +146,7 @@ const CaseComponent = (props: any) => {
                     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                     value: SelectValue<{}, false>
                     ) => {
-                        onchangeSelectHandler(e, value, "whenYn", props.index)
+                        onchangeSelectHandler(e, value, "whenYn")
                     }}
                 >
                     {whenYn.map((item, index) => (
@@ -130,9 +157,10 @@ const CaseComponent = (props: any) => {
             )}
             {!elseSelected &&
             <TextField 
-                placeholder="TargetID / 계산식 입력"
+                placeholder="Target/계산식 입력"
                 value={props.ruleCase.targetFormula}
-                //onChange={props.validationFormula} 
+                id='targetFormula'
+                onChange={onchangeInputHandler} 
                 //validation={!props.isValidFormula ? 'Error' : 'Default'}
             />
             }
@@ -146,17 +174,19 @@ const CaseComponent = (props: any) => {
                 width: '11.25rem'
                 }}
                 appearance="Outline" 
-                placeholder="선택" 
+                placeholder="연산자 선택" 
                 onChange={(
                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                 value: SelectValue<{}, false>
                 ) => {
-                    onchangeSelectHandler(e, value, "operator", props.index)
+                    onchangeSelectHandler(e, value, "operator")
                 }}
             >
-                {operatorOption.map((item, index) => (
+            
+                {trgtFormulaInput && operatorOption.map((item, index) => (
                 <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                 ))}
+                {!trgtFormulaInput && <SelectOption value="">연산자 선택</SelectOption>}
             </Select>
             }
             {(!elseSelected && delimiterSelected) &&
@@ -175,7 +205,7 @@ const CaseComponent = (props: any) => {
                         value: SelectValue<{}, false>
                     ) => {
                         // 구분자 선택
-                        onchangeSelectHandler(e, value, "delimiter", props.index)
+                        onchangeSelectHandler(e, value, "delimiter")
                     }}
                 >
                     {delimiterOption.map((item, index) => (
@@ -183,21 +213,23 @@ const CaseComponent = (props: any) => {
                     ))}
                 </Select>
             }
-            {!elseSelected &&
+            {(!elseSelected && trgtFormulaInput) &&
             <TextField 
                 placeholder="피연산자 입력"
                 value={props.ruleCase.operand1}
                 id='operand1'
-                onChange={(e) => onchangeInputHandler(e, props.index)} 
+                onChange={onchangeInputHandler} 
             />
             }
             <>
+            {!elseSelected &&
             <Typography variant='h5'>THEN</Typography>
+            }
             <TextField 
                 placeholder="결과 입력"
                 value={props.ruleCase.result}
                 id='result'
-                onChange={(e) => onchangeInputHandler(e, props.index)} 
+                onChange={onchangeInputHandler} 
             />
             </>
         </Stack>

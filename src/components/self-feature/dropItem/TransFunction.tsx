@@ -68,14 +68,6 @@ const TransFunction = (props: any) => {
             변환
             </Button>
         )}
-        
-        {/* 변환식 함수, 구분자, 변수1, 변수2, 변수3
-        <Typography variant="h6">{props.trgtFilterItem.function}</Typography>
-        <Typography variant="h6">{props.trgtFilterItem.delimiter}</Typography>
-        <Typography variant="h6">{props.trgtFilterItem.variable1}</Typography>
-        <Typography variant="h6">{props.trgtFilterItem.variable2}</Typography>
-        <Typography variant="h6">{props.trgtFilterItem.variable3}</Typography>
-        */}
         </>
     )
 
