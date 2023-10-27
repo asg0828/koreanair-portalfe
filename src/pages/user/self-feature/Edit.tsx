@@ -136,12 +136,14 @@ const SelfFeatureEdit = () => {
   // 대상 선택 list가 없는 경우 formula reset
   useEffect(() => {
     if (formulaTrgtList.length > 0) return 
-    
-    setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
-      let rtn = cloneDeep(state)
-      rtn.formula = ''
-      return rtn
-    })
+
+    if (location.state.tbRsCustFeatRuleCalc.formula === "") {
+      setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
+        let rtn = cloneDeep(state)
+        rtn.formula = ''
+        return rtn
+      })
+    }
     
   }, [formulaTrgtList])
 
@@ -457,6 +459,7 @@ const SelfFeatureEdit = () => {
             isValidFormula={isValidFormula}
             setIsValidFormula={setIsValidFormula}
             formulaTrgtList={formulaTrgtList}
+            formula={custFeatRuleCalc.formula}
             custFeatRuleCalc={custFeatRuleCalc}
             custFeatRuleCaseList={custFeatRuleCaseList}
             setCustFeatRuleCalc={setCustFeatRuleCalc}

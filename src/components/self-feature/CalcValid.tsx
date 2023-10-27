@@ -2,8 +2,15 @@ import {Button, Checkbox, Stack, Typography} from '@components/ui'
 import { useEffect, useState } from 'react'
 
 import { cloneDeep } from 'lodash'
-import { TbRsCustFeatRuleCalc, TbRsCustFeatRuleCase, } from '@/models/selfFeature/FeatureInfo'
-import { initTbRsCustFeatRuleCase, selfFeatPgPpNm, subFeatStatus } from '@/pages/user/self-feature/data';
+import { 
+    TbRsCustFeatRuleCalc, 
+    TbRsCustFeatRuleCase, 
+} from '@/models/selfFeature/FeatureInfo'
+import { 
+    initTbRsCustFeatRuleCase, 
+    selfFeatPgPpNm, 
+    subFeatStatus 
+} from '@/pages/user/self-feature/data';
 import CaseComponent from './CaseComponent';
 import FormulaComponent from './FormulaComponent';
 
@@ -27,9 +34,6 @@ const ClacValid = (props: any) => {
         }
 
     }, [props.featStatus])
-
-    useEffect(() => {
-    }, [props.custFeatRuleCalc])
 
     // 수정시 case문 list 값에 따른 else 체크
     useEffect(() => {
@@ -207,8 +211,10 @@ const ClacValid = (props: any) => {
                 <FormulaComponent 
                     isPossibleEdit={isPossibleEdit}
                     custFeatRuleCalc={props.custFeatRuleCalc}
+                    setCustFeatRuleCalc={props.setCustFeatRuleCalc}
                     validationFormula={validationFormula}
-                />}
+                />
+            }
             {formulaCaseChecked &&
                 <>
                 <Stack 
