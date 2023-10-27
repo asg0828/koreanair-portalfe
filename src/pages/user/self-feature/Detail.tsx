@@ -30,8 +30,6 @@ import {
   TbRsCustFeatRuleCase, 
   TbRsCustFeatRuleTrgt, 
   TbRsCustFeatRuleTrgtFilter, 
-  selfFeatPgPpNm, 
-  subFeatStatus 
 } from '@/models/selfFeature/FeatureInfo';
 import { 
   initSelfFeatureInfo, 
@@ -39,7 +37,9 @@ import {
   initTbRsCustFeatRuleCalc, 
   initTbRsCustFeatRuleCase, 
   initTbRsCustFeatRuleTrgt, 
-  initTbRsCustFeatRuleTrgtFilter 
+  initTbRsCustFeatRuleTrgtFilter,
+  selfFeatPgPpNm, 
+  subFeatStatus 
 } from './data';
 
 const SelfFeatureDetail = () => {
@@ -153,7 +153,12 @@ const SelfFeatureDetail = () => {
         tbRsCustFeatRuleTrgtFilterList.push(tbRsCustFeatRuleTrgtFilter)
         rtn.tbRsCustFeatRuleTrgtFilterList = tbRsCustFeatRuleTrgtFilterList
 
-        let tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = Object.assign(cloneDeep(initTbRsCustFeatRuleCalc), {formula: "T1"})
+        let tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = Object.assign(
+          cloneDeep(initTbRsCustFeatRuleCalc),
+          {
+            formula: "T1",
+          }
+        )
         rtn.tbRsCustFeatRuleCalc = tbRsCustFeatRuleCalc
 
         let tbRsCustFeatRuleCaseList = []

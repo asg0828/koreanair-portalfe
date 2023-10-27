@@ -19,8 +19,6 @@ import {
   TbRsCustFeatRuleTrgtFilter,
   TbRsCustFeatRuleCase,
   MstrSgmtTableandColMetaInfo,
-  subFeatStatus,
-  selfFeatPgPpNm,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
@@ -30,7 +28,9 @@ import {
   initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
-  initTbRsCustFeatRuleCase
+  initTbRsCustFeatRuleCase,
+  subFeatStatus,
+  selfFeatPgPpNm,
 } from './data'
 
 const lCategory = [
@@ -61,10 +61,10 @@ const SelfFeatureReg = () => {
   const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
   // 계산식
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
+  const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
   const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(false)
-  const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
-
+  // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 
   useEffect(() => {

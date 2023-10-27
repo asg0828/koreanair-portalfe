@@ -10,17 +10,17 @@ import { Page, Stack } from '@components/ui'
 import { 
     TbRsCustFeatRuleTrgt, 
     TbRsCustFeatRuleTrgtFilter, 
-    divisionTypes, 
     TbCoMetaTblClmnInfo, 
     Attribute, 
-    subFeatStatus, 
-    selfFeatPgPpNm
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initAttribute, 
     initTbCoMetaTblClmnInfo, 
     initTbRsCustFeatRuleTrgt, 
-    initTbRsCustFeatRuleTrgtFilter 
+    initTbRsCustFeatRuleTrgtFilter,
+    subFeatStatus, 
+    selfFeatPgPpNm,
+    divisionTypes, 
 } from '@/pages/user/self-feature/data'
 
 const DropList = (props: any) => {

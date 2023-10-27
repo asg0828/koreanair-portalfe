@@ -14,8 +14,6 @@ import {
   TbRsCustFeatRuleTrgtFilter,
   TbRsCustFeatRuleCase,
   MstrSgmtTableandColMetaInfo,
-  subFeatStatus,
-  selfFeatPgPpNm,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
@@ -25,6 +23,8 @@ import {
   initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
+  subFeatStatus,
+  selfFeatPgPpNm,
 } from './data'
 
 const SelfFeatureReg = () => {

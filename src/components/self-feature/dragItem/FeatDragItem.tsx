@@ -1,7 +1,12 @@
-import { Typography } from "@components/ui"
 import { useDrag } from "react-dnd"
-import { divisionTypes } from '@/models/selfFeature/FeatureInfo'
 import { cloneDeep } from "lodash"
+
+import { Typography } from "@components/ui"
+
+import { 
+    divisionTypes,
+} from '@/pages/user/self-feature/data'
+
 
 const FeatDragItem = (props: any) => {
 

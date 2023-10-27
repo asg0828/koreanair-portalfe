@@ -8,13 +8,17 @@ import BehvColDropItem from "./BehvColDropItem"
 
 import { 
     TbCoMetaTblClmnInfo, 
-    TbRsCustFeatRuleTrgtFilter, 
+    TbRsCustFeatRuleTrgtFilter,
+    TbRsCustFeatRuleTrgt,
+} from '@/models/selfFeature/FeatureInfo'
+import { 
+    initTbCoMetaTblClmnInfo, 
+    initTbRsCustFeatRuleTrgtFilter, 
+    trgtFilterTit, 
     divisionTypes,
     filterOption,
     aggregateOption,
-    TbRsCustFeatRuleTrgt
-} from '@/models/selfFeature/FeatureInfo'
-import { initTbCoMetaTblClmnInfo, initTbRsCustFeatRuleTrgtFilter, trgtFilterTit } from "@/pages/user/self-feature/data"
+} from "@/pages/user/self-feature/data"
 
 const columnList = [
     { value: 'colum1', text: 'colum1' },

@@ -2,8 +2,13 @@ import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from 'lodash'
 
-import { Button, Select, SelectOption, Stack, TextField, Typography } from '@/components/ui'
-import { TbRsCustFeatRuleCase, delimiterOption, operatorOption, whenYn } from '@/models/selfFeature/FeatureInfo';
+import { Button, Select, SelectOption, Stack, TextField, Typography, HelperText } from '@/components/ui'
+import { TbRsCustFeatRuleCase, } from '@/models/selfFeature/FeatureInfo';
+import { 
+    delimiterOption, 
+    operatorOption, 
+    whenYn, 
+} from '@/pages/user/self-feature/data'
 
 const CaseComponent = (props: any) => {
 
@@ -12,28 +17,28 @@ const CaseComponent = (props: any) => {
     const [ elseSelected, setElseSelected ] = useState<Boolean>(false)
 
     useEffect(() => {
-        if (props.ruleCase.operator === "in_str" || props.ruleCase.operator === "not_in_str") {
+        if (props.custFeatRuleCase.operator === "in_str" || props.custFeatRuleCase.operator === "not_in_str") {
             setDelimiterSelected(true)
         } else {
             setDelimiterSelected(false)
         }
-    }, [props.ruleCase.operator])
+    }, [props.custFeatRuleCase.operator])
 
     useEffect(() => {
-        if (props.ruleCase.whenYn === "N") {
+        if (props.custFeatRuleCase.whenYn === "N") {
             setElseSelected(true)
         } else {
             setElseSelected(false)
         }
-    }, [props.ruleCase.whenYn])
+    }, [props.custFeatRuleCase.whenYn])
 
     useEffect(() => {
-        if (props.ruleCase.targetFormula !== "") {
+        if (props.custFeatRuleCase.targetFormula !== "") {
             setTrgtFormulaInput(true)
         } else {
             setTrgtFormulaInput(false)
         }
-    }, [props.ruleCase.targetFormula])
+    }, [props.custFeatRuleCase.targetFormula])
 
     const onClickDeleteHandler = () => {
         props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
@@ -125,48 +130,74 @@ const CaseComponent = (props: any) => {
             justifyContent="Start" 
             gap="MD" 
         >
-            {props.index === 0 ? (
+            {props.index === 0 && 
                 <Typography variant='h5'>WHEN</Typography>
-            ) : (
+            }
+            {props.index !== 0 && 
                 <>
-                <Button size="SM" onClick={onClickDeleteHandler}>
-                삭제
-                </Button>
-                <Select 
-                    disabled={!((props.lastIdx-1) === props.index) ? true : false}
-                    value={props.ruleCase.whenYn}
-                    appearance="Outline"
-                    shape="Square"
-                    size="MD"
-                    status="default"
-                    style={{
-                    width: '11.25rem'
-                    }}
-                    onChange={(
-                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                    value: SelectValue<{}, false>
-                    ) => {
-                        onchangeSelectHandler(e, value, "whenYn")
-                    }}
-                >
-                    {whenYn.map((item, index) => (
-                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                    ))}
-                </Select>
+                {props.isPossibleEdit &&
+                    <Button 
+                        size="SM" 
+                        onClick={onClickDeleteHandler}
+                    >
+                    삭제
+                    </Button>
+                }
+                {props.lastIdx === props.index &&
+                    <Select 
+                        disabled={!props.isPossibleEdit}
+                        value={props.custFeatRuleCase.whenYn}
+                        appearance="Outline"
+                        shape="Square"
+                        size="MD"
+                        status="default"
+                        style={{
+                        width: '11.25rem'
+                        }}
+                        onChange={(
+                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                        value: SelectValue<{}, false>
+                        ) => {
+                            onchangeSelectHandler(e, value, "whenYn")
+                        }}
+                    >
+                        {whenYn.map((item, index) => (
+                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                        ))}
+                    </Select>
+                }
+                {props.lastIdx !== props.index &&
+                    <Typography variant='h5'>WHEN</Typography>
+                }
                 </>
-            )}
+            }
             {!elseSelected &&
             <TextField 
+                disabled={!props.isPossibleEdit}
                 placeholder="Target/계산식 입력"
-                value={props.ruleCase.targetFormula}
+                value={props.custFeatRuleCase.targetFormula}
                 id='targetFormula'
                 onChange={onchangeInputHandler} 
                 //validation={!props.isValidFormula ? 'Error' : 'Default'}
             />
+            /*
+            <div className='flex space-between'>
+                <div>
+                {!props.isValidFormula ? (
+                    <HelperText showIcon={false} type='Error'>
+                    계산식을 확인해주세요
+                    </HelperText>
+                ) : (
+                    ''
+                )}
+                </div>
+            </div>
+            */
             }
             {!elseSelected &&
             <Select 
-                value={props.ruleCase.operator}
+                disabled={!props.isPossibleEdit}
+                value={props.custFeatRuleCase.operator}
                 shape="Square"
                 size="MD"
                 status="default"
@@ -191,9 +222,9 @@ const CaseComponent = (props: any) => {
             }
             {(!elseSelected && delimiterSelected) &&
                 <Select 
-                    //disabled={!props.isPossibleEdit}
+                    disabled={!props.isPossibleEdit}
                     appearance="Outline"
-                    value={props.ruleCase.delimiter}
+                    value={props.custFeatRuleCase.delimiter}
                     shape="Square"
                     size="MD"
                     status="default"
@@ -215,8 +246,9 @@ const CaseComponent = (props: any) => {
             }
             {(!elseSelected && trgtFormulaInput) &&
             <TextField 
+                disabled={!props.isPossibleEdit}
                 placeholder="피연산자 입력"
-                value={props.ruleCase.operand1}
+                value={props.custFeatRuleCase.operand1}
                 id='operand1'
                 onChange={onchangeInputHandler} 
             />
@@ -226,8 +258,9 @@ const CaseComponent = (props: any) => {
             <Typography variant='h5'>THEN</Typography>
             }
             <TextField 
+                disabled={!props.isPossibleEdit}
                 placeholder="결과 입력"
-                value={props.ruleCase.result}
+                value={props.custFeatRuleCase.result}
                 id='result'
                 onChange={onchangeInputHandler} 
             />

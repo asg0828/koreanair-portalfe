@@ -6,11 +6,13 @@ import { Button, Select, SelectOption, Stack, TextField, Typography } from '@com
 import TransFunction from './TransFunction'
 
 import { 
-    operatorOption,
-    delimiterOption,
     TbRsCustFeatRuleTrgtFilter,
 } from '@/models/selfFeature/FeatureInfo'
-import { trgtFilterTit } from '@/pages/user/self-feature/data'
+import { 
+    trgtFilterTit, 
+    operatorOption,
+    delimiterOption,
+} from '@/pages/user/self-feature/data'
 
 const BehvColDropItem = (props: any) => {
 
