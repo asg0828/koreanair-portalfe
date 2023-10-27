@@ -451,16 +451,16 @@ const SelfFeatureEdit = () => {
         {/* 대상 선택 */}
 
         {/* 계산식 */}
-        <Typography variant="h2">3. 계산식</Typography>
         {formulaTrgtList.length > 0 &&
           <CalcValid
+            featStatus={subFeatStatus.REG}
             isValidFormula={isValidFormula}
+            setIsValidFormula={setIsValidFormula}
             formulaTrgtList={formulaTrgtList}
-            custFeatRuleCalc={location.state.tbRsCustFeatRuleCalc}
+            custFeatRuleCalc={custFeatRuleCalc}
             custFeatRuleCaseList={custFeatRuleCaseList}
             setCustFeatRuleCalc={setCustFeatRuleCalc}
             setCustFeatRuleCaseList={setCustFeatRuleCaseList}
-            setIsValidFormula={setIsValidFormula}
           />
         }
         {/* 계산식 */}

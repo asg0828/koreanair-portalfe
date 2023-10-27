@@ -63,7 +63,7 @@ const SelfFeatureReg = () => {
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(false)
-  const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
+  const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
 
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 
@@ -387,16 +387,16 @@ const SelfFeatureReg = () => {
           {/* 대상 선택 */}
 
           {/* 계산식 */}
-          <Typography variant="h2">3. 계산식</Typography>
           {formulaTrgtList.length > 0 &&
             <CalcValid
+              featStatus={subFeatStatus.REG}
               isValidFormula={isValidFormula}
+              setIsValidFormula={setIsValidFormula}
               formulaTrgtList={formulaTrgtList}
               custFeatRuleCalc={custFeatRuleCalc}
               custFeatRuleCaseList={custFeatRuleCaseList}
               setCustFeatRuleCalc={setCustFeatRuleCalc}
               setCustFeatRuleCaseList={setCustFeatRuleCaseList}
-              setIsValidFormula={setIsValidFormula}
             />
           }
           {/* 계산식 */}

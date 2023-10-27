@@ -99,6 +99,7 @@ const BehvColDropItem = (props: any) => {
                 />
                 <Select 
                     disabled={!props.isPossibleEdit}
+                    placeholder="연산자 선택" 
                     appearance="Outline"
                     value={props.trgtFilterItem.operator}
                     shape="Square"
@@ -122,6 +123,7 @@ const BehvColDropItem = (props: any) => {
                 {delimiterSelected &&
                     <Select 
                         disabled={!props.isPossibleEdit}
+                        placeholder="구분자 선택" 
                         appearance="Outline"
                         value={props.trgtFilterItem.delimiter}
                         shape="Square"

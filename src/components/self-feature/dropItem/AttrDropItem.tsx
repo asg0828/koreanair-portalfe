@@ -24,12 +24,6 @@ const AttrDropItem = (props: any) => {
             <TransFunction 
                 isPossibleEdit={props.isPossibleEdit}
             />
-            {/* 변환식 함수, 변수1, 변수2, 변수3
-            <Typography variant="h6">{props.targetItem.function}</Typography>
-            <Typography variant="h6">{props.targetItem.variable1}</Typography>
-            <Typography variant="h6">{props.targetItem.variable2}</Typography>
-            <Typography variant="h6">{props.targetItem.variable3}</Typography>
-             */}
             {props.isPossibleEdit ? (
                 <Button size="SM" onClick={onClickDeleteHandler}>
                 삭제
