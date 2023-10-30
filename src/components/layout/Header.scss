@@ -100,7 +100,6 @@
 }
 .dropDownMenu .dropDownWrap{
   display: flex;
-  margin-top: 2rem;
   padding: 0 20px;
 }
 .dropDownMenu .dropDownItem{
@@ -125,7 +124,7 @@
   display: block;
 }
 .dropDownMenu .dropDownItem>div div:last-child{
-  padding-bottom: 60px;
+  padding-bottom: 30px;
 }
 .dropDownMenu .dropDownItem a:hover{
   font-weight: 500;
