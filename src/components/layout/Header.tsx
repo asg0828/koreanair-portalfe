@@ -153,7 +153,7 @@ const Header = () => {
           <div className="dropDownWrap">
             {menuList?.map((menu, index: number) => (
               <div key={`menu-${index}`} className="dropDownItem">
-                <Link to={menu.path} className="depth1">
+                <Link to={menu.path} className="depth1" onClick={(e) => handleNaviLink(e, menu)}>
                   {menu.name}
                 </Link>
                 {menu.children.length > 0 && (
@@ -161,7 +161,7 @@ const Header = () => {
                     {menu.children.map((subMenu, index: number) => (
                       <div key={`subMenu-${index}`}>
                         {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
-                          <Link to={subMenu.path} className="depth2">
+                          <Link to={subMenu.path} className="depth2" onClick={(e) => handleNaviLink(e, menu)}>
                             {subMenu.name}
                           </Link>
                         ) : (
@@ -169,7 +169,7 @@ const Header = () => {
                             <Typography variant="body1">{subMenu.name}</Typography>
                             {subMenu.children.map((subMenuSecond, index: number) => (
                               <div key={`subMenuSecond-${index}`} className="dropdown-item">
-                                <Link to={subMenuSecond.path}>
+                                <Link to={subMenuSecond.path} onClick={(e) => handleNaviLink(e, menu)}>
                                   <Typography variant="body1">{subMenuSecond.name}</Typography>
                                 </Link>
                               </div>

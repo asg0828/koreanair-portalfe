@@ -37,10 +37,14 @@ const RootLayout = () => {
   const isDropMenu = useSelector((state: ReducerType) => state.menu.isDropMenu);
 
   useEffect(() => {
+    handleCloseDropMenu();
+  }, [location, dispatch]);
+
+  const handleCloseDropMenu = () => {
     if (isDropMenu) {
       dispatch(menuSlice.actions.setIsDropMenu(!isDropMenu));
     }
-  }, [location, dispatch]);
+  };
 
   return (
     <>
@@ -51,7 +55,7 @@ const RootLayout = () => {
       ) : (
         <>
           <Header />
-          <Body />
+          <Body onClick={handleCloseDropMenu} />
           <Footer />
         </>
       )}
