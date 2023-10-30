@@ -90,12 +90,14 @@ const BehvColDropItem = (props: any) => {
                 gap="SM"
                 className="width-100"
                 style={{
-                    border: '0.1em solid',
+                    backgroundColor: 'rgb(0, 37, 108)',
+                    color:"#FFF",
                     borderRadius: '5px',
+                    padding:"0.35rem"
                 }}
             >  
-                <Typography variant='h6'>{trgtFilterTit[props.itemIdx]}</Typography>
-                <Typography variant="h6">{props.trgtFilterItem.columnName}</Typography>
+                <Typography variant='h6' style={{color:"inherit"}}>{trgtFilterTit[props.itemIdx]}</Typography>
+                <Typography variant="h6" style={{color:"inherit"}}>{props.trgtFilterItem.columnName}</Typography>
                 <TransFunction 
                     isPossibleEdit={props.isPossibleEdit}
                 />

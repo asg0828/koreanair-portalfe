@@ -29,8 +29,8 @@ const BehvDragItem = (props: any) => {
             {props.behvTblClmnInfo &&
                 <Typography 
                     ref={(behvDragItem)}
-                    style={{ opacity: behvOpacity, backgroundColor: '#e0ffff', color: 'black' }} 
-                    variant="h6"
+                    style={{ opacity: behvOpacity,backgroundColor: '#e6f9ff', color: '#00256c',padding:"0.3rem" }}
+                    variant="body2"
                 >
                     {props.behvTblClmnInfo.metaTblClmnLogiNm}
                 </Typography>

@@ -75,27 +75,30 @@ const DragList = (props: any) => {
     return (
         <Page
             style={{
-                overflowY: 'scroll',
+                overflowY: 'auto',
+                width:'20%',
                 height: '100%',
-                border: '0.1em solid',
+                border: '1px solid rgb(218, 218, 218)',
                 borderRadius: '5px',
+                padding:"1rem"
             }}
         >
-            <Stack direction="Horizontal" gap="MD" justifyContent="Between" >
+            <Stack direction="Horizontal" gap="SM" justifyContent="Between">
                 <TextField 
-                    size="SM" 
+                    size="MD" 
                     value={keyword} 
                     onChange={(e) => setKeyword(e.target.value)}
                     onKeyDown={onKeyPressTrgtSrchHandler}
                 />
-                <Button priority="Primary" appearance="Contained" size="XS" onClick={onClickTrgtSrchHandler}>
-                    검색
+                <Button priority="Primary" appearance="Contained" size="MD" onClick={onClickTrgtSrchHandler}>
+                    <span className="searchIcon"></span>
                 </Button>
             </Stack>
             <Accordion
                 align="Right"
                 size="MD"
                 type="multiple"
+                style={{marginTop:"10px"}}
             >
                 <AccordionItem
                     title='속성 정보'

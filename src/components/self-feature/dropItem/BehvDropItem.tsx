@@ -202,18 +202,19 @@ const BehvDropItem = (props: any) => {
             gap="SM" 
             className="width-100"
             style={{
-                backgroundColor: '#e0ffff',
-                border: '0.1em solid',
+                backgroundColor: '#e6f9ff', 
+                color: '#00256c',
                 borderRadius: '5px',
+                padding:'0.5rem'
             }}
         >
-            <Typography variant="h6">T{props.itemIdx + 1}</Typography>
             <Stack
                 direction="Vertical"
                 justifyContent="Start" 
                 gap="SM" 
                 className="width-100"
             >
+
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
@@ -223,8 +224,12 @@ const BehvDropItem = (props: any) => {
                         marginTop: '1%',
                     }}
                 >
-                    <Typography variant="h6">행동</Typography>
-                    <Typography variant="h6">{props.targetItem.tableName}</Typography>
+                    <Typography variant="h6" style={{color:"inherit"}}>T{props.itemIdx + 1}</Typography>
+                    <div className="dragItemLocation">
+                        행동
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.29498 16.59L12.875 12L8.29498 7.41L9.70498 6L15.705 12L9.70498 18L8.29498 16.59Z" fill="currentColor"></path></svg>
+                    </div>
+                    <Typography variant="body2" style={{color:"inherit"}}>{props.targetItem.tableName}</Typography>
                 </Stack>
                 <Stack
                     direction="Vertical"
@@ -232,31 +237,27 @@ const BehvDropItem = (props: any) => {
                     gap="SM" 
                     className="width-100"
                     style={{
-                        marginTop: '1%',
-                        marginBottom: '1%',
-                        border: '0.1em solid',
+                        border:"1px solid rgb(218, 218, 218)",
                         borderRadius: '5px',
                     }}
                 >   
                     <Stack
                         direction="Horizontal"
-                        justifyContent="Start" 
+                        justifyContent="Between" 
                         gap="SM" 
                         className="width-100"
-                        style={{
-                            marginLeft: '1%',
-                            marginTop: '1%',
-                            marginBottom: '1%',
-                        }}
+                        style={{padding:"0.5rem"}}
                     >
-                        <Typography variant="h6">필터 선택</Typography>
-                        <TextField 
-                            disabled={!props.isPossibleEdit}
-                            placeholder="논리 표현식" 
-                            value={filterExpsn}
-                            id="filterLogiExpsn"
-                            onChange={onchangeInputHandler}
-                        />
+                        <Stack gap="SM">
+                            <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
+                            <TextField 
+                                disabled={!props.isPossibleEdit}
+                                placeholder="논리 표현식" 
+                                value={filterExpsn}
+                                id="filterLogiExpsn"
+                                onChange={onchangeInputHandler}
+                            />
+                        </Stack>
                         <Select
                             disabled={!props.isPossibleEdit}
                             appearance="Outline"
@@ -265,7 +266,7 @@ const BehvDropItem = (props: any) => {
                             size="SM"
                             status="default"
                             style={{
-                                width: '11.25rem',
+                                
                             }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -288,15 +289,12 @@ const BehvDropItem = (props: any) => {
                         <Page
                             ref={(behvDrop)}
                             style={{
-                                overflowY: 'scroll',
-                                height: '110px',
-                                border: '0.1em solid',
+                                border:"1px solid rgb(218, 218, 218)",
                                 borderRadius: '5px',
-                                marginLeft: '1%',
-                                marginRight: '1%',
-                                marginBottom: '1%',
+                                padding:"0.5rem"
                             }}
                         >
+                            <Stack direction="Vertical" gap="SM">
                             {props.trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
                                 <BehvColDropItem 
                                     key={index}
@@ -307,6 +305,7 @@ const BehvDropItem = (props: any) => {
                                     deleteTrgtFilterInfo={deleteTrgtFilterInfo}
                                 />
                             ))}
+                            </Stack>
                         </Page>
                     </Stack>
                 </Stack>
