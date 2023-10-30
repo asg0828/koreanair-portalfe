@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { cloneDeep } from 'lodash'
 
 import { 
@@ -19,6 +19,13 @@ const FormulaComponent = (props: any) => {
 
     const [ formulaValidRslt, setFormulaValidRslt ] = useState<FormulaValidRslt>(cloneDeep(initFormulaValidRslt))
 
+    useEffect(() => {
+        setFormulaValidRslt(cloneDeep(ValidationFormula({
+            formula: cloneDeep(props.custFeatRuleCalc.formula),
+            targetList: cloneDeep(props.formulaTrgtList),
+        })))
+    }, [props.custFeatRuleCalc.formula])
+
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         
@@ -31,11 +38,12 @@ const FormulaComponent = (props: any) => {
 
     const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
         const { id, value } = e.target
-        
+        /*
         setFormulaValidRslt(cloneDeep(ValidationFormula({
             formula: cloneDeep(value),
             targetList: cloneDeep(props.formulaTrgtList),
         })))
+        */
     }
 
     return (
