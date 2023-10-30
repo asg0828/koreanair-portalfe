@@ -40,20 +40,18 @@ const LoginForm = () => {
 
     return component;
   } else {
-    setTimeout(() => {
-      const authInfo = {
-        isAdminPage: isAdminPage,
-        userInfo: {
-          userId: 'test',
-          userNm: 'test',
-          pstnCode: 'test',
-          detpCode: 'test',
-          authId: 'test',
-          isAdmin: true,
-        },
-      };
-      dispatch(authSlice.actions.login(authInfo));
-    }, 1000);
+    const authInfo = {
+      isAdminPage: isAdminPage,
+      userInfo: {
+        userId: 'test',
+        userNm: 'test',
+        pstnCode: 'test',
+        detpCode: 'test',
+        authId: 'test',
+        isAdmin: true,
+      },
+    };
+    dispatch(authSlice.actions.login(authInfo));
   }
 
   return (

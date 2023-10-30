@@ -97,4 +97,45 @@ export default class SessionUtil {
   private deleteSessionStorage = (): void => {
     sessionStorage.clear();
   };
+
+  /* localStorage */
+  public getLocalAccessTokenRefreshTokenInfo = (): AccessTokenRefreshTokenInfo => {
+    let accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo = {} as AccessTokenRefreshTokenInfo;
+
+    accessTokenRefreshTokenInfo = {
+      refreshToken: this.getLocalStorageValue(AccessTokenRefrehTokenEnum.REFRESH_TOKEN),
+      accessToken: this.getLocalStorageValue(AccessTokenRefrehTokenEnum.ACCESS_TOKEN),
+      clientName: this.getLocalStorageValue(AccessTokenRefrehTokenEnum.CLIENT_NAME),
+    };
+
+    return accessTokenRefreshTokenInfo;
+  };
+
+  public getRefreshLocalToken = (): string => {
+    return this.getLocalStorageValue(AccessTokenRefrehTokenEnum.REFRESH_TOKEN);
+  };
+
+  public setLocalStorageInfo = (accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo): void => {
+    for (const [key, value] of Object.entries(accessTokenRefreshTokenInfo)) {
+      this.setLocalStorageValue(key, value ?? '');
+    }
+  };
+
+  public deleteLocalStorage = (): void => {
+    localStorage.clear();
+  };
+
+  private getLocalStorageValue = (key: string): string => {
+    /* istanbul ignore if */
+    if (!key) return '';
+    const value = localStorage.getItem(key) || '';
+    return value && value !== 'undefined' ? value : '';
+  };
+
+  private setLocalStorageValue = (key: string, value: any): void => {
+    /* istanbul ignore else */
+    if (key) {
+      localStorage.setItem(key, value as string);
+    }
+  };
 }

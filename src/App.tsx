@@ -11,8 +11,16 @@ const App = () => {
   const auth = useSelector((state: ReducerType) => state.auth);
   const sessionUtil = new SessionUtil();
 
+  if (window.location.pathname.substring(0, 6) === '/popup') {
+    if (sessionUtil.getRefreshLocalToken()) {
+      const localStorageTokenInfo = sessionUtil.getLocalAccessTokenRefreshTokenInfo();
+      sessionUtil.setAccessTokenRefreshTokenInfo(localStorageTokenInfo);
+      sessionUtil.deleteLocalStorage();
+    }
+  }
+
   if (!sessionUtil.getRefreshToken()) {
-    return <OAuth />
+    return <OAuth />;
   }
 
   return (

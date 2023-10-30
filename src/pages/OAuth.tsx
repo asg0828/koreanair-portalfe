@@ -3,6 +3,7 @@ import CommonResponse from '@models/common/CommonResponse';
 import { SessionRequest, AccessTokenRefreshTokenRequest } from '@models/common/Session';
 import SessionUtil from '@utils/SessionUtil';
 import SessionApis from '@api/common/SessionApis';
+import { Stack, Loader } from '@components/ui';
 
 const OAuth: React.FC = (): ReactElement => {
   const sessionUtil = new SessionUtil();
@@ -49,7 +50,11 @@ const OAuth: React.FC = (): ReactElement => {
     }
   });
 
-  return <></>;
+  return (
+    <Stack justifyContent="Center" className="width-100 height-100">
+      <Loader title="진행중" description="잠시만 기다려주세요" />
+    </Stack>
+  );
 };
 
 export default OAuth;

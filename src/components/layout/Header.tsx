@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, NavLink, Link } from 'react-router-dom';
 import { ReducerType } from '@reducers';
 import SessionApis from '@api/common/SessionApis';
+import SessionUtil from '@utils/SessionUtil';
 import { MenuItem } from '@/models/common/Menu';
 import { menuSlice } from '@/reducers';
 import { MenuOutlinedIcon, LogoutOutlinedIcon, KeyboardArrowDownIcon } from '@/assets/icons';
@@ -13,6 +14,8 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const sessionApis = new SessionApis();
+  const sessionUtil = new SessionUtil();
+  const accessTokenRefreshTokenInfo = sessionUtil.getAccessTokenRefreshTokenInfo;
   const isDropMenu = useSelector((state: ReducerType) => state.menu.isDropMenu);
   const menuList = useSelector((state: ReducerType) => state.menu.menuList);
   const isAdminPage = useSelector((state: ReducerType) => state.auth.isAdminPage);
@@ -41,6 +44,8 @@ const Header = () => {
   const handleNaviLink = (e: any, menu: MenuItem) => {
     if (menu.isPopup) {
       e.preventDefault();
+      sessionUtil.setLocalStorageInfo(accessTokenRefreshTokenInfo());
+      console.log(accessTokenRefreshTokenInfo());
       window.open(`/popup${menu.path}`, '_blank', 'noopener, noreferrer');
     }
   };
