@@ -84,7 +84,6 @@ const List = () => {
                   size="MD"
                 >
                   <span className="searchIcon"></span>
-                  Search
                 </Button>
               </Stack>
             </TD>
@@ -99,7 +98,6 @@ const List = () => {
                   size="MD"
                 >
                   <span className="searchIcon"></span>
-                  Search
                 </Button>
               </Stack>
             </TD>

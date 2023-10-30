@@ -103,7 +103,6 @@ const Edit = () => {
                   size="MD"
                 >
                   <span className="searchIcon"></span>
-                  Search
                 </Button>
               </Stack>
             </TD>
