@@ -13,7 +13,7 @@ import {
 import { 
     initFormulaValidRslt,
 } from '@/pages/user/self-feature/data'
-import { ValidationFormula } from '@/utils/self-feature/formulaValidUtil';
+import { ValidationFormula } from '@/utils/self-feature/FormulaValidUtil';
 
 const FormulaComponent = (props: any) => {
 
@@ -32,10 +32,10 @@ const FormulaComponent = (props: any) => {
     const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         
-        setFormulaValidRslt(ValidationFormula({
-            formula: value,
-            targetList: props.formulaTrgtList,
-        }))
+        setFormulaValidRslt(cloneDeep(ValidationFormula({
+            formula: cloneDeep(value),
+            targetList: cloneDeep(props.formulaTrgtList),
+        })))
     }
 
     return (

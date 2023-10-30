@@ -29,7 +29,7 @@ export const ValidationFormula = (props: any) => {
             validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
             return false
         }
-        console.log(inputTrgtIdList)
+        
         for (let i = 0; i < inputTrgtIdList.length; i++) {
             
             if (inputTrgtIdList[i] === "") continue

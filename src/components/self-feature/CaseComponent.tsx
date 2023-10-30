@@ -11,7 +11,7 @@ import {
     operatorOption, 
     whenYn, 
 } from '@/pages/user/self-feature/data'
-import { ValidationFormula } from '@/utils/self-feature/formulaValidUtil';
+import { ValidationFormula } from '@/utils/self-feature/FormulaValidUtil';
 
 const CaseComponent = (props: any) => {
 
@@ -43,6 +43,10 @@ const CaseComponent = (props: any) => {
         } else {
             setTrgtFormulaInput(false)
         }
+        setFormulaValidRslt(cloneDeep(ValidationFormula({
+            formula: cloneDeep(props.custFeatRuleCase.targetFormula),
+            targetList: cloneDeep(props.formulaTrgtList),
+        })))
     }, [props.custFeatRuleCase.targetFormula])
 
     const onClickDeleteHandler = () => {
@@ -133,11 +137,12 @@ const CaseComponent = (props: any) => {
 
     const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
         const { id, value } = e.target
-
-        setFormulaValidRslt(ValidationFormula({
-            formula: value,
-            targetList: props.formulaTrgtList,
-        }))
+        /*
+        setFormulaValidRslt(cloneDeep(ValidationFormula({
+            formula: cloneDeep(value),
+            targetList: cloneDeep(props.formulaTrgtList),
+        })))
+        */
     }
     
     return (
@@ -189,26 +194,26 @@ const CaseComponent = (props: any) => {
             }
             {!elseSelected &&
             <>
-            <TextField 
-                disabled={!props.isPossibleEdit}
-                placeholder="Target/계산식 입력"
-                value={props.custFeatRuleCase.targetFormula}
-                id='targetFormula'
-                onChange={onchangeInputHandler} 
-                onBlur={onblurInputHandler}
-                validation={!formulaValidRslt.isValidFormula ? 'Error' : 'Default'}
-            />
-            <div className='flex space-between'>
-                <div>
-                {!formulaValidRslt.isValidFormula ? (
-                    <HelperText showIcon={false} type='Error'>
-                    {formulaValidRslt.text}
-                    </HelperText>
-                ) : (
-                    ''
-                )}
+                <TextField 
+                    disabled={!props.isPossibleEdit}
+                    placeholder="Target/계산식 입력"
+                    value={props.custFeatRuleCase.targetFormula}
+                    id='targetFormula'
+                    onChange={onchangeInputHandler} 
+                    onBlur={onblurInputHandler}
+                    validation={!formulaValidRslt.isValidFormula ? 'Error' : 'Default'}
+                />
+                <div className='flex space-between'>
+                    <div>
+                    {!formulaValidRslt.isValidFormula ? (
+                        <HelperText showIcon={false} type='Error'>
+                        {formulaValidRslt.text}
+                        </HelperText>
+                    ) : (
+                        ''
+                    )}
+                    </div>
                 </div>
-            </div>
             </>
             }
             {!elseSelected &&
