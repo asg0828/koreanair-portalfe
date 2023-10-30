@@ -24,6 +24,9 @@ const FormulaComponent = (props: any) => {
             formula: cloneDeep(props.custFeatRuleCalc.formula),
             targetList: cloneDeep(props.formulaTrgtList),
         })))
+        
+        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+
     }, [props.custFeatRuleCalc.formula])
 
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,15 +39,18 @@ const FormulaComponent = (props: any) => {
         })
     }
 
+    /*
     const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
         const { id, value } = e.target
-        /*
+        
+        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+
         setFormulaValidRslt(cloneDeep(ValidationFormula({
             formula: cloneDeep(value),
             targetList: cloneDeep(props.formulaTrgtList),
         })))
-        */
     }
+    */
 
     return (
         <>
@@ -54,7 +60,7 @@ const FormulaComponent = (props: any) => {
             value={props.custFeatRuleCalc.formula}
             id="formula"
             onChange={onchangeInputHandler} 
-            onBlur={onblurInputHandler}
+            //onBlur={onblurInputHandler}
             validation={!formulaValidRslt.isValidFormula ? 'Error' : 'Default'}
         />
         <div className='flex space-between'>

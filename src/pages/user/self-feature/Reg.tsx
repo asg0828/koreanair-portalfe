@@ -63,7 +63,7 @@ const SelfFeatureReg = () => {
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
   const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
-  const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(false)
+  const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 
@@ -145,8 +145,12 @@ const SelfFeatureReg = () => {
 
   const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     console.log(`속성/Feature/행동 데이터 API CALL!`)
-    // getTableandColumnMetaInfoByMstrSgmtRuleId
-    // api url :: (GET)/api/v1/mastersegment/table-columns-meta-info/{mstrSgmtRuleId}
+    /*
+      Method      :: GET
+      Url         :: /api/v1/mastersegment/table-columns-meta-info
+      path param  :: {mstrSgmtRuleId}
+      query param :: 
+    */
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
       let temp = cloneDeep(state)
       let attributes = []
@@ -232,14 +236,19 @@ const SelfFeatureReg = () => {
   }
 
   const onSubmitInsertHandler = () => {
-    // createCustFeatRule
-    // api Url :: (POST)/api/v1/customerfeatures
     /*
+      Method      :: POST
+      Url         :: /api/v1/customerfeatures
+      path param  :: 
+      query param :: 
+      body param  :: featureInfo
+    */
+    
     if (!isValidFormula) {
       alert("계산식을 확인해주세요.")
       return null
     }
-    */
+    
     console.log("createCustFeatRule API CALL!")
     console.log("Self Feature insert data :: ", featureInfo)
   }
