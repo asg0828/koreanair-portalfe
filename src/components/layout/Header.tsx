@@ -47,6 +47,7 @@ const Header = () => {
 
   const handleLogout = async () => {
     await sessionApis.logoutRequset();
+    localStorage.removeItem('accessPathname');
     window.location.reload();
   };
 

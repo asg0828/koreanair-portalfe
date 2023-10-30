@@ -14,6 +14,12 @@ const OAuth: React.FC = (): ReactElement => {
   const refreshToken = accessTokenRefreshTokenInfo().refreshToken;
   const authorizationCode: any = searchParameters.get('code');
 
+  const accessPathname = localStorage.getItem('accessPathname');
+
+  if (!accessPathname) {
+    localStorage.setItem('accessPathname', location.pathname);
+  }
+
   useEffect(() => {
     if (!refreshToken && !authorizationCode) {
       sessionApis.oauthLogin();
@@ -33,7 +39,12 @@ const OAuth: React.FC = (): ReactElement => {
           googleIdToken: data.data.google_id_token,
         };
 
-        window.location.href = '/';
+        let href: string = '/';
+        if (accessPathname) {
+          href = accessPathname;
+          localStorage.removeItem('accessPathname');
+        }
+        window.location.href = href;
       })();
     }
   });
