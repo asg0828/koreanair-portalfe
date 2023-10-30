@@ -145,6 +145,12 @@ export interface Attribute {
     //example: 데이터 타입 유형
 }
 
+export interface FormulaValidRslt {
+    [key: string]: string | Boolean
+    isValidFormula: Boolean, 
+    text: string,
+}
+
 //Required: tbRsCustFeatRule,tbRsCustFeatRuleCalc
 export interface FeatureInfo {
     [key: string]: TbRsCustFeatRule | TbRsCustFeatRuleCalc | Array<TbRsCustFeatRuleTrgt> | Array<TbRsCustFeatRuleTrgtFilter> | Array<TbRsCustFeatRuleCase>
