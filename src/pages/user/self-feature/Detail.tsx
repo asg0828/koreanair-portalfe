@@ -190,13 +190,13 @@ const SelfFeatureDetail = () => {
       if (location.state.submissionStatus === subFeatStatus.REG || location.state.submissionStatus === subFeatStatus.SUBREG) {
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
-            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
               수정
             </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
               승인요청
             </Button>
           </Stack>
@@ -204,7 +204,7 @@ const SelfFeatureDetail = () => {
       } else {
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBINFO)}>
@@ -220,63 +220,63 @@ const SelfFeatureDetail = () => {
       {/* 정보 영역 */}
         <Stack direction="Vertical" gap="MD">
             {/* 기본 정보 */}
-            <Typography variant="h2">1. Feature 기본 정보</Typography>
+            <Typography variant="h3">Feature 기본 정보</Typography>
               <HorizontalTable>
                 <TR>
                   <TH colSpan={1} align="right">대구분</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && `대구분`}
                   </TD>
                   <TH colSpan={1} align="right">중구분</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && `중구분`}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">Feature ID</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.id}
                   </TD>
                   <TH colSpan={1} align="right">Feature 타입</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && `Self Feature`}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">한글명</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && `한글명`}
                   </TD>
                   <TH colSpan={1} align="right">영문명</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.name}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">Feature 정의</TH>
-                  <TD colSpan={5.01}>
+                  <TD colSpan={5.01} align='left'>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.description}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">산출 단위</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && `산출 단위`}
                   </TD>
                   <TH colSpan={1} align="right">카테고리</TH>
-                  <TD colSpan={2}>
+                  <TD colSpan={2} align='left'>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.category}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">산출 로직</TH>
-                  <TD colSpan={5.01}>
+                  <TD colSpan={5.01} align='left'>
                     {featureInfo.tbRsCustFeatRule && `산출 로직`}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">비고</TH>
-                  <TD colSpan={5.01}>
+                  <TD colSpan={5.01} align='left'>
                     {featureInfo.tbRsCustFeatRule && `비고`}
                   </TD>
                 </TR>
@@ -284,7 +284,7 @@ const SelfFeatureDetail = () => {
             {/* 기본 정보 */}
 
             {/* 대상 선택 */}
-            <Typography variant="h2">2. 대상 선택</Typography>
+            <Typography variant="h3">대상 선택</Typography>
               {/* drag && drop 영역*/}
               <Stack 
                   direction="Horizontal"
