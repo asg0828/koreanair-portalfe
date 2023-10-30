@@ -85,17 +85,17 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
         <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>
             <Modal.Header>Feature 선후행 관계</Modal.Header>
             <Modal.Body>
+                
                 {/* 검색 영역 */}
-                <HorizontalTable>
+                <HorizontalTable className='width-100'>
                     <TR>
                         <TH colSpan={1} align="right">Feature 명</TH>
-                        <TD colSpan={3}>
+                        <TD colSpan={4}>
                             <TextField className="width-100" id="custFeatRuleName" onChange={onchangeInputHandler}/>
                         </TD>
                     </TR>
                 </HorizontalTable>
-
-                <Stack gap="SM" justifyContent="Center">
+                <Stack gap="SM" justifyContent="Center" className='width-100'>
                     <Button 
                         type="button" 
                         priority="Primary" 
@@ -103,12 +103,21 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
                         size="LG" 
                         onClick={onClickSrchHandler}
                     >
+                        <span className="searchIcon"></span>
                         검색
                     </Button>
                 </Stack>
                 {/* 검색 영역 */}
-                <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
-                    <Label>총 {custFeatParentChildList.length} 건</Label>
+                <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100 width-100">
+                    <Stack justifyContent="Between">
+                        <Label>총 <span className="total">{custFeatParentChildList.length}</span> 건</Label>
+                        <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
+                            <SelectOption value={10}>10</SelectOption>
+                            <SelectOption value={30}>30</SelectOption>
+                            <SelectOption value={50}>50</SelectOption>
+                        </Select>
+                    </Stack>
+
                     <VerticalTable
                         columns={columns}
                         rows={custFeatParentChildList}
@@ -116,18 +125,12 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
                         clickable={false}
                     />
                     <Stack className="pagination-layout">
-                        <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
-                            <SelectOption value={10}>10</SelectOption>
-                            <SelectOption value={30}>30</SelectOption>
-                            <SelectOption value={50}>50</SelectOption>
-                        </Select>
-            
                         <Pagination size="LG" className="pagination" />
                     </Stack>
                 </Stack>
             </Modal.Body>
             <Modal.Footer>
-                <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
+                <Button priority="Normal" appearance="Outline" size='LG' onClick={handleConfirm}>
                 닫기
                 </Button>
             </Modal.Footer>

@@ -258,11 +258,11 @@ const SelfFeatureReg = () => {
     {/* 정보 영역 */}
       <Stack direction="Vertical" gap="MD">
           {/* 기본 정보 */}
-          <Typography variant="h2">1. Feature 기본 정보</Typography>
+          <Typography variant="h3">Feature 기본 정보</Typography>
           <HorizontalTable>
             <TR>
-              <TH colSpan={1} align="center">대구분</TH>
-              <TD colSpan={3}>
+              <TH colSpan={1} align="right" required>대구분</TH>
+              <TD colSpan={2}>
                 <Select 
                   appearance="Outline" 
                   placeholder="선택" 
@@ -279,8 +279,8 @@ const SelfFeatureReg = () => {
                   ))}
                 </Select>
               </TD>
-              <TH colSpan={1} align="center">중구분</TH>
-              <TD colSpan={3}>
+              <TH colSpan={1} align="right" required>중구분</TH>
+              <TD colSpan={2}>
                 <Select 
                   appearance="Outline" 
                   placeholder="선택" 
@@ -299,34 +299,40 @@ const SelfFeatureReg = () => {
               </TD>
             </TR>
             <TR>
-              <TH colSpan={1} align="center">Feature ID</TH>
-              <TD colSpan={3}>
-                <TextField className="width-100" id="id" onChange={onchangeInputHandler}/>
+              <TH colSpan={1} align="right" required>Feature ID</TH>
+              <TD colSpan={2}>
+                <TextField className="width-100" id="id" value={"feature id ex"} readOnly onChange={onchangeInputHandler}/>
               </TD>
-              <TH colSpan={1} align="center">Feature 타입</TH>
-              <TD colSpan={3}>
-                <TextField className="width-100" id="dataType" onChange={onchangeInputHandler}/>
-              </TD>
-            </TR>
-            <TR>
-              <TH colSpan={1} align="center">한글명</TH>
-              <TD colSpan={3}>
-                {/* <TextField className="width-100" id="id" onChange={onchangeInputHandler}/> */}
-              </TD>
-              <TH colSpan={1} align="center">영문명</TH>
-              <TD colSpan={3}>
-                {/* <TextField className="width-100" id="id" onChange={onchangeInputHandler}/> */}
+              <TH colSpan={1} align="right" required>Feature 타입</TH>
+              <TD colSpan={2}>
+                <TextField className="width-100" id="dataType" value={"self-feature"} readOnly onChange={onchangeInputHandler}/>
               </TD>
             </TR>
             <TR>
-              <TH colSpan={1} align="center">Feature 정의</TH>
-              <TD colSpan={7}>
-                <TextField className="width-100" id="description" onChange={onchangeInputHandler}/>
+              <TH colSpan={1} align="right" required>한글명</TH>
+              <TD colSpan={2}>
+                <Stack gap="SM" className='width-100'>
+                  <TextField className="width-100" id="id" onChange={onchangeInputHandler}/>
+                  <Button>중복확인</Button>
+                </Stack>
+              </TD>
+              <TH colSpan={1} align="right" required>영문명</TH>
+              <TD colSpan={2}>
+                <Stack gap="SM" className='width-100'>
+                  <TextField className="width-100" id="id" onChange={onchangeInputHandler}/>
+                  <Button>중복확인</Button>
+                </Stack>
               </TD>
             </TR>
             <TR>
-              <TH colSpan={1} align="center">산출 단위</TH>
-              <TD colSpan={3}>
+              <TH colSpan={1} align="right" required>Feature 정의</TH>
+              <TD colSpan={5.01}>
+                <TextField className="width-100" id="description" multiline onChange={onchangeInputHandler}/>
+              </TD>
+            </TR>
+            <TR>
+              <TH colSpan={1} align="right">산출 단위</TH>
+              <TD colSpan={2}>
                 <Select 
                   appearance="Outline" 
                   placeholder="선택" 
@@ -343,26 +349,30 @@ const SelfFeatureReg = () => {
                   ))}
                 </Select>
               </TD>
-              <TD colSpan={4}>
+              <TH colSpan={1} align="right" required>카테고리</TH>
+              <TD colSpan={2}>
+                <Select className='width-100'  appearance="Outline" >
+                    <SelectOption value={1}>test</SelectOption>
+                </Select>
               </TD>
             </TR>
             <TR>
-              <TH colSpan={1} align="center">산출 로직</TH>
-              <TD colSpan={7}>
-                {/* <TextField className="width-100" id="description" onChange={onchangeInputHandler}/> */}
+              <TH colSpan={1} align="right" required>산출 로직</TH>
+              <TD colSpan={5.01}>
+                <TextField className="width-100" multiline id="description" onChange={onchangeInputHandler}/>
               </TD>
             </TR>
             <TR>
-              <TH colSpan={1} align="center">비고</TH>
-              <TD colSpan={7}>
-                {/* <TextField className="width-100" id="description" onChange={onchangeInputHandler}/> */}
+              <TH colSpan={1} align="right">비고</TH>
+              <TD colSpan={5.01}>
+                <TextField className="width-100" id="description" onChange={onchangeInputHandler}/>
               </TD>
             </TR>
           </HorizontalTable>
           {/* 기본 정보 */}
 
           {/* 대상 선택 */}
-          <Typography variant="h2">2. 대상 선택</Typography>
+          <Typography variant="h3">대상 선택</Typography>
           {/* drag && drop 영역*/}
           <Stack 
               direction="Horizontal"
@@ -415,9 +425,15 @@ const SelfFeatureReg = () => {
       <Stack direction="Vertical" gap="MD" justifyContent="End">
         <Stack justifyContent="End" gap="SM" className="width-100">
           <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitInsertHandler}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M8.79502 15.8749L4.62502 11.7049L3.20502 13.1149L8.79502 18.7049L20.795 6.70492L19.385 5.29492L8.79502 15.8749Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
             저장
           </Button>
-          <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+          <Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
             취소
           </Button>
         </Stack> 

@@ -223,60 +223,60 @@ const SelfFeatureDetail = () => {
             <Typography variant="h2">1. Feature 기본 정보</Typography>
               <HorizontalTable>
                 <TR>
-                  <TH colSpan={1} align="center">대구분</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">대구분</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && `대구분`}
                   </TD>
-                  <TH colSpan={1} align="center">중구분</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">중구분</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && `중구분`}
                   </TD>
                 </TR>
                 <TR>
-                  <TH colSpan={1} align="center">Feature ID</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">Feature ID</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.id}
                   </TD>
-                  <TH colSpan={1} align="center">Feature 타입</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">Feature 타입</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && `Self Feature`}
                   </TD>
                 </TR>
                 <TR>
-                  <TH colSpan={1} align="center">한글명</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">한글명</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && `한글명`}
                   </TD>
-                  <TH colSpan={1} align="center">영문명</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">영문명</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.name}
                   </TD>
                 </TR>
                 <TR>
-                  <TH colSpan={1} align="center">Feature 정의</TH>
-                  <TD colSpan={7}>
+                  <TH colSpan={1} align="right">Feature 정의</TH>
+                  <TD colSpan={5.01}>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.description}
                   </TD>
                 </TR>
                 <TR>
-                  <TH colSpan={1} align="center">산출 단위</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">산출 단위</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && `산출 단위`}
                   </TD>
-                  <TH colSpan={1} align="center">카테고리</TH>
-                  <TD colSpan={3}>
+                  <TH colSpan={1} align="right">카테고리</TH>
+                  <TD colSpan={2}>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.category}
                   </TD>
                 </TR>
                 <TR>
-                  <TH colSpan={1} align="center">산출 로직</TH>
-                  <TD colSpan={7}>
+                  <TH colSpan={1} align="right">산출 로직</TH>
+                  <TD colSpan={5.01}>
                     {featureInfo.tbRsCustFeatRule && `산출 로직`}
                   </TD>
                 </TR>
                 <TR>
-                  <TH colSpan={1} align="center">비고</TH>
-                  <TD colSpan={7}>
+                  <TH colSpan={1} align="right">비고</TH>
+                  <TD colSpan={5.01}>
                     {featureInfo.tbRsCustFeatRule && `비고`}
                   </TD>
                 </TR>

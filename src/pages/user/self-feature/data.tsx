@@ -78,11 +78,11 @@ export const whenYn = [
 ]
 // Feature 메인 리스트 table header
 export const featListColumns = [
-    { headerName: 'Feature 명', field: 'name', colSpan: 4 },
-    { headerName: '최종 수정 일시', field: 'lastUpdDttm', colSpan: 1 },
-    { headerName: '진행 상태', field: 'submissionStatus', colSpan: 2 },
-    { headerName: '최종 수정 사용자', field: 'lastUpdUserNm', colSpan: 1 },
-    { headerName: '사용 여부', field: 'useYn', colSpan: 1 },
+    { headerName: 'Feature 명', field: 'name', colSpan: 8 },
+    { headerName: '최종 수정 일시', field: 'lastUpdDttm', colSpan: 3 },
+    { headerName: '진행 상태', field: 'submissionStatus', colSpan: 4 },
+    { headerName: '최종 수정 사용자', field: 'lastUpdUserNm', colSpan: 2 },
+    { headerName: '사용 여부', field: 'useYn', colSpan: 2 },
 ]
 // Feature 선후행 관계 table header
 export const featPrntClidListColumns = [

@@ -153,83 +153,94 @@ const SelfFeature = () => {
         </Stack>
         {/* 검색 영역 */}
         <form onSubmit={onsubmitHandler}>
-          <HorizontalTable>
-            <TR>
-              <TH colSpan={1} align="right">카테고리</TH>
-              <TD colSpan={3}>
-                <Select 
-                  appearance="Outline" 
-                  placeholder="선택" 
-                  className="width-100" 
-                  onChange={(
-                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                    value: SelectValue<{}, false>
-                  ) => {
-                    onchangeSelectHandler(e, value, "category")
-                  }}
-                >
-                  {category.map((item, index) => (
-                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                  ))}
-                </Select>
-              </TD>
-            </TR>
-            <TR>
-              <TH colSpan={1} align="right">Feature 명</TH>
-              <TD colSpan={3}>
-                <TextField className="width-100" id="name" onChange={onchangeInputHandler}/>
-              </TD>
-            </TR>
-            <TR>
-              <TH align="right">사용 여부</TH>
-              <TD>
-                <Select 
-                  appearance="Outline" 
-                  placeholder="선택" 
-                  className="width-100" 
-                  onChange={(
-                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                    value: SelectValue<{}, false>
-                  ) => {
-                    onchangeSelectHandler(e, value, "useYn")
-                  }}
-                >
-                  {useYn.map((item, index) => (
-                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                  ))}
-                </Select>
-              </TD>
-              <TH align="right">진행 상태</TH>
-              <TD>
-                <Select 
-                  appearance="Outline" 
-                  placeholder="전체" 
-                  className="width-100" 
-                  onChange={(
-                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                    value: SelectValue<{}, false>
-                  ) => {
-                    onchangeSelectHandler(e, value, "submissionStatus")
-                  }}
-                >
-                  {submissionStatus.map((item, index) => (
-                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                  ))}
-                </Select>
-              </TD>
-            </TR>
-          </HorizontalTable>
+          <Stack direction="Vertical" gap="LG">
+            <HorizontalTable>
+              <TR>
+                <TH colSpan={1} align="right">카테고리</TH>
+                <TD colSpan={5.01}>
+                  <Select 
+                    appearance="Outline" 
+                    placeholder="선택" 
+                    className="width-100" 
+                    onChange={(
+                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                      value: SelectValue<{}, false>
+                    ) => {
+                      onchangeSelectHandler(e, value, "category")
+                    }}
+                  >
+                    {category.map((item, index) => (
+                      <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                    ))}
+                  </Select>
+                </TD>
+              </TR>
+              <TR>
+                <TH colSpan={1} align="right">Feature 명</TH>
+                <TD colSpan={5.01}>
+                  <TextField className="width-100" id="name" onChange={onchangeInputHandler}/>
+                </TD>
+              </TR>
+              <TR>
+                <TH align="right" colSpan={1}>사용 여부</TH>
+                <TD colSpan={2}>
+                  <Select 
+                    appearance="Outline" 
+                    placeholder="선택" 
+                    className="width-100" 
+                    onChange={(
+                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                      value: SelectValue<{}, false>
+                    ) => {
+                      onchangeSelectHandler(e, value, "useYn")
+                    }}
+                  >
+                    {useYn.map((item, index) => (
+                      <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                    ))}
+                  </Select>
+                </TD>
+                <TH align="right" colSpan={1}>진행 상태</TH>
+                <TD colSpan={2}>
+                  <Select 
+                    appearance="Outline" 
+                    placeholder="전체" 
+                    className="width-100" 
+                    onChange={(
+                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                      value: SelectValue<{}, false>
+                    ) => {
+                      onchangeSelectHandler(e, value, "submissionStatus")
+                    }}
+                  >
+                    {submissionStatus.map((item, index) => (
+                      <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                    ))}
+                  </Select>
+                </TD>
+              </TR>
+            </HorizontalTable>
 
-          <Stack gap="SM" justifyContent="Center">
-            <Button type="submit" priority="Primary" appearance="Contained" size="LG" >
-              검색
-            </Button>
+            <Stack gap="SM" justifyContent="Center">
+              <Button type="submit" priority="Primary" appearance="Contained" size="LG" >
+                <span className="searchIcon"></span>
+                검색
+              </Button>
+            </Stack>
+
           </Stack>
         </form>
         {/* 검색 영역 */}
 
         <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
-          <Label>총 {selfFeatureList.length} 건</Label>
+          <Stack justifyContent="Between">
+            <Label>총 <span className="total">{selfFeatureList.length}</span> 건</Label>
+            <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
+              <SelectOption value={10}>10</SelectOption>
+              <SelectOption value={30}>30</SelectOption>
+              <SelectOption value={50}>50</SelectOption>
+            </Select>
+          </Stack>
           <VerticalTable
             columns={columns}
             rows={selfFeatureList}
@@ -238,27 +249,24 @@ const SelfFeature = () => {
             rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
             onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
           />
-          <Stack className="pagination-layout">
-            <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
-              <SelectOption value={10}>10</SelectOption>
-              <SelectOption value={30}>30</SelectOption>
-              <SelectOption value={50}>50</SelectOption>
-            </Select>
-  
-            <Pagination size="LG" className="pagination" />
-  
+          <Stack className="pagination-layout">  
             <Stack justifyContent="End" gap="SM" className="width-100">
               {/* <Button size="LG">엑셀다운로드</Button> */}
-              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
-                등록
-              </Button>
-              <Button priority="Primary" appearance="Contained" size="LG" onClick={deleteSelfFeature}>
+              <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
                 삭제
+              </Button>
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+                Rule 등록
+              </Button>
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+                SQL 등록
               </Button>
             </Stack>
           </Stack>
+          <Pagination size="LG" />
         </Stack>
-        
         {/* 팝업 */}
         <CustFeatParentChildListPop 
           isOpen={isOpenFeatPrntChldPop} 
