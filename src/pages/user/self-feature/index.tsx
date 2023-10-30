@@ -5,9 +5,6 @@ import { cloneDeep } from "lodash";
 
 import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
-import CustFeatParentChildListPop from "@/components/self-feature/CustFeatParentChildListPop";
-import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
-import { RowsInfo } from "@/models/components/Table";
 import {
     Pagination,
     TR,
@@ -16,15 +13,16 @@ import {
     Button,
     Stack,
     TextField,
-    Checkbox,
     Select,
     SelectOption,
-    DatePicker,
     Label,
 } from '@components/ui';
+import CustFeatParentChildListPop from "@/components/self-feature/CustFeatParentChildListPop";
 
+import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
+import { RowsInfo } from "@/models/components/Table";
 import { 
-  listColumns as columns,
+  featListColumns as columns,
   initTbRsCustFeatRule,
   selfFeatPgPpNm 
 } from "./data";
@@ -57,7 +55,7 @@ const SelfFeature = () => {
 
     const navigate = useNavigate();
 
-    const [ searchInfo, setSearchInfo ] = useState<{}>({
+    const [ searchInfo, setSearchInfo ] = useState<Object>({
       name: '',
       category: '',
       useYn: '',
@@ -66,6 +64,8 @@ const SelfFeature = () => {
     const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
     const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
 
+    const [ isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop ] = useState<boolean>(false)
+
     useEffect(() => {
       // 공통 코드 API CALL && 초기 LIST 조회 API CALL
       retrieveCustFeatRules()
@@ -73,9 +73,13 @@ const SelfFeature = () => {
 
     const retrieveCustFeatRules = () => {
       console.log(`RETRIEVE API CALL!`)
-      // retrieveCustFeatRules
-      // api Url :: (GET)/api/v1/customerfeatures?mstrSgmtRuleId=&custFeatRuleName=&useYn=&category=&submissionStatus=
-
+      /*
+        Method      :: GET
+        Url         :: /api/v1/customerfeatures
+        path param  :: 
+        query param :: mstrSgmtRuleId=&custFeatRuleName=&useYn=&category=&submissionStatus=
+        body param  :: 
+      */
       let list: Array<TbRsCustFeatRule> = []
       for (let i = 0; i < 10; i++) {
         let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
@@ -101,14 +105,11 @@ const SelfFeature = () => {
 
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
       if (pageNm === selfFeatPgPpNm.DETL) {
-          navigate(pageNm, { state: rows })
+        navigate(pageNm, { state: rows })
       } else if (pageNm === selfFeatPgPpNm.PRNTCHLD) {
-        // 팝업 component mount시 호출
-        // retrieveCustFeatParentChildList
-        // api Url :: (GET)/api/v1/customerfeatures/parent-child?mstrSgmtRuleId=&custFeatRuleName=
-        console.log("Feature 선후행 관계 팝업 open!")
+        setIsOpenFeatPrntChldPop((prevState) => !prevState)
       } else {
-          navigate(pageNm)
+        navigate(pageNm)
       }
     }
 
@@ -257,6 +258,13 @@ const SelfFeature = () => {
             </Stack>
           </Stack>
         </Stack>
+        
+        {/* 팝업 */}
+        <CustFeatParentChildListPop 
+          isOpen={isOpenFeatPrntChldPop} 
+          onClose={(isOpen) => setIsOpenFeatPrntChldPop(isOpen)} 
+        />
+
       </Stack>
     )
   }

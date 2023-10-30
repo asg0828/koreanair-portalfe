@@ -47,6 +47,9 @@ const CaseComponent = (props: any) => {
             formula: cloneDeep(props.custFeatRuleCase.targetFormula),
             targetList: cloneDeep(props.formulaTrgtList),
         })))
+        
+        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+        
     }, [props.custFeatRuleCase.targetFormula])
 
     const onClickDeleteHandler = () => {
@@ -134,16 +137,19 @@ const CaseComponent = (props: any) => {
             return rtn
         })
     }
-
+    /*
     const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
         const { id, value } = e.target
-        /*
+        
+        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+        
         setFormulaValidRslt(cloneDeep(ValidationFormula({
             formula: cloneDeep(value),
             targetList: cloneDeep(props.formulaTrgtList),
         })))
-        */
+        
     }
+    */
     
     return (
         <Stack
@@ -200,7 +206,7 @@ const CaseComponent = (props: any) => {
                     value={props.custFeatRuleCase.targetFormula}
                     id='targetFormula'
                     onChange={onchangeInputHandler} 
-                    onBlur={onblurInputHandler}
+                    //onBlur={onblurInputHandler}
                     validation={!formulaValidRslt.isValidFormula ? 'Error' : 'Default'}
                 />
                 <div className='flex space-between'>

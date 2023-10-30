@@ -369,3 +369,41 @@ export interface TbRsCustFeatRuleCase {
     lastUpdUserId: string,
     //example: 최종수정 사용자ID
 }
+// Feature 선후행 관계
+export interface FeatPrntCild extends RowsInfo {
+    [key: string]: string
+    id: string,
+    name: string,
+    submissionStatus: string,
+    parentIds: string,
+    parentNames: string,
+    childIds: string,
+    childNames: string,
+}
+// 샘플 확인
+export interface FeatSampleData extends RowsInfo {
+    [key: string]: string
+    cf_value: string,
+    rsln_id: string,
+}
+// 쿼리 실행 내역
+export interface BatchExecuteLog extends RowsInfo {
+    [key: string]: string
+    batType: string,
+    ruleId: string,
+    ruleNm: string,
+    startTime: string,
+    endTime: string,
+    execTime: string,
+    rsltCnt: string,
+    pgmNm: string,
+    execVersion: string,
+    batchResultStatus: string,
+    schdId: string,
+    schdNm: string,
+}
+// 쿼리 확인
+export interface ReadSql {
+    [key: string]: string
+    sql: string
+}

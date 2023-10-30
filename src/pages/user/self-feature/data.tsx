@@ -11,6 +11,10 @@ import {
     Behavior,
     Attribute,
     FormulaValidRslt,
+    FeatPrntCild,
+    FeatSampleData,
+    BatchExecuteLog,
+    ReadSql,
 } from "@/models/selfFeature/FeatureInfo";
 
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
@@ -72,13 +76,33 @@ export const whenYn = [
     { value: 'Y', text: 'WHEN' },
     { value: 'N', text: 'ELSE' },
 ]
-
-export const listColumns = [
+// Feature 메인 리스트 table header
+export const featListColumns = [
     { headerName: 'Feature 명', field: 'name', colSpan: 4 },
     { headerName: '최종 수정 일시', field: 'lastUpdDttm', colSpan: 1 },
     { headerName: '진행 상태', field: 'submissionStatus', colSpan: 2 },
     { headerName: '최종 수정 사용자', field: 'lastUpdUserNm', colSpan: 1 },
     { headerName: '사용 여부', field: 'useYn', colSpan: 1 },
+]
+// Feature 선후행 관계 table header
+export const featPrntClidListColumns = [
+    { headerName: 'Feature 명', field: 'name', colSpan: 4 },
+    { headerName: '진행 상태', field: 'submissionStatus', colSpan: 2 },
+    { headerName: '선행 Feature', field: 'parentNames', colSpan: 1 },
+    { headerName: '후행 Feature', field: 'childNames', colSpan: 1 },
+]
+// 배치 실행 결과 샘플 확인 팝업 table header
+export const querySampleDataListColumns = [
+    { headerName: '샘플 One ID', field: 'rsln_id', colSpan: 1 },
+    { headerName: '샘플 값', field: 'cf_value', colSpan: 1 },
+]
+// 배치 실행 이력 팝업 table header
+export const batchExecuteLogListColumns = [
+    { headerName: '실행 일시', field: 'startTime', colSpan: 3 },
+    { headerName: '종료 일시', field: 'endTime', colSpan: 3 },
+    { headerName: '수행 시간', field: 'execTime', colSpan: 3 },
+    { headerName: '생성 건수', field: 'rsltCnt', colSpan: 3 },
+    { headerName: '수행 결과', field: 'batchResultStatus', colSpan: 3 },
 ]
 
 export const divisionTypes = {
@@ -280,4 +304,38 @@ export const initMstrSgmtTableandColMetaInfo: MstrSgmtTableandColMetaInfo = {
     rslnRuleId: '',
     behaviors: [{...initBehavior}],
     attributes: [{...initAttribute}]
+}
+
+export const initFeatPrntCild: FeatPrntCild = {
+    id: '',
+    name: '',
+    submissionStatus: '',
+    parentIds: '',
+    parentNames: '',
+    childIds: '',
+    childNames: '',
+}
+
+export const initFeatSampleData: FeatSampleData = {
+    cf_value: '',
+    rsln_id: '',
+}
+
+export const initBatchExecuteLog: BatchExecuteLog = {
+    batType: '',
+    ruleId: '',
+    ruleNm: '',
+    startTime: '',
+    endTime: '',
+    execTime: '',
+    rsltCnt: '',
+    pgmNm: '',
+    execVersion: '',
+    batchResultStatus: '',
+    schdId: '',
+    schdNm: '',
+}
+
+export const initReadSql: ReadSql = {
+    sql: '',
 }

@@ -1,5 +1,11 @@
-import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { 
+  useEffect, 
+  useState 
+} from "react"
+import { 
+  useLocation, 
+  useNavigate 
+} from "react-router-dom"
 import { cloneDeep } from 'lodash'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -9,10 +15,18 @@ import HorizontalTable from "@/components/table/HorizontalTable"
 import CalcValid from '@/components/self-feature/CalcValid';
 import DropList from "@/components/self-feature/DropList";
 import DragList from "@/components/self-feature/DragList";
-import QuerySampleDataPop from "@/components/self-feature/QuerySampleDataPop";
-import BatchExecuteLogsPop from "@/components/self-feature/BatchExecuteLogsPop";
-import ReadSqlPop from "@/components/self-feature/ReadSqlPop";
-import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography } from '@components/ui'
+import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
+import { 
+  Button, 
+  Select, 
+  SelectOption, 
+  Stack, 
+  TD, 
+  TH, 
+  TR, 
+  TextField, 
+  Typography 
+} from '@components/ui'
 
 import { 
   FeatureInfo,
@@ -65,7 +79,7 @@ const SelfFeatureEdit = () => {
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
   const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
-  const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(false)
+  const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 
@@ -141,12 +155,16 @@ const SelfFeatureEdit = () => {
       })
     }
     
-  }, [formulaTrgtList])
+  }, [formulaTrgtList, location.state.tbRsCustFeatRuleCalc.formula])
 
   const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     console.log(`속성/Feature/행동 데이터 API CALL!`)
-    // getTableandColumnMetaInfoByMstrSgmtRuleId
-    // api url :: (GET)/api/v1/mastersegment/table-columns-meta-info/{mstrSgmtRuleId}
+    /*
+      Method      :: GET
+      Url         :: /api/v1/mastersegment/table-columns-meta-info
+      path param  :: {mstrSgmtRuleId}
+      query param :: 
+    */
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
       let temp = cloneDeep(state)
       let attributes = []
@@ -231,39 +249,21 @@ const SelfFeatureEdit = () => {
   }
 
   const onSubmitUpdateHandler = () => {
-    // updateCustFeatRule
-    // api url :: (PUT)/api/v1/customerfeatures/{custFeatRuleId}
     /*
+      Method      :: PUT
+      Url         :: /api/v1/customerfeatures
+      path param  :: {custFeatRuleId}
+      query param :: 
+      body param  :: updtFeatureInfo
+    */
+    
     if (!isValidFormula) {
       alert("계산식을 확인해주세요.")
       return null
     }
-    */
+    
     console.log("createCustFeatRule API CALL!")
     console.log("Self Feature update data :: ", updtFeatureInfo)
-  }
-
-  const onClickFeatQueryRsltHandler = (type: number) => {
-    if (type === 1) {
-      // runScheduleByManually
-      // api url :: (POST)/api/v1/airflow/runSchedule/{id}
-      console.log("수동 실행")
-    } else if (type === 2) {
-      // 팝업 component mount시 호출
-      // retrieveSampleData
-      // api url :: (GET)/api/v1/customerfeatures/sample/{custFeatRuleId}?rslnId=
-      console.log("샘플 확인 팝업 open")
-    } else if (type === 3) {
-      // 팝업 component mount시 호출
-      // retrieveBatchExecuteLogs
-      // api url :: (GET)/api/v1/batchdb/logs/{ruleId}
-      console.log("실행 내역 팝업 open")
-    } else if (type === 4) {
-      // 팝업 component mount시 호출
-      // readSql
-      // api url :: (GET)/api/v1/customerfeatures/read-sql/{custFeatRuleId}
-      console.log("쿼리 확인 팝업 open")
-    }
   }
 
   return (
@@ -271,20 +271,8 @@ const SelfFeatureEdit = () => {
     {/* 정보 영역 */}
       <Stack direction="Vertical" gap="MD" >
         {/* 상단 버튼 영역 */}
-        <Stack direction="Horizontal" gap="MD" justifyContent="End">
-          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(1)}>
-            수동 실행
-          </Button>
-          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(2)}>
-            샘플 확인
-          </Button>
-          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(3)}>
-            실행 내역
-          </Button>
-          <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(4)}>
-            쿼리 확인
-          </Button>
-        </Stack>
+        <FeatQueryRsltButton />
+        
         {/* 기본 정보 */}
         <Typography variant="h2">1. Feature 기본 정보</Typography>
         <HorizontalTable>

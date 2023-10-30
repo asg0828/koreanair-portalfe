@@ -13,14 +13,7 @@ import {
     TD,
     Button,
     Stack,
-    TextField,
-    Checkbox,
-    Select,
-    SelectOption,
-    DatePicker,
-    Label,
     Typography,
-    Page,
   } from '@components/ui';
 
 import { 
@@ -92,7 +85,7 @@ const SelfFeatureDetail = () => {
         } else if (pageNm === selfFeatPgPpNm.EDIT) {
           navigate(`../${pageNm}`, { state: featureInfo })
         } else if (pageNm === selfFeatPgPpNm.SUBINFO || pageNm === selfFeatPgPpNm.SUBMCFRM) {
-          // 팝업 component mount시 호출
+          // 팝업 component open시 호출
           // retrieveSubmission1
           // api url :: (GET)/api/v1/submissions/{submissionId}
           console.log("승인 팝업 open!")
@@ -102,8 +95,13 @@ const SelfFeatureDetail = () => {
     }
     
     const retrieveCustFeatRuleInfos = () => {
-      // retrieveCustFeatRuleInfos
-      // apiUrl :: (GET)/api/v1/customerfeatures/{custFeatRuleId(location.state.id)}
+      /*
+        Method      :: GET
+        Url         :: /api/v1/customerfeatures
+        path param  :: {custFeatRuleId}
+        query param :: 
+        body param  :: 
+      */
       setFeatureInfo((state: FeatureInfo) => {
         let rtn = cloneDeep(state)
         let tbRsCustFeatRule : TbRsCustFeatRule = Object.assign(cloneDeep(initTbRsCustFeatRule), cloneDeep(location.state))
