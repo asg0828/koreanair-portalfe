@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { cloneDeep } from 'lodash'
+import { ValidationFormula } from '@/utils/self-feature/FormulaValidUtil';
 
 import { 
     HelperText,
@@ -7,32 +8,40 @@ import {
 } from '@/components/ui'
 
 import { 
+    FormulaCaseProps,
     FormulaValidRslt,
     TbRsCustFeatRuleCalc,
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initFormulaValidRslt,
 } from '@/pages/user/self-feature/data'
-import { ValidationFormula } from '@/utils/self-feature/FormulaValidUtil';
 
-const FormulaComponent = (props: any) => {
+const FormulaComponent = ({
+    isPossibleEdit,
+    custFeatRuleCalc,
+    setCustFeatRuleCalc,
+    setIsValidFormula,
+    formulaTrgtList,
+}: FormulaCaseProps) => {
 
     const [ formulaValidRslt, setFormulaValidRslt ] = useState<FormulaValidRslt>(cloneDeep(initFormulaValidRslt))
 
     useEffect(() => {
+        if (!custFeatRuleCalc) return
+
         setFormulaValidRslt(cloneDeep(ValidationFormula({
-            formula: cloneDeep(props.custFeatRuleCalc.formula),
-            targetList: cloneDeep(props.formulaTrgtList),
+            formula: cloneDeep(custFeatRuleCalc.formula),
+            targetList: cloneDeep(formulaTrgtList),
         })))
         
-        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+        setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
 
-    }, [props.custFeatRuleCalc.formula])
+    }, [custFeatRuleCalc?.formula])
 
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         
-        props.setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
+        setCustFeatRuleCalc && setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
             let rtn = cloneDeep(state)
             rtn[id] = value.toUpperCase()
             return rtn
@@ -43,11 +52,11 @@ const FormulaComponent = (props: any) => {
     const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         
-        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+        setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
 
         setFormulaValidRslt(cloneDeep(ValidationFormula({
             formula: cloneDeep(value),
-            targetList: cloneDeep(props.formulaTrgtList),
+            targetList: cloneDeep(formulaTrgtList),
         })))
     }
     */
@@ -55,9 +64,9 @@ const FormulaComponent = (props: any) => {
     return (
         <>
         <TextField 
-            disabled={!props.isPossibleEdit}
+            disabled={!isPossibleEdit}
             placeholder='(숫자 타입의 TARGET명, +, -, *, /, 소괄호만 사용하여 계산식을 입력합니다. 예) (T1+T2)/T3 )'
-            value={props.custFeatRuleCalc.formula}
+            value={custFeatRuleCalc?.formula}
             id="formula"
             onChange={onchangeInputHandler} 
             //onBlur={onblurInputHandler}
