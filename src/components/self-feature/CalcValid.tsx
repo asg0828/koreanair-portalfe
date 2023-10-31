@@ -17,10 +17,8 @@ import {
 
 const ClacValid = ({
     featStatus,
-    isValidFormula,
     setIsValidFormula,
     formulaTrgtList,
-    formula,
     custFeatRuleCalc,
     custFeatRuleCaseList,
     setCustFeatRuleCalc,

@@ -25,10 +25,8 @@ export interface TargetDragProps {
 
 export interface FeatCalcValidProps {
     featStatus: string 
-    isValidFormula?: Boolean
     setIsValidFormula?: React.Dispatch<React.SetStateAction<Boolean>>
     formulaTrgtList: Array<string>
-    formula?: string
     custFeatRuleCalc: TbRsCustFeatRuleCalc 
     custFeatRuleCaseList:  Array<TbRsCustFeatRuleCase>
     setCustFeatRuleCalc:  React.Dispatch<React.SetStateAction<TbRsCustFeatRuleCalc>>
