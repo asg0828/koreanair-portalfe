@@ -23,6 +23,28 @@ export interface TargetDragProps {
     behvTblClmnInfo?: TbCoMetaTblClmnInfo
 }
 
+export interface FeatCalcValidProps {
+    featStatus: string 
+    setIsValidFormula?: React.Dispatch<React.SetStateAction<Boolean>>
+    formulaTrgtList: Array<string>
+    custFeatRuleCalc: TbRsCustFeatRuleCalc 
+    custFeatRuleCaseList:  Array<TbRsCustFeatRuleCase>
+    setCustFeatRuleCalc:  React.Dispatch<React.SetStateAction<TbRsCustFeatRuleCalc>>
+    setCustFeatRuleCaseList:  React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleCase>>>
+}
+
+export interface FormulaCaseProps {
+    isPossibleEdit: Boolean
+    index?: number
+    lastIdx?: number
+    custFeatRuleCalc?: TbRsCustFeatRuleCalc
+    custFeatRuleCase?: TbRsCustFeatRuleCase
+    setCustFeatRuleCalc?: React.Dispatch<React.SetStateAction<TbRsCustFeatRuleCalc>>
+    setCustFeatRuleCaseList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleCase>>>
+    setIsValidFormula: React.Dispatch<React.SetStateAction<Boolean>>
+    formulaTrgtList: Array<string>
+}
+
 export interface MstrSgmtTableandColMetaInfo {
     [key: string]: string | Array<Behavior> | Array<Attribute>
     rslnRuleId: string,

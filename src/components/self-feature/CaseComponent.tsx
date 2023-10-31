@@ -1,19 +1,31 @@
 import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from 'lodash'
+import { ValidationFormula } from '@/utils/self-feature/FormulaValidUtil';
 
 import { Button, Select, SelectOption, Stack, TextField, Typography, HelperText } from '@/components/ui'
 
-import { FormulaValidRslt, TbRsCustFeatRuleCase, } from '@/models/selfFeature/FeatureInfo';
+import { 
+    FormulaCaseProps, 
+    FormulaValidRslt, 
+    TbRsCustFeatRuleCase, 
+} from '@/models/selfFeature/FeatureInfo';
 import { 
     delimiterOption, 
     initFormulaValidRslt, 
     operatorOption, 
     whenYn, 
 } from '@/pages/user/self-feature/data'
-import { ValidationFormula } from '@/utils/self-feature/FormulaValidUtil';
 
-const CaseComponent = (props: any) => {
+const CaseComponent = ({
+    isPossibleEdit,
+    index,
+    lastIdx,
+    custFeatRuleCase,
+    setCustFeatRuleCaseList,
+    setIsValidFormula,
+    formulaTrgtList,
+}: FormulaCaseProps) => {
 
     const [ trgtFormulaInput, setTrgtFormulaInput ] = useState<Boolean>(false)
     const [ formulaValidRslt, setFormulaValidRslt ] = useState<FormulaValidRslt>(cloneDeep(initFormulaValidRslt))
@@ -22,40 +34,54 @@ const CaseComponent = (props: any) => {
     const [ elseSelected, setElseSelected ] = useState<Boolean>(false)
 
     useEffect(() => {
-        if (props.custFeatRuleCase.operator === "in_str" || props.custFeatRuleCase.operator === "not_in_str") {
+        if (!custFeatRuleCase) return
+
+        if (custFeatRuleCase.operator === "in_str" || custFeatRuleCase.operator === "not_in_str") {
             setDelimiterSelected(true)
         } else {
             setDelimiterSelected(false)
         }
-    }, [props.custFeatRuleCase.operator])
+    }, [custFeatRuleCase?.operator])
 
     useEffect(() => {
-        if (props.custFeatRuleCase.whenYn === "N") {
+        if (!custFeatRuleCase) return
+
+        if (custFeatRuleCase.whenYn === "N") {
             setElseSelected(true)
         } else {
             setElseSelected(false)
         }
-    }, [props.custFeatRuleCase.whenYn])
+    }, [custFeatRuleCase?.whenYn])
 
     useEffect(() => {
-        if (props.custFeatRuleCase.targetFormula !== "") {
+        if (!custFeatRuleCase) return
+
+        if (custFeatRuleCase.targetFormula !== "") {
             setTrgtFormulaInput(true)
         } else {
             setTrgtFormulaInput(false)
         }
         setFormulaValidRslt(cloneDeep(ValidationFormula({
-            formula: cloneDeep(props.custFeatRuleCase.targetFormula),
-            targetList: cloneDeep(props.formulaTrgtList),
+            formula: cloneDeep(custFeatRuleCase.targetFormula),
+            targetList: cloneDeep(formulaTrgtList),
         })))
         
-        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+        setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
         
-    }, [props.custFeatRuleCase.targetFormula])
+    }, [custFeatRuleCase?.targetFormula])
+
+    useEffect(() => {
+        if (formulaValidRslt.isValidFormula){
+            setTrgtFormulaInput(true)
+        } else { 
+            setTrgtFormulaInput(false)
+        }
+    }, [formulaValidRslt.isValidFormula])
 
     const onClickDeleteHandler = () => {
-        props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
+        (setCustFeatRuleCaseList && (index || index === 0)) && setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
-            rtn.splice(props.index, 1)
+            rtn.splice(index, 1)
             return rtn
         })
     }
@@ -77,14 +103,14 @@ const CaseComponent = (props: any) => {
             t = true
         }
 
-        props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
+        (setCustFeatRuleCaseList && (index || index === 0)) && setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
-            rtn[props.index][id] = inputValue
+            rtn[index][id] = inputValue
             if (t) {
-                rtn[props.index]["targetFormula"] = ''
-                rtn[props.index]["operator"] = ''
-                rtn[props.index]["delimiter"] = ''
-                rtn[props.index]["operand1"] = ''
+                rtn[index]["targetFormula"] = ''
+                rtn[index]["operator"] = ''
+                rtn[index]["delimiter"] = ''
+                rtn[index]["operand1"] = ''
             }
             return rtn
         })
@@ -122,17 +148,17 @@ const CaseComponent = (props: any) => {
             t = false
         }
 
-        props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
+        (setCustFeatRuleCaseList && (index || index === 0)) && setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
-            rtn[props.index][keyNm] = v
+            rtn[index][keyNm] = v
             if (!t) {
-                rtn[props.index]["delimiter"] = ''
+                rtn[index]["delimiter"] = ''
             }
             if (t2) {
-                rtn[props.index]["targetFormula"] = ''
-                rtn[props.index]["operator"] = ''
-                rtn[props.index]["delimiter"] = ''
-                rtn[props.index]["operand1"] = ''
+                rtn[index]["targetFormula"] = ''
+                rtn[index]["operator"] = ''
+                rtn[index]["delimiter"] = ''
+                rtn[index]["operand1"] = ''
             }
             return rtn
         })
@@ -141,11 +167,11 @@ const CaseComponent = (props: any) => {
     const onblurInputHandler = (e: React.FocusEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         
-        props.setIsValidFormula && props.setIsValidFormula(formulaValidRslt.isValidFormula)
+        setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
         
         setFormulaValidRslt(cloneDeep(ValidationFormula({
             formula: cloneDeep(value),
-            targetList: cloneDeep(props.formulaTrgtList),
+            targetList: cloneDeep(formulaTrgtList),
         })))
         
     }
@@ -157,12 +183,12 @@ const CaseComponent = (props: any) => {
             justifyContent="Start" 
             gap="MD" 
         >
-            {props.index === 0 && 
+            {index === 0 && 
                 <Typography variant='h5'>WHEN</Typography>
             }
-            {props.index !== 0 && 
+            {index !== 0 && 
                 <>
-                {props.isPossibleEdit &&
+                {isPossibleEdit &&
                     <Button 
                         size="SM" 
                         onClick={onClickDeleteHandler}
@@ -170,10 +196,10 @@ const CaseComponent = (props: any) => {
                     삭제
                     </Button>
                 }
-                {props.lastIdx === props.index &&
+                {lastIdx === index &&
                     <Select 
-                        disabled={!props.isPossibleEdit}
-                        value={props.custFeatRuleCase.whenYn}
+                        disabled={!isPossibleEdit}
+                        value={custFeatRuleCase?.whenYn}
                         appearance="Outline"
                         shape="Square"
                         size="MD"
@@ -193,7 +219,7 @@ const CaseComponent = (props: any) => {
                         ))}
                     </Select>
                 }
-                {props.lastIdx !== props.index &&
+                {lastIdx !== index &&
                     <Typography variant='h5'>WHEN</Typography>
                 }
                 </>
@@ -201,9 +227,9 @@ const CaseComponent = (props: any) => {
             {!elseSelected &&
             <>
                 <TextField 
-                    disabled={!props.isPossibleEdit}
+                    disabled={!isPossibleEdit}
                     placeholder="Target/계산식 입력"
-                    value={props.custFeatRuleCase.targetFormula}
+                    value={custFeatRuleCase?.targetFormula}
                     id='targetFormula'
                     onChange={onchangeInputHandler} 
                     //onBlur={onblurInputHandler}
@@ -224,8 +250,8 @@ const CaseComponent = (props: any) => {
             }
             {!elseSelected &&
             <Select 
-                disabled={!props.isPossibleEdit}
-                value={props.custFeatRuleCase.operator}
+                disabled={!isPossibleEdit}
+                value={custFeatRuleCase?.operator}
                 shape="Square"
                 size="MD"
                 status="default"
@@ -250,9 +276,9 @@ const CaseComponent = (props: any) => {
             }
             {(!elseSelected && delimiterSelected) &&
                 <Select 
-                    disabled={!props.isPossibleEdit}
+                    disabled={!isPossibleEdit}
                     appearance="Outline"
-                    value={props.custFeatRuleCase.delimiter}
+                    value={custFeatRuleCase?.delimiter}
                     shape="Square"
                     size="MD"
                     status="default"
@@ -274,9 +300,9 @@ const CaseComponent = (props: any) => {
             }
             {(!elseSelected && trgtFormulaInput) &&
             <TextField 
-                disabled={!props.isPossibleEdit}
+                disabled={!isPossibleEdit}
                 placeholder="피연산자 입력"
-                value={props.custFeatRuleCase.operand1}
+                value={custFeatRuleCase?.operand1}
                 id='operand1'
                 onChange={onchangeInputHandler} 
             />
@@ -286,9 +312,9 @@ const CaseComponent = (props: any) => {
             <Typography variant='h5'>THEN</Typography>
             }
             <TextField 
-                disabled={!props.isPossibleEdit}
+                disabled={!isPossibleEdit}
                 placeholder="결과 입력"
-                value={props.custFeatRuleCase.result}
+                value={custFeatRuleCase?.result}
                 id='result'
                 onChange={onchangeInputHandler} 
             />

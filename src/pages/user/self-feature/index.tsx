@@ -145,7 +145,7 @@ const SelfFeature = () => {
     }
 
     return (
-      <Stack direction="Vertical" gap="MD" className="height-100">
+      <Stack direction="Vertical" gap="LG" className="height-100">
         <Stack direction="Horizontal" gap="MD" justifyContent="End">
           <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.PRNTCHLD)}>
             Feature 선후행 관계
@@ -232,7 +232,7 @@ const SelfFeature = () => {
         </form>
         {/* 검색 영역 */}
 
-        <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
+        <Stack direction="Vertical" gap="LG" justifyContent="End" className="height-100">
           <Stack justifyContent="Between">
             <Label>총 <span className="total">{selfFeatureList.length}</span> 건</Label>
             <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
@@ -249,6 +249,7 @@ const SelfFeature = () => {
             rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
             onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
           />
+          <Pagination size="MD" />
           <Stack className="pagination-layout">  
             <Stack justifyContent="End" gap="SM" className="width-100">
               {/* <Button size="LG">엑셀다운로드</Button> */}
@@ -265,7 +266,6 @@ const SelfFeature = () => {
               </Button>
             </Stack>
           </Stack>
-          <Pagination size="LG" />
         </Stack>
         {/* 팝업 */}
         <CustFeatParentChildListPop 
