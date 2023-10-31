@@ -42,7 +42,6 @@ const BehvDropItem = ({
 
     // 논리 표현식(필터옵션 좌측 input) 수정
     useEffect(() => {
-
         if (!trgtFilterList) return
 
         if (trgtFilterList.length < 1) {

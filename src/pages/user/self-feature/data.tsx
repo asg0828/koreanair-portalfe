@@ -46,6 +46,7 @@ export const filterOption = [
 ]
 // 변환식 함수
 export const transFuncOtion = [
+    { value: '',          text: '선택' },
     { value: 'NVL',       text: 'NVL' },
     { value: 'SUBSTRING', text: 'Substring' },
     { value: 'LENGTH',    text: 'Length' },
@@ -54,14 +55,15 @@ export const transFuncOtion = [
 ]
 // 연산자 목록
 export const operatorOption = [
-    { value: 'match', text: 'Match' },
-    { value: 'not match', text: 'Not Match' },
-    { value: 'start with', text: 'Start With' },
-    { value: 'not start with', text: 'Not Start With' },
-    { value: 'in_str', text: 'In' },
-    { value: 'not_in_str', text: 'Not in' },
-    { value: 'contains', text: 'Contains' },
-    { value: 'not contains', text: 'Not Contains' },
+    { value: '',                text: '선택' },
+    { value: 'match',           text: 'Match' },
+    { value: 'not match',       text: 'Not Match' },
+    { value: 'start with',      text: 'Start With' },
+    { value: 'not start with',  text: 'Not Start With' },
+    { value: 'in_str',          text: 'In' },
+    { value: 'not_in_str',      text: 'Not in' },
+    { value: 'contains',        text: 'Contains' },
+    { value: 'not contains',    text: 'Not Contains' },
 ]
 // 구분자 목록
 export const delimiterOption = [
@@ -71,13 +73,13 @@ export const delimiterOption = [
 ]
 // 집계함수 목록
 export const aggregateOption = [
-    { value: 'count', text: 'Count' },
-    { value: 'max', text: 'Max' },
-    { value: 'min', text: 'Min' },
-    { value: 'distinct_count', text: 'Distinct Count' },
-    { value: 'first', text: 'First' },
-    { value: 'last', text: 'Last' },
-    { value: 'top', text: 'Top' },
+    { value: 'count',           text: 'Count' },
+    { value: 'max',             text: 'Max' },
+    { value: 'min',             text: 'Min' },
+    { value: 'distinct_count',  text: 'Distinct Count' },
+    { value: 'first',           text: 'First' },
+    { value: 'last',            text: 'Last' },
+    { value: 'top',             text: 'Top' },
 ]
 
 export const whenYn = [

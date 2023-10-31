@@ -45,6 +45,19 @@ export interface FormulaCaseProps {
     formulaTrgtList: Array<string>
 }
 
+export interface TransFuncProps {
+    isOpen?: boolean
+    onClose?: (isOpen: boolean) => void
+    isPossibleEdit?: Boolean
+    itemIdx: number
+    funcStr?: string
+    trgtItem: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
+    setFuncStr?: React.Dispatch<React.SetStateAction<string>>
+    setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
+    setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+    setTransFuncChecked?: React.Dispatch<React.SetStateAction<boolean>>
+}
+
 export interface MstrSgmtTableandColMetaInfo {
     [key: string]: string | Array<Behavior> | Array<Attribute>
     rslnRuleId: string,

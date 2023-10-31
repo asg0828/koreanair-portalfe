@@ -107,6 +107,9 @@ const BehvColDropItem = ({
                 <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterItem.columnName}</Typography>
                 <TransFunction 
                     isPossibleEdit={isPossibleEdit}
+                    itemIdx={itemIdx}
+                    trgtItem={trgtFilterItem}
+                    setTrgtFilterList={setTrgtFilterList!}
                 />
                 <Select 
                     disabled={!isPossibleEdit}

@@ -157,6 +157,7 @@ const DropList = ({
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
                             targetItem={targetItem} 
+                            setTargetList={setTargetList}
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {

@@ -20,28 +20,13 @@ import {
     transFuncOtion 
 } from '@/pages/user/self-feature/data';
 import { 
-    TbRsCustFeatRuleTrgt, 
-    TbRsCustFeatRuleTrgtFilter 
+    TbRsCustFeatRuleTrgt,
+    TbRsCustFeatRuleTrgtFilter,
+    TransFuncProps
 } from '@/models/selfFeature/FeatureInfo';
 
-export interface Props {
-    isOpen?: boolean
-    onClose?: (isOpen: boolean) => void
-    itemIdx: number
-    colNm: string
-    targetItem?: TbRsCustFeatRuleTrgt
-    trgtFilterItem?: TbRsCustFeatRuleTrgtFilter
-    setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
-    setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
-    funcStr: string
-    funcVal: string
-    var1: string
-    var2: string
-    var3: string
-    setFuncStr: React.Dispatch<React.SetStateAction<string>>
-}
-
 const columns = [
+    { value: '',        text: '선택' },
     { value: 'column1', text: 'column1' },
     { value: 'column2', text: 'column2' },
     { value: 'column3', text: 'column3' },
@@ -52,33 +37,39 @@ const TransFunctionPop = (
         isOpen = false, 
         onClose, 
         itemIdx,
-        colNm,
-        targetItem,
-        trgtFilterItem,
+        trgtItem,
+        funcStr,
+        setFuncStr,
         setTargetList,
         setTrgtFilterList,
-        funcStr,
-        funcVal,
-        var1,
-        var2,
-        var3,
-        setFuncStr 
-    }: Props
-    ) => {
+        setTransFuncChecked,
+    }: TransFuncProps) => {
     
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
-
-    const [ variable1, setVariable1 ] = useState<string>('')
-    const [ variable2, setVariable2 ] = useState<string>('')
-    const [ variable3, setVariable3 ] = useState<string>('')
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            
+
         }
     }, [isOpen])
+
+    useEffect(() => {
+        transFuncCalcStr(trgtItem.function, '', '', '')
+    }, [trgtItem.function])
+
+    useEffect(() => {
+        transFuncCalcStr(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
+    }, [trgtItem.variable1])
+
+    useEffect(() => {
+        transFuncCalcStr(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
+    }, [trgtItem.variable2])
+
+    useEffect(() => {
+        transFuncCalcStr(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
+    }, [trgtItem.variable3])
 
     const handleClose = useCallback(
         (isOpenPopUp: boolean) => {
@@ -91,32 +82,113 @@ const TransFunctionPop = (
         [onClose]
     )
 
+    const transFuncCalcStr = (funcType: string, var1: string, var2: string, var3: string) => {
+        let rtnStr = `${funcType}(${trgtItem.columnName}`
+
+        if (funcType === "NVL") {
+
+            if (var1 === "") rtnStr += ', [대체값])'
+            else rtnStr += `, [${var1}])`
+
+        } else if (funcType === "SUBSTRING") {
+
+            if (var1 === "") rtnStr += ', [시작위치]'
+            else rtnStr += `, [${var1}]`
+
+            if (var2 === "") rtnStr += ', [길이])'
+            else rtnStr += `, [${var2}])`
+            
+        } else if (funcType === "LENGTH") {
+            rtnStr += ')'
+        } else if (funcType === "CONCAT") {
+
+            if (var1 === "") rtnStr += ', [컬럼1]'
+            else rtnStr += `, [${var1}]`
+
+            if (var2 === "") rtnStr += ', [컬럼2])'
+            else rtnStr += `, [${var2}]`
+
+            if (var3 === "") rtnStr += ', [컬럼3])'
+            else rtnStr += `, [${var3}])`
+
+        } else if (funcType === "TO_NUMBER") {
+            rtnStr += ')'
+        } else {
+            rtnStr = ""
+        }
+
+        setFuncStr && setFuncStr(rtnStr)
+
+    }
+
+    const setTrgtItem = (funcType: string, var1: string, var2: string, var3: string) => {
+
+        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+            let rtn = cloneDeep(state)
+            rtn[itemIdx].function = funcType
+            rtn[itemIdx].variable1 = var1
+            rtn[itemIdx].variable2 = var2
+            rtn[itemIdx].variable3 = var3
+            return rtn
+        })
+        setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+            let rtn = cloneDeep(state)
+            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
+            let updtTrgtFilterList = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtItem.targetId)
+            updtTrgtFilterList[itemIdx].function = funcType
+            updtTrgtFilterList[itemIdx].variable1 = var1
+            updtTrgtFilterList[itemIdx].variable2 = var2
+            updtTrgtFilterList[itemIdx].variable3 = var3
+            rtn = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtItem.targetId)
+            rtn = [...rtn, ...updtTrgtFilterList]
+            return rtn
+        })
+    }
+    // 적용
     const handleConfirm = () => {
+        if (trgtItem.function === "") {
+            setTransFuncChecked && setTransFuncChecked(false)
+            setTrgtItem('', '', '', '')
+        } else {
+            setTrgtItem(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
+        }
+        handleClose(false)
+    }
+
+    const handleClosePop = () => {
+        // 변환식 적용 전 팝업 닫기인 경우
+        if (trgtItem.function === "") {
+            setTransFuncChecked && setTransFuncChecked(false)
+            setTrgtItem('', '', '', '')
+        }
         handleClose(false)
     }
 
     const handleResetTransFunc = () => {
-        // 속성 데이터의 경우 targetItem 만 넘김(filter list도 넘겨주지만 사용여부는 확인 필요)
-        targetItem && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
-            let rtn = cloneDeep(state)
-            rtn[itemIdx].function  = ''
-            rtn[itemIdx].variable1  = ''
-            rtn[itemIdx].variable2  = ''
-            rtn[itemIdx].variable3  = ''
-            return rtn
-        })
-
-        // 행동 데이터의 경우 trgtFilterItem 만 넘김
-        trgtFilterItem && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
-            let rtn = cloneDeep(state)
-            rtn[itemIdx].function  = ''
-            rtn[itemIdx].variable1  = ''
-            rtn[itemIdx].variable2  = ''
-            rtn[itemIdx].variable3  = ''
-            return rtn
-        })
+        setTransFuncChecked && setTransFuncChecked(false)
+        setTrgtItem('', '', '', '')
         // 팝업 close
         handleClose(false)
+    }
+
+    const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = e.target
+        
+        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+            let rtn = cloneDeep(state)
+            rtn[itemIdx][id] = value
+            return rtn
+        })
+        setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+            let rtn = cloneDeep(state)
+            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
+            let updtTrgtFilterList = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtItem.targetId)
+            updtTrgtFilterList[itemIdx][id] = value
+            rtn = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtItem.targetId)
+            rtn = [...rtn, ...updtTrgtFilterList]
+            return rtn
+        })
+        
     }
 
     const onchangeSelectHandler = (
@@ -126,37 +198,41 @@ const TransFunctionPop = (
     ) => {
         let keyNm = String(id)
         let v = String(value)
+        let t = false
 
-        // funcstr 수정
-        if (funcVal === transFuncOtion[0].value) {
-            setFuncStr(`${transFuncOtion[0].text}(${colNm}, [${variable1}])`)
-        } else if (funcVal === transFuncOtion[1].value) {
-            setFuncStr(`${transFuncOtion[0].text}(${colNm}, [${variable1}], [${variable2}])`)
-        } else if (funcVal === transFuncOtion[2].value) {
-            setFuncStr(`${transFuncOtion[0].text}(${colNm})`)
-        } else if (funcVal === transFuncOtion[3].value) {
-            setFuncStr(`${transFuncOtion[0].text}(${colNm}, [${variable1}], [${variable2}], [${variable3}])`)
-        } else if (funcVal === transFuncOtion[4].value) {
-            setFuncStr(`${transFuncOtion[0].text}(${colNm})`)
+        if (keyNm === "function") {
+            t = true
         }
-        
-        // 속성 데이터의 경우 targetItem 만 넘김(filter list도 넘겨주지만 사용여부는 확인 필요)
-        targetItem && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+
+        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let rtn = cloneDeep(state)
-            rtn[itemIdx][keyNm]  = v
+            rtn[itemIdx][keyNm] = v
+            return rtn
+        })
+        setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+            let rtn = cloneDeep(state)
+            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
+            let updtTrgtFilterList = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtItem.targetId)
+            updtTrgtFilterList[itemIdx][keyNm] = v
+            if (t) {
+                updtTrgtFilterList[itemIdx].variable1 = ''
+                updtTrgtFilterList[itemIdx].variable2 = ''
+                updtTrgtFilterList[itemIdx].variable3 = ''
+            }
+            rtn = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtItem.targetId)
+            rtn = [...rtn, ...updtTrgtFilterList]
             return rtn
         })
 
-        // 행동 데이터의 경우 trgtFilterItem 만 넘김
-        trgtFilterItem && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
-            let rtn = cloneDeep(state)
-            rtn[itemIdx][keyNm]  = v
-            return rtn
-        })
     }    
 
     return (
-        <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>
+        <Modal 
+            open={isOpenPopUp} 
+            onClose={handleClose} 
+            size='LG'
+            closeOnOutsideClick={false}
+        >
             <Modal.Header>변환식</Modal.Header>
             <Modal.Body>
                 <Stack
@@ -164,54 +240,85 @@ const TransFunctionPop = (
                     gap="MD"
                     justifyContent="Start"
                 >
-                    <TextField readOnly value={funcStr} ></TextField>
-                    <Select
-                        appearance="Outline"
-                        value={funcVal}
-                        shape="Square"
-                        size="SM"
-                        status="default"
-                        style={{
-                            width: '11.25rem',
-                        }}
-                        onChange={(
-                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                            value: SelectValue<{}, false>
-                        ) => {
-                            onchangeSelectHandler(e, value, "function")
-                        }}
+                    
+                    <Stack
+                        direction="Horizontal"
+                        gap="MD"
+                        justifyContent="Start"
                     >
-                        {transFuncOtion.map((item, index) => (
-                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                        ))}
-                    </Select>
-                    {funcVal === transFuncOtion[0].text &&
+                        <Typography variant='h6'>변환식</Typography>
+                        <TextField style={{width: '450px'}} readOnly value={funcStr} ></TextField>
+                    </Stack>
+                    <Stack
+                        direction="Horizontal"
+                        gap="MD"
+                        justifyContent="Start"
+                    >
+                        <Typography variant='h6'>함수</Typography>
+                        <Select
+                            appearance="Outline"
+                            value={trgtItem.function}
+                            shape="Square"
+                            size="SM"
+                            status="default"
+                            style={{
+                                width: '11.25rem',
+                            }}
+                            onChange={(
+                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                value: SelectValue<{}, false>
+                            ) => {
+                                onchangeSelectHandler(e, value, "function")
+                            }}
+                        >
+                            {transFuncOtion.map((item, index) => (
+                            <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                            ))}
+                        </Select>
+                    </Stack>
+                    {trgtItem.function === "NVL" &&
                         <>
-                        <Stack>
+                        <Stack
+                            direction="Horizontal"
+                            gap="MD"
+                            justifyContent="Start"
+                        >
                             <Typography variant='h6'>대체값</Typography>
-                            <TextField value={variable1}></TextField>
+                            <TextField value={trgtItem.variable1} id='variable1' onChange={onchangeInputHandler}></TextField>
                         </Stack>
                         </>
                     }
-                    {funcVal === transFuncOtion[1].text &&
+                    {trgtItem.function === "SUBSTRING" &&
                         <>
-                        <Stack>
+                        <Stack
+                            direction="Horizontal"
+                            gap="MD"
+                            justifyContent="Start"
+                        >
                             <Typography variant='h6'>시작위치</Typography>
-                            <TextField value={variable1}></TextField>
+                            <TextField value={trgtItem.variable1} id='variable1' onChange={onchangeInputHandler}></TextField>
                         </Stack>
-                        <Stack>
+                        <Stack
+                            direction="Horizontal"
+                            gap="MD"
+                            justifyContent="Start"
+                        >
                             <Typography variant='h6'>길이</Typography>
-                            <TextField value={variable2}></TextField>
+                            <TextField value={trgtItem.variable2} id='variable2' onChange={onchangeInputHandler}></TextField>
                         </Stack>
                         </>
                     }
-                    {funcVal === transFuncOtion[3].text &&
+                    {trgtItem.function === "CONCAT" &&
                         <>
-                        <Stack>
+                        <Stack
+                            direction="Horizontal"
+                            gap="MD"
+                            justifyContent="Start"
+                        >
                             <Typography variant='h6'>컬럼1</Typography>
                             <Select 
                                 appearance="Outline"
-                                value={var1}
+                                value={trgtItem.variable1}
                                 shape="Square"
                                 size="SM"
                                 status="default"
@@ -230,11 +337,15 @@ const TransFunctionPop = (
                                 ))}
                             </Select>
                         </Stack>
-                        <Stack>
+                        <Stack
+                            direction="Horizontal"
+                            gap="MD"
+                            justifyContent="Start"
+                        >
                             <Typography variant='h6'>컬럼2</Typography>
                             <Select 
                                 appearance="Outline"
-                                value={var2}
+                                value={trgtItem.variable2}
                                 shape="Square"
                                 size="SM"
                                 status="default"
@@ -253,11 +364,15 @@ const TransFunctionPop = (
                                 ))}
                             </Select>
                         </Stack>
-                        <Stack>
+                        <Stack
+                            direction="Horizontal"
+                            gap="MD"
+                            justifyContent="Start"
+                        >
                             <Typography variant='h6'>컬럼3</Typography>
                             <Select 
                                 appearance="Outline"
-                                value={var3}
+                                value={trgtItem.variable3}
                                 shape="Square"
                                 size="SM"
                                 status="default"
@@ -287,7 +402,7 @@ const TransFunctionPop = (
                 <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
                 적용
                 </Button>
-                <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
+                <Button priority="Normal" appearance="Contained" onClick={handleClosePop}>
                 닫기
                 </Button>
             </Modal.Footer>
