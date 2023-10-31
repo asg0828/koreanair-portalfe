@@ -274,7 +274,7 @@ const SelfFeatureEdit = () => {
         <FeatQueryRsltButton />
         
         {/* 기본 정보 */}
-        <Typography variant="h2">1. Feature 기본 정보</Typography>
+        <Typography variant="h3">Feature 기본 정보</Typography>
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="center">대구분</TH>
@@ -403,7 +403,7 @@ const SelfFeatureEdit = () => {
         {/* 기본 정보 */}
 
         {/* 대상 선택 */}
-        <Typography variant="h2">2. 대상 선택</Typography>
+        <Typography variant="h3">대상 선택</Typography>
         {/* drag && drop 영역*/}
         <Stack 
             direction="Horizontal"
@@ -457,7 +457,7 @@ const SelfFeatureEdit = () => {
             <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitUpdateHandler}>
               수정
             </Button>
-            <Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            <Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               취소
             </Button>
           </Stack> 

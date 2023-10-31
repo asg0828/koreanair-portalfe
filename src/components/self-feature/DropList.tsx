@@ -133,6 +133,7 @@ const DropList = ({
                 borderRadius: '5px',
                 padding:"1rem"
             }}
+            className='dropList'
         >
             <Stack 
                 direction="Vertical"
