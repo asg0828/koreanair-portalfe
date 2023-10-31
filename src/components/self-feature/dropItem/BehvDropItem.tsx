@@ -20,6 +20,7 @@ import {
     filterOption,
     aggregateOption,
 } from "@/pages/user/self-feature/data"
+import SelfFeatureConfirmModal from "../SelfFeatureConfirmModal";
 
 const columnList = [
     { value: 'colum1', text: 'colum1' },
@@ -30,6 +31,7 @@ const columnList = [
 const BehvDropItem = ({
     itemIdx,
     isPossibleEdit,
+    setIsSelectAggregateTop,
     targetItem,
     trgtFilterList,
     setTargetList,
@@ -39,6 +41,31 @@ const BehvDropItem = ({
 
     const [ filterExpsn, setFilterExpsn ] = useState<string>(cloneDeep(targetItem.filterLogiExpsn))
     const [ aggregateTopSelect, setAggregateTopSelect ] = useState<Boolean>(false)
+    const [ isOpenSelfFeatureConfirmModal, setIsOpenSelfFeatureConfirmModal ] = useState<boolean>(false)
+    const [ modalCloseRslt, setModalCloseRslt ] = useState<boolean>(false)
+
+    // confirm 모달 확인 여부
+    useEffect(() => {
+        if (!modalCloseRslt) return
+
+        // 우측 drag 영역 삭제 여부
+        setIsSelectAggregateTop && setIsSelectAggregateTop(true)
+        // Top 함수 선택시 노출되는 항목 show 여부
+        setAggregateTopSelect(true)
+
+        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+            let tl = cloneDeep(state)
+            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
+            if (tl[itemIdx].targetId === targetItem.targetId) {
+                tl[itemIdx]["operator"] = "top"
+                tl[itemIdx]["operand1"] = ''
+                tl[itemIdx]["operand2"] = ''
+                tl[itemIdx]["operand3"] = ''
+                tl[itemIdx]["operand4"] = ''
+            }
+            return tl
+        })
+    }, [modalCloseRslt])
 
     // 논리 표현식(필터옵션 좌측 input) 수정
     useEffect(() => {
@@ -173,14 +200,23 @@ const BehvDropItem = ({
 
         if (keyNm === "columnName" || keyNm === "filterLogiOption") {
             t = true
-        } else if (keyNm === "operator" && v === "top") {
-            /*
-                'Top 연산자는 하나의 대상만 가능합니다. 다른 대상들을 제거 하시겠습니까?' 
-                confirm 모달 open 확인시 해당 대상(필터에 선택된 컬럼대상은 유지)
-                들은 삭제 및 우측 drag 영역 hide
-            */
-            setAggregateTopSelect(true)
-            t = true
+        } else if (keyNm === "operator") {
+            if (v === "top") {
+                /*
+                    'Top 연산자는 하나의 대상만 가능합니다. 다른 대상들을 제거 하시겠습니까?' 
+                    confirm 모달 open 확인시 해당 대상(필터에 선택된 컬럼대상은 유지)
+                    들은 삭제 및 우측 drag 영역 hide
+                */
+                // 추후 공통 modal 적용 예정
+                setIsOpenSelfFeatureConfirmModal(true)
+                t = true
+                return
+            } else {
+                // 우측 drag 영역 삭제 여부
+                setIsSelectAggregateTop && setIsSelectAggregateTop(false)
+                
+                setModalCloseRslt(false)
+            }
         } else if (
             keyNm === "operand1"
             || keyNm === "operand3"
@@ -191,7 +227,7 @@ const BehvDropItem = ({
         } else {
             setAggregateTopSelect(false)
         }
-
+        console.log(v)
         setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let tl = cloneDeep(state)
             // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
@@ -209,6 +245,7 @@ const BehvDropItem = ({
     }
       
     return (
+        <>
         <Stack 
             direction="Horizontal"
             justifyContent="Start" 
@@ -465,6 +502,16 @@ const BehvDropItem = ({
             </Button>
             }
         </Stack>
+
+        {/* 팝업 */}
+        <SelfFeatureConfirmModal
+            isOpen={isOpenSelfFeatureConfirmModal}
+            onClose={(isOpen) => setIsOpenSelfFeatureConfirmModal(isOpen)}
+            headerText="header"
+            bodyText="Top 연산자는 하나의 대상만 가능합니다. 다른 대상들을 제거 하시겠습니까?"
+            setModalCloseRslt={setModalCloseRslt}
+        />
+        </>
     )
 }
 

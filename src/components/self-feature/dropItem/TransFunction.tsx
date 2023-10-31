@@ -105,7 +105,6 @@ const TransFunction = ({
         <TransFunctionPop
             isOpen={isOpenTransFunctionPop}
             onClose={(isOpen) => setIsOpenTransFunctionPop(isOpen)}
-            isPossibleEdit={isPossibleEdit}
             itemIdx={itemIdx}
             trgtItem={trgtItem}
             funcStr={funcStr}

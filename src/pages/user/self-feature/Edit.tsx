@@ -82,6 +82,8 @@ const SelfFeatureEdit = () => {
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
+  // Top 집계함수 선택 여부
+  const [ isSelectAggregateTop, setIsSelectAggregateTop ] = useState<Boolean>(false)
 
   useEffect(() => {
     getTableandColumnMetaInfoByMstrSgmtRuleId()
@@ -417,6 +419,7 @@ const SelfFeatureEdit = () => {
             {/* drop 영역 */}
             <DropList 
               featStatus={subFeatStatus.REG}
+              setIsSelectAggregateTop={setIsSelectAggregateTop}
               targetList={targetList} 
               trgtFilterList={trgtFilterList} 
               setTargetList={setTargetList} 
@@ -425,7 +428,7 @@ const SelfFeatureEdit = () => {
             {/* drop 영역 */}
 
             {/* drag 영역 */}
-            {mstrSgmtTableandColMetaInfo && 
+            {(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) && 
               <DragList 
                 attributes={mstrSgmtTableandColMetaInfo.attributes} 
                 behaviors={mstrSgmtTableandColMetaInfo.behaviors} 

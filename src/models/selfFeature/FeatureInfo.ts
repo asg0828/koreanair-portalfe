@@ -1,8 +1,18 @@
 import { RowsInfo } from "@/models/components/Table";
 
+export interface TargetDropListProps {
+    featStatus: string
+    setIsSelectAggregateTop?: React.Dispatch<React.SetStateAction<Boolean>>
+    targetList: Array<TbRsCustFeatRuleTrgt>
+    trgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>
+    setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
+    setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+}
+
 export interface TargetDropProps {
     itemIdx: number
     isPossibleEdit: Boolean
+    setIsSelectAggregateTop?: React.Dispatch<React.SetStateAction<Boolean>>
     targetItem: TbRsCustFeatRuleTrgt
     trgtFilterList?: Array<TbRsCustFeatRuleTrgtFilter>
     setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>

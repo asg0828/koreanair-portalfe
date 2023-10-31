@@ -11,7 +11,8 @@ import {
     TbRsCustFeatRuleTrgt, 
     TbRsCustFeatRuleTrgtFilter, 
     TbCoMetaTblClmnInfo, 
-    Attribute, 
+    Attribute,
+    TargetDropListProps, 
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initAttribute, 
@@ -23,21 +24,14 @@ import {
     divisionTypes, 
 } from '@/pages/user/self-feature/data'
 
-export interface Props {
-    featStatus: string
-    targetList: Array<TbRsCustFeatRuleTrgt>
-    trgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>
-    setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
-    setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
-}
-
 const DropList = ({
     featStatus,
+    setIsSelectAggregateTop,
     targetList, 
     trgtFilterList,
     setTargetList,
     setTrgtFilterList
-}: Props) => {
+}: TargetDropListProps) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
 
@@ -173,6 +167,7 @@ const DropList = ({
                             key={`dropItem-${index}`}
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
+                            setIsSelectAggregateTop={setIsSelectAggregateTop}
                             targetItem={targetItem}
                             trgtFilterList={tfList}
                             setTargetList={setTargetList} 

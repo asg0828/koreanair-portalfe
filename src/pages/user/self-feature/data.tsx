@@ -81,7 +81,7 @@ export const aggregateOption = [
     { value: 'last',            text: 'Last' },
     { value: 'top',             text: 'Top' },
 ]
-
+// Rule Design 등록/수정시 case문
 export const whenYn = [
     { value: 'Y', text: 'WHEN' },
     { value: 'N', text: 'ELSE' },
