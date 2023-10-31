@@ -1,56 +1,32 @@
-import { Link } from 'react-router-dom';
-import { Stack, Tabs, TabList, TabContent, Tab, Typography,Tag } from '@components/ui';
-import VerticalTable from '@components/table/VerticalTable';
+import { Link, useNavigate } from 'react-router-dom';
+import { Stack, Typography, Tag } from '@components/ui';
 import '@/assets/styles/Home.scss';
 
-const columns = [
-  { headerName: 'No', field: 'column1' },
-  { headerName: '주제영역', field: 'column2' },
-  { headerName: '데이터셋명', field: 'column3' },
-];
-
-const rows = [
-  {
-    column1: '유류할증료',
-    column2: '마일리지 몰 기획 SKYPASS Deal 『추석기획전』',
-    column3: '2023.09.22',
-  },
-  {
-    column1: '기타안내',
-    column2: '대한항공 사칭 피싱 이메일 주의',
-    column3: '2023.09.22',
-  },
-  {
-    column1: '유류할증료',
-    column2: '한국 출발 국제선 유류할증료 (2023년 9월)',
-    column3: '2023.09.22',
-  },
-  {
-    column1: '스카이패스 클럽',
-    column2: '캐시앤마일즈 서비스 이용 한도 확대',
-    column3: '2023.09.22',
-  },
-  {
-    column1: '여행정보',
-    column2: '부산·후쿠오카/나고야 재운항 (9/27일 부)',
-    column3: '2023.09.22',
-  },
-];
-
 const Home = () => {
+  const navigate = useNavigate();
+
   return (
     <Stack id="home" direction="Vertical" gap="LG" justifyContent="Between">
       <Stack direction="Horizontal" gap="LG" className="width-100" alignItems="Start">
         <Stack direction="Vertical" className="box1 shadowBox1">
           <div>
             <>
-              <Tag variety="01" size='LG' shape="Round" style={{display:'inline-block',width:'auto',lineHeight:'1.75rem'}}>BIZ메타</Tag>
+              <Tag
+                variety="01"
+                size="LG"
+                shape="Round"
+                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
+              >
+                BIZ메타
+              </Tag>
             </>
           </div>
-          <Typography variant='h2' style={{lineHeight:'50px',marginBottom:'12px'}}>Customer Data Portal</Typography>
+          <Typography variant="h2" style={{ lineHeight: '50px', marginBottom: '12px' }}>
+            Customer Data Portal
+          </Typography>
           <Stack gap="MD" alignItems="Start">
-            <Link to="/" className="box5">
-              <Typography variant='h3'>Feature</Typography>
+            <Link to="/biz-meta/feature" className="box5">
+              <Typography variant="h3">Feature</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_01"></div>
               </Stack>
@@ -60,8 +36,8 @@ const Home = () => {
               </Stack>
             </Link>
 
-            <Link to="/" className="box5">
-            <Typography variant='h3'>테이블정의</Typography>
+            <Link to="/biz-meta/dataset" className="box5">
+              <Typography variant="h3">테이블정의</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_02"></div>
               </Stack>
@@ -72,7 +48,7 @@ const Home = () => {
             </Link>
 
             <Link to="/" className="box5">
-              <Typography variant='h3'>일평균사용자</Typography>
+              <Typography variant="h3">일평균사용자</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_03"></div>
               </Stack>
@@ -85,11 +61,20 @@ const Home = () => {
         </Stack>
         <Stack direction={'Vertical'} className="box2 shadowBox1">
           <div>
-          <Tag variety="01" size='LG' shape="Round" style={{display:'inline-block',width:'auto',lineHeight:'1.75rem'}}>여객마케팅부</Tag>
+            <Tag
+              variety="01"
+              size="LG"
+              shape="Round"
+              style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
+            >
+              여객마케팅부
+            </Tag>
           </div>
-          <Typography variant='h2' style={{lineHeight:'50px',marginBottom:'12px'}}>내 부서</Typography>
-          <Link to="/" className="box6 leftIconBox n1">
-            <Typography variant='h3'>신청/등록 Feature</Typography>
+          <Typography variant="h2" style={{ lineHeight: '50px', marginBottom: '12px' }}>
+            내 부서
+          </Typography>
+          <Link to="/biz-meta/feature" className="box6 leftIconBox n1">
+            <Typography variant="h3">신청/등록 Feature</Typography>
             <span className="smallBox_title"></span>
             <Stack justifyContent="End" alignItems="Center">
               <span className="number">226</span>
@@ -97,8 +82,8 @@ const Home = () => {
             </Stack>
           </Link>
           <Stack direction="Vertical" className="">
-            <Link to="/" className="box6 leftIconBox n2">
-              <Typography variant='h3'>관심 Feature</Typography>
+            <Link to="/feature/interest" className="box6 leftIconBox n2">
+              <Typography variant="h3">관심 Feature</Typography>
               <Stack justifyContent="End" alignItems="Center">
                 <span className="number">55</span>
                 <span className="count">건</span>
@@ -110,8 +95,8 @@ const Home = () => {
       <Stack gap="LG" alignItems="Start">
         <div className="box3 shadowBox1 noticeBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-            <Typography variant='h5'>공지사항</Typography>
-            <Link to="/" className="seeMore">
+            <Typography variant="h5">공지사항</Typography>
+            <Link to="/board/notice" className="seeMore">
               more
             </Link>
           </Stack>
@@ -150,8 +135,8 @@ const Home = () => {
         </div>
         <div className="box3 shadowBox1 faqBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-          <Typography variant='h5'>FAQ</Typography>
-            <Link to="/" className="seeMore">
+            <Typography variant="h5">FAQ</Typography>
+            <Link to="/board/faq" className="seeMore">
               more
             </Link>
           </Stack>
@@ -184,35 +169,64 @@ const Home = () => {
         </div>
         <div className="box3 shadowBox1 qnaBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-          <Typography variant='h5'>Q&A</Typography>
-            <Link to="/" className="seeMore">
+            <Typography variant="h5">Q&A</Typography>
+            <Link to="/board/qna" className="seeMore">
               more
             </Link>
           </Stack>
           <div className="boardListWrap ">
             <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-            <Tag variety="03" size='MD' shape="Round" style={{display:'inline-block',width:'auto',lineHeight:'1.375rem',marginRight:'5px'}}>확인중</Tag>
+              <Tag
+                variety="03"
+                size="MD"
+                shape="Round"
+                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '5px' }}
+              >
+                확인중
+              </Tag>
               <Link to="/" className="ellipsis1">
                 대한항공 사칭 피싱 이메일 주의이메일 주의이메일 주의
               </Link>
               <span className="date">2023-09-10</span>
             </Stack>
             <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-            <Tag variety="03" size='MD' shape="Round" style={{display:'inline-block',width:'auto',lineHeight:'1.375rem',marginRight:'5px'}}>확인중</Tag>
+              <Tag
+                variety="03"
+                size="MD"
+                shape="Round"
+                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '5px' }}
+              >
+                확인중
+              </Tag>
               <Link to="/" className="ellipsis1">
                 대한항공 사칭 피싱 이메일 주의이메일 주의이메일 주의
               </Link>
               <span className="date">2023-09-10</span>
             </Stack>
             <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-            <Tag variety="03" size='MD' shape="Round" style={{display:'inline-block',width:'auto',lineHeight:'1.375rem',marginRight:'5px'}}>확인중</Tag>
+              <Tag
+                variety="03"
+                size="MD"
+                shape="Round"
+                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '5px' }}
+              >
+                확인중
+              </Tag>
               <Link to="/" className="ellipsis1">
                 대한항공 사칭 피싱 이메일 주의이메일 주의이메일 주의
               </Link>
               <span className="date">2023-09-10</span>
             </Stack>
             <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-              <Tag variety="03" size='MD' shape="Round" type="Strong" style={{display:'inline-block',width:'auto',lineHeight:'1.375rem',marginRight:'5px'}}>답변완료</Tag>
+              <Tag
+                variety="03"
+                size="MD"
+                shape="Round"
+                type="Strong"
+                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '5px' }}
+              >
+                답변완료
+              </Tag>
               <Link to="/" className="ellipsis1">
                 대한항공 사칭 피싱 이메일 주의이메일 주의이메일 주의
               </Link>
@@ -224,8 +238,10 @@ const Home = () => {
       <Stack gap="LG" alignItems="Start">
         <div className="box4 shadowBox1 recentFeatureBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-            <Typography variant='h5' className='recentFeatureTypo'>최근 Feature</Typography>
-            <Link to="/" className="seeMore">
+            <Typography variant="h5" className="recentFeatureTypo">
+              최근 Feature
+            </Typography>
+            <Link to="/biz-meta/feature" className="seeMore">
               more
             </Link>
           </Stack>
@@ -278,8 +294,10 @@ const Home = () => {
         </div>
         <div className="box4 shadowBox1 popFeatureBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-          <Typography variant='h5' className='popFeatureTypo'>인기 Feature</Typography>
-            <Link to="/" className="seeMore">
+            <Typography variant="h5" className="popFeatureTypo">
+              인기 Feature
+            </Typography>
+            <Link to="/feature/popular" className="seeMore">
               more
             </Link>
           </Stack>
