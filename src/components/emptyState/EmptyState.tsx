@@ -1,56 +1,64 @@
-import { ReactNode } from "react";
-import { Stack, Typography } from '@components/ui';
-import { CheckCircleOutlineIcon, ErrorOutlineIcon, WarningAmberIcon } from '@/assets/icons';
+import { lazy } from 'react';
+import { Stack, Typography, Button } from '@components/ui';
 import './EmptyState.scss';
 
+const CheckCircleOutlineIcon = lazy(() =>
+  import('@/assets/icons').then((module) => ({ default: module.CheckCircleOutlineIcon }))
+);
+const ErrorOutlineIcon = lazy(() => import('@/assets/icons').then((module) => ({ default: module.ErrorOutlineIcon })));
+const WarningAmberIcon = lazy(() => import('@/assets/icons').then((module) => ({ default: module.WarningAmberIcon })));
+
 export interface EmptyStateProps {
-  type: "complete" | "error" | "warning",
-  description?: string,
-  buttonChildren?: ReactNode, 
+  type: 'complete' | 'error' | 'warning';
+  isModal?: boolean;
+  description?: string;
+  confirmText?: string;
+  cancleText?: string;
+  onConfirm?: Function;
+  onCancle?: Function;
 }
 
 const sx = {
   fontSize: 72,
-}
+};
 
-const EmptyState: React.FC<EmptyStateProps> = ({
-  type,
-  description,
-  buttonChildren,
-}) => {
+const EmptyState: React.FC<EmptyStateProps> = ({ type, description, confirmText, cancleText, onConfirm, onCancle }) => {
+  const handleConfirm = () => {
+    onConfirm && onConfirm();
+  };
+
+  const handleCancle = () => {
+    onCancle && onCancle();
+  };
+
   return (
-    <Stack
-      direction="Vertical"
-      gap="LG"
-      justifyContent="Center"
-      alignItems="Center"
-      className="width-100 height-100"
-    >
+    <Stack direction="Vertical" gap="LG" justifyContent="Center" alignItems="Center" className="width-100 height-100">
       {(() => {
-        let icon;
-        
+        let IConComponent;
+
         switch (type) {
-          case "complete":
-            icon = <CheckCircleOutlineIcon className={type} sx={sx} />
+          case 'complete':
+            IConComponent = CheckCircleOutlineIcon;
             break;
-          case "error":
-            icon = <ErrorOutlineIcon className={type} sx={sx} />
+          case 'error':
+            IConComponent = ErrorOutlineIcon;
             break;
-            case "warning":
-            icon = <WarningAmberIcon className={type} sx={sx} />
+          case 'warning':
+            IConComponent = WarningAmberIcon;
             break;
         }
 
-        return icon;
+        return <IConComponent className={type} sx={sx} />;
       })()}
-      
+
       <Typography variant="h2">{type.charAt(0).toUpperCase() + type.slice(1)}</Typography>
       <Typography variant="body1">{description}</Typography>
 
       <Stack gap="SM">
-        {buttonChildren}
+        {confirmText && <Button onClick={handleConfirm}>{confirmText}</Button>}
+        {cancleText && <Button onClick={handleCancle}>{cancleText}</Button>}
       </Stack>
     </Stack>
-  )
+  );
 };
 export default EmptyState;
