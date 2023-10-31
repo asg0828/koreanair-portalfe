@@ -44,6 +44,14 @@ export const filterOption = [
     { value: 'ANY', text: '아래 조건중 하나라도 만족하는 경우' },
     { value: 'CUS', text: '조건 사이의 관계를 직접 입력' },
 ]
+// 변환식 함수
+export const transFuncOtion = [
+    { value: 'NVL',       text: 'NVL' },
+    { value: 'SUBSTRING', text: 'Substring' },
+    { value: 'LENGTH',    text: 'Length' },
+    { value: 'CONCAT',    text: 'Concat' },
+    { value: 'TO_NUMBER', text: 'To Number' },
+]
 // 연산자 목록
 export const operatorOption = [
     { value: 'match', text: 'Match' },

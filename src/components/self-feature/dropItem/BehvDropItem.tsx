@@ -10,6 +10,7 @@ import {
     TbCoMetaTblClmnInfo, 
     TbRsCustFeatRuleTrgtFilter,
     TbRsCustFeatRuleTrgt,
+    TargetDropProps,
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initTbCoMetaTblClmnInfo, 
@@ -26,25 +27,36 @@ const columnList = [
     { value: 'colum3', text: 'colum3' },
 ]
 
-const BehvDropItem = (props: any) => {
+const BehvDropItem = ({
+    itemIdx,
+    isPossibleEdit,
+    targetItem,
+    trgtFilterList,
+    setTargetList,
+    setTrgtFilterList,
+    delTargetInfo,
+}: TargetDropProps) => {
 
-    const [ filterExpsn, setFilterExpsn ] = useState<string>(cloneDeep(props.targetItem.filterLogiExpsn))
+    const [ filterExpsn, setFilterExpsn ] = useState<string>(cloneDeep(targetItem.filterLogiExpsn))
     const [ aggregateTopSelect, setAggregateTopSelect ] = useState<Boolean>(false)
 
     // 논리 표현식(필터옵션 좌측 input) 수정
     useEffect(() => {
-        if (props.trgtFilterList < 1) {
+
+        if (!trgtFilterList) return
+
+        if (trgtFilterList.length < 1) {
             setFilterExpsn('')
             return
         }
 
         let op = ''
         let fe = ''
-        if (props.targetItem.filterLogiOption === "ALL") op = " and "
-        else if (props.targetItem.filterLogiOption === "ANY") op = " or "
+        if (targetItem.filterLogiOption === "ALL") op = " and "
+        else if (targetItem.filterLogiOption === "ANY") op = " or "
         
         if (op !== '') {
-            for (let i = 0; i < props.trgtFilterList.length; i++) {
+            for (let i = 0; i < trgtFilterList.length; i++) {
                 if (i === 0) {
                     fe = trgtFilterTit[i]
                     continue
@@ -53,26 +65,27 @@ const BehvDropItem = (props: any) => {
             }
             setFilterExpsn(fe)
         }
-    }, [props.trgtFilterList])
+    }, [trgtFilterList])
 
     // 수정시 집계함수가 top인 경우
     useEffect(() => {
-        if (props.targetItem.operator === "top") {
+        if (targetItem.operator === "top") {
             setAggregateTopSelect(true)
         } else {
             setAggregateTopSelect(false)
         }
-    }, [props.targetItem.operator])
+    }, [targetItem.operator])
 
     // 논리 표현식이 변경될 경우 부모 컴포넌트의 target 리스트 update
     useEffect(() => {
-        props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let tl = cloneDeep(state)
             tl.map((trgt: TbRsCustFeatRuleTrgt) => {
                 // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-                if (trgt.targetId === props.targetItem.targetId) {
+                if (trgt.targetId === targetItem.targetId) {
                     trgt.filterLogiExpsn = filterExpsn
                 }
+                return trgt
             })
             return tl
         })
@@ -86,7 +99,7 @@ const BehvDropItem = (props: any) => {
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
                 // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-                let targetId = cloneDeep(props.targetItem.targetId)
+                let targetId = cloneDeep(targetItem.targetId)
                 let tableId  = targetId.split('_')[0]
 
                 if (tableId !== targetObj.metaTblId) {
@@ -94,7 +107,7 @@ const BehvDropItem = (props: any) => {
                     return null
                 }
 
-                props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+                setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     let tl = cloneDeep(state)
                     let trgtFilter = initTbRsCustFeatRuleTrgtFilter
                     trgtFilter.targetId  = targetId // 고정
@@ -113,14 +126,14 @@ const BehvDropItem = (props: any) => {
     // 행동데이터 필터에 해당되는 컬럼 삭제시
     const deleteTrgtFilterInfo = (idx: number) => {
         
-        props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+        setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let newTrgtFilterList = cloneDeep(state)
             
             let removeTrgetFilterList = []
-            removeTrgetFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === props.targetItem.targetId)
+            removeTrgetFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetItem.targetId)
             removeTrgetFilterList.splice(idx, 1)
 
-            newTrgtFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== props.targetItem.targetId)
+            newTrgtFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== targetItem.targetId)
             newTrgtFilterList = [...newTrgtFilterList, ...removeTrgetFilterList]
 
             return newTrgtFilterList
@@ -129,7 +142,7 @@ const BehvDropItem = (props: any) => {
     }
     // 행동데이터 테이블 정보 삭제시
     const onClickDeleteHandler = () => {
-        props.delTargetInfo(props.itemIdx, props.targetItem.targetId)
+        delTargetInfo(itemIdx, targetItem.targetId)
     }
 
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,13 +150,14 @@ const BehvDropItem = (props: any) => {
         if (id === "filterLogiExpsn") {
             setFilterExpsn(value)
         } else {
-            props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+            setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                 let tl = cloneDeep(state)
                 tl.map((trgt: TbRsCustFeatRuleTrgt) => {
                     // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-                    if (trgt.targetId === props.targetItem.targetId) {
+                    if (trgt.targetId === targetItem.targetId) {
                         trgt[id] = value
                     }
+                    return trgt
                 })
                 return tl
             })
@@ -179,16 +193,16 @@ const BehvDropItem = (props: any) => {
             setAggregateTopSelect(false)
         }
 
-        props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let tl = cloneDeep(state)
             // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-            if (tl[props.itemIdx].targetId === props.targetItem.targetId) {
-                tl[props.itemIdx][keyNm] = v
+            if (tl[itemIdx].targetId === targetItem.targetId) {
+                tl[itemIdx][keyNm] = v
                 if (!t) {
-                    tl[props.itemIdx]["operand1"] = ''
-                    tl[props.itemIdx]["operand2"] = ''
-                    tl[props.itemIdx]["operand3"] = ''
-                    tl[props.itemIdx]["operand4"] = ''
+                    tl[itemIdx]["operand1"] = ''
+                    tl[itemIdx]["operand2"] = ''
+                    tl[itemIdx]["operand3"] = ''
+                    tl[itemIdx]["operand4"] = ''
                 }
             }
             return tl
@@ -224,12 +238,12 @@ const BehvDropItem = (props: any) => {
                         marginTop: '1%',
                     }}
                 >
-                    <Typography variant="h6" style={{color:"inherit"}}>T{props.itemIdx + 1}</Typography>
+                    <Typography variant="h6" style={{color:"inherit"}}>T{itemIdx + 1}</Typography>
                     <div className="dragItemLocation">
                         행동
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.29498 16.59L12.875 12L8.29498 7.41L9.70498 6L15.705 12L9.70498 18L8.29498 16.59Z" fill="currentColor"></path></svg>
                     </div>
-                    <Typography variant="body2" style={{color:"inherit"}}>{props.targetItem.tableName}</Typography>
+                    <Typography variant="body2" style={{color:"inherit"}}>{targetItem.tableName}</Typography>
                 </Stack>
                 <Stack
                     direction="Vertical"
@@ -251,7 +265,7 @@ const BehvDropItem = (props: any) => {
                         <Stack gap="SM">
                             <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
                             <TextField 
-                                disabled={!props.isPossibleEdit}
+                                disabled={!isPossibleEdit}
                                 placeholder="논리 표현식" 
                                 value={filterExpsn}
                                 id="filterLogiExpsn"
@@ -259,9 +273,9 @@ const BehvDropItem = (props: any) => {
                             />
                         </Stack>
                         <Select
-                            disabled={!props.isPossibleEdit}
+                            disabled={!isPossibleEdit}
                             appearance="Outline"
-                            value={props.targetItem.filterLogiOption}
+                            value={targetItem.filterLogiOption}
                             shape="Square"
                             size="SM"
                             status="default"
@@ -295,13 +309,14 @@ const BehvDropItem = (props: any) => {
                             }}
                         >
                             <Stack direction="Vertical" gap="SM">
-                            {props.trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
+                            {(trgtFilterList && setTrgtFilterList) && 
+                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
                                 <BehvColDropItem 
-                                    key={index}
+                                    key={`behvCol-${index}`}
                                     itemIdx={index}
-                                    isPossibleEdit={props.isPossibleEdit}
+                                    isPossibleEdit={isPossibleEdit}
                                     trgtFilterItem={trgtFilterItem}
-                                    setTrgtFilterList={props.setTrgtFilterList}
+                                    setTrgtFilterList={setTrgtFilterList}
                                     deleteTrgtFilterInfo={deleteTrgtFilterInfo}
                                 />
                             ))}
@@ -320,10 +335,10 @@ const BehvDropItem = (props: any) => {
                     }}
                 >
                     <Select 
-                        disabled={!props.isPossibleEdit}
+                        disabled={!isPossibleEdit}
                         placeholder="집계할 컬럼" 
                         appearance="Outline"
-                        value={props.targetItem.columnName}
+                        value={targetItem.columnName}
                         shape="Square"
                         size="MD"
                         status="default"
@@ -343,10 +358,10 @@ const BehvDropItem = (props: any) => {
                         ))}
                     </Select>
                     <Select 
-                        disabled={!props.isPossibleEdit}
+                        disabled={!isPossibleEdit}
                         placeholder="집계 함수 선택" 
                         appearance="Outline"
-                        value={props.targetItem.operator}
+                        value={targetItem.operator}
                         shape="Square"
                         size="MD"
                         status="default"
@@ -367,10 +382,10 @@ const BehvDropItem = (props: any) => {
                     {aggregateTopSelect &&
                         <>
                         <Select 
-                            disabled={!props.isPossibleEdit}
+                            disabled={!isPossibleEdit}
                             placeholder="Top 기준 함수" 
                             appearance="Outline"
-                            value={props.targetItem.operand1}
+                            value={targetItem.operand1}
                             shape="Square"
                             size="MD"
                             status="default"
@@ -389,17 +404,17 @@ const BehvDropItem = (props: any) => {
                             <SelectOption value="last">last</SelectOption>
                         </Select>
                         <TextField 
-                            disabled={!props.isPossibleEdit}
-                            value={props.targetItem.operand2}
+                            disabled={!isPossibleEdit}
+                            value={targetItem.operand2}
                             placeholder="Top 숫자 입력"
                             id="operand2"
                             onChange={onchangeInputHandler}
                         />
                         <Select 
                             appearance="Outline"
-                            disabled={!props.isPossibleEdit}
+                            disabled={!isPossibleEdit}
                             placeholder="동률일 때 기준 컬럼" 
-                            value={props.targetItem.operand3}
+                            value={targetItem.operand3}
                             shape="Square"
                             size="MD"
                             status="default"
@@ -420,9 +435,9 @@ const BehvDropItem = (props: any) => {
                         </Select>
                         <Select 
                             appearance="Outline"
-                            disabled={!props.isPossibleEdit}
+                            disabled={!isPossibleEdit}
                             placeholder="동률일 때 기준 정렬" 
-                            value={props.targetItem.operand4}
+                            value={targetItem.operand4}
                             shape="Square"
                             size="MD"
                             status="default"
@@ -445,7 +460,7 @@ const BehvDropItem = (props: any) => {
                 </Stack>
             </Stack>
             
-            {props.isPossibleEdit &&
+            {isPossibleEdit &&
             <Button size="SM" onClick={onClickDeleteHandler}>
             삭제
             </Button>

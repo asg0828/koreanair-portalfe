@@ -6,12 +6,15 @@ import { Typography } from "@components/ui"
 import { 
     divisionTypes,
 } from '@/pages/user/self-feature/data'
+import { TargetDragProps } from "@/models/selfFeature/FeatureInfo"
 
-const BehvDragItem = (props: any) => {
+const BehvDragItem = ({
+    behvTblClmnInfo
+}: TargetDragProps) => {
 
     const [{ isBehvDragging }, behvDragItem] = useDrag(() => ({
         type: divisionTypes.BEHV,
-        item: Object.assign({ divisionCode: divisionTypes.BEHV }, cloneDeep(props.behvTblClmnInfo)),
+        item: Object.assign({ divisionCode: divisionTypes.BEHV }, cloneDeep(behvTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 
@@ -20,19 +23,19 @@ const BehvDragItem = (props: any) => {
         collect: (monitor) => ({
             isBehvDragging: monitor.isDragging(),
         }),
-    }), [props.behvTblClmnInfo])
+    }), [behvTblClmnInfo])
 
     const behvOpacity = isBehvDragging ? 0.4 : 1
 
     return (
         <>
-            {props.behvTblClmnInfo &&
+            {behvTblClmnInfo &&
                 <Typography 
                     ref={(behvDragItem)}
                     style={{ opacity: behvOpacity,backgroundColor: '#e6f9ff', color: '#00256c',padding:"0.3rem" }}
                     variant="body2"
                 >
-                    {props.behvTblClmnInfo.metaTblClmnLogiNm}
+                    {behvTblClmnInfo.metaTblClmnLogiNm}
                 </Typography>
             }
         </>

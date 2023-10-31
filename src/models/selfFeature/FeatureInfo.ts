@@ -1,5 +1,28 @@
 import { RowsInfo } from "@/models/components/Table";
 
+export interface TargetDropProps {
+    itemIdx: number
+    isPossibleEdit: Boolean
+    targetItem: TbRsCustFeatRuleTrgt
+    trgtFilterList?: Array<TbRsCustFeatRuleTrgtFilter>
+    setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
+    setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+    delTargetInfo: (delIdx: number, delTrgtId: string) => void
+}
+
+export interface TargetDropFilterProps {
+    itemIdx: number
+    isPossibleEdit: Boolean
+    trgtFilterItem: TbRsCustFeatRuleTrgtFilter
+    setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+    deleteTrgtFilterInfo: (idx: number) => void
+}
+
+export interface TargetDragProps {
+    attrTblClmnInfo?: Attribute
+    behvTblClmnInfo?: TbCoMetaTblClmnInfo
+}
+
 export interface MstrSgmtTableandColMetaInfo {
     [key: string]: string | Array<Behavior> | Array<Attribute>
     rslnRuleId: string,

@@ -10,25 +10,33 @@ import {
 import { useEffect, useState } from "react";
 import { cloneDeep } from "lodash";
 
-const DragList = (props: any) => {
+export interface Props {
+    attributes: Array<Attribute>
+    behaviors: Array<Behavior>
+}
+
+const DragList = ({
+    attributes,
+    behaviors
+}: Props) => {
 
     const [ keyword, setKeyword ] = useState<string>('')
     const [ srchAttrRsltList, setSrchAttrRsltList ] = useState<Array<Attribute>>([])
     const [ srchBehvRsltList, setSrchBehvRsltList ] = useState<Array<Behavior>>([])
 
     useEffect(() => {
-        if (props.attributes.length < 1) return
+        if (attributes.length < 1) return
 
-        let attrList: Array<Attribute> = cloneDeep(props.attributes)
+        let attrList: Array<Attribute> = cloneDeep(attributes)
         setSrchAttrRsltList(attrList)
-    }, [props.attributes])
+    }, [attributes])
 
     useEffect(() => {
-        if (props.behaviors.length < 1) return
+        if (behaviors.length < 1) return
         
-        let behvList: Array<Behavior> = cloneDeep(props.behaviors)
+        let behvList: Array<Behavior> = cloneDeep(behaviors)
         setSrchBehvRsltList(behvList)
-    }, [props.behaviors])
+    }, [behaviors])
 
     useEffect(() => {
     }, [srchAttrRsltList])
@@ -37,7 +45,7 @@ const DragList = (props: any) => {
     }, [srchBehvRsltList])
 
     const searchAttrList = (keyword: string) => {
-        let attrList: Array<Attribute> = cloneDeep(props.attributes)
+        let attrList: Array<Attribute> = cloneDeep(attributes)
         if (keyword.trim() === '') {
             setSrchAttrRsltList(attrList)
             return
@@ -47,7 +55,7 @@ const DragList = (props: any) => {
     }
 
     const searchBehvList = (keyword: string) => {
-        let behvList: Array<Behavior> = cloneDeep(props.behaviors)
+        let behvList: Array<Behavior> = cloneDeep(behaviors)
         if (keyword.trim() === '') {
             setSrchBehvRsltList(behvList)
             return
@@ -117,7 +125,7 @@ const DragList = (props: any) => {
                 </AccordionItem>
             </Accordion>
             {/* Feature 정보
-            {props.features.map(() => {
+            {features.map(() => {
 
             })}
             */}

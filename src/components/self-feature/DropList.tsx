@@ -23,7 +23,21 @@ import {
     divisionTypes, 
 } from '@/pages/user/self-feature/data'
 
-const DropList = (props: any) => {
+export interface Props {
+    featStatus: string
+    targetList: Array<TbRsCustFeatRuleTrgt>
+    trgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>
+    setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
+    setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+}
+
+const DropList = ({
+    featStatus,
+    targetList, 
+    trgtFilterList,
+    setTargetList,
+    setTrgtFilterList
+}: Props) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
 
@@ -31,16 +45,16 @@ const DropList = (props: any) => {
     useEffect(() => {
         // 등록, 품의저장인 상태이면서 상세페이지가 아닌 경우 수정가능
         if (
-            (props.featStatus === subFeatStatus.REG 
-            || props.featStatus === subFeatStatus.SUBREG )
-            && props.featStatus !== selfFeatPgPpNm.DETL
+            (featStatus === subFeatStatus.REG 
+            || featStatus === subFeatStatus.SUBREG )
+            && featStatus !== selfFeatPgPpNm.DETL
         ) {
             setIsPossibleEdit(true)
         } else {
             setIsPossibleEdit(false)
         }
 
-    }, [props.featStatus])
+    }, [featStatus])
 
     const [, drop] = useDrop(() => ({
         accept: Object.values(divisionTypes),
@@ -60,7 +74,7 @@ const DropList = (props: any) => {
                 }
 
                 let target: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
-                props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+                setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
@@ -73,7 +87,7 @@ const DropList = (props: any) => {
                     return tl
                 })
                 // 행동 데이터의 경우에만 해당일까?
-                props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+                setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
                     target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
@@ -95,13 +109,13 @@ const DropList = (props: any) => {
 
     // 대상 선택 정보 삭제시
     const deleteInfo = (delIdx: number, delTrgtId: string) => {
-        props.setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+        setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let newTargetList = cloneDeep(state)
             newTargetList.splice(delIdx, 1)
             return newTargetList
         })
         // target에 해당되는 target filter 리스트도 같이 삭제
-        props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+        setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let newTrgtFilterList = cloneDeep(state)
             newTrgtFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== delTrgtId)
             return newTrgtFilterList
@@ -126,12 +140,12 @@ const DropList = (props: any) => {
                 justifyContent="Start"
             >
             {
-                props.targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
+                targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
                     
                     // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     let targetId = targetItem.targetId
                     let tfList: Array<TbRsCustFeatRuleTrgtFilter> = []
-                    props.trgtFilterList.map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
+                    trgtFilterList.map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
                         if (targetId === trgtFilter.targetId) {
                             tfList.push(cloneDeep(trgtFilter))
                         }
@@ -142,9 +156,6 @@ const DropList = (props: any) => {
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
                             targetItem={targetItem} 
-                            trgtFilterList={tfList}
-                            setTargetList={props.setTargetList} 
-                            setTrgtFilterList={props.setTrgtFilterList} 
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {
@@ -153,9 +164,6 @@ const DropList = (props: any) => {
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
                             targetItem={targetItem}
-                            trgtFilterList={tfList}
-                            setTargetList={props.setTargetList} 
-                            setTrgtFilterList={props.setTrgtFilterList}
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.BEHV) {
@@ -165,8 +173,8 @@ const DropList = (props: any) => {
                             isPossibleEdit={isPossibleEdit}
                             targetItem={targetItem}
                             trgtFilterList={tfList}
-                            setTargetList={props.setTargetList} 
-                            setTrgtFilterList={props.setTrgtFilterList} 
+                            setTargetList={setTargetList} 
+                            setTrgtFilterList={setTrgtFilterList} 
                             delTargetInfo={deleteInfo}
                         />
                     }

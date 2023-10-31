@@ -6,6 +6,7 @@ import { Button, Select, SelectOption, Stack, TextField, Typography } from '@com
 import TransFunction from './TransFunction'
 
 import { 
+    TargetDropFilterProps,
     TbRsCustFeatRuleTrgtFilter,
 } from '@/models/selfFeature/FeatureInfo'
 import { 
@@ -14,33 +15,39 @@ import {
     delimiterOption,
 } from '@/pages/user/self-feature/data'
 
-const BehvColDropItem = (props: any) => {
+const BehvColDropItem = ({
+    itemIdx,
+    isPossibleEdit,
+    trgtFilterItem,
+    setTrgtFilterList,
+    deleteTrgtFilterInfo,
+}: TargetDropFilterProps) => {
 
     const [ delimiterSelected, setDelimiterSelected ] = useState<Boolean>(false)
 
     useEffect(() => {
 
-        if (props.trgtFilterItem.operator === "in_str" || props.trgtFilterItem.operator === "not_in_str") {
+        if (trgtFilterItem.operator === "in_str" || trgtFilterItem.operator === "not_in_str") {
             setDelimiterSelected(true)
         } else {
             setDelimiterSelected(false)
         }
 
-    }, [props.trgtFilterItem.operator])
+    }, [trgtFilterItem.operator])
 
     const onClickTrgtFilterDeleteHandler = () => {
-        props.deleteTrgtFilterInfo(props.itemIdx)
+        deleteTrgtFilterInfo(itemIdx)
     }
 
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         
-        props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+        setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
             // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-            let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === props.trgtFilterItem.targetId)
-            updtTrgtFilterList[props.itemIdx][id] = value
-            tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== props.trgtFilterItem.targetId)
+            let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
+            updtTrgtFilterList[itemIdx][id] = value
+            tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtFilterItem.targetId)
             tl = [...tl, ...updtTrgtFilterList]
             return tl
         })
@@ -67,15 +74,15 @@ const BehvColDropItem = (props: any) => {
             t = false
         }
 
-        props.setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+        setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
             // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-            let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === props.trgtFilterItem.targetId)
-            updtTrgtFilterList[props.itemIdx][keyNm] = v
+            let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
+            updtTrgtFilterList[itemIdx][keyNm] = v
             if (!t) {
-                updtTrgtFilterList[props.itemIdx]["delimiter"] = ''
+                updtTrgtFilterList[itemIdx]["delimiter"] = ''
             }
-            tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== props.trgtFilterItem.targetId)
+            tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtFilterItem.targetId)
             tl = [...tl, ...updtTrgtFilterList]
             return tl
         })
@@ -84,7 +91,7 @@ const BehvColDropItem = (props: any) => {
 
     return (
         <>
-        {props.trgtFilterItem &&
+        {trgtFilterItem &&
             <Stack 
                 justifyContent="Start"
                 gap="SM"
@@ -96,16 +103,16 @@ const BehvColDropItem = (props: any) => {
                     padding:"0.35rem"
                 }}
             >  
-                <Typography variant='h6' style={{color:"inherit"}}>{trgtFilterTit[props.itemIdx]}</Typography>
-                <Typography variant="h6" style={{color:"inherit"}}>{props.trgtFilterItem.columnName}</Typography>
+                <Typography variant='h6' style={{color:"inherit"}}>{trgtFilterTit[itemIdx]}</Typography>
+                <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterItem.columnName}</Typography>
                 <TransFunction 
-                    isPossibleEdit={props.isPossibleEdit}
+                    isPossibleEdit={isPossibleEdit}
                 />
                 <Select 
-                    disabled={!props.isPossibleEdit}
+                    disabled={!isPossibleEdit}
                     placeholder="연산자 선택" 
                     appearance="Outline"
-                    value={props.trgtFilterItem.operator}
+                    value={trgtFilterItem.operator}
                     shape="Square"
                     size="MD"
                     status="default"
@@ -126,10 +133,10 @@ const BehvColDropItem = (props: any) => {
                 </Select>
                 {delimiterSelected &&
                     <Select 
-                        disabled={!props.isPossibleEdit}
+                        disabled={!isPossibleEdit}
                         placeholder="구분자 선택" 
                         appearance="Outline"
-                        value={props.trgtFilterItem.delimiter}
+                        value={trgtFilterItem.delimiter}
                         shape="Square"
                         size="MD"
                         status="default"
@@ -150,13 +157,13 @@ const BehvColDropItem = (props: any) => {
                     </Select>
                 }
                 <TextField 
-                    disabled={!props.isPossibleEdit}
-                    value={props.trgtFilterItem.operand1}
+                    disabled={!isPossibleEdit}
+                    value={trgtFilterItem.operand1}
                     placeholder="피연산자 입력"
                     id="operand1"
                     onChange={onchangeInputHandler}
                 />
-                {props.isPossibleEdit ? (
+                {isPossibleEdit ? (
                     <Button size="XS" onClick={onClickTrgtFilterDeleteHandler}>
                     컬럼삭제
                     </Button>
