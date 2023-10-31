@@ -439,10 +439,8 @@ const SelfFeatureEdit = () => {
         {formulaTrgtList.length > 0 &&
           <CalcValid
             featStatus={subFeatStatus.REG}
-            isValidFormula={isValidFormula}
             setIsValidFormula={setIsValidFormula}
             formulaTrgtList={formulaTrgtList}
-            formula={custFeatRuleCalc.formula}
             custFeatRuleCalc={custFeatRuleCalc}
             custFeatRuleCaseList={custFeatRuleCaseList}
             setCustFeatRuleCalc={setCustFeatRuleCalc}

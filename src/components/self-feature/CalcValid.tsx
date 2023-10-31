@@ -6,6 +6,7 @@ import CaseComponent from './CaseComponent';
 import FormulaComponent from './FormulaComponent';
 
 import { 
+    FeatCalcValidProps,
     TbRsCustFeatRuleCase, 
 } from '@/models/selfFeature/FeatureInfo'
 import { 
@@ -14,7 +15,15 @@ import {
     subFeatStatus 
 } from '@/pages/user/self-feature/data';
 
-const ClacValid = (props: any) => {
+const ClacValid = ({
+    featStatus,
+    setIsValidFormula,
+    formulaTrgtList,
+    custFeatRuleCalc,
+    custFeatRuleCaseList,
+    setCustFeatRuleCalc,
+    setCustFeatRuleCaseList,
+}: FeatCalcValidProps) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
     const [ formulaCaseChecked, setFormulaCaseChecked ] = useState(false)
@@ -24,33 +33,33 @@ const ClacValid = (props: any) => {
     useEffect(() => {
         // 등록, 품의저장인 상태이면서 상세페이지가 아닌 경우 수정가능
         if (
-            (props.featStatus === subFeatStatus.REG 
-            || props.featStatus === subFeatStatus.SUBREG )
-            && props.featStatus !== selfFeatPgPpNm.DETL
+            (featStatus === subFeatStatus.REG 
+            || featStatus === subFeatStatus.SUBREG )
+            && featStatus !== selfFeatPgPpNm.DETL
         ) {
             setIsPossibleEdit(true)
         } else {
             setIsPossibleEdit(false)
         }
 
-    }, [props.featStatus])
+    }, [featStatus])
 
     // 수정시 case문 list 값에 따른 else 체크
     useEffect(() => {
-        if (props.custFeatRuleCaseList.length < 1) return
+        if (custFeatRuleCaseList.length < 1) return
 
-        if (props.custFeatRuleCaseList.length > 1)
+        if (custFeatRuleCaseList.length > 1)
             setFormulaCaseChecked(true)
 
-        for (let i = 0; i < props.custFeatRuleCaseList.length; i++) {
-            if (props.custFeatRuleCaseList[i].whenYn === "N") {
+        for (let i = 0; i < custFeatRuleCaseList.length; i++) {
+            if (custFeatRuleCaseList[i].whenYn === "N") {
                 setElseSelected(true)
                 break
             } else {
                 setElseSelected(false)
             }
         }
-    }, [props.custFeatRuleCaseList])
+    }, [custFeatRuleCaseList])
 
     // case문 사용 체크시
     const onCheckedCaseChange = () => {
@@ -60,7 +69,7 @@ const ClacValid = (props: any) => {
             //console.log("checked")
         } else {
             // case문 사용 체크 해제시 입력값 초기화
-            props.setCustFeatRuleCaseList((state: TbRsCustFeatRuleCase) => {
+            setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
                 let rtn = [cloneDeep(initTbRsCustFeatRuleCase)]
                 return rtn
             })
@@ -69,7 +78,7 @@ const ClacValid = (props: any) => {
     }
     // case문 구문 추가시
     const onClickAddRuleCaseHandler = () => {
-        props.setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
+        setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
             let addRuleCase: TbRsCustFeatRuleCase = cloneDeep(initTbRsCustFeatRuleCase)
             rtn.push(addRuleCase)
@@ -103,10 +112,10 @@ const ClacValid = (props: any) => {
             {!formulaCaseChecked && 
                 <FormulaComponent 
                     isPossibleEdit={isPossibleEdit}
-                    custFeatRuleCalc={props.custFeatRuleCalc}
-                    setCustFeatRuleCalc={props.setCustFeatRuleCalc}
-                    setIsValidFormula={props.setIsValidFormula}
-                    formulaTrgtList={props.formulaTrgtList}
+                    custFeatRuleCalc={custFeatRuleCalc}
+                    setCustFeatRuleCalc={setCustFeatRuleCalc}
+                    setIsValidFormula={setIsValidFormula!}
+                    formulaTrgtList={formulaTrgtList}
                 />
             }
             {formulaCaseChecked &&
@@ -121,16 +130,16 @@ const ClacValid = (props: any) => {
                         추가
                     </Button>}
                 </Stack>
-                {props.custFeatRuleCaseList.map((ruleCase: TbRsCustFeatRuleCase, index: number) => {
+                {custFeatRuleCaseList.map((ruleCase: TbRsCustFeatRuleCase, index: number) => {
                     return <CaseComponent
                         key={`custFeatRuleCase-${index}`}
                         isPossibleEdit={isPossibleEdit}
                         index={index}
-                        lastIdx={(props.custFeatRuleCaseList.length-1)}
+                        lastIdx={(custFeatRuleCaseList.length-1)}
                         custFeatRuleCase={ruleCase}
-                        setCustFeatRuleCaseList={props.setCustFeatRuleCaseList}
-                        setIsValidFormula={props.setIsValidFormula}
-                        formulaTrgtList={props.formulaTrgtList}
+                        setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+                        setIsValidFormula={setIsValidFormula!}
+                        formulaTrgtList={formulaTrgtList}
                     />
                 })}
                 </>

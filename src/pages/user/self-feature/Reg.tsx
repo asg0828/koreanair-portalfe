@@ -408,7 +408,6 @@ const SelfFeatureReg = () => {
           {formulaTrgtList.length > 0 &&
             <CalcValid
               featStatus={subFeatStatus.REG}
-              isValidFormula={isValidFormula}
               setIsValidFormula={setIsValidFormula}
               formulaTrgtList={formulaTrgtList}
               custFeatRuleCalc={custFeatRuleCalc}
