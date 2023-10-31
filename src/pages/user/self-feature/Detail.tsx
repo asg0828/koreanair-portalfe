@@ -290,9 +290,7 @@ const SelfFeatureDetail = () => {
                   direction="Horizontal"
                   gap="MD"
                   justifyContent="Between"
-                  style={{
-                    height: '220px',
-                  }}
+                  className='dropChild-100per'
               >
                 <DndProvider backend={HTML5Backend}>
                   {/* drop 영역 */}

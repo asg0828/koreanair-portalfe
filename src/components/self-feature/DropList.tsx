@@ -133,6 +133,7 @@ const DropList = ({
                 borderRadius: '5px',
                 padding:"1rem"
             }}
+            className='dropList'
         >
             <Stack 
                 direction="Vertical"
@@ -156,6 +157,7 @@ const DropList = ({
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
                             targetItem={targetItem} 
+                            setTargetList={setTargetList}
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {

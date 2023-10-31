@@ -13,6 +13,7 @@ const AttrDropItem = ({
     itemIdx,
     isPossibleEdit,
     targetItem,
+    setTargetList,
     delTargetInfo,
 }: TargetDropProps) => {
 
@@ -41,6 +42,9 @@ const AttrDropItem = ({
             <Typography variant="body2" style={{color:"inherit"}}>{targetItem.columnName}</Typography>
             <TransFunction 
                 isPossibleEdit={isPossibleEdit}
+                itemIdx={itemIdx}
+                trgtItem={targetItem}
+                setTargetList={setTargetList!}
             />
             </Stack>
             {isPossibleEdit ? (

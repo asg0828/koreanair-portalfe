@@ -94,7 +94,7 @@ const ClacValid = ({
             justifyContent="Start" 
             gap="MD" 
         >
-            <Typography variant="h2">3. 계산식</Typography>
+            <Typography variant="h3">계산식</Typography>
             <Typography variant='body2'>CASE 사용</Typography>
             <Checkbox
                 disabled={!isPossibleEdit}

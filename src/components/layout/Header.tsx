@@ -148,7 +148,7 @@ const Header = () => {
 
           <Stack justifyContent="End" gap="XL" className="user-info-wrap">
             <MenuOutlinedIcon color="action" onClick={handleDropMenu} />
-            <Avatar status="01" />
+            <Avatar status="02" />
             <LogoutOutlinedIcon color="action" onClick={handleLogout} />
           </Stack>
         </Stack>

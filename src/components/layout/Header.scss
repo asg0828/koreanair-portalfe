@@ -106,6 +106,7 @@
   flex: 1;
   border-right: 1px solid rgb(218, 218, 218);
   padding:0 1rem;
+  padding-bottom: 30px;
 }
 .dropDownMenu .dropDownItem .depth1{
   font-weight: 500;
@@ -124,7 +125,7 @@
   display: block;
 }
 .dropDownMenu .dropDownItem>div div:last-child{
-  padding-bottom: 30px;
+  
 }
 .dropDownMenu .dropDownItem a:hover{
   font-weight: 500;

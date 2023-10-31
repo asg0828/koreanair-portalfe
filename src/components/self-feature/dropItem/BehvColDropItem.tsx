@@ -97,8 +97,8 @@ const BehvColDropItem = ({
                 gap="SM"
                 className="width-100"
                 style={{
-                    backgroundColor: 'rgb(0, 37, 108)',
-                    color:"#FFF",
+                    color: 'rgb(0, 99, 165)',
+                    backgroundColor: 'rgb(200, 233, 255)',
                     borderRadius: '5px',
                     padding:"0.35rem"
                 }}
@@ -107,6 +107,9 @@ const BehvColDropItem = ({
                 <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterItem.columnName}</Typography>
                 <TransFunction 
                     isPossibleEdit={isPossibleEdit}
+                    itemIdx={itemIdx}
+                    trgtItem={trgtFilterItem}
+                    setTrgtFilterList={setTrgtFilterList!}
                 />
                 <Select 
                     disabled={!isPossibleEdit}

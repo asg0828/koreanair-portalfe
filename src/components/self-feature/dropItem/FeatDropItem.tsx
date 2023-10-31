@@ -8,6 +8,7 @@ const FeatDropItem = ({
     itemIdx,
     isPossibleEdit,
     targetItem,
+    setTargetList,
     delTargetInfo,
 }: TargetDropProps) => {
 
@@ -34,6 +35,9 @@ const FeatDropItem = ({
             <Typography variant="h6" style={{color:"inherit"}}>{targetItem.columnName}</Typography>
             <TransFunction 
                 isPossibleEdit={isPossibleEdit}
+                itemIdx={itemIdx}
+                trgtItem={targetItem}
+                setTargetList={setTargetList!}
             />
             {isPossibleEdit ? (
                 <Button size="MD" onClick={onClickDeleteHandler}>
