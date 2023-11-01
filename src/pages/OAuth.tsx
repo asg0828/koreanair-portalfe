@@ -40,6 +40,9 @@ const OAuth: React.FC = (): ReactElement => {
           googleIdToken: data.data.google_id_token,
         };
 
+        sessionStorage.setItem('googleAccessToken', sessionRequest.googleAccessToken);
+        sessionStorage.setItem('googleIdToken', sessionRequest.googleIdToken);
+
         let href: string = '/';
         if (accessPathname) {
           href = accessPathname;
