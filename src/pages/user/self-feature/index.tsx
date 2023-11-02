@@ -6,16 +6,16 @@ import { cloneDeep } from "lodash";
 import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
 import {
-    Pagination,
-    TR,
-    TH,
-    TD,
-    Button,
-    Stack,
-    TextField,
-    Select,
-    SelectOption,
-    Label,
+  Pagination,
+  TR,
+  TH,
+  TD,
+  Button,
+  Stack,
+  TextField,
+  Select,
+  SelectOption,
+  Label,
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/CustFeatParentChildListPop";
 
@@ -23,9 +23,14 @@ import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import { 
   featListColumns as columns,
+  initApiRequest,
+  initCommonResponse,
+  initConfig,
   initTbRsCustFeatRule,
   selfFeatPgPpNm 
 } from "./data";
+import { Method, QueryParams, callApi } from "@/utils/ApiUtil";
+import { StatusCode } from "@/models/common/CommonResponse";
 
 const category = [
   { value: '', text: '선택' },
@@ -53,227 +58,247 @@ const submissionStatus = [
 
 const SelfFeature = () => {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [ searchInfo, setSearchInfo ] = useState<Object>({
-      name: '',
-      category: '',
-      useYn: '',
-      submissionStatus: '',
-    })
-    const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
-    const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
+  const [ searchInfo, setSearchInfo ] = useState<QueryParams>({
+    mstrSgmtRuleId: '',
+    custFeatRuleName: '',
+    category: '',
+    useYn: '',
+    submissionStatus: '',
+  })
+  const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
+  const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
 
-    const [ isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop ] = useState<boolean>(false)
+  const [ isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop ] = useState<boolean>(false)
 
-    useEffect(() => {
-      // 공통 코드 API CALL && 초기 LIST 조회 API CALL
-      retrieveCustFeatRules()
-    }, [])
+  useEffect(() => {
+    // 공통 코드 API CALL && 초기 LIST 조회 API CALL -> useQuery 사용하기
+    retrieveCustFeatRules()
+  }, [])
 
-    const retrieveCustFeatRules = () => {
-      console.log(`RETRIEVE API CALL!`)
-      /*
-        Method      :: GET
-        Url         :: /api/v1/customerfeatures
-        path param  :: 
-        query param :: mstrSgmtRuleId=&custFeatRuleName=&useYn=&category=&submissionStatus=
-        body param  :: 
-      */
-      let list: Array<TbRsCustFeatRule> = []
-      for (let i = 0; i < 10; i++) {
-        let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
-        selfFeature.id = `ID_${String(i)}` //custFeatRuleId
-        selfFeature.name = `NAME_${String(i)}`
-        selfFeature.description = `DESCRIPTION_${String(i)}`
-        selfFeature.lastUpdDttm = `2023-10-16 10:11:1${String(i)}`
-        selfFeature.lastUpdUserNm = "UPDUSER_" + String(i)
-        if (i % 2) {
-          selfFeature.useYn = "Y"
-          selfFeature.submissionStatus = `reg`
-        } else {
-          selfFeature.useYn = "N"
-          selfFeature.submissionStatus = `subInfo`
-        }
-        list.push(selfFeature)
-      }
-      setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
-        prevState = list
-        return cloneDeep(prevState)
-      })
+  const retrieveCustFeatRules = async () => {
+    /*
+    Method      :: GET
+    Url         :: /api/v1/customerfeatures
+    path param  :: 
+    query param :: mstrSgmtRuleId=&custFeatRuleName=&useYn=&category=&submissionStatus=
+    body param  :: 
+    */
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.GET
+    request.url = "/api/v1/customerfeatures"
+    request.params!.queryParams = searchInfo
+
+    let response = cloneDeep(initCommonResponse)
+    //response = await callApi(request)
+    console.log("[retrieveCustFeatRules] Request :: ", request)
+    console.log("[retrieveCustFeatRules] Result  :: ", response)
+
+    let list: Array<TbRsCustFeatRule> = []
+    /*
+    if (response.successOrNot === StatusCode.SUCCESS) {
+      list = response.data
     }
-
-    const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
-      if (pageNm === selfFeatPgPpNm.DETL) {
-        navigate(pageNm, { state: rows })
-      } else if (pageNm === selfFeatPgPpNm.PRNTCHLD) {
-        setIsOpenFeatPrntChldPop((prevState) => !prevState)
+    */
+    for (let i = 0; i < 10; i++) {
+      let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
+      selfFeature.id = `ID_${String(i)}` //custFeatRuleId
+      selfFeature.name = `NAME_${String(i)}`
+      selfFeature.description = `DESCRIPTION_${String(i)}`
+      selfFeature.lastUpdDttm = `2023-10-16 10:11:1${String(i)}`
+      selfFeature.lastUpdUserNm = "UPDUSER_" + String(i)
+      if (i % 2) {
+        selfFeature.useYn = "Y"
+        selfFeature.submissionStatus = `reg`
       } else {
-        navigate(pageNm)
+        selfFeature.useYn = "N"
+        selfFeature.submissionStatus = `subInfo`
       }
+      list.push(selfFeature)
     }
-
-    const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { id, value } = e.target
-      setSearchInfo({...searchInfo, [id]: value,})
-    }
-    const onchangeSelectHandler = (
-      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-      value: SelectValue<{}, false>,
-      id?: String
-    ) => {
-      setSearchInfo({...searchInfo, [`${id}`]: value ,})
-    }
-    const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault()
-      console.log(`SEARCH PARAM INFO :: `, searchInfo)
-      console.log(`SEARCH RETRIEVE API CALL!`)
-      //retrieveSelfFeatureList()
-    }
-
-    const getCheckList = (checkedList: Array<number>) => {
-      setDelList(() => {
-        let delList = checkedList.map((delItemIdx) => selfFeatureList[delItemIdx])
-        return cloneDeep(delList)
-      })
-    }
-
-    const deleteSelfFeature = () => {
-      console.log("DELETE SELF FEATURE INFO :: ", delList)
-      if (delList.length > 0) console.log("DELETE API CALL!")
-      else alert(`삭제할 항목이 없습니다.`)
-    }
-
-    return (
-      <Stack direction="Vertical" gap="LG" className="height-100">
-        <Stack direction="Horizontal" gap="MD" justifyContent="End">
-          <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.PRNTCHLD)}>
-            Feature 선후행 관계
-          </Button>
-        </Stack>
-        {/* 검색 영역 */}
-        <form onSubmit={onsubmitHandler}>
-          <Stack direction="Vertical" gap="LG">
-            <HorizontalTable>
-              <TR>
-                <TH colSpan={1} align="right">카테고리</TH>
-                <TD colSpan={5.01}>
-                  <Select 
-                    appearance="Outline" 
-                    placeholder="선택" 
-                    className="width-100" 
-                    onChange={(
-                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                      value: SelectValue<{}, false>
-                    ) => {
-                      onchangeSelectHandler(e, value, "category")
-                    }}
-                  >
-                    {category.map((item, index) => (
-                      <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                    ))}
-                  </Select>
-                </TD>
-              </TR>
-              <TR>
-                <TH colSpan={1} align="right">Feature 명</TH>
-                <TD colSpan={5.01}>
-                  <TextField className="width-100" id="name" onChange={onchangeInputHandler}/>
-                </TD>
-              </TR>
-              <TR>
-                <TH align="right" colSpan={1}>사용 여부</TH>
-                <TD colSpan={2}>
-                  <Select 
-                    appearance="Outline" 
-                    placeholder="선택" 
-                    className="width-100" 
-                    onChange={(
-                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                      value: SelectValue<{}, false>
-                    ) => {
-                      onchangeSelectHandler(e, value, "useYn")
-                    }}
-                  >
-                    {useYn.map((item, index) => (
-                      <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                    ))}
-                  </Select>
-                </TD>
-                <TH align="right" colSpan={1}>진행 상태</TH>
-                <TD colSpan={2}>
-                  <Select 
-                    appearance="Outline" 
-                    placeholder="전체" 
-                    className="width-100" 
-                    onChange={(
-                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                      value: SelectValue<{}, false>
-                    ) => {
-                      onchangeSelectHandler(e, value, "submissionStatus")
-                    }}
-                  >
-                    {submissionStatus.map((item, index) => (
-                      <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                    ))}
-                  </Select>
-                </TD>
-              </TR>
-            </HorizontalTable>
-
-            <Stack gap="SM" justifyContent="Center">
-              <Button type="submit" priority="Primary" appearance="Contained" size="LG" >
-                <span className="searchIcon"></span>
-                검색
-              </Button>
-            </Stack>
-
-          </Stack>
-        </form>
-        {/* 검색 영역 */}
-
-        <Stack direction="Vertical" gap="LG" justifyContent="End" className="height-100">
-          <Stack justifyContent="Between">
-            <Label>총 <span className="total">{selfFeatureList.length}</span> 건</Label>
-            <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
-              <SelectOption value={10}>10</SelectOption>
-              <SelectOption value={30}>30</SelectOption>
-              <SelectOption value={50}>50</SelectOption>
-            </Select>
-          </Stack>
-          <VerticalTable
-            columns={columns}
-            rows={selfFeatureList}
-            enableSort={true}
-            clickable={true}
-            rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
-            onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
-          />
-          <Pagination size="MD" />
-          <Stack className="pagination-layout">  
-            <Stack justifyContent="End" gap="SM" className="width-100">
-              {/* <Button size="LG">엑셀다운로드</Button> */}
-              <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
-                삭제
-              </Button>
-              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
-                Rule 등록
-              </Button>
-              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
-                SQL 등록
-              </Button>
-            </Stack>
-          </Stack>
-        </Stack>
-        {/* 팝업 */}
-        <CustFeatParentChildListPop 
-          isOpen={isOpenFeatPrntChldPop} 
-          onClose={(isOpen) => setIsOpenFeatPrntChldPop(isOpen)} 
-        />
-
-      </Stack>
-    )
+    setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
+      prevState = list
+      return cloneDeep(prevState)
+    })
   }
-  export default SelfFeature;
+
+  const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
+    if (pageNm === selfFeatPgPpNm.DETL) {
+      navigate(pageNm, { state: rows })
+    } else if (pageNm === selfFeatPgPpNm.PRNTCHLD) {
+      setIsOpenFeatPrntChldPop((prevState) => !prevState)
+    } else {
+      navigate(pageNm)
+    }
+  }
+
+  const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setSearchInfo({...searchInfo, [id]: value,})
+  }
+  const onchangeSelectHandler = (
+    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: SelectValue<{}, false>,
+    id?: String
+  ) => {
+    setSearchInfo({...searchInfo, [`${id}`]: String(value) ,})
+  }
+  const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log(`SEARCH PARAM INFO :: `, searchInfo)
+    console.log(`SEARCH RETRIEVE API CALL!`)
+    retrieveCustFeatRules()
+  }
+
+  const getCheckList = (checkedList: Array<number>) => {
+    setDelList(() => {
+      let delList = checkedList.map((delItemIdx) => selfFeatureList[delItemIdx])
+      return cloneDeep(delList)
+    })
+  }
+
+  const deleteSelfFeature = () => {
+    console.log("DELETE SELF FEATURE INFO :: ", delList)
+    if (delList.length > 0) console.log("DELETE API CALL!")
+    else alert(`삭제할 항목이 없습니다.`)
+  }
+
+  return (
+  <Stack direction="Vertical" gap="LG" className="height-100">
+    <Stack direction="Horizontal" gap="MD" justifyContent="End">
+      <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.PRNTCHLD)}>
+      Feature 선후행 관계
+      </Button>
+    </Stack>
+    {/* 검색 영역 */}
+    <form onSubmit={onsubmitHandler}>
+    <Stack direction="Vertical" gap="LG">
+      <HorizontalTable>
+        <TR>
+          <TH colSpan={1} align="right">카테고리</TH>
+          <TD colSpan={5.01}>
+            <Select 
+              appearance="Outline" 
+              placeholder="선택" 
+              className="width-100" 
+              onChange={(
+              e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+              value: SelectValue<{}, false>
+            ) => {
+              onchangeSelectHandler(e, value, "category")
+            }}
+            >
+              {category.map((item, index) => (
+              <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+              ))}
+            </Select>
+          </TD>
+        </TR>
+        <TR>
+          <TH colSpan={1} align="right">Feature 명</TH>
+          <TD colSpan={5.01}>
+            <TextField className="width-100" id="custFeatRuleName" onChange={onchangeInputHandler}/>
+          </TD>
+        </TR>
+        <TR>
+          <TH align="right" colSpan={1}>사용 여부</TH>
+          <TD colSpan={2}>
+            <Select 
+              appearance="Outline" 
+              placeholder="선택" 
+              className="width-100" 
+              onChange={(
+              e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+              value: SelectValue<{}, false>
+            ) => {
+              onchangeSelectHandler(e, value, "useYn")
+            }}
+            >
+              {useYn.map((item, index) => (
+              <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+              ))}
+            </Select>
+          </TD>
+          <TH align="right" colSpan={1}>진행 상태</TH>
+          <TD colSpan={2}>
+            <Select 
+              appearance="Outline" 
+              placeholder="전체" 
+              className="width-100" 
+              onChange={(
+              e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+              value: SelectValue<{}, false>
+            ) => {
+              onchangeSelectHandler(e, value, "submissionStatus")
+            }}
+            >
+              {submissionStatus.map((item, index) => (
+              <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+              ))}
+            </Select>
+          </TD>
+        </TR>
+      </HorizontalTable>
+      <Stack gap="SM" justifyContent="Center">
+        <Button type="submit" priority="Primary" appearance="Contained" size="LG" >
+        <span className="searchIcon"></span>
+        검색
+        </Button>
+      </Stack>
+    </Stack>
+    </form>
+    {/* 검색 영역 */}
+
+    <Stack direction="Vertical" gap="LG" justifyContent="End" className="height-100">
+      <Stack justifyContent="Between">
+        <Label>총 <span className="total">{selfFeatureList.length}</span> 건</Label>
+        <Select 
+          appearance="Outline" 
+          size="LG" 
+          defaultValue={10} 
+          className="select-page"
+        >
+          <SelectOption value={10}>10</SelectOption>
+          <SelectOption value={30}>30</SelectOption>
+          <SelectOption value={50}>50</SelectOption>
+        </Select>
+      </Stack>
+      <VerticalTable
+        columns={columns}
+        rows={selfFeatureList}
+        enableSort={true}
+        clickable={true}
+        rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
+        onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
+      />
+      <Pagination size="MD" />
+      <Stack className="pagination-layout">  
+      <Stack justifyContent="End" gap="SM" className="width-100">
+        <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
+        삭제
+        </Button>
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+        Rule 등록
+        </Button>
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+        SQL 등록
+        </Button>
+      </Stack>
+      </Stack>
+    </Stack>
+
+    {/* 팝업 */}
+    <CustFeatParentChildListPop 
+      isOpen={isOpenFeatPrntChldPop} 
+      onClose={(isOpen) => setIsOpenFeatPrntChldPop(isOpen)} 
+    />
+
+  </Stack>
+  )
+}
+export default SelfFeature;

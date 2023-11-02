@@ -1,3 +1,5 @@
+import CommonResponse, { StatusCode } from "@/models/common/CommonResponse";
+import { Service } from "@/models/common/Service";
 import { 
     FeatureInfo,
     TbRsCustFeatRuleCalc,
@@ -16,14 +18,41 @@ import {
     BatchExecuteLog,
     ReadSql,
 } from "@/models/selfFeature/FeatureInfo";
+import { ApiRequest, Config, Method, ParamObject } from "@/utils/ApiUtil";
+// API Config inti
+export const initConfig: Config = {
+    isLoarding: false,
+    isFile: false,
+    isOAuth: false,
+    isAccessTokenRefreshToken: false,
+}
+export const initParam: ParamObject = {
+    queryParams: {},
+    bodyParams: {},
+}
+// APi request init
+export const initApiRequest: ApiRequest = {
+    service: Service.KAL_SF_BE,
+    url: '',
+    method: Method.GET,
+    params: initParam
+}
+// APi response init
+export const initCommonResponse: CommonResponse = {
+    successOrNot: 'N',
+    statusCode: StatusCode.FAIL,
+    data: {},
+}
 
+// 대상선택(행동 데이터) 순번 setting(A,B,C ...)
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
 
+// 계산식 validation 결과값
 export const initFormulaValidRslt: FormulaValidRslt = {
     isValidFormula: true,
     text:  '',
 }
-
+// 페이지명(path) setting
 export const selfFeatPgPpNm = {
     LIST: 'list', // 목록
     DETL: 'detail',  // 상세

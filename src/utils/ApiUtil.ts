@@ -68,6 +68,10 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       case Service.KAL_BE:
         baseURL += ':' + ServicePort.KAL_BE.toString();
         break;
+      // 2023-11-02 김태훈A Self-Feature BE API case 추가
+      case Service.KAL_SF_BE:
+        baseURL = `${apiUrl['KAL_SF_BE']}:${ServicePort.KAL_SF_BE.toString()}`;
+        break;
       default:
         break;
     }
