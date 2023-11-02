@@ -9,12 +9,21 @@ import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
     [TargetID]는 존재하지 않는 Target ID 입니다.
     괄호가 올바르게 열리고 닫히지 않았습니다.
 */
-export const ValidationFormula = (props: any) => {
+
+export interface Props {
+    formula: string
+    targetList: Array<string>
+}
+
+export const ValidationFormula = ({
+    formula,
+    targetList,
+}: Props) => {
 
     let validRslt: FormulaValidRslt = cloneDeep(initFormulaValidRslt)
 
     const targetIdExistCheck = () => {
-        let str = cloneDeep(props.formula).replace(/[^T0-9]/g, '')
+        let str = cloneDeep(formula).replace(/[^T0-9]/g, '')
 
         if (!/^T/g.test(str)) {
             validRslt.isValidFormula = false
@@ -35,7 +44,7 @@ export const ValidationFormula = (props: any) => {
             if (inputTrgtIdList[i] === "") continue
 
             let chkTrgt = `T${inputTrgtIdList[i]}`
-            if (props.targetList.indexOf(chkTrgt) < 0) {
+            if (targetList.indexOf(chkTrgt) < 0) {
                 validRslt.isValidFormula = false
                 validRslt.text = `[ ${chkTrgt} ]는 존재하지 않는 Target ID 입니다.`
                 return false
@@ -46,7 +55,7 @@ export const ValidationFormula = (props: any) => {
     }
 
     const parenthesisCheck = () => {
-        let str = cloneDeep(props.formula).replace(/[^()]/g, '')
+        let str = cloneDeep(formula).replace(/[^()]/g, '')
         let cum = 0
         for (let paren of str) {
             cum += paren === '('? 1: -1
@@ -140,17 +149,17 @@ export const ValidationFormula = (props: any) => {
         return result
     }
     
-    if (props.formula === "") {
+    if (formula === "") {
         validRslt = cloneDeep(initFormulaValidRslt)
         return validRslt
-    } else if (isNaN(formulaValid(props.formula))) {
+    } else if (isNaN(formulaValid(formula))) {
         validRslt.isValidFormula = false
 
         if (validRslt.text === '') {
             validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
         }
         
-    } else if (/([^()+\-*/T0-9])+/g.test(props.formula)) {
+    } else if (/([^()+\-*/T0-9])+/g.test(formula)) {
         /* 
             잘못된 문자열 입력 체크
             변수할당이 아닌 정규식 그대로 적용
@@ -177,6 +186,61 @@ export const ValidationFormula = (props: any) => {
     }
 
     return validRslt
+
+}
+// 변환식 팝업 변환식 string 설정
+export interface TransFuncCalcProps {
+    funcType: string
+    var1: string
+    var2: string
+    var3: string
+    colNm: string
+    setFuncStr: React.Dispatch<React.SetStateAction<string>>
+}
+
+export const transFuncCalcStr = ({
+    funcType,
+    var1,
+    var2,
+    var3,
+    colNm,
+    setFuncStr,
+}: TransFuncCalcProps) => {
+    let rtnStr = `${funcType}(${colNm}`
+
+    if (funcType === "NVL") {
+
+        if (var1 === "") rtnStr += ', [대체값])'
+        else rtnStr += `, [${var1}])`
+
+    } else if (funcType === "SUBSTRING") {
+
+        if (var1 === "") rtnStr += ', [시작위치]'
+        else rtnStr += `, [${var1}]`
+
+        if (var2 === "") rtnStr += ', [길이])'
+        else rtnStr += `, [${var2}])`
+        
+    } else if (funcType === "LENGTH") {
+        rtnStr += ')'
+    } else if (funcType === "CONCAT") {
+
+        if (var1 === "") rtnStr += ', [컬럼1]'
+        else rtnStr += `, [${var1}]`
+
+        if (var2 === "") rtnStr += ', [컬럼2])'
+        else rtnStr += `, [${var2}]`
+
+        if (var3 === "") rtnStr += ', [컬럼3])'
+        else rtnStr += `, [${var3}])`
+
+    } else if (funcType === "TO_NUMBER") {
+        rtnStr += ')'
+    } else {
+        rtnStr = ""
+    }
+
+    setFuncStr(rtnStr)
 
 }
 

@@ -21,8 +21,12 @@ import {
 
 import { ReadSql } from '@/models/selfFeature/FeatureInfo';
 import { 
+    initApiRequest,
+    initCommonResponse,
+    initConfig,
     initReadSql, 
 } from '@/pages/user/self-feature/data';
+import { Method, callApi } from '@/utils/ApiUtil';
 
 export interface Props {
     isOpen?: boolean
@@ -57,13 +61,25 @@ const ReadSqlPop = ({ isOpen = false, onClose }: Props) => {
         handleClose(false)
     }
     
-    const retrieveReadSql = () => {
+    const retrieveReadSql = async () => {
         /*
             Method      :: GET
             Url         :: /api/v1/customerfeatures/read-sql
             path param  :: {custFeatRuleId}
             query param :: 
         */
+        let custFeatRuleId = ''
+        let config = cloneDeep(initConfig)
+        config.isLoarding = true
+        let request = cloneDeep(initApiRequest)
+        request.method = Method.GET
+        request.url = `/api/v1/customerfeatures/read-sql/${custFeatRuleId}`
+        console.log("[retrieveReadSql] Request  :: ", request)
+
+        let response = cloneDeep(initCommonResponse)
+        response = await callApi(request)
+        console.log("[retrieveReadSql] Response :: ", response)
+
         setReadSql(cloneDeep(initReadSql))
     }
 

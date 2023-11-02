@@ -31,7 +31,14 @@ import {
   initTbRsCustFeatRuleCase,
   subFeatStatus,
   selfFeatPgPpNm,
+  initConfig,
+  initApiRequest,
+  initCommonResponse,
+  ModalType,
+  ModalTitCont,
 } from './data'
+import { Method, callApi } from '@/utils/ApiUtil';
+import ConfirmModal from '@/components/modal/ConfirmModal';
 
 const lCategory = [
   { value: '', text: '선택' },
@@ -69,6 +76,20 @@ const SelfFeatureReg = () => {
   // Top 집계함수 선택 여부
   const [ isSelectAggregateTop, setIsSelectAggregateTop ] = useState<Boolean>(false)
 
+  const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
+  const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
+  const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
+  const [ modalType, setModalType ] = useState<string>('')
+
+  // modal 확인/취소 이벤트
+  const onConfirm = () => {
+    if (modalType === ModalType.CONFIRM) createCustFeatRule()
+    setIsOpenConfirmModal(false)
+  }
+  const onCancel = () => {
+    setIsOpenConfirmModal(false)
+  }
+
   useEffect(() => {
     // 초기 setting API Call
     initCustFeatRule()
@@ -94,6 +115,9 @@ const SelfFeatureReg = () => {
   
   // 대상 선택시 formData setting
   useEffect(() => {
+    // 선택 대상이 없을 경우 우측 drag 영역 노출
+    if (targetList.length < 1) setIsSelectAggregateTop(false)
+
     setFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
       rtn.tbRsCustFeatRuleTrgtList = cloneDeep(targetList)
@@ -145,14 +169,25 @@ const SelfFeatureReg = () => {
     
   }, [formulaTrgtList])
 
-  const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
-    console.log(`속성/Feature/행동 데이터 API CALL!`)
+  const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
     /*
       Method      :: GET
       Url         :: /api/v1/mastersegment/table-columns-meta-info
       path param  :: {mstrSgmtRuleId}
       query param :: 
     */
+    let mstrSgmtRuleId = ''
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.GET
+    request.url = `/api/v1/mastersegment/table-columns-meta-info/${mstrSgmtRuleId}`
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    response = await callApi(request)
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
+
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
       let temp = cloneDeep(state)
       let attributes = []
@@ -208,6 +243,33 @@ const SelfFeatureReg = () => {
     })
   }
 
+  const createCustFeatRule = async () => {
+    if (!isValidFormula) {
+      setModalType(ModalType.ALERT)
+      setConfirmModalCont(ModalTitCont.REG_VALID.context)
+      setIsOpenConfirmModal(true)
+      return
+    }
+    /*
+      Method      :: POST
+      Url         :: /api/v1/customerfeatures
+      path param  :: 
+      query param :: 
+      body param  :: featureInfo
+    */
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.POST
+    request.url = "/api/v1/customerfeatures"
+    request.params!.bodyParams = featureInfo
+    console.log("[createCustFeatRule] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    response = await callApi(request)
+    console.log("[createCustFeatRule] Response :: ", response)
+  }
+
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
     setCustFeatRule((state: TbRsCustFeatRule) => {
@@ -231,28 +293,17 @@ const SelfFeatureReg = () => {
   }
 
   const onClickPageMovHandler = (pageNm: string) => {
-      if (pageNm === selfFeatPgPpNm.LIST)
-        navigate('..')
-      else
-        navigate(`../${pageNm}`)
+    if (pageNm === selfFeatPgPpNm.LIST)
+      navigate('..')
+    else
+      navigate(`../${pageNm}`)
   }
 
   const onSubmitInsertHandler = () => {
-    /*
-      Method      :: POST
-      Url         :: /api/v1/customerfeatures
-      path param  :: 
-      query param :: 
-      body param  :: featureInfo
-    */
-    
-    if (!isValidFormula) {
-      alert("계산식을 확인해주세요.")
-      return null
-    }
-    
-    console.log("createCustFeatRule API CALL!")
-    console.log("Self Feature insert data :: ", featureInfo)
+    setModalType(ModalType.CONFIRM)
+    setConfirmModalTit(ModalTitCont.REG.title)
+    setConfirmModalCont(ModalTitCont.REG.context)
+    setIsOpenConfirmModal(true)
   }
 
   return (
@@ -441,6 +492,17 @@ const SelfFeatureReg = () => {
         </Stack> 
       </Stack>
     {/* 버튼 영역 */}
+
+    {/* Confirm 모달 */}
+      <ConfirmModal
+          isOpen={isOpenConfirmModal}
+          onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+          title={confirmModalTit}
+          content={confirmModalCont}
+          onConfirm={onConfirm}
+          onCancle={onCancel}
+      />
+
     </Stack>
   )
 

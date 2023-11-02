@@ -22,8 +22,13 @@ import {
 import { FeatSampleData } from '@/models/selfFeature/FeatureInfo';
 import { 
     initFeatSampleData, 
-    querySampleDataListColumns as columns 
+    querySampleDataListColumns as columns, 
+    initConfig,
+    initApiRequest,
+    initCommonResponse,
+    initQueryParams
 } from '@/pages/user/self-feature/data';
+import { Method, callApi } from '@/utils/ApiUtil';
 
 export interface Props {
     isOpen?: boolean
@@ -58,13 +63,25 @@ const QuerySampleDataPop = ({ isOpen = false, onClose }: Props) => {
         handleClose(false)
     }
     
-    const retrieveSampleData = () => {
+    const retrieveSampleData = async () => {
         /*
             Method      :: GET
             Url         :: /api/v1/customerfeatures/sample
             path param  :: {custFeatRuleId}
             query param :: rslnId=
         */
+        let custFeatRuleId = ''
+        let config = cloneDeep(initConfig)
+        config.isLoarding = true
+        let request = cloneDeep(initApiRequest)
+        request.method = Method.GET
+        request.url = `/api/v1/customerfeatures/sample/${custFeatRuleId}`
+        request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), {rslnId: 'OneId'})
+        console.log("[retrieveSampleData] Request  :: ", request)
+
+        let response = cloneDeep(initCommonResponse)
+        response = await callApi(request)
+        console.log("[retrieveSampleData] Response :: ", response)
         //setQuerySampleDatadList([{...initFeatSampleData}])
     }
 

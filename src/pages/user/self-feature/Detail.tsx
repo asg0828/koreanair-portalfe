@@ -145,6 +145,7 @@ const SelfFeatureDetail = () => {
           {
             columnName:"컬럼 논리명2",
             tableName:"featureBehvTable1",
+            function:"NVL",
             targetId:"featureBehvTable1_2023925124157637",
           }
         )
