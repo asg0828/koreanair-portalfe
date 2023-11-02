@@ -18,7 +18,7 @@ import {
     BatchExecuteLog,
     ReadSql,
 } from "@/models/selfFeature/FeatureInfo";
-import { ApiRequest, Config, Method, ParamObject } from "@/utils/ApiUtil";
+import { ApiRequest, Config, Method, ParamObject, QueryParams } from "@/utils/ApiUtil";
 // API Config inti
 export const initConfig: Config = {
     isLoarding: false,
@@ -26,8 +26,9 @@ export const initConfig: Config = {
     isOAuth: false,
     isAccessTokenRefreshToken: false,
 }
+export const initQueryParams: QueryParams = {}
 export const initParam: ParamObject = {
-    queryParams: {},
+    queryParams: initQueryParams,
     bodyParams: {},
 }
 // APi request init

@@ -18,6 +18,7 @@ import {
   Label,
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/CustFeatParentChildListPop";
+import ConfirmModal from "@/components/modal/ConfirmModal";
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
@@ -26,10 +27,11 @@ import {
   initApiRequest,
   initCommonResponse,
   initConfig,
+  initQueryParams,
   initTbRsCustFeatRule,
   selfFeatPgPpNm 
 } from "./data";
-import { Method, QueryParams, callApi } from "@/utils/ApiUtil";
+import { Method, callApi } from "@/utils/ApiUtil";
 import { StatusCode } from "@/models/common/CommonResponse";
 
 const category = [
@@ -60,7 +62,7 @@ const SelfFeature = () => {
 
   const navigate = useNavigate();
 
-  const [ searchInfo, setSearchInfo ] = useState<QueryParams>({
+  const [ searchInfo, setSearchInfo ] = useState<Object>({
     mstrSgmtRuleId: '',
     custFeatRuleName: '',
     category: '',
@@ -71,6 +73,9 @@ const SelfFeature = () => {
   const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
 
   const [ isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop ] = useState<boolean>(false)
+  const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
+  const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
+  const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
 
   useEffect(() => {
     // 공통 코드 API CALL && 초기 LIST 조회 API CALL -> useQuery 사용하기
@@ -90,12 +95,12 @@ const SelfFeature = () => {
     let request = cloneDeep(initApiRequest)
     request.method = Method.GET
     request.url = "/api/v1/customerfeatures"
-    request.params!.queryParams = searchInfo
+    request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), searchInfo)
+    console.log("[retrieveCustFeatRules] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
     //response = await callApi(request)
-    console.log("[retrieveCustFeatRules] Request :: ", request)
-    console.log("[retrieveCustFeatRules] Result  :: ", response)
+    console.log("[retrieveCustFeatRules] Response :: ", response)
 
     let list: Array<TbRsCustFeatRule> = []
     /*
@@ -125,6 +130,28 @@ const SelfFeature = () => {
     })
   }
 
+  const deleteCustFeatRule =async () => {
+
+    if (delList.length < 1) return
+
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.DELETE
+    request.url = "/api/v1/customerfeatures"
+    let custFeatRuleIds: Array<string> = []
+    delList.map((feature: TbRsCustFeatRule) => {
+      custFeatRuleIds.push(feature.id)
+    })
+    request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), {custFeatRuleIds: custFeatRuleIds.toString()})
+    console.log("[deleteCustFeatRule] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    //response = await callApi(request)
+    console.log("[deleteCustFeatRule] Response :: ", response)
+
+  }
+  
   const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
     if (pageNm === selfFeatPgPpNm.DETL) {
       navigate(pageNm, { state: rows })
@@ -144,12 +171,10 @@ const SelfFeature = () => {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    setSearchInfo({...searchInfo, [`${id}`]: String(value) ,})
+    setSearchInfo({...searchInfo, [`${id}`]: String(value),})
   }
   const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(`SEARCH PARAM INFO :: `, searchInfo)
-    console.log(`SEARCH RETRIEVE API CALL!`)
     retrieveCustFeatRules()
   }
 
@@ -161,9 +186,26 @@ const SelfFeature = () => {
   }
 
   const deleteSelfFeature = () => {
-    console.log("DELETE SELF FEATURE INFO :: ", delList)
-    if (delList.length > 0) console.log("DELETE API CALL!")
-    else alert(`삭제할 항목이 없습니다.`)
+    setConfirmModalTit("Feature 삭제")
+
+    if (delList.length < 1) {
+      setConfirmModalCont("삭제할 항목이 없습니다.")
+      setIsOpenConfirmModal(true)
+      return
+    }
+    
+    setConfirmModalCont("선택한 Feature 정보를 삭제 하시겠습니까?")
+    setIsOpenConfirmModal(true)
+    
+  }
+
+  const onConfirm = () => {
+    deleteCustFeatRule()
+    setIsOpenConfirmModal(false)
+  }
+
+  const onCancel = () => {
+    setIsOpenConfirmModal(false)
   }
 
   return (
@@ -296,6 +338,15 @@ const SelfFeature = () => {
     <CustFeatParentChildListPop 
       isOpen={isOpenFeatPrntChldPop} 
       onClose={(isOpen) => setIsOpenFeatPrntChldPop(isOpen)} 
+    />
+    {/* Confirm 모달 */}
+    <ConfirmModal
+        isOpen={isOpenConfirmModal}
+        onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+        title={confirmModalTit}
+        content={confirmModalCont}
+        onConfirm={onConfirm}
+        onCancle={onCancel}
     />
 
   </Stack>
