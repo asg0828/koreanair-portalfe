@@ -1,0 +1,14 @@
+.dataGridWrap{
+  display: flex;
+  position: relative;
+  
+  .total-layout{
+   display: flex; 
+   justify-content: space-between;
+  }
+ 
+  .pagination-layout{
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -41,7 +41,7 @@ const List = () => {
 
   return (
     <>
-      <SearchForm>
+      {/* <SearchForm> */}
       <HorizontalTable>
           <TBody className="height-100">
           <TR>
@@ -104,7 +104,7 @@ const List = () => {
           </TR>
           </TBody>
         </HorizontalTable>
-      </SearchForm>
+      {/* </SearchForm> */}
       <Stack gap="SM" style={{justifyContent:"space-between"}}>
         <Label>총 <span className="total">{10}</span> 건</Label>
         <Select appearance="Outline" size='LG' defaultValue={10}  className='select-page'>

@@ -3,7 +3,8 @@ import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
 import { TR, TH, TD, Button, Stack, TextField, Select, SelectOption } from '@components/ui';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import { archiveColumns as columns, archiveRows as rows } from '@/utils/data/tableSampleData';
+import AddIcon from '@mui/icons-material/Add';
 
 const List = () => {
   const navigate = useNavigate();
@@ -45,13 +46,14 @@ const List = () => {
         clickable={true}
         onClick={clickRow}
         onChange={undefined}
-        buttonChildren={
-          <>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-              등록
-            </Button>
-          </>
-        }
+        // buttonChildren={
+        //   <>
+        //     <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+        //      <AddIcon />
+        //       등록
+        //     </Button>
+        //   </>
+        // }
       />
     </>
   );

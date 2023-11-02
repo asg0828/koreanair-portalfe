@@ -156,14 +156,14 @@ const adminMenulist = [
             name: '자료실',
             path: '/admin/user-portal-management/board-management/archive',
             children: [
-              { name: '도움말 등록', path: '/admin/user-portal-management/board-management/archive/reg', children: [] },
+              { name: '자료실 등록', path: '/admin/user-portal-management/board-management/archive/reg', children: [] },
               {
-                name: '도움말 상세',
+                name: '자료실 상세',
                 path: '/admin/user-portal-management/board-management/archive/detail',
                 children: [],
               },
               {
-                name: '도움말 수정',
+                name: '자료실 수정',
                 path: '/admin/user-portal-management/board-management/archive/edit',
                 children: [],
               },

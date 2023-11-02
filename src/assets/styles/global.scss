@@ -284,3 +284,14 @@ svg {
 .dropChild-100per .dropList{
   width: 100% !important;
 }
+.contentDeatilWrap{
+  .attachFileList{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    svg{
+      font-size: 14px;
+      vertical-align: middle;
+    }
+  }
+}
