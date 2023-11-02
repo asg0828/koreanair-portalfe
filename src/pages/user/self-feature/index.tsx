@@ -23,6 +23,7 @@ import ConfirmModal from "@/components/modal/ConfirmModal";
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import { 
+  ModalType,
   featListColumns as columns,
   initApiRequest,
   initCommonResponse,
@@ -76,6 +77,7 @@ const SelfFeature = () => {
   const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
   const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
   const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
+  const [ modalType, setModalType ] = useState<string>('')
 
   useEffect(() => {
     // 공통 코드 API CALL && 초기 LIST 조회 API CALL -> useQuery 사용하기
@@ -147,7 +149,7 @@ const SelfFeature = () => {
     console.log("[deleteCustFeatRule] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    //response = await callApi(request)
+    response = await callApi(request)
     console.log("[deleteCustFeatRule] Response :: ", response)
 
   }
@@ -187,20 +189,19 @@ const SelfFeature = () => {
 
   const deleteSelfFeature = () => {
     setConfirmModalTit("Feature 삭제")
-
     if (delList.length < 1) {
+      setModalType(ModalType.ALERT)
       setConfirmModalCont("삭제할 항목이 없습니다.")
       setIsOpenConfirmModal(true)
       return
     }
-    
+    setModalType(ModalType.CONFIRM)
     setConfirmModalCont("선택한 Feature 정보를 삭제 하시겠습니까?")
     setIsOpenConfirmModal(true)
-    
   }
 
   const onConfirm = () => {
-    deleteCustFeatRule()
+    if (modalType === ModalType.CONFIRM) deleteCustFeatRule()
     setIsOpenConfirmModal(false)
   }
 

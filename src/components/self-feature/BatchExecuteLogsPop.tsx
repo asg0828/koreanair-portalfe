@@ -22,8 +22,12 @@ import {
 import { BatchExecuteLog } from '@/models/selfFeature/FeatureInfo';
 import { 
     initBatchExecuteLog, 
-    batchExecuteLogListColumns as columns 
+    batchExecuteLogListColumns as columns, 
+    initConfig,
+    initApiRequest,
+    initCommonResponse
 } from '@/pages/user/self-feature/data';
+import { Method, callApi } from '@/utils/ApiUtil';
 
 export interface Props {
     isOpen?: boolean
@@ -58,13 +62,24 @@ const BatchExecuteLogsPop = ({ isOpen = false, onClose }: Props) => {
         handleClose(false)
     }
     
-    const retrieveBatchExecuteLogs = () => {
+    const retrieveBatchExecuteLogs = async () => {
         /*
             Method      :: GET
             Url         :: /api/v1/batchdb/logs
             path param  :: {ruleId}
             query param :: 
         */
+        let ruleId = ''
+        let config = cloneDeep(initConfig)
+        config.isLoarding = true
+        let request = cloneDeep(initApiRequest)
+        request.method = Method.GET
+        request.url = `/api/v1/batchdb/logs/${ruleId}`
+        console.log("[retrieveBatchExecuteLogs] Request  :: ", request)
+
+        let response = cloneDeep(initCommonResponse)
+        response = await callApi(request)
+        console.log("[retrieveBatchExecuteLogs] Response :: ", response)
         //setBatchExecuteLogList([{...initBatchExecuteLog}])
     }
 

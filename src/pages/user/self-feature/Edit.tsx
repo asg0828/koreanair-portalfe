@@ -47,7 +47,14 @@ import {
   initTbRsCustFeatRuleCalc,
   subFeatStatus,
   selfFeatPgPpNm,
+  initConfig,
+  initApiRequest,
+  initCommonResponse,
+  ModalType,
 } from './data'
+import { Method, callApi } from "@/utils/ApiUtil";
+import ConfirmModal from "@/components/modal/ConfirmModal";
+import { useQuery } from "@tanstack/react-query";
 
 const lCategory = [
   { value: '1', text: '회원' },
@@ -85,7 +92,22 @@ const SelfFeatureEdit = () => {
   // Top 집계함수 선택 여부
   const [ isSelectAggregateTop, setIsSelectAggregateTop ] = useState<Boolean>(false)
 
+  const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
+  const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
+  const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
+  const [ modalType, setModalType ] = useState<string>('')
+
+  // modal 확인/취소 이벤트
+  const onConfirm = () => {
+    if (modalType === ModalType.CONFIRM) updateCustFeatRule()
+    setIsOpenConfirmModal(false)
+  }
+  const onCancel = () => {
+    setIsOpenConfirmModal(false)
+  }
+
   useEffect(() => {
+    //useQuery(['mstrSgmtTableandColMetaInfo'], () => )
     getTableandColumnMetaInfoByMstrSgmtRuleId()
   }, [])
 
@@ -162,14 +184,25 @@ const SelfFeatureEdit = () => {
     
   }, [formulaTrgtList, location.state.tbRsCustFeatRuleCalc.formula])
 
-  const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
-    console.log(`속성/Feature/행동 데이터 API CALL!`)
+  const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
     /*
       Method      :: GET
       Url         :: /api/v1/mastersegment/table-columns-meta-info
       path param  :: {mstrSgmtRuleId}
       query param :: 
     */
+    let mstrSgmtRuleId = ''
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.GET
+    request.url = `/api/v1/mastersegment/table-columns-meta-info/${mstrSgmtRuleId}`
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    response = await callApi(request)
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
+
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
       let temp = cloneDeep(state)
       let attributes = []
@@ -224,6 +257,37 @@ const SelfFeatureEdit = () => {
       return cloneDeep(temp)
     })
   }
+
+  const updateCustFeatRule = async () => {
+
+    if (!isValidFormula) {
+      setModalType(ModalType.ALERT)
+      setConfirmModalCont("계산식을 확인해주세요.")
+      setIsOpenConfirmModal(true)
+      return
+    }
+    /*
+      Method      :: PUT
+      Url         :: /api/v1/customerfeatures
+      path param  :: {custFeatRuleId}
+      query param :: 
+      body param  :: updtFeatureInfo
+    */
+    let custFeatRuleId = ''
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.PUT
+    request.url = `/api/v1/customerfeatures/${custFeatRuleId}`
+    request.params!.bodyParams = updtFeatureInfo
+    console.log("[updateCustFeatRule] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    response = await callApi(request)
+    console.log("[updateCustFeatRule] Response :: ", response)
+    
+  }
+
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
     setCustFeatRule((state: TbRsCustFeatRule) => {
@@ -254,21 +318,10 @@ const SelfFeatureEdit = () => {
   }
 
   const onSubmitUpdateHandler = () => {
-    /*
-      Method      :: PUT
-      Url         :: /api/v1/customerfeatures
-      path param  :: {custFeatRuleId}
-      query param :: 
-      body param  :: updtFeatureInfo
-    */
-    
-    if (!isValidFormula) {
-      alert("계산식을 확인해주세요.")
-      return null
-    }
-    
-    console.log("createCustFeatRule API CALL!")
-    console.log("Self Feature update data :: ", updtFeatureInfo)
+    setModalType(ModalType.CONFIRM)
+    setConfirmModalTit("Feature 수정")
+    setConfirmModalCont("Feature 정보를 수정 하시겠습니까?")
+    setIsOpenConfirmModal(true)
   }
 
   return (
@@ -469,6 +522,16 @@ const SelfFeatureEdit = () => {
           </Stack> 
         </Stack>
       {/* 버튼 영역 */}
+
+      {/* Confirm 모달 */}
+        <ConfirmModal
+            isOpen={isOpenConfirmModal}
+            onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+            title={confirmModalTit}
+            content={confirmModalCont}
+            onConfirm={onConfirm}
+            onCancle={onCancel}
+        />
     </Stack>
   )
 }

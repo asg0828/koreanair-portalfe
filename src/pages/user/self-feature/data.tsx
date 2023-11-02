@@ -31,20 +31,24 @@ export const initParam: ParamObject = {
     queryParams: initQueryParams,
     bodyParams: {},
 }
-// APi request init
+// API request init
 export const initApiRequest: ApiRequest = {
     service: Service.KAL_SF_BE,
     url: '',
     method: Method.GET,
     params: initParam
 }
-// APi response init
+// API response init
 export const initCommonResponse: CommonResponse = {
     successOrNot: 'N',
     statusCode: StatusCode.FAIL,
     data: {},
 }
-
+// 모달 타입
+export const ModalType = {
+    ALERT: 'alert',
+    CONFIRM: 'Confirm',
+}
 // 대상선택(행동 데이터) 순번 setting(A,B,C ...)
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
 
