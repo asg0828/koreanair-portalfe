@@ -13,8 +13,11 @@ import {
     TextField,
     Select,
     SelectOption,
-    Typography,
+    TR,
+    TH,
+    TD,
 } from '@components/ui';
+import HorizontalTable from '@/components/table/HorizontalTable';
 
 import { 
     transFuncOtion 
@@ -24,6 +27,7 @@ import {
     TbRsCustFeatRuleTrgtFilter,
     TransFuncProps
 } from '@/models/selfFeature/FeatureInfo';
+import { transFuncCalcStr } from '@/utils/self-feature/FormulaValidUtil';
 
 const columns = [
     { value: '',        text: '선택' },
@@ -38,8 +42,6 @@ const TransFunctionPop = (
         onClose, 
         itemIdx,
         trgtItem,
-        funcStr,
-        setFuncStr,
         setTargetList,
         setTrgtFilterList,
         setTransFuncChecked,
@@ -47,29 +49,49 @@ const TransFunctionPop = (
     
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
 
+    const [ funcStrVal, setFuncStrVal ] = useState<string>('')
+    const [ functionVal,  setFunctionVal ] = useState<string>('')
+    const [ variable1Val, setVariable1Val ] = useState<string>('')
+    const [ variable2Val, setVariable2Val ] = useState<string>('')
+    const [ variable3Val, setVariable3Val ] = useState<string>('')
+
     useEffect(() => {
         setIsOpenPopUp(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-
+            transFuncCalcStr({
+                colNm: trgtItem.columnName,
+                setFuncStr: setFuncStrVal,
+                funcType: trgtItem.function,
+                var1: trgtItem.variable1,
+                var2: trgtItem.variable2,
+                var3: trgtItem.variable3,
+            })
+            setTempTrgtItem(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
         }
     }, [isOpen])
 
     useEffect(() => {
-        transFuncCalcStr(trgtItem.function, '', '', '')
-    }, [trgtItem.function])
+        transFuncCalcStr({
+            colNm: trgtItem.columnName,
+            setFuncStr: setFuncStrVal,
+            funcType: functionVal,
+            var1: '',
+            var2: '',
+            var3: '',
+        })
+    }, [functionVal])
 
     useEffect(() => {
-        transFuncCalcStr(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
-    }, [trgtItem.variable1])
-
-    useEffect(() => {
-        transFuncCalcStr(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
-    }, [trgtItem.variable2])
-
-    useEffect(() => {
-        transFuncCalcStr(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
-    }, [trgtItem.variable3])
+        transFuncCalcStr({
+            colNm: trgtItem.columnName,
+            setFuncStr: setFuncStrVal,
+            funcType: functionVal,
+            var1: variable1Val,
+            var2: variable2Val,
+            var3: variable3Val,
+        })
+    }, [variable1Val, variable2Val, variable3Val])
 
     const handleClose = useCallback(
         (isOpenPopUp: boolean) => {
@@ -82,46 +104,12 @@ const TransFunctionPop = (
         [onClose]
     )
 
-    const transFuncCalcStr = (funcType: string, var1: string, var2: string, var3: string) => {
-        let rtnStr = `${funcType}(${trgtItem.columnName}`
-
-        if (funcType === "NVL") {
-
-            if (var1 === "") rtnStr += ', [대체값])'
-            else rtnStr += `, [${var1}])`
-
-        } else if (funcType === "SUBSTRING") {
-
-            if (var1 === "") rtnStr += ', [시작위치]'
-            else rtnStr += `, [${var1}]`
-
-            if (var2 === "") rtnStr += ', [길이])'
-            else rtnStr += `, [${var2}])`
-            
-        } else if (funcType === "LENGTH") {
-            rtnStr += ')'
-        } else if (funcType === "CONCAT") {
-
-            if (var1 === "") rtnStr += ', [컬럼1]'
-            else rtnStr += `, [${var1}]`
-
-            if (var2 === "") rtnStr += ', [컬럼2])'
-            else rtnStr += `, [${var2}]`
-
-            if (var3 === "") rtnStr += ', [컬럼3])'
-            else rtnStr += `, [${var3}])`
-
-        } else if (funcType === "TO_NUMBER") {
-            rtnStr += ')'
-        } else {
-            rtnStr = ""
-        }
-
-        setFuncStr && setFuncStr(rtnStr)
-
-    }
-
-    const setTrgtItem = (funcType: string, var1: string, var2: string, var3: string) => {
+    const setTrgtItem = (
+        funcType: string,
+        var1: string,
+        var2: string,
+        var3: string,
+    ) => {
 
         setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let rtn = cloneDeep(state)
@@ -144,51 +132,54 @@ const TransFunctionPop = (
             return rtn
         })
     }
+
+    const setTempTrgtItem = (
+        funcType: string,
+        var1: string,
+        var2: string,
+        var3: string,
+    ) => {
+        setFunctionVal(funcType)
+        setVariable1Val(var1)
+        setVariable2Val(var2)
+        setVariable3Val(var3)
+    }
+
     // 적용
     const handleConfirm = () => {
-        if (trgtItem.function === "") {
+        if (functionVal === "") {
             setTransFuncChecked && setTransFuncChecked(false)
             setTrgtItem('', '', '', '')
         } else {
-            setTrgtItem(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
+            setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
         }
         handleClose(false)
     }
 
     const handleClosePop = () => {
-        // 변환식 적용 전 팝업 닫기인 경우
         if (trgtItem.function === "") {
             setTransFuncChecked && setTransFuncChecked(false)
-            setTrgtItem('', '', '', '')
         }
+        // 이전 값을 기억하고 있어야한다.
+        setTrgtItem(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
+        setTempTrgtItem('', '', '', '')
         handleClose(false)
     }
 
     const handleResetTransFunc = () => {
         setTransFuncChecked && setTransFuncChecked(false)
         setTrgtItem('', '', '', '')
+        setTempTrgtItem('', '', '', '')
         // 팝업 close
         handleClose(false)
     }
 
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
-        
-        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
-            let rtn = cloneDeep(state)
-            rtn[itemIdx][id] = value
-            return rtn
-        })
-        setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
-            let rtn = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-            let updtTrgtFilterList = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtItem.targetId)
-            updtTrgtFilterList[itemIdx][id] = value
-            rtn = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtItem.targetId)
-            rtn = [...rtn, ...updtTrgtFilterList]
-            return rtn
-        })
-        
+        if (id === "functionVal") setFunctionVal(value)
+        else if (id === "variable1Val") setVariable1Val(value)
+        else if (id === "variable2Val") setVariable2Val(value)
+        else if (id === "variable3Val") setVariable3Val(value)
     }
 
     const onchangeSelectHandler = (
@@ -198,211 +189,193 @@ const TransFunctionPop = (
     ) => {
         let keyNm = String(id)
         let v = String(value)
-        let t = false
 
-        if (keyNm === "function") {
-            t = true
+        if (keyNm === "functionVal") {
+            setTempTrgtItem(v, '', '', '')
+        } else if (keyNm === "variable1Val") {
+            setVariable1Val(v)
+        } else if (keyNm === "variable2Val") {
+            setVariable2Val(v)
+        } else if (keyNm === "variable3Val") {
+            setVariable3Val(v)
         }
-
-        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
-            let rtn = cloneDeep(state)
-            rtn[itemIdx][keyNm] = v
-            return rtn
-        })
-        setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
-            let rtn = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-            let updtTrgtFilterList = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtItem.targetId)
-            updtTrgtFilterList[itemIdx][keyNm] = v
-            if (t) {
-                updtTrgtFilterList[itemIdx].variable1 = ''
-                updtTrgtFilterList[itemIdx].variable2 = ''
-                updtTrgtFilterList[itemIdx].variable3 = ''
-            }
-            rtn = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtItem.targetId)
-            rtn = [...rtn, ...updtTrgtFilterList]
-            return rtn
-        })
-
     }    
 
     return (
         <Modal 
             open={isOpenPopUp} 
             onClose={handleClose} 
-            size='LG'
+            size='SM'
             closeOnOutsideClick={false}
         >
             <Modal.Header>변환식</Modal.Header>
-            <Modal.Body>
+            <Modal.Body className="width-100">
                 <Stack
                     direction="Vertical"
+                    className="width-100"
                     gap="MD"
-                    justifyContent="Start"
                 >
-                    
-                    <Stack
-                        direction="Horizontal"
-                        gap="MD"
-                        justifyContent="Start"
-                    >
-                        <Typography variant='h6'>변환식</Typography>
-                        <TextField style={{width: '450px'}} readOnly value={funcStr} ></TextField>
-                    </Stack>
-                    <Stack
-                        direction="Horizontal"
-                        gap="MD"
-                        justifyContent="Start"
-                    >
-                        <Typography variant='h6'>함수</Typography>
-                        <Select
-                            appearance="Outline"
-                            value={trgtItem.function}
-                            shape="Square"
-                            size="SM"
-                            status="default"
-                            style={{
-                                width: '11.25rem',
-                            }}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                onchangeSelectHandler(e, value, "function")
-                            }}
-                        >
-                            {transFuncOtion.map((item, index) => (
-                            <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                            ))}
-                        </Select>
-                    </Stack>
-                    {trgtItem.function === "NVL" &&
-                        <>
-                        <Stack
-                            direction="Horizontal"
-                            gap="MD"
-                            justifyContent="Start"
-                        >
-                            <Typography variant='h6'>대체값</Typography>
-                            <TextField value={trgtItem.variable1} id='variable1' onChange={onchangeInputHandler}></TextField>
-                        </Stack>
-                        </>
-                    }
-                    {trgtItem.function === "SUBSTRING" &&
-                        <>
-                        <Stack
-                            direction="Horizontal"
-                            gap="MD"
-                            justifyContent="Start"
-                        >
-                            <Typography variant='h6'>시작위치</Typography>
-                            <TextField value={trgtItem.variable1} id='variable1' onChange={onchangeInputHandler}></TextField>
-                        </Stack>
-                        <Stack
-                            direction="Horizontal"
-                            gap="MD"
-                            justifyContent="Start"
-                        >
-                            <Typography variant='h6'>길이</Typography>
-                            <TextField value={trgtItem.variable2} id='variable2' onChange={onchangeInputHandler}></TextField>
-                        </Stack>
-                        </>
-                    }
-                    {trgtItem.function === "CONCAT" &&
-                        <>
-                        <Stack
-                            direction="Horizontal"
-                            gap="MD"
-                            justifyContent="Start"
-                        >
-                            <Typography variant='h6'>컬럼1</Typography>
-                            <Select 
+                    <HorizontalTable className="width-100">
+                        <TR>
+                            <TH colSpan={1} align="right">
+                            변환식
+                            </TH>
+                            <TD colSpan={2}>
+                                <Stack gap="SM" className="width-100">
+                                    <TextField className="width-100" readOnly value={funcStrVal} ></TextField>
+                                </Stack>
+                            </TD>
+                        </TR>
+                    </HorizontalTable>
+                    <HorizontalTable className="width-100 bdtb">
+                    <TR>
+                        <TH colSpan={1} align="right">
+                        함수
+                        </TH>
+                        <TD colSpan={2}>
+                            <Select
                                 appearance="Outline"
-                                value={trgtItem.variable1}
-                                shape="Square"
-                                size="SM"
-                                status="default"
-                                style={{
-                                    width: '11.25rem',
-                                }}
+                                className="width-100"
+                                value={functionVal}
                                 onChange={(
                                     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                     value: SelectValue<{}, false>
                                 ) => {
-                                    onchangeSelectHandler(e, value, "variable1")
+                                    onchangeSelectHandler(e, value, "functionVal")
+                                }}
+                            >
+                                {transFuncOtion.map((item, index) => (
+                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                ))}
+                            </Select>
+                        </TD>
+                    </TR>
+                    {functionVal === "NVL" &&
+                    <TR>
+                        <TH colSpan={1} align="right">
+                        대체값
+                        </TH>
+                        <TD colSpan={2}>
+                            <TextField 
+                                className="width-100" 
+                                value={variable1Val} 
+                                id='variable1Val' 
+                                onChange={onchangeInputHandler}
+                            ></TextField>
+                        </TD>
+                    </TR>
+                    }
+                    {functionVal === "SUBSTRING" &&
+                    <>
+                    <TR>
+                        <TH colSpan={1} align="right">
+                        시작위치
+                        </TH>
+                        <TD colSpan={2}>
+                            <TextField 
+                                className="width-100"
+                                value={variable1Val} 
+                                id='variable1Val' 
+                                onChange={onchangeInputHandler}
+                            ></TextField>
+                        </TD>
+                    </TR>
+                    <TR>
+                        <TH colSpan={1} align="right">
+                        길이
+                        </TH>
+                        <TD colSpan={2}>
+                            <TextField 
+                                className="width-100"
+                                value={variable2Val} 
+                                id='variable2Val' 
+                                onChange={onchangeInputHandler}
+                            ></TextField>
+                        </TD>
+                    </TR>
+                    </>
+                    }
+                    {functionVal === "CONCAT" &&
+                    <>
+                    <TR>
+                        <TH colSpan={1} align="right">
+                        컬럼1
+                        </TH>
+                        <TD colSpan={2}>
+                            <Select 
+                                appearance="Outline"
+                                className="width-100"
+                                value={variable1Val}
+                                onChange={(
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
+                                ) => {
+                                    onchangeSelectHandler(e, value, "variable1Val")
                                 }}
                             >
                                 {columns.map((item, index) => (
                                 <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                                 ))}
                             </Select>
-                        </Stack>
-                        <Stack
-                            direction="Horizontal"
-                            gap="MD"
-                            justifyContent="Start"
-                        >
-                            <Typography variant='h6'>컬럼2</Typography>
+                        </TD>
+                    </TR>
+                    <TR>
+                        <TH colSpan={1} align="right">
+                        컬럼2
+                        </TH>
+                        <TD colSpan={2}>
                             <Select 
                                 appearance="Outline"
-                                value={trgtItem.variable2}
-                                shape="Square"
-                                size="SM"
-                                status="default"
-                                style={{
-                                    width: '11.25rem',
-                                }}
+                                className="width-100"
+                                value={variable2Val}
                                 onChange={(
                                     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                     value: SelectValue<{}, false>
                                 ) => {
-                                    onchangeSelectHandler(e, value, "variable2")
+                                    onchangeSelectHandler(e, value, "variable2Val")
                                 }}
                             >
                                 {columns.map((item, index) => (
                                 <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                                 ))}
                             </Select>
-                        </Stack>
-                        <Stack
-                            direction="Horizontal"
-                            gap="MD"
-                            justifyContent="Start"
-                        >
-                            <Typography variant='h6'>컬럼3</Typography>
+                        </TD>
+                    </TR>
+                    <TR>
+                        <TH colSpan={1} align="right">
+                        컬럼3
+                        </TH>
+                        <TD colSpan={2}>
                             <Select 
                                 appearance="Outline"
-                                value={trgtItem.variable3}
-                                shape="Square"
-                                size="SM"
-                                status="default"
-                                style={{
-                                    width: '11.25rem',
-                                }}
+                                className="width-100"
+                                value={variable3Val}
                                 onChange={(
                                     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                     value: SelectValue<{}, false>
                                 ) => {
-                                    onchangeSelectHandler(e, value, "variable3")
+                                    onchangeSelectHandler(e, value, "variable3Val")
                                 }}
                             >
                                 {columns.map((item, index) => (
                                 <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                                 ))}
                             </Select>
-                        </Stack>
-                        </>
+                        </TD>
+                    </TR>
+                    </>
                     }
+                    </HorizontalTable>
                 </Stack>
             </Modal.Body>
             <Modal.Footer>
-                <Button priority="Normal" appearance="Contained" onClick={handleResetTransFunc}>
+                <Button priority="Normal" appearance="Outline" size="LG" onClick={handleResetTransFunc}>
                 초기화
                 </Button>
-                <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
+                <Button priority="Primary" appearance="Contained" size="LG" onClick={handleConfirm}>
                 적용
                 </Button>
-                <Button priority="Normal" appearance="Contained" onClick={handleClosePop}>
+                <Button priority="Normal" appearance="Outline" size="LG" onClick={handleClosePop}>
                 닫기
                 </Button>
             </Modal.Footer>

@@ -60,12 +60,12 @@ export interface TransFuncProps {
     onClose?: (isOpen: boolean) => void
     isPossibleEdit?: Boolean
     itemIdx: number
-    funcStr?: string
     trgtItem: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
-    setFuncStr?: React.Dispatch<React.SetStateAction<string>>
     setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     setTransFuncChecked?: React.Dispatch<React.SetStateAction<boolean>>
+    isOpenPopApply?: Boolean
+    setIsOpenPopApply?: React.Dispatch<React.SetStateAction<Boolean>>
 }
 
 export interface MstrSgmtTableandColMetaInfo {

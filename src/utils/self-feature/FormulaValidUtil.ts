@@ -15,7 +15,6 @@ export interface Props {
     targetList: Array<string>
 }
 
-
 export const ValidationFormula = ({
     formula,
     targetList,
@@ -187,6 +186,61 @@ export const ValidationFormula = ({
     }
 
     return validRslt
+
+}
+// 변환식 팝업 변환식 string 설정
+export interface TransFuncCalcProps {
+    funcType: string
+    var1: string
+    var2: string
+    var3: string
+    colNm: string
+    setFuncStr: React.Dispatch<React.SetStateAction<string>>
+}
+
+export const transFuncCalcStr = ({
+    funcType,
+    var1,
+    var2,
+    var3,
+    colNm,
+    setFuncStr,
+}: TransFuncCalcProps) => {
+    let rtnStr = `${funcType}(${colNm}`
+
+    if (funcType === "NVL") {
+
+        if (var1 === "") rtnStr += ', [대체값])'
+        else rtnStr += `, [${var1}])`
+
+    } else if (funcType === "SUBSTRING") {
+
+        if (var1 === "") rtnStr += ', [시작위치]'
+        else rtnStr += `, [${var1}]`
+
+        if (var2 === "") rtnStr += ', [길이])'
+        else rtnStr += `, [${var2}])`
+        
+    } else if (funcType === "LENGTH") {
+        rtnStr += ')'
+    } else if (funcType === "CONCAT") {
+
+        if (var1 === "") rtnStr += ', [컬럼1]'
+        else rtnStr += `, [${var1}]`
+
+        if (var2 === "") rtnStr += ', [컬럼2])'
+        else rtnStr += `, [${var2}]`
+
+        if (var3 === "") rtnStr += ', [컬럼3])'
+        else rtnStr += `, [${var3}])`
+
+    } else if (funcType === "TO_NUMBER") {
+        rtnStr += ')'
+    } else {
+        rtnStr = ""
+    }
+
+    setFuncStr(rtnStr)
 
 }
 

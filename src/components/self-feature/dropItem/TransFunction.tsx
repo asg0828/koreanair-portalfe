@@ -15,6 +15,7 @@ import {
     TbRsCustFeatRuleTrgtFilter,
     TransFuncProps 
 } from "@/models/selfFeature/FeatureInfo"
+import { transFuncCalcStr } from "@/utils/self-feature/FormulaValidUtil"
 
 const TransFunction = ({
     isPossibleEdit,
@@ -27,6 +28,20 @@ const TransFunction = ({
     const [ funcStr, setFuncStr ] = useState<string>('')
     const [ transFuncChecked, setTransFuncChecked ] = useState(false)
     const [ isOpenTransFunctionPop, setIsOpenTransFunctionPop ] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (trgtItem.function !== "") {
+            setTransFuncChecked(true)
+        }
+        transFuncCalcStr({
+            colNm: trgtItem.columnName,
+            setFuncStr: setFuncStr,
+            funcType: trgtItem.function,
+            var1: trgtItem.variable1,
+            var2: trgtItem.variable2,
+            var3: trgtItem.variable3,
+        })
+    }, [trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3])
 
     const onCheckedChange = () => {
         setTransFuncChecked(!transFuncChecked)
@@ -74,7 +89,7 @@ const TransFunction = ({
                 align="center"
                 content={funcStr}
                 delayDuration={700}
-                position="bottom"
+                position="top"
                 shape="Square"
             >
                 <Button
@@ -107,8 +122,6 @@ const TransFunction = ({
             onClose={(isOpen) => setIsOpenTransFunctionPop(isOpen)}
             itemIdx={itemIdx}
             trgtItem={trgtItem}
-            funcStr={funcStr}
-            setFuncStr={setFuncStr}
             setTargetList={setTargetList}
             setTrgtFilterList={setTrgtFilterList}
             setTransFuncChecked={setTransFuncChecked}

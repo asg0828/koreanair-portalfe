@@ -102,7 +102,7 @@ const FeatQueryRsltButton = () => {
                 onClose={(isOpen) => setIsOpenReadSqlPop(isOpen)}
             />
 
-        {/* Confirm 모달 */}
+            {/* Confirm 모달 */}
             <ConfirmModal
                 isOpen={isOpenConfirmModal}
                 onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
