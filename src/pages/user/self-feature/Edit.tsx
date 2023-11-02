@@ -108,6 +108,9 @@ const SelfFeatureEdit = () => {
   
   // 대상 선택시 formData setting
   useEffect(() => {
+    // 선택 대상이 없을 경우 우측 drag 영역 노출
+    if (targetList.length < 1) setIsSelectAggregateTop(false)
+
     setUpdtFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
       rtn.tbRsCustFeatRuleTrgtList = cloneDeep(targetList)
