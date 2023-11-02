@@ -35,6 +35,7 @@ import {
   initApiRequest,
   initCommonResponse,
   ModalType,
+  ModalTitCont,
 } from './data'
 import { Method, callApi } from '@/utils/ApiUtil';
 import ConfirmModal from '@/components/modal/ConfirmModal';
@@ -88,7 +89,7 @@ const SelfFeatureReg = () => {
   const onCancel = () => {
     setIsOpenConfirmModal(false)
   }
-  
+
   useEffect(() => {
     // 초기 setting API Call
     initCustFeatRule()
@@ -245,7 +246,7 @@ const SelfFeatureReg = () => {
   const createCustFeatRule = async () => {
     if (!isValidFormula) {
       setModalType(ModalType.ALERT)
-      setConfirmModalCont("계산식을 확인해주세요.")
+      setConfirmModalCont(ModalTitCont.REG_VALID.context)
       setIsOpenConfirmModal(true)
       return
     }
@@ -300,8 +301,8 @@ const SelfFeatureReg = () => {
 
   const onSubmitInsertHandler = () => {
     setModalType(ModalType.CONFIRM)
-    setConfirmModalTit("Feature 저장")
-    setConfirmModalCont("Feature 정보를 저장 하시겠습니까?")
+    setConfirmModalTit(ModalTitCont.REG.title)
+    setConfirmModalCont(ModalTitCont.REG.context)
     setIsOpenConfirmModal(true)
   }
 

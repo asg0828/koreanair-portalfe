@@ -49,6 +49,17 @@ export const ModalType = {
     ALERT: 'alert',
     CONFIRM: 'Confirm',
 }
+// 모달 title/context
+export const ModalTitCont = {
+    DETAIL: { title: "", context: ""},
+    REG: { title: "Feature 저장", context: "Feature 정보를 저장 하시겠습니까?"},
+    EDIT: { title: "Feature 수정", context: "Feature 정보를 수정 하시겠습니까?"},
+    DELETE: { title: "Feature 삭제", context: "선택한 Feature 정보를 삭제 하시겠습니까?"},
+    BETCH: { title: "Feature 수동 실행", context: "Feature 수동 실행을 진행 하시겠습니까?" },
+    DEL_VALID: { title: "Feature 삭제", context: "삭제할 항목이 없습니다." },
+    REG_VALID: { title: "Feature 저장", context: "계산식을 확인해주세요."},
+    EDIT_VALID: { title: "Feature 수정", context: "계산식을 확인해주세요."},
+}
 // 대상선택(행동 데이터) 순번 setting(A,B,C ...)
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
 

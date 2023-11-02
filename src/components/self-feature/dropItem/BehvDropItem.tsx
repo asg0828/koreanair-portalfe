@@ -20,6 +20,7 @@ import {
     divisionTypes,
     filterOption,
     aggregateOption,
+    ModalType,
 } from "@/pages/user/self-feature/data"
 
 const columnList = [
@@ -43,37 +44,43 @@ const BehvDropItem = ({
     const [ aggregateTopSelect, setAggregateTopSelect ] = useState<Boolean>(false)
 
     const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
+    const [ modalType, setModalType ] = useState<string>("")
     const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
     const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
 
     const onConfirm = () => {
-        // 우측 drag 영역 삭제 여부
-        setIsSelectAggregateTop && setIsSelectAggregateTop(true)
-        // Top 함수 선택시 노출되는 항목 show 여부
-        setAggregateTopSelect(true)
+        if (modalType === ModalType.CONFIRM) {
+            // 우측 drag 영역 삭제 여부
+            setIsSelectAggregateTop && setIsSelectAggregateTop(true)
+            // Top 함수 선택시 노출되는 항목 show 여부
+            setAggregateTopSelect(true)
 
-        setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
-            let tl = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-            if (tl[itemIdx].targetId === targetItem.targetId) {
-                tl[itemIdx]["operator"] = "top"
-                tl[itemIdx]["operand1"] = ''
-                tl[itemIdx]["operand2"] = ''
-                tl[itemIdx]["operand3"] = ''
-                tl[itemIdx]["operand4"] = ''
-            }
-            // 현재 Target을 제외한 모든 Target 삭제
-            tl = tl.filter((target: TbRsCustFeatRuleTrgt) => target.targetId === targetItem.targetId)
-            return tl
-        })
+            setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+                let tl = cloneDeep(state)
+                // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
+                if (tl[itemIdx].targetId === targetItem.targetId) {
+                    tl[itemIdx]["operator"] = "top"
+                    tl[itemIdx]["operand1"] = ''
+                    tl[itemIdx]["operand2"] = ''
+                    tl[itemIdx]["operand3"] = ''
+                    tl[itemIdx]["operand4"] = ''
+                }
+                // 현재 Target을 제외한 모든 Target 삭제
+                tl = tl.filter((target: TbRsCustFeatRuleTrgt) => target.targetId === targetItem.targetId)
+                return tl
+            })
 
-        // 현재 TargetFilter를 제외한 모든 TargetFilter 삭제
-        setTrgtFilterList && setTrgtFilterList((targetFilter: Array<TbRsCustFeatRuleTrgtFilter>) => {
-            let rtn = cloneDeep(targetFilter)
-            rtn = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetItem.targetId)
-            return rtn
-        })
-        // 모달 닫기
+            // 현재 TargetFilter를 제외한 모든 TargetFilter 삭제
+            setTrgtFilterList && setTrgtFilterList((targetFilter: Array<TbRsCustFeatRuleTrgtFilter>) => {
+                let rtn = cloneDeep(targetFilter)
+                rtn = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetItem.targetId)
+                return rtn
+            })
+        }
+        setIsOpenConfirmModal(false)
+    }
+
+    const onCancel = () => {
         setIsOpenConfirmModal(false)
     }
 
@@ -139,7 +146,10 @@ const BehvDropItem = ({
                 let tableId  = targetId.split('_')[0]
 
                 if (tableId !== targetObj.metaTblId) {
-                    alert("같은 테이블 조건이 아닙니다.")
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("대상 선택")
+                    setConfirmModalCont("같은 테이블 조건이 아닙니다.")
+                    setIsOpenConfirmModal(true)
                     return null
                 }
 
@@ -212,6 +222,7 @@ const BehvDropItem = ({
             t = true
         } else if (keyNm === "operator") {
             if (v === "top") {
+                setModalType(ModalType.CONFIRM)
                 setConfirmModalTit("Top 집계 함수")
                 setConfirmModalCont("Top 연산자는 하나의 대상만 가능합니다. 다른 대상들을 제거 하시겠습니까?")
                 setIsOpenConfirmModal(true)
@@ -316,12 +327,6 @@ const BehvDropItem = ({
                             disabled={!isPossibleEdit}
                             appearance="Outline"
                             value={targetItem.filterLogiOption}
-                            shape="Square"
-                            size="SM"
-                            status="default"
-                            style={{
-                                
-                            }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                 value: SelectValue<{}, false>
@@ -514,6 +519,7 @@ const BehvDropItem = ({
             title={confirmModalTit}
             content={confirmModalCont}
             onConfirm={onConfirm}
+            onCancle={onCancel}
         />
         </>
     )

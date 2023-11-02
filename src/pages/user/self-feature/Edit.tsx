@@ -51,6 +51,7 @@ import {
   initApiRequest,
   initCommonResponse,
   ModalType,
+  ModalTitCont,
 } from './data'
 import { Method, callApi } from "@/utils/ApiUtil";
 import ConfirmModal from "@/components/modal/ConfirmModal";
@@ -262,7 +263,7 @@ const SelfFeatureEdit = () => {
 
     if (!isValidFormula) {
       setModalType(ModalType.ALERT)
-      setConfirmModalCont("계산식을 확인해주세요.")
+      setConfirmModalCont(ModalTitCont.EDIT_VALID.context)
       setIsOpenConfirmModal(true)
       return
     }
@@ -319,8 +320,8 @@ const SelfFeatureEdit = () => {
 
   const onSubmitUpdateHandler = () => {
     setModalType(ModalType.CONFIRM)
-    setConfirmModalTit("Feature 수정")
-    setConfirmModalCont("Feature 정보를 수정 하시겠습니까?")
+    setConfirmModalTit(ModalTitCont.EDIT.title)
+    setConfirmModalCont(ModalTitCont.EDIT.context)
     setIsOpenConfirmModal(true)
   }
 

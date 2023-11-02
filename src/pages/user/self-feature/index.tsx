@@ -23,6 +23,7 @@ import ConfirmModal from "@/components/modal/ConfirmModal";
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import { 
+  ModalTitCont,
   ModalType,
   featListColumns as columns,
   initApiRequest,
@@ -188,15 +189,15 @@ const SelfFeature = () => {
   }
 
   const deleteSelfFeature = () => {
-    setConfirmModalTit("Feature 삭제")
+    setConfirmModalTit(ModalTitCont.DELETE.title)
     if (delList.length < 1) {
       setModalType(ModalType.ALERT)
-      setConfirmModalCont("삭제할 항목이 없습니다.")
+      setConfirmModalCont(ModalTitCont.DEL_VALID.context)
       setIsOpenConfirmModal(true)
       return
     }
     setModalType(ModalType.CONFIRM)
-    setConfirmModalCont("선택한 Feature 정보를 삭제 하시겠습니까?")
+    setConfirmModalCont(ModalTitCont.DELETE.context)
     setIsOpenConfirmModal(true)
   }
 

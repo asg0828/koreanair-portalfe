@@ -10,7 +10,7 @@ import {
     Button,
     Stack,
 } from '@components/ui'
-import { ModalType, initApiRequest, initCommonResponse, initConfig } from '@/pages/user/self-feature/data';
+import { ModalTitCont, ModalType, initApiRequest, initCommonResponse, initConfig } from '@/pages/user/self-feature/data';
 import { Method, callApi } from '@/utils/ApiUtil';
 
 const FeatQueryRsltButton = () => {
@@ -57,8 +57,8 @@ const FeatQueryRsltButton = () => {
     const onClickFeatQueryRsltHandler = (type: number) => {
         if (type === 1) {
             setModalType(ModalType.CONFIRM)
-            setConfirmModalTit("Feature 수동 실행")
-            setConfirmModalCont("Feature 수동 실행을 진행 하시겠습니까?")
+            setConfirmModalTit(ModalTitCont.BETCH.title)
+            setConfirmModalCont(ModalTitCont.BETCH.context)
             setIsOpenConfirmModal(true)
         } else if (type === 2) {
             setIsOpenQuerySampleDataPop((prevState) => !prevState)
