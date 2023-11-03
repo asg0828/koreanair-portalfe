@@ -202,7 +202,8 @@ const listColumns = [
 
 const listRows = [
   {
-    column1: '10',
+    // column1 확성기 아이콘 넣고 싶은데 어떻게 넣어야 할지 모르곘어요...
+    column1: '<CampaignIcon />',
     column2: '항공 보상',
     column3: 'DATASET01003(10)',
     column4: 'DICD0100001',

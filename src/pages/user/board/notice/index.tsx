@@ -5,6 +5,7 @@ import { RowsInfo } from '@/models/components/Table';
 import { TR, TH, TD, Button, Stack, TextField, Select, SelectOption } from '@components/ui';
 import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
 import AddIcon from '@mui/icons-material/Add';
+import CampaignIcon from '@mui/icons-material/Campaign';
 
 const List = () => {
   const navigate = useNavigate();
@@ -55,6 +56,7 @@ const List = () => {
           </>
         }
       />
+      
     </>
   );
 };

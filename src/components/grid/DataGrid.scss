@@ -11,4 +11,16 @@
     display: flex;
     flex-direction: column;
   }
+
+  .status{
+    &.blue{
+      color: #0064DE;
+    }
+    &.red{
+      color: #DE001B;
+    }
+    &.gray{
+      color: #B9B9B9;
+    }
+  }
 }
