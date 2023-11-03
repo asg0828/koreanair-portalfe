@@ -295,3 +295,36 @@ svg {
     }
   }
 }
+
+.dataGridWrap{
+  .accordionWrap{
+    > div {
+      width: 100%;
+      border-top: 1px solid rgb(0, 37, 108);
+      border-bottom: 1px solid rgb(218, 218, 218);
+    }
+    h3{
+      position: relative;
+      button{
+        padding-left: 34px;
+      }
+      button::after{
+        content: 'Q.';
+        display: inline-block;
+        position: absolute;
+        left: 12px;
+        font-size: 0.875rem;
+      }
+    }
+    .answer{
+      padding-left: 22px;
+    }
+    .answer::after{
+      content: 'A.';
+      display: inline-block;
+      position: absolute;
+      left: 12px;
+      font-size: 0.875rem;
+    }
+  }
+}
