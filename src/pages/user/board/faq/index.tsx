@@ -40,23 +40,6 @@ const List = () => {
         </TR>
       </SearchForm>
 
-      {/* <DataGrid
-        columns={columns}
-        rows={rows}
-        enableSort={true}
-        clickable={true}
-        onClick={clickRow}
-        onChange={undefined}
-        buttonChildren={
-          <>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-              <AddIcon />
-              등록
-            </Button>
-          </>
-        }
-      /> */}
-
       <Stack className="dataGridWrap" direction="Vertical" gap="MD">
         <Stack className="total-layout">
           <Label>총 <span className="total">0</span> 건</Label>
