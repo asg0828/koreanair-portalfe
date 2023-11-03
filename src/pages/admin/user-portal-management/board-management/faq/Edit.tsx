@@ -4,12 +4,16 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import TinyEditor from '@/components/editor/TinyEditor';
 import '@/assets/styles/Board.scss';
+import AddIcon from '@mui/icons-material/Add';
+
 const Edit = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const goToList = () => {
     navigate('..');
   };
+
   return (
     <>
       <Stack direction="Vertical" gap="MD" className="height-100">
@@ -59,6 +63,7 @@ const Edit = () => {
           </TR>
         </HorizontalTable>
       </Stack>
+
       <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG">
           수정

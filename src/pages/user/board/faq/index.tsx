@@ -57,6 +57,10 @@ const List = () => {
         <Stack className="accordionWrap width-100">
           <Accordion defaultValue="item01" type="single" size="LG">
             <AccordionItem title="[시스템] 시스템 질문1" value="item01">
+              {/* <Stack justifyContent="End" gap="SM" className="width-100">
+                <Button appearance="Unfilled">수정</Button>
+                <Button appearance="Unfilled">삭제</Button>
+              </Stack> */}
               <Typography variant="body1" className="answer">
                 시스템 질문1 답변입니다.
               </Typography>
