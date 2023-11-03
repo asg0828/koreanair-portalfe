@@ -59,6 +59,20 @@ const SubmissionRequestPop = ({
             setIsOpenSubmissionApprovePop('rightPopup openTrue');
     }
 
+    const handleApproveDelete = () => {
+        // 결재선 리스트 삭제
+    }
+
+    const getCheckList = (checkedList: Array<number>) => {
+        // 삭제할 결제선 목록 선택
+        /*
+        setDelList(() => {
+            let delList = checkedList.map((delItemIdx) => selfFeatureList[delItemIdx])
+            return cloneDeep(delList)
+        })
+        */
+    }
+
     return (
         <Modal 
             open={isOpenSubmissionRequestPop} 
@@ -131,7 +145,7 @@ const SubmissionRequestPop = ({
                             <Typography variant="h4">결재선</Typography>
                             <Stack gap="SM">
                                 <Button onClick={handleApproveAppend}>추가</Button>
-                                <Button>삭제</Button>
+                                <Button onClick={handleApproveDelete}>삭제</Button>
                             </Stack>
                         </Stack>
                         <VerticalTable
@@ -139,7 +153,7 @@ const SubmissionRequestPop = ({
                             rows={[]}
                             enableSort={false}
                             clickable={true}
-                            rowSelection={() => {}}
+                            rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
                         />
                     </Stack>
                 </Modal.Body>

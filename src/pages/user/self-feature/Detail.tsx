@@ -7,6 +7,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import HorizontalTable from '@components/table/HorizontalTable';
 import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
+import SubmissionRequestPop from '@/components/self-feature-submission/popup/SubmissionRequestPop';
 import {
     TR,
     TH,
@@ -18,23 +19,28 @@ import {
 
 import { 
   FeatureInfo, 
+  FeatureTemp, 
   TbRsCustFeatRule, 
   TbRsCustFeatRuleCalc, 
   TbRsCustFeatRuleCase, 
+  TbRsCustFeatRuleSql, 
   TbRsCustFeatRuleTrgt, 
   TbRsCustFeatRuleTrgtFilter, 
 } from '@/models/selfFeature/FeatureInfo';
 import { 
+  initFeatureTemp,
   initSelfFeatureInfo, 
   initTbRsCustFeatRule, 
   initTbRsCustFeatRuleCalc, 
   initTbRsCustFeatRuleCase, 
+  initTbRsCustFeatRuleSql, 
   initTbRsCustFeatRuleTrgt, 
   initTbRsCustFeatRuleTrgtFilter,
-  selfFeatPgPpNm, 
-  subFeatStatus 
 } from './data';
-import SubmissionRequestPop from '@/components/self-feature/popup/SubmissionRequestPop';
+import {
+  subFeatStatus,
+  selfFeatPgPpNm,
+} from '@/models/selfFeature/FeatureCommon';
 
 const SelfFeatureDetail = () => {
 
@@ -43,11 +49,14 @@ const SelfFeatureDetail = () => {
 
     const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
 
+    const [ featureTempInfo, setFeatureTempInfo ] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
     const [ featureInfo, setFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
     const [ targetList, setTargetList ] = useState<Array<TbRsCustFeatRuleTrgt>>([])
     const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
     const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
     const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
+    // SQL 입력
+    const [ sqlQueryInfo, setSqlQueryInfo ] = useState<TbRsCustFeatRuleSql>(cloneDeep(initTbRsCustFeatRuleSql))
 
     const [ isOpenSubmissionRequestPop, setIsOpenSubmissionRequestPop ] = useState<boolean>(false)
 
@@ -66,10 +75,12 @@ const SelfFeatureDetail = () => {
     }
 
     useEffect(() => {
+      setFeatureTempInfo(cloneDeep(featureInfo.featureTemp))
       setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
       setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
       setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
       setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
+      setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
     }, [featureInfo])
 
     useEffect(() => {

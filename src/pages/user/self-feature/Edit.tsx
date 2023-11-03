@@ -16,6 +16,7 @@ import CalcValid from '@/components/self-feature/CalcValid';
 import DropList from "@/components/self-feature/DropList";
 import DragList from "@/components/self-feature/DragList";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
+import ConfirmModal from "@/components/modal/ConfirmModal";
 import { 
   Button, 
   Select, 
@@ -36,6 +37,8 @@ import {
   TbRsCustFeatRuleTrgtFilter,
   TbRsCustFeatRuleCase,
   MstrSgmtTableandColMetaInfo,
+  FeatureTemp,
+  TbRsCustFeatRuleSql,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
@@ -45,6 +48,11 @@ import {
   initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
+  initFeatureTemp,
+  initTbRsCustFeatRuleSql,
+} from './data'
+import { Method, callApi } from "@/utils/ApiUtil";
+import {
   subFeatStatus,
   selfFeatPgPpNm,
   initConfig,
@@ -52,10 +60,7 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
-} from './data'
-import { Method, callApi } from "@/utils/ApiUtil";
-import ConfirmModal from "@/components/modal/ConfirmModal";
-import { useQuery } from "@tanstack/react-query";
+} from '@/models/selfFeature/FeatureCommon';
 
 const lCategory = [
   { value: '1', text: '회원' },
@@ -79,10 +84,13 @@ const SelfFeatureEdit = () => {
   const [ updtFeatureInfo, setUpdtFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
 
   // 기본정보
+  const [ featureTempInfo, setFeatureTempInfo ] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
   const [ custFeatRule, setCustFeatRule ] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
   // 대상선택
   const [ targetList, setTargetList ] = useState<Array<TbRsCustFeatRuleTrgt>>([])
   const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
+  // SQL 입력
+  const [ sqlQueryInfo, setSqlQueryInfo ] = useState<TbRsCustFeatRuleSql>(cloneDeep(initTbRsCustFeatRuleSql))
   // 계산식
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
@@ -113,14 +121,23 @@ const SelfFeatureEdit = () => {
   }, [])
 
   useEffect(() => {
+    setFeatureTempInfo(cloneDeep(location.state.featureTemp))
     setCustFeatRule(cloneDeep(location.state.tbRsCustFeatRule))
     setTargetList(cloneDeep(location.state.tbRsCustFeatRuleTrgtList))
     setTrgtFilterList(cloneDeep(location.state.tbRsCustFeatRuleTrgtFilterList))
     setCustFeatRuleCalc(cloneDeep(location.state.tbRsCustFeatRuleCalc))
     setCustFeatRuleCaseList(cloneDeep(location.state.tbRsCustFeatRuleCaseList))
+    setSqlQueryInfo(cloneDeep(location.state.tbRsCustFeatRuleSql))
   }, [location.state])
 
   // 기본 정보 입력시 formData setting
+  useEffect(() => {
+    setUpdtFeatureInfo((state: FeatureInfo) => {
+      let rtn = cloneDeep(state)
+      rtn.featureTemp = cloneDeep(featureTempInfo)
+      return rtn
+    })
+  }, [featureTempInfo])
   useEffect(() => {
     setUpdtFeatureInfo((state: FeatureInfo) => {
       let rtn = cloneDeep(state)
@@ -154,6 +171,13 @@ const SelfFeatureEdit = () => {
       return rtn
     })
   }, [trgtFilterList])
+  useEffect(() => {
+    setUpdtFeatureInfo((state: FeatureInfo) => {
+      let rtn = cloneDeep(state)
+      rtn.tbRsCustFeatRuleSql = cloneDeep(sqlQueryInfo)
+      return rtn
+    })
+  }, [sqlQueryInfo])
   
   // 계산식 입력시 formData setting
   useEffect(() => {
@@ -293,11 +317,37 @@ const SelfFeatureEdit = () => {
 
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
+
     setCustFeatRule((state: TbRsCustFeatRule) => {
       let rtn = cloneDeep(state)
-      rtn[id] = value
+      Object.keys(rtn).map((key) => {
+        if (key === id) {
+          rtn[key] = value
+        }
+      })
       return rtn
     })
+
+    setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === id) {
+          rtn[key] = value
+        }
+      })
+      return rtn
+    })
+
+    setFeatureTempInfo((state: FeatureTemp) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === id) {
+          rtn[key] = value
+        }
+      })
+      return rtn
+    })
+    
   }
   const onchangeSelectHandler = (
     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -306,11 +356,37 @@ const SelfFeatureEdit = () => {
   ) => {
     let keyNm = String(id)
     let v = String(value)
+
     setCustFeatRule((state: TbRsCustFeatRule) => {
       let rtn = cloneDeep(state)
-      rtn[keyNm] = v
+      Object.keys(rtn).map((key) => {
+        if (key === keyNm) {
+          rtn[key] = v
+        }
+      })
       return rtn
     })
+
+    setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === keyNm) {
+          rtn[key] = v
+        }
+      })
+      return rtn
+    })
+
+    setFeatureTempInfo((state: FeatureTemp) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === keyNm) {
+          rtn[key] = v
+        }
+      })
+      return rtn
+    })
+
   }
 
   const onClickPageMovHandler = (pageNm: string) => {
@@ -381,7 +457,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="id" 
-                value={custFeatRule.id}
+                value={featureTempInfo.featureId}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -390,7 +466,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="dataType"
-                value={custFeatRule.dataType}
+                value={featureTempInfo.featureTyp}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -401,18 +477,18 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="name" 
-                value={custFeatRule.name}
+                value={featureTempInfo.featureNm}
                 onChange={onchangeInputHandler}
               />
             </TD>
             <TH colSpan={1} align="center">영문명</TH>
             <TD colSpan={3}>
-              {/* <TextField 
+              <TextField 
                 className="width-100" 
                 id="name" 
-                value={custFeatRule.name}
+                value={featureTempInfo.featureEngNm}
                 onChange={onchangeInputHandler}
-              /> */}
+              />
             </TD>
           </TR>
           <TR>
@@ -421,7 +497,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="description" 
-                value={custFeatRule.description}
+                value={featureTempInfo.featureDef}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -451,7 +527,7 @@ const SelfFeatureEdit = () => {
           <TR>
             <TH colSpan={1} align="center">산출 로직</TH>
             <TD colSpan={7}>
-              {/* <TextField className="width-100" id="description" onChange={onchangeInputHandler}/> */}
+              <TextField className="width-100" id="featureFm" onChange={onchangeInputHandler}/>
             </TD>
           </TR>
           <TR>

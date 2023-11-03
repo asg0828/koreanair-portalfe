@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { cloneDeep } from 'lodash';
@@ -10,6 +10,7 @@ import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography } from '@components/ui'
+import ConfirmModal from '@/components/modal/ConfirmModal';
 
 import { 
   FeatureInfo,
@@ -19,6 +20,8 @@ import {
   TbRsCustFeatRuleTrgtFilter,
   TbRsCustFeatRuleCase,
   MstrSgmtTableandColMetaInfo,
+  FeatureTemp,
+  TbRsCustFeatRuleSql,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
@@ -29,6 +32,11 @@ import {
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
   initTbRsCustFeatRuleCase,
+  initFeatureTemp,
+  initTbRsCustFeatRuleSql,
+} from './data'
+import { Method, callApi } from '@/utils/ApiUtil';
+import {
   subFeatStatus,
   selfFeatPgPpNm,
   initConfig,
@@ -36,9 +44,7 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
-} from './data'
-import { Method, callApi } from '@/utils/ApiUtil';
-import ConfirmModal from '@/components/modal/ConfirmModal';
+} from '@/models/selfFeature/FeatureCommon';
 
 const lCategory = [
   { value: '', text: '선택' },
@@ -58,19 +64,27 @@ const calcUnit = [
 const SelfFeatureReg = () => {
 
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const [ regType, setRegType ] = useState<string>(location.state.regType)
+
   // formData
   const [ featureInfo, setFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
 
   // 기본정보
+  const [ featureTempInfo, setFeatureTempInfo ] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
   const [ custFeatRule, setCustFeatRule ] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
   // 대상선택
   const [ targetList, setTargetList ] = useState<Array<TbRsCustFeatRuleTrgt>>([])
   const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
+  // SQL 입력
+  const [ sqlQueryInfo, setSqlQueryInfo ] = useState<TbRsCustFeatRuleSql>(cloneDeep(initTbRsCustFeatRuleSql))
   // 계산식
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
   const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
+  // SQL 등록
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
   // Top 집계함수 선택 여부
@@ -83,7 +97,13 @@ const SelfFeatureReg = () => {
 
   // modal 확인/취소 이벤트
   const onConfirm = () => {
-    if (modalType === ModalType.CONFIRM) createCustFeatRule()
+    if (modalType === ModalType.CONFIRM) {
+      if (regType === selfFeatPgPpNm.SQL_REG) {
+        createCustFeatSQL()
+      } else if (regType === selfFeatPgPpNm.RULE_REG) {
+        createCustFeatRule()
+      }
+    }
     setIsOpenConfirmModal(false)
   }
   const onCancel = () => {
@@ -93,7 +113,8 @@ const SelfFeatureReg = () => {
   useEffect(() => {
     // 초기 setting API Call
     initCustFeatRule()
-    getTableandColumnMetaInfoByMstrSgmtRuleId()
+    if (regType === selfFeatPgPpNm.RULE_REG) 
+      getTableandColumnMetaInfoByMstrSgmtRuleId()
   }, [])
 
   const initCustFeatRule = () => {
@@ -112,6 +133,13 @@ const SelfFeatureReg = () => {
       return rtn
     })
   }, [custFeatRule])
+  useEffect(() => {
+    setFeatureInfo((state: FeatureInfo) => {
+      let rtn = cloneDeep(state)
+      rtn.featureTemp = cloneDeep(featureTempInfo)
+      return rtn
+    })
+  }, [featureTempInfo])
   
   // 대상 선택시 formData setting
   useEffect(() => {
@@ -139,6 +167,15 @@ const SelfFeatureReg = () => {
       return rtn
     })
   }, [trgtFilterList])
+
+  // SQL 입력시 formData setting
+  useEffect(() => {
+    setFeatureInfo((state: FeatureInfo) => {
+      let rtn = cloneDeep(state)
+      rtn.tbRsCustFeatRuleSql = cloneDeep(sqlQueryInfo)
+      return rtn
+    })
+  }, [sqlQueryInfo])
   
   // 계산식 입력시 formData setting
   useEffect(() => {
@@ -266,7 +303,31 @@ const SelfFeatureReg = () => {
     console.log("[createCustFeatRule] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
+    //response = await callApi(request)
+    console.log("[createCustFeatRule] Response :: ", response)
+
+    // API 정상 응답시 페이지 redirect
+    
+  }
+
+  const createCustFeatSQL = async () => {
+    /*
+      Method      :: POST
+      Url         :: /api/v1/korean-air/customerfeatures
+      path param  :: 
+      query param :: 
+      body param  :: featureInfo
+    */
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.POST
+    request.url = "/api/v1/korean-air/customerfeatures"
+    request.params!.bodyParams = featureInfo
+    console.log("[createCustFeatRule] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    //response = await callApi(request)
     console.log("[createCustFeatRule] Response :: ", response)
 
     // API 정상 응답시 페이지 redirect
@@ -275,11 +336,37 @@ const SelfFeatureReg = () => {
 
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
+
     setCustFeatRule((state: TbRsCustFeatRule) => {
       let rtn = cloneDeep(state)
-      rtn[id] = value
+      Object.keys(rtn).map((key) => {
+        if (key === id) {
+          rtn[key] = value
+        }
+      })
       return rtn
     })
+
+    setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === id) {
+          rtn[key] = value
+        }
+      })
+      return rtn
+    })
+
+    setFeatureTempInfo((state: FeatureTemp) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === id) {
+          rtn[key] = value
+        }
+      })
+      return rtn
+    })
+    
   }
   const onchangeSelectHandler = (
     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -288,11 +375,37 @@ const SelfFeatureReg = () => {
   ) => {
     let keyNm = String(id)
     let v = String(value)
+
     setCustFeatRule((state: TbRsCustFeatRule) => {
       let rtn = cloneDeep(state)
-      rtn[keyNm] = v
+      Object.keys(rtn).map((key) => {
+        if (key === keyNm) {
+          rtn[key] = v
+        }
+      })
       return rtn
     })
+
+    setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === keyNm) {
+          rtn[key] = v
+        }
+      })
+      return rtn
+    })
+
+    setFeatureTempInfo((state: FeatureTemp) => {
+      let rtn = cloneDeep(state)
+      Object.keys(rtn).map((key) => {
+        if (key === keyNm) {
+          rtn[key] = v
+        }
+      })
+      return rtn
+    })
+    
   }
 
   const onClickPageMovHandler = (pageNm: string) => {
@@ -357,25 +470,25 @@ const SelfFeatureReg = () => {
             <TR>
               <TH colSpan={1} align="right" required>Feature ID</TH>
               <TD colSpan={2}>
-                <TextField className="width-100" id="id" value={"feature id ex"} readOnly onChange={onchangeInputHandler}/>
+                <TextField className="width-100" id="featureId" readOnly onChange={onchangeInputHandler}/>
               </TD>
               <TH colSpan={1} align="right" required>Feature 타입</TH>
               <TD colSpan={2}>
-                <TextField className="width-100" id="dataType" value={"self-feature"} readOnly onChange={onchangeInputHandler}/>
+                <TextField className="width-100" id="featureTyp" value={"self-feature"} readOnly onChange={onchangeInputHandler}/>
               </TD>
             </TR>
             <TR>
               <TH colSpan={1} align="right" required>한글명</TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className='width-100'>
-                  <TextField className="width-100" id="id" onChange={onchangeInputHandler}/>
+                  <TextField className="width-100" id="featureNm" onChange={onchangeInputHandler}/>
                   <Button>중복확인</Button>
                 </Stack>
               </TD>
               <TH colSpan={1} align="right" required>영문명</TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className='width-100'>
-                  <TextField className="width-100" id="id" onChange={onchangeInputHandler}/>
+                  <TextField className="width-100" id="featureEngNm" onChange={onchangeInputHandler}/>
                   <Button>중복확인</Button>
                 </Stack>
               </TD>
@@ -383,7 +496,7 @@ const SelfFeatureReg = () => {
             <TR>
               <TH colSpan={1} align="right" required>Feature 정의</TH>
               <TD colSpan={5.01}>
-                <TextField className="width-100" id="description" multiline onChange={onchangeInputHandler}/>
+                <TextField className="width-100" id="featureDef" multiline onChange={onchangeInputHandler}/>
               </TD>
             </TR>
             <TR>
@@ -415,7 +528,7 @@ const SelfFeatureReg = () => {
             <TR>
               <TH colSpan={1} align="right" required>산출 로직</TH>
               <TD colSpan={5.01}>
-                <TextField className="width-100" multiline id="description" onChange={onchangeInputHandler}/>
+                <TextField className="width-100" multiline id="featureFm" onChange={onchangeInputHandler}/>
               </TD>
             </TR>
             <TR>
@@ -428,6 +541,8 @@ const SelfFeatureReg = () => {
           {/* 기본 정보 */}
 
           {/* 대상 선택 */}
+          {(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
+          <>
           <Typography variant="h3">대상 선택</Typography>
           {/* drag && drop 영역*/}
           <Stack 
@@ -459,10 +574,29 @@ const SelfFeatureReg = () => {
               {/* drag 영역 */}
             </DndProvider>
           </Stack>
+          </>
+          }
           {/* 대상 선택 */}
+          {/* SQL 입력 */}
+          {(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
+          <>
+          <Typography variant="h3">Feature 생성 Query</Typography>
+          <Stack 
+              direction="Horizontal"
+              gap="MD"
+              justifyContent="Between"
+              style={{
+                height: '400px',
+              }}
+          >
+            <TextField className="width-100 height-100" multiline id="sqlQuery" onChange={onchangeInputHandler}/>
+          </Stack>
+          </>
+          }
+          {/* SQL 입력 */}
 
           {/* 계산식 */}
-          {formulaTrgtList.length > 0 &&
+          {(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
             <CalcValid
               featStatus={subFeatStatus.REG}
               setIsValidFormula={setIsValidFormula}

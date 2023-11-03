@@ -221,7 +221,9 @@ export interface FormulaValidRslt {
 
 //Required: tbRsCustFeatRule,tbRsCustFeatRuleCalc
 export interface FeatureInfo {
-    [key: string]: TbRsCustFeatRule | TbRsCustFeatRuleCalc | Array<TbRsCustFeatRuleTrgt> | Array<TbRsCustFeatRuleTrgtFilter> | Array<TbRsCustFeatRuleCase>
+    [key: string]: TbRsCustFeatRule | TbRsCustFeatRuleCalc 
+    | Array<TbRsCustFeatRuleTrgt> | Array<TbRsCustFeatRuleTrgtFilter> 
+    | Array<TbRsCustFeatRuleCase> | FeatureTemp | TbRsCustFeatRuleSql
     //Required: category,description,mstrSgmtRuleId,name,useYn
     tbRsCustFeatRule: TbRsCustFeatRule,//기본정보
     tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc,//계산식
@@ -229,6 +231,8 @@ export interface FeatureInfo {
     tbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt>,
     tbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>,
     tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase>,
+    featureTemp: FeatureTemp,
+    tbRsCustFeatRuleSql: TbRsCustFeatRuleSql,
 }
 
 export interface TbRsCustFeatRule extends RowsInfo {
@@ -260,11 +264,42 @@ export interface TbRsCustFeatRule extends RowsInfo {
     category: string,
     //example: 데이터 유형
     dataType: string,
+    sqlDirectInputYn: string,
     frstRegUserNm: string,
     lastUpdUserNm: string,
     submissionStatus: string,
     metaTblId: string,
     lastUpdLginId: string
+}
+
+export interface TbRsCustFeatRuleSql {
+    [key: string]: string
+    custFeatRuleId: string // "Customer Feature Rule ID",
+    sqlQuery: string // "string",
+    frstRegDttm: string // "최초등록 일시: default=CURRENT_TIMESTAMP",
+    frstRegUserId: string // "최초등록 사용자ID",
+    lastUpdDttm: string // "최종수정 일시",
+    lastUpdUserId: string // "최종수정 사용자ID"
+}
+
+export interface FeatureTemp {
+    [key: string]: string
+    featureId: string //example: 피쳐ID
+    featureTyp: string //example: 피쳐타입
+    featureSe: string //example: 피쳐구분
+    featureNm: string //example: 피쳐명
+    featureEngNm: string //example: 피쳐영문명
+    calcUnt: string //example: 산출단위
+    featureDef: string //example: 피쳐정의
+    featureFm: string //example: 피쳐산식(산출로직)
+    enrUserId: string //example: 신청자 ID
+    enrDeptCode: string //example: 신청부서코드
+    delYn: string //example: 삭제여부
+    rgstDt: string //example: 등록일자
+    rgstId: string //example: 등록ID
+    modiDt: string //example: 수정일자
+    modiId: string //example: 수정ID
+    featureRelTb: string //example: 연관테이블
 }
 
 export interface TbRsCustFeatRuleCalc {
