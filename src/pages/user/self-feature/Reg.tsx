@@ -268,6 +268,9 @@ const SelfFeatureReg = () => {
     let response = cloneDeep(initCommonResponse)
     response = await callApi(request)
     console.log("[createCustFeatRule] Response :: ", response)
+
+    // API 정상 응답시 페이지 redirect
+    
   }
 
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

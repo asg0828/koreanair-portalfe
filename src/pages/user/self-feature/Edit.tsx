@@ -286,6 +286,8 @@ const SelfFeatureEdit = () => {
     let response = cloneDeep(initCommonResponse)
     response = await callApi(request)
     console.log("[updateCustFeatRule] Response :: ", response)
+
+    // API 정상 응답시 페이지 redirect
     
   }
 

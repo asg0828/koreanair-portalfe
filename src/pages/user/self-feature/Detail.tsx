@@ -34,6 +34,7 @@ import {
   selfFeatPgPpNm, 
   subFeatStatus 
 } from './data';
+import SubmissionRequestPop from '@/components/self-feature/popup/SubmissionRequestPop';
 
 const SelfFeatureDetail = () => {
 
@@ -47,6 +48,8 @@ const SelfFeatureDetail = () => {
     const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
     const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
     const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
+
+    const [ isOpenSubmissionRequestPop, setIsOpenSubmissionRequestPop ] = useState<boolean>(false)
 
     useEffect(() => {
       // 초기 상세 정보 조회 API CALL
@@ -88,7 +91,8 @@ const SelfFeatureDetail = () => {
           // 팝업 component open시 호출
           // retrieveSubmission1
           // api url :: (GET)/api/v1/submissions/{submissionId}
-          console.log("승인 팝업 open!")
+          // console.log("승인 팝업 open!")
+          setIsOpenSubmissionRequestPop(true)
         } else {
           navigate(`../${pageNm}`)
         }
@@ -334,6 +338,14 @@ const SelfFeatureDetail = () => {
           <DetailBtnComponent/>
         </Stack>
       {/* 버튼 영역 */}
+
+      {/* 팝업 */}
+          <SubmissionRequestPop
+            isOpen={isOpenSubmissionRequestPop}
+            onClose={(isOpen) => setIsOpenSubmissionRequestPop(isOpen)}
+          />
+      {/* 팝업 */}
+
       </Stack>
     )
   }

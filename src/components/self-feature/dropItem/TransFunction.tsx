@@ -9,7 +9,7 @@ import {
     Checkbox, 
     Tooltip 
 } from "@components/ui"
-import TransFunctionPop from "./TransFunctionPop"
+import TransFunctionPop from "../popup/TransFunctionPop"
 import { 
     TbRsCustFeatRuleTrgt,
     TbRsCustFeatRuleTrgtFilter,
@@ -94,7 +94,7 @@ const TransFunction = ({
             >
                 <Button
                     appearance="Outline"
-                    disabled={!transFuncChecked}
+                    disabled={!isPossibleEdit || !transFuncChecked}
                     priority="Normal"
                     shape="Square"
                     size="MD"
@@ -106,7 +106,7 @@ const TransFunction = ({
         ) : (
             <Button
                 appearance="Outline"
-                disabled={!transFuncChecked}
+                disabled={!isPossibleEdit || !transFuncChecked}
                 priority="Normal"
                 shape="Square"
                 size="MD"

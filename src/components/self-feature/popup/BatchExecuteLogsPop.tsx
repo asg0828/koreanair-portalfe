@@ -5,7 +5,7 @@ import {
 } from 'react'
 import { cloneDeep } from 'lodash'
 
-import VerticalTable from '../table/VerticalTable';
+import VerticalTable from '../../table/VerticalTable';
 import { 
     Modal, 
     Button, 

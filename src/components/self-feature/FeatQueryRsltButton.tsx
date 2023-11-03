@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { cloneDeep } from 'lodash'
 
-import QuerySampleDataPop from "@/components/self-feature/QuerySampleDataPop";
-import BatchExecuteLogsPop from "@/components/self-feature/BatchExecuteLogsPop";
-import ReadSqlPop from "@/components/self-feature/ReadSqlPop";
+import QuerySampleDataPop from "@/components/self-feature/popup/QuerySampleDataPop";
+import BatchExecuteLogsPop from "@/components/self-feature/popup/BatchExecuteLogsPop";
+import ReadSqlPop from "@/components/self-feature/popup/ReadSqlPop";
 import ConfirmModal from '../modal/ConfirmModal';
 
 import {

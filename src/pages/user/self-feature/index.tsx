@@ -17,7 +17,7 @@ import {
   SelectOption,
   Label,
 } from '@components/ui';
-import CustFeatParentChildListPop from "@/components/self-feature/CustFeatParentChildListPop";
+import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
