@@ -53,13 +53,20 @@ const Edit = () => {
               <UploadDropzone />
             </TD>
           </TR>
+          <TR>
+            <TH colSpan={1} align='right'>파일링크</TH>
+            <TD colSpan={5.01}>
+              <Stack gap="SM" className="width-100">
+                <TextField className="width-100" />
+              </Stack>
+            </TD>
+          </TR>
         </HorizontalTable>
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG">
-          <AddIcon />
-          등록
+          수정
         </Button>
         <Button size="LG" onClick={goToList}>
           목록
