@@ -3,6 +3,7 @@
 }
 .tox-tinymce{
   min-height: 300px;
+  z-index: -1;
 }
 .tox-edit-area {
   &:hover {

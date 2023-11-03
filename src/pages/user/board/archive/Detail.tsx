@@ -74,12 +74,12 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        {/* <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
           수정
         </Button>
         <Button priority="Normal" size="LG">
           삭제
-        </Button> */}
+        </Button>
         <Button size="LG" onClick={goToList}>
           목록
         </Button>

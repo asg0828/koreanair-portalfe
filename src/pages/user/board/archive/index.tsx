@@ -46,14 +46,14 @@ const List = () => {
         clickable={true}
         onClick={clickRow}
         onChange={undefined}
-        // buttonChildren={
-        //   <>
-        //     <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-        //      <AddIcon />
-        //       등록
-        //     </Button>
-        //   </>
-        // }
+        buttonChildren={
+          <>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+             <AddIcon />
+              등록
+            </Button>
+          </>
+        }
       />
     </>
   );
