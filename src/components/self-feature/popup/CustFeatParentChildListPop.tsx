@@ -3,10 +3,9 @@ import {
     useEffect, 
     useCallback 
 } from 'react'
-import { cloneDeep } from 'lodash'
 
 import HorizontalTable from '@components/table/HorizontalTable';
-import VerticalTable from '../table/VerticalTable';
+import VerticalTable from '../../table/VerticalTable';
 import { 
     Modal, 
     Button, 

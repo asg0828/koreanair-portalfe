@@ -19,10 +19,12 @@ import {
     initTbCoMetaTblClmnInfo, 
     initTbRsCustFeatRuleTrgt, 
     initTbRsCustFeatRuleTrgtFilter,
-    subFeatStatus, 
-    selfFeatPgPpNm,
     divisionTypes, 
 } from '@/pages/user/self-feature/data'
+import {
+    subFeatStatus, 
+    selfFeatPgPpNm,
+} from '@/models/selfFeature/FeatureCommon';
 
 const DropList = ({
     featStatus,

@@ -17,24 +17,26 @@ import {
   SelectOption,
   Label,
 } from '@components/ui';
-import CustFeatParentChildListPop from "@/components/self-feature/CustFeatParentChildListPop";
+import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import { 
-  ModalTitCont,
-  ModalType,
   featListColumns as columns,
-  initApiRequest,
-  initCommonResponse,
-  initConfig,
-  initQueryParams,
   initTbRsCustFeatRule,
-  selfFeatPgPpNm 
 } from "./data";
 import { Method, callApi } from "@/utils/ApiUtil";
-import { StatusCode } from "@/models/common/CommonResponse";
+import { StatusCode } from "@/models/common/CommonResponse"
+import {
+  selfFeatPgPpNm,
+  initConfig,
+  initApiRequest,
+  initCommonResponse,
+  ModalType,
+  ModalTitCont,
+  initQueryParams,
+} from '@/models/selfFeature/FeatureCommon';
 
 const category = [
   { value: '', text: '선택' },
@@ -160,6 +162,8 @@ const SelfFeature = () => {
       navigate(pageNm, { state: rows })
     } else if (pageNm === selfFeatPgPpNm.PRNTCHLD) {
       setIsOpenFeatPrntChldPop((prevState) => !prevState)
+    } else if (pageNm === selfFeatPgPpNm.RULE_REG || pageNm === selfFeatPgPpNm.SQL_REG) {
+      navigate(selfFeatPgPpNm.REG, { state: { regType: pageNm } })
     } else {
       navigate(pageNm)
     }
@@ -324,11 +328,11 @@ const SelfFeature = () => {
         <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
         삭제
         </Button>
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.RULE_REG)}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
         Rule 등록
         </Button>
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
         SQL 등록
         </Button>

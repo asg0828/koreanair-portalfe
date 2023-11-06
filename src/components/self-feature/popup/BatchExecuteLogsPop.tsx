@@ -5,7 +5,7 @@ import {
 } from 'react'
 import { cloneDeep } from 'lodash'
 
-import VerticalTable from '../table/VerticalTable';
+import VerticalTable from '../../table/VerticalTable';
 import { 
     Modal, 
     Button, 
@@ -23,11 +23,13 @@ import { BatchExecuteLog } from '@/models/selfFeature/FeatureInfo';
 import { 
     initBatchExecuteLog, 
     batchExecuteLogListColumns as columns, 
+} from '@/pages/user/self-feature/data';
+import { Method, callApi } from '@/utils/ApiUtil';
+import {
     initConfig,
     initApiRequest,
     initCommonResponse
-} from '@/pages/user/self-feature/data';
-import { Method, callApi } from '@/utils/ApiUtil';
+} from '@/models/selfFeature/FeatureCommon';
 
 export interface Props {
     isOpen?: boolean

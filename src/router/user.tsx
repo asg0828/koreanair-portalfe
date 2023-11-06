@@ -31,6 +31,8 @@ import SelfFeature from '@pages/user/self-feature';
 import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
 import SelfFeatureReg from '@pages/user/self-feature/Reg';
 import SelfFeatureEdit from '@pages/user/self-feature/Edit';
+import SfSubmissionRequest from '@/pages/user/self-feature-submission';
+import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Detail';
 import CustomerInfo from '@pages/user/customer-info/dashboard';
 import StructuredReport from '@pages/user/report/structured-report';
 import UnStructuredReport from '@pages/user/report/unstructured-report';
@@ -93,6 +95,13 @@ const userRouter = [
               { path: 'detail', element: <SelfFeatureDetail /> },
               { path: 'reg', element: <SelfFeatureReg /> },
               { path: 'edit', element: <SelfFeatureEdit /> },
+            ],
+          },
+          {
+            path: 'submission-request',
+            children: [
+              { index: true, element: <SfSubmissionRequest /> },
+              { path: 'detail', element: <SfSubmissionRequestDetail /> },
             ],
           },
         ],
