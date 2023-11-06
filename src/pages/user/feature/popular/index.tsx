@@ -1,22 +1,23 @@
 import DataGrid from '@/components/grid/DataGrid';
 import { popularColumns as columns, popularRows as rows } from '@/utils/data/tableSampleData';
-import { Button, } from '@components/ui';
+import { Button, Tooltip } from '@components/ui';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const List = () => {
   return (
     <>
+      {/* 관심 Feature 등록/해제?  */}
+        {/* <Tooltip content="tooltip">
+          <Button appearance="Unfilled">
+            <FavoriteIcon />
+          </Button>
+        </Tooltip> */}
       <DataGrid
         columns={columns}
         rows={rows}
         enableSort={true}
         clickable={true}
         onChange={undefined}
-        // buttonChildren={
-        //   <>
-        //     {/* <Button size="LG">엑셀다운로드</Button> */}
-        //     <Button priority="Primary" appearance="Contained" size="LG">관심 해제</Button>
-        //   </>
-        // }
       />
     </>
   );
