@@ -4,7 +4,7 @@ import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
 import { TR, TH, TD, Button, Stack, TextField, Select, SelectOption, Typography, Label, Pagination } from '@components/ui';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent,} from '@ke-design/components';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+// import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
 import AddIcon from '@mui/icons-material/Add';
 
 const List = () => {

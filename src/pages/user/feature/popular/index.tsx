@@ -1,5 +1,6 @@
 import DataGrid from '@/components/grid/DataGrid';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData'
+import { popularColumns as columns, popularRows as rows } from '@/utils/data/tableSampleData';
+import { Button, } from '@components/ui';
 
 const List = () => {
   return (
@@ -10,6 +11,12 @@ const List = () => {
         enableSort={true}
         clickable={true}
         onChange={undefined}
+        // buttonChildren={
+        //   <>
+        //     {/* <Button size="LG">엑셀다운로드</Button> */}
+        //     <Button priority="Primary" appearance="Contained" size="LG">관심 해제</Button>
+        //   </>
+        // }
       />
     </>
   );

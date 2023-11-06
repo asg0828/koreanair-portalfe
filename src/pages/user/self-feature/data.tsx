@@ -371,3 +371,4 @@ export const initBatchExecuteLog: BatchExecuteLog = {
 export const initReadSql: ReadSql = {
     sql: '',
 }
+
