@@ -1,4 +1,4 @@
-import SearchForm, { SearchKey, searchInfoList } from '@/components/form/SearchForm';
+import SearchForm from '@/components/form/SearchForm';
 import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
@@ -8,6 +8,20 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useModal, { ModalType } from '@/hooks/useModal';
+
+export type SearchKey = 'qstn' | 'answ';
+
+export type SearchValue = '제목' | '내용';
+
+export type SearchInfo = {
+  key: SearchKey;
+  value: SearchValue;
+};
+
+export const searchInfoList: SearchInfo[] = [
+  { key: 'qstn', value: '제목' },
+  { key: 'answ', value: '내용' },
+];
 
 const List = () => {
   const navigate = useNavigate();
