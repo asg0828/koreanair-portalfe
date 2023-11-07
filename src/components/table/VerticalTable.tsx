@@ -1,7 +1,7 @@
 import { useState, ReactNode } from 'react';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { CheckedState, SortDirection, SortDirectionCode, AlignCode } from '@/models/common/Design';
-import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD } from '@components/ui';
+import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD, Stack, Loader } from '@components/ui';
 import '@components/table/VerticalTable.scss';
 
 export interface VerticalTableProps {
@@ -30,7 +30,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
 
   const handleCheckedChangeAll = (checked: boolean): void => {
-    let newCheckedList: Array<number> = []; 
+    let newCheckedList: Array<number> = [];
 
     if (checked) {
       newCheckedList = new Array(rows.length).fill(null).map((v, i) => i);
@@ -42,7 +42,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   };
 
   const handleCheckedChange = (checked: CheckedState, row: RowsInfo, index: number): void => {
-    let newCheckedList: Array<number> = []; 
+    let newCheckedList: Array<number> = [];
 
     if (checked) {
       newCheckedList = [...checkedList, index];
@@ -106,10 +106,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
       {rows?.length > 0 && (
         <TBody clickable={clickable}>
           {rows.map((row, index) => (
-            <TR
-              key={`row-${index}`}
-              selected={checkedList.includes(index)}
-            >
+            <TR key={`row-${index}`} selected={checkedList.includes(index)}>
               {isCheckbox && (
                 <TD>
                   <Checkbox
@@ -119,14 +116,14 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                 </TD>
               )}
 
-              {Object.keys(columns).map((column, index) => (
+              {Object.keys(columns).map((column, index2) => (
                 <TD
-                  key={`column-${index}`}
-                  colSpan={columns[index].colSpan ? columns[index].colSpan : 1}
-                  align={columns[index].align ? columns[index].align : AlignCode.CENTER}
+                  key={`column-${index2}`}
+                  colSpan={columns[index2].colSpan ? columns[index2].colSpan : 1}
+                  align={columns[index2].align ? columns[index2].align : AlignCode.CENTER}
                   onClick={() => handleClick(row, index)}
                 >
-                  <Typography variant="body2">{row[columns[index].field]}</Typography>
+                  <Typography variant="body2">{row[columns[index2].field]}</Typography>
                 </TD>
               ))}
             </TR>

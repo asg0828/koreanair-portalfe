@@ -6,7 +6,12 @@
   z-index: 0;
 }
 .tox-edit-area {
+  height: 300px !important;
+
   &:hover {
     cursor: pointer;
   }
+}
+.tox-tinymce--disabled {
+  border: none !important;
 }

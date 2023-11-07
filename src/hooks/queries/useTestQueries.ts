@@ -1,6 +1,5 @@
-import { callApi } from '@utils/ApiUtil';
+import { callApi, ApiRequest } from '@utils/ApiUtil';
 import { useQuery } from '@tanstack/react-query';
-import { ApiRequest } from '@utils/ApiUtil';
 
 export const QUERY_KEY = ['/test'];
 
@@ -14,7 +13,7 @@ const fetcher = ({ service, url, method, params }: ApiRequest) => {
 };
 
 const useTestQuery = (apiRequest: ApiRequest) => {
-  return useQuery(QUERY_KEY, () => fetcher(apiRequest), { refetchOnWindowFocus: false });
+  return useQuery(QUERY_KEY, () => fetcher(apiRequest));
 };
 
 export default useTestQuery;

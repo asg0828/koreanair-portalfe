@@ -1,42 +1,58 @@
-import { ReactNode } from 'react';
-import { Modal, Button } from '@components/ui';
+import { useState, useEffect } from 'react';
+import { ModalInfo } from '@/models/components/Modal';
+import { Modal, Button, Stack } from '@components/ui';
 
-export interface Props {
-  isOpen?: boolean;
-  onClose: (isOpen: boolean) => void;
-  title: string;
-  content: ReactNode;
-  onConfirm?: Function;
-  onCancle?: Function;
-}
+const ConfirmModal = ({
+  isOpen = false,
+  autoClose = true,
+  title,
+  content,
+  onConfirm,
+  onCancle,
+  onClose,
+}: ModalInfo) => {
+  const [isOpenModal, setIsOpenModal] = useState(isOpen);
 
-const ConfirmModal = ({ isOpen, onClose, title, content, onConfirm, onCancle }: Props) => {
+  useEffect(() => {
+    setIsOpenModal(isOpen);
+  }, [isOpen]);
+
+  const handleClose = () => {
+    setIsOpenModal(false);
+    onClose && onClose(false);
+  };
+
   const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm() && onClose(false);
-    } else {
-      onClose(false);
-    }
+    onConfirm && onConfirm();
+    autoClose && handleClose();
   };
 
   const handleCancle = () => {
     onCancle && onCancle();
-    onClose(false);
+    autoClose && handleClose();
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      handleConfirm();
+    }
   };
 
   return (
-    <Modal open={isOpen} onClose={onClose} size="SM">
-      <Modal.Header>{title}</Modal.Header>
-      <Modal.Body>{content}</Modal.Body>
-      <Modal.Footer>
-        <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
-          확인
-        </Button>
-        <Button priority="Normal" appearance="Outline" onClick={handleCancle}>
-          취소
-        </Button>
-      </Modal.Footer>
-    </Modal>
+    <Stack onKeyDown={handleKeyDown}>
+      <Modal open={isOpenModal} onClose={handleClose} size="SM">
+        <Modal.Header>{title}</Modal.Header>
+        <Modal.Body>{content}</Modal.Body>
+        <Modal.Footer>
+          <Button priority="Primary" appearance="Contained" onClick={handleConfirm} autoFocus>
+            확인
+          </Button>
+          <Button priority="Normal" appearance="Outline" onClick={handleCancle}>
+            취소
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Stack>
   );
 };
 

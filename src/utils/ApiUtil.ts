@@ -116,6 +116,11 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
     (response: any): any => {
       const commonResponse: CommonResponse = response.data as CommonResponse;
       commonResponse.header = response?.headers;
+      commonResponse.statusCode = StatusCode.SUCCESS;
+      commonResponse.successOrNot = 'Y';
+      commonResponse.status = response?.status;
+      commonResponse.message = response?.message;
+
       if (isLoading) {
         // @ts-ignore
         // eslint-disable-next-line
@@ -136,6 +141,8 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
         successOrNot: 'N',
         statusCode: StatusCode.UNKNOWN_ERROR,
         data: {},
+        status: error?.response?.status,
+        message: error?.response?.message,
       };
       // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
@@ -151,8 +158,8 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
             });
           });
         } else {
-          sessionUtil.deleteSessionInfo();
-          sessionApis.oauthLogin();
+          // sessionUtil.deleteSessionInfo();
+          // sessionApis.oauthLogin();
         }
       }
       return unknownError;
@@ -196,7 +203,9 @@ export const callApi = async (apiRequest: ApiRequest): Promise<CommonResponse> =
       response = await getInstance(apiRequest.service, isLoading, {}, isFile).patch(url, apiRequest.params?.bodyParams);
       break;
     case Method.DELETE:
-      response = await getInstance(apiRequest.service, isLoading, {}, isFile).delete(url);
+      response = await getInstance(apiRequest.service, isLoading, {}, isFile).delete(url, {
+        data: apiRequest.params?.bodyParams,
+      });
       break;
     default:
       break;
