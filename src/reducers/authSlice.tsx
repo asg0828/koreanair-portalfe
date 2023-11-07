@@ -18,6 +18,9 @@ const authSlice = createSlice({
       state.isAdminPage = false;
       state.userInfo = undefined;
     },
+    getUserInfo(state: AuthInfo) {
+      return state;
+    },
   },
 });
 

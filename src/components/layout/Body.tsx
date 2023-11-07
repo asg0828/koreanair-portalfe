@@ -1,8 +1,9 @@
-import { useLocation } from 'react-router-dom';
+import AdminHome from '@/pages/admin/AdminHome';
 import Home from '@/pages/user/Home';
 import Main from '@components/layout/Main';
 import QuickMenu from '@components/layout/QuickMenu';
-import { Stack, Page } from '@components/ui';
+import { Page, Stack } from '@components/ui';
+import { useLocation } from 'react-router-dom';
 import './Body.scss';
 
 export interface Props {
@@ -11,41 +12,24 @@ export interface Props {
 
 const Body = ({ onClick }: Props) => {
   const location = useLocation();
+  const isHome = location.pathname === '/' || location.pathname === '/admin';
 
   return (
-    <>
-      {location.pathname === '/' ? (
-        <Stack
-          id="body"
-          style={{ background: '#f8f9fc', paddingBottom: '0.875rem' }}
-          direction="Horizontal"
-          alignItems="Start"
-          onClick={(e) => onClick()}
-        >
-          <Page style={{ padding: '0 1rem' }} fixedSize={true}>
-            <Stack alignItems="Start" style={{ position: 'relative' }}>
-              <QuickMenu />
-              <Home />
-            </Stack>
-          </Page>
+    <Stack
+      id="body"
+      className={isHome ? 'is-home' : ''}
+      direction="Horizontal"
+      alignItems="Start"
+      onClick={(e) => onClick()}
+    >
+      <Page style={{ padding: '0 1rem' }} fixedSize={true}>
+        <Stack alignItems="Start" style={{ position: 'relative' }}>
+          <QuickMenu />
+
+          {location.pathname === '/' ? <Home /> : location.pathname === '/admin' ? <AdminHome /> : <Main />}
         </Stack>
-      ) : (
-        <Stack
-          id="body"
-          style={{ paddingBottom: '0.875rem' }}
-          direction="Horizontal"
-          alignItems="Start"
-          onClick={(e) => onClick()}
-        >
-          <Page style={{ padding: '0 1rem' }} fixedSize={true}>
-            <Stack alignItems="Start" style={{ position: 'relative' }}>
-              <QuickMenu />
-              <Main />
-            </Stack>
-          </Page>
-        </Stack>
-      )}
-    </>
+      </Page>
+    </Stack>
   );
 };
 export default Body;
