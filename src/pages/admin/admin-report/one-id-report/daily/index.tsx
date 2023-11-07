@@ -5,106 +5,137 @@ import { Typography } from '@mui/material';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { onIdPaxData, oneIdPaxColumn, reason } from '../../one-id-main/data';
 import { SelectValue } from '@mui/base/useSelect';
+import { Method, callApi } from '@/utils/ApiUtil';
+import { Service } from '@/models/common/Service';
+import { initApiRequest, initCommonResponse, initConfig } from '@/models/selfFeature/FeatureCommon';
+import { cloneDeep } from 'lodash';
+import { dailySearch } from '@/models/oneId/OneIdInfo';
 
+//남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function Daily() {
-  // 셀렉트박스 > 선택된 value값
-  const [value, setValue] = useState('');
-
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [oneIdNum, setOneIdNum] = useState('');
-  const [pnrNum, setPnrNum] = useState('');
-  const [uciid, setUciid] = useState('');
-
-  const today = new Date();
-
-  function onSearchChangeHandler(e: any, target: string) {
-    let currVal = e.target.value;
-    if (target === 'oneId') {
-      setOneIdNum(currVal);
-    } else if (target === 'pnrNum') {
-      setPnrNum(currVal);
-    } else if (target === 'uciid') {
-      setUciid(currVal);
-    }
+  const [searchInfo, setSearchInfo] = useState<dailySearch>({
+    oneIdNum: '',
+    searchCri: 'one',
+    oneIdChgReason: '',
+  });
+  /* input state관리 */
+  function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    const { id, value } = e.target;
+    setSearchInfo({ ...searchInfo, [id]: value });
   }
 
-  // 검색 버튼
-  function onSearch() {
-    const formData = new FormData();
+  /* 검색 버튼 */
+  const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    retrieveRelation();
+  };
 
-    // OneId 번호
-    formData.append('oneIdNum', oneIdNum);
-    // OneID 변경 이유 코드
-    formData.append('reason', value);
-    // 조회기준
-    // const criterionVal = criterion.value;
-    // formData.append('criterion', criterionVal);
-    // for (const x of formData.entries()) {
-    //   console.log(x);
-    // }
-  }
+  /* select 입력 함수 */
+  const onchangeSelectHandler = (
+    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: SelectValue<{}, false>,
+    id?: String
+  ) => {
+    setSearchInfo({ ...searchInfo, [`${id}`]: value });
+  };
 
-  // 초기화 버튼
+  /* api 호출 */
+  const retrieveRelation = async () => {
+    let config = cloneDeep(initConfig);
+    config.isLoarding = true;
+    let request = cloneDeep(initApiRequest);
+    request.method = Method.GET;
+    request.url = '';
+    request.service = Service.KAL_BE;
+    request.params = {
+      bodyParams: {
+        searchInfo,
+      },
+    };
+    let response = cloneDeep(initCommonResponse);
+    response = await callApi(request);
+
+    console.log(request.params);
+    console.log('[retrieve360] Response :: ', response);
+  };
+
+  /* 초기화 버튼 */
   function onClear() {
-    setStartDate('');
-    setEndDate('');
-    setOneIdNum('');
-    setPnrNum('');
-    setUciid('');
+    setSearchInfo({ ...searchInfo, oneIdNum: '', searchCri: 'one', oneIdChgReason: '' });
   }
+
+  /* radio 입력 함수 */
+  const radioHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setSearchInfo({ ...searchInfo, [id]: value });
+  };
 
   return (
-    <div style={{ width: '1200px' }}>
-      <div>
+    <div>
+      <form onSubmit={onsubmitHandler}>
         <Stack>
-          <HorizontalTable>
-            <TR>
-              <TH align="right">OneId 번호</TH>
-              <TD>
-                <TextField
-                  onChange={(e) => onSearchChangeHandler(e, 'oneId')}
-                  placeholder="검색어를 입력하세요."
-                  value={oneIdNum}
-                />
-              </TD>
-              <TH align="right">OneID변경이유코드</TH>
-              <TD>
-                <Select
-                  appearance="Outline"
-                  placeholder="전체"
-                  onChange={(
-                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                    value: SelectValue<{}, false>
-                  ) => {
-                    {
-                      onSearchChangeHandler(e, 'reason');
-                      setValue(String(value));
-                    }
-                  }}
-                >
-                  {reason.map((item, index) => (
-                    <SelectOption key={index} value={item.value}>
-                      {item.text}
-                    </SelectOption>
-                  ))}
-                </Select>
-              </TD>
-              <TH align="right">조회기준</TH>
-              <TD>
-                <Radio name="criterion" label="History단건" value="1" />
-                <Radio name="criterion" label="해당History전체" value="2" />
-              </TD>
-            </TR>
-          </HorizontalTable>
+          <div style={{ width: '1200px' }}>
+            <HorizontalTable>
+              <TR>
+                <TH align="right">OneId 번호</TH>
+                <TD>
+                  <TextField
+                    onChange={onSearchChangeHandler}
+                    placeholder="검색어를 입력하세요."
+                    value={searchInfo.oneIdNum}
+                    id="oneIdNum"
+                  />
+                </TD>
+                <TH align="right">OneID변경이유코드</TH>
+                <TD>
+                  <Select
+                    appearance="Outline"
+                    placeholder="전체"
+                    onChange={(
+                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                      value: SelectValue<{}, false>
+                    ) => {
+                      onchangeSelectHandler(e, value, 'oneIdChgReason');
+                    }}
+                  >
+                    {reason.map((item, index) => (
+                      <SelectOption key={index} value={item.value}>
+                        {item.text}
+                      </SelectOption>
+                    ))}
+                  </Select>
+                </TD>
+                <TH align="right">조회기준</TH>
+                <TD>
+                  <Radio
+                    id="searchCri"
+                    name="searchCri"
+                    onChange={(e) => radioHandler(e)}
+                    label="History단건"
+                    value="one"
+                    defaultChecked
+                  />
+                  <Radio
+                    id="searchCri"
+                    name="searchCri"
+                    onChange={(e) => radioHandler(e)}
+                    label="해당History전체"
+                    value="all"
+                  />
+                </TD>
+              </TR>
+            </HorizontalTable>
+            <div style={{ marginLeft: 1080 }}>
+              <Stack>
+                <Button type="submit">검색</Button>
+                <Button type="reset" onClick={onClear}>
+                  초기화
+                </Button>
+              </Stack>
+            </div>
+          </div>
         </Stack>
-        <div style={{ marginLeft: 1080 }}>
-          <Stack>
-            <Button onClick={onSearch}>검색</Button>
-            <Button onClick={onClear}>초기화</Button>
-          </Stack>
-        </div>
-      </div>
+      </form>
       <Typography variant="h6">마스터 {onIdPaxData.length}</Typography>
       <Stack>
         <VerticalTable enableSort={true} showHeader={true} columns={oneIdPaxColumn} rows={onIdPaxData} />

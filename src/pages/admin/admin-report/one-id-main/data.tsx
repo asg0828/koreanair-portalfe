@@ -71,7 +71,7 @@ const onIdPaxData: PaxData[] = [
   },
 ];
 const reason = [
-  { value: '', text: '전체' },
+  { value: '0', text: '전체' },
   { value: '1', text: 'KOM' },
   { value: '2', text: 'ENM' },
   { value: '3', text: 'DOB' },

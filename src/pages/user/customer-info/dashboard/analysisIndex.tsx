@@ -1,12 +1,35 @@
-import { useId } from 'react';
+import { useId, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Stack, Accordion, AccordionItem, Typography } from '@components/ui';
 import { analysisIndexList } from './data';
+import { callApi, Method } from '@utils/ApiUtil';
+import { Service } from '@models/common/Service';
+import { useQuery } from '@tanstack/react-query';
+import { ParamObject } from '@utils/ApiUtil';
+import React from 'react';
 
-export default function AnalysisIndex() {
+export const AnalysisIndex = React.memo((props: any) => {
   const uniqueId = useId();
   const analysisList = useSelector((state) => analysisIndexList);
 
+  // useEffect(() => {
+  //   // 공통 코드 API CALL && 초기 LIST 조회 API CALL
+  //   retrieveanalysisIndex({});
+  // }, []);
+
+  // api 호출
+
+  // const retrieveanalysisIndex = ({ queryParams, bodyParams }: ParamObject) => {
+  //   return callApi({
+  //     service: Service.KAL_BE,
+  //     url: '',
+  //     method: Method.GET,
+  //     params: {
+  //       queryParams,
+  //       bodyParams,
+  //     },
+  //   });
+  // };
   return (
     <div style={{ minHeight: 520, maxHeight: 520, overflowY: 'scroll' }}>
       <Stack direction="Vertical" wrap={true}>
@@ -28,4 +51,4 @@ export default function AnalysisIndex() {
       </Stack>
     </div>
   );
-}
+});

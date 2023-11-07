@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { homepageData } from './data';
-import DetailData from './detailDataComp';
+import { DetailData } from './detailDataComp';
 
 export default function Homepage() {
   const data = useSelector((state) => homepageData);

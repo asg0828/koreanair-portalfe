@@ -61,3 +61,50 @@ export interface ErrLogData {
   createDate: string;
   updateDate: string;
 }
+
+export interface oneIdHistorySearch {
+  oneIdNum: string;
+  oneIdChgReason: string;
+  searchCri: string;
+  firstNameK: string;
+  lastNameK: string;
+  firstNameE: string;
+  lastNameE: string;
+  phoneNum: string;
+  telephoneNum: string;
+  eMailAdd: string;
+  birth: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface paxMappingSearch {
+  oneIdNum: string;
+  pnrNum: string;
+  uciid: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface mobileSearch {
+  oneIdNum: string;
+  pnrNum: string;
+}
+
+export interface relationSearch {
+  oneIdNum: string;
+  startDate: string;
+  endDate: string;
+}
+
+export interface dailySearch {
+  oneIdNum: string;
+  searchCri: string;
+  oneIdChgReason: string;
+}
+
+export interface ctiVocSearch {
+  searchCri: string;
+  startDate: string;
+  endDate: string;
+}
