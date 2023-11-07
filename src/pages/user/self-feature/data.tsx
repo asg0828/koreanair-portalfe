@@ -377,7 +377,7 @@ export const initReadSql: ReadSql = {
 export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
     {
         id: 'CFR_00000001',
-        name: '등록중',
+        name: '고객픽쳐테스트1',
         description: '등록중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -399,7 +399,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         submissionStatusNm: '등록중',
     }, {
         id: 'CFR_00000002',
-        name: '등록중',
+        name: '고객픽쳐테스트2',
         description: '등록중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -421,7 +421,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         submissionStatusNm: '등록중',
     }, {
         id: 'CFR_00000003',
-        name: '승인요청',
+        name: '고객픽쳐테스트3',
         description: '승인요청',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -443,7 +443,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         submissionStatusNm: '승인요청',
     }, {
         id: 'CFR_00000004',
-        name: '결재진행중',
+        name: '고객픽쳐테스트4',
         description: '결재진행중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -465,7 +465,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         submissionStatusNm: '결재진행중',
     }, {
         id: 'CFR_00000005',
-        name: '승인 완료',
+        name: '고객픽쳐테스트5',
         description: '승인 완료',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -487,7 +487,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         submissionStatusNm: '승인 완료',
     }, {
         id: 'CFR_00000006',
-        name: '반려',
+        name: '고객픽쳐테스트6',
         description: '반려',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',

@@ -24,6 +24,7 @@ export interface SfSubmissionRequestInfo extends RowsInfo {
     createdDate: string
     lastModifier: string
     lastModifiedDate: string
+    statusNm: string
 }
 
 export interface SfSubmissionApproval extends RowsInfo {

@@ -129,34 +129,36 @@ const SubmissionRequestPop = ({
         let response = cloneDeep(initCommonResponse)
         //response = await callApi(request)
         console.log("[retrieveSubmission1] Response :: ", response)
-
-        setSubmission((state: SfSubmissionRequestInfo) => {
-            let rtn = cloneDeep(state)
-            rtn.submissionNo = "SUB_00000001"
-            rtn.requesterName = "이두나"
-            rtn.status = featureInfo.tbRsCustFeatRule.submissionStatus
-            rtn.requestDate = "2023-11-07 11:22:33"
-            rtn.title = "승인해주세요."
-            rtn.content = "승인부탁드립니다."
-            return rtn
-        })
-        setApprovals((state: Array<SfSubmissionApproval>) => {
-            let rtn = []//cloneDeep(state)
-            for (let i = 0; i < 3; i++) {
-                let approval: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
-                approval.approver = `결재자${i + 1}`
-                approval.approvalSequence = i + 1
-                if (approval.approvalSequence === 1) {
-                    approval.approvalSequenceNm = aprvSeqNm.FIRST
-                } else if (approval.approvalSequence === 2) {
-                    approval.approvalSequenceNm = aprvSeqNm.SECOND
-                } else if (approval.approvalSequence === 3) {
-                    approval.approvalSequenceNm = aprvSeqNm.LAST
+        if (featureInfo.tbRsCustFeatRule.submissionStatus !== "") {
+            setSubmission((state: SfSubmissionRequestInfo) => {
+                let rtn = cloneDeep(state)
+                rtn.submissionNo = "SUB_00000001"
+                rtn.requesterName = "이두나"
+                rtn.status = featureInfo.tbRsCustFeatRule.submissionStatus
+                rtn.statusNm = featureInfo.tbRsCustFeatRule.submissionStatusNm
+                rtn.requestDate = "2023-11-07 11:22:33"
+                rtn.title = "승인해주세요."
+                rtn.content = "승인부탁드립니다."
+                return rtn
+            })
+            setApprovals((state: Array<SfSubmissionApproval>) => {
+                let rtn = []//cloneDeep(state)
+                for (let i = 0; i < 3; i++) {
+                    let approval: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+                    approval.approver = `결재자${i + 1}`
+                    approval.approvalSequence = i + 1
+                    if (approval.approvalSequence === 1) {
+                        approval.approvalSequenceNm = aprvSeqNm.FIRST
+                    } else if (approval.approvalSequence === 2) {
+                        approval.approvalSequenceNm = aprvSeqNm.SECOND
+                    } else if (approval.approvalSequence === 3) {
+                        approval.approvalSequenceNm = aprvSeqNm.LAST
+                    }
+                    rtn.push(approval)
                 }
-                rtn.push(approval)
-            }
-            return rtn
-        })
+                return rtn
+            })
+        }
     }
 
     const handleClose = useCallback(
@@ -174,6 +176,8 @@ const SubmissionRequestPop = ({
     const closePopup5 = () => {
         setIsOpenSubmissionRequestPop(false);
         setIsOpenSubmissionApprovePop('rightPopup openFalse');
+        setSubmission(cloneDeep(initSfSubmissionRequestInfo))
+        setApprovals([])
         onClose(false)
     }
 
@@ -476,7 +480,8 @@ const SubmissionRequestPop = ({
                                 승인 상태
                                 </TH>
                                 <TD colSpan={2}>
-                                    <TextField className="width-100" readOnly value={submission.status} />
+                                    <TextField className="width-100" readOnly value={submission.statusNm} 
+                                    />
                                 </TD>
                             </TR>
                             <TR>

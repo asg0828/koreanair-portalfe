@@ -43,6 +43,7 @@ import {
   sfSubmissionApprovalListColumns as columns, 
   initSfSubmissionApproval, 
   initSfSubmissionRequestInfo,
+  sfSubmissionStatusOption,
 } from '../self-feature-submission/data'
 import {
   subFeatStatus,
@@ -420,7 +421,12 @@ const SelfFeatureDetail = () => {
                     승인 상태
                     </TH>
                     <TD colSpan={2}>
-                        {sfSubmissionRequestData.status}
+                        {featureInfo.tbRsCustFeatRule.submissionStatusNm}
+                        {/* {sfSubmissionRequestData.status === sfSubmissionStatusOption[1].value && sfSubmissionStatusOption[1].text}
+                        {sfSubmissionRequestData.status === sfSubmissionStatusOption[2].value && sfSubmissionStatusOption[2].text}
+                        {sfSubmissionRequestData.status === sfSubmissionStatusOption[3].value && sfSubmissionStatusOption[3].text}
+                        {sfSubmissionRequestData.status === sfSubmissionStatusOption[4].value && sfSubmissionStatusOption[4].text}
+                        {sfSubmissionRequestData.status === sfSubmissionStatusOption[5].value && sfSubmissionStatusOption[5].text} */}
                     </TD>
                 </TR>
                 <TR>
@@ -488,11 +494,11 @@ const SelfFeatureDetail = () => {
                 <TR>
                   <TH colSpan={1} align="right">한글명</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `한글명`}
+                    {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.name}
                   </TD>
                   <TH colSpan={1} align="right">영문명</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.name}
+                    {featureInfo.tbRsCustFeatRule && `영문명`}
                   </TD>
                 </TR>
                 <TR>

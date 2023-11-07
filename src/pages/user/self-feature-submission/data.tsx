@@ -63,6 +63,7 @@ export const initSfSubmissionRequestInfo: SfSubmissionRequestInfo = {
     createdDate: '',
     lastModifier: '',
     lastModifiedDate: '',
+    statusNm: '',
 }
 
 export const initSfSubmissionApproval: SfSubmissionApproval = {
