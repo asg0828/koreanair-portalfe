@@ -25,6 +25,36 @@ const Detail = () => {
   const { data: response, isSuccess, isError } = useNoticeById(noticeId);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteNotice(noticeId);
 
+  const goToList = () => {
+    navigate('..');
+  };
+
+  const goToEdit = () => {
+    navigate('../edit', {
+      state: {
+        noticeId: noticeInfo?.noticeId,
+      },
+    });
+  };
+
+  const handleMoveDetail = (noticeId: string | undefined) => {
+    navigate('', {
+      state: {
+        noticeId: noticeId,
+        rows: rows,
+      },
+    });
+  };
+
+  const handleDelete = () => {
+    openModal({
+      type: ModalType.CONFIRM,
+      title: '삭제',
+      content: '삭제하시겠습니까?',
+      onConfirm: mutate,
+    });
+  };
+
   useEffect(() => {
     if (rows?.length > 0) {
       const index = rows.findIndex((row) => row.noticeId === noticeId);
@@ -67,46 +97,10 @@ const Detail = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() =>
-          navigate('..', {
-            state: {
-              isRefresh: true,
-            },
-          })
-        }
+        onConfirm={() => navigate('..')}
       />
     );
   }
-
-  const goToList = () => {
-    navigate('..');
-  };
-
-  const goToEdit = () => {
-    navigate('../edit', {
-      state: {
-        noticeInfo: noticeInfo,
-      },
-    });
-  };
-
-  const handleMoveDetail = (noticeId: string | undefined) => {
-    navigate('', {
-      state: {
-        noticeId: noticeId,
-        rows: rows,
-      },
-    });
-  };
-
-  const handleDelete = () => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: '삭제',
-      content: '삭제하시겠습니까?',
-      onConfirm: mutate,
-    });
-  };
 
   return (
     <>

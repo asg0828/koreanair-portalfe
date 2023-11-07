@@ -1,12 +1,12 @@
-import DataGrid, { initPage } from '@/components/grid/DataGrid';
-import HorizontalTable from '@components/table/HorizontalTable';
-import { TR, TH, TD, Stack, TextField, Typography, Button } from '@components/ui';
+import DataGrid from '@/components/grid/DataGrid';
 import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import HorizontalTable from '@components/table/HorizontalTable';
+import { Button, Stack, TD, TH, TR, TextField, Typography } from '@components/ui';
 
 const List = () => {
   return (
     <>
-      <DataGrid columns={columns} rows={rows} enableSort={true} clickable={true} onChange={undefined} page={initPage} />
+      <DataGrid columns={columns} rows={rows} enableSort={true} clickable={true} onChange={undefined} />
 
       <Stack direction="Vertical" gap="MD">
         <Typography variant="h3">권한그룹 등록</Typography>

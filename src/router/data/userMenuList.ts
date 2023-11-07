@@ -98,12 +98,11 @@ const userMenuList = [
         path: '/board/faq',
         children: [
           { name: 'FAQ 등록', path: '/board/faq/reg', children: [] },
-          { name: 'FAQ 상세', path: '/board/faq/detail', children: [] },
           { name: 'FAQ 수정', path: '/board/faq/edit', children: [] },
         ],
       },
       {
-        name: 'Q&A',
+        name: 'Q&A',  
         path: '/board/qna',
         children: [
           { name: 'Q&A 등록', path: '/board/qna/reg', children: [] },

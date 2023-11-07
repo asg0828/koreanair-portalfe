@@ -1,60 +1,103 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useForm, Controller } from 'react-hook-form';
-import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
-import { TR, TH, TD, Button, Stack, Label, Radio, DatePicker, TextField, useToast } from '@components/ui';
-import HorizontalTable from '@components/table/HorizontalTable';
-import UploadDropzone from '@/components/upload/UploadDropzone';
+import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
-import { UpdatedNoticeInfo } from '@/models/Board/Notice';
+import UploadDropzone from '@/components/upload/UploadDropzone';
+import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
+import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import useModal, { ModalType } from '@/hooks/useModal';
-import '@/assets/styles/Board.scss';
+import { UpdatedNoticeInfo } from '@/models/Board/Notice';
+import HorizontalTable from '@components/table/HorizontalTable';
+import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
   const { openModal } = useModal();
-  const noticeInfo = location?.state?.noticeInfo;
+  const noticeId = location?.state?.noticeId;
   const {
     register,
     handleSubmit,
     control,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm<UpdatedNoticeInfo>({
     mode: 'onChange',
     defaultValues: {
-      noticeId: noticeInfo?.noticeId,
-      sj: noticeInfo?.sj,
-      cn: noticeInfo?.cn,
-      startDt: noticeInfo?.startDt,
-      endDt: noticeInfo?.endDt,
-      popupYn: noticeInfo?.popupYn,
-      useYn: noticeInfo?.useYn,
-      importantYn: noticeInfo?.importantYn,
+      noticeId: noticeId,
+      sj: '',
+      cn: '',
+      startDt: '',
+      endDt: '',
+      popupYn: 'Y',
+      useYn: 'Y',
+      importantYn: 'Y',
     },
   });
   const values = getValues();
-  const { data: response, mutate, isSuccess, isError } = useUpdateNotice(values.noticeId, values);
+  const { data: response, isSuccess, isError } = useNoticeById(values.noticeId);
+  const {
+    data: uResponse,
+    mutate,
+    isSuccess: uIsSuccess,
+    isError: uIsError,
+  } = useUpdateNotice(values.noticeId, values);
+
+  const goToList = () => {
+    navigate('..');
+  };
+
+  const onSubmit = (data: UpdatedNoticeInfo) => {
+    openModal({
+      type: ModalType.CONFIRM,
+      title: '수정',
+      content: '수정하시겠습니까?',
+      onConfirm: mutate,
+    });
+  };
+
+  useEffect(() => {
+    if (isSuccess && response.data) {
+      setValue('sj', response.data.sj);
+      setValue('cn', response.data.cn);
+      setValue('startDt', response.data.startDt);
+      setValue('endDt', response.data.endDt);
+      setValue('popupYn', response.data.popupYn);
+      setValue('useYn', response.data.useYn);
+      setValue('importantYn', response.data.importantYn);
+    }
+  }, [isSuccess, response?.data, setValue]);
+
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    }
+  }, [response, isError, toast]);
+
+  useEffect(() => {
+    if (uIsError || uResponse?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
         content: '수정 중 에러가 발생했습니다.',
       });
-    } else if (isSuccess) {
+    } else if (uIsSuccess) {
       toast({
         type: 'Confirm',
         content: '수정되었습니다.',
       });
       navigate('..');
     }
-  }, [response, isSuccess, isError, toast, navigate]);
+  }, [uResponse, uIsSuccess, uIsError, toast, navigate]);
 
-  if (!noticeInfo) {
+  if (!noticeId) {
     return (
       <EmptyState
         type="warning"
@@ -70,19 +113,6 @@ const Edit = () => {
       />
     );
   }
-
-  const goToList = () => {
-    navigate('..');
-  };
-
-  const onSubmit = (data: UpdatedNoticeInfo) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: '수정',
-      content: '수정하시겠습니까?',
-      onConfirm: mutate,
-    });
-  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

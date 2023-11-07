@@ -1,134 +1,159 @@
-import SearchForm from '@/components/form/SearchForm';
-import { RowsInfo } from '@/models/components/Table';
-import {
-  Button,
-  Label,
-  Pagination,
-  Select,
-  SelectOption,
-  Stack,
-  TD,
-  TH,
-  TR,
-  TextField,
-  Typography,
-} from '@components/ui';
-import { Accordion, AccordionItem } from '@ke-design/components';
-import AddIcon from '@mui/icons-material/Add';
+import SearchForm, { SearchKey, searchInfoList } from '@/components/form/SearchForm';
+import AccordionGrid from '@/components/grid/AccordionGrid';
+import { useFaqList } from '@/hooks/queries/useFaqQueries';
+import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
+import { FaqInfo } from '@/models/Board/Faq';
+import { PageInfo, initPage } from '@/models/components/Page';
+import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import useModal, { ModalType } from '@/hooks/useModal';
 
 const List = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const { openModal } = useModal();
+  const [searchKey, setSearchKey] = useState<SearchKey>(searchInfoList[0].key);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [page, setPage] = useState<PageInfo>(initPage);
+  const [isChanged, setIsChanged] = useState(false);
+  const [rows, setRows] = useState<Array<FaqInfo>>([]);
+  const [faqId, setFaqId] = useState<string>('');
+  const { refetch, data: response, isError } = useFaqList(searchKey, searchValue, page);
+  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteFaq(faqId);
 
   const goToReg = () => {
     navigate('reg');
   };
 
-  const goToDetail = (row: RowsInfo) => {
-    navigate('detail', { state: row });
+  const handleChangeSearchKey = (e: any, value: any) => {
+    setSearchKey(value);
   };
 
-  const clickRow = (row: RowsInfo, index: number) => {
-    goToDetail(row);
+  const handleChangeSearchValue = (value: any) => {
+    setSearchValue(value);
   };
+
+  const handleSearch = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  const handleClear = () => {
+    setSearchKey(searchInfoList[0].key);
+    setSearchValue('');
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handlePage = (page: PageInfo) => {
+    setPage(page);
+    setIsChanged(true);
+  };
+
+  const handleFaqId = (faqId: string) => {
+    setFaqId(faqId);
+  };
+
+  const handleUpdate = (faqId: string) => {
+    navigate('./edit', {
+      state: {
+        faqId: faqId,
+      },
+    });
+  };
+
+  const handleDelete = (faqId: string) => {
+    openModal({
+      type: ModalType.CONFIRM,
+      title: '삭제',
+      content: '삭제하시겠습니까?',
+      onConfirm: () => handleFaqId(faqId),
+    });
+  };
+
+  useEffect(() => {
+    faqId && mutate();
+  }, [faqId, mutate]);
+
+  useEffect(() => {
+    isChanged && handleSearch();
+
+    return () => {
+      setIsChanged(false);
+    };
+  }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.data) {
+        response.data.page.page = response.data.page.page - 1;
+        setRows(response.data.contents);
+        setPage(response.data.page);
+      }
+    }
+  }, [response, isError, toast]);
+
+  useEffect(() => {
+    if (dIsError || dResponse?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '삭제 중 에러가 발생했습니다.',
+      });
+    } else if (dIsSuccess) {
+      toast({
+        type: 'Confirm',
+        content: '삭제되었습니다.',
+      });
+      handleSearch();
+    }
+  }, [dResponse, dIsSuccess, dIsError, toast, navigate, handleSearch]);
 
   return (
     <>
-      <SearchForm>
+      <SearchForm onSearch={handleSearch} onClear={handleClear}>
         <TR>
           <TH colSpan={1} align="right">
             검색
           </TH>
           <TD colSpan={3}>
             <Stack gap="SM" className="width-100">
-              <Select appearance="Outline" placeholder="전체" className="select-basic">
-                <SelectOption value={1}>테스트</SelectOption>
+              <Select appearance="Outline" placeholder="전체" className="select-basic" onChange={handleChangeSearchKey}>
+                {searchInfoList.map((searchInfo) => (
+                  <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
+                ))}
               </Select>
-              <TextField className="width-100" />
+              <TextField
+                className="width-100"
+                onKeyDown={handleKeyDown}
+                value={searchValue}
+                onChange={(e) => handleChangeSearchValue(e.target.value)}
+              />
             </Stack>
           </TD>
         </TR>
       </SearchForm>
 
-      <Stack className="dataGridWrap" direction="Vertical" gap="MD">
-        <Stack className="total-layout">
-          <Label>
-            총 <span className="total">0</span> 건
-          </Label>
-          <Select appearance="Outline" size="LG" className="select-page" defaultValue={10}>
-            <SelectOption value={10}>10건</SelectOption>
-            <SelectOption value={30}>30건</SelectOption>
-            <SelectOption value={50}>30건</SelectOption>
-          </Select>
-        </Stack>
-        <Stack className="accordionWrap width-100">
-          <Accordion defaultValue="item01" type="single" size="LG">
-            <AccordionItem title="[시스템] 시스템 질문1" value="item01">
-              {/* 관리자 FAQ 수정 삭제 */}
-              {/* <Stack justifyContent="End" gap="SM" className="width-100">
-                <Button appearance="Unfilled">수정</Button>
-                <Button appearance="Unfilled">삭제</Button>
-              </Stack> */}
-              <Typography variant="body1" className="answer">
-                시스템 질문1 답변입니다.
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item02">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item03">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item04">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item05">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item06">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item07">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item08">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item09">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-
-            <AccordionItem title="[기타] 권한신청 결재선 설정방법" value="item10">
-              <Typography variant="body1" className="answer">
-                권한신청 결재선 설정방법입니다
-              </Typography>
-            </AccordionItem>
-          </Accordion>
-        </Stack>
-        <Pagination size="MD" className="pagination" />
-        <Stack justifyContent="End" gap="SM" className="width-100">
+      <AccordionGrid
+        rows={rows}
+        onChange={handlePage}
+        onUpdate={handleUpdate}
+        onDelete={handleDelete}
+        page={page}
+        buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-            <AddIcon />
             등록
           </Button>
-        </Stack>
-      </Stack>
+        }
+      />
     </>
   );
 };
