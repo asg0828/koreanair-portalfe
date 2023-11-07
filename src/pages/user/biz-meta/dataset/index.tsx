@@ -1,21 +1,17 @@
-import { useNavigate } from 'react-router-dom';
 import SearchForm from '@/components/form/SearchForm';
-import DataGrid, { initPage } from '@/components/grid/DataGrid';
+import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
+import { tableColumns as columns, tableRows as rows } from '@/utils/data/tableSampleData';
 import {
-  TR,
-  TH,
-  TD,
   Button,
-  Stack,
-  TextField,
   Checkbox,
-  Select,
-  SelectOption,
-  DatePicker,
-  Label,
+  TD,
+  TH,
+  TR,
+  TextField
 } from '@components/ui';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const navigate = useNavigate();
@@ -56,7 +52,7 @@ const List = () => {
             <Checkbox label="활용상세" />
           </TD>
         </TR>
-        <TR>
+        {/* <TR>
           <TH align="right">주제영역</TH>
           <TD>
             <Select appearance="Outline" placeholder="전체" className="width-100">
@@ -95,7 +91,7 @@ const List = () => {
               <Button>검색</Button>
             </Stack>
           </TD>
-        </TR>
+        </TR> */}
       </SearchForm>
 
       <DataGrid
@@ -105,11 +101,11 @@ const List = () => {
         clickable={true}
         onClick={clickRow}
         onChange={undefined}
-        page={initPage}
         buttonChildren={
           <>
-            <Button size="LG">엑셀다운로드</Button>
+            {/* <Button size="LG">엑셀다운로드</Button> */}
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
               등록
             </Button>
           </>

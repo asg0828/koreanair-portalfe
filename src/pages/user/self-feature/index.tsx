@@ -37,6 +37,7 @@ import {
   ModalTitCont,
   initQueryParams,
 } from '@/models/selfFeature/FeatureCommon';
+import AddIcon from '@mui/icons-material/Add';
 
 const category = [
   { value: '', text: '선택' },
@@ -329,11 +330,11 @@ const SelfFeature = () => {
         삭제
         </Button>
         <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.RULE_REG)}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+        <AddIcon />
         Rule 등록
         </Button>
         <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+        <AddIcon />
         SQL 등록
         </Button>
       </Stack>
