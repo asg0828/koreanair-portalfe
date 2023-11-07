@@ -3,7 +3,7 @@ import SearchForm from '@/components/form/SearchForm';
 import DataGrid, { initPage } from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
 import { TR, TH, TD, Button, Stack, TextField, Select, SelectOption } from '@components/ui';
-import { archiveColumns as columns, archiveRows as rows } from '@/utils/data/tableSampleData';
+import { dataroomColumns as columns, dataroomRows as rows } from '@/utils/data/tableSampleData';
 import AddIcon from '@mui/icons-material/Add';
 
 const List = () => {

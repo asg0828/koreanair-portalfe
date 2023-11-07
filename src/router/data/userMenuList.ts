@@ -113,11 +113,11 @@ const userMenuList = [
       },
       {
         name: '자료실',
-        path: '/board/archive',
+        path: '/board/dataroom',
         children: [
-          { name: '자료실 등록', path: '/board/archive/reg', children: [] },
-          { name: '자료실 상세', path: '/board/archive/detail', children: [] },
-          { name: '자료실 수정', path: '/board/archive/edit', children: [] },
+          { name: '자료실 등록', path: '/board/dataroom/reg', children: [] },
+          { name: '자료실 상세', path: '/board/dataroom/detail', children: [] },
+          { name: '자료실 수정', path: '/board/dataroom/edit', children: [] },
         ],
       },
     ],
