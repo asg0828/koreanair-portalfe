@@ -1,6 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
-import { createNotice, updateNotice, deleteNotice } from '@/api/NoticeAPI';
+import { createNotice, deleteNotice, updateNotice } from '@/api/NoticeAPI';
 import { CreatedNoticeInfo, UpdatedNoticeInfo } from '@/models/Board/Notice';
+import { useMutation } from '@tanstack/react-query';
 
 export const useCreateNotice = (createdNotice: CreatedNoticeInfo) => {
   return useMutation(['/notice/create', createdNotice], () => createNotice(createdNotice));

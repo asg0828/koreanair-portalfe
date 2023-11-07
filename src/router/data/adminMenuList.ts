@@ -139,7 +139,6 @@ const adminMenulist = [
             path: '/admin/user-portal-management/board-management/faq',
             children: [
               { name: 'FAQ 등록', path: '/admin/user-portal-management/board-management/faq/reg', children: [] },
-              { name: 'FAQ 상세', path: '/admin/user-portal-management/board-management/faq/detail', children: [] },
               { name: 'FAQ 수정', path: '/admin/user-portal-management/board-management/faq/edit', children: [] },
             ],
           },

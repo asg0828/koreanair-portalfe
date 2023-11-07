@@ -14,7 +14,6 @@ import NoticeDetail from '@pages/user/board/notice/Detail';
 import NoticeReg from '@pages/user/board/notice/Reg';
 import NoticeEdit from '@pages/user/board/notice/Edit';
 import Faq from '@pages/user/board/faq';
-import FaqDetail from '@pages/user/board/faq/Detail';
 import FaqReg from '@pages/user/board/faq/Reg';
 import FaqEdit from '@pages/user/board/faq/Edit';
 import Qna from '@pages/user/board/qna';
@@ -131,7 +130,6 @@ const userRouter = [
             path: 'faq',
             children: [
               { index: true, element: <Faq /> },
-              { path: 'detail', element: <FaqDetail /> },
               { path: 'reg', element: <FaqReg /> },
               { path: 'edit', element: <FaqEdit /> },
             ],

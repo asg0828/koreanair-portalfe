@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import SearchForm from '@/components/form/SearchForm';
-import DataGrid, { initPage } from '@/components/grid/DataGrid';
+import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
 import { TR, TH, TD, Button, Stack, TextField, Select, SelectOption } from '@components/ui';
 import { qnaColumns as columns, qnaRows as rows } from '@/utils/data/tableSampleData';
@@ -46,7 +46,6 @@ const List = () => {
         clickable={true}
         onClick={clickRow}
         onChange={undefined}
-        page={initPage}
         buttonChildren={
           <>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>

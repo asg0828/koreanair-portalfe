@@ -1,10 +1,10 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { ReducerType } from '@reducers';
 import MainNavigation from '@components/layout/MainNavigation';
-import { Stack, Typography } from '@components/ui';
+import { Loader, Stack, Typography } from '@components/ui';
 import { MenuItem } from '@models/common/Menu';
-import { StarBorderIcon } from '@/assets/icons';
+import { ReducerType } from '@reducers';
+import { Suspense } from 'react';
+import { useSelector } from 'react-redux';
+import { Outlet, useLocation } from 'react-router-dom';
 import './Main.scss';
 
 const Main = () => {
@@ -43,9 +43,17 @@ const Main = () => {
             {/* <StarBorderIcon  /> */}
           </Stack>
 
-          <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
-            <Outlet />
-          </Stack>
+          <Suspense
+            fallback={
+              <Stack justifyContent="Center" className="height-100 width-100">
+                <Loader title="진행중" description="잠시만 기다려주세요" />
+              </Stack>
+            }
+          >
+            <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
+              <Outlet />
+            </Stack>
+          </Suspense>
         </Stack>
       </main>
     </>

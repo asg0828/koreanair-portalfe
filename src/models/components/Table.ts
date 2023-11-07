@@ -10,10 +10,3 @@ export interface ColumnsInfo {
 export interface RowsInfo {
   [key: string]: any;
 }
-
-export interface PageInfo {
-  page: number;
-  pageSize: number;
-  totalPage: number;
-  totalCount: number;
-}
