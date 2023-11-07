@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { TR, TH, TD, Button, Stack, Radio, TextField } from '@components/ui';
 import HorizontalTable from '@components/table/HorizontalTable';
+import UploadDropzone from '@/components/upload/UploadDropzone';
 import TinyEditor from '@/components/editor/TinyEditor';
 import '@/assets/styles/Board.scss';
 
@@ -41,7 +42,17 @@ const Reg = () => {
           </TR>
           <TR>
             <TH colSpan={1}>첨부파일</TH>
-            <TD colSpan={3} className="attachFile"></TD>
+            <TD colSpan={3} className="attachFile">
+              <UploadDropzone />
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1}>파일링크</TH>
+            <TD colSpan={3}>
+              <Stack gap="SM" className="width-100">
+                <TextField className="width-100" />
+              </Stack>
+            </TD>
           </TR>
         </HorizontalTable>
       </Stack>

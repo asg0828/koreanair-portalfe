@@ -1,7 +1,10 @@
 .tox {
   width: 100%;
 }
-
+.tox-tinymce{
+  min-height: 300px;
+  z-index: 0;
+}
 .tox-edit-area {
   &:hover {
     cursor: pointer;
