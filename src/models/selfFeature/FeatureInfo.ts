@@ -269,7 +269,8 @@ export interface TbRsCustFeatRule extends RowsInfo {
     lastUpdUserNm: string,
     submissionStatus: string,
     metaTblId: string,
-    lastUpdLginId: string
+    lastUpdLginId: string,
+    submissionStatusNm: string,
 }
 
 export interface TbRsCustFeatRuleSql {

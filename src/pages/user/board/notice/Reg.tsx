@@ -36,6 +36,19 @@ const Reg = () => {
   const values = getValues();
   const { data: response, mutate, isSuccess, isError } = useCreateNotice(values);
 
+  const goToList = () => {
+    navigate('..');
+  };
+
+  const onSubmit = (data: CreatedNoticeInfo) => {
+    openModal({
+      type: ModalType.CONFIRM,
+      title: '저장',
+      content: '등록하시겠습니까?',
+      onConfirm: mutate,
+    });
+  };
+
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
@@ -50,19 +63,6 @@ const Reg = () => {
       navigate('..');
     }
   }, [response, isSuccess, isError, toast, navigate]);
-
-  const goToList = () => {
-    navigate('..');
-  };
-
-  const onSubmit = (data: CreatedNoticeInfo) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: '저장',
-      content: '등록하시겠습니까?',
-      onConfirm: mutate,
-    });
-  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -91,7 +91,7 @@ const Reg = () => {
                 <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
               </Stack>
             </TD>
-            <TH>팝업공지일자</TH>
+            <TH required>팝업공지일자</TH>
             <TD>
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <Stack gap="SM" className="width-100">

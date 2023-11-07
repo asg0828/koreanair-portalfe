@@ -24,7 +24,7 @@ import {
 } from "@/models/selfFeature/FeatureSubmissionInfo";
 import { 
     initSfSubmissionRequestInfo,
-    sfSubmissionAppendApprovalListColumns as columns,
+    sfSubmissionApprovalListColumns as columns,
     initSfSubmissionApproval
 } from "./data";
 import { 
@@ -186,7 +186,7 @@ const SfSubmissionRequestDetail = () => {
             <Typography variant="h2">요청 상세</Typography>
             <Stack direction="Vertical" gap="MD">
             {/* 기본 정보 */}
-            <Typography variant="h3">Feature 기본 정보</Typography>
+            <Typography variant="h4">Feature 기본 정보</Typography>
             <HorizontalTable>
                 <TR>
                     <TH colSpan={1} align="right">대구분</TH>
@@ -250,9 +250,9 @@ const SfSubmissionRequestDetail = () => {
             {/* 기본 정보 */}
 
             {/* 대상 선택 */}
-            {(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
+            {(regType && (regType === selfFeatPgPpNm.RULE_REG) && targetList.length > 0) &&
             <>
-            <Typography variant="h3">대상 선택</Typography>
+            <Typography variant="h4">대상 선택</Typography>
             {/* drag && drop 영역*/}
             <Stack 
                 direction="Horizontal"
@@ -278,7 +278,7 @@ const SfSubmissionRequestDetail = () => {
             {/* SQL 입력 */}
             {(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
             <>
-                <Typography variant="h3">Feature 생성 Query</Typography>
+                <Typography variant="h4">Feature 생성 Query</Typography>
                 <Stack 
                     direction="Horizontal"
                     gap="MD"
@@ -294,7 +294,7 @@ const SfSubmissionRequestDetail = () => {
             {/* SQL 입력 */}
 
             {/* 계산식 */}
-            {formulaTrgtList.length > 0 &&
+            {(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
             <CalcValid
                 featStatus={selfFeatPgPpNm.DETL}
                 formulaTrgtList={formulaTrgtList}

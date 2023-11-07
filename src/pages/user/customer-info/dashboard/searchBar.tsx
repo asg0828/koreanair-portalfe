@@ -1,8 +1,7 @@
 import { Button, Modal, Stack, TextField } from '@components/ui';
-import { useState, useRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, useRef } from 'react';
 
-export default function SearchBar() {
+export default function SearchBar(props: any) {
   const [skypassNum, setSkypassNum] = useState('');
   const [oneId, setOneId] = useState('');
   const [passengerNm, setPassengerNm] = useState('');
@@ -10,7 +9,6 @@ export default function SearchBar() {
   const skypassNumId = useRef<any>(null);
   const oneIdId = useRef<any>(null);
   const passengerNmId = useRef<any>(null);
-  const dispatch = useDispatch();
 
   const onSearchChangeHandler = (e: any, target: string) => {
     let currVal = e.target.value; // trim하면 공백이 입력이 안 되는데 사이에 focus하면 또 가능
@@ -23,21 +21,6 @@ export default function SearchBar() {
     }
   };
 
-  // function focusing() {
-  //   // 검색 조건 미입력 시 focus
-  //   if (skypassNum === '' && skypassNumId.current !== null) {
-  //     skypassNumId.current.firstElementChild.focus();
-  //   } else if (oneId === '' && oneIdId.current !== null) {
-  //     oneIdId.current.firstElementChild.focus();
-  //   } else if (passengerNm === '' && passengerNmId.current !== null) {
-  //     passengerNmId.current.firstElementChild.focus();
-  //   }
-  // }
-  // axios(url, {
-  //   method: "get",
-  //   headers: {},
-  //   data: {},
-  // });
   function validation() {
     // 검색 조건 미입력 시 modal
     if (skypassNum.trim() === '' || oneId.trim() === '' || passengerNm.trim() === '') {
@@ -51,16 +34,9 @@ export default function SearchBar() {
 
     // 인풋값 받아와서 api날려주는 함수 작성 예정
     const formData = new FormData();
-
     formData.append('skypassNum', skypassNum);
     formData.append('oneId', oneId);
     formData.append('passengerNm', passengerNm);
-
-    // dispatch(
-    //   callCustomerDataAPI({
-    //     form: formData,
-    //   })
-    // );
   }
 
   return (

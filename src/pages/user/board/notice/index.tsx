@@ -1,8 +1,9 @@
 import SearchForm, { SearchKey, searchInfoList } from '@/components/form/SearchForm';
-import DataGrid, { initPage } from '@/components/grid/DataGrid';
+import DataGrid from '@/components/grid/DataGrid';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import { NoticeInfo } from '@/models/Board/Notice';
-import { PageInfo, RowsInfo } from '@/models/components/Table';
+import { RowsInfo } from '@/models/components/Table';
+import { PageInfo, initPage } from '@/models/components/Page';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -67,10 +68,6 @@ const List = () => {
   };
 
   useEffect(() => {
-    handleSearch();
-  }, [handleSearch]);
-
-  useEffect(() => {
     isChanged && handleSearch();
 
     return () => {
@@ -102,13 +99,7 @@ const List = () => {
           </TH>
           <TD colSpan={3}>
             <Stack gap="SM" className="width-100">
-              <Select
-                appearance="Outline"
-                placeholder="전체"
-                className="select-basic"
-                onChange={handleChangeSearchKey}
-                value={searchKey}
-              >
+              <Select appearance="Outline" placeholder="전체" className="select-basic" onChange={handleChangeSearchKey}>
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}
@@ -139,7 +130,6 @@ const List = () => {
           </Button>
         }
       />
-      
     </>
   );
 };

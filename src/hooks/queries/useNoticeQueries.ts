@@ -1,5 +1,5 @@
 import { getNoticeById, getNoticeList } from '@/api/NoticeAPI';
-import { PageInfo } from '@/models/components/Table';
+import { PageInfo } from '@/models/components/Page';
 import { useQuery } from '@tanstack/react-query';
 
 export const useNoticeList = (searchKey: string, searchValue: string, page: PageInfo) => {

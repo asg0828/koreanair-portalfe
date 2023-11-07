@@ -1,0 +1,26 @@
+.dataGridWrap{
+  display: flex;
+  position: relative;
+  
+  .total-layout{
+   display: flex; 
+   justify-content: space-between;
+  }
+ 
+  .pagination-layout{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .status{
+    &.blue{
+      color: #0064DE;
+    }
+    &.red{
+      color: #DE001B;
+    }
+    &.gray{
+      color: #B9B9B9;
+    }
+  }
+}

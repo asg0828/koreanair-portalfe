@@ -324,11 +324,11 @@ const SelfFeatureReg = () => {
     request.method = Method.POST
     request.url = "/api/v1/korean-air/customerfeatures"
     request.params!.bodyParams = featureInfo
-    console.log("[createCustFeatRule] Request  :: ", request)
+    console.log("[createCustFeatSQL] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
     //response = await callApi(request)
-    console.log("[createCustFeatRule] Response :: ", response)
+    console.log("[createCustFeatSQL] Response :: ", response)
 
     // API 정상 응답시 페이지 redirect
     
@@ -405,7 +405,7 @@ const SelfFeatureReg = () => {
       })
       return rtn
     })
-    
+
   }
 
   const onClickPageMovHandler = (pageNm: string) => {
@@ -427,7 +427,7 @@ const SelfFeatureReg = () => {
     {/* 정보 영역 */}
       <Stack direction="Vertical" gap="MD">
           {/* 기본 정보 */}
-          <Typography variant="h3">Feature 기본 정보</Typography>
+          <Typography variant="h4">Feature 기본 정보</Typography>
           <HorizontalTable>
             <TR>
               <TH colSpan={1} align="right" required>대구분</TH>
@@ -543,7 +543,7 @@ const SelfFeatureReg = () => {
           {/* 대상 선택 */}
           {(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
           <>
-          <Typography variant="h3">대상 선택</Typography>
+          <Typography variant="h4">대상 선택</Typography>
           {/* drag && drop 영역*/}
           <Stack 
               direction="Horizontal"
@@ -580,7 +580,7 @@ const SelfFeatureReg = () => {
           {/* SQL 입력 */}
           {(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
           <>
-          <Typography variant="h3">Feature 생성 Query</Typography>
+          <Typography variant="h4">Feature 생성 Query</Typography>
           <Stack 
               direction="Horizontal"
               gap="MD"
@@ -638,6 +638,7 @@ const SelfFeatureReg = () => {
           content={confirmModalCont}
           onConfirm={onConfirm}
           onCancle={onCancel}
+          btnType={modalType}
       />
 
     </Stack>

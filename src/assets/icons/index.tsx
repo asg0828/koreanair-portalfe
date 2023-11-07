@@ -18,6 +18,8 @@ import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRig
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import UploadIcon from '@mui/icons-material/Upload';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import SearchOffOutlinedIcon from '@mui/icons-material/SearchOffOutlined';
+import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
 
 export {
   SettingsOutlinedIcon,
@@ -40,4 +42,6 @@ export {
   KeyboardArrowDownOutlinedIcon,
   UploadIcon,
   HighlightOffIcon,
+  SearchOffOutlinedIcon,
+  TextSnippetOutlinedIcon,
 };

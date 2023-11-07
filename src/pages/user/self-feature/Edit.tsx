@@ -108,7 +108,13 @@ const SelfFeatureEdit = () => {
 
   // modal 확인/취소 이벤트
   const onConfirm = () => {
-    if (modalType === ModalType.CONFIRM) updateCustFeatRule()
+    if (modalType === ModalType.CONFIRM) {
+      if (custFeatRule.sqlDirectInputYn === 'Y') {
+        updateCustFeatSQL()
+      } else if (custFeatRule.sqlDirectInputYn === 'N') {
+        updateCustFeatRule()
+      }
+    }
     setIsOpenConfirmModal(false)
   }
   const onCancel = () => {
@@ -225,7 +231,7 @@ const SelfFeatureEdit = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
+    //response = await callApi(request)
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
 
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
@@ -315,6 +321,30 @@ const SelfFeatureEdit = () => {
     
   }
 
+  const updateCustFeatSQL = async () => {
+    /*
+      Method      :: PUT
+      Url         :: /api/v1/korean-air/customerfeatures/${custFeatRuleId}
+      path param  :: custFeatRuleId
+      query param :: 
+      body param  :: updtFeatureInfo
+    */
+    let custFeatRuleId = ''
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.PUT
+    request.url = `/api/v1/korean-air/customerfeatures/${custFeatRuleId}`
+    request.params!.bodyParams = updtFeatureInfo
+    console.log("[updateCustFeatSQL] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    response = await callApi(request)
+    console.log("[updateCustFeatSQL] Response :: ", response)
+
+    // API 정상 응답시 페이지 redirect
+  }
+
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target
 
@@ -347,7 +377,7 @@ const SelfFeatureEdit = () => {
       })
       return rtn
     })
-    
+
   }
   const onchangeSelectHandler = (
     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -411,7 +441,7 @@ const SelfFeatureEdit = () => {
         <FeatQueryRsltButton />
         
         {/* 기본 정보 */}
-        <Typography variant="h3">Feature 기본 정보</Typography>
+        <Typography variant="h4">Feature 기본 정보</Typography>
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="center">대구분</TH>
@@ -540,7 +570,7 @@ const SelfFeatureEdit = () => {
         {/* 기본 정보 */}
 
         {/* 대상 선택 */}
-        <Typography variant="h3">대상 선택</Typography>
+        <Typography variant="h4">대상 선택</Typography>
         {/* drag && drop 영역*/}
         <Stack 
             direction="Horizontal"
@@ -610,6 +640,7 @@ const SelfFeatureEdit = () => {
             content={confirmModalCont}
             onConfirm={onConfirm}
             onCancle={onCancel}
+            btnType={modalType}
         />
     </Stack>
   )

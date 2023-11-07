@@ -1,6 +1,7 @@
 import { RowsInfo } from "@/models/components/Table";
 
 export interface SfSubmission {
+    [key: string]: SfSubmissionRequestInfo | Array<SfSubmissionApproval>
     submission: SfSubmissionRequestInfo
     approvals: Array<SfSubmissionApproval>
 }
@@ -23,6 +24,7 @@ export interface SfSubmissionRequestInfo extends RowsInfo {
     createdDate: string
     lastModifier: string
     lastModifiedDate: string
+    statusNm: string
 }
 
 export interface SfSubmissionApproval extends RowsInfo {
@@ -39,6 +41,7 @@ export interface SfSubmissionApproval extends RowsInfo {
     createdDate: string
     lastModifier: string
     lastModifiedDate: string
+    approvalSequenceNm: string
 }
 
 export interface SfSubmissionAppendApproval extends RowsInfo {
@@ -49,20 +52,4 @@ export interface SfSubmissionAppendApproval extends RowsInfo {
     cmpyNm: string
     teamNm: string
     defaultApproverUserId: string
-    // {
-    //   "lginId": "cdpadmin@lgcns.com",
-    //   "userNm": "관리자",
-    //   "mbltlno": "010-1111-1113",
-    //   "cmpyNm": null,
-    //   "teamNm": "CDP",
-    //   "defaultApproverUserId": "US_0000000001"
-    // },
-    // {
-    //   "lginId": "yj.sim@lgcns.com",
-    //   "userNm": "심예진",
-    //   "mbltlno": "010-4714-3436",
-    //   "cmpyNm": null,
-    //   "teamNm": "CDP",
-    //   "defaultApproverUserId": "US_0000000038"
-    // }
 }

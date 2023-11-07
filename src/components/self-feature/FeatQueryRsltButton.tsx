@@ -116,6 +116,7 @@ const FeatQueryRsltButton = () => {
                 content={confirmModalCont}
                 onConfirm={onConfirm}
                 onCancle={onCancel}
+                btnType={modalType}
             />
         </>
     )

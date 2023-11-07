@@ -55,19 +55,19 @@ const userMenuList = [
     path: '/self-feature',
     children: [
       {
-        name: 'Self Feature',
+        name: 'Feature 목록',
         path: '/self-feature/self-feature',
         children: [
-          { name: 'Self Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
-          { name: 'Self Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
-          { name: 'Self Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
+          { name: 'Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
+          { name: 'Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
+          { name: 'Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
         ],
       },
       {
-        name: 'Self Feature 승인 요청',
+        name: 'Feature 승인 요청 목록',
         path: '/self-feature/submission-request',
         children: [
-          { name: 'Self Feature 승인 요청 상세', path: '/self-feature/submission-request/detail', children: [] },
+          { name: 'Feature 승인 요청 상세', path: '/self-feature/submission-request/detail', children: [] },
         ],
       },
     ],
@@ -98,12 +98,11 @@ const userMenuList = [
         path: '/board/faq',
         children: [
           { name: 'FAQ 등록', path: '/board/faq/reg', children: [] },
-          { name: 'FAQ 상세', path: '/board/faq/detail', children: [] },
           { name: 'FAQ 수정', path: '/board/faq/edit', children: [] },
         ],
       },
       {
-        name: 'Q&A',
+        name: 'Q&A',  
         path: '/board/qna',
         children: [
           { name: 'Q&A 등록', path: '/board/qna/reg', children: [] },

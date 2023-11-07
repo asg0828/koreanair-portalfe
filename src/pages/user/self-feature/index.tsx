@@ -19,12 +19,14 @@ import {
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
 import ConfirmModal from "@/components/modal/ConfirmModal";
+import AddIcon from '@mui/icons-material/Add'
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import { 
   featListColumns as columns,
   initTbRsCustFeatRule,
+  protoTbRsCustFeatRuleList,
 } from "./data";
 import { Method, callApi } from "@/utils/ApiUtil";
 import { StatusCode } from "@/models/common/CommonResponse"
@@ -37,7 +39,6 @@ import {
   ModalTitCont,
   initQueryParams,
 } from '@/models/selfFeature/FeatureCommon';
-import AddIcon from '@mui/icons-material/Add';
 
 const category = [
   { value: '', text: '선택' },
@@ -131,7 +132,7 @@ const SelfFeature = () => {
       list.push(selfFeature)
     }
     setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
-      prevState = list
+      prevState = protoTbRsCustFeatRuleList//list
       return cloneDeep(prevState)
     })
   }
@@ -228,7 +229,7 @@ const SelfFeature = () => {
       <HorizontalTable>
         <TR>
           <TH colSpan={1} align="right">카테고리</TH>
-          <TD colSpan={5.01}>
+          <TD colSpan={2}>
             <Select 
               appearance="Outline" 
               placeholder="선택" 
@@ -241,32 +242,6 @@ const SelfFeature = () => {
             }}
             >
               {category.map((item, index) => (
-              <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-              ))}
-            </Select>
-          </TD>
-        </TR>
-        <TR>
-          <TH colSpan={1} align="right">Feature 명</TH>
-          <TD colSpan={5.01}>
-            <TextField className="width-100" id="custFeatRuleName" onChange={onchangeInputHandler}/>
-          </TD>
-        </TR>
-        <TR>
-          <TH align="right" colSpan={1}>사용 여부</TH>
-          <TD colSpan={2}>
-            <Select 
-              appearance="Outline" 
-              placeholder="선택" 
-              className="width-100" 
-              onChange={(
-              e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-              value: SelectValue<{}, false>
-            ) => {
-              onchangeSelectHandler(e, value, "useYn")
-            }}
-            >
-              {useYn.map((item, index) => (
               <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
               ))}
             </Select>
@@ -289,6 +264,32 @@ const SelfFeature = () => {
               ))}
             </Select>
           </TD>
+        </TR>
+        <TR>
+          <TH colSpan={1} align="right">Feature 명</TH>
+          <TD colSpan={5.01}>
+            <TextField className="width-100" id="custFeatRuleName" onChange={onchangeInputHandler}/>
+          </TD>
+        </TR>
+        <TR>
+          {/* <TH align="right" colSpan={1}>사용 여부</TH>
+          <TD colSpan={2}>
+            <Select 
+              appearance="Outline" 
+              placeholder="선택" 
+              className="width-100" 
+              onChange={(
+              e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+              value: SelectValue<{}, false>
+            ) => {
+              onchangeSelectHandler(e, value, "useYn")
+            }}
+            >
+              {useYn.map((item, index) => (
+              <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+              ))}
+            </Select>
+          </TD> */}
         </TR>
       </HorizontalTable>
       <Stack gap="SM" justifyContent="Center">
@@ -354,6 +355,7 @@ const SelfFeature = () => {
         content={confirmModalCont}
         onConfirm={onConfirm}
         onCancle={onCancel}
+        btnType={modalType}
     />
 
   </Stack>

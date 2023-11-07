@@ -1,4 +1,4 @@
-import { SfSubmission, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionInfo"
+import { SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionInfo"
 
 // Feature 승인 요청 리스트 table header
 export const sfSubmissionListColumns = [
@@ -9,12 +9,18 @@ export const sfSubmissionListColumns = [
     { headerName: '요청 일시', field: 'requestDate', colSpan: 3 },
 ]
 // Feature 결재선 리스트 table header
-export const sfSubmissionAppendApprovalListColumns = [
-    { headerName: '단계',   field: 'approvalSequence', colSpan: 2 },
+export const sfSubmissionApprovalListColumns = [
+    { headerName: '단계',   field: 'approvalSequenceNm', colSpan: 2 },
     { headerName: '결재자', field: 'approver', colSpan: 6 },
     { headerName: '상태',   field: 'status', colSpan: 2 },
     { headerName: '일시',   field: 'approvedDate', colSpan: 3 },
     { headerName: '의견',   field: 'comment', colSpan: 6 },
+]
+
+// Feature 결재자 선택 리스트 talbe header
+export const sfSubmissionAppendApprovalListColumns = [
+    { headerName: '이름',   field: 'userNm', colSpan: 2 },
+    { headerName: '이메일', field: 'lginId', colSpan: 2 },
 ]
 
 export const sfSubmissionTypeOption = [
@@ -34,9 +40,15 @@ export const sfSubmissionStatusOption = [
     { value: 'deleted',    text: '삭제' },
 ]
 
+export const aprvSeqNm = {
+    FIRST: "1차",
+    SECOND: "2차",
+    LAST: "최종",
+}
+
 export const initSfSubmissionRequestInfo: SfSubmissionRequestInfo = {
     id: '',
-    type: '',
+    type: 'CustomerFeature',
     referenceNo: '',
     submissionNo: '',
     status: '',
@@ -51,6 +63,7 @@ export const initSfSubmissionRequestInfo: SfSubmissionRequestInfo = {
     createdDate: '',
     lastModifier: '',
     lastModifiedDate: '',
+    statusNm: '',
 }
 
 export const initSfSubmissionApproval: SfSubmissionApproval = {
@@ -66,9 +79,19 @@ export const initSfSubmissionApproval: SfSubmissionApproval = {
     createdDate: '',
     lastModifier: '',
     lastModifiedDate: '',
+    approvalSequenceNm: ''
 }
 
 export const initSfSubmission: SfSubmission = {
     submission: initSfSubmissionRequestInfo,
     approvals: [{...initSfSubmissionApproval}]
+}
+
+export const initSfSubmissionAppendApproval: SfSubmissionAppendApproval = {
+    lginId: '',
+    userNm: '',
+    mbltlno: '',
+    cmpyNm: '',
+    teamNm: '',
+    defaultApproverUserId: '',
 }

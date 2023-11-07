@@ -2,6 +2,7 @@ import { useState, ReactNode } from 'react';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { CheckedState, SortDirection, SortDirectionCode, AlignCode } from '@/models/common/Design';
 import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD, Stack, Loader } from '@components/ui';
+import NoResult from '@/components/emptyState/NoData';
 import '@components/table/VerticalTable.scss';
 
 export interface VerticalTableProps {
@@ -103,7 +104,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
           </TR>
         </THead>
       )}
-      {rows?.length > 0 && (
+      {rows?.length > 0 ? (
         <TBody clickable={clickable}>
           {rows.map((row, index) => (
             <TR key={`row-${index}`} selected={checkedList.includes(index)}>
@@ -128,6 +129,10 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               ))}
             </TR>
           ))}
+        </TBody>
+      ) : (
+        <TBody className="no-data-wrap">
+          <NoResult />
         </TBody>
       )}
     </Table>
