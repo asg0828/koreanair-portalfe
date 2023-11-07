@@ -58,6 +58,7 @@ svg {
 }
 
 /* margin */
+.margin-top-8 { margin-top: 8px; }
 .margin-top-100 { margin-top: 100px; }
 .margin-top-200 { margin-top: 200px; }
 .margin-bottom-100 { margin-bottom: 100px; }
@@ -283,4 +284,48 @@ svg {
 }
 .dropChild-100per .dropList{
   width: 100% !important;
+}
+.contentDeatilWrap{
+  .attachFileList{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    svg{
+      font-size: 14px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.dataGridWrap{
+  .accordionWrap{
+    > div {
+      width: 100%;
+      border-top: 1px solid rgb(0, 37, 108);
+      border-bottom: 1px solid rgb(218, 218, 218);
+    }
+    h3{
+      position: relative;
+      button{
+        padding-left: 34px;
+      }
+      button::after{
+        content: 'Q.';
+        display: inline-block;
+        position: absolute;
+        left: 12px;
+        font-size: 0.875rem;
+      }
+    }
+    .answer{
+      padding-left: 22px;
+    }
+    .answer::after{
+      content: 'A.';
+      display: inline-block;
+      position: absolute;
+      left: 12px;
+      font-size: 0.875rem;
+    }
+  }
 }

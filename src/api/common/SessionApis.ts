@@ -113,7 +113,7 @@ export default class SessionApis {
     return newAccessTokenResponse;
   };
 
-  public logoutRequset = async (isLoading = true, isLogout = true) => {
+  public revokeToken = async (isLoading = true, isLogout = true) => {
     const sessionUtil = new SessionUtil();
     const logoutParameter = `client_id=${process.env.REACT_APP_CLIENT_ID || ''}&grant_type=revoke_token`;
     let logoutResponse: CommonResponse = {
@@ -140,14 +140,11 @@ export default class SessionApis {
     return logoutResponse;
   };
 
-  public logout = async (isLoading = true) => {
+  public logoutSession = async () => {
     return callApi({
       service: Service.KAL_BE,
       url: '/api/v1/session',
       method: Method.DELETE,
-      config: {
-        isLoarding: isLoading,
-      },
     });
   };
 }

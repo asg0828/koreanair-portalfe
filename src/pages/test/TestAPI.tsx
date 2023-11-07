@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Stack, Loader, Button, TextField, Label, Typography, Select, SelectOption, useToast } from '@components/ui';
-import useTestQuery from '@/api/services/queries/useTestQuery';
+import useTestQuery from '@/hooks/queries/useTestQueries';
 import { ServicePort } from '@models/common/Service';
 import { Service } from '@models/common/Service';
 import { Method, ParamObject } from '@/utils/ApiUtil';

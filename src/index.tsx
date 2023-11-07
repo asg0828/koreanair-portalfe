@@ -4,7 +4,6 @@ import reportWebVitals from './reportWebVitals';
 import rootReducer from '@reducers';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { Providers } from '@components/ui';
 
 const reduxStore = configureStore({
@@ -12,29 +11,14 @@ const reduxStore = configureStore({
   devTools: process.env.REACT_APP_NODE_ENV !== 'prod',
 });
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // staleTime: 0,
-      // cacheTime: 0,
-      // suspense: true,
-      enabled: false,
-    },
-  },
-});
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
   <Provider store={reduxStore}>
     <Providers>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
+      <App />
     </Providers>
-  </Provider>,
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

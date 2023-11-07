@@ -1,22 +1,25 @@
-import { ReactNode } from 'react';
-import VerticalTable from '@components/table/VerticalTable';
-import { VerticalTableProps } from '@components/table/VerticalTable';
-import {
-  Pagination,
-  Stack,
-  Select,
-  SelectOption,
-  Label,
-} from '@components/ui';
+import { PageInfo } from '@/models/components/Table';
+import VerticalTable, { VerticalTableProps } from '@components/table/VerticalTable';
+import { Label, Pagination, Select, SelectOption, Stack } from '@components/ui';
+import { ReactNode, useEffect, useState } from 'react';
+import './DataGrid.scss';
 
 export interface DatagridProps extends VerticalTableProps {
-  totalCount?: number;
   buttonChildren?: ReactNode;
-  onChange?: (e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null, value: any) => void,
+  onChange?: (pageSize: any) => void;
+  page?: PageInfo;
 }
 
+export const initPage = {
+  totalCount: 0,
+  totalPage: 0,
+  page: 0,
+  pageSize: 10,
+};
+
+const pageSizeList = [10, 30, 50];
+
 const DataGrid: React.FC<DatagridProps> = ({
-  totalCount = 0,
   columns,
   rows,
   enableSort,
@@ -24,37 +27,60 @@ const DataGrid: React.FC<DatagridProps> = ({
   onClick,
   onChange,
   buttonChildren,
+  page,
 }) => {
+  const [pages, setPages] = useState<PageInfo>(initPage);
+
+  useEffect(() => {
+    page && setPages(page);
+  }, [page]);
+
+  const handleChange = (key: string, value: any) => {
+    setPages((prevState) => {
+      const state = {
+        ...prevState,
+        [key]: value,
+      };
+      if (key === 'pageSize') {
+        state.page = 0;
+      }
+      onChange && onChange(state);
+      return state;
+    });
+  };
+
   return (
-    <Stack direction="Vertical" gap="MD">
-      <Label>{`총 ${totalCount} 건`}</Label>
-      <VerticalTable
-        columns={columns}
-        rows={rows}
-        enableSort={enableSort}
-        clickable={clickable}
-        onClick={onClick}
-        />
-      <Stack className="pagination-layout">
+    <Stack className="dataGridWrap" direction="Vertical" gap="MD">
+      <Stack className="total-layout">
+        <Label>
+          총 <span className="total">{pages.totalCount}</span> 건
+        </Label>
         <Select
           appearance="Outline"
           size="LG"
           className="select-page"
-          defaultValue={10}
-          onChange={onChange}
-          >
-          <SelectOption value={10}>10건</SelectOption>
-          <SelectOption value={30}>30건</SelectOption>
-          <SelectOption value={50}>30건</SelectOption>
+          value={pages.pageSize}
+          onChange={(e, value) => handleChange('pageSize', value)}
+        >
+          {pageSizeList.map((pageSize) => (
+            <SelectOption value={pageSize}>{`${pageSize} 건`}</SelectOption>
+          ))}
         </Select>
-
-        <Pagination size="LG" className="pagination" />
-
+      </Stack>
+      <VerticalTable columns={columns} rows={rows} enableSort={enableSort} clickable={clickable} onClick={onClick} />
+      <Stack className="pagination-layout">
+        <Pagination
+          size="LG"
+          className="pagination"
+          page={pages.page}
+          totalPages={pages.totalPage}
+          onChangePage={(value) => handleChange('page', value)}
+        />
         <Stack justifyContent="End" gap="SM" className="width-100">
           {buttonChildren}
         </Stack>
       </Stack>
     </Stack>
-  )
-}
+  );
+};
 export default DataGrid;

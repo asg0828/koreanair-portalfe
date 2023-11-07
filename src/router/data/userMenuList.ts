@@ -115,9 +115,9 @@ const userMenuList = [
         name: '자료실',
         path: '/board/archive',
         children: [
-          { name: '도움말 등록', path: '/board/archive/reg', children: [] },
-          { name: '도움말 상세', path: '/board/archive/detail', children: [] },
-          { name: '도움말 수정', path: '/board/archive/edit', children: [] },
+          { name: '자료실 등록', path: '/board/archive/reg', children: [] },
+          { name: '자료실 상세', path: '/board/archive/detail', children: [] },
+          { name: '자료실 수정', path: '/board/archive/edit', children: [] },
         ],
       },
     ],

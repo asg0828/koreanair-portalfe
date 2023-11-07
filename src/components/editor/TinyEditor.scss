@@ -1,9 +1,17 @@
 .tox {
   width: 100%;
 }
-
+.tox-tinymce{
+  min-height: 300px;
+  z-index: 0;
+}
 .tox-edit-area {
+  height: 300px !important;
+
   &:hover {
     cursor: pointer;
   }
+}
+.tox-tinymce--disabled {
+  border: none !important;
 }
