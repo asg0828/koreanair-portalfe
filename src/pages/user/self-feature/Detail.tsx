@@ -107,6 +107,11 @@ const SelfFeatureDetail = () => {
       if (modalType === ModalType.CONFIRM) {
         if (regType === "cancel") {
           cancelRequestSubmission()
+        } else if (regType === "approval") {
+          approveSubmissionApproval()
+        } else if (regType === "reject") {
+          //cancelRequestSubmission()
+          // 팝업 오픈 - 반려 사유 작성 팝업
         }
       }
       setIsOpenConfirmModal(false)
@@ -148,11 +153,22 @@ const SelfFeatureDetail = () => {
         } else if (pageNm === selfFeatPgPpNm.SUBINFO || pageNm === selfFeatPgPpNm.SUBMCFRM) {
           setIsOpenSubmissionRequestPop(true)
         } else if (pageNm === selfFeatPgPpNm.SUB_CANCEL) {
-          console.log("요청 취소")
           setModalType(ModalType.CONFIRM)
           setRegType("cancel")
           setConfirmModalTit(ModalTitCont.SUBMISSION_CANCEL.title)
           setConfirmModalCont(ModalTitCont.SUBMISSION_CANCEL.context)
+          setIsOpenConfirmModal(true)
+        } else if (pageNm === selfFeatPgPpNm.SUB_APRV) {
+          setModalType(ModalType.CONFIRM)
+          setRegType("approval")
+          setConfirmModalTit(ModalTitCont.SUBMISSION_APPROVAL.title)
+          setConfirmModalCont(ModalTitCont.SUBMISSION_APPROVAL.context)
+          setIsOpenConfirmModal(true)
+        } else if (pageNm === selfFeatPgPpNm.SUB_REJT) {
+          setModalType(ModalType.CONFIRM)
+          setRegType("reject")
+          setConfirmModalTit(ModalTitCont.SUBMISSION_REJECT.title)
+          setConfirmModalCont(ModalTitCont.SUBMISSION_REJECT.context)
           setIsOpenConfirmModal(true)
         } else {
           navigate(`../${pageNm}`)
@@ -321,6 +337,30 @@ const SelfFeatureDetail = () => {
       console.log("[CancelRequestSubmission] Response :: ", response)
     }
 
+    const approveSubmissionApproval = async () => {
+      /*
+        승인
+        Method      :: PUT
+        Url         :: /api/v1/users/${email}/submission-approvals/${approvalId}/approve
+        path param  :: email, approvalId
+        query param :: 
+        body param  :: { comment }
+      */
+      let config = cloneDeep(initConfig)
+      config.isLoarding = true
+      let request = cloneDeep(initApiRequest)
+      request.method = Method.PUT
+      let email = ""
+      let approvalId = ""
+      request.url = `/api/v1/users/${email}/submissions/${approvalId}/cancel`
+      request.params!.bodyParams = { comment: "" }
+      console.log("[approveSubmissionApproval] Request  :: ", request)
+
+      let response = cloneDeep(initCommonResponse)
+      //response = await callApi(request)
+      console.log("[approveSubmissionApproval] Response :: ", response)
+    }
+
     const DetailBtnComponent = () => {
       if (
         location.state.submissionStatus === ""
@@ -343,16 +383,32 @@ const SelfFeatureDetail = () => {
         )
       } else if (location.state.submissionStatus === subFeatStatus.REQ) {
         // 승인 요청
-        return (
-          <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
-              목록
-            </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
-              요청 취소
-            </Button>
-          </Stack>
-        )
+        if (location.state.id.includes('ADM')) {
+          return (
+            <Stack justifyContent="End" gap="SM" className="width-100">
+              <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+                목록
+              </Button>
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_APRV)}>
+                승인
+              </Button>
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_REJT)}>
+                반려
+              </Button>
+            </Stack>
+          )
+        } else {
+          return (
+            <Stack justifyContent="End" gap="SM" className="width-100">
+              <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+                목록
+              </Button>
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
+                요청 취소
+              </Button>
+            </Stack>
+          )
+        }
       } else if (location.state.submissionStatus === subFeatStatus.IN_APRV) {
         // 결재 진행
         return (
@@ -364,7 +420,7 @@ const SelfFeatureDetail = () => {
               승인 정보
             </Button>
           </Stack>
-        )
+        )  
       } else if (location.state.submissionStatus === subFeatStatus.APRV) {
         // 승인 완료
         return (
