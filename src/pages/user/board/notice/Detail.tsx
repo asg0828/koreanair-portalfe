@@ -1,22 +1,111 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { TR, TH, TD, Button, Stack, Label, Typography } from '@components/ui';
-import HorizontalTable from '@components/table/HorizontalTable';
 import '@/assets/styles/Board.scss';
-import { Link } from '@ke-design/components';
+import TinyEditor from '@/components/editor/TinyEditor';
+import EmptyState from '@/components/emptyState/EmptyState';
+import { useDeleteNotice } from '@/hooks/mutations/useNoticeMutations';
+import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
+import useModal, { ModalType } from '@/hooks/useModal';
+import { NoticeInfo } from '@/models/Board/Notice';
+import HorizontalTable from '@components/table/HorizontalTable';
+import { Button, Stack, TD, TH, TR, Typography, Link, useToast } from '@components/ui';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
+  const { openModal } = useModal();
+  const [noticeInfo, setNoticeInfo] = useState<NoticeInfo>();
+  const [prevNoticeInfo, setPrevNoticeInfo] = useState<NoticeInfo>();
+  const [nextNoticeInfo, setNextNoticeInfo] = useState<NoticeInfo>();
+  const noticeId: string = location?.state?.noticeId || '';
+  const rows: Array<NoticeInfo> = location?.state?.rows;
+  const { data: response, isSuccess, isError } = useNoticeById(noticeId);
+  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteNotice(noticeId);
+
+  useEffect(() => {
+    if (rows?.length > 0) {
+      const index = rows.findIndex((row) => row.noticeId === noticeId);
+      setPrevNoticeInfo(index === 0 ? undefined : rows[index - 1]);
+      setNextNoticeInfo(index === rows.length - 1 ? undefined : rows[index + 1]);
+    }
+  }, [noticeId, rows]);
+
+  useEffect(() => {
+    isSuccess && setNoticeInfo(response.data);
+  }, [isSuccess, response?.data]);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    }
+  }, [response, isError, toast]);
+
+  useEffect(() => {
+    if (dIsError || dResponse?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '삭제 중 에러가 발생했습니다.',
+      });
+    } else if (dIsSuccess) {
+      toast({
+        type: 'Confirm',
+        content: '삭제되었습니다.',
+      });
+      navigate('..');
+    }
+  }, [dResponse, dIsSuccess, dIsError, toast, navigate]);
+
+  if (!noticeId) {
+    return (
+      <EmptyState
+        type="warning"
+        description="조회에 필요한 정보가 없습니다"
+        confirmText="돌아가기"
+        onConfirm={() =>
+          navigate('..', {
+            state: {
+              isRefresh: true,
+            },
+          })
+        }
+      />
+    );
+  }
 
   const goToList = () => {
     navigate('..');
   };
 
   const goToEdit = () => {
-    navigate('../edit');
+    navigate('../edit', {
+      state: {
+        noticeInfo: noticeInfo,
+      },
+    });
+  };
+
+  const handleMoveDetail = (noticeId: string | undefined) => {
+    navigate('', {
+      state: {
+        noticeId: noticeId,
+        rows: rows,
+      },
+    });
+  };
+
+  const handleDelete = () => {
+    openModal({
+      type: ModalType.CONFIRM,
+      title: '삭제',
+      content: '삭제하시겠습니까?',
+      onConfirm: mutate,
+    });
   };
 
   return (
@@ -25,41 +114,53 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">공지사항 테스트</Typography>
+              <Typography variant="h3">{noticeInfo?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">
-            <TD colSpan={4} className="content"></TD>
+            <TD colSpan={4} className="content">
+              <TinyEditor content={noticeInfo?.cn} disabled />
+            </TD>
           </TR>
           <TR>
-            <TH colSpan={1} className="attachFile">첨부파일</TH>
+            <TH colSpan={1} className="attachFile">
+              첨부파일
+            </TH>
             <TD colSpan={3}>
-              <ul className="attachFileList">
+              {/* <ul className="attachFileList">
                 <li>
-                  <Link href="#" target="_blank"><AttachFileIcon />첨부파일입니다.</Link>
+                  <Link target="_blank">
+                    <AttachFileIcon />
+                    첨부파일입니다.
+                  </Link>
                 </li>
-                <li>
-                  <Link href="#" target="_blank"><AttachFileIcon />첨부파일입니다.</Link>
-                </li>
-                <li>
-                  <Link href="#" target="_blank"><AttachFileIcon />첨부파일입니다.</Link>
-                </li>
-                <li>
-                  <Link href="#" target="_blank"><AttachFileIcon />첨부파일입니다.</Link>
-                </li>
-              </ul>
+              </ul> */}
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>다음<ExpandLessIcon fontSize="small"/></TH>
+            <TH colSpan={1}>
+              다음
+              <ExpandLessIcon fontSize="small" />
+            </TH>
             <TD colSpan={3} className="nextContent">
-              <Link href="#" linkType="Page">다음글입니다.</Link>
+              {nextNoticeInfo?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(nextNoticeInfo?.noticeId)}>
+                  {nextNoticeInfo?.sj}
+                </Link>
+              )}
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>이전<ExpandMoreIcon fontSize="small" /></TH>
-            <TD colSpan={3} className="prevContent">
-              <Link href="#" linkType="Page">이전글입니다.</Link>
+            <TH colSpan={1}>
+              이전
+              <ExpandLessIcon fontSize="small" />
+            </TH>
+            <TD colSpan={3} className="nextContent">
+              {prevNoticeInfo?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(prevNoticeInfo?.noticeId)}>
+                  {prevNoticeInfo?.sj}
+                </Link>
+              )}
             </TD>
           </TR>
         </HorizontalTable>
@@ -69,10 +170,7 @@ const Detail = () => {
         <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
           수정
         </Button>
-        {/* <Button priority="Normal" appearance="Contained" size="LG">
-          삭제
-        </Button> */}
-        <Button priority="Normal" size="LG">
+        <Button priority="Normal" size="LG" onClick={handleDelete}>
           삭제
         </Button>
         <Button size="LG" onClick={goToList}>

@@ -1,4 +1,4 @@
-import DataGrid from '@/components/grid/DataGrid';
+import DataGrid, { initPage } from '@/components/grid/DataGrid';
 import { popularColumns as columns, popularRows as rows } from '@/utils/data/tableSampleData';
 import { Button, Tooltip } from '@components/ui';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -18,6 +18,7 @@ const List = () => {
         enableSort={true}
         clickable={true}
         onChange={undefined}
+        page={initPage}
       />
     </>
   );

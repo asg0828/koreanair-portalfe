@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import SearchForm from '@/components/form/SearchForm';
-import DataGrid from '@/components/grid/DataGrid';
+import DataGrid, { initPage } from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
 import {
   TR,
@@ -37,13 +37,17 @@ const List = () => {
     <>
       <SearchForm>
         <TR>
-          <TH colSpan={1} align="right">데이터셋 검색</TH>
+          <TH colSpan={1} align="right">
+            데이터셋 검색
+          </TH>
           <TD colSpan={3}>
             <TextField className="width-100" />
           </TD>
         </TR>
         <TR>
-          <TH colSpan={1} align="right">데이터셋 조건</TH>
+          <TH colSpan={1} align="right">
+            데이터셋 조건
+          </TH>
           <TD colSpan={3} align="left">
             <Checkbox label="테이터셋명" />
             <Checkbox label="테이블ID" />
@@ -68,7 +72,9 @@ const List = () => {
           </TD>
         </TR>
         <TR>
-          <TH colSpan={1} align="right">등록일</TH>
+          <TH colSpan={1} align="right">
+            등록일
+          </TH>
           <TD colSpan={3}>
             <DatePicker appearance="Outline" calendarViewMode="days" mode="single" shape="Square" size="MD" />
             <Label>~</Label>
@@ -100,6 +106,7 @@ const List = () => {
         clickable={true}
         onClick={clickRow}
         onChange={undefined}
+        page={initPage}
         buttonChildren={
           <>
             {/* <Button size="LG">엑셀다운로드</Button> */}

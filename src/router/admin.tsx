@@ -44,6 +44,7 @@ import Daily from '@pages/admin/admin-report/one-id-report/daily';
 import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 import StructuredReportManagement from '@pages/admin/structured-report-management';
+import AdminHome from '@/pages/admin/AdminHome';
 
 const adminRouter = [
   {
@@ -54,6 +55,7 @@ const adminRouter = [
       {
         path: 'admin',
         children: [
+          { index: true, element: <AdminHome /> },
           {
             path: 'biz-meta-management',
             children: [

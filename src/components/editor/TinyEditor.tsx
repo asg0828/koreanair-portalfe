@@ -1,22 +1,32 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect, forwardRef, useImperativeHandle, ForwardedRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import './TinyEditor.scss';
 
-const TinyEditor = () => {
-  const editorRef = useRef(null);
+export interface TinyEditorProps {
+  content?: string;
+  disabled?: boolean;
+  onEditorChange?: (content: string, editor: any) => void;
+}
+
+const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content, disabled, onEditorChange }, ref) => {
+  const editorRef = useRef<any>(null);
+  const [editorContent, setEditorContent] = useState(content);
+
+  useEffect(() => {
+    setEditorContent(content);
+  }, [content]);
+
+  useImperativeHandle(ref, () => editorRef.current.editor);
+
+  const handleEditorChange = (content: string, editor: any) => {
+    setEditorContent(content);
+    onEditorChange && onEditorChange(content, editor);
+  };
 
   const initEditorContentStyle = () => {
     const iframe = (document.querySelector('.tox-edit-area iframe') as HTMLIFrameElement).contentWindow;
     const html = iframe?.document.querySelector('html');
     const body = iframe?.document.querySelector('body');
-
-    if (html) {
-      html.style.height = '100%';
-    }
-
-    if (body) {
-      body.style.height = '95%';
-    }
   };
 
   return (
@@ -24,6 +34,9 @@ const TinyEditor = () => {
       tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
       ref={editorRef}
       onLoadContent={initEditorContentStyle}
+      value={editorContent}
+      onEditorChange={handleEditorChange}
+      disabled={disabled}
       init={{
         height: '100%',
         menubar: false,
@@ -48,12 +61,13 @@ const TinyEditor = () => {
           'wordcount',
           'image',
         ],
-        toolbar:
-          'undo redo | blocks | ' +
-          'bold italic forecolor | alignleft aligncenter ' +
-          'alignright alignjustify | bullist numlist outdent indent | ' +
-          'removeformat | link image table tabledeletes | ' +
-          'code help',
+        toolbar: disabled
+          ? false
+          : 'undo redo | blocks | ' +
+            'bold italic forecolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | link image table tabledeletes | ' +
+            'code help',
         content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
         image_title: true,
         automatic_uploads: true,
@@ -87,6 +101,6 @@ const TinyEditor = () => {
       }}
     />
   );
-};
+});
 
 export default TinyEditor;

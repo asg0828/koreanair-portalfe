@@ -8,5 +8,12 @@ export interface ColumnsInfo {
 }
 
 export interface RowsInfo {
-  [key: string]: string | number;
+  [key: string]: any;
+}
+
+export interface PageInfo {
+  page: number;
+  pageSize: number;
+  totalPage: number;
+  totalCount: number;
 }

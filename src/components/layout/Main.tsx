@@ -31,22 +31,24 @@ const Main = () => {
   const title = menuObj ? menuObj.name : 'UnKown Title';
 
   return (
-    <main id="main" className="width-100">
-      <Stack direction="Vertical" gap="MD" className="height-100">
-        <MainNavigation />
+    <>
+      <main id="main" className="width-100">
+        <Stack direction="Vertical" gap="MD" className="height-100">
+          <MainNavigation />
 
-        <Stack className="width-100" gap="MD">
-          <Typography variant='h1'>{title}</Typography>
-          <span className="star"></span>
-          {/* <span className="star active"></span> */}
-          {/* <StarBorderIcon  /> */}
-        </Stack>
+          <Stack className="width-100" gap="MD">
+            <Typography variant="h1">{title}</Typography>
+            <span className="star"></span>
+            {/* <span className="star active"></span> */}
+            {/* <StarBorderIcon  /> */}
+          </Stack>
 
-        <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
-          <Outlet />
+          <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
+            <Outlet />
+          </Stack>
         </Stack>
-      </Stack>
-    </main>
+      </main>
+    </>
   );
 };
 export default Main;

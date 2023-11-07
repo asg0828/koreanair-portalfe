@@ -1,27 +1,105 @@
+import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { TR, TH, TD, Button, Stack, Label, Radio, DatePicker, TextField } from '@components/ui';
+import { useForm, Controller } from 'react-hook-form';
+import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
+import { TR, TH, TD, Button, Stack, Label, Radio, DatePicker, TextField, useToast } from '@components/ui';
 import HorizontalTable from '@components/table/HorizontalTable';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import TinyEditor from '@/components/editor/TinyEditor';
+import EmptyState from '@/components/emptyState/EmptyState';
+import ErrorLabel from '@/components/error/ErrorLabel';
+import { UpdatedNoticeInfo } from '@/models/Board/Notice';
+import useModal, { ModalType } from '@/hooks/useModal';
 import '@/assets/styles/Board.scss';
 
 const Edit = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
+  const { openModal } = useModal();
+  const noticeInfo = location?.state?.noticeInfo;
+  const {
+    register,
+    handleSubmit,
+    control,
+    getValues,
+    formState: { errors },
+  } = useForm<UpdatedNoticeInfo>({
+    mode: 'onChange',
+    defaultValues: {
+      noticeId: noticeInfo?.noticeId,
+      sj: noticeInfo?.sj,
+      cn: noticeInfo?.cn,
+      startDt: noticeInfo?.startDt,
+      endDt: noticeInfo?.endDt,
+      popupYn: noticeInfo?.popupYn,
+      useYn: noticeInfo?.useYn,
+      importantYn: noticeInfo?.importantYn,
+    },
+  });
+  const values = getValues();
+  const { data: response, mutate, isSuccess, isError } = useUpdateNotice(values.noticeId, values);
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '수정 중 에러가 발생했습니다.',
+      });
+    } else if (isSuccess) {
+      toast({
+        type: 'Confirm',
+        content: '수정되었습니다.',
+      });
+      navigate('..');
+    }
+  }, [response, isSuccess, isError, toast, navigate]);
+
+  if (!noticeInfo) {
+    return (
+      <EmptyState
+        type="warning"
+        description="조회에 필요한 정보가 없습니다"
+        confirmText="돌아가기"
+        onConfirm={() =>
+          navigate('..', {
+            state: {
+              isRefresh: true,
+            },
+          })
+        }
+      />
+    );
+  }
 
   const goToList = () => {
     navigate('..');
   };
 
+  const onSubmit = (data: UpdatedNoticeInfo) => {
+    openModal({
+      type: ModalType.CONFIRM,
+      title: '수정',
+      content: '수정하시겠습니까?',
+      onConfirm: mutate,
+    });
+  };
+
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="Vertical" gap="MD" className="height-100">
         <HorizontalTable className="height-100">
           <TR>
-            <TH colSpan={1}>제목</TH>
+            <TH colSpan={1} required>
+              제목
+            </TH>
             <TD colSpan={3}>
-              <Stack gap="SM" className="width-100">
-                <TextField className="width-100" />
+              <Stack gap="SM" className="width-100" direction="Vertical">
+                <TextField
+                  className="width-100"
+                  {...register('sj', { required: 'subject is required.' })}
+                  validation={errors?.sj?.message ? 'Error' : undefined}
+                />
+                <ErrorLabel message={errors?.sj?.message} />
               </Stack>
             </TD>
           </TR>
@@ -29,37 +107,113 @@ const Edit = () => {
             <TH>팝업공지여부</TH>
             <TD>
               <Stack gap="LG">
-                <Radio label="사용" checked />
-                <Radio label="미사용" />
+                <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
+                <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
               </Stack>
             </TD>
             <TH>팝업공지일자</TH>
             <TD>
-              <DatePicker appearance="Outline" calendarViewMode="days" mode="single" shape="Square" size="MD" />
-              <Label>~</Label>
-              <DatePicker appearance="Outline" />
+              <Stack gap="SM" className="width-100" direction="Vertical">
+                <Stack gap="SM" className="width-100">
+                  <Controller
+                    name="startDt"
+                    control={control}
+                    rules={{
+                      required: 'start date is required.',
+                      pattern: {
+                        value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
+                        message: 'start date is invalid.',
+                      },
+                    }}
+                    render={({ field }) => (
+                      <DatePicker
+                        ref={(el) => {
+                          const input = el?.querySelector('input');
+                          input && field.ref(input);
+                        }}
+                        value={field.value}
+                        onValueChange={(value) => field.onChange(value)}
+                        validation={errors?.startDt?.message ? 'Error' : undefined}
+                      />
+                    )}
+                  />
+                  <Label>~</Label>
+                  <Controller
+                    name="endDt"
+                    control={control}
+                    rules={{
+                      required: 'end date is required.',
+                      pattern: {
+                        value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
+                        message: 'end date is invalid.',
+                      },
+                    }}
+                    render={({ field }) => (
+                      <DatePicker
+                        ref={(el) => {
+                          const input = el?.querySelector('input');
+                          input && field.ref(input);
+                        }}
+                        value={field.value}
+                        onValueChange={(value) => field.onChange(value)}
+                        validation={errors?.endDt?.message ? 'Error' : undefined}
+                      />
+                    )}
+                  />
+                </Stack>
+                <Stack justifyContent="Between">
+                  <ErrorLabel message={errors?.startDt?.message} />
+                  <ErrorLabel message={errors?.endDt?.message} />
+                </Stack>
+              </Stack>
             </TD>
           </TR>
           <TR>
             <TH>게시여부</TH>
             <TD>
               <Stack gap="LG">
-                <Radio label="게시" checked />
-                <Radio label="미개시" />
+                <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
+                <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
               </Stack>
             </TD>
             <TH>중요여부</TH>
             <TD>
               <Stack gap="LG">
-                <Radio label="중요" checked />
-                <Radio label="일반" />
+                <Radio
+                  label="중요"
+                  value="Y"
+                  defaultChecked={values.importantYn === 'Y'}
+                  {...register('importantYn')}
+                />
+                <Radio
+                  label="일반"
+                  value="N"
+                  defaultChecked={values.importantYn === 'N'}
+                  {...register('importantYn')}
+                />
               </Stack>
             </TD>
           </TR>
           <TR className="height-100">
-            <TH colSpan={1}>내용</TH>
+            <TH colSpan={1} required>
+              내용
+            </TH>
             <TD colSpan={3} className="content">
-              <TinyEditor />
+              <Stack gap="SM" className="width-100" direction="Vertical">
+                <Controller
+                  name="cn"
+                  control={control}
+                  rules={{ required: 'content is required.' }}
+                  render={({ field }) => (
+                    <TinyEditor
+                      ref={field.ref}
+                      content={field.value}
+                      onEditorChange={(content, editor) => field.onChange(content)}
+                    />
+                  )}
+                />
+                <ErrorLabel message={errors?.cn?.message} />
+              </Stack>
             </TD>
           </TR>
           <TR>
@@ -70,16 +224,16 @@ const Edit = () => {
           </TR>
         </HorizontalTable>
       </Stack>
-      
-      <Stack gap="SM" justifyContent="End">
-        <Button priority="Primary" appearance="Contained" size="LG">
+
+      <Stack gap="SM" justifyContent="End" className="margin-top-8">
+        <Button priority="Primary" appearance="Contained" size="LG" type="submit">
           등록
         </Button>
         <Button size="LG" onClick={goToList}>
           목록
         </Button>
       </Stack>
-    </>
+    </form>
   );
 };
 export default Edit;

@@ -3,6 +3,8 @@ export default interface CommonResponse {
   statusCode: string;
   data?: any;
   header?: any;
+  status?: number;
+  message?: string;
 }
 
 export class StatusCode {

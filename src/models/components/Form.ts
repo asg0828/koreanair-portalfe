@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface CommonFormProps {
-  onSearch?: Function,
-  onClear?: Function,
-  children?: ReactNode,
+  onSearch?: Function;
+  onClear?: Function;
+  children?: ReactNode;
 }
