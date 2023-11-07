@@ -323,7 +323,7 @@ const qnaRows = [
   },
 ];
 
-const archiveColumns = [
+const dataroomColumns = [
   { headerName: 'No', field: 'column1', colSpan: 1 },
   { headerName: '제목', field: 'column2', colSpan: 2 },
   { headerName: '내용', field: 'column3', colSpan: 4 },
@@ -331,7 +331,7 @@ const archiveColumns = [
   { headerName: '등록일', field: 'column5', colSpan: 1 },
 ];
 
-const archiveRows = [
+const dataroomRows = [
   {
     column1: '10',
     column2: '제목명입니다.',
@@ -551,4 +551,19 @@ const regRows = [
   },
 ];
 
-export { popularColumns, popularRows, interestColumns, interestRows, tableColumns, tableRows, listColumns, listRows, archiveColumns, archiveRows, qnaColumns, qnaRows, regColumns, regRows };
+export {
+  popularColumns,
+  popularRows,
+  interestColumns,
+  interestRows,
+  tableColumns,
+  tableRows,
+  listColumns,
+  listRows,
+  dataroomColumns,
+  dataroomRows,
+  qnaColumns,
+  qnaRows,
+  regColumns,
+  regRows,
+};

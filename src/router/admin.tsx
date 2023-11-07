@@ -22,10 +22,10 @@ import Qna from '@pages/user/board/qna';
 import QnaDetail from '@pages/user/board/qna/Detail';
 import QnaReg from '@pages/user/board/qna/Reg';
 import QnaEdit from '@pages/user/board/qna/Edit';
-import Archive from '@pages/user/board/archive';
-import ArchiveDetail from '@pages/user/board/archive/Detail';
-import ArchiveReg from '@pages/user/board/archive/Reg';
-import ArchiveEdit from '@pages/user/board/archive/Edit';
+import Dataroom from '@/pages/user/board/dataroom';
+import DataroomDetail from '@/pages/user/board/dataroom/Detail';
+import DataroomReg from '@/pages/user/board/dataroom/Reg';
+import DataroomEdit from '@/pages/user/board/dataroom/Edit';
 import DataSet from '@pages/user/biz-meta/dataset';
 import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
 import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
@@ -165,12 +165,12 @@ const adminRouter = [
                     ],
                   },
                   {
-                    path: 'archive',
+                    path: 'dataroom',
                     children: [
-                      { index: true, element: <Archive /> },
-                      { path: 'detail', element: <ArchiveDetail /> },
-                      { path: 'reg', element: <ArchiveReg /> },
-                      { path: 'edit', element: <ArchiveEdit /> },
+                      { index: true, element: <Dataroom /> },
+                      { path: 'detail', element: <DataroomDetail /> },
+                      { path: 'reg', element: <DataroomReg /> },
+                      { path: 'edit', element: <DataroomEdit /> },
                     ],
                   },
                 ],

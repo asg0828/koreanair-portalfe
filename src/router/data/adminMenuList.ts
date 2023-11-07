@@ -154,17 +154,17 @@ const adminMenulist = [
           },
           {
             name: '자료실',
-            path: '/admin/user-portal-management/board-management/archive',
+            path: '/admin/user-portal-management/board-management/dataroom',
             children: [
-              { name: '자료실 등록', path: '/admin/user-portal-management/board-management/archive/reg', children: [] },
+              { name: '자료실 등록', path: '/admin/user-portal-management/board-management/dataroom/reg', children: [] },
               {
                 name: '자료실 상세',
-                path: '/admin/user-portal-management/board-management/archive/detail',
+                path: '/admin/user-portal-management/board-management/dataroom/detail',
                 children: [],
               },
               {
                 name: '자료실 수정',
-                path: '/admin/user-portal-management/board-management/archive/edit',
+                path: '/admin/user-portal-management/board-management/dataroom/edit',
                 children: [],
               },
             ],

@@ -1,22 +1,17 @@
-import { useNavigate } from 'react-router-dom';
 import SearchForm from '@/components/form/SearchForm';
-import DataGrid, { initPage } from '@/components/grid/DataGrid';
+import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
+import { tableColumns as columns, tableRows as rows } from '@/utils/data/tableSampleData';
 import {
-  TR,
-  TH,
-  TD,
   Button,
-  Stack,
-  TextField,
   Checkbox,
-  Select,
-  SelectOption,
-  DatePicker,
-  Label,
+  TD,
+  TH,
+  TR,
+  TextField
 } from '@components/ui';
-import { tableColumns as columns, tableRows as rows } from '@/utils/data/tableSampleData'
 import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const navigate = useNavigate();
@@ -106,7 +101,6 @@ const List = () => {
         clickable={true}
         onClick={clickRow}
         onChange={undefined}
-        page={initPage}
         buttonChildren={
           <>
             {/* <Button size="LG">엑셀다운로드</Button> */}

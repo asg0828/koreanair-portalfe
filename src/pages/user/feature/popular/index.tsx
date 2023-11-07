@@ -7,19 +7,12 @@ const List = () => {
   return (
     <>
       {/* 관심 Feature 등록/해제?  */}
-        {/* <Tooltip content="tooltip">
+      {/* <Tooltip content="tooltip">
           <Button appearance="Unfilled">
             <FavoriteIcon />
           </Button>
         </Tooltip> */}
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        enableSort={true}
-        clickable={true}
-        onChange={undefined}
-        page={initPage}
-      />
+      <DataGrid columns={columns} rows={rows} enableSort={true} clickable={true} onChange={undefined} />
     </>
   );
 };
