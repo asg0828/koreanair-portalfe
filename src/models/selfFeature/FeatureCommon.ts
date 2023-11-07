@@ -43,6 +43,11 @@ export const ModalTitCont = {
     DEL_VALID: { title: "Feature 삭제", context: "삭제할 항목이 없습니다." },
     REG_VALID: { title: "Feature 저장", context: "계산식을 확인해주세요."},
     EDIT_VALID: { title: "Feature 수정", context: "계산식을 확인해주세요."},
+    APRO_MAX_SLCT: { title: "결재자 선택", context: "최대 3명의 결재자 선택이 가능합니다."},
+    APRO_MAX_APND: { title: "결재자 추가", context: "최대 3명의 결재자 선택이 가능합니다."},
+    SUBMISSION_CANCEL: { title: "승인 정보 요청 취소", context: "요청한 승인 정보를 취소 하시겠습니까?"},
+    SUBMISSION_INSERT: { title: "승인 정보 저장", context: "입력한 승인 정보를 저장 하시겠습니까?"},
+    SUBMISSION_INSERT_REQ: { title: "승인 정보 승인 요청", context: "압력한 승인 정보로 승인 요청 하시겠습니까?"},
 }
 
 // 페이지명(path) setting
@@ -55,10 +60,16 @@ export const selfFeatPgPpNm = {
     EDIT: 'edit',  // 수정
     SUBMCFRM: 'subConfirm', // 승인 요청 팝업
     SUBINFO:  'subInfo',  // 승인 확인 팝업
+    SUB_CANCEL: 'subCancel', // 요청 취소
     PRNTCHLD: 'parentChildList'
 }
 // feat 상태
 export const subFeatStatus = {
     REG: 'reg', // 등록
     SUBREG: 'sub_reg', // 품의 저장
+    SAVE: 'saved', // 등록, 품의 저장
+    REQ: 'requested', // 승인요청
+    IN_APRV: 'inApproval', // 결재진행중
+    APRV: 'approved', // 승인완료
+    REJT: 'rejected', // 반려
 }

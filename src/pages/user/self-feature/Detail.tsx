@@ -5,6 +5,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
 import HorizontalTable from '@components/table/HorizontalTable';
+import VerticalTable from '@/components/table/VerticalTable';
 import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
 import SubmissionRequestPop from '@/components/self-feature-submission/popup/SubmissionRequestPop';
@@ -38,14 +39,37 @@ import {
   initTbRsCustFeatRuleTrgtFilter,
 } from './data';
 import {
+  aprvSeqNm,
+  sfSubmissionApprovalListColumns as columns, 
+  initSfSubmissionApproval, 
+  initSfSubmissionRequestInfo,
+} from '../self-feature-submission/data'
+import {
   subFeatStatus,
   selfFeatPgPpNm,
+  initConfig,
+  initApiRequest,
+  initCommonResponse,
+  ModalType,
+  ModalTitCont,
 } from '@/models/selfFeature/FeatureCommon';
+import { 
+  SfSubmissionApproval, 
+  SfSubmissionRequestInfo 
+} from '@/models/selfFeature/FeatureSubmissionInfo';
+import { Method } from '@/utils/ApiUtil';
+import ConfirmModal from '@/components/modal/ConfirmModal';
 
 const SelfFeatureDetail = () => {
 
     const location = useLocation()
     const navigate = useNavigate()
+
+    const [ regType, setRegType ] = useState<string>('')
+    const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
+    const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
+    const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
+    const [ modalType, setModalType ] = useState<string>('')
 
     const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
 
@@ -57,6 +81,10 @@ const SelfFeatureDetail = () => {
     const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
     // SQL 입력
     const [ sqlQueryInfo, setSqlQueryInfo ] = useState<TbRsCustFeatRuleSql>(cloneDeep(initTbRsCustFeatRuleSql))
+    // 승인 정보
+    const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
+    const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
+
 
     const [ isOpenSubmissionRequestPop, setIsOpenSubmissionRequestPop ] = useState<boolean>(false)
 
@@ -73,6 +101,19 @@ const SelfFeatureDetail = () => {
         return rtn
       })
     }
+    // modal 확인/취소 이벤트
+    const onConfirm = () => {
+      if (modalType === ModalType.CONFIRM) {
+        if (regType === "cancel") {
+          cancelRequestSubmission()
+        }
+      }
+      setIsOpenConfirmModal(false)
+    }
+
+    const onCancel = () => {
+      setIsOpenConfirmModal(false)
+    }
 
     useEffect(() => {
       setFeatureTempInfo(cloneDeep(featureInfo.featureTemp))
@@ -81,6 +122,11 @@ const SelfFeatureDetail = () => {
       setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
       setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
       setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
+
+      if (featureInfo.tbRsCustFeatRule.submissionStatus !== "") {
+        retrieveSubmission1()
+      }
+
     }, [featureInfo])
 
     useEffect(() => {
@@ -99,16 +145,69 @@ const SelfFeatureDetail = () => {
         } else if (pageNm === selfFeatPgPpNm.EDIT) {
           navigate(`../${pageNm}`, { state: featureInfo })
         } else if (pageNm === selfFeatPgPpNm.SUBINFO || pageNm === selfFeatPgPpNm.SUBMCFRM) {
-          // 팝업 component open시 호출
-          // retrieveSubmission1
-          // api url :: (GET)/api/v1/submissions/{submissionId}
-          // console.log("승인 팝업 open!")
           setIsOpenSubmissionRequestPop(true)
+        } else if (pageNm === selfFeatPgPpNm.SUB_CANCEL) {
+          console.log("요청 취소")
+          setModalType(ModalType.CONFIRM)
+          setRegType("cancel")
+          setConfirmModalTit(ModalTitCont.SUBMISSION_CANCEL.title)
+          setConfirmModalCont(ModalTitCont.SUBMISSION_CANCEL.context)
+          setIsOpenConfirmModal(true)
         } else {
           navigate(`../${pageNm}`)
         }
     }
     
+    const retrieveSubmission1 = () => {
+      /*
+        Method      :: GET
+        Url         :: /api/v1/submissions/${submissionId}
+        path param  :: submissionId
+        query param :: 
+        body param  :: 
+      */
+      let config = cloneDeep(initConfig)
+      config.isLoarding = true
+      let request = cloneDeep(initApiRequest)
+      request.method = Method.GET
+      let submissionId = ""
+      request.url = `/api/v1/submissions/${submissionId}`
+      console.log("[retrieveSubmission1] Request  :: ", request)
+
+      let response = cloneDeep(initCommonResponse)
+      //response = await callApi(request)
+      console.log("[retrieveSubmission1] Response :: ", response)
+      if (featureInfo.tbRsCustFeatRule.submissionStatus !== "") {
+        setSfSubmissionRequestData((state: SfSubmissionRequestInfo) => {
+          let rtn = cloneDeep(state)
+          rtn.submissionNo = "SUB_00000001"
+          rtn.requesterName = "이두나"
+          rtn.status = featureInfo.tbRsCustFeatRule.submissionStatus
+          rtn.requestDate = "2023-11-07 11:22:33"
+          rtn.title = "승인해주세요."
+          rtn.content = "승인부탁드립니다."
+          return rtn
+        })
+        setSfSubmissionApprovalList((state: Array<SfSubmissionApproval>) => {
+          let rtn = []//cloneDeep(state)
+          for (let i = 0; i < 3; i++) {
+            let approval: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+            approval.approver = `결재자${i + 1}`
+            approval.approvalSequence = i + 1
+            if (approval.approvalSequence === 1) {
+              approval.approvalSequenceNm = aprvSeqNm.FIRST
+            } else if (approval.approvalSequence === 2) {
+              approval.approvalSequenceNm = aprvSeqNm.SECOND
+            } else if (approval.approvalSequence === 3) {
+              approval.approvalSequenceNm = aprvSeqNm.LAST
+            }
+            rtn.push(approval)
+          }
+          return rtn
+        })
+      }
+    }
+
     const retrieveCustFeatRuleInfos = () => {
       /*
         Method      :: GET
@@ -198,12 +297,36 @@ const SelfFeatureDetail = () => {
       })
     }
 
+    const cancelRequestSubmission = async () => {
+      /*
+        승인 요청 취소
+        Method      :: PUT
+        Url         :: /api/v1/users/${email}/submissions/${submissionId}/cancel
+        path param  :: email, submissionId
+        query param :: 
+        body param  :: 
+      */
+      let config = cloneDeep(initConfig)
+      config.isLoarding = true
+      let request = cloneDeep(initApiRequest)
+      request.method = Method.PUT
+      let email = ""
+      let submissionId = ""
+      request.url = `/api/v1/users/${email}/submissions/${submissionId}/cancel`
+      console.log("[CancelRequestSubmission] Request  :: ", request)
+
+      let response = cloneDeep(initCommonResponse)
+      //response = await callApi(request)
+      console.log("[CancelRequestSubmission] Response :: ", response)
+    }
+
     const DetailBtnComponent = () => {
-      /**
-       * 등록 / 품의 저장 -> 목록,수정,승인요청 버튼
-       * 승인요청/결제진행/승인완료/반려 -> 목록,승인 확인 버튼
-       */
-      if (location.state.submissionStatus === subFeatStatus.REG || location.state.submissionStatus === subFeatStatus.SUBREG) {
+      if (
+        location.state.submissionStatus === ""
+        || location.state.submissionStatus === subFeatStatus.SAVE
+        || location.state.submissionStatus === subFeatStatus.REJT
+      ) {
+        // 등록(품의는 저장 x) / 품의 저장 / 반려
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
@@ -213,7 +336,43 @@ const SelfFeatureDetail = () => {
               수정
             </Button>
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-              승인요청
+              승인 정보
+            </Button>
+          </Stack>
+        )
+      } else if (location.state.submissionStatus === subFeatStatus.REQ) {
+        // 승인 요청
+        return (
+          <Stack justifyContent="End" gap="SM" className="width-100">
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+              목록
+            </Button>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
+              요청 취소
+            </Button>
+          </Stack>
+        )
+      } else if (location.state.submissionStatus === subFeatStatus.IN_APRV) {
+        // 결재 진행
+        return (
+          <Stack justifyContent="End" gap="SM" className="width-100">
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+              목록
+            </Button>
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
+              승인 정보
+            </Button>
+          </Stack>
+        )
+      } else if (location.state.submissionStatus === subFeatStatus.APRV) {
+        // 승인 완료
+        return (
+          <Stack justifyContent="End" gap="SM" className="width-100">
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+              목록
+            </Button>
+            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
+              승인 정보
             </Button>
           </Stack>
         )
@@ -223,9 +382,6 @@ const SelfFeatureDetail = () => {
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBINFO)}>
-              승인확인
-            </Button>
           </Stack>
         )
       }
@@ -234,9 +390,80 @@ const SelfFeatureDetail = () => {
     return (
       <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
       {/* 정보 영역 */}
+        {sfSubmissionRequestData.submissionNo !== "" && 
+        <>
+        <Typography variant="h2">승인 정보</Typography>
+        <Stack direction="Vertical" className="width-100" gap="MD">
+            <HorizontalTable className="width-100">
+                <TR>
+                    <TH colSpan={1} align="right">
+                    승인 번호
+                    </TH>
+                    <TD colSpan={2}>
+                        {sfSubmissionRequestData.submissionNo}
+                    </TD>
+                    <TH colSpan={1} align="right">
+                    요청자
+                    </TH>
+                    <TD colSpan={2}>
+                        {sfSubmissionRequestData.requesterName}
+                    </TD>
+                </TR>
+                <TR>
+                    <TH colSpan={1} align="right">
+                    승인 유형
+                    </TH>
+                    <TD colSpan={2}>
+                        {sfSubmissionRequestData.type}
+                    </TD>
+                    <TH colSpan={1} align="right">
+                    승인 상태
+                    </TH>
+                    <TD colSpan={2}>
+                        {sfSubmissionRequestData.status}
+                    </TD>
+                </TR>
+                <TR>
+                    <TH colSpan={1} align="right">
+                    요청 일시
+                    </TH>
+                    <TD colSpan={5.01}>
+                        {sfSubmissionRequestData.requestDate}
+                    </TD>
+                </TR>
+                <TR>
+                    <TH colSpan={1} align="right">
+                    승인 제목
+                    </TH>
+                    <TD colSpan={5.01}>
+                        {sfSubmissionRequestData.title}
+                    </TD>
+                </TR>
+                <TR>
+                    <TH colSpan={1} align="right">
+                    승인 내용
+                    </TH>
+                    <TD colSpan={5.01}>
+                        {sfSubmissionRequestData.content}
+                    </TD>
+                </TR>
+            </HorizontalTable>
+
+            <Stack justifyContent="Between" className="width-100">
+                <Typography variant="h4">결재선</Typography>
+            </Stack>
+            <VerticalTable
+                columns={columns}
+                rows={sfSubmissionApprovalList}
+                enableSort={false}
+            />
+        </Stack>
+        </>
+        }
+
         <Stack direction="Vertical" gap="MD">
             {/* 기본 정보 */}
-            <Typography variant="h3">Feature 기본 정보</Typography>
+            <Typography variant="h4">Feature 기본 정보</Typography>
               <HorizontalTable>
                 <TR>
                   <TH colSpan={1} align="right">대구분</TH>
@@ -300,7 +527,7 @@ const SelfFeatureDetail = () => {
             {/* 기본 정보 */}
 
             {/* 대상 선택 */}
-            <Typography variant="h3">대상 선택</Typography>
+            <Typography variant="h4">대상 선택</Typography>
               {/* drag && drop 영역*/}
               <Stack 
                   direction="Horizontal"
@@ -351,12 +578,23 @@ const SelfFeatureDetail = () => {
       {/* 버튼 영역 */}
 
       {/* 팝업 */}
-          <SubmissionRequestPop
-            isOpen={isOpenSubmissionRequestPop}
-            onClose={(isOpen) => setIsOpenSubmissionRequestPop(isOpen)}
-          />
+        <SubmissionRequestPop
+          isOpen={isOpenSubmissionRequestPop}
+          onClose={(isOpen) => setIsOpenSubmissionRequestPop(isOpen)}
+          featureInfo={featureInfo}
+        />
       {/* 팝업 */}
 
+      {/* Confirm 모달 */}
+        <ConfirmModal
+          isOpen={isOpenConfirmModal}
+          onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+          title={confirmModalTit}
+          content={confirmModalCont}
+          onConfirm={onConfirm}
+          onCancle={onCancel}
+          btnType={modalType}
+        />
       </Stack>
     )
   }

@@ -15,4 +15,5 @@ export interface ModalInfo {
   onConfirm?: Function;
   onCancle?: Function;
   onClose?: (isOpen: boolean) => void;
+  btnType?: string
 }

@@ -522,6 +522,7 @@ const BehvDropItem = ({
             content={confirmModalCont}
             onConfirm={onConfirm}
             onCancle={onCancel}
+            btnType={modalType}
         />
         </>
     )
