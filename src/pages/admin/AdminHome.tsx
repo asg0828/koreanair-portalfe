@@ -8,6 +8,40 @@ const AdminHome = () => {
   return (
     <Stack id="home" direction="Vertical" gap="LG" justifyContent="Between">
       <Stack direction="Horizontal" gap="LG" className="width-100" alignItems="Start">
+      <Stack direction={'Vertical'} className="box2 none">
+        <Stack direction="Vertical" className="box2-1 shadowBox1">
+          <Typography variant="h3" style={{ marginBottom: '12px' }}>
+            접속 정보
+          </Typography>
+          <ul>
+            <li>
+              <dl><dt>로그인 시간</dt><dd>2023-10-27 11:23</dd></dl>
+            </li>
+            <li>
+              <dl><dt>IP 주소</dt><dd>10.111.48.144</dd></dl>
+            </li>
+          </ul>
+          </Stack>
+          <Stack direction="Vertical" className="box2-1 shadowBox1">
+            <Typography variant="h3" style={{ marginBottom: '12px' }}>
+            부서별 접속자수 <span style={{ fontSize: '12px', color: '#333', fontWeight: 'normal' }}>(지난 일주일 기준)</span>
+          </Typography>
+          <ol>
+            <li className="item01">
+              <dl><dt>여객마케팅부</dt><dd>5,542<span>명</span></dd></dl>
+            </li>
+            <li className="item02">
+              <dl><dt>고객서비스부</dt><dd>3,300<span>명</span></dd></dl>
+            </li>
+            <li className="item03">
+              <dl><dt>고객승무본부</dt><dd>1,600<span>명</span></dd></dl>
+            </li>
+            <li className="item04">
+              <dl><dt>기내식사업본부</dt><dd>470<span>명</span></dd></dl>
+            </li>
+          </ol>
+          </Stack>
+        </Stack>
         <Stack direction="Vertical" className="box1 shadowBox1">
           <div>
             <>
@@ -55,38 +89,6 @@ const AdminHome = () => {
               <Stack justifyContent="End" alignItems="Center">
                 <span className="number n3">14,226</span>
                 <span className="count">명</span>
-              </Stack>
-            </Link>
-          </Stack>
-        </Stack>
-        <Stack direction={'Vertical'} className="box2 shadowBox1">
-          <div>
-            <Tag
-              variety="01"
-              size="LG"
-              shape="Round"
-              style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
-            >
-              여객마케팅부
-            </Tag>
-          </div>
-          <Typography variant="h2" style={{ lineHeight: '50px', marginBottom: '12px' }}>
-            내 부서
-          </Typography>
-          <Link to="/biz-meta/feature" className="box6 leftIconBox n1">
-            <Typography variant="h3">신청/등록 Feature</Typography>
-            <span className="smallBox_title"></span>
-            <Stack justifyContent="End" alignItems="Center">
-              <span className="number">226</span>
-              <span className="count">건</span>
-            </Stack>
-          </Link>
-          <Stack direction="Vertical" className="">
-            <Link to="/feature/interest" className="box6 leftIconBox n2">
-              <Typography variant="h3">관심 Feature</Typography>
-              <Stack justifyContent="End" alignItems="Center">
-                <span className="number">55</span>
-                <span className="count">건</span>
               </Stack>
             </Link>
           </Stack>

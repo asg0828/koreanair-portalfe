@@ -62,7 +62,7 @@ const Header = () => {
   };
 
   return (
-    <header id="header">
+    <header id="header" className={isAdminPage ? 'admin' : ''}>
       <Page fixedSize={true} style={{ padding: '0 20px' }}>
         <Stack direction="Horizontal" justifyContent="Between">
           <Stack gap="XL" className="logo-wrap">

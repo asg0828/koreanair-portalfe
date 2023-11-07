@@ -113,7 +113,7 @@
   font-size: 0.875rem;
   margin-bottom: 0.75rem;
   line-height: 1.5;
-  color: rgb(52, 52, 52);
+  color: #fff;
   display: block;
 }
 .dropDownMenu .dropDownItem .depth2{
@@ -133,4 +133,34 @@
 }
 .dropDownMenu .dropDownItem:last-child{
   border-right: 0;
+}
+
+#header.admin{
+  background:#001863;
+  border-bottom: 1px solid #ddd;
+  .home-logo {
+    background: url("/assets/images/logo1.png") no-repeat center;
+  }
+  .menu-title {
+    color:#b1b5c5;
+  }
+  .triger-active {
+    border-bottom: 2px solid #fff;
+  }
+  .dropdown-trigger:hover a,.dropdown-trigger:hover h4{
+    color: #fff ;
+  }
+  .dropDownMenu .dropDownItem a:hover{
+    color: #fff;
+  }
+  .user-info-wrap {
+    svg{
+      color: rgba(255,255,255,0.5);
+    }
+    span{
+      svg{
+        color: rgba(0, 0, 0, 0.54);
+      }
+    }
+  }
 }
