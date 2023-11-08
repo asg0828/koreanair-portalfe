@@ -3,7 +3,7 @@ import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
 import { TR, TH, TD, Stack, TextField, Select, SelectOption, Radio } from '@components/ui';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import { userColumns as columns, userRows as rows } from '@/utils/data/tableSampleData';
 
 const List = () => {
   const navigate = useNavigate();

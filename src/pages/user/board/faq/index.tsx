@@ -8,6 +8,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useModal, { ModalType } from '@/hooks/useModal';
+import AddIcon from '@mui/icons-material/Add';
 
 export type SearchKey = 'qstn' | 'answ';
 
@@ -164,6 +165,7 @@ const List = () => {
         page={page}
         buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+            <AddIcon />
             등록
           </Button>
         }

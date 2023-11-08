@@ -1,5 +1,5 @@
 import DataGrid from '@/components/grid/DataGrid';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import { authGroupColumns as columns, authGroupRows as rows } from '@/utils/data/tableSampleData';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, TextField, Typography } from '@components/ui';
 
@@ -31,11 +31,11 @@ const List = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        <Button size="LG">신규</Button>
-        <Button priority="Normal" appearance="Contained" size="LG">
+        <Button priority="Primary" appearance="Contained" size="LG">신규</Button>
+        <Button size="LG">
           저장
         </Button>
-        <Button priority="Primary" appearance="Contained" size="LG">
+        <Button size="LG">
           삭제
         </Button>
       </Stack>

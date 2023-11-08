@@ -1,4 +1,4 @@
-import DataGrid, { initPage } from '@/components/grid/DataGrid';
+import DataGrid from '@/components/grid/DataGrid';
 import { interestColumns as columns, interestRows as rows } from '@/utils/data/tableSampleData';
 import { Button, } from '@components/ui';
 
@@ -11,7 +11,7 @@ const List = () => {
         enableSort={true}
         clickable={true}
         onChange={undefined}
-        page={initPage}
+        // page={initPage}
         buttonChildren={
           <>
             {/* <Button size="LG">엑셀다운로드</Button> */}

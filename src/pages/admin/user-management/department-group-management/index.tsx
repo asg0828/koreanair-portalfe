@@ -1,6 +1,6 @@
 import HorizontalTable from '@/components/table/HorizontalTable';
 import TreeMenuForm from '@/components/form/TreeSearchForm';
-import { Stack, Button, TextField, TR, TH, TD, Radio } from '@components/ui';
+import { Stack, Button, TextField, TR, TH, TD, Select, SelectOption, Radio } from '@components/ui';
 
 const List = () => {
   return (
@@ -25,8 +25,28 @@ const List = () => {
             <TR>
               <TH>사용여부</TH>
               <TD>
-                <Radio label="사용" checked />
-                <Radio label="미사용" />
+                <Radio label="사용" name="isUse" checked />
+                <Radio label="미사용" name="isUse" />
+              </TD>
+            </TR>
+            <TR>
+              <TH>사용자권한그룹</TH>
+              <TD>
+                <Select appearance="Outline" placeholder="전체" className="width-100">
+                  <SelectOption className="width-100" value={1}>
+                    테스트
+                  </SelectOption>
+                </Select>
+              </TD>
+            </TR>
+            <TR>
+              <TH>관리자권한그룹</TH>
+              <TD>
+                <Select appearance="Outline" placeholder="전체" className="width-100">
+                  <SelectOption className="width-100" value={1}>
+                    테스트
+                  </SelectOption>
+                </Select>
               </TD>
             </TR>
           </HorizontalTable>
