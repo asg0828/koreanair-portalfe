@@ -15,11 +15,13 @@ const searchInfoList: SearchInfo[] = [
   { key: 'answ', value: '내용' },
 ];
 
+const defaultSearchKey = 'all';
+
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { openModal } = useModal();
-  const [searchKey, setSearchKey] = useState<SearchKey>('all');
+  const [searchKey, setSearchKey] = useState<SearchKey>(defaultSearchKey);
   const [searchValue, setSearchValue] = useState<string>('');
   const [page, setPage] = useState<PageInfo>(initPage);
   const [isChanged, setIsChanged] = useState(false);
@@ -33,6 +35,9 @@ const List = () => {
   };
 
   const handleChangeSearchKey = (e: any, value: any) => {
+    if (!value) {
+      value = defaultSearchKey;
+    }
     setSearchKey(value);
   };
 
@@ -45,7 +50,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setSearchKey('all');
+    setSearchKey(defaultSearchKey);
     setSearchValue('');
   };
 
@@ -132,7 +137,13 @@ const List = () => {
           </TH>
           <TD colSpan={3}>
             <Stack gap="SM" className="width-100">
-              <Select appearance="Outline" placeholder="전체" className="select-basic" onChange={handleChangeSearchKey} value={searchKey}>
+              <Select
+                appearance="Outline"
+                placeholder="전체"
+                className="select-basic"
+                onChange={handleChangeSearchKey}
+                value={searchKey}
+              >
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}
