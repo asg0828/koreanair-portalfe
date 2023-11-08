@@ -64,7 +64,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({ buttonChildren, rows, onU
       <Stack className="accordionWrap width-100">
         <Accordion type="single" size="LG">
           {rows?.map((row) => (
-            <AccordionItem title={`[${row.clCode}] ${row.qstn}`} value={row.faqId}>
+            <AccordionItem title={`[${row.clCode || ''}] ${row.qstn || ''}`} value={row.faqId}>
               <Stack justifyContent="End" gap="SM" className="width-100">
                 <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
                   수정

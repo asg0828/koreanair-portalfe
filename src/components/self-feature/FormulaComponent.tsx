@@ -38,6 +38,18 @@ const FormulaComponent = ({
 
     }, [custFeatRuleCalc?.formula])
 
+    useEffect(() => {
+        if (formulaTrgtList.length < 1) return
+
+        setFormulaValidRslt(cloneDeep(ValidationFormula({
+            formula: cloneDeep(custFeatRuleCalc!.formula),
+            targetList: cloneDeep(formulaTrgtList),
+        })))
+        
+        setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
+        
+    }, [formulaTrgtList])
+
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         

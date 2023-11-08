@@ -419,7 +419,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         metaTblId: '',
         lastUpdLginId: '',
         submissionStatusNm: '등록중',
-    }, {
+    }, /*{
         id: 'CFR_00000003',
         name: '고객픽쳐테스트3',
         description: '승인요청',
@@ -441,7 +441,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         metaTblId: '',
         lastUpdLginId: '',
         submissionStatusNm: '승인요청',
-    }, {
+    },*/
+    {
         id: 'CFR_00000004',
         name: '고객픽쳐테스트4',
         description: '결재진행중',
@@ -525,9 +526,9 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         sqlDirectInputYn: '',
         frstRegUserNm: '',
         lastUpdUserNm: '수정자6',
-        submissionStatus: 'requested',
+        submissionStatus: 'inApproval',
         metaTblId: '',
         lastUpdLginId: '',
-        submissionStatusNm: '승인요청',
+        submissionStatusNm: '결재진행중',
     }
 ]
