@@ -93,7 +93,7 @@ const Home = () => {
                 <div className="home_icon_03"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number">2</span>
+                <span className="number">1</span>
                 <span className="count">건</span>
               </Stack>
             </Link>

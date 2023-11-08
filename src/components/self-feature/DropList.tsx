@@ -74,7 +74,7 @@ const DropList = ({
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
-                    target.tableName = String(targetObj.metaTblId)
+                    target.tableName = String(targetObj.metaTblLogiNm)
                     // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)
@@ -87,7 +87,7 @@ const DropList = ({
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
                     target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
-                    target.tableName = String(targetObj.metaTblId)
+                    target.tableName = String(targetObj.metaTblLogiNm)
                     // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)

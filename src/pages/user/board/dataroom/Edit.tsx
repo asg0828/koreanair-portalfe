@@ -118,7 +118,10 @@ const Edit = () => {
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
-                  {...register('sj', { required: 'subject is required.' })}
+                  {...register('sj', {
+                    required: { value: true, message: 'subject is required.' },
+                    maxLength: { value: 100, message: 'max length exceeded' },
+                  })}
                   validation={errors?.sj?.message ? 'Error' : undefined}
                 />
                 <ErrorLabel message={errors?.sj?.message} />
@@ -141,7 +144,9 @@ const Edit = () => {
                 <Controller
                   name="cn"
                   control={control}
-                  rules={{ required: 'content is required.' }}
+                  rules={{
+                    required: { value: true, message: 'content is required.' },
+                  }}
                   render={({ field }) => (
                     <TinyEditor
                       ref={field.ref}

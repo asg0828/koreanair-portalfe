@@ -1,4 +1,4 @@
-import SearchForm, { SearchKey, searchInfoList } from '@/components/form/SearchForm';
+import SearchForm, { SearchKey, SearchInfo } from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useDataroomList } from '@/hooks/queries/useDataroomQueries';
 import { DataroomInfo } from '@/models/Board/Dataroom';
@@ -8,7 +8,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDateString } from '@/utils/FuncUtil';
-import { htmlTagReg } from '@/utils/Constants';
+import { htmlTagReg, htmlSpeReg } from '@/utils/Constants';
 import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
@@ -21,10 +21,17 @@ const columns = [
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
 ];
 
+const searchInfoList: SearchInfo[] = [
+  { key: 'sj', value: '제목' },
+  { key: 'cn', value: '내용' },
+];
+
+const defaultSearchKey = 'all';
+
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [searchKey, setSearchKey] = useState<SearchKey>(searchInfoList[0].key);
+  const [searchKey, setSearchKey] = useState<SearchKey>(defaultSearchKey);
   const [searchValue, setSearchValue] = useState<string>('');
   const [page, setPage] = useState<PageInfo>(initPage);
   const [isChanged, setIsChanged] = useState(false);
@@ -45,6 +52,9 @@ const List = () => {
   };
 
   const handleChangeSearchKey = (e: any, value: any) => {
+    if (!value) {
+      value = defaultSearchKey;
+    }
     setSearchKey(value);
   };
 
@@ -57,7 +67,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setSearchKey(searchInfoList[0].key);
+    setSearchKey(defaultSearchKey);
     setSearchValue('');
   };
 
@@ -91,7 +101,7 @@ const List = () => {
         response.data.page.page = response.data.page.page - 1;
         response.data.contents.forEach((item: DataroomInfo) => {
           item.rgstDt = getDateString(item.rgstDt, '-');
-          item.cn = item.cn.replace(htmlTagReg, '');
+          item.cn = item.cn.replace(htmlTagReg, '').replace(htmlSpeReg, '');
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
           item.useYn = item.useYn === 'Y' ? '예' : '아니오';
         });
@@ -110,7 +120,13 @@ const List = () => {
           </TH>
           <TD colSpan={3}>
             <Stack gap="SM" className="width-100">
-              <Select appearance="Outline" placeholder="전체" className="select-basic" onChange={handleChangeSearchKey}>
+              <Select
+                appearance="Outline"
+                placeholder="전체"
+                className="select-basic"
+                onChange={handleChangeSearchKey}
+                value={searchKey}
+              >
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}

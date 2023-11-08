@@ -110,7 +110,10 @@ const Reg = () => {
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
-                  {...register('qstn', { required: 'question is required.' })}
+                  {...register('qstn', {
+                    required: { value: true, message: 'question is required.' },
+                    maxLength: { value: 1000, message: 'max length exceeded' },
+                  })}
                   validation={errors?.qstn?.message ? 'Error' : undefined}
                 />
                 <ErrorLabel message={errors?.qstn?.message} />
@@ -124,7 +127,7 @@ const Reg = () => {
                 <Controller
                   name="clCode"
                   control={control}
-                  rules={{ required: 'code is required.' }}
+                  rules={{ required: { value: true, message: 'code is required.' } }}
                   render={({ field }) => (
                     <Select
                       appearance="Outline"
@@ -158,7 +161,7 @@ const Reg = () => {
                 <Controller
                   name="answ"
                   control={control}
-                  rules={{ required: 'answer is required.' }}
+                  rules={{ required: { value: true, message: 'answer is required.' } }}
                   render={({ field }) => (
                     <TinyEditor
                       ref={field.ref}

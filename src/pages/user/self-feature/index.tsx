@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from "lodash";
 
+import { RowsInfo } from "@/models/components/Table";
 import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
 import {
@@ -22,11 +23,11 @@ import ConfirmModal from "@/components/modal/ConfirmModal";
 import AddIcon from '@mui/icons-material/Add'
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
-import { RowsInfo } from "@/models/components/Table";
 import { 
+  category,
   featListColumns as columns,
-  initTbRsCustFeatRule,
   protoTbRsCustFeatRuleList,
+  submissionStatus,
 } from "./data";
 import { Method, callApi } from "@/utils/ApiUtil";
 import { StatusCode } from "@/models/common/CommonResponse"
@@ -38,29 +39,9 @@ import {
   ModalType,
   ModalTitCont,
   initQueryParams,
+  subFeatStatus,
 } from '@/models/selfFeature/FeatureCommon';
 
-const category = [
-  { value: '', text: '선택' },
-  { value: 'PROPORTION', text: '비율' },
-  { value: 'SUM', text: '합계' },
-  { value: 'TOP_N', text: 'Top N' },
-  { value: 'CASE', text: 'Case문 사용' },
-  { value: 'COUNT', text: '건수' },
-  { value: 'AVG', text: '평균' },
-]
-const useYn = [
-  { value: '', text: '선택' },
-  { value: 'USE_Y', text: '사용' },
-  { value: 'USE_N', text: '미사용' },
-]
-const submissionStatus = [
-  { value: '', text: '전체' },
-  { value: 'saved', text: '등록' },
-  { value: 'inApproval', text: '결재진행중' },
-  { value: 'approved', text: '승인 완료' },
-  { value: 'rejected', text: '반려' },
-]
 
 export interface searchProps {
   mstrSgmtRuleId: string
@@ -97,7 +78,7 @@ const SelfFeature = () => {
     if (location.state) {
       if (location.state.submissionStatus === "reg") {
         setSearchInfo((state: searchProps) => {
-          state.submissionStatus = "saved"
+          state.submissionStatus = subFeatStatus.SAVE
           return cloneDeep(state)
         })
       } else {
@@ -129,13 +110,13 @@ const SelfFeature = () => {
     let response = cloneDeep(initCommonResponse)
     //response = await callApi(request)
     console.log("[retrieveCustFeatRules] Response :: ", response)
-
-    let list: Array<TbRsCustFeatRule> = []
     /*
     if (response.successOrNot === StatusCode.SUCCESS) {
       list = response.data
     }
     */
+   /*
+    let list: Array<TbRsCustFeatRule> = []
     for (let i = 0; i < 10; i++) {
       let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
       selfFeature.id = `ID_${String(i)}` //custFeatRuleId
@@ -152,10 +133,11 @@ const SelfFeature = () => {
       }
       list.push(selfFeature)
     }
+    */
     setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
       if (searchInfo.submissionStatus !== "") {
-        if (searchInfo.submissionStatus === "reg" || searchInfo.submissionStatus === "saved") {
-          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === "" || v.submissionStatus === "saved")//list
+        if (searchInfo.submissionStatus === "reg" || searchInfo.submissionStatus === subFeatStatus.SAVE) {
+          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === "" || v.submissionStatus === subFeatStatus.SAVE)//list
         } else if (searchInfo.submissionStatus) {
           prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === searchInfo.submissionStatus)//list//list
         }
