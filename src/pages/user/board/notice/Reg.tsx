@@ -1,15 +1,15 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm, Controller } from 'react-hook-form';
-import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
-import { TR, TH, TD, Button, Stack, Label, Radio, DatePicker, TextField, useToast } from '@components/ui';
-import HorizontalTable from '@components/table/HorizontalTable';
-import UploadDropzone from '@/components/upload/UploadDropzone';
-import TinyEditor from '@/components/editor/TinyEditor';
-import { CreatedNoticeInfo } from '@/models/Board/Notice';
-import ErrorLabel from '@/components/error/ErrorLabel';
-import useModal, { ModalType } from '@/hooks/useModal';
 import '@/assets/styles/Board.scss';
+import TinyEditor from '@/components/editor/TinyEditor';
+import ErrorLabel from '@/components/error/ErrorLabel';
+import UploadDropzone from '@/components/upload/UploadDropzone';
+import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
+import useModal, { ModalType } from '@/hooks/useModal';
+import { CreatedNoticeInfo } from '@/models/Board/Notice';
+import HorizontalTable from '@components/table/HorizontalTable';
+import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { useEffect } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 const Reg = () => {
   const navigate = useNavigate();
@@ -85,11 +85,9 @@ const Reg = () => {
           </TR>
           <TR>
             <TH>팝업공지여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
-                <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
+              <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
             </TD>
             <TH required>팝업공지일자</TH>
             <TD>
@@ -150,28 +148,14 @@ const Reg = () => {
           </TR>
           <TR>
             <TH>게시여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-                <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
+              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
             </TD>
             <TH>중요여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio
-                  label="중요"
-                  value="Y"
-                  defaultChecked={values.importantYn === 'Y'}
-                  {...register('importantYn')}
-                />
-                <Radio
-                  label="일반"
-                  value="N"
-                  defaultChecked={values.importantYn === 'N'}
-                  {...register('importantYn')}
-                />
-              </Stack>
+            <TD align="left">
+              <Radio label="중요" value="Y" defaultChecked={values.importantYn === 'Y'} {...register('importantYn')} />
+              <Radio label="일반" value="N" defaultChecked={values.importantYn === 'N'} {...register('importantYn')} />
             </TD>
           </TR>
           <TR className="height-100">

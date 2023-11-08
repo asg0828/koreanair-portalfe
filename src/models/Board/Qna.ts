@@ -1,4 +1,4 @@
-import { YN, commonInfo } from '@models/common/CommonInfo';
+import { commonInfo } from '@models/common/CommonInfo';
 
 export interface QnaInfo extends CreatedQnaInfo, commonInfo {
   qnaId: string;
@@ -9,7 +9,8 @@ export interface CreatedQnaInfo {
   sj: string;
   cn: string;
   qnaStat: string;
-  useYn: YN;
+  openYn: string;
+  useYn: string;
 }
 
 export interface UpdatedQnaInfo extends CreatedQnaInfo {

@@ -1,4 +1,4 @@
-import { YN, commonInfo } from '@models/common/CommonInfo';
+import { commonInfo } from '@models/common/CommonInfo';
 
 export interface NoticeInfo extends CreatedNoticeInfo, commonInfo {
   noticeId: string;
@@ -9,9 +9,9 @@ export interface CreatedNoticeInfo {
   cn: string;
   startDt: string;
   endDt: string;
-  popupYn: YN;
-  useYn: YN;
-  importantYn: YN;
+  popupYn: string;
+  useYn: string;
+  importantYn: string;
 }
 
 export interface UpdatedNoticeInfo extends CreatedNoticeInfo {

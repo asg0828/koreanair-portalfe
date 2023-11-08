@@ -1,16 +1,16 @@
-import { YN, commonInfo } from '@models/common/CommonInfo';
+import { commonInfo } from '@models/common/CommonInfo';
 
-export interface DataRoomInfo extends CreatedDataRoomInfo, commonInfo {
+export interface DataroomInfo extends CreatedDataroomInfo, commonInfo {
   dataId: string;
 }
 
-export interface CreatedDataRoomInfo {
+export interface CreatedDataroomInfo {
   clCode: string;
   sj: string;
   cn: string;
-  useYn: YN;
+  useYn: string;
 }
 
-export interface UpdatedDataRoomInfo extends CreatedDataRoomInfo {
+export interface UpdatedDataroomInfo extends CreatedDataroomInfo {
   dataId: string;
 }

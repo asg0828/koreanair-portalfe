@@ -7,7 +7,7 @@ import useModal, { ModalType } from '@/hooks/useModal';
 import { CreatedFaqInfo } from '@/models/Board/Faq';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -106,11 +106,9 @@ const Reg = () => {
               </Stack>
             </TD>
             <TH>게시여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-                <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
+              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
             </TD>
           </TR>
           <TR className="height-100">
