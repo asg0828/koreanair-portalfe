@@ -34,6 +34,7 @@ import {
   initTbRsCustFeatRuleCase,
   initFeatureTemp,
   initTbRsCustFeatRuleSql,
+  protoTypeMstrSgmtTableandColMetaInfo,
 } from './data'
 import { Method, callApi } from '@/utils/ApiUtil';
 import {
@@ -226,57 +227,7 @@ const SelfFeatureReg = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
 
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
-      let temp = cloneDeep(state)
-      let attributes = []
-      let behaviors  = []
-      if (temp) {
-        temp.rslnRuleId = 'featureTest'
-
-        for (let i = 0; i < 4; i++) {
-
-          let behabvior = cloneDeep(initBehavior)
-
-          behabvior.metaTblId = `featureBehvTable${i+1}`
-          behabvior.metaTblLogiNm = `픽처테이블${i+1}`
-          behabvior.tbCoMetaTbInfo.dbNm = `selfFeature${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblDesc = `메타테이블설명${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblDvCd = `ATTR/BEHV${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblPhysNm = `행동물리명${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblLogiNm = `행동논리명${i+1}`
-
-          let tbCoMetaTblClmnInfoList = []
-          for (let j = 0; j < 4; j++) {
-
-            let tbCoMetaTblClmnInfo = cloneDeep(initTbCoMetaTblClmnInfo)
-
-            tbCoMetaTblClmnInfo.metaTblId = `featureBehvTable${i+1}`
-            tbCoMetaTblClmnInfo.metaTblClmnId = `featureBehvTable${i+1}Clmn${i+1}`
-            tbCoMetaTblClmnInfo.metaTblClmnPhysNm = `컬럼 물리명${j+1}`
-            tbCoMetaTblClmnInfo.metaTblClmnLogiNm = `컬럼 논리명${j+1}`
-            tbCoMetaTblClmnInfoList.push(tbCoMetaTblClmnInfo)
-          }
-
-          behabvior.tbCoMetaTblClmnInfoList = tbCoMetaTblClmnInfoList
-          behaviors.push(behabvior)
-        }
-
-        for (let i = 0; i < 4; i++) {
-
-          let attribute = cloneDeep(initAttribute)
-
-          attribute.metaTblId = `featureAttrTable${i+1}`
-          attribute.metaTblClmnId = `featureAttrTable${i+1}Clmn${i+1}`
-          attribute.metaTblClmnPhysNm = `속성컬럼물리명${i+1}`
-          attribute.metaTblClmnLogiNm = `속성컬럼논리명${i+1}`
-          
-          attributes.push(attribute)
-
-        }
-
-        temp.attributes = attributes
-        temp.behaviors  = behaviors
-      }
-      return cloneDeep(temp)
+      return cloneDeep(protoTypeMstrSgmtTableandColMetaInfo)
     })
   }
 

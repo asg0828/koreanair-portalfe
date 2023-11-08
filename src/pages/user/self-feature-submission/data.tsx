@@ -11,10 +11,10 @@ export const sfSubmissionListColumns = [
 // Feature 결재선 리스트 table header
 export const sfSubmissionApprovalListColumns = [
     { headerName: '단계',   field: 'approvalSequenceNm', colSpan: 2 },
-    { headerName: '결재자', field: 'approver', colSpan: 6 },
+    { headerName: '결재자', field: 'approver', colSpan: 4 },
     { headerName: '상태',   field: 'statusNm', colSpan: 2 },
-    { headerName: '일시',   field: 'approvedDate', colSpan: 3 },
-    { headerName: '의견',   field: 'comment', colSpan: 6 },
+    { headerName: '일시',   field: 'approvedDate', colSpan: 4 },
+    { headerName: '의견',   field: 'comment', colSpan: 8 },
 ]
 
 // Feature 결재자 선택 리스트 talbe header
@@ -47,7 +47,7 @@ export const aprvSeqNm = {
 
 export const initSfSubmissionRequestInfo: SfSubmissionRequestInfo = {
     id: '',
-    type: 'CustomerFeature',
+    type: 'Rule-Design',
     referenceNo: '',
     submissionNo: '',
     status: '',
