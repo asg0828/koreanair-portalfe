@@ -93,7 +93,6 @@ const List = () => {
         response.data.page.page = response.data.page.page - 1;
         response.data.contents.forEach((item: NoticeInfo) => {
           item.rgstDt = getDateString(item.rgstDt, '-');
-          item.cn = item.cn.replace(htmlTagReg, '');
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
         });
         setRows(response.data.contents);

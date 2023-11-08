@@ -8,7 +8,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getDateString } from '@/utils/FuncUtil';
-import { htmlTagReg } from '@/utils/Constants';
+import { htmlTagReg, htmlSpeReg } from '@/utils/Constants';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
@@ -95,7 +95,7 @@ const List = () => {
         response.data.page.page = response.data.page.page - 1;
         response.data.contents.forEach((item: DataroomInfo) => {
           item.rgstDt = getDateString(item.rgstDt, '-');
-          item.cn = item.cn.replace(htmlTagReg, '');
+          item.cn = item.cn.replace(htmlTagReg, '').replace(htmlSpeReg, '');
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
           item.useYn = item.useYn === 'Y' ? '예' : '아니오';
         });
