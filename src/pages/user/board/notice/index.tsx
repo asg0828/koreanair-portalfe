@@ -110,7 +110,7 @@ const List = () => {
           </TH>
           <TD colSpan={3}>
             <Stack gap="SM" className="width-100">
-              <Select appearance="Outline" placeholder="전체" className="select-basic" onChange={handleChangeSearchKey}>
+              <Select appearance="Outline" placeholder="전체" className="select-basic" onChange={handleChangeSearchKey} value={searchKey}>
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}
