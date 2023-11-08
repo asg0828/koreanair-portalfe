@@ -85,11 +85,9 @@ const Reg = () => {
           </TR>
           <TR>
             <TH>팝업공지여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
-                <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
+              <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
             </TD>
             <TH required>팝업공지일자</TH>
             <TD>
@@ -150,28 +148,14 @@ const Reg = () => {
           </TR>
           <TR>
             <TH>게시여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-                <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
+              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
             </TD>
             <TH>중요여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio
-                  label="중요"
-                  value="Y"
-                  defaultChecked={values.importantYn === 'Y'}
-                  {...register('importantYn')}
-                />
-                <Radio
-                  label="일반"
-                  value="N"
-                  defaultChecked={values.importantYn === 'N'}
-                  {...register('importantYn')}
-                />
-              </Stack>
+            <TD align="left">
+              <Radio label="중요" value="Y" defaultChecked={values.importantYn === 'Y'} {...register('importantYn')} />
+              <Radio label="일반" value="N" defaultChecked={values.importantYn === 'N'} {...register('importantYn')} />
             </TD>
           </TR>
           <TR className="height-100">

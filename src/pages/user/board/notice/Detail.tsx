@@ -32,7 +32,7 @@ const Detail = () => {
   const goToEdit = () => {
     navigate('../edit', {
       state: {
-        noticeId: noticeInfo?.noticeId,
+        noticeId: noticeId,
       },
     });
   };
