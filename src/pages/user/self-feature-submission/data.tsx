@@ -361,9 +361,9 @@ export const protoTypeSfSubmissionApprovalListRejected: Array<SfSubmissionApprov
         status: 'approved',//[ requested, canceled, approved, rejected ]
         statusNm: '',//[ requested, canceled, approved, rejected ]
         approver: '최종승인자(박최종)',
-        comment: '승인합니다.',
+        comment: '',
         requestDate: '',
-        approvedDate: '2023-11-09 14:20:05',
+        approvedDate: '',
         creator: '',
         createdDate: '',
         lastModifier: '',
