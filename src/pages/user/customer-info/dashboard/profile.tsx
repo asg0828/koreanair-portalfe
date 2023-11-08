@@ -1,7 +1,7 @@
 import { Avatar, Stack, Typography } from '@components/ui';
 import { profile, mileage, ffp } from './data';
 
-export default function Profile() {
+export default function ProfileComp() {
   return (
     <Stack>
       <div

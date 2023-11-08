@@ -21,12 +21,14 @@ import {
 
 import { ReadSql } from '@/models/selfFeature/FeatureInfo';
 import { 
-    initApiRequest,
-    initCommonResponse,
-    initConfig,
     initReadSql, 
 } from '@/pages/user/self-feature/data';
 import { Method, callApi } from '@/utils/ApiUtil';
+import {
+    initApiRequest,
+    initCommonResponse,
+    initConfig,
+} from '@/models/selfFeature/FeatureCommon';
 
 export interface Props {
     isOpen?: boolean

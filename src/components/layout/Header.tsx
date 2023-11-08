@@ -51,9 +51,10 @@ const Header = () => {
   };
 
   const handleLogout = async () => {
-    await sessionApis.logoutRequset();
+    await sessionApis.logoutSession();
+    await sessionApis.revokeToken();
+    sessionUtil.googleLogout();
     localStorage.removeItem('accessPathname');
-    window.location.reload();
   };
 
   const handleDropMenu = () => {

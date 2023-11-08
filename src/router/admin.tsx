@@ -15,17 +15,16 @@ import NoticeDetail from '@pages/user/board/notice/Detail';
 import NoticeReg from '@pages/user/board/notice/Reg';
 import NoticeEdit from '@pages/user/board/notice/Edit';
 import Faq from '@pages/user/board/faq';
-import FaqDetail from '@pages/user/board/faq/Detail';
 import FaqReg from '@pages/user/board/faq/Reg';
 import FaqEdit from '@pages/user/board/faq/Edit';
 import Qna from '@pages/user/board/qna';
 import QnaDetail from '@pages/user/board/qna/Detail';
 import QnaReg from '@pages/user/board/qna/Reg';
 import QnaEdit from '@pages/user/board/qna/Edit';
-import Archive from '@pages/user/board/archive';
-import ArchiveDetail from '@pages/user/board/archive/Detail';
-import ArchiveReg from '@pages/user/board/archive/Reg';
-import ArchiveEdit from '@pages/user/board/archive/Edit';
+import Dataroom from '@/pages/user/board/dataroom';
+import DataroomDetail from '@/pages/user/board/dataroom/Detail';
+import DataroomReg from '@/pages/user/board/dataroom/Reg';
+import DataroomEdit from '@/pages/user/board/dataroom/Edit';
 import DataSet from '@pages/user/biz-meta/dataset';
 import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
 import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
@@ -44,6 +43,7 @@ import Daily from '@pages/admin/admin-report/one-id-report/daily';
 import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 import StructuredReportManagement from '@pages/admin/structured-report-management';
+import AdminHome from '@/pages/admin/AdminHome';
 
 const adminRouter = [
   {
@@ -54,6 +54,7 @@ const adminRouter = [
       {
         path: 'admin',
         children: [
+          { index: true, element: <AdminHome /> },
           {
             path: 'biz-meta-management',
             children: [
@@ -148,7 +149,6 @@ const adminRouter = [
                     path: 'faq',
                     children: [
                       { index: true, element: <Faq /> },
-                      { path: 'detail', element: <FaqDetail /> },
                       { path: 'reg', element: <FaqReg /> },
                       { path: 'edit', element: <FaqEdit /> },
                     ],
@@ -163,12 +163,12 @@ const adminRouter = [
                     ],
                   },
                   {
-                    path: 'archive',
+                    path: 'dataroom',
                     children: [
-                      { index: true, element: <Archive /> },
-                      { path: 'detail', element: <ArchiveDetail /> },
-                      { path: 'reg', element: <ArchiveReg /> },
-                      { path: 'edit', element: <ArchiveEdit /> },
+                      { index: true, element: <Dataroom /> },
+                      { path: 'detail', element: <DataroomDetail /> },
+                      { path: 'reg', element: <DataroomReg /> },
+                      { path: 'edit', element: <DataroomEdit /> },
                     ],
                   },
                 ],

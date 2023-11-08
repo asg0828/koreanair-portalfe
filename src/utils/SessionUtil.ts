@@ -98,6 +98,16 @@ export default class SessionUtil {
     sessionStorage.clear();
   };
 
+  /* google logout */
+  public googleLogout = (): void => {
+    this.deleteSessionInfo();
+
+    const redirectUri: string = encodeURIComponent(process.env.REACT_APP_AUTHORIZATION_REDIRECT_URL || '');
+    window.location.assign(
+      'https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=' + redirectUri
+    );
+  };
+
   /* localStorage */
   public getLocalAccessTokenRefreshTokenInfo = (): AccessTokenRefreshTokenInfo => {
     let accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo = {} as AccessTokenRefreshTokenInfo;

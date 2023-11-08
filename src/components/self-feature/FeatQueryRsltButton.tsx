@@ -10,7 +10,13 @@ import {
     Button,
     Stack,
 } from '@components/ui'
-import { ModalTitCont, ModalType, initApiRequest, initCommonResponse, initConfig } from '@/pages/user/self-feature/data';
+import {
+    ModalTitCont, 
+    ModalType, 
+    initApiRequest, 
+    initCommonResponse, 
+    initConfig
+} from '@/models/selfFeature/FeatureCommon';
 import { Method, callApi } from '@/utils/ApiUtil';
 
 const FeatQueryRsltButton = () => {
@@ -110,6 +116,7 @@ const FeatQueryRsltButton = () => {
                 content={confirmModalCont}
                 onConfirm={onConfirm}
                 onCancle={onCancel}
+                btnType={modalType}
             />
         </>
     )

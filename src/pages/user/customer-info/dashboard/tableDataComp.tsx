@@ -1,10 +1,11 @@
 import VerticalTable from '@/components/table/VerticalTable';
-import { Stack } from '@ke-design/components';
+import React from 'react';
 
-export default function TableDataComp(props: any) {
+export const TableDataComp = React.memo((props: any) => {
   const pnrTickerColumn = props.column;
   const pnrData = props.row;
   const flag = props.flag;
+
   return (
     <div
       style={{
@@ -18,4 +19,4 @@ export default function TableDataComp(props: any) {
       <VerticalTable columns={pnrTickerColumn} rows={pnrData} showHeader={true} />
     </div>
   );
-}
+});

@@ -1,6 +1,7 @@
 import { Stack, Typography } from '@components/ui';
+import React from 'react';
 
-export default function DetailData(props: any) {
+export const DetailData = React.memo((props: any) => {
   const data = props.init;
   const flag = props.compName;
   return (
@@ -25,4 +26,4 @@ export default function DetailData(props: any) {
       </Stack>
     </div>
   );
-}
+});

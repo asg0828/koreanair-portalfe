@@ -4,8 +4,14 @@ import { useState } from 'react';
 import { Typography } from '@mui/material';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { errLogColumn, errLogData } from '../one-id-main/data';
+import { Method, callApi } from '@/utils/ApiUtil';
+import { Service } from '@/models/common/Service';
+import { initApiRequest, initCommonResponse, initConfig } from '@/models/selfFeature/FeatureCommon';
+import { cloneDeep } from 'lodash';
 
+//남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function OneIdErrorHistory() {
+  /* 검색 조건 */
   const [errCode, setErrCode] = useState('');
   const [errCodeDtl, setErrCodeDtl] = useState('');
   const [channelCode, setChannelCode] = useState('');
@@ -17,6 +23,7 @@ export default function OneIdErrorHistory() {
 
   const today = new Date();
 
+  /* 검색조건 input 입력 함수 */
   function onSearchChangeHandler(e: any, target: string) {
     let currVal = e.target.value;
     if (target === 'errCode') {
@@ -32,7 +39,7 @@ export default function OneIdErrorHistory() {
     }
   }
 
-  //라디오 클릭시 값, input 초기화 함수
+  /* 라디오 클릭시 값, input 초기화 함수 */
   function radioVal(e: any) {
     let currVal = e.target.value;
 
@@ -45,23 +52,39 @@ export default function OneIdErrorHistory() {
     setChannelCode(currVal);
   }
 
-  // 검색 버튼
+  /* 검색 버튼 */
   function onSearch() {
-    const formData = new FormData();
-
-    formData.append('endDate', endDate);
-    formData.append('startDate', startDate);
-    formData.append('errCode', errCode);
-    formData.append('errCodeDtl', errCodeDtl);
-    formData.append('pnrNum', pnrNum);
-    formData.append('uciid', uciid);
-
-    // for (const x of formData.entries()) {
-    //   console.log(x);
-    // }
+    retrieveErrorHistory();
   }
 
-  // 초기화 버튼
+  /* api 호출 */
+  const retrieveErrorHistory = async () => {
+    let config = cloneDeep(initConfig);
+    config.isLoarding = true;
+    let request = cloneDeep(initApiRequest);
+    request.method = Method.GET;
+    request.url = '';
+    request.service = Service.KAL_BE;
+    request.params = {
+      bodyParams: {
+        errCode: errCode,
+        errCodeDtl: errCodeDtl,
+        pnrNum: pnrNum,
+        channelCode: channelCode,
+        uciid: uciid,
+        skypassNum: skypassNum,
+        startDate: startDate,
+        endDate: endDate,
+      },
+    };
+    let response = cloneDeep(initCommonResponse);
+    response = await callApi(request);
+
+    console.log(request.params);
+    console.log('[retrieve360] Response :: ', response);
+  };
+
+  /* 초기화 버튼 */
   function onClear() {
     setStartDate('');
     setEndDate('');
@@ -71,29 +94,28 @@ export default function OneIdErrorHistory() {
     setPnrNum('');
     setUciid('');
     setSkypassNum('');
+    setChannelCode('');
   }
 
-  // 기간 별 버튼
+  /* 기간 별 버튼 */
   function duration(flag: string) {
     let date = '';
-    if (flag == 'today') {
+    if (flag === 'today') {
       date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
       setEndDate(date);
-    } else if (flag == 'oneMonth') {
-      date = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-    } else if (flag == 'sixMonth') {
-      date = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate()}`;
-    } else if (flag == 'oneYear') {
-      date = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate()}`;
+    } else if (flag === 'oneMonth') {
+      date = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+    } else if (flag === 'sixMonth') {
+      date = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+    } else if (flag === 'oneYear') {
+      date = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
     }
     setStartDate(date);
   }
 
   return (
     <div style={{ width: '1200px' }}>
-      {/* <Accordion align="Right" size="MD" type="multiple"> */}
       <div>
-        {/* <AccordionItem value={''} title={undefined} children={undefined}> */}
         <Stack>
           <HorizontalTable>
             <TR>
@@ -118,7 +140,14 @@ export default function OneIdErrorHistory() {
             <TR>
               <TH align="right">OneID등록Channel코드</TH>
               <TD>
-                <Radio name="channelCode" label="전체" onClick={(e) => radioVal(e)} value="total" defaultChecked />
+                <Radio
+                  name="channelCode"
+                  label="전체"
+                  checked={channelCode === ''}
+                  onClick={(e) => radioVal(e)}
+                  value="total"
+                  defaultChecked
+                />
                 <Radio name="channelCode" label="ODS" onClick={(e) => radioVal(e)} value="ods" />
                 <Radio name="channelCode" label="SKYPASS" onClick={(e) => radioVal(e)} value="skypass" />
               </TD>
@@ -194,7 +223,6 @@ export default function OneIdErrorHistory() {
             <Button onClick={onClear}>초기화</Button>
           </Stack>
         </div>
-        {/* </AccordionItem> */}
       </div>
 
       <Typography variant="h6">조회결과 {errLogData.length}</Typography>
@@ -202,7 +230,6 @@ export default function OneIdErrorHistory() {
         <VerticalTable enableSort={true} showHeader={true} columns={errLogColumn} rows={errLogData} />
       </Stack>
       <Pagination />
-      {/* </Accordion> */}
     </div>
   );
 }

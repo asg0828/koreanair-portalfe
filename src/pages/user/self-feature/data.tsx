@@ -1,5 +1,3 @@
-import CommonResponse, { StatusCode } from "@/models/common/CommonResponse";
-import { Service } from "@/models/common/Service";
 import { 
     FeatureInfo,
     TbRsCustFeatRuleCalc,
@@ -17,49 +15,11 @@ import {
     FeatSampleData,
     BatchExecuteLog,
     ReadSql,
+    FeatureTemp,
+    TbRsCustFeatRuleSql,
 } from "@/models/selfFeature/FeatureInfo";
-import { ApiRequest, Config, Method, ParamObject, QueryParams } from "@/utils/ApiUtil";
-// API Config inti
-export const initConfig: Config = {
-    isLoarding: false,
-    isFile: false,
-    isOAuth: false,
-    isAccessTokenRefreshToken: false,
-}
-export const initQueryParams: QueryParams = {}
-export const initParam: ParamObject = {
-    queryParams: initQueryParams,
-    bodyParams: {},
-}
-// API request init
-export const initApiRequest: ApiRequest = {
-    service: Service.KAL_SF_BE,
-    url: '',
-    method: Method.GET,
-    params: initParam
-}
-// API response init
-export const initCommonResponse: CommonResponse = {
-    successOrNot: 'N',
-    statusCode: StatusCode.FAIL,
-    data: {},
-}
-// 모달 타입
-export const ModalType = {
-    ALERT: 'alert',
-    CONFIRM: 'Confirm',
-}
-// 모달 title/context
-export const ModalTitCont = {
-    DETAIL: { title: "", context: ""},
-    REG: { title: "Feature 저장", context: "Feature 정보를 저장 하시겠습니까?"},
-    EDIT: { title: "Feature 수정", context: "Feature 정보를 수정 하시겠습니까?"},
-    DELETE: { title: "Feature 삭제", context: "선택한 Feature 정보를 삭제 하시겠습니까?"},
-    BETCH: { title: "Feature 수동 실행", context: "Feature 수동 실행을 진행 하시겠습니까?" },
-    DEL_VALID: { title: "Feature 삭제", context: "삭제할 항목이 없습니다." },
-    REG_VALID: { title: "Feature 저장", context: "계산식을 확인해주세요."},
-    EDIT_VALID: { title: "Feature 수정", context: "계산식을 확인해주세요."},
-}
+
+
 // 대상선택(행동 데이터) 순번 setting(A,B,C ...)
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
 
@@ -68,21 +28,7 @@ export const initFormulaValidRslt: FormulaValidRslt = {
     isValidFormula: true,
     text:  '',
 }
-// 페이지명(path) setting
-export const selfFeatPgPpNm = {
-    LIST: 'list', // 목록
-    DETL: 'detail',  // 상세
-    REG:  'reg',  // 등록
-    EDIT: 'edit',  // 수정
-    SUBMCFRM: 'subConfirm', // 승인 요청 팝업
-    SUBINFO:  'subInfo',  // 승인 확인 팝업
-    PRNTCHLD: 'parentChildList'
-}
-// feat 상태
-export const subFeatStatus = {
-    REG: 'reg', // 등록
-    SUBREG: 'sub_reg', // 품의 저장
-}
+
 // 필터 옵션
 export const filterOption = [
     { value: 'ALL', text: '아래 조건을 모두 만족하는 경우' },
@@ -135,9 +81,9 @@ export const whenYn = [
 export const featListColumns = [
     { headerName: 'Feature 명', field: 'name', colSpan: 8 },
     { headerName: '최종 수정 일시', field: 'lastUpdDttm', colSpan: 3 },
-    { headerName: '진행 상태', field: 'submissionStatus', colSpan: 4 },
+    { headerName: '진행 상태', field: 'submissionStatusNm', colSpan: 4 },
     { headerName: '최종 수정 사용자', field: 'lastUpdUserNm', colSpan: 2 },
-    { headerName: '사용 여부', field: 'useYn', colSpan: 2 },
+    // { headerName: '사용 여부', field: 'useYn', colSpan: 2 },
 ]
 // Feature 선후행 관계 table header
 export const featPrntClidListColumns = [
@@ -159,7 +105,7 @@ export const batchExecuteLogListColumns = [
     { headerName: '생성 건수', field: 'rsltCnt', colSpan: 3 },
     { headerName: '수행 결과', field: 'batchResultStatus', colSpan: 3 },
 ]
-
+// 속성, 행동, feature 데이터 타입
 export const divisionTypes = {
     ATTR: 'ATTR',
     FEAT: 'FEAT',
@@ -173,7 +119,7 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     rslnRuleId: '',
     mstrSgmtRuleId: '',
     mstrSgmtRuleNm: '',
-    useYn: '',
+    useYn: 'Y',
     batManualExecTestCnt: 0,
     frstRegDttm: '',
     frstRegUserId: '',
@@ -181,11 +127,13 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     lastUpdUserId: '',
     category: '',
     dataType: '',
+    sqlDirectInputYn: '',
     frstRegUserNm: '',
     lastUpdUserNm: '',
     submissionStatus: '',
     metaTblId: '',
-    lastUpdLginId: ''
+    lastUpdLginId: '',
+    submissionStatusNm: '',
 }
 
 export const initTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
@@ -270,12 +218,42 @@ export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
     lastUpdUserId: '',
 }
 
+export const initFeatureTemp: FeatureTemp = {
+    featureId: '',
+    featureTyp: '',
+    featureSe: '',
+    featureNm: '',
+    featureEngNm: '',
+    calcUnt: '',
+    featureDef: '',
+    featureFm: '',
+    enrUserId: '',
+    enrDeptCode: '',
+    delYn: '',
+    rgstDt: '',
+    rgstId: '',
+    modiDt: '',
+    modiId: '',
+    featureRelTb: '',
+}
+
+export const initTbRsCustFeatRuleSql: TbRsCustFeatRuleSql = {
+    custFeatRuleId: '',
+    sqlQuery: '',
+    frstRegDttm: '',
+    frstRegUserId: '',
+    lastUpdDttm: '',
+    lastUpdUserId: '',
+}
+
 export const initSelfFeatureInfo: FeatureInfo = {
     tbRsCustFeatRule: initTbRsCustFeatRule,
     tbRsCustFeatRuleCalc: initTbRsCustFeatRuleCalc,
     tbRsCustFeatRuleTrgtList: [{...initTbRsCustFeatRuleTrgt}],
     tbRsCustFeatRuleTrgtFilterList: [{...initTbRsCustFeatRuleTrgtFilter}],
     tbRsCustFeatRuleCaseList: [{...initTbRsCustFeatRuleCase}],
+    featureTemp: initFeatureTemp,
+    tbRsCustFeatRuleSql: initTbRsCustFeatRuleSql,
 }
 
 export const initTbCoMetaTbInfo: TbCoMetaTbInfo = {
@@ -394,3 +372,163 @@ export const initBatchExecuteLog: BatchExecuteLog = {
 export const initReadSql: ReadSql = {
     sql: '',
 }
+
+// proto type data
+export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
+    {
+        id: 'CFR_00000001',
+        name: '고객픽쳐테스트1',
+        description: '등록중',
+        rslnRuleId: 'OneID',
+        mstrSgmtRuleId: 'CustomerFeature',
+        mstrSgmtRuleNm: '고객픽쳐',
+        useYn: 'Y',
+        batManualExecTestCnt: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '2023-11-01 13:52:11',
+        lastUpdUserId: '',
+        category: '',
+        dataType: '',
+        sqlDirectInputYn: '',
+        frstRegUserNm: '',
+        lastUpdUserNm: '수정자1',
+        submissionStatus: '',
+        metaTblId: '',
+        lastUpdLginId: '',
+        submissionStatusNm: '등록중',
+    }, {
+        id: 'CFR_00000002',
+        name: '고객픽쳐테스트2',
+        description: '등록중',
+        rslnRuleId: 'OneID',
+        mstrSgmtRuleId: 'CustomerFeature',
+        mstrSgmtRuleNm: '고객픽쳐',
+        useYn: 'Y',
+        batManualExecTestCnt: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '2023-11-02 13:52:11',
+        lastUpdUserId: '',
+        category: '',
+        dataType: '',
+        sqlDirectInputYn: '',
+        frstRegUserNm: '',
+        lastUpdUserNm: '수정자2',
+        submissionStatus: 'saved',
+        metaTblId: '',
+        lastUpdLginId: '',
+        submissionStatusNm: '등록중',
+    }, /*{
+        id: 'CFR_00000003',
+        name: '고객픽쳐테스트3',
+        description: '승인요청',
+        rslnRuleId: 'OneID',
+        mstrSgmtRuleId: 'CustomerFeature',
+        mstrSgmtRuleNm: '고객픽쳐',
+        useYn: 'Y',
+        batManualExecTestCnt: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '2023-11-03 13:52:11',
+        lastUpdUserId: '',
+        category: '',
+        dataType: '',
+        sqlDirectInputYn: '',
+        frstRegUserNm: '',
+        lastUpdUserNm: '수정자3',
+        submissionStatus: 'requested',
+        metaTblId: '',
+        lastUpdLginId: '',
+        submissionStatusNm: '승인요청',
+    },*/
+    {
+        id: 'CFR_00000004',
+        name: '고객픽쳐테스트4',
+        description: '결재진행중',
+        rslnRuleId: 'OneID',
+        mstrSgmtRuleId: 'CustomerFeature',
+        mstrSgmtRuleNm: '고객픽쳐',
+        useYn: 'Y',
+        batManualExecTestCnt: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '2023-11-04 13:52:11',
+        lastUpdUserId: '',
+        category: '',
+        dataType: '',
+        sqlDirectInputYn: '',
+        frstRegUserNm: '',
+        lastUpdUserNm: '수정자4',
+        submissionStatus: 'inApproval',
+        metaTblId: '',
+        lastUpdLginId: '',
+        submissionStatusNm: '결재진행중',
+    }, {
+        id: 'CFR_00000005',
+        name: '고객픽쳐테스트5',
+        description: '승인 완료',
+        rslnRuleId: 'OneID',
+        mstrSgmtRuleId: 'CustomerFeature',
+        mstrSgmtRuleNm: '고객픽쳐',
+        useYn: 'Y',
+        batManualExecTestCnt: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '2023-11-05 13:52:11',
+        lastUpdUserId: '',
+        category: '',
+        dataType: '',
+        sqlDirectInputYn: '',
+        frstRegUserNm: '',
+        lastUpdUserNm: '수정자5',
+        submissionStatus: 'approved',
+        metaTblId: '',
+        lastUpdLginId: '',
+        submissionStatusNm: '승인 완료',
+    }, {
+        id: 'CFR_00000006',
+        name: '고객픽쳐테스트6',
+        description: '반려',
+        rslnRuleId: 'OneID',
+        mstrSgmtRuleId: 'CustomerFeature',
+        mstrSgmtRuleNm: '고객픽쳐',
+        useYn: 'Y',
+        batManualExecTestCnt: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '2023-11-06 13:52:11',
+        lastUpdUserId: '',
+        category: '',
+        dataType: '',
+        sqlDirectInputYn: '',
+        frstRegUserNm: '',
+        lastUpdUserNm: '수정자6',
+        submissionStatus: 'rejected',
+        metaTblId: '',
+        lastUpdLginId: '',
+        submissionStatusNm: '반려',
+    }, {
+        id: 'CFR_ADM_00000007',
+        name: '고객픽쳐테스트7(결재요청건)',
+        description: '결재요청건',
+        rslnRuleId: 'OneID',
+        mstrSgmtRuleId: 'CustomerFeature',
+        mstrSgmtRuleNm: '고객픽쳐',
+        useYn: 'Y',
+        batManualExecTestCnt: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '2023-11-06 13:52:11',
+        lastUpdUserId: '',
+        category: '',
+        dataType: '',
+        sqlDirectInputYn: '',
+        frstRegUserNm: '',
+        lastUpdUserNm: '수정자6',
+        submissionStatus: 'inApproval',
+        metaTblId: '',
+        lastUpdLginId: '',
+        submissionStatusNm: '결재진행중',
+    }
+]

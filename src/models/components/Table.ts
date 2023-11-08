@@ -8,5 +8,5 @@ export interface ColumnsInfo {
 }
 
 export interface RowsInfo {
-  [key: string]: string | number;
+  [key: string]: any;
 }

@@ -1,20 +1,13 @@
 import DataGrid from '@/components/grid/DataGrid';
-import HorizontalTable from '@components/table/HorizontalTable';
-import { TR, TH, TD, Stack, TextField, Typography, Button } from '@components/ui';
 import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import HorizontalTable from '@components/table/HorizontalTable';
+import { Button, Stack, TD, TH, TR, TextField, Typography } from '@components/ui';
 
 const List = () => {
-
   return (
     <>
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        enableSort={true}
-        clickable={true}
-        onChange={undefined}
-      />
-      
+      <DataGrid columns={columns} rows={rows} enableSort={true} clickable={true} onChange={undefined} />
+
       <Stack direction="Vertical" gap="MD">
         <Typography variant="h3">권한그룹 등록</Typography>
         <HorizontalTable>
@@ -38,9 +31,7 @@ const List = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        <Button size="LG">
-          신규
-        </Button>
+        <Button size="LG">신규</Button>
         <Button priority="Normal" appearance="Contained" size="LG">
           저장
         </Button>

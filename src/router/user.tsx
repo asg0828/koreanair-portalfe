@@ -14,23 +14,24 @@ import NoticeDetail from '@pages/user/board/notice/Detail';
 import NoticeReg from '@pages/user/board/notice/Reg';
 import NoticeEdit from '@pages/user/board/notice/Edit';
 import Faq from '@pages/user/board/faq';
-import FaqDetail from '@pages/user/board/faq/Detail';
 import FaqReg from '@pages/user/board/faq/Reg';
 import FaqEdit from '@pages/user/board/faq/Edit';
 import Qna from '@pages/user/board/qna';
 import QnaDetail from '@pages/user/board/qna/Detail';
 import QnaReg from '@pages/user/board/qna/Reg';
 import QnaEdit from '@pages/user/board/qna/Edit';
-import Archive from '@pages/user/board/archive';
-import ArchiveDetail from '@pages/user/board/archive/Detail';
-import ArchiveReg from '@pages/user/board/archive/Reg';
-import ArchiveEdit from '@pages/user/board/archive/Edit';
+import Dataroom from '@/pages/user/board/dataroom';
+import DataroomDetail from '@/pages/user/board/dataroom/Detail';
+import DataroomReg from '@/pages/user/board/dataroom/Reg';
+import DataroomEdit from '@/pages/user/board/dataroom/Edit';
 import InterestFeature from '@pages/user/feature/interest';
 import PopularFeature from '@pages/user/feature/popular';
 import SelfFeature from '@pages/user/self-feature';
 import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
 import SelfFeatureReg from '@pages/user/self-feature/Reg';
 import SelfFeatureEdit from '@pages/user/self-feature/Edit';
+import SfSubmissionRequest from '@/pages/user/self-feature-submission';
+import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Detail';
 import CustomerInfo from '@pages/user/customer-info/dashboard';
 import StructuredReport from '@pages/user/report/structured-report';
 import UnStructuredReport from '@pages/user/report/unstructured-report';
@@ -95,6 +96,13 @@ const userRouter = [
               { path: 'edit', element: <SelfFeatureEdit /> },
             ],
           },
+          {
+            path: 'submission-request',
+            children: [
+              { index: true, element: <SfSubmissionRequest /> },
+              { path: 'detail', element: <SfSubmissionRequestDetail /> },
+            ],
+          },
         ],
       },
       {
@@ -122,7 +130,6 @@ const userRouter = [
             path: 'faq',
             children: [
               { index: true, element: <Faq /> },
-              { path: 'detail', element: <FaqDetail /> },
               { path: 'reg', element: <FaqReg /> },
               { path: 'edit', element: <FaqEdit /> },
             ],
@@ -137,12 +144,12 @@ const userRouter = [
             ],
           },
           {
-            path: 'archive',
+            path: 'dataroom',
             children: [
-              { index: true, element: <Archive /> },
-              { path: 'detail', element: <ArchiveDetail /> },
-              { path: 'reg', element: <ArchiveReg /> },
-              { path: 'edit', element: <ArchiveEdit /> },
+              { index: true, element: <Dataroom /> },
+              { path: 'detail', element: <DataroomDetail /> },
+              { path: 'reg', element: <DataroomReg /> },
+              { path: 'edit', element: <DataroomEdit /> },
             ],
           },
         ],

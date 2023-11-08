@@ -22,25 +22,25 @@ const Detail = () => {
         <Typography variant="h3">기본 정보</Typography>
         <HorizontalTable>
           <TR>
-            <TH required>데이터셋 물리명</TH>
+            <TH required>테이블 영문명</TH>
             <TD>
               <Stack gap="SM" className="width-100">
                 <TextField className="width-100" />
-                <Button>중복확인</Button>
+                {/* <Button>중복확인</Button> */}
               </Stack>
             </TD>
-            <TH required>데이터셋 논리명</TH>
+            <TH required>테이블 한글명</TH>
             <TD>
               <Stack gap="SM" className="width-100">
                 <TextField className="width-100" />
-                <Button>중복확인</Button>
+                {/* <Button>중복확인</Button> */}
               </Stack>
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1} required>데이터셋 정의</TH>
+            <TH colSpan={1} required>테이블 정의</TH>
             <TD colSpan={3}>
-              <TextField className="width-100" />
+              <TextField className="width-100" multiline />
             </TD>
           </TR>
           <TR>
@@ -50,12 +50,24 @@ const Detail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>관련 데이터 셋</TH>
+            <TH colSpan={1}>원천시스템</TH>
             <TD colSpan={3}>
               <Stack gap="SM" className="width-100">
                 <TextField className="width-100" />
-                <Button>데이터셋검색</Button>
+                {/* <Button>데이터셋검색</Button> */}
               </Stack>
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1}>원천테이블명</TH>
+            <TD colSpan={3}>
+              <TextField className="width-100" />
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1}>DB명</TH>
+            <TD colSpan={3}>
+              <TextField className="width-100" />
             </TD>
           </TR>
           <TR>
@@ -64,7 +76,7 @@ const Detail = () => {
               <TextField className="width-100" />
             </TD>
           </TR>
-          <TR>
+          {/* <TR>
             <TH colSpan={1}>검색태그</TH>
             <TD colSpan={3}>
               <Stack gap="SM" direction="Vertical" className="width-100">
@@ -75,11 +87,11 @@ const Detail = () => {
                 <TextField />
               </Stack>
             </TD>
-          </TR>
+          </TR> */}
         </HorizontalTable>
       </Stack>
 
-      <Stack direction="Vertical" gap="MD">
+      {/* <Stack direction="Vertical" gap="MD">
         <Typography variant="h3">관리 정보</Typography>
         <HorizontalTable>
           <TR>
@@ -96,7 +108,7 @@ const Detail = () => {
             </TD>
           </TR>
         </HorizontalTable>
-      </Stack>
+      </Stack> */}
 
       <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>

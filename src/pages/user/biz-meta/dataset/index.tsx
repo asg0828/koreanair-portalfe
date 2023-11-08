@@ -1,21 +1,17 @@
-import { useNavigate } from 'react-router-dom';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { RowsInfo } from '@/models/components/Table';
+import { tableColumns as columns, tableRows as rows } from '@/utils/data/tableSampleData';
 import {
-  TR,
-  TH,
-  TD,
   Button,
-  Stack,
-  TextField,
   Checkbox,
-  Select,
-  SelectOption,
-  DatePicker,
-  Label,
+  TD,
+  TH,
+  TR,
+  TextField
 } from '@components/ui';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData'
+import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const navigate = useNavigate();
@@ -36,13 +32,17 @@ const List = () => {
     <>
       <SearchForm>
         <TR>
-          <TH colSpan={1} align="right">데이터셋 검색</TH>
+          <TH colSpan={1} align="right">
+            데이터셋 검색
+          </TH>
           <TD colSpan={3}>
             <TextField className="width-100" />
           </TD>
         </TR>
         <TR>
-          <TH colSpan={1} align="right">데이터셋 조건</TH>
+          <TH colSpan={1} align="right">
+            데이터셋 조건
+          </TH>
           <TD colSpan={3} align="left">
             <Checkbox label="테이터셋명" />
             <Checkbox label="테이블ID" />
@@ -52,7 +52,7 @@ const List = () => {
             <Checkbox label="활용상세" />
           </TD>
         </TR>
-        <TR>
+        {/* <TR>
           <TH align="right">주제영역</TH>
           <TD>
             <Select appearance="Outline" placeholder="전체" className="width-100">
@@ -67,7 +67,9 @@ const List = () => {
           </TD>
         </TR>
         <TR>
-          <TH colSpan={1} align="right">등록일</TH>
+          <TH colSpan={1} align="right">
+            등록일
+          </TH>
           <TD colSpan={3}>
             <DatePicker appearance="Outline" calendarViewMode="days" mode="single" shape="Square" size="MD" />
             <Label>~</Label>
@@ -89,7 +91,7 @@ const List = () => {
               <Button>검색</Button>
             </Stack>
           </TD>
-        </TR>
+        </TR> */}
       </SearchForm>
 
       <DataGrid
@@ -101,8 +103,9 @@ const List = () => {
         onChange={undefined}
         buttonChildren={
           <>
-            <Button size="LG">엑셀다운로드</Button>
+            {/* <Button size="LG">엑셀다운로드</Button> */}
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
               등록
             </Button>
           </>

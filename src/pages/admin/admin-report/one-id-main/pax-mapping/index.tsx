@@ -1,143 +1,163 @@
 import VerticalTable from '@/components/table/VerticalTable';
 import { Button, DatePicker, Pagination, Stack, TD, TH, TR, TextField } from '@ke-design/components';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Typography } from '@mui/material';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { onIdPaxData, oneIdPaxColumn } from '../data';
+import { Method, callApi } from '@/utils/ApiUtil';
+import { Service } from '@/models/common/Service';
+import { initApiRequest, initCommonResponse, initConfig } from '@/models/selfFeature/FeatureCommon';
+import { cloneDeep } from 'lodash';
+import { paxMappingSearch } from '@/models/oneId/OneIdInfo';
 
+//남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function PaxMapping() {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [oneIdNum, setOneIdNum] = useState('');
-  const [pnrNum, setPnrNum] = useState('');
-  const [uciid, setUciid] = useState('');
-
+  const [searchInfo, setSearchInfo] = useState<paxMappingSearch>({
+    oneIdNum: '',
+    pnrNum: '',
+    uciid: '',
+    startDate: '',
+    endDate: '',
+  });
   const today = new Date();
 
-  function onSearchChangeHandler(e: any, target: string) {
-    let currVal = e.target.value;
-    if (target === 'oneId') {
-      setOneIdNum(currVal);
-    } else if (target === 'pnrNum') {
-      setPnrNum(currVal);
-    } else if (target === 'uciid') {
-      setUciid(currVal);
-    }
+  /* input state관리 */
+  function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
+    const { id, value } = e.target;
+    setSearchInfo({ ...searchInfo, [id]: value });
   }
 
-  // 검색 버튼
-  function onSearch() {
-    const formData = new FormData();
+  /* 검색 버튼 */
+  const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    retrivePaxMapping();
+  };
 
-    formData.append('endDate', endDate);
-    formData.append('startDate', startDate);
-    formData.append('oneIdNum', oneIdNum);
-    formData.append('pnrNum', pnrNum);
-    formData.append('uciid', uciid);
+  /* api 호출 */
+  const retrivePaxMapping = async () => {
+    let config = cloneDeep(initConfig);
+    config.isLoarding = true;
+    let request = cloneDeep(initApiRequest);
+    request.method = Method.GET;
+    request.url = '';
+    request.service = Service.KAL_BE;
+    request.params = {
+      bodyParams: {
+        searchInfo,
+      },
+    };
+    let response = cloneDeep(initCommonResponse);
+    response = await callApi(request);
 
-    // for (const x of formData.entries()) {
-    //   console.log(x);
-    // }
-  }
+    console.log(request.params);
+    console.log('[retrieve360] Response :: ', response);
+  };
 
-  // 초기화 버튼
+  /* 초기화 버튼 */
   function onClear() {
-    setStartDate('');
-    setEndDate('');
-    setOneIdNum('');
-    setPnrNum('');
-    setUciid('');
+    setSearchInfo({ ...searchInfo, oneIdNum: '', pnrNum: '', uciid: '', startDate: '', endDate: '' });
   }
 
-  // 기간 별 버튼
+  /* 기간 별 버튼 */
   function duration(flag: string) {
     let date = '';
-    if (flag == 'today') {
+    if (flag === 'today') {
       date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-      setEndDate(date);
-    } else if (flag == 'oneMonth') {
-      date = `${today.getFullYear()}-${today.getMonth()}-${today.getDate()}`;
-    } else if (flag == 'sixMonth') {
-      date = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate()}`;
-    } else if (flag == 'oneYear') {
-      date = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate()}`;
+      setSearchInfo({ ...searchInfo, endDate: date, startDate: date });
+    } else if (flag === 'oneMonth') {
+      date = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+      setSearchInfo({ ...searchInfo, startDate: date });
+    } else if (flag === 'sixMonth') {
+      date = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+      setSearchInfo({ ...searchInfo, startDate: date });
+    } else if (flag === 'oneYear') {
+      date = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+      setSearchInfo({ ...searchInfo, startDate: date });
     }
-    setStartDate(date);
   }
 
   return (
     <div style={{ width: '1200px' }}>
       <div>
         <Stack>
-          <HorizontalTable>
-            <TR>
-              <TH align="right">OneId 번호</TH>
-              <TD>
-                <TextField
-                  onChange={(e) => onSearchChangeHandler(e, 'oneId')}
-                  placeholder="검색어를 입력하세요."
-                  value={oneIdNum}
-                />
-              </TD>
-              <TH align="right">PNR 번호</TH>
-              <TD>
-                <TextField
-                  placeholder="검색어를 입력하세요."
-                  value={pnrNum}
-                  onChange={(e) => onSearchChangeHandler(e, 'pnrNum')}
-                />
-              </TD>
-              <TH align="right">UCIID</TH>
-              <TD>
-                <TextField
-                  placeholder="검색어를 입력하세요."
-                  value={uciid}
-                  onChange={(e) => onSearchChangeHandler(e, 'uciid')}
-                />
-              </TD>
-            </TR>
-            <TR>
-              <div style={{ width: 500 }}>
-                <TH align="right">최초 생성일</TH>
-              </div>
-              <TD>
-                <DatePicker
-                  value={startDate}
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  onValueChange={(nextVal) => {
-                    setStartDate(nextVal);
-                  }}
-                />
-                -
-                <DatePicker
-                  value={endDate}
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  onValueChange={(nextVal) => {
-                    setEndDate(nextVal);
-                  }}
-                />
-                <Button onClick={() => duration('today')}>당일</Button>
-                <Button onClick={() => duration('oneMonth')}>1개월</Button>
-                <Button onClick={() => duration('sixMonth')}>6개월</Button>
-                <Button onClick={() => duration('oneYear')}>1년</Button>
-              </TD>
-            </TR>
-          </HorizontalTable>
+          <form onSubmit={onsubmitHandler}>
+            <HorizontalTable>
+              <TR>
+                <TH align="right">OneId 번호</TH>
+                <TD>
+                  <TextField
+                    onChange={onSearchChangeHandler}
+                    placeholder="검색어를 입력하세요."
+                    value={searchInfo.oneIdNum}
+                    id="oneIdNum"
+                  />
+                </TD>
+                <TH align="right">PNR 번호</TH>
+                <TD>
+                  <TextField
+                    id="pnrNum"
+                    placeholder="검색어를 입력하세요."
+                    value={searchInfo.pnrNum}
+                    onChange={onSearchChangeHandler}
+                  />
+                </TD>
+                <TH align="right">UCIID</TH>
+                <TD>
+                  <TextField
+                    id="uciid"
+                    placeholder="검색어를 입력하세요."
+                    value={searchInfo.uciid}
+                    onChange={onSearchChangeHandler}
+                  />
+                </TD>
+              </TR>
+              <TR>
+                <div style={{ width: 500 }}>
+                  <TH align="right">최초 생성일</TH>
+                </div>
+                <TD>
+                  <DatePicker
+                    appearance="Outline"
+                    calendarViewMode="days"
+                    mode="single"
+                    shape="Square"
+                    size="MD"
+                    id="startDate"
+                    value={searchInfo.startDate}
+                    onValueChange={(nextVal) => {
+                      setSearchInfo({ ...searchInfo, startDate: nextVal });
+                    }}
+                  />
+                  -
+                  <DatePicker
+                    appearance="Outline"
+                    calendarViewMode="days"
+                    mode="single"
+                    shape="Square"
+                    size="MD"
+                    id="endDate"
+                    value={searchInfo.endDate}
+                    onValueChange={(nextVal) => {
+                      setSearchInfo({ ...searchInfo, endDate: nextVal });
+                    }}
+                  />
+                  <Button onClick={() => duration('today')}>당일</Button>
+                  <Button onClick={() => duration('oneMonth')}>1개월</Button>
+                  <Button onClick={() => duration('sixMonth')}>6개월</Button>
+                  <Button onClick={() => duration('oneYear')}>1년</Button>
+                </TD>
+              </TR>
+            </HorizontalTable>
+            <div style={{ marginLeft: 1080 }}>
+              <Stack>
+                <Button type="submit">검색</Button>
+                <Button type="reset" onClick={onClear}>
+                  초기화
+                </Button>
+              </Stack>
+            </div>
+          </form>
         </Stack>
-        <div style={{ marginLeft: 1080 }}>
-          <Stack>
-            <Button onClick={onSearch}>검색</Button>
-            <Button onClick={onClear}>초기화</Button>
-          </Stack>
-        </div>
       </div>
 
       <Typography variant="h6">조회결과 {onIdPaxData.length}</Typography>

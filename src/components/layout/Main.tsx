@@ -1,10 +1,10 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { ReducerType } from '@reducers';
 import MainNavigation from '@components/layout/MainNavigation';
-import { Stack, Typography } from '@components/ui';
+import { Loader, Stack, Typography } from '@components/ui';
 import { MenuItem } from '@models/common/Menu';
-import { StarBorderIcon } from '@/assets/icons';
+import { ReducerType } from '@reducers';
+import { Suspense } from 'react';
+import { useSelector } from 'react-redux';
+import { Outlet, useLocation } from 'react-router-dom';
 import './Main.scss';
 
 const Main = () => {
@@ -31,22 +31,32 @@ const Main = () => {
   const title = menuObj ? menuObj.name : 'UnKown Title';
 
   return (
-    <main id="main" className="width-100">
-      <Stack direction="Vertical" gap="MD" className="height-100">
-        <MainNavigation />
+    <>
+      <main id="main" className="width-100">
+        <Stack direction="Vertical" gap="MD" className="height-100">
+          <MainNavigation />
 
-        <Stack className="width-100" gap="MD">
-          <Typography variant='h1'>{title}</Typography>
-          <span className="star"></span>
-          {/* <span className="star active"></span> */}
-          {/* <StarBorderIcon  /> */}
-        </Stack>
+          <Stack className="width-100" gap="MD">
+            <Typography variant="h1">{title}</Typography>
+            <span className="star"></span>
+            {/* <span className="star active"></span> */}
+            {/* <StarBorderIcon  /> */}
+          </Stack>
 
-        <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
-          <Outlet />
+          <Suspense
+            fallback={
+              <Stack justifyContent="Center" className="height-100 width-100">
+                <Loader title="진행중" description="잠시만 기다려주세요" />
+              </Stack>
+            }
+          >
+            <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
+              <Outlet />
+            </Stack>
+          </Suspense>
         </Stack>
-      </Stack>
-    </main>
+      </main>
+    </>
   );
 };
 export default Main;

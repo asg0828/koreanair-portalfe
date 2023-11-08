@@ -11,9 +11,11 @@ import {
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initTbRsCustFeatRuleCase, 
+} from '@/pages/user/self-feature/data';
+import {
     selfFeatPgPpNm, 
     subFeatStatus 
-} from '@/pages/user/self-feature/data';
+} from '@/models/selfFeature/FeatureCommon';
 
 const ClacValid = ({
     featStatus,
@@ -94,13 +96,16 @@ const ClacValid = ({
             justifyContent="Start" 
             gap="MD" 
         >
-            <Typography variant="h3">계산식</Typography>
+            <Typography variant="h4">계산식</Typography>
+            {isPossibleEdit &&
+            <>
             <Typography variant='body2'>CASE 사용</Typography>
             <Checkbox
-                disabled={!isPossibleEdit}
                 checked={formulaCaseChecked}
                 onCheckedChange={onCheckedCaseChange}
             />
+            </>
+            }
         </Stack>
         <div className='flex row'>
             <Stack 

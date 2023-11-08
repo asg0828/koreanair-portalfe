@@ -196,9 +196,8 @@ const CaseComponent = ({
                     삭제
                     </Button>
                 }
-                {lastIdx === index &&
+                {(lastIdx === index && isPossibleEdit) &&
                     <Select 
-                        disabled={!isPossibleEdit}
                         value={custFeatRuleCase?.whenYn}
                         appearance="Outline"
                         shape="Square"
@@ -219,15 +218,17 @@ const CaseComponent = ({
                         ))}
                     </Select>
                 }
+                {(lastIdx === index && !isPossibleEdit) &&
+                    <Typography variant='h5'>{custFeatRuleCase?.whenYn === 'Y' ? 'WHEN' : 'ELSE'}</Typography>
+                }
                 {lastIdx !== index &&
                     <Typography variant='h5'>WHEN</Typography>
                 }
                 </>
             }
-            {!elseSelected &&
+            {(!elseSelected && isPossibleEdit) &&
             <>
                 <TextField 
-                    disabled={!isPossibleEdit}
                     placeholder="Target/계산식 입력"
                     value={custFeatRuleCase?.targetFormula}
                     id='targetFormula'
@@ -248,9 +249,11 @@ const CaseComponent = ({
                 </div>
             </>
             }
-            {!elseSelected &&
+            {(!elseSelected && !isPossibleEdit) &&
+                <Typography variant='h5'>{custFeatRuleCase?.targetFormula}</Typography>
+            }
+            {(!elseSelected && isPossibleEdit) &&
             <Select 
-                disabled={!isPossibleEdit}
                 value={custFeatRuleCase?.operator}
                 shape="Square"
                 size="MD"
@@ -274,9 +277,11 @@ const CaseComponent = ({
                 {!trgtFormulaInput && <SelectOption value="">연산자 선택</SelectOption>}
             </Select>
             }
-            {(!elseSelected && delimiterSelected) &&
+            {(!elseSelected && !isPossibleEdit) &&
+                <Typography variant='h5'>{custFeatRuleCase?.operator}</Typography>
+            }
+            {(!elseSelected && delimiterSelected && isPossibleEdit) &&
                 <Select 
-                    disabled={!isPossibleEdit}
                     appearance="Outline"
                     value={custFeatRuleCase?.delimiter}
                     shape="Square"
@@ -298,26 +303,35 @@ const CaseComponent = ({
                     ))}
                 </Select>
             }
-            {(!elseSelected && trgtFormulaInput) &&
+            {(!elseSelected && delimiterSelected && !isPossibleEdit) &&
+                <Typography variant='h5'>{custFeatRuleCase?.delimiter}</Typography>
+            }
+            {(!elseSelected && trgtFormulaInput && isPossibleEdit) &&
             <TextField 
-                disabled={!isPossibleEdit}
                 placeholder="피연산자 입력"
                 value={custFeatRuleCase?.operand1}
                 id='operand1'
                 onChange={onchangeInputHandler} 
             />
             }
+            {(!elseSelected && trgtFormulaInput && !isPossibleEdit) &&
+                <Typography variant='h5'>{custFeatRuleCase?.operand1}</Typography>
+            }
             <>
             {!elseSelected &&
             <Typography variant='h5'>THEN</Typography>
             }
-            <TextField 
-                disabled={!isPossibleEdit}
-                placeholder="결과 입력"
-                value={custFeatRuleCase?.result}
-                id='result'
-                onChange={onchangeInputHandler} 
-            />
+            {isPossibleEdit &&
+                <TextField 
+                    placeholder="결과 입력"
+                    value={custFeatRuleCase?.result}
+                    id='result'
+                    onChange={onchangeInputHandler} 
+                />
+            }
+            {!isPossibleEdit &&
+                <Typography variant='h5'>{custFeatRuleCase?.result}</Typography>
+            }
             </>
         </Stack>
     )

@@ -20,8 +20,10 @@ import {
     divisionTypes,
     filterOption,
     aggregateOption,
-    ModalType,
 } from "@/pages/user/self-feature/data"
+import {
+    ModalType,
+} from '@/models/selfFeature/FeatureCommon';
 
 const columnList = [
     { value: 'colum1', text: 'colum1' },
@@ -520,6 +522,7 @@ const BehvDropItem = ({
             content={confirmModalCont}
             onConfirm={onConfirm}
             onCancle={onCancel}
+            btnType={modalType}
         />
         </>
     )

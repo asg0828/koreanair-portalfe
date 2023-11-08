@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from "lodash";
 
@@ -19,22 +19,26 @@ import {
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
 import ConfirmModal from "@/components/modal/ConfirmModal";
+import AddIcon from '@mui/icons-material/Add'
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { RowsInfo } from "@/models/components/Table";
 import { 
-  ModalTitCont,
-  ModalType,
   featListColumns as columns,
-  initApiRequest,
-  initCommonResponse,
-  initConfig,
-  initQueryParams,
   initTbRsCustFeatRule,
-  selfFeatPgPpNm 
+  protoTbRsCustFeatRuleList,
 } from "./data";
 import { Method, callApi } from "@/utils/ApiUtil";
-import { StatusCode } from "@/models/common/CommonResponse";
+import { StatusCode } from "@/models/common/CommonResponse"
+import {
+  selfFeatPgPpNm,
+  initConfig,
+  initApiRequest,
+  initCommonResponse,
+  ModalType,
+  ModalTitCont,
+  initQueryParams,
+} from '@/models/selfFeature/FeatureCommon';
 
 const category = [
   { value: '', text: '선택' },
@@ -52,25 +56,33 @@ const useYn = [
 ]
 const submissionStatus = [
   { value: '', text: '전체' },
-  { value: '1', text: '등록' },
-  { value: '2', text: '승인 요청 정보 등록' },
-  { value: '3', text: '승인 요청' },
-  { value: '4', text: '승인 요청 취소' },
-  { value: '5', text: '승인 완료' },
-  { value: '6', text: '반려' },
+  { value: 'saved', text: '등록' },
+  { value: 'inApproval', text: '결재진행중' },
+  { value: 'approved', text: '승인 완료' },
+  { value: 'rejected', text: '반려' },
 ]
+
+export interface searchProps {
+  mstrSgmtRuleId: string
+  custFeatRuleName: string
+  category: string
+  useYn: string
+  submissionStatus: string
+}
 
 const SelfFeature = () => {
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const [ searchInfo, setSearchInfo ] = useState<Object>({
+  const [ searchInfo, setSearchInfo ] = useState<searchProps>({
     mstrSgmtRuleId: '',
     custFeatRuleName: '',
     category: '',
     useYn: '',
     submissionStatus: '',
   })
+
   const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
   const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
 
@@ -82,6 +94,19 @@ const SelfFeature = () => {
 
   useEffect(() => {
     // 공통 코드 API CALL && 초기 LIST 조회 API CALL -> useQuery 사용하기
+    if (location.state) {
+      if (location.state.submissionStatus === "reg") {
+        setSearchInfo((state: searchProps) => {
+          state.submissionStatus = "saved"
+          return cloneDeep(state)
+        })
+      } else {
+        setSearchInfo((state: searchProps) => {
+          state.submissionStatus = location.state.submissionStatus
+          return cloneDeep(state)
+        })
+      }
+    }
     retrieveCustFeatRules()
   }, [])
 
@@ -128,7 +153,16 @@ const SelfFeature = () => {
       list.push(selfFeature)
     }
     setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
-      prevState = list
+      if (searchInfo.submissionStatus !== "") {
+        if (searchInfo.submissionStatus === "reg" || searchInfo.submissionStatus === "saved") {
+          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === "" || v.submissionStatus === "saved")//list
+        } else if (searchInfo.submissionStatus) {
+          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === searchInfo.submissionStatus)//list//list
+        }
+      } else {
+        prevState = protoTbRsCustFeatRuleList
+      }
+
       return cloneDeep(prevState)
     })
   }
@@ -150,7 +184,7 @@ const SelfFeature = () => {
     console.log("[deleteCustFeatRule] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
+    //response = await callApi(request)
     console.log("[deleteCustFeatRule] Response :: ", response)
 
   }
@@ -160,6 +194,8 @@ const SelfFeature = () => {
       navigate(pageNm, { state: rows })
     } else if (pageNm === selfFeatPgPpNm.PRNTCHLD) {
       setIsOpenFeatPrntChldPop((prevState) => !prevState)
+    } else if (pageNm === selfFeatPgPpNm.RULE_REG || pageNm === selfFeatPgPpNm.SQL_REG) {
+      navigate(selfFeatPgPpNm.REG, { state: { regType: pageNm } })
     } else {
       navigate(pageNm)
     }
@@ -223,7 +259,7 @@ const SelfFeature = () => {
       <HorizontalTable>
         <TR>
           <TH colSpan={1} align="right">카테고리</TH>
-          <TD colSpan={5.01}>
+          <TD colSpan={2}>
             <Select 
               appearance="Outline" 
               placeholder="선택" 
@@ -240,6 +276,25 @@ const SelfFeature = () => {
               ))}
             </Select>
           </TD>
+          <TH align="right" colSpan={1}>진행 상태</TH>
+          <TD colSpan={2}>
+            <Select 
+              value={searchInfo.submissionStatus}
+              appearance="Outline" 
+              placeholder="전체" 
+              className="width-100" 
+              onChange={(
+              e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+              value: SelectValue<{}, false>
+            ) => {
+              onchangeSelectHandler(e, value, "submissionStatus")
+            }}
+            >
+              {submissionStatus.map((item, index) => (
+              <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+              ))}
+            </Select>
+          </TD>
         </TR>
         <TR>
           <TH colSpan={1} align="right">Feature 명</TH>
@@ -248,7 +303,7 @@ const SelfFeature = () => {
           </TD>
         </TR>
         <TR>
-          <TH align="right" colSpan={1}>사용 여부</TH>
+          {/* <TH align="right" colSpan={1}>사용 여부</TH>
           <TD colSpan={2}>
             <Select 
               appearance="Outline" 
@@ -265,25 +320,7 @@ const SelfFeature = () => {
               <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
               ))}
             </Select>
-          </TD>
-          <TH align="right" colSpan={1}>진행 상태</TH>
-          <TD colSpan={2}>
-            <Select 
-              appearance="Outline" 
-              placeholder="전체" 
-              className="width-100" 
-              onChange={(
-              e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-              value: SelectValue<{}, false>
-            ) => {
-              onchangeSelectHandler(e, value, "submissionStatus")
-            }}
-            >
-              {submissionStatus.map((item, index) => (
-              <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-              ))}
-            </Select>
-          </TD>
+          </TD> */}
         </TR>
       </HorizontalTable>
       <Stack gap="SM" justifyContent="Center">
@@ -324,12 +361,12 @@ const SelfFeature = () => {
         <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
         삭제
         </Button>
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.RULE_REG)}>
+        <AddIcon />
         Rule 등록
         </Button>
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.REG)}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
+        <AddIcon />
         SQL 등록
         </Button>
       </Stack>
@@ -349,6 +386,7 @@ const SelfFeature = () => {
         content={confirmModalCont}
         onConfirm={onConfirm}
         onCancle={onCancel}
+        btnType={modalType}
     />
 
   </Stack>
