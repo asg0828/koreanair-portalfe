@@ -14,8 +14,8 @@ const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
   { headerName: '제목', field: 'sj', colSpan: 2 },
   { headerName: '내용', field: 'cn', colSpan: 4 },
-  { headerName: '게시여부', field: 'useYnStr', colSpan: 1 },
-  { headerName: '등록자', field: 'rgstNmStr', colSpan: 2 },
+  { headerName: '게시여부', field: 'useYn', colSpan: 1 },
+  { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
 ];
@@ -91,8 +91,8 @@ const List = () => {
         response.data.contents.forEach((item: DataroomInfo) => {
           item.rgstDt = getDateString(item.rgstDt, '-');
           item.cn = item.cn.replace(htmlTagReg, '');
-          item.rgstNmStr = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
-          item.useYnStr = item.useYn === 'Y' ? '예' : '아니오';
+          item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
+          item.useYn = item.useYn === 'Y' ? '예' : '아니오';
         });
         setRows(response.data.contents);
         setPage(response.data.page);

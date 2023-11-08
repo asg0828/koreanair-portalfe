@@ -8,7 +8,7 @@ import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import useModal, { ModalType } from '@/hooks/useModal';
 import { UpdatedDataroomInfo } from '@/models/Board/Dataroom';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';

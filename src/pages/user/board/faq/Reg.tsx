@@ -7,7 +7,7 @@ import useModal, { ModalType } from '@/hooks/useModal';
 import { CreatedFaqInfo } from '@/models/Board/Faq';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 

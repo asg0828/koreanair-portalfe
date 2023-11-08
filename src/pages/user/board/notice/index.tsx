@@ -88,7 +88,7 @@ const List = () => {
         response.data.contents.forEach((item: NoticeInfo) => {
           item.rgstDt = getDateString(item.rgstDt, '-');
           item.cn = item.cn.replace(htmlTagReg, '');
-          item.rgstNmStr = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
+          item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
         });
         setRows(response.data.contents);
         setPage(response.data.page);
