@@ -286,7 +286,7 @@ const SelfFeatureDetail = () => {
         let tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = Object.assign(
           cloneDeep(initTbRsCustFeatRuleCalc),
           {
-            formula: "T1",
+            formula: "T1/T2",
           }
         )
         rtn.tbRsCustFeatRuleCalc = tbRsCustFeatRuleCalc
@@ -308,7 +308,7 @@ const SelfFeatureDetail = () => {
           }
         )
         tbRsCustFeatRuleCaseList.push(tbRsCustFeatRuleCase)
-        rtn.tbRsCustFeatRuleCaseList = tbRsCustFeatRuleCaseList
+        //rtn.tbRsCustFeatRuleCaseList = tbRsCustFeatRuleCaseList
 
         return rtn
       })
