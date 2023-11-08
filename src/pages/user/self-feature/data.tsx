@@ -400,7 +400,7 @@ export const initReadSql: ReadSql = {
 export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
     {
         id: 'CFR_00000001',
-        name: '고객픽쳐테스트1',
+        name: '홈페이지방문횟수(예매)',
         description: '등록중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -421,8 +421,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '등록중',
     }, {
-        id: 'CFR_00000002',
-        name: '고객픽쳐테스트2',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '등록중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -443,8 +443,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '등록중',
     }, /*{
-        id: 'CFR_00000003',
-        name: '고객픽쳐테스트3',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '승인요청',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -466,8 +466,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         submissionStatusNm: '승인요청',
     },*/
     {
-        id: 'CFR_00000004',
-        name: '고객픽쳐테스트4',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '결재진행중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -488,8 +488,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '결재진행중',
     }, {
-        id: 'CFR_00000005',
-        name: '고객픽쳐테스트5',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '승인 완료',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -510,8 +510,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '승인 완료',
     }, {
-        id: 'CFR_00000006',
-        name: '고객픽쳐테스트6',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '반려',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
