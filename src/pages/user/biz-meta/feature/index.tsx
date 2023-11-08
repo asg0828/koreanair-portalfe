@@ -19,6 +19,7 @@ import {
   Label
 } from '@components/ui';
 import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData'
+import AddIcon from '@mui/icons-material/Add';
 
 const List = () => {
   const navigate = useNavigate();
@@ -429,7 +430,7 @@ const List = () => {
       </Stack>
       <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={()=>{goToReg()}}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path></svg>
+          <AddIcon />
           등록
         </Button>
       </Stack>
