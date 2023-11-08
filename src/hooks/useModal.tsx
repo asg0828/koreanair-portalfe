@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { modalSlice } from '@/reducers';
-import { ModalInfo, ModalType } from '@/models/components/Modal';
+import { ModalInfo } from '@/models/components/Modal';
 
 const useModal = () => {
   const dispatch = useDispatch();
@@ -19,7 +19,5 @@ const useModal = () => {
     closeModal,
   };
 };
-
-export { ModalType };
 
 export default useModal;

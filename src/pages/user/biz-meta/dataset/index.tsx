@@ -1,5 +1,6 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
+import { View } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
 import { tableColumns as columns, tableRows as rows } from '@/utils/data/tableSampleData';
 import {
@@ -17,11 +18,11 @@ const List = () => {
   const navigate = useNavigate();
 
   const goToReg = () => {
-    navigate('reg');
+    navigate(View.REG);
   };
 
   const goToDetail = (row: RowsInfo) => {
-    navigate('detail', { state: row });
+    navigate(View.DETAIL, { state: row });
   };
 
   const clickRow = (row: RowsInfo, index: number) => {

@@ -5,8 +5,9 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
-import useModal, { ModalType } from '@/hooks/useModal';
+import useModal from '@/hooks/useModal';
 import { UpdatedFaqInfo } from '@/models/Board/Faq';
+import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -47,7 +48,7 @@ const Reg = () => {
   const onSubmit = (data: UpdatedFaqInfo) => {
     openModal({
       type: ModalType.CONFIRM,
-      title: '수정',
+      title: ModalTitle.MODIFY,
       content: '수정하시겠습니까?',
       onConfirm: mutate,
     });
@@ -66,7 +67,7 @@ const Reg = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     }
@@ -75,12 +76,12 @@ const Reg = () => {
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '수정 중 에러가 발생했습니다.',
       });
     } else if (uIsSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
       navigate('..');

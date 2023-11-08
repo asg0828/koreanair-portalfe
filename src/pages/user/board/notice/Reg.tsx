@@ -3,8 +3,9 @@ import TinyEditor from '@/components/editor/TinyEditor';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
-import useModal, { ModalType } from '@/hooks/useModal';
+import useModal from '@/hooks/useModal';
 import { CreatedNoticeInfo } from '@/models/Board/Notice';
+import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -43,7 +44,7 @@ const Reg = () => {
   const onSubmit = (data: CreatedNoticeInfo) => {
     openModal({
       type: ModalType.CONFIRM,
-      title: '저장',
+      title: ModalTitle.SAVE,
       content: '등록하시겠습니까?',
       onConfirm: mutate,
     });
@@ -52,12 +53,12 @@ const Reg = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '등록 중 에러가 발생했습니다.',
       });
     } else if (isSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '등록되었습니다.',
       });
       navigate('..');

@@ -1,7 +1,8 @@
-import SearchForm, { SearchInfo, SearchKey } from '@/components/form/SearchForm';
+import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import { NoticeInfo } from '@/models/Board/Notice';
+import { SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { RowsInfo } from '@/models/components/Table';
 import { getDateString } from '@/utils/FuncUtil';
@@ -17,29 +18,27 @@ const columns = [
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
 ];
 
-const searchInfoList: SearchInfo[] = [
+const searchInfoList = [
   { key: 'sj', value: '제목' },
   { key: 'cn', value: '내용' },
 ];
 
-const defaultSearchKey = 'all';
-
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [searchKey, setSearchKey] = useState<SearchKey>(defaultSearchKey);
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
+  const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
   const [page, setPage] = useState<PageInfo>(initPage);
   const [isChanged, setIsChanged] = useState(false);
   const [rows, setRows] = useState<Array<NoticeInfo>>([]);
   const { refetch, data: response, isError } = useNoticeList(searchKey, searchValue, page);
 
   const goToReg = () => {
-    navigate('reg');
+    navigate(View.REG);
   };
 
   const goToDetail = (row: RowsInfo, index: number) => {
-    navigate('detail', {
+    navigate(View.DETAIL, {
       state: {
         noticeId: row.noticeId,
         rows: rows,
@@ -49,7 +48,7 @@ const List = () => {
 
   const handleChangeSearchKey = (e: any, value: any) => {
     if (!value) {
-      value = defaultSearchKey;
+      value = SearchKey.ALL;
     }
     setSearchKey(value);
   };
@@ -63,7 +62,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setSearchKey(defaultSearchKey);
+    setSearchKey(SearchKey.ALL);
     setSearchValue('');
   };
 
@@ -89,7 +88,7 @@ const List = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     } else {
