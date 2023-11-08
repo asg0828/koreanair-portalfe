@@ -627,7 +627,7 @@ const SelfFeatureDetail = () => {
                 <TR>
                   <TH colSpan={1} align="right">산출 단위</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.featureTemp && featureInfo.featureTemp.featureDef}
+                    {featureInfo.featureTemp && featureInfo.featureTemp.calcUnt}
                   </TD>
                   <TH colSpan={1} align="right">카테고리</TH>
                   <TD colSpan={2} align='left'>
