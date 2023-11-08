@@ -117,7 +117,7 @@ const SfSubmissionRequestDetail = () => {
     return (
         <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
             {/* 정보 영역 */}
-            <Typography variant="h2">승인 정보</Typography>
+            <Typography variant="h2">승인 요청서 정보</Typography>
             <Stack direction="Vertical" className="width-100" gap="MD">
                 <HorizontalTable className="width-100">
                     <TR>

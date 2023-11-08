@@ -154,6 +154,7 @@ const DragList = ({
                         {behavior.tbCoMetaTblClmnInfoList.map((tbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo, clmnIdx: number) => (
                             <BehvDragItem
                                 key={clmnIdx}
+                                metaTblLogiNm={behavior.metaTblLogiNm}
                                 behvTblClmnInfo={tbCoMetaTblClmnInfo}
                             />
                         ))}

@@ -222,7 +222,7 @@ const SelfFeatureReg = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
+    //response = await callApi(request)
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
 
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
@@ -299,6 +299,7 @@ const SelfFeatureReg = () => {
     let request = cloneDeep(initApiRequest)
     request.method = Method.POST
     request.url = "/api/v1/customerfeatures"
+    featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
     request.params!.bodyParams = featureInfo
     console.log("[createCustFeatRule] Request  :: ", request)
 
@@ -323,6 +324,7 @@ const SelfFeatureReg = () => {
     let request = cloneDeep(initApiRequest)
     request.method = Method.POST
     request.url = "/api/v1/korean-air/customerfeatures"
+    featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
     request.params!.bodyParams = featureInfo
     console.log("[createCustFeatSQL] Request  :: ", request)
 

@@ -27,7 +27,16 @@ import {
     initSfSubmission, 
     initSfSubmissionApproval, 
     initSfSubmissionRequestInfo, 
-    sfSubmissionApprovalListColumns 
+    protoTypeSfSubmissionApprovalListApproved, 
+    protoTypeSfSubmissionApprovalListInApproval, 
+    protoTypeSfSubmissionApprovalListRejected, 
+    protoTypeSfSubmissionApprovalListSaved, 
+    protoTypeSfSubmissionRequestInfoApproved, 
+    protoTypeSfSubmissionRequestInfoInApproval, 
+    protoTypeSfSubmissionRequestInfoRejected, 
+    protoTypeSfSubmissionRequestInfoSaved, 
+    sfSubmissionApprovalListColumns, 
+    sfSubmissionStatusOption
 } from '@/pages/user/self-feature-submission/data';
 import { 
     ModalTitCont,
@@ -130,33 +139,50 @@ const SubmissionRequestPop = ({
         //response = await callApi(request)
         console.log("[retrieveSubmission1] Response :: ", response)
         if (featureInfo.tbRsCustFeatRule.submissionStatus !== "") {
+            let featureStatus = featureInfo.tbRsCustFeatRule.submissionStatus
+            let requestInfo: SfSubmissionRequestInfo = cloneDeep(initSfSubmissionRequestInfo)
+            let approvalList: Array<SfSubmissionApproval> = cloneDeep([initSfSubmissionApproval])
+    
+            if (featureStatus === subFeatStatus.SAVE) {
+                protoTypeSfSubmissionRequestInfoSaved.statusNm = sfSubmissionStatusOption[1].text
+                requestInfo = protoTypeSfSubmissionRequestInfoSaved
+                approvalList = protoTypeSfSubmissionApprovalListSaved
+            } else if (featureStatus === subFeatStatus.IN_APRV) {
+                protoTypeSfSubmissionRequestInfoInApproval.statusNm = sfSubmissionStatusOption[2].text
+                requestInfo = protoTypeSfSubmissionRequestInfoInApproval
+                approvalList = protoTypeSfSubmissionApprovalListInApproval
+            } else if (featureStatus === subFeatStatus.APRV) {
+                protoTypeSfSubmissionRequestInfoApproved.statusNm = sfSubmissionStatusOption[3].text
+                requestInfo = protoTypeSfSubmissionRequestInfoApproved
+                approvalList = protoTypeSfSubmissionApprovalListApproved
+            } else if (featureStatus === subFeatStatus.REJT) {
+                protoTypeSfSubmissionRequestInfoRejected.statusNm = sfSubmissionStatusOption[4].text
+                requestInfo = protoTypeSfSubmissionRequestInfoRejected
+                approvalList = protoTypeSfSubmissionApprovalListRejected
+            }
+            console.log("requestInfo :: ", requestInfo)
+            console.log("approvalList :: ", approvalList)
             setSubmission((state: SfSubmissionRequestInfo) => {
-                let rtn = cloneDeep(state)
-                rtn.submissionNo = "SUB_00000001"
-                rtn.requesterName = "이두나"
-                rtn.status = featureInfo.tbRsCustFeatRule.submissionStatus
-                rtn.statusNm = featureInfo.tbRsCustFeatRule.submissionStatusNm
-                rtn.requestDate = "2023-11-07 11:22:33"
-                rtn.title = "승인해주세요."
-                rtn.content = "승인부탁드립니다."
-                return rtn
+              return requestInfo
             })
             setApprovals((state: Array<SfSubmissionApproval>) => {
-                let rtn = []//cloneDeep(state)
-                for (let i = 0; i < 3; i++) {
-                    let approval: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
-                    approval.approver = `결재자${i + 1}`
-                    approval.approvalSequence = i + 1
-                    if (approval.approvalSequence === 1) {
-                        approval.approvalSequenceNm = aprvSeqNm.FIRST
-                    } else if (approval.approvalSequence === 2) {
-                        approval.approvalSequenceNm = aprvSeqNm.SECOND
-                    } else if (approval.approvalSequence === 3) {
-                        approval.approvalSequenceNm = aprvSeqNm.LAST
-                    }
-                    rtn.push(approval)
+              /*
+              let rtn = []//cloneDeep(state)
+              for (let i = 0; i < 3; i++) {
+                let approval: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+                approval.approver = `결재자${i + 1}`
+                approval.approvalSequence = i + 1
+                if (approval.approvalSequence === 1) {
+                  approval.approvalSequenceNm = aprvSeqNm.FIRST
+                } else if (approval.approvalSequence === 2) {
+                  approval.approvalSequenceNm = aprvSeqNm.SECOND
+                } else if (approval.approvalSequence === 3) {
+                  approval.approvalSequenceNm = aprvSeqNm.LAST
                 }
-                return rtn
+                rtn.push(approval)
+              }
+              */
+              return approvalList
             })
         }
     }
@@ -164,6 +190,7 @@ const SubmissionRequestPop = ({
     const handleClose = useCallback(
         (isOpenSubmissionRequestPop: boolean) => {
             if (onClose) {
+                // 초기화
                 setApprovals([])
                 onClose(isOpenSubmissionRequestPop)
             } else {
@@ -173,9 +200,10 @@ const SubmissionRequestPop = ({
         [onClose]
     )
 
-    const closePopup5 = () => {
+    const onClickCancelSubmission = () => {
         setIsOpenSubmissionRequestPop(false);
         setIsOpenSubmissionApprovePop('rightPopup openFalse');
+        // 초기화
         setSubmission(cloneDeep(initSfSubmissionRequestInfo))
         setApprovals([])
         onClose(false)
@@ -337,7 +365,7 @@ const SubmissionRequestPop = ({
                         priority="Normal" 
                         appearance="Outline" 
                         size="LG"
-                        onClick={closePopup5} 
+                        onClick={onClickCancelSubmission} 
                     >
                     취소
                     </Button>
@@ -365,7 +393,7 @@ const SubmissionRequestPop = ({
                         priority="Normal" 
                         appearance="Outline" 
                         size="LG"
-                        onClick={closePopup5} 
+                        onClick={onClickCancelSubmission} 
                     >
                     취소
                     </Button>
@@ -393,15 +421,15 @@ const SubmissionRequestPop = ({
                     </Button>
                 </>
             )
-        } else if (submissionInfo.submission.status === subFeatStatus.REG) {
-            // 승인 요청
+        } else if (submissionInfo.submission.status === subFeatStatus.IN_APRV) {
+            // 결재 진행중
             return (
                 <>
                     <Button 
                         priority="Normal" 
                         appearance="Outline" 
                         size="LG"
-                        onClick={closePopup5} 
+                        onClick={onClickCancelSubmission} 
                     >
                     취소
                     </Button>
@@ -416,18 +444,17 @@ const SubmissionRequestPop = ({
                 </>
             )
         } else if (
-            submissionInfo.submission.status === subFeatStatus.IN_APRV
-            || submissionInfo.submission.status === subFeatStatus.APRV
+            submissionInfo.submission.status === subFeatStatus.APRV
             || submissionInfo.submission.status === subFeatStatus.REJT
         ) {
-            // 결재 진행중, 승인완료, 반려
+            // 승인완료, 반려
             return (
                 <>
                     <Button 
                         priority="Normal" 
                         appearance="Outline" 
                         size="LG"
-                        onClick={closePopup5} 
+                        onClick={onClickCancelSubmission} 
                     >
                     취소
                     </Button>
@@ -451,7 +478,7 @@ const SubmissionRequestPop = ({
             <Stack className="width-100" style={{ position: 'relative' }} alignItems="Start">
                 {/* 승인 정보 */}
                 <div className="width-100">
-                <Modal.Header>승인 정보</Modal.Header>
+                <Modal.Header>승인 요청서</Modal.Header>
                 <Modal.Body className="width-100" style={{maxHeight:"60vh"}}>
                     <Stack direction="Vertical" className="width-100" gap="MD">
                         <HorizontalTable className="width-100">
@@ -480,8 +507,7 @@ const SubmissionRequestPop = ({
                                 승인 상태
                                 </TH>
                                 <TD colSpan={2}>
-                                    <TextField className="width-100" readOnly value={submission.statusNm} 
-                                    />
+                                    <TextField className="width-100" readOnly value={submission.statusNm} />
                                 </TD>
                             </TR>
                             <TR>

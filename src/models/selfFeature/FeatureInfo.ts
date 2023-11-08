@@ -30,6 +30,7 @@ export interface TargetDropFilterProps {
 
 export interface TargetDragProps {
     attrTblClmnInfo?: Attribute
+    metaTblLogiNm?: string
     behvTblClmnInfo?: TbCoMetaTblClmnInfo
 }
 
@@ -288,6 +289,8 @@ export interface FeatureTemp {
     featureId: string //example: 피쳐ID
     featureTyp: string //example: 피쳐타입
     featureSe: string //example: 피쳐구분
+    featureLSe: string //example: 피쳐대구분
+    featureMSe: string //example: 피쳐중구분
     featureNm: string //example: 피쳐명
     featureEngNm: string //example: 피쳐영문명
     calcUnt: string //example: 산출단위

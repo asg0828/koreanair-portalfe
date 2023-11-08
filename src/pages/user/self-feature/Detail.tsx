@@ -16,6 +16,7 @@ import {
     Button,
     Stack,
     Typography,
+    TextField,
   } from '@components/ui';
 
 import { 
@@ -37,12 +38,28 @@ import {
   initTbRsCustFeatRuleSql, 
   initTbRsCustFeatRuleTrgt, 
   initTbRsCustFeatRuleTrgtFilter,
+  protoTypeFeatureTemp,
+  protoTypeFeatureTempApproved,
+  protoTypeFeatureTempInApproval,
+  protoTypeFeatureTempRejected,
+  protoTypeFeatureTempSaved,
+  protoTypeTbRsCustFeatRuleCalc,
+  protoTypeTbRsCustFeatRuleTrgtFilterList,
+  protoTypeTbRsCustFeatRuleTrgtList,
 } from './data';
 import {
   aprvSeqNm,
   sfSubmissionApprovalListColumns as columns, 
   initSfSubmissionApproval, 
   initSfSubmissionRequestInfo,
+  protoTypeSfSubmissionApprovalListApproved,
+  protoTypeSfSubmissionApprovalListInApproval,
+  protoTypeSfSubmissionApprovalListRejected,
+  protoTypeSfSubmissionApprovalListSaved,
+  protoTypeSfSubmissionRequestInfoApproved,
+  protoTypeSfSubmissionRequestInfoInApproval,
+  protoTypeSfSubmissionRequestInfoRejected,
+  protoTypeSfSubmissionRequestInfoSaved,
   sfSubmissionStatusOption,
 } from '../self-feature-submission/data'
 import {
@@ -60,6 +77,7 @@ import {
 } from '@/models/selfFeature/FeatureSubmissionInfo';
 import { Method } from '@/utils/ApiUtil';
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
 
 const SelfFeatureDetail = () => {
 
@@ -195,17 +213,30 @@ const SelfFeatureDetail = () => {
       //response = await callApi(request)
       console.log("[retrieveSubmission1] Response :: ", response)
       if (featureInfo.tbRsCustFeatRule.submissionStatus !== "") {
+        let featureStatus = featureInfo.tbRsCustFeatRule.submissionStatus
+        let requestInfo: SfSubmissionRequestInfo = cloneDeep(initSfSubmissionRequestInfo)
+        let approvalList: Array<SfSubmissionApproval> = cloneDeep([initSfSubmissionApproval])
+
+        if (featureStatus === subFeatStatus.SAVE) {
+          requestInfo = protoTypeSfSubmissionRequestInfoSaved
+          approvalList = protoTypeSfSubmissionApprovalListSaved
+        } else if (featureStatus === subFeatStatus.IN_APRV) {
+          requestInfo = protoTypeSfSubmissionRequestInfoInApproval
+          approvalList = protoTypeSfSubmissionApprovalListInApproval
+        } else if (featureStatus === subFeatStatus.APRV) {
+          requestInfo = protoTypeSfSubmissionRequestInfoApproved
+          approvalList = protoTypeSfSubmissionApprovalListApproved
+        } else if (featureStatus === subFeatStatus.REJT) {
+          requestInfo = protoTypeSfSubmissionRequestInfoRejected
+          approvalList = protoTypeSfSubmissionApprovalListRejected
+        }
+        console.log("requestInfo :: ", requestInfo)
+        console.log("approvalList :: ", approvalList)
         setSfSubmissionRequestData((state: SfSubmissionRequestInfo) => {
-          let rtn = cloneDeep(state)
-          rtn.submissionNo = "SUB_00000001"
-          rtn.requesterName = "이두나"
-          rtn.status = featureInfo.tbRsCustFeatRule.submissionStatus
-          rtn.requestDate = "2023-11-07 11:22:33"
-          rtn.title = "승인해주세요."
-          rtn.content = "승인부탁드립니다."
-          return rtn
+          return requestInfo
         })
         setSfSubmissionApprovalList((state: Array<SfSubmissionApproval>) => {
+          /*
           let rtn = []//cloneDeep(state)
           for (let i = 0; i < 3; i++) {
             let approval: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
@@ -220,7 +251,8 @@ const SelfFeatureDetail = () => {
             }
             rtn.push(approval)
           }
-          return rtn
+          */
+          return approvalList
         })
       }
     }
@@ -235,9 +267,25 @@ const SelfFeatureDetail = () => {
       */
       setFeatureInfo((state: FeatureInfo) => {
         let rtn = cloneDeep(state)
+        // Feature 기본정보
         let tbRsCustFeatRule : TbRsCustFeatRule = Object.assign(cloneDeep(initTbRsCustFeatRule), cloneDeep(location.state))
         rtn.tbRsCustFeatRule = tbRsCustFeatRule
-
+        // Feature temp(포탈동기화정보)
+        if (tbRsCustFeatRule.id === "CFR_00000001") {
+          rtn.featureTemp = protoTypeFeatureTemp
+        } else if (tbRsCustFeatRule.id === "CFR_00000002") {
+          rtn.featureTemp = protoTypeFeatureTempSaved
+        } else if (tbRsCustFeatRule.id === "CFR_00000004") {
+          rtn.featureTemp = protoTypeFeatureTempInApproval
+        } else if (tbRsCustFeatRule.id === "CFR_00000005") {
+          rtn.featureTemp = protoTypeFeatureTempApproved
+        } else if (tbRsCustFeatRule.id === "CFR_00000006") {
+          rtn.featureTemp = protoTypeFeatureTempRejected
+        } else {
+          rtn.featureTemp = cloneDeep(initFeatureTemp)
+        }
+          
+        /*
         let tbRsCustFeatRuleTrgtList = []
         let tbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = Object.assign(
           cloneDeep(initTbRsCustFeatRuleTrgt), 
@@ -259,8 +307,9 @@ const SelfFeatureDetail = () => {
           }
         )
         tbRsCustFeatRuleTrgtList.push(tbRsCustFeatRuleTrgt)
-        rtn.tbRsCustFeatRuleTrgtList = tbRsCustFeatRuleTrgtList
-        
+        */
+        rtn.tbRsCustFeatRuleTrgtList = protoTypeTbRsCustFeatRuleTrgtList
+        /*
         let tbRsCustFeatRuleTrgtFilterList = []
         let tbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = Object.assign(
           cloneDeep(initTbRsCustFeatRuleTrgtFilter), 
@@ -281,17 +330,20 @@ const SelfFeatureDetail = () => {
           }
         )
         tbRsCustFeatRuleTrgtFilterList.push(tbRsCustFeatRuleTrgtFilter)
-        rtn.tbRsCustFeatRuleTrgtFilterList = tbRsCustFeatRuleTrgtFilterList
-
+        */
+        rtn.tbRsCustFeatRuleTrgtFilterList = protoTypeTbRsCustFeatRuleTrgtFilterList
+        /*
         let tbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = Object.assign(
           cloneDeep(initTbRsCustFeatRuleCalc),
           {
             formula: "T1/T2",
           }
         )
-        rtn.tbRsCustFeatRuleCalc = tbRsCustFeatRuleCalc
+        */
+        rtn.tbRsCustFeatRuleCalc = protoTypeTbRsCustFeatRuleCalc
 
-        let tbRsCustFeatRuleCaseList = []
+        let tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase> = []
+        /*
         let tbRsCustFeatRuleCase: TbRsCustFeatRuleCase = Object.assign(
           cloneDeep(initTbRsCustFeatRuleCase), 
           {
@@ -308,7 +360,8 @@ const SelfFeatureDetail = () => {
           }
         )
         tbRsCustFeatRuleCaseList.push(tbRsCustFeatRuleCase)
-        //rtn.tbRsCustFeatRuleCaseList = tbRsCustFeatRuleCaseList
+        */
+        rtn.tbRsCustFeatRuleCaseList = tbRsCustFeatRuleCaseList
 
         return rtn
       })
@@ -377,12 +430,12 @@ const SelfFeatureDetail = () => {
               수정
             </Button>
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-              승인 정보
+              승인 요청서
             </Button>
           </Stack>
         )
-      } else if (location.state.submissionStatus === subFeatStatus.REQ) {
-        // 승인 요청
+      } else if (location.state.submissionStatus === subFeatStatus.IN_APRV) {
+        // 결재 진행
         if (location.state.id.includes('ADM')) {
           return (
             <Stack justifyContent="End" gap="SM" className="width-100">
@@ -409,18 +462,18 @@ const SelfFeatureDetail = () => {
             </Stack>
           )
         }
-      } else if (location.state.submissionStatus === subFeatStatus.IN_APRV) {
-        // 결재 진행
+        /*
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-              승인 정보
+              승인 요청서
             </Button>
           </Stack>
         )  
+        */
       } else if (location.state.submissionStatus === subFeatStatus.APRV) {
         // 승인 완료
         return (
@@ -429,7 +482,7 @@ const SelfFeatureDetail = () => {
               목록
             </Button>
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-              승인 정보
+            승인 요청서
             </Button>
           </Stack>
         )
@@ -446,23 +499,26 @@ const SelfFeatureDetail = () => {
 
     return (
       <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
+      {/* 상단 버튼 영역 */}
+        <FeatQueryRsltButton />
+        
       {/* 정보 영역 */}
         {sfSubmissionRequestData.submissionNo !== "" && 
         <>
-        <Typography variant="h2">승인 정보</Typography>
+        <Typography variant="h2">승인 요청서 정보</Typography>
         <Stack direction="Vertical" className="width-100" gap="MD">
             <HorizontalTable className="width-100">
                 <TR>
                     <TH colSpan={1} align="right">
                     승인 번호
                     </TH>
-                    <TD colSpan={2}>
+                    <TD colSpan={2} align="left">
                         {sfSubmissionRequestData.submissionNo}
                     </TD>
                     <TH colSpan={1} align="right">
                     요청자
                     </TH>
-                    <TD colSpan={2}>
+                    <TD colSpan={2} align="left">
                         {sfSubmissionRequestData.requesterName}
                     </TD>
                 </TR>
@@ -470,13 +526,13 @@ const SelfFeatureDetail = () => {
                     <TH colSpan={1} align="right">
                     승인 유형
                     </TH>
-                    <TD colSpan={2}>
+                    <TD colSpan={2} align="left">
                         {sfSubmissionRequestData.type}
                     </TD>
                     <TH colSpan={1} align="right">
                     승인 상태
                     </TH>
-                    <TD colSpan={2}>
+                    <TD colSpan={2} align="left">
                         {featureInfo.tbRsCustFeatRule.submissionStatusNm}
                         {/* {sfSubmissionRequestData.status === sfSubmissionStatusOption[1].value && sfSubmissionStatusOption[1].text}
                         {sfSubmissionRequestData.status === sfSubmissionStatusOption[2].value && sfSubmissionStatusOption[2].text}
@@ -489,7 +545,7 @@ const SelfFeatureDetail = () => {
                     <TH colSpan={1} align="right">
                     요청 일시
                     </TH>
-                    <TD colSpan={5.01}>
+                    <TD colSpan={5.01} align="left">
                         {sfSubmissionRequestData.requestDate}
                     </TD>
                 </TR>
@@ -497,7 +553,7 @@ const SelfFeatureDetail = () => {
                     <TH colSpan={1} align="right">
                     승인 제목
                     </TH>
-                    <TD colSpan={5.01}>
+                    <TD colSpan={5.01} align="left">
                         {sfSubmissionRequestData.title}
                     </TD>
                 </TR>
@@ -505,7 +561,7 @@ const SelfFeatureDetail = () => {
                     <TH colSpan={1} align="right">
                     승인 내용
                     </TH>
-                    <TD colSpan={5.01}>
+                    <TD colSpan={5.01} align="left">
                         {sfSubmissionRequestData.content}
                     </TD>
                 </TR>
@@ -530,43 +586,48 @@ const SelfFeatureDetail = () => {
                 <TR>
                   <TH colSpan={1} align="right">대구분</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `대구분`}
+                    {featureInfo.tbRsCustFeatRule && featureInfo.featureTemp.featureLSe}
                   </TD>
                   <TH colSpan={1} align="right">중구분</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `중구분`}
+                    {featureInfo.tbRsCustFeatRule && featureInfo.featureTemp.featureMSe}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">Feature ID</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.id}
+                    {featureInfo.featureTemp && featureInfo.featureTemp.featureId}
                   </TD>
                   <TH colSpan={1} align="right">Feature 타입</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `Self Feature`}
+                    {featureInfo.featureTemp && featureInfo.featureTemp.featureTyp}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">한글명</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.name}
+                    {featureInfo.featureTemp && featureInfo.featureTemp.featureNm}
                   </TD>
                   <TH colSpan={1} align="right">영문명</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `영문명`}
+                    {featureInfo.featureTemp && featureInfo.featureTemp.featureEngNm}
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">Feature 정의</TH>
                   <TD colSpan={5.01} align='left'>
-                    {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.description}
+                    <TextField 
+                      className="width-100" 
+                      multiline
+                      readOnly
+                      defaultValue={featureInfo.featureTemp && featureInfo.featureTemp.featureDef}
+                    />
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">산출 단위</TH>
                   <TD colSpan={2} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `산출 단위`}
+                    {featureInfo.featureTemp && featureInfo.featureTemp.featureDef}
                   </TD>
                   <TH colSpan={1} align="right">카테고리</TH>
                   <TD colSpan={2} align='left'>
@@ -576,19 +637,29 @@ const SelfFeatureDetail = () => {
                 <TR>
                   <TH colSpan={1} align="right">산출 로직</TH>
                   <TD colSpan={5.01} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `산출 로직`}
+                    <TextField 
+                      className="width-100" 
+                      multiline
+                      readOnly
+                      defaultValue={featureInfo.featureTemp && featureInfo.featureTemp.featureFm}
+                    />
                   </TD>
                 </TR>
                 <TR>
                   <TH colSpan={1} align="right">비고</TH>
                   <TD colSpan={5.01} align='left'>
-                    {featureInfo.tbRsCustFeatRule && `비고`}
+                    {featureInfo.featureTemp && `비고`}
                   </TD>
                 </TR>
               </HorizontalTable>
             {/* 기본 정보 */}
 
             {/* 대상 선택 */}
+            {(
+                featureInfo.tbRsCustFeatRule.sqlDirectInputYn === ""
+              || featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
+            ) &&
+            <>
             <Typography variant="h4">대상 선택</Typography>
               {/* drag && drop 영역*/}
               <Stack 
@@ -626,6 +697,29 @@ const SelfFeatureDetail = () => {
               />
             }
             {/* 계산식 */}
+            </>
+            }
+            {featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
+            <>
+            <Typography variant="h4">Feature 생성 Query</Typography>
+            <Stack 
+                direction="Horizontal"
+                gap="MD"
+                justifyContent="Between"
+                style={{
+                  height: '400px',
+                }}
+            >
+              <TextField 
+                className="width-100 height-100" 
+                multiline 
+                id="sqlQuery" 
+                readOnly
+                defaultValue={featureInfo.tbRsCustFeatRuleSql.sqlQuery}
+              />
+            </Stack>
+            </>
+            }
         </Stack>
       {/* 정보 영역 */}
 
