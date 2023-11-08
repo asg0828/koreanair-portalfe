@@ -316,6 +316,9 @@ svg {
         font-size: 0.875rem;
       }
     }
+    .sc-kgOKUu.dldJrs{
+      position: relative;
+    }
     .answer{
       padding-left: 22px;
     }
@@ -323,7 +326,9 @@ svg {
       content: 'A.';
       display: inline-block;
       position: absolute;
-      left: 12px;
+      left: 1px;
+      top: 16px;
+      z-index: 1;
       font-size: 0.875rem;
     }
   }
@@ -352,3 +357,5 @@ svg {
   border-bottom: 1px solid rgb(218, 218, 218);
   height: 240px;
 }
+
+

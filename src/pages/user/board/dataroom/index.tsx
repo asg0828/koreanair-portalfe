@@ -8,6 +8,7 @@ import { RowsInfo } from '@/models/components/Table';
 import { getDateString } from '@/utils/FuncUtil';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import AddIcon from '@mui/icons-material/Add';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -150,6 +151,7 @@ const List = () => {
         onChange={handlePage}
         buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+            <AddIcon />
             등록
           </Button>
         }

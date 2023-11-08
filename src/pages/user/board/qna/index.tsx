@@ -9,6 +9,7 @@ import { getDateString } from '@/utils/FuncUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
@@ -149,6 +150,7 @@ const List = () => {
         onChange={handlePage}
         buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+            <AddIcon />
             등록
           </Button>
         }
