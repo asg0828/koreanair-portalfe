@@ -328,3 +328,23 @@ svg {
     }
   }
 }
+@media screen and (max-width:1652px) {
+  #aside{
+    transform: unset;
+  }
+  #home,#main{
+    padding-left: calc(1.75rem + 170px);
+  }
+  .home_icon_01 {
+    width: 70px;
+  }
+  .home_icon_02 {
+    width: 70px;
+  }
+  .home_icon_03 {
+    width: 70px;
+  }
+  .box1 h3{
+    font-size:1rem;
+  }
+}
