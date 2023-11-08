@@ -144,11 +144,9 @@ const Reg = () => {
               </Stack>
             </TD>
             <TH>게시여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-                <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
+              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
             </TD>
           </TR>
           <TR className="height-100">

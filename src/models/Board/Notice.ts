@@ -2,6 +2,7 @@ import { YN, commonInfo } from '@models/common/CommonInfo';
 
 export interface NoticeInfo extends CreatedNoticeInfo, commonInfo {
   noticeId: string;
+  rgstNmStr: string;
 }
 
 export interface CreatedNoticeInfo {

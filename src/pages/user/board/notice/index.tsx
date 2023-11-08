@@ -7,6 +7,8 @@ import { PageInfo, initPage } from '@/models/components/Page';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getDateString } from '@/utils/FuncUtil';
+import { htmlTagReg } from '@/utils/Constants';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
@@ -83,6 +85,11 @@ const List = () => {
     } else {
       if (response?.data) {
         response.data.page.page = response.data.page.page - 1;
+        response.data.contents.forEach((item: NoticeInfo) => {
+          item.rgstDt = getDateString(item.rgstDt, '-');
+          item.cn = item.cn.replace(htmlTagReg, '');
+          item.rgstNmStr = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
+        });
         setRows(response.data.contents);
         setPage(response.data.page);
       }
