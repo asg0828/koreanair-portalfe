@@ -50,6 +50,7 @@ import {
   initTbRsCustFeatRuleCalc,
   initFeatureTemp,
   initTbRsCustFeatRuleSql,
+  protoTypeMstrSgmtTableandColMetaInfo,
 } from './data'
 import { Method, callApi } from "@/utils/ApiUtil";
 import {
@@ -63,14 +64,14 @@ import {
 } from '@/models/selfFeature/FeatureCommon';
 
 const lCategory = [
-  { value: '1', text: '회원' },
+  { value: '온라인행동', text: '온라인행동' },
   { value: '2', text: '항공' },
 ]
 const mCategory = [
-  { value: '1', text: '항공권' },
+  { value: '홈페이지', text: '홈페이지' },
 ]
 const calcUnit = [
-  { value: '1', text: '원' },
+  { value: '횟수', text: '횟수' },
   { value: '2', text: '명' },
 ]
 
@@ -111,7 +112,10 @@ const SelfFeatureEdit = () => {
     if (modalType === ModalType.CONFIRM) {
       if (custFeatRule.sqlDirectInputYn === 'Y') {
         updateCustFeatSQL()
-      } else if (custFeatRule.sqlDirectInputYn === 'N') {
+      } else if (
+        custFeatRule.sqlDirectInputYn === '' 
+        || custFeatRule.sqlDirectInputYn === 'N'
+      ) {
         updateCustFeatRule()
       }
     }
@@ -123,7 +127,8 @@ const SelfFeatureEdit = () => {
 
   useEffect(() => {
     //useQuery(['mstrSgmtTableandColMetaInfo'], () => )
-    getTableandColumnMetaInfoByMstrSgmtRuleId()
+    if (location.state.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
+      getTableandColumnMetaInfoByMstrSgmtRuleId()
   }, [])
 
   useEffect(() => {
@@ -235,6 +240,8 @@ const SelfFeatureEdit = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
 
     setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
+
+      /*
       let temp = cloneDeep(state)
       let attributes = []
       let behaviors  = []
@@ -285,7 +292,8 @@ const SelfFeatureEdit = () => {
         temp.attributes = attributes
         temp.behaviors  = behaviors
       }
-      return cloneDeep(temp)
+      */
+      return cloneDeep(protoTypeMstrSgmtTableandColMetaInfo)
     })
   }
 
@@ -314,7 +322,7 @@ const SelfFeatureEdit = () => {
     console.log("[updateCustFeatRule] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
+    //response = await callApi(request)
     console.log("[updateCustFeatRule] Response :: ", response)
 
     // API 정상 응답시 페이지 redirect
@@ -339,7 +347,7 @@ const SelfFeatureEdit = () => {
     console.log("[updateCustFeatSQL] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
+    //response = await callApi(request)
     console.log("[updateCustFeatSQL] Response :: ", response)
 
     // API 정상 응답시 페이지 redirect
@@ -448,6 +456,7 @@ const SelfFeatureEdit = () => {
             <TH colSpan={1} align="center">대구분</TH>
             <TD colSpan={3}>
               <Select 
+                defaultValue={location.state.featureTemp.featureLSe}
                 appearance="Outline" 
                 placeholder="대구분" 
                 className="width-100" 
@@ -455,7 +464,7 @@ const SelfFeatureEdit = () => {
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                   value: SelectValue<{}, false>
                 ) => {
-                  onchangeSelectHandler(e, value, "lCategory")
+                  onchangeSelectHandler(e, value, "featureLSe")
                 }}
               >
                 {lCategory.map((item, index) => (
@@ -466,6 +475,7 @@ const SelfFeatureEdit = () => {
             <TH colSpan={1} align="center">중구분</TH>
             <TD colSpan={3}>
               <Select 
+                defaultValue={location.state.featureTemp.featureMSe}
                 appearance="Outline" 
                 placeholder="중구분" 
                 className="width-100" 
@@ -473,7 +483,7 @@ const SelfFeatureEdit = () => {
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                   value: SelectValue<{}, false>
                 ) => {
-                  onchangeSelectHandler(e, value, "mCategory")
+                  onchangeSelectHandler(e, value, "featureMSe")
                 }}
               >
                 {mCategory.map((item, index) => (
@@ -488,7 +498,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="id" 
-                value={featureTempInfo.featureId}
+                defaultValue={location.state.featureTemp.featureId}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -497,7 +507,8 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="dataType"
-                value={featureTempInfo.featureTyp}
+                readOnly
+                defaultValue={location.state.featureTemp.featureTyp}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -508,7 +519,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="name" 
-                value={featureTempInfo.featureNm}
+                defaultValue={location.state.featureTemp.featureNm}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -517,7 +528,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="name" 
-                value={featureTempInfo.featureEngNm}
+                defaultValue={location.state.featureTemp.featureEngNm}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -527,8 +538,9 @@ const SelfFeatureEdit = () => {
             <TD colSpan={7}>
               <TextField 
                 className="width-100" 
+                multiline
                 id="description" 
-                value={featureTempInfo.featureDef}
+                defaultValue={featureTempInfo.featureDef}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -537,6 +549,7 @@ const SelfFeatureEdit = () => {
             <TH colSpan={1} align="center">산출 단위</TH>
             <TD colSpan={3}>
               <Select 
+                defaultValue={location.state.featureTemp.calcUnt}
                 appearance="Outline" 
                 placeholder="산출 단위" 
                 className="width-100" 
@@ -558,7 +571,12 @@ const SelfFeatureEdit = () => {
           <TR>
             <TH colSpan={1} align="center">산출 로직</TH>
             <TD colSpan={7}>
-              <TextField className="width-100" id="featureFm" onChange={onchangeInputHandler}/>
+              <TextField 
+                className="width-100" 
+                multiline
+                id="featureFm" 
+                defaultValue={featureTempInfo.featureFm}
+                onChange={onchangeInputHandler}/>
             </TD>
           </TR>
           <TR>
@@ -569,7 +587,11 @@ const SelfFeatureEdit = () => {
           </TR>
         </HorizontalTable>
         {/* 기본 정보 */}
-
+        {(
+          custFeatRule.sqlDirectInputYn === "" 
+          || custFeatRule.sqlDirectInputYn === "N"
+        ) &&
+        <>
         {/* 대상 선택 */}
         <Typography variant="h4">대상 선택</Typography>
         {/* drag && drop 영역*/}
@@ -617,6 +639,29 @@ const SelfFeatureEdit = () => {
           />
         }
         {/* 계산식 */}
+        </>
+        }
+        {custFeatRule.sqlDirectInputYn === "Y" &&
+        <>
+        <Typography variant="h4">Feature 생성 Query</Typography>
+        <Stack 
+            direction="Horizontal"
+            gap="MD"
+            justifyContent="Between"
+            style={{
+              height: '400px',
+            }}
+        >
+          <TextField 
+            className="width-100 height-100" 
+            multiline 
+            id="sqlQuery" 
+            value={sqlQueryInfo.sqlQuery}
+            onChange={onchangeInputHandler}
+          />
+        </Stack>
+        </>
+        }
       </Stack>
       {/* 정보 영역 */}
 

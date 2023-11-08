@@ -33,6 +33,7 @@ export interface SfSubmissionApproval extends RowsInfo {
     submissionId: number
     approvalSequence: number
     status: string//[ requested, canceled, approved, rejected ]
+    statusNm: string//[ requested, canceled, approved, rejected ]
     approver: string
     comment: string
     requestDate: string

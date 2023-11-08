@@ -26,9 +26,7 @@ import {
 } from '@/models/selfFeature/FeatureCommon';
 
 const columnList = [
-    { value: 'colum1', text: 'colum1' },
-    { value: 'colum2', text: 'colum2' },
-    { value: 'colum3', text: 'colum3' },
+    { value: '세션번호', text: '세션번호' },
 ]
 
 const BehvDropItem = ({
@@ -145,8 +143,9 @@ const BehvDropItem = ({
                 let targetObj: TbCoMetaTblClmnInfo = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
                 // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                 let targetId = cloneDeep(targetItem.targetId)
-                let tableId  = targetId.split('_')[0]
-
+                let tableIdArr  = targetId.split('_')
+                tableIdArr.pop()
+                let tableId = tableIdArr.join('_')
                 if (tableId !== targetObj.metaTblId) {
                     setModalType(ModalType.ALERT)
                     setConfirmModalTit("대상 선택")

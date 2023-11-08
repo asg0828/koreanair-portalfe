@@ -63,13 +63,13 @@ const userMenuList = [
           { name: 'Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
         ],
       },
-      {
-        name: 'Feature 승인 요청 목록',
-        path: '/self-feature/submission-request',
-        children: [
-          { name: 'Feature 승인 요청 상세', path: '/self-feature/submission-request/detail', children: [] },
-        ],
-      },
+      // {
+      //   name: 'Feature 승인 요청 목록',
+      //   path: '/self-feature/submission-request',
+      //   children: [
+      //     { name: 'Feature 승인 요청 상세', path: '/self-feature/submission-request/detail', children: [] },
+      //   ],
+      // },
     ],
   },
   {
