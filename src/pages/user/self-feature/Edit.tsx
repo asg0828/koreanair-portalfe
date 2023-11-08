@@ -421,7 +421,8 @@ const SelfFeatureEdit = () => {
 
   const onClickPageMovHandler = (pageNm: string) => {
       if (pageNm === selfFeatPgPpNm.LIST)
-        navigate('..')
+        //navigate('..')
+        navigate(-1)
       else
         navigate(`../${pageNm}`)
   }

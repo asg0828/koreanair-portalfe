@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from "lodash";
 
@@ -56,25 +56,33 @@ const useYn = [
 ]
 const submissionStatus = [
   { value: '', text: '전체' },
-  { value: '1', text: '등록' },
-  { value: '2', text: '승인 요청 정보 등록' },
-  { value: '3', text: '승인 요청' },
-  { value: '4', text: '승인 요청 취소' },
-  { value: '5', text: '승인 완료' },
-  { value: '6', text: '반려' },
+  { value: 'saved', text: '등록' },
+  { value: 'inApproval', text: '결재진행중' },
+  { value: 'approved', text: '승인 완료' },
+  { value: 'rejected', text: '반려' },
 ]
+
+export interface searchProps {
+  mstrSgmtRuleId: string
+  custFeatRuleName: string
+  category: string
+  useYn: string
+  submissionStatus: string
+}
 
 const SelfFeature = () => {
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const [ searchInfo, setSearchInfo ] = useState<Object>({
+  const [ searchInfo, setSearchInfo ] = useState<searchProps>({
     mstrSgmtRuleId: '',
     custFeatRuleName: '',
     category: '',
     useYn: '',
     submissionStatus: '',
   })
+
   const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
   const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
 
@@ -86,6 +94,19 @@ const SelfFeature = () => {
 
   useEffect(() => {
     // 공통 코드 API CALL && 초기 LIST 조회 API CALL -> useQuery 사용하기
+    if (location.state) {
+      if (location.state.submissionStatus === "reg") {
+        setSearchInfo((state: searchProps) => {
+          state.submissionStatus = "saved"
+          return cloneDeep(state)
+        })
+      } else {
+        setSearchInfo((state: searchProps) => {
+          state.submissionStatus = location.state.submissionStatus
+          return cloneDeep(state)
+        })
+      }
+    }
     retrieveCustFeatRules()
   }, [])
 
@@ -132,7 +153,16 @@ const SelfFeature = () => {
       list.push(selfFeature)
     }
     setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
-      prevState = protoTbRsCustFeatRuleList//list
+      if (searchInfo.submissionStatus !== "") {
+        if (searchInfo.submissionStatus === "reg" || searchInfo.submissionStatus === "saved") {
+          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === "" || v.submissionStatus === "saved")//list
+        } else if (searchInfo.submissionStatus) {
+          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === searchInfo.submissionStatus)//list//list
+        }
+      } else {
+        prevState = protoTbRsCustFeatRuleList
+      }
+
       return cloneDeep(prevState)
     })
   }
@@ -154,7 +184,7 @@ const SelfFeature = () => {
     console.log("[deleteCustFeatRule] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
+    //response = await callApi(request)
     console.log("[deleteCustFeatRule] Response :: ", response)
 
   }
@@ -249,6 +279,7 @@ const SelfFeature = () => {
           <TH align="right" colSpan={1}>진행 상태</TH>
           <TD colSpan={2}>
             <Select 
+              value={searchInfo.submissionStatus}
               appearance="Outline" 
               placeholder="전체" 
               className="width-100" 
