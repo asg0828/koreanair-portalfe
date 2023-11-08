@@ -1,4 +1,4 @@
-import SearchForm, { SearchKey, searchInfoList } from '@/components/form/SearchForm';
+import SearchForm, { SearchKey, SearchInfo } from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import { NoticeInfo } from '@/models/Board/Notice';
@@ -18,10 +18,15 @@ const columns = [
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
 ];
 
+const searchInfoList: SearchInfo[] = [
+  { key: 'sj', value: '제목' },
+  { key: 'cn', value: '내용' },
+];
+
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [searchKey, setSearchKey] = useState<SearchKey>(searchInfoList[0].key);
+  const [searchKey, setSearchKey] = useState<SearchKey>('all');
   const [searchValue, setSearchValue] = useState<string>('');
   const [page, setPage] = useState<PageInfo>(initPage);
   const [isChanged, setIsChanged] = useState(false);
@@ -54,7 +59,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setSearchKey(searchInfoList[0].key);
+    setSearchKey('all');
     setSearchValue('');
   };
 
