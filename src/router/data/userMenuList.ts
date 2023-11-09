@@ -1,6 +1,6 @@
 const userMenuList = [
   {
-    name: 'BiZ 메타',
+    name: 'BIZ 메타',
     path: '/biz-meta',
     children: [
       {

@@ -1,42 +1,41 @@
-import SearchForm, { FaqSearchKey as SearchKey, SearchInfo } from '@/components/form/SearchForm';
+import SearchForm from '@/components/form/SearchForm';
 import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
-import useModal, { ModalType } from '@/hooks/useModal';
-import { FaqInfo } from '@/models/Board/Faq';
+import useModal from '@/hooks/useModal';
+import { FaqInfo } from '@/models/board/Faq';
+import { ModalTitle, ModalType, SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const searchInfoList: SearchInfo[] = [
+const searchInfoList = [
   { key: 'qstn', value: '제목' },
   { key: 'answ', value: '내용' },
 ];
-
-const defaultSearchKey = 'all';
 
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { openModal } = useModal();
-  const [searchKey, setSearchKey] = useState<SearchKey>(defaultSearchKey);
-  const [searchValue, setSearchValue] = useState<string>('');
+  const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
+  const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
   const [page, setPage] = useState<PageInfo>(initPage);
   const [isChanged, setIsChanged] = useState(false);
   const [rows, setRows] = useState<Array<FaqInfo>>([]);
-  const [faqId, setFaqId] = useState<string>('');
+  const [faqId, setFaqId] = useState<string>(StringValue.DEFAULT);
   const { refetch, data: response, isError } = useFaqList(searchKey, searchValue, page);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteFaq(faqId);
 
   const goToReg = () => {
-    navigate('reg');
+    navigate(View.REG);
   };
 
   const handleChangeSearchKey = (e: any, value: any) => {
     if (!value) {
-      value = defaultSearchKey;
+      value = SearchKey.ALL;
     }
     setSearchKey(value);
   };
@@ -50,7 +49,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setSearchKey(defaultSearchKey);
+    setSearchKey(SearchKey.ALL);
     setSearchValue('');
   };
 
@@ -80,7 +79,7 @@ const List = () => {
   const handleDelete = (faqId: string) => {
     openModal({
       type: ModalType.CONFIRM,
-      title: '삭제',
+      title: ModalTitle.REMOVE,
       content: '삭제하시겠습니까?',
       onConfirm: () => handleFaqId(faqId),
     });
@@ -101,7 +100,7 @@ const List = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     } else {
@@ -116,12 +115,12 @@ const List = () => {
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '삭제 중 에러가 발생했습니다.',
       });
     } else if (dIsSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '삭제되었습니다.',
       });
       handleSearch();

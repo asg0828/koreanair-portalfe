@@ -5,8 +5,9 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
-import useModal, { ModalType } from '@/hooks/useModal';
-import { UpdatedNoticeInfo } from '@/models/Board/Notice';
+import useModal from '@/hooks/useModal';
+import { UpdatedNoticeInfo } from '@/models/board/Notice';
+import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -55,7 +56,7 @@ const Edit = () => {
   const onSubmit = (data: UpdatedNoticeInfo) => {
     openModal({
       type: ModalType.CONFIRM,
-      title: '수정',
+      title: ModalTitle.MODIFY,
       content: '수정하시겠습니까?',
       onConfirm: mutate,
     });
@@ -76,7 +77,7 @@ const Edit = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     }
@@ -85,12 +86,12 @@ const Edit = () => {
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '수정 중 에러가 발생했습니다.',
       });
     } else if (uIsSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
       navigate('..');

@@ -3,8 +3,9 @@ import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
-import useModal, { ModalType } from '@/hooks/useModal';
-import { QnaInfo } from '@/models/Board/Qna';
+import useModal from '@/hooks/useModal';
+import { QnaInfo } from '@/models/board/Qna';
+import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -48,7 +49,7 @@ const Detail = () => {
   const handleDelete = () => {
     openModal({
       type: ModalType.CONFIRM,
-      title: '삭제',
+      title: ModalTitle.REMOVE,
       content: '삭제하시겠습니까?',
       onConfirm: mutate,
     });
@@ -69,7 +70,7 @@ const Detail = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     }
@@ -78,12 +79,12 @@ const Detail = () => {
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '삭제 중 에러가 발생했습니다.',
       });
     } else if (dIsSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '삭제되었습니다.',
       });
       navigate('..');

@@ -1,10 +1,5 @@
 import { ReactNode } from 'react';
-
-export enum ModalType {
-  NORMAL = 'NORMAL',
-  CONFIRM = 'CONFIRM',
-  NOTICE = 'NOTICE',
-}
+import { ModalType } from '@models/common/Constants';
 
 export interface ModalInfo {
   type?: ModalType;
@@ -15,5 +10,5 @@ export interface ModalInfo {
   onConfirm?: Function;
   onCancle?: Function;
   onClose?: (isOpen: boolean) => void;
-  btnType?: string
+  btnType?: string;
 }

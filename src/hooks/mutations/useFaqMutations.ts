@@ -1,5 +1,5 @@
 import { createFaq, deleteFaq, updateFaq } from '@/api/FaqAPI';
-import { CreatedFaqInfo, UpdatedFaqInfo } from '@/models/Board/Faq';
+import { CreatedFaqInfo, UpdatedFaqInfo } from '@/models/board/Faq';
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateFaq = (createdFaq: CreatedFaqInfo) => {

@@ -1,5 +1,5 @@
 import { createQna, deleteQna, updateQna } from '@/api/QnaAPI';
-import { CreatedQnaInfo, UpdatedQnaInfo } from '@/models/Board/Qna';
+import { CreatedQnaInfo, UpdatedQnaInfo } from '@/models/board/Qna';
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateQna = (createdQna: CreatedQnaInfo) => {

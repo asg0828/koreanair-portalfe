@@ -1,5 +1,5 @@
 import { createNotice, deleteNotice, updateNotice } from '@/api/NoticeAPI';
-import { CreatedNoticeInfo, UpdatedNoticeInfo } from '@/models/Board/Notice';
+import { CreatedNoticeInfo, UpdatedNoticeInfo } from '@/models/board/Notice';
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateNotice = (createdNotice: CreatedNoticeInfo) => {

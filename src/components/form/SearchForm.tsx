@@ -4,15 +4,6 @@ import { Button, Stack } from '@components/ui';
 
 export interface SearchCommonFormProps extends CommonFormProps {}
 
-export type SearchKey = 'all' | 'sj' | 'cn';
-export type FaqSearchKey = 'all' | 'qstn' | 'answ';
-export type SearchValue = '전체' | '제목' | '내용';
-
-export type SearchInfo = {
-  key: SearchKey | FaqSearchKey;
-  value: SearchValue;
-};
-
 const SearchForm: React.FC<SearchCommonFormProps> = ({ onSearch, onClear, children }) => {
   const handleSearch = () => {
     onSearch && onSearch();

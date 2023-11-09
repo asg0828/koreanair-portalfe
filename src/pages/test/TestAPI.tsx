@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { Stack, Loader, Button, TextField, Label, Typography, Select, SelectOption, useToast } from '@components/ui';
 import useTestQuery from '@/hooks/queries/useTestQueries';
-import { ServicePort } from '@models/common/Service';
-import { Service } from '@models/common/Service';
+import { ValidType } from '@/models/common/Constants';
 import { Method, ParamObject } from '@/utils/ApiUtil';
+import { Button, Label, Loader, Select, SelectOption, Stack, TextField, Typography, useToast } from '@components/ui';
+import { Service, ServicePort } from '@models/common/Service';
+import { useEffect, useState } from 'react';
 
 const textareaStyle = {
   width: '500px',
@@ -66,7 +66,7 @@ const TestAPI = () => {
 
     if (isError) {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: 'JSON 포맷 변환 중 에러가 발생했습니다.',
       });
 
