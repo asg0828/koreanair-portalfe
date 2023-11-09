@@ -1,5 +1,5 @@
 import { createDataroom, deleteDataroom, updateDataroom } from '@/api/DataroomAPI';
-import { CreatedDataroomInfo, UpdatedDataroomInfo } from '@/models/Board/Dataroom';
+import { CreatedDataroomInfo, UpdatedDataroomInfo } from '@/models/board/Dataroom';
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateDataroom = (createdDataroom: CreatedDataroomInfo) => {

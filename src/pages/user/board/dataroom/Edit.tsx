@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import useModal from '@/hooks/useModal';
-import { UpdatedDataroomInfo } from '@/models/Board/Dataroom';
+import { UpdatedDataroomInfo } from '@/models/board/Dataroom';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

@@ -1,7 +1,7 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
-import { NoticeInfo } from '@/models/Board/Notice';
+import { NoticeInfo } from '@/models/board/Notice';
 import { SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { RowsInfo } from '@/models/components/Table';

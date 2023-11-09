@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateFaq } from '@/hooks/mutations/useFaqMutations';
 import useModal from '@/hooks/useModal';
-import { CreatedFaqInfo } from '@/models/Board/Faq';
+import { CreatedFaqInfo } from '@/models/board/Faq';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

@@ -4,7 +4,7 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import useModal from '@/hooks/useModal';
-import { DataroomInfo } from '@/models/Board/Dataroom';
+import { DataroomInfo } from '@/models/board/Dataroom';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';

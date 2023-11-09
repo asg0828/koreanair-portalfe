@@ -4,7 +4,7 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import useModal from '@/hooks/useModal';
-import { QnaInfo } from '@/models/Board/Qna';
+import { QnaInfo } from '@/models/board/Qna';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';

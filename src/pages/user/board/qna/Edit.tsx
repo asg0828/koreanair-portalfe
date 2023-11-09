@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import useModal from '@/hooks/useModal';
-import { UpdatedQnaInfo } from '@/models/Board/Qna';
+import { UpdatedQnaInfo } from '@/models/board/Qna';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

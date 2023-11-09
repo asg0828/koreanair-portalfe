@@ -3,7 +3,7 @@ import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import useModal from '@/hooks/useModal';
-import { FaqInfo } from '@/models/Board/Faq';
+import { FaqInfo } from '@/models/board/Faq';
 import { ModalTitle, ModalType, SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
 import useModal from '@/hooks/useModal';
-import { CreatedNoticeInfo } from '@/models/Board/Notice';
+import { CreatedNoticeInfo } from '@/models/board/Notice';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

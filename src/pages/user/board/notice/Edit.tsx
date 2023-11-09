@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import useModal from '@/hooks/useModal';
-import { UpdatedNoticeInfo } from '@/models/Board/Notice';
+import { UpdatedNoticeInfo } from '@/models/board/Notice';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

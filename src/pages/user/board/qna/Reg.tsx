@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
 import useModal from '@/hooks/useModal';
-import { CreatedQnaInfo } from '@/models/Board/Qna';
+import { CreatedQnaInfo } from '@/models/board/Qna';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

@@ -1,7 +1,7 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useDataroomList } from '@/hooks/queries/useDataroomQueries';
-import { DataroomInfo } from '@/models/Board/Dataroom';
+import { DataroomInfo } from '@/models/board/Dataroom';
 import { SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { RowsInfo } from '@/models/components/Table';

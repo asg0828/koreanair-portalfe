@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
 import useModal from '@/hooks/useModal';
-import { UpdatedFaqInfo } from '@/models/Board/Faq';
+import { UpdatedFaqInfo } from '@/models/board/Faq';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

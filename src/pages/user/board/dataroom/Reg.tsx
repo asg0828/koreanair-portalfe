@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import useModal from '@/hooks/useModal';
-import { CreatedDataroomInfo } from '@/models/Board/Dataroom';
+import { CreatedDataroomInfo } from '@/models/board/Dataroom';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';

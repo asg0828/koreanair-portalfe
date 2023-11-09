@@ -4,7 +4,7 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import useModal from '@/hooks/useModal';
-import { NoticeInfo } from '@/models/Board/Notice';
+import { NoticeInfo } from '@/models/board/Notice';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
