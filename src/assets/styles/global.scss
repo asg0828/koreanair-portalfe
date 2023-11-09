@@ -357,5 +357,22 @@ svg {
   border-bottom: 1px solid rgb(218, 218, 218);
   height: 240px;
 }
-
+.tree-wrap{
+  border-right: 1px solid #ddd;
+}
+.user-search{
+  min-width: 250px;
+}
+.user-seleted{
+  min-width: 500px;
+}
+.updown-btns{
+  padding: 10px 0;
+  button{
+    svg{
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+}
 
