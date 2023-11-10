@@ -1,15 +1,14 @@
-import { useState, Suspense } from 'react';
-import { useSelector } from 'react-redux';
-import { QueryClientProvider, QueryClient, QueryCache } from '@tanstack/react-query';
-import { ReducerType } from '@reducers';
+import '@/assets/styles/global.scss';
 import OAuth from '@/pages/OAuth';
 import LoginForm from '@components/form/LoginForm';
+import { Loader, Stack, Toaster } from '@components/ui';
+import { ReducerType } from '@reducers';
+import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Watermark from '@uiw/react-watermark';
 import SessionUtil from '@utils/SessionUtil';
-import { Toaster, Stack, Loader } from '@components/ui';
-import ConfirmModal from './components/modal/ConfirmModal';
+import { Suspense, useState } from 'react';
+import { useSelector } from 'react-redux';
 import ModalContainer from './components/modal/ModalContainter';
-import '@/assets/styles/global.scss';
 
 const App = () => {
   const auth = useSelector((state: ReducerType) => state.auth);

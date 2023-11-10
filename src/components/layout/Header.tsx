@@ -1,13 +1,12 @@
-import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate, NavLink, Link } from 'react-router-dom';
-import { ReducerType } from '@reducers';
+import { KeyboardArrowDownIcon, LogoutOutlinedIcon, MenuOutlinedIcon } from '@/assets/icons';
+import { Avatar, DropdownMenu, Page, Stack, Typography } from '@/components/ui';
+import { MenuItem } from '@/models/common/Menu';
+import { ReducerType, menuSlice } from '@/reducers';
 import SessionApis from '@api/common/SessionApis';
 import SessionUtil from '@utils/SessionUtil';
-import { MenuItem } from '@/models/common/Menu';
-import { menuSlice } from '@/reducers';
-import { MenuOutlinedIcon, LogoutOutlinedIcon, KeyboardArrowDownIcon } from '@/assets/icons';
-import { Avatar, Typography, Stack, DropdownMenu, Page } from '@/components/ui';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import './Header.scss';
 
 const Header = () => {

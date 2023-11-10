@@ -1,12 +1,11 @@
-import { useDispatch, useSelector } from 'react-redux';
-import CustomRouter, { userRouter, adminRouter, testRouter } from '@/router';
-import { ReducerType } from '@reducers';
-import { authSlice, menuSlice } from '@/reducers';
-import userMenuList from '@/router/data/userMenuList';
+import NotFound from '@/pages/Error';
+import { authSlice, menuSlice, ReducerType } from '@/reducers';
+import CustomRouter, { adminRouter, testRouter, userRouter } from '@/router';
 import adminMenuList from '@/router/data/adminMenuList';
 import testMenulist from '@/router/data/testMenuList';
-import { Stack, Loader } from '@components/ui';
-import NotFound from '@/pages/Error';
+import userMenuList from '@/router/data/userMenuList';
+import { Loader, Stack } from '@components/ui';
+import { useDispatch, useSelector } from 'react-redux';
 
 const LoginForm = () => {
   const auth = useSelector((state: ReducerType) => state.auth);

@@ -5,9 +5,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
+import useCode from '@/hooks/useCode';
 import useModal from '@/hooks/useModal';
 import { UpdatedQnaInfo } from '@/models/board/Qna';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalTitle, ModalType, ValidType, GroupCodeType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -19,6 +20,7 @@ const Edit = () => {
   const location = useLocation();
   const { toast } = useToast();
   const { openModal } = useModal();
+  const { getCodeList } = useCode();
   const qnaId = location?.state?.qnaId;
   const {
     register,
@@ -39,6 +41,8 @@ const Edit = () => {
     },
   });
   const values = getValues();
+  const codeList = getCodeList(GroupCodeType.QNA_TYPE);
+  const statCodeList = getCodeList(GroupCodeType.QNA_STAT);
   const { data: response, isSuccess, isError } = useQnaById(values.qnaId);
   const { data: uResponse, mutate, isSuccess: uIsSuccess, isError: uIsError } = useUpdateQna(values.qnaId, values);
 
@@ -58,6 +62,7 @@ const Edit = () => {
   useEffect(() => {
     if (isSuccess && response.data) {
       setValue('clCode', response.data.clCode);
+      setValue('qnaStat', response.data.qnaStat);
       setValue('sj', response.data.sj);
       setValue('cn', response.data.cn);
       setValue('openYn', response.data.openYn);
@@ -144,12 +149,13 @@ const Edit = () => {
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      value={field.value}
                       onChange={(e, value) => field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
+                      value={field.value}
                     >
-                      <SelectOption value={'aa'}>분류1</SelectOption>
-                      <SelectOption value={'bb'}>분류2</SelectOption>
+                      {codeList.map((codeItem: any) => (
+                        <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+                      ))}
                     </Select>
                   )}
                 />
@@ -158,17 +164,36 @@ const Edit = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>공개여부</TH>
-            <TD colSpan={3} align="left">
+            <TH>공개여부</TH>
+            <TD align="left">
               <Radio label="공개" value="Y" defaultChecked={values.openYn === 'Y'} {...register('openYn')} />
               <Radio label="미공개" value="N" defaultChecked={values.openYn === 'N'} {...register('openYn')} />
             </TD>
-          </TR>
-          <TR>
-            <TH colSpan={1}>게시여부</TH>
-            <TD colSpan={3} align="left">
-              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
+            <TH required>상태</TH>
+            <TD>
+              <Stack gap="SM" className="width-100" direction="Vertical">
+                <Controller
+                  name="qnaStat"
+                  control={control}
+                  rules={{ required: 'stat is required.' }}
+                  render={({ field }) => (
+                    <Select
+                      appearance="Outline"
+                      placeholder="전체"
+                      className="width-100"
+                      ref={field.ref}
+                      onChange={(e, value) => field.onChange(value)}
+                      status={errors?.clCode?.message ? 'error' : undefined}
+                      value={field.value}
+                    >
+                      {statCodeList.map((codeItem: any) => (
+                        <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+                      ))}
+                    </Select>
+                  )}
+                />
+                <ErrorLabel message={errors?.clCode?.message} />
+              </Stack>
             </TD>
           </TR>
           <TR className="height-100">

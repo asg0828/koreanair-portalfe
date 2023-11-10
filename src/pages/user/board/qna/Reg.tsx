@@ -3,9 +3,10 @@ import TinyEditor from '@/components/editor/TinyEditor';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
+import useCode from '@/hooks/useCode';
 import useModal from '@/hooks/useModal';
 import { CreatedQnaInfo } from '@/models/board/Qna';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalTitle, ModalType, ValidType, GroupCodeType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -16,11 +17,13 @@ const Reg = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { openModal } = useModal();
+  const { getCodeList } = useCode();
   const {
     register,
     handleSubmit,
     control,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm<CreatedQnaInfo>({
     mode: 'onChange',
@@ -33,6 +36,7 @@ const Reg = () => {
     },
   });
   const values = getValues();
+  const codeList = getCodeList(GroupCodeType.QNA_TYPE);
   const { data: response, mutate, isSuccess, isError } = useCreateQna(values);
 
   const goToList = () => {
@@ -47,6 +51,12 @@ const Reg = () => {
       onConfirm: mutate,
     });
   };
+
+  useEffect(() => {
+    if (codeList.length > 0 && !values.clCode) {
+      setValue('clCode', codeList[0].codeId);
+    }
+  }, [codeList, values.clCode, setValue]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -103,9 +113,11 @@ const Reg = () => {
                       ref={field.ref}
                       onChange={(e, value) => field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
+                      value={field.value}
                     >
-                      <SelectOption value={'aa'}>분류1</SelectOption>
-                      <SelectOption value={'bb'}>분류2</SelectOption>
+                      {codeList.map((codeItem: any) => (
+                        <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+                      ))}
                     </Select>
                   )}
                 />

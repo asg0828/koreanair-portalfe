@@ -2,9 +2,18 @@ import SearchForm from '@/components/form/SearchForm';
 import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
+import useCode from '@/hooks/useCode';
 import useModal from '@/hooks/useModal';
 import { FaqInfo } from '@/models/board/Faq';
-import { ModalTitle, ModalType, SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
+import {
+  GroupCodeType,
+  ModalTitle,
+  ModalType,
+  SearchKey,
+  StringValue,
+  ValidType,
+  View,
+} from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import AddIcon from '@mui/icons-material/Add';
@@ -20,6 +29,7 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { openModal } = useModal();
+  const { getCode } = useCode();
   const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
   const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
   const [page, setPage] = useState<PageInfo>(initPage);
@@ -106,11 +116,14 @@ const List = () => {
     } else {
       if (response?.data) {
         response.data.page.page = response.data.page.page - 1;
+        response.data.contents.forEach((item: FaqInfo) => {
+          item.clCode = getCode(GroupCodeType.FAQ_TYPE, item.clCode)?.codeNm || '';
+        });
         setRows(response.data.contents);
         setPage(response.data.page);
       }
     }
-  }, [response, isError, toast]);
+  }, [response, isError, toast, getCode]);
 
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {
