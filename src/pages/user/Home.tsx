@@ -59,69 +59,8 @@ const Home = () => {
             </Link>
           </Stack>
         </Stack>
-        {/* self-feature 임시 영역: 2023-11-08 */}
-        <Stack direction="Vertical" className="box1 shadowBox1">
-          <div>
-            <>
-              <Tag
-                variety="01"
-                size="LG"
-                shape="Round"
-                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
-              >
-                FEATURE 현황
-              </Tag>
-            </>
-          </div>
-          <Typography variant="h2" style={{ lineHeight: '50px', marginBottom: '12px' }}>
-            Feature Data
-          </Typography>
-          <Stack gap="MD" alignItems="Start">
-            <Link to="/self-feature/self-feature" state={{ submissionStatus: "reg" }} className="box5">
-              <Typography variant="h3">등록</Typography>
-              <Stack justifyContent={'End'}>
-                <div className="home_icon_03"></div>
-              </Stack>
-              <Stack justifyContent="End" alignItems="Center">
-                <span className="number">2</span>
-                <span className="count">건</span>
-              </Stack>
-            </Link>
-            <Link to="/self-feature/self-feature" state={{ submissionStatus: "inApproval" }} className="box5">
-              <Typography variant="h3">결재 진행중</Typography>
-              <Stack justifyContent={'End'}>
-                <div className="home_icon_03"></div>
-              </Stack>
-              <Stack justifyContent="End" alignItems="Center">
-                <span className="number">1</span>
-                <span className="count">건</span>
-              </Stack>
-            </Link>
-            <Link to="/self-feature/self-feature" state={{ submissionStatus: "approved" }} className="box5">
-              <Typography variant="h3">승인 완료</Typography>
-              <Stack justifyContent={'End'}>
-                <div className="home_icon_03"></div>
-              </Stack>
-              <Stack justifyContent="End" alignItems="Center">
-                <span className="number">1</span>
-                <span className="count">건</span>
-              </Stack>
-            </Link>
-            <Link to="/self-feature/self-feature" state={{ submissionStatus: "rejected" }} className="box5">
-              <Typography variant="h3">반려</Typography>
-              <Stack justifyContent={'End'}>
-                <div className="home_icon_03"></div>
-              </Stack>
-              <Stack justifyContent="End" alignItems="Center">
-                <span className="number">1</span>
-                <span className="count">건</span>
-              </Stack>
-            </Link>
-          </Stack>
-        </Stack>
-        {/* self-feature 임시 영역: 2023-11-08 */}
         {/* 기존 포탈 영역 */}
-        {/* <Stack direction={'Vertical'} className="box2 shadowBox1">
+        <Stack direction={'Vertical'} className="box2 shadowBox1">
           <div>
             <Tag
               variety="01"
@@ -152,7 +91,7 @@ const Home = () => {
               </Stack>
             </Link>
           </Stack>
-        </Stack> */}
+        </Stack>
         {/* 기존 포탈 영역 */}
       </Stack>
       <Stack gap="LG" alignItems="Start">
