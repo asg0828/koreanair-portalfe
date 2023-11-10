@@ -64,17 +64,15 @@ const Detail = () => {
   }, [noticeId, rows]);
 
   useEffect(() => {
-    isSuccess && setNoticeInfo(response.data);
-  }, [isSuccess, response?.data]);
-
-  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
+    } else if (isSuccess) {
+      setNoticeInfo(response.data);
     }
-  }, [response, isError, toast]);
+  }, [response, isSuccess, isError, toast]);
 
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {

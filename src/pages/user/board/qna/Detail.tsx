@@ -1,15 +1,18 @@
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
-import { useDeleteQna } from '@/hooks/mutations/useQnaMutations';
+import ErrorLabel from '@/components/error/ErrorLabel';
+import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
+import useCode from '@/hooks/useCode';
 import useModal from '@/hooks/useModal';
-import { QnaInfo } from '@/models/board/Qna';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { CreatedQnaInfo, QnaInfo, UpdatedQnaInfo } from '@/models/board/Qna';
+import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Link, Stack, TD, TH, TR, Typography, useToast, TextField, Label } from '@components/ui';
+import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
@@ -17,13 +20,59 @@ const Detail = () => {
   const location = useLocation();
   const { toast } = useToast();
   const { openModal } = useModal();
-  const [dataroomInfo, setQnaInfo] = useState<QnaInfo>();
+  const { getCode } = useCode();
+  const [qnaInfo, setQnaInfo] = useState<QnaInfo>();
   const [prevQnaInfo, setPrevQnaInfo] = useState<QnaInfo>();
   const [nextQnaInfo, setNextQnaInfo] = useState<QnaInfo>();
   const qnaId: string = location?.state?.qnaId || '';
+  const [cQnaId, setCQnaId] = useState<string>('');
   const rows: Array<QnaInfo> = location?.state?.rows;
-  const { data: response, isSuccess, isError } = useQnaById(qnaId);
-  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteQna(qnaId);
+  const {
+    register,
+    handleSubmit,
+    getValues,
+    setValue,
+    formState: { errors },
+  } = useForm<CreatedQnaInfo>({
+    mode: 'onChange',
+    defaultValues: {
+      bfQnaId: qnaId,
+      answ: '',
+      openYn: 'Y',
+      useYn: 'Y',
+    },
+  });
+  const values = getValues();
+  const { data: response, isSuccess, isError, refetch } = useQnaById(qnaId);
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteQna(qnaId);
+  const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateQna(values);
+  const { data: cdResponse, isSuccess: cdIsSuccess, isError: cdIsError, mutate: cdMutate } = useDeleteQna(cQnaId);
+
+  const {
+    register: uRegister,
+    handleSubmit: uHandleSubmit,
+    getValues: uGetValues,
+    setValue: uSetValue,
+    formState: { errors: uErrors },
+    watch,
+  } = useForm<UpdatedQnaInfo>({
+    mode: 'onChange',
+    defaultValues: {
+      qnaId: '',
+      bfQnaId: '',
+      answ: '',
+      openYn: 'Y',
+      useYn: 'Y',
+    },
+  });
+  const uValues = uGetValues();
+
+  const {
+    data: cuResponse,
+    isSuccess: cuIsSuccess,
+    isError: cuIsError,
+    mutate: cuMutate,
+  } = useUpdateQna(uValues.qnaId, uValues);
 
   const goToList = () => {
     navigate('..');
@@ -55,6 +104,71 @@ const Detail = () => {
     });
   };
 
+  const handleAddComment = (parentQnaItem: QnaInfo) => {
+
+  }
+
+  const handleCommentUpdate = (qnaItem: QnaInfo) => {
+    uSetValue('qnaId', qnaItem.qnaId);
+    uSetValue('bfQnaId', qnaItem.bfQnaId);
+    uSetValue('answ', qnaItem.answ);
+  };
+
+  const handleCommentCancel = () => {
+    uSetValue('qnaId', '');
+    uSetValue('bfQnaId', '');
+    uSetValue('answ', '');
+  };
+
+  const handleCommentDelete = (qnaId: string) => {
+    setCQnaId(qnaId);
+    openModal({
+      type: ModalType.CONFIRM,
+      title: ModalTitle.REMOVE,
+      content: '답글을 삭제하시겠습니까?',
+      onConfirm: cdMutate,
+    });
+  };
+
+  const onCreateCommentSubmit = (data: CreatedQnaInfo) => {
+    cMutate();
+  };
+
+  const onUpdateCommentSubmit = (data: CreatedQnaInfo) => {
+    cuMutate();
+  };
+
+  useEffect(() => {
+    if (cdIsError || cdResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '답글 삭제 중 에러가 발생했습니다.',
+      });
+    } else if (cdIsSuccess) {
+      refetch();
+      toast({
+        type: ValidType.CONFIRM,
+        content: '답글이 삭제되었습니다.',
+      });
+    }
+  }, [cdResponse, cdIsSuccess, cdIsError, toast, refetch]);
+
+  useEffect(() => {
+    if (cIsError || cResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '답글 등록 중 에러가 발생했습니다.',
+      });
+    } else if (cIsSuccess) {
+      refetch();
+      toast({
+        type: ValidType.CONFIRM,
+        content: '답글이 등록되었습니다.',
+      });
+      setValue('answ', '');
+    }
+  }, [cResponse, cIsSuccess, cIsError, setValue, toast, refetch]);
+
   useEffect(() => {
     if (rows?.length > 0) {
       const index = rows.findIndex((row) => row.qnaId === qnaId);
@@ -64,17 +178,16 @@ const Detail = () => {
   }, [qnaId, rows]);
 
   useEffect(() => {
-    isSuccess && setQnaInfo(response.data);
-  }, [isSuccess, response?.data]);
-
-  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
+    } else if (isSuccess) {
+      response.data.rgstNm = `${response.data.rgstDeptNm || ''} ${response.data.rgstNm || ''}`;
+      setQnaInfo(response.data);
     }
-  }, [response, isError, toast]);
+  }, [response, isSuccess, isError, toast]);
 
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {
@@ -109,19 +222,19 @@ const Detail = () => {
           <TR>
             <TH colSpan={4} className="headerName">
               <Stack className="headerNameWrap">
-                <Typography variant="h3">{dataroomInfo?.sj}</Typography>
-                  <ul>
-                    <li>기타</li>
-                    <li>서비스 개발본부 관리자</li>
-                    <li>0000-00-00 00:00:00</li>
-                    <li>조회수<span>60</span></li>
-                  </ul>
+                <Typography variant="h3">{qnaInfo?.sj}</Typography>
+                <ul>
+                  <li>{getCode(GroupCodeType.QNA_TYPE, qnaInfo?.clCode || '')?.codeNm}</li>
+                  <li>{`${qnaInfo?.rgstDeptNm || ''} ${qnaInfo?.rgstNm || ''}`}</li>
+                  <li>{qnaInfo?.rgstDt}</li>
+                  <li>{`조회수 ${qnaInfo?.viewCnt}`}</li>
+                </ul>
               </Stack>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={dataroomInfo?.cn} disabled />
+              <TinyEditor content={qnaInfo?.cn} disabled />
             </TD>
           </TR>
           <TR>
@@ -142,25 +255,89 @@ const Detail = () => {
           <TR>
             <TD colSpan={4} className="reply">
               <Stack direction="Vertical" gap="SM" className="width-100">
-                <Typography variant="h6">Comment <span className="total">1</span>건</Typography>
-                <Stack>
-                  <TextField size="LG" className="width-100" />
-                  <Button size="LG" >등록</Button>
-                </Stack>
-                <Stack>
-                  <Stack gap="SM" className="width-100">
-                    <Label>서비스개발본부 관리자</Label>
-                    <Typography variant="h6">서비스개발본부 관리자</Typography>
-                    <Label>2023-09-25 06:37:38</Label>
-                  </Stack>
+                <Typography variant="h6">
+                  Comment
+                  <span className="total">{`${qnaInfo?.comments.length || 0}`}</span>건
+                </Typography>
+
+                <form onSubmit={handleSubmit(onCreateCommentSubmit)}>
                   <Stack>
-                    <Button appearance="Unfilled">답글</Button>
-                    <Button appearance="Unfilled">수정</Button>
-                    <Button appearance="Unfilled">삭제</Button>
+                    <Stack gap="SM" className="width-100" direction="Vertical">
+                      <TextField
+                        multiline
+                        size="LG"
+                        className="width-100"
+                        autoFocus
+                        {...register('answ', {
+                          required: { value: true, message: 'answer is required.' },
+                        })}
+                        validation={errors?.answ?.message ? 'Error' : undefined}
+                      />
+                    </Stack>
+                    <Button type="submit" size="LG">
+                      등록
+                    </Button>
                   </Stack>
-                </Stack>
-                <Label>답변완료.</Label>
-                <Typography variant="body1">답변완료</Typography>
+                  <ErrorLabel message={errors?.answ?.message} />
+                </form>
+
+                {qnaInfo?.comments.map((qnaItem) => (
+                  <Stack gap="SM" direction="Vertical">
+                    <Stack>
+                      <Stack gap="SM" className="width-100">
+                        <Typography variant="h6">{`${qnaItem.rgstDeptNm || ''} ${qnaItem.rgstNm || ''}`}</Typography>
+                        <Label>{qnaItem.rgstDt}</Label>
+                      </Stack>
+
+                      {watch().qnaId === qnaItem.qnaId ? (
+                        <Stack>
+                          <Button appearance="Unfilled" onClick={handleCommentCancel}>
+                            취소
+                          </Button>
+                        </Stack>
+                      ) : (
+                        <Stack>
+                          {/* <Button appearance="Unfilled" onClick={() => handleAddComment(qnaItem)}>답글</Button> */}
+                          <Button
+                            appearance="Unfilled"
+                            onClick={() => handleCommentUpdate(qnaItem)}
+                          >
+                            수정
+                          </Button>
+                          <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
+                            삭제
+                          </Button>
+                        </Stack>
+                      )}
+                    </Stack>
+                    <Stack gap="SM" direction="Vertical">
+                      {watch().qnaId === qnaItem.qnaId ? (
+                        <form onSubmit={uHandleSubmit(onUpdateCommentSubmit)}>
+                          <Stack>
+                            <Stack gap="SM" className="width-100" direction="Vertical">
+                              <TextField
+                                multiline
+                                size="LG"
+                                className="width-100"
+                                autoFocus
+                                {...uRegister('answ', {
+                                  required: { value: true, message: 'answer is required.' },
+                                })}
+                                validation={uErrors?.answ?.message ? 'Error' : undefined}
+                              />
+                            </Stack>
+                            <Button type="submit" size="LG">
+                              수정
+                            </Button>
+                          </Stack>
+                          <ErrorLabel message={uErrors?.answ?.message} />
+                        </form>
+                      ) : (
+                        <Typography variant="body1">{qnaItem.answ}</Typography>
+                      )}
+                    </Stack>
+                  </Stack>
+                ))}
               </Stack>
             </TD>
           </TR>
@@ -193,7 +370,7 @@ const Detail = () => {
         </HorizontalTable>
       </Stack>
 
-      <Stack gap="SM" justifyContent="End">
+      <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
           수정
         </Button>
