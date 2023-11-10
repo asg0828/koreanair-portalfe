@@ -3,6 +3,7 @@ import Error from '@/pages/Error';
 import TestAPI from '@/pages/test/TestAPI';
 import TestModal from '@/pages/test/TestModal';
 import TestAuth from '@/pages/test/TestAuth';
+import TestHook from '@/pages/test/TestHook';
 
 const testRouter = [
   {
@@ -27,6 +28,11 @@ const testRouter = [
           {
             path: 'auth',
             element: <TestAuth />,
+            children: [],
+          },
+          {
+            path: 'hook',
+            element: <TestHook />,
             children: [],
           },
         ],

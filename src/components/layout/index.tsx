@@ -1,9 +1,8 @@
 import { defaultPathInfo } from '@/models/common/Menu';
-import { menuSlice } from '@/reducers';
+import { menuSlice, ReducerType } from '@/reducers';
 import Body from '@components/layout/Body';
 import Footer from '@components/layout/Footer';
 import Header from '@components/layout/Header';
-import { ReducerType } from '@reducers';
 import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';

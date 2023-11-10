@@ -34,3 +34,9 @@ export enum ModalType {
   CONFIRM = 'CONFIRM',
   NOTICE = 'NOTICE',
 }
+
+export enum GroupCodeType {
+  FAQ_TYPE = 'FAQ_TYPE',
+  QNA_TYPE = 'QNA_TYPE',
+  QNA_STAT = 'QNA_STAT',
+}

@@ -18,6 +18,11 @@ const testMenulist = [
         path: '/test/auth',
         children: [],
       },
+      {
+        name: '훅 테스트',
+        path: '/test/hook',
+        children: [],
+      },
     ],
   },
 ];

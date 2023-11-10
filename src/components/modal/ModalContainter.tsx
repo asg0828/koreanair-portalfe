@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
-import { ReducerType } from '@reducers';
-import ConfirmModal from './ConfirmModal';
-import { useDispatch } from 'react-redux';
-import { modalSlice } from '@/reducers';
 import { ModalType } from '@/models/common/Constants';
+import { modalSlice, ReducerType } from '@reducers';
+import { useDispatch, useSelector } from 'react-redux';
+import ConfirmModal from './ConfirmModal';
 
 const ModalContainer = () => {
   const dispatch = useDispatch();

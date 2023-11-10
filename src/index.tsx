@@ -6,7 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { Providers } from '@components/ui';
 
-const reduxStore = configureStore({
+export const reduxStore = configureStore({
   reducer: rootReducer,
   devTools: process.env.REACT_APP_NODE_ENV !== 'prod',
 });

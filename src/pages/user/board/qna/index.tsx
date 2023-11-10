@@ -1,15 +1,16 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useQnaList } from '@/hooks/queries/useQnaQueries';
+import useCode from '@/hooks/useCode';
 import { QnaInfo } from '@/models/board/Qna';
-import { SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
+import { GroupCodeType, SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { RowsInfo } from '@/models/components/Table';
 import { getDateString } from '@/utils/FuncUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import AddIcon from '@mui/icons-material/Add';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AddIcon from '@mui/icons-material/Add';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
@@ -30,6 +31,7 @@ const searchInfoList = [
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { getCode } = useCode();
   const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
   const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
   const [page, setPage] = useState<PageInfo>(initPage);
@@ -102,12 +104,14 @@ const List = () => {
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
           item.rgstDt = getDateString(item.rgstDt, '-');
           item.useYn = item.useYn === 'Y' ? '예' : '아니오';
+          item.clCode = getCode(GroupCodeType.QNA_TYPE, item.clCode)?.codeNm || '';
+          item.qnaStat = getCode(GroupCodeType.QNA_STAT, item.qnaStat)?.codeNm || '';
         });
         setRows(response.data.contents);
         setPage(response.data.page);
       }
     }
-  }, [response, isError, toast]);
+  }, [response, isError, toast, getCode]);
 
   return (
     <>

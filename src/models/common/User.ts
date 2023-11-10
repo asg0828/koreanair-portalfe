@@ -1,8 +1,3 @@
-export interface AuthInfo {
-  isAdminPage: boolean;
-  userInfo?: UserInfo;
-}
-
 export interface UserInfo {
   userId?: string;
   userNm?: string;
