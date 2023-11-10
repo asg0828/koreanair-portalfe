@@ -1,7 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AuthInfo } from '@/models/common/Auth';
+import { UserInfo } from '@/models/common/User';
 
-const initialState: AuthInfo = {
+export interface AuthState {
+  isAdminPage?: boolean;
+  userInfo?: UserInfo;
+}
+
+const initialState: AuthState = {
   isAdminPage: false,
   userInfo: undefined,
 };
@@ -10,16 +15,12 @@ const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
   reducers: {
-    login(state: AuthInfo, action) {
+    login(state: AuthState, action) {
       state.isAdminPage = action.payload.isAdminPage;
       state.userInfo = action.payload.userInfo;
     },
-    logout(state: AuthInfo) {
-      state.isAdminPage = false;
-      state.userInfo = undefined;
-    },
-    getUserInfo(state: AuthInfo) {
-      return state;
+    logout() {
+      return initialState;
     },
   },
 });

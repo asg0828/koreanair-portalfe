@@ -5,9 +5,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
+import useCode from '@/hooks/useCode';
 import useModal from '@/hooks/useModal';
 import { UpdatedFaqInfo } from '@/models/board/Faq';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -19,6 +20,7 @@ const Reg = () => {
   const location = useLocation();
   const { toast } = useToast();
   const { openModal } = useModal();
+  const { getCodeList } = useCode();
   const faqId = location?.state?.faqId;
   const {
     register,
@@ -38,6 +40,7 @@ const Reg = () => {
     },
   });
   const values = getValues();
+  const codeList = getCodeList(GroupCodeType.FAQ_TYPE);
   const { data: response, isSuccess, isError } = useFaqById(values.faqId);
   const { data: uResponse, mutate, isSuccess: uIsSuccess, isError: uIsError } = useUpdateFaq(values.faqId, values);
 
@@ -135,12 +138,13 @@ const Reg = () => {
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      value={field.value}
                       onChange={(e, value) => field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
+                      value={field.value}
                     >
-                      <SelectOption value={'aa'}>분류1</SelectOption>
-                      <SelectOption value={'bb'}>분류2</SelectOption>
+                      {codeList.map((codeItem: any) => (
+                        <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+                      ))}
                     </Select>
                   )}
                 />

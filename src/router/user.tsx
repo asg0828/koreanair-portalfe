@@ -36,6 +36,7 @@ import CustomerInfo from '@pages/user/customer-info/dashboard';
 import StructuredReport from '@pages/user/report/structured-report';
 import UnStructuredReport from '@pages/user/report/unstructured-report';
 import Tableau from '@pages/user/tableau';
+import { useFaqLoader, useQnaLoader } from '@/hooks/useLoader';
 
 const userRouter = [
   {
@@ -128,6 +129,7 @@ const userRouter = [
           },
           {
             path: 'faq',
+            loader: useFaqLoader,
             children: [
               { index: true, element: <Faq /> },
               { path: 'reg', element: <FaqReg /> },
@@ -136,6 +138,7 @@ const userRouter = [
           },
           {
             path: 'qna',
+            loader: useQnaLoader,
             children: [
               { index: true, element: <Qna /> },
               { path: 'detail', element: <QnaDetail /> },

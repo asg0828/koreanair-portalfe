@@ -18,11 +18,13 @@ const modalSlice = createSlice({
   initialState,
   reducers: {
     openModal(state: ModalInfo, action: PayloadAction<ModalInfo>) {
-      return action.payload;
+      state = action.payload;
+      return state;
     },
     closeModal(state: ModalInfo) {
       return initialState;
     },
   },
 });
+
 export default modalSlice;
