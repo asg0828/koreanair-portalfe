@@ -24,7 +24,7 @@ const rows = [
 
 const List = () => {
   return (
-    <Stack>
+    <Stack alignItems="Start">
       <TableSearchForm
         columns={columns}
         rows={rows}

@@ -7,7 +7,7 @@ import useModal from '@/hooks/useModal';
 import { QnaInfo } from '@/models/board/Qna';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
+import { Button, Link, Stack, TD, TH, TR, Typography, useToast, TextField, Label } from '@components/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -108,7 +108,15 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">{dataroomInfo?.sj}</Typography>
+              <Stack className="headerNameWrap">
+                <Typography variant="h3">{dataroomInfo?.sj}</Typography>
+                  <ul>
+                    <li>기타</li>
+                    <li>서비스 개발본부 관리자</li>
+                    <li>0000-00-00 00:00:00</li>
+                    <li>조회수<span>60</span></li>
+                  </ul>
+              </Stack>
             </TH>
           </TR>
           <TR className="height-100">
@@ -129,6 +137,31 @@ const Detail = () => {
                   </Link>
                 </li>
               </ul> */}
+            </TD>
+          </TR>
+          <TR>
+            <TD colSpan={4} className="reply">
+              <Stack direction="Vertical" gap="SM" className="width-100">
+                <Typography variant="h6">Comment <span className="total">1</span>건</Typography>
+                <Stack>
+                  <TextField size="LG" className="width-100" />
+                  <Button size="LG" >등록</Button>
+                </Stack>
+                <Stack>
+                  <Stack gap="SM" className="width-100">
+                    <Label>서비스개발본부 관리자</Label>
+                    <Typography variant="h6">서비스개발본부 관리자</Typography>
+                    <Label>2023-09-25 06:37:38</Label>
+                  </Stack>
+                  <Stack>
+                    <Button appearance="Unfilled">답글</Button>
+                    <Button appearance="Unfilled">수정</Button>
+                    <Button appearance="Unfilled">삭제</Button>
+                  </Stack>
+                </Stack>
+                <Label>답변완료.</Label>
+                <Typography variant="body1">답변완료</Typography>
+              </Stack>
             </TD>
           </TR>
           <TR>
