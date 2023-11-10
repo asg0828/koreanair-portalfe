@@ -184,7 +184,6 @@ const Detail = () => {
         content: '조회 중 에러가 발생했습니다.',
       });
     } else if (isSuccess) {
-      response.data.rgstNm = `${response.data.rgstDeptNm || ''} ${response.data.rgstNm || ''}`;
       setQnaInfo(response.data);
     }
   }, [response, isSuccess, isError, toast]);
