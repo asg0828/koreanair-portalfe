@@ -57,7 +57,7 @@ const SelfFeature = () => {
   const location = useLocation()
 
   const [ searchInfo, setSearchInfo ] = useState<searchProps>({
-    mstrSgmtRuleId: '',
+    mstrSgmtRuleId: 'MS_0006',
     custFeatRuleName: '',
     category: '',
     useYn: '',
@@ -108,15 +108,19 @@ const SelfFeature = () => {
     console.log("[retrieveCustFeatRules] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    //response = await callApi(request)
-    console.log("[retrieveCustFeatRules] Response :: ", response)
-    /*
-    if (response.successOrNot === StatusCode.SUCCESS) {
-      list = response.data
-    }
-    */
-   /*
+    response = await callApi(request)
+    console.log("[retrieveCustFeatRules] Response header       :: ", response.header)
+    console.log("[retrieveCustFeatRules] Response statusCode   :: ", response.statusCode)
+    console.log("[retrieveCustFeatRules] Response status       :: ", response.status)
+    console.log("[retrieveCustFeatRules] Response successOrNot :: ", response.successOrNot)
+    console.log("[retrieveCustFeatRules] Response result       :: ", response.result)
+    
     let list: Array<TbRsCustFeatRule> = []
+    if (response.statusCode === StatusCode.SUCCESS) {
+      list = response.result
+    }
+
+   /*
     for (let i = 0; i < 10; i++) {
       let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
       selfFeature.id = `ID_${String(i)}` //custFeatRuleId
@@ -146,6 +150,7 @@ const SelfFeature = () => {
       }
 
       return cloneDeep(prevState)
+      //return cloneDeep(response.result)
     })
   }
 

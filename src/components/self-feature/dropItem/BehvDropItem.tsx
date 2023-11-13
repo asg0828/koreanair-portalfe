@@ -141,12 +141,12 @@ const BehvDropItem = ({
 
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
-                // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-                let targetId = cloneDeep(targetItem.targetId)
+                /*
                 let tableIdArr  = targetId.split('_')
                 tableIdArr.pop()
                 let tableId = tableIdArr.join('_')
-                if (tableId !== targetObj.metaTblId) {
+                */
+                if (targetItem.tableName !== targetObj.metaTblLogiNm) {
                     setModalType(ModalType.ALERT)
                     setConfirmModalTit("대상 선택")
                     setConfirmModalCont("같은 테이블 조건이 아닙니다.")
@@ -157,7 +157,7 @@ const BehvDropItem = ({
                 setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     let tl = cloneDeep(state)
                     let trgtFilter = initTbRsCustFeatRuleTrgtFilter
-                    trgtFilter.targetId  = targetId // 고정
+                    trgtFilter.targetId  = targetItem.targetId // 고정
                     trgtFilter.columnName = targetObj.metaTblClmnLogiNm
                     tl.push(trgtFilter)
                     return tl

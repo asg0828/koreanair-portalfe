@@ -368,8 +368,9 @@ export interface TbRsCustFeatRuleTrgt {
     variable2: string,
     //example: 변수3(팝업)-속성데이터
     variable3: string,
-    //example: 대상 데이터 타입
+    //example: 대상 데이터 타입()
     targetDataType: string,
+    targetUniqKey: string
 }
 
 export interface TbRsCustFeatRuleTrgtFilter {
@@ -426,6 +427,7 @@ export interface TbRsCustFeatRuleTrgtFilter {
     //example: 변수2(팝업에 필요한 항목)행동데이터
     variable3: string,
     //example: 변수3(팝업에 필요한 항목)행동데이터
+    targetUniqKey: string
 }
 
 export interface TbRsCustFeatRuleCase {

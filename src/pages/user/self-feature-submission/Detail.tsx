@@ -107,10 +107,10 @@ const SfSubmissionRequestDetail = () => {
         
         if (pageNm === selfFeatPgPpNm.LIST) {
             navigate('..')
-        } else if (pageNm === selfFeatPgPpNm.DETL) {
-            navigate(pageNm, { state: rows })
-        } else {
-            navigate(pageNm)
+        } else if (pageNm === selfFeatPgPpNm.SUB_APRV) {
+            console.log("승인처리")
+        } else if (pageNm === selfFeatPgPpNm.SUB_REJT) {
+            console.log("반려처리")
         }
     }
 
@@ -311,6 +311,12 @@ const SfSubmissionRequestDetail = () => {
             <Stack justifyContent="End" gap="SM" className="width-100">
                 <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
                 목록
+                </Button>
+                <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_APRV)}>
+                승인
+                </Button>
+                <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_REJT)}>
+                반려
                 </Button>
             </Stack>
             {/* 버튼 영역 */}

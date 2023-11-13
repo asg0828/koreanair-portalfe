@@ -214,7 +214,7 @@ const SelfFeatureReg = () => {
       path param  :: {mstrSgmtRuleId}
       query param :: 
     */
-    let mstrSgmtRuleId = ''
+    let mstrSgmtRuleId = 'MS_0006'
     let config = cloneDeep(initConfig)
     config.isLoarding = true
     let request = cloneDeep(initApiRequest)
@@ -223,12 +223,14 @@ const SelfFeatureReg = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    //response = await callApi(request)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
+    response = await callApi(request)
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response header       :: ", response.header)
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response statusCode   :: ", response.statusCode)
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response status       :: ", response.status)
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response successOrNot :: ", response.successOrNot)
+    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
 
-    setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
-      return cloneDeep(protoTypeMstrSgmtTableandColMetaInfo)
-    })
+    setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
   }
 
   const createCustFeatRule = async () => {
@@ -511,7 +513,7 @@ const SelfFeatureReg = () => {
               <DropList 
                 featStatus={subFeatStatus.REG}
                 setIsSelectAggregateTop={setIsSelectAggregateTop}
-                targetList={targetList} 
+                targetList={targetList}
                 trgtFilterList={trgtFilterList} 
                 setTargetList={setTargetList} 
                 setTrgtFilterList={setTrgtFilterList} 
