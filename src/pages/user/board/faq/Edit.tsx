@@ -119,6 +119,7 @@ const Reg = () => {
                     maxLength: { value: 1000, message: 'max length exceeded' },
                   })}
                   validation={errors?.qstn?.message ? 'Error' : undefined}
+                  autoFocus
                 />
                 <ErrorLabel message={errors?.qstn?.message} />
               </Stack>
