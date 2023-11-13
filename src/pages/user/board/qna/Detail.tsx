@@ -11,7 +11,7 @@ import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -104,21 +104,17 @@ const Detail = () => {
     });
   };
 
-  const handleAddComment = (parentQnaItem: QnaInfo) => {
-
-  }
-
   const handleCommentUpdate = (qnaItem: QnaInfo) => {
     uSetValue('qnaId', qnaItem.qnaId);
     uSetValue('bfQnaId', qnaItem.bfQnaId);
     uSetValue('answ', qnaItem.answ);
   };
 
-  const handleCommentCancel = () => {
+  const handleCommentCancel = useCallback(() => {
     uSetValue('qnaId', '');
     uSetValue('bfQnaId', '');
     uSetValue('answ', '');
-  };
+  }, [uSetValue]);
 
   const handleCommentDelete = (qnaId: string) => {
     setCQnaId(qnaId);
@@ -168,6 +164,22 @@ const Detail = () => {
       setValue('answ', '');
     }
   }, [cResponse, cIsSuccess, cIsError, setValue, toast, refetch]);
+
+  useEffect(() => {
+    if (cuIsError || cuResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '답글 수정 중 에러가 발생했습니다.',
+      });
+    } else if (cuIsSuccess) {
+      refetch();
+      toast({
+        type: ValidType.CONFIRM,
+        content: '답글이 수정되었습니다.',
+      });
+      handleCommentCancel();
+    }
+  }, [cuResponse, cuIsSuccess, cuIsError, setValue, toast, refetch, handleCommentCancel]);
 
   useEffect(() => {
     if (rows?.length > 0) {
@@ -296,11 +308,7 @@ const Detail = () => {
                         </Stack>
                       ) : (
                         <Stack>
-                          {/* <Button appearance="Unfilled" onClick={() => handleAddComment(qnaItem)}>답글</Button> */}
-                          <Button
-                            appearance="Unfilled"
-                            onClick={() => handleCommentUpdate(qnaItem)}
-                          >
+                          <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
                             수정
                           </Button>
                           <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
@@ -326,7 +334,7 @@ const Detail = () => {
                               />
                             </Stack>
                             <Button type="submit" size="LG">
-                              수정
+                              확인
                             </Button>
                           </Stack>
                           <ErrorLabel message={uErrors?.answ?.message} />
