@@ -32,13 +32,10 @@ const RootLayout = () => {
   const isPopup = pathname.includes('/popup');
 
   const dispatch = useDispatch();
-  const isDropMenu = useSelector((state: ReducerType) => state.menu.isDropMenu);
 
   const handleCloseDropMenu = useCallback(() => {
-    if (isDropMenu) {
-      dispatch(menuSlice.actions.setIsDropMenu(!isDropMenu));
-    }
-  }, [dispatch, isDropMenu]);
+    dispatch(menuSlice.actions.setIsDropMenu(false));
+  }, [dispatch]);
 
   useEffect(() => {
     handleCloseDropMenu();
