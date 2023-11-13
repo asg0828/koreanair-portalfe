@@ -4,7 +4,7 @@ import SessionApis from '@api/common/SessionApis';
 import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
 
 import { v4 as uuidv4 } from 'uuid';
-import { Service, ServicePort } from '@models/common/Service';
+import { Service, ServicePort, ServicePath } from '@models/common/Service';
 
 export enum Method {
   GET = 'GET',
@@ -63,18 +63,19 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
   const sessionUtil = new SessionUtil();
   const sessionApis = new SessionApis();
 
-  if (process.env.REACT_APP_NODE_ENV === 'local') {
-    switch (serviceName) {
-      case Service.KAL_BE:
-        baseURL += ':' + ServicePort.KAL_BE.toString();
-        break;
-      // 2023-11-02 김태훈A Self-Feature BE API case 추가
-      case Service.KAL_SF_BE:
-        baseURL = `${apiUrl['KAL_SF_BE']}`//:${ServicePort.KAL_SF_BE.toString()}`;
-        break;
-      default:
-        break;
-    }
+  switch (serviceName) {
+    case Service.KAL_BE:
+      baseURL =
+        baseURL +
+        (process.env.REACT_APP_NODE_ENV === 'local' ? ':' + ServicePort.KAL_BE.toString() : '') +
+        ServicePath.KAL_BE;
+      break;
+    // 2023-11-02 김태훈A Self-Feature BE API case 추가
+    case Service.KAL_SF_BE:
+      baseURL = `${apiUrl['KAL_SF_BE']}`; //:${ServicePort.KAL_SF_BE.toString()}`;
+      break;
+    default:
+      break;
   }
 
   const instance = axios.create({
