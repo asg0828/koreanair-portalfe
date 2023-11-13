@@ -40,7 +40,7 @@ export interface Props {
 const ReadSqlPop = ({ isOpen = false, onClose }: Props) => {
     
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
-    const [ readSql, setReadSql ] = useState<ReadSql>()
+    const [ readSql, setReadSql ] = useState<ReadSql>(cloneDeep(initReadSql))
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
@@ -84,7 +84,10 @@ const ReadSqlPop = ({ isOpen = false, onClose }: Props) => {
         //response = await callApi(request)
         console.log("[retrieveReadSql] Response :: ", response)
 
-        setReadSql({sql:'SELECT adb \n from a\nwhere'})
+        setReadSql((state: ReadSql) => { 
+            state.sql = "SELECT *\nfrom a\nwhere\n1=1" 
+            return cloneDeep(state)
+        })
     }
 
     return (

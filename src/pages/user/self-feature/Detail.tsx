@@ -505,7 +505,7 @@ const SelfFeatureDetail = () => {
       {/* 정보 영역 */}
         {sfSubmissionRequestData.submissionNo !== "" && 
         <>
-        <Typography variant="h2">승인 요청서 정보</Typography>
+        <Typography variant="h4">승인 요청서 정보</Typography>
         <Stack direction="Vertical" className="width-100" gap="MD">
             <HorizontalTable className="width-100">
                 <TR>

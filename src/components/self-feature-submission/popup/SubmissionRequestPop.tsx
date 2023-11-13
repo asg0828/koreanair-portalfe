@@ -160,8 +160,6 @@ const SubmissionRequestPop = ({
                 requestInfo = protoTypeSfSubmissionRequestInfoRejected
                 approvalList = protoTypeSfSubmissionApprovalListRejected
             }
-            console.log("requestInfo :: ", requestInfo)
-            console.log("approvalList :: ", approvalList)
             setSubmission((state: SfSubmissionRequestInfo) => {
               return requestInfo
             })

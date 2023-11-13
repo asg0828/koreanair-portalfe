@@ -190,6 +190,7 @@ export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     variable2: '',
     variable3: '',
     targetDataType: '',
+    targetUniqKey: '',
 }
 
 export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {
@@ -216,6 +217,7 @@ export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {
     variable1: '',
     variable2: '',
     variable3: '',
+    targetUniqKey: '',
 }
 // 초기 case문은 반드시 when(whenYn = Y)
 export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
@@ -692,6 +694,7 @@ export const protoTypeTbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt> = [
         variable2: '',
         variable3: '',
         targetDataType: '',
+        targetUniqKey: '',
     }
 ]
 
@@ -720,6 +723,7 @@ export const protoTypeTbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgt
         variable1: '',
         variable2: '',
         variable3: '',
+        targetUniqKey: '',
     }
 ]
 

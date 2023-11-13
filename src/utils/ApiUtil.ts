@@ -70,7 +70,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
         break;
       // 2023-11-02 김태훈A Self-Feature BE API case 추가
       case Service.KAL_SF_BE:
-        baseURL = `${apiUrl['KAL_SF_BE']}:${ServicePort.KAL_SF_BE.toString()}`;
+        baseURL = `${apiUrl['KAL_SF_BE']}`//:${ServicePort.KAL_SF_BE.toString()}`;
         break;
       default:
         break;
@@ -186,6 +186,7 @@ export const callApi = async (apiRequest: ApiRequest): Promise<CommonResponse> =
   let response: CommonResponse = {
     successOrNot: 'N',
     statusCode: StatusCode.UNKNOWN_ERROR,
+    result: {},
     data: {},
   };
 
