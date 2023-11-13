@@ -82,6 +82,7 @@ const Reg = () => {
                     maxLength: { value: 100, message: 'max length exceeded' },
                   })}
                   validation={errors?.sj?.message ? 'Error' : undefined}
+                  autoFocus
                 />
                 <ErrorLabel message={errors?.sj?.message} />
               </Stack>
