@@ -285,7 +285,7 @@ const Detail = () => {
                         validation={errors?.answ?.message ? 'Error' : undefined}
                       />
                     </Stack>
-                    <Button type="submit" size="LG">
+                    <Button type="submit" size="LG" className="reg">
                       등록
                     </Button>
                   </Stack>
