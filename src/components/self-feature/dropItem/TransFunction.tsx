@@ -55,7 +55,6 @@ const TransFunction = ({
         })
         setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let rtn = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             let updtTrgtFilterList = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtItem.targetId)
             updtTrgtFilterList[itemIdx].function = ''
             updtTrgtFilterList[itemIdx].variable1 = ''

@@ -12,7 +12,8 @@ import {
     TbRsCustFeatRuleTrgtFilter, 
     TbCoMetaTblClmnInfo, 
     Attribute,
-    TargetDropListProps, 
+    TargetDropListProps,
+    Behavior, 
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initAttribute, 
@@ -32,7 +33,9 @@ const DropList = ({
     targetList, 
     trgtFilterList,
     setTargetList,
-    setTrgtFilterList
+    setTrgtFilterList,
+    behaviors,
+    setFormulaTrgtList,
 }: TargetDropListProps) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
@@ -78,10 +81,10 @@ const DropList = ({
                     t = tl.length
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
                     target.tableName = String(targetObj.metaTblLogiNm)
-                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     target.targetId  = `T${t+1}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)
                     target.divisionCode = String(targetType)
+                    target.targetDataType = targetObj.dataTypeCategory//targetObj.dtpCd
                     tl.push(target)
                     return tl
                 })
@@ -92,9 +95,9 @@ const DropList = ({
                         let tl = cloneDeep(state)
                         target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
                         target.tableName = String(targetObj.metaTblLogiNm)
-                        // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                         target.targetId  = `T${t+1}`
                         target.columnName = String(targetObj.metaTblClmnLogiNm)
+                        target.columnDataTypeCode = targetObj.dataTypeCategory//targetObj.dtpCd
                         tl.push(target)
                         return tl
                     })
@@ -155,8 +158,6 @@ const DropList = ({
             >
             {
                 targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
-                    
-                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     let targetId = targetItem.targetId
                     let tfList: Array<TbRsCustFeatRuleTrgtFilter> = []
                     trgtFilterList.map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
@@ -182,6 +183,7 @@ const DropList = ({
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.BEHV) {
+                        let bs = behaviors.filter((behavior: Behavior) => (behavior.metaTblLogiNm === targetItem.tableName || behavior.metaTblId === targetItem.tableName))
                         return <BehvDropItem 
                             key={`dropItem-${index}`}
                             itemIdx={index}
@@ -192,6 +194,8 @@ const DropList = ({
                             setTargetList={setTargetList} 
                             setTrgtFilterList={setTrgtFilterList} 
                             delTargetInfo={deleteInfo}
+                            aggregateColList={bs[0]?.tbCoMetaTblClmnInfoList}
+                            setFormulaTrgtList={setFormulaTrgtList}
                         />
                     }
                 })

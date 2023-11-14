@@ -26,6 +26,8 @@ import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { 
   category,
   featListColumns as columns,
+  initSelfFeatureInfo,
+  initTbRsCustFeatRule,
   protoTbRsCustFeatRuleList,
   submissionStatus,
 } from "./data";
@@ -41,7 +43,6 @@ import {
   initQueryParams,
   subFeatStatus,
 } from '@/models/selfFeature/FeatureCommon';
-
 
 export interface searchProps {
   mstrSgmtRuleId: string
@@ -115,42 +116,30 @@ const SelfFeature = () => {
     console.log("[retrieveCustFeatRules] Response successOrNot :: ", response.successOrNot)
     console.log("[retrieveCustFeatRules] Response result       :: ", response.result)
     
-    let list: Array<TbRsCustFeatRule> = []
-    if (response.statusCode === StatusCode.SUCCESS) {
-      list = response.result
-    }
+    setSelfFeatureList(() => {
+      let rtn = cloneDeep(response.result)
 
-   /*
-    for (let i = 0; i < 10; i++) {
-      let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
-      selfFeature.id = `ID_${String(i)}` //custFeatRuleId
-      selfFeature.name = `NAME_${String(i)}`
-      selfFeature.description = `DESCRIPTION_${String(i)}`
-      selfFeature.lastUpdDttm = `2023-10-16 10:11:1${String(i)}`
-      selfFeature.lastUpdUserNm = "UPDUSER_" + String(i)
-      if (i % 2) {
-        selfFeature.useYn = "Y"
-        selfFeature.submissionStatus = `reg`
-      } else {
-        selfFeature.useYn = "N"
-        selfFeature.submissionStatus = `subInfo`
-      }
-      list.push(selfFeature)
-    }
-    */
-    setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
-      if (searchInfo.submissionStatus !== "") {
-        if (searchInfo.submissionStatus === "reg" || searchInfo.submissionStatus === subFeatStatus.SAVE) {
-          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === "" || v.submissionStatus === subFeatStatus.SAVE)//list
-        } else if (searchInfo.submissionStatus) {
-          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === searchInfo.submissionStatus)//list//list
+      rtn = rtn.map((sf: TbRsCustFeatRule) => {
+        let t = cloneDeep(sf)
+        if (
+          !t.submissionStatus
+          || t.submissionStatus === "" 
+          || t.submissionStatus === submissionStatus[1].value
+        ) {
+          t.submissionStatusNm = submissionStatus[1].text
+        } else if (
+          t.submissionStatus === "requested" 
+          || t.submissionStatus === submissionStatus[2].value
+        ) {
+          t.submissionStatusNm = submissionStatus[2].text
+        } else if (t.submissionStatus === submissionStatus[3].value) {
+          t.submissionStatusNm = submissionStatus[3].text
+        } else if (t.submissionStatus === submissionStatus[4].value) {
+          t.submissionStatusNm = submissionStatus[4].text
         }
-      } else {
-        prevState = protoTbRsCustFeatRuleList
-      }
-
-      return cloneDeep(prevState)
-      //return cloneDeep(response.result)
+        return t
+      })
+      return rtn
     })
   }
 
@@ -235,11 +224,12 @@ const SelfFeature = () => {
 
   return (
   <Stack direction="Vertical" gap="LG" className="height-100">
-    <Stack direction="Horizontal" gap="MD" justifyContent="End">
+    {/* 관리자(1차)인 경우만 노출 */}
+    {/* <Stack direction="Horizontal" gap="MD" justifyContent="End">
       <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.PRNTCHLD)}>
-      Feature 선후행 관계
+      Feature 연결 관계
       </Button>
-    </Stack>
+    </Stack> */}
     {/* 검색 영역 */}
     <form onSubmit={onsubmitHandler}>
     <Stack direction="Vertical" gap="LG">
@@ -338,24 +328,25 @@ const SelfFeature = () => {
         columns={columns}
         rows={selfFeatureList}
         enableSort={true}
-        clickable={true}
-        rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
+        clickable={false}
+        //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
         onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
       />
       <Pagination size="MD" />
       <Stack className="pagination-layout">  
       <Stack justifyContent="End" gap="SM" className="width-100">
-        <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
+        {/* <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
         삭제
-        </Button>
+        </Button> */}
         <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.RULE_REG)}>
         <AddIcon />
-        Rule 등록
+        신규 등록
         </Button>
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
+        {/* 관리자(1차)인 경우만 노출 */}
+        {/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
         <AddIcon />
-        SQL 등록
-        </Button>
+        SQL 신규 등록
+        </Button> */}
       </Stack>
       </Stack>
     </Stack>

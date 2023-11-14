@@ -60,7 +60,7 @@ const userMenuList = [
         children: [
           { name: 'Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
           { name: 'Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
-          { name: 'Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
+          { name: 'Feature 등록', path: '/self-feature/self-feature/edit', children: [] },
         ],
       },
       {

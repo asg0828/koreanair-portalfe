@@ -39,6 +39,9 @@ import {
   MstrSgmtTableandColMetaInfo,
   FeatureTemp,
   TbRsCustFeatRuleSql,
+  FormulaTrgtListProps,
+  Behavior,
+  TbCoMetaTblClmnInfo,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
@@ -62,6 +65,7 @@ import {
   ModalType,
   ModalTitCont,
 } from '@/models/selfFeature/FeatureCommon';
+import { StatusCode } from "@/models/common/CommonResponse";
 
 const lCategory = [
   { value: '온라인행동', text: '온라인행동' },
@@ -95,7 +99,7 @@ const SelfFeatureEdit = () => {
   // 계산식
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
-  const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
+  const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<FormulaTrgtListProps>>([])
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
@@ -127,18 +131,18 @@ const SelfFeatureEdit = () => {
 
   useEffect(() => {
     //useQuery(['mstrSgmtTableandColMetaInfo'], () => )
-    if (location.state.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
+    if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
       getTableandColumnMetaInfoByMstrSgmtRuleId()
   }, [])
 
   useEffect(() => {
-    setFeatureTempInfo(cloneDeep(location.state.featureTemp))
-    setCustFeatRule(cloneDeep(location.state.tbRsCustFeatRule))
-    setTargetList(cloneDeep(location.state.tbRsCustFeatRuleTrgtList))
-    setTrgtFilterList(cloneDeep(location.state.tbRsCustFeatRuleTrgtFilterList))
-    setCustFeatRuleCalc(cloneDeep(location.state.tbRsCustFeatRuleCalc))
-    setCustFeatRuleCaseList(cloneDeep(location.state.tbRsCustFeatRuleCaseList))
-    setSqlQueryInfo(cloneDeep(location.state.tbRsCustFeatRuleSql))
+    setFeatureTempInfo(cloneDeep(location.state.featureInfo.featureTemp))
+    setCustFeatRule(cloneDeep(location.state.featureInfo.tbRsCustFeatRule))
+    setTargetList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtList))
+    setTrgtFilterList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtFilterList))
+    setCustFeatRuleCalc(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCalc))
+    setCustFeatRuleCaseList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCaseList))
+    setSqlQueryInfo(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleSql))
   }, [location.state])
 
   // 기본 정보 입력시 formData setting
@@ -170,8 +174,18 @@ const SelfFeatureEdit = () => {
     // 계산식 validation을 위한 대상 list 추출
     let fList = []
     for (let i = 0; i < targetList.length; i++) {
-      let t = i + 1
-      fList.push(`T${t}`)
+      let t = { targetId: `T${i+1}`, dataType: "" }
+      let dataType = targetList[i].targetDataType
+      
+      if (
+        targetList[i].operator === "count"
+        || targetList[i].operator === "distinct_count"
+      ) {
+        dataType = "number"
+      }
+      t.dataType = dataType
+
+      fList.push(t)
     }
     setFormulaTrgtList(fList)
   }, [targetList])
@@ -209,8 +223,8 @@ const SelfFeatureEdit = () => {
   // 대상 선택 list가 없는 경우 formula reset
   useEffect(() => {
     if (formulaTrgtList.length > 0) return 
-
-    if (location.state.tbRsCustFeatRuleCalc.formula === "") {
+    
+    if (location.state.featureInfo.tbRsCustFeatRuleCalc.formula === "") {
       setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
         let rtn = cloneDeep(state)
         rtn.formula = ''
@@ -218,7 +232,7 @@ const SelfFeatureEdit = () => {
       })
     }
     
-  }, [formulaTrgtList, location.state.tbRsCustFeatRuleCalc.formula])
+  }, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc.formula])
 
   const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
     /*
@@ -243,7 +257,9 @@ const SelfFeatureEdit = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response successOrNot :: ", response.successOrNot)
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
 
-    setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
+    if (response.statusCode === StatusCode.SUCCESS) {
+      setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
+    }
   }
 
   const updateCustFeatRule = async () => {
@@ -405,7 +421,7 @@ const SelfFeatureEdit = () => {
             <TH colSpan={1} align="center">대구분</TH>
             <TD colSpan={3}>
               <Select 
-                defaultValue={location.state.featureTemp.featureLSe}
+                defaultValue={location.state.featureInfo.featureTemp?.featureLSe}
                 appearance="Outline" 
                 placeholder="대구분" 
                 className="width-100" 
@@ -424,7 +440,7 @@ const SelfFeatureEdit = () => {
             <TH colSpan={1} align="center">중구분</TH>
             <TD colSpan={3}>
               <Select 
-                defaultValue={location.state.featureTemp.featureMSe}
+                defaultValue={location.state.featureInfo.featureTemp?.featureMSe}
                 appearance="Outline" 
                 placeholder="중구분" 
                 className="width-100" 
@@ -447,7 +463,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="id" 
-                defaultValue={location.state.featureTemp.featureId}
+                defaultValue={location.state.featureInfo.featureTemp?.featureId}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -457,7 +473,7 @@ const SelfFeatureEdit = () => {
                 className="width-100" 
                 id="dataType"
                 readOnly
-                defaultValue={location.state.featureTemp.featureTyp}
+                defaultValue={location.state.featureInfo.featureTemp?.featureTyp}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -468,7 +484,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="name" 
-                defaultValue={location.state.featureTemp.featureNm}
+                defaultValue={location.state.featureInfo.featureTemp?.featureNm}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -477,7 +493,7 @@ const SelfFeatureEdit = () => {
               <TextField 
                 className="width-100" 
                 id="name" 
-                defaultValue={location.state.featureTemp.featureEngNm}
+                defaultValue={location.state.featureInfo.featureTemp?.featureEngNm}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -489,7 +505,7 @@ const SelfFeatureEdit = () => {
                 className="width-100" 
                 multiline
                 id="description" 
-                defaultValue={featureTempInfo.featureDef}
+                defaultValue={featureTempInfo?.featureDef}
                 onChange={onchangeInputHandler}
               />
             </TD>
@@ -498,7 +514,7 @@ const SelfFeatureEdit = () => {
             <TH colSpan={1} align="center">산출 단위</TH>
             <TD colSpan={3}>
               <Select 
-                defaultValue={location.state.featureTemp.calcUnt}
+                defaultValue={location.state.featureInfo.featureTemp?.calcUnt}
                 appearance="Outline" 
                 placeholder="산출 단위" 
                 className="width-100" 
@@ -521,10 +537,13 @@ const SelfFeatureEdit = () => {
             <TH colSpan={1} align="center">산출 로직</TH>
             <TD colSpan={7}>
               <TextField 
+                style={{
+                  height: "150px"
+                }}
                 className="width-100" 
                 multiline
                 id="featureFm" 
-                defaultValue={featureTempInfo.featureFm}
+                defaultValue={featureTempInfo?.featureFm}
                 onChange={onchangeInputHandler}/>
             </TD>
           </TR>
@@ -561,6 +580,8 @@ const SelfFeatureEdit = () => {
               trgtFilterList={trgtFilterList} 
               setTargetList={setTargetList} 
               setTrgtFilterList={setTrgtFilterList} 
+              behaviors={mstrSgmtTableandColMetaInfo.behaviors}
+              setFormulaTrgtList={setFormulaTrgtList}
             />
             {/* drop 영역 */}
 
@@ -579,6 +600,7 @@ const SelfFeatureEdit = () => {
         {formulaTrgtList.length > 0 &&
           <CalcValid
             featStatus={subFeatStatus.REG}
+            isSelectAggregateTop={isSelectAggregateTop}
             setIsValidFormula={setIsValidFormula}
             formulaTrgtList={formulaTrgtList}
             custFeatRuleCalc={custFeatRuleCalc}

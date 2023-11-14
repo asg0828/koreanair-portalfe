@@ -65,8 +65,21 @@ export const transFuncOtion = [
     { value: 'CONCAT',    text: 'Concat' },
     { value: 'TO_NUMBER', text: 'To Number' },
 ]
-// 연산자 목록
-export const operatorOption = [
+// 연산자 목록(number)
+export const operatorOptionNum = [
+    { value: '',           text: '선택' },
+    { value: '=',          text: 'Equal to' },
+    { value: '<>',         text: 'Not Equal to' },
+    { value: '>',          text: 'Greater Than' },
+    { value: '>=',         text: 'Greater or Equal' },
+    { value: '<',          text: 'Less Than' },
+    { value: '<=',         text: 'Less or Equal' },
+    { value: 'in_num',     text: 'In' },
+    { value: 'not_in_num', text: 'Not in' },
+]
+//Equal to(=) /  Not Equal to(<>) / Greater Than(>) / Greater or Equal(>=) / Less Than(<) / Less or Equal(<=) / In(in_num) / Not in(not_in_num)
+// 연산자 목록(string)
+export const operatorOptionStr = [
     { value: '',                text: '선택' },
     { value: 'match',           text: 'Match' },
     { value: 'not match',       text: 'Not Match' },
@@ -77,14 +90,37 @@ export const operatorOption = [
     { value: 'contains',        text: 'Contains' },
     { value: 'not contains',    text: 'Not Contains' },
 ]
-// 구분자 목록
-export const delimiterOption = [
+// 연산자 목록(timestamp)
+export const operatorOptionTim = [
+    { value: '',        text: '선택' },
+    { value: 'before',  text: 'before' },
+    { value: 'after',   text: 'after' },
+    { value: 'between', text: 'between' },
+]
+// 구분자 목록(number type)
+export const delimiterOptionNum = [
+    { value: ',', text: ',' },
+]
+// 구분자 목록(string/timestamp type)
+export const delimiterOptionStrTim = [
     { value: ',', text: ',' },
     { value: '/', text: '/' },
     { value: ':', text: ':' },
 ]
-// 집계함수 목록
-export const aggregateOption = [
+// 집계함수 목록(number)
+export const aggregateOptionNum = [
+    { value: 'count',           text: 'Count' },
+    { value: 'sum',           text: 'Sum' },
+    { value: 'max',             text: 'Max' },
+    { value: 'min',             text: 'Min' },
+    { value: 'distinct_count',  text: 'Distinct Count' },
+    { value: 'avg',           text: 'Avg' },
+    { value: 'first',           text: 'First' },
+    { value: 'last',            text: 'Last' },
+    { value: 'top',             text: 'Top' },
+]
+// 집계함수 목록(string, timestamp)
+export const aggregateOptionStrTim = [
     { value: 'count',           text: 'Count' },
     { value: 'max',             text: 'Max' },
     { value: 'min',             text: 'Min' },
@@ -169,7 +205,7 @@ export const initTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
 
 export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     id: 0,
-    custFeatRuleId: '',
+    custFeatRuleId: 'MS_0006',
     targetId: '',
     divisionCode: '',
     tableName: '',
@@ -190,13 +226,12 @@ export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     variable2: '',
     variable3: '',
     targetDataType: '',
-    targetUniqKey: '',
 }
 
 export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {
     id: 0,
     custFeatRuleTrgtId: 0,
-    custFeatRuleId: '',
+    custFeatRuleId: 'MS_0006',
     targetId: '',
     filterId: '',
     columnName: '',
@@ -217,7 +252,6 @@ export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {
     variable1: '',
     variable2: '',
     variable3: '',
-    targetUniqKey: '',
 }
 // 초기 case문은 반드시 when(whenYn = Y)
 export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
@@ -674,9 +708,9 @@ export const protoTypeTbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt> = [
     {
         id: 0,
         custFeatRuleId: '',
-        targetId: 'L2_홈페이지행동_B_202392593229538',
+        targetId: 'T1',
         divisionCode: 'BEHV',
-        tableName: 'L2_홈페이지행동_B',
+        tableName: '[행동]대한항공 설치 테스트',
         filterLogiOption: 'ALL',
         filterLogiExpsn: '',
         operator: 'distinct_count',
@@ -694,7 +728,6 @@ export const protoTypeTbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt> = [
         variable2: '',
         variable3: '',
         targetDataType: '',
-        targetUniqKey: '',
     }
 ]
 
@@ -703,7 +736,7 @@ export const protoTypeTbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgt
         id: 0,
         custFeatRuleTrgtId: 0,
         custFeatRuleId: '',
-        targetId: 'L2_홈페이지행동_B_202392593229538',
+        targetId: 'T1',
         filterId: '',
         columnName: '페이지그룹구분',
         columnDataTypeCode: '',
@@ -723,7 +756,6 @@ export const protoTypeTbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgt
         variable1: '',
         variable2: '',
         variable3: '',
-        targetUniqKey: '',
     }
 ]
 

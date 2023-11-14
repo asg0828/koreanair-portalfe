@@ -60,8 +60,10 @@ export const selfFeatPgPpNm = {
     RULE_REG:  'rule_reg',  // Rule 등록
     SQL_REG:  'sql_reg',  // Sql 등록
     EDIT: 'edit',  // 수정
+    DELETE: 'delete', // 삭제
     SUBMCFRM: 'subConfirm', // 승인 요청 팝업
     SUBINFO:  'subInfo',  // 승인 확인 팝업
+    SUB_ISRT_REQ: 'subInsertReq', // 승인 요청
     SUB_CANCEL: 'subCancel', // 요청 취소
     SUB_APRV: 'subApproval', // 승인 처리
     SUB_REJT: 'subReject', // 반려 처리
