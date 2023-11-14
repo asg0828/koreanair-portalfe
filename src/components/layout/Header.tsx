@@ -171,7 +171,7 @@ const Header = () => {
                             {subMenu.name}
                           </Link>
                         ) : (
-                          <div>
+                          <div className="dropdown-subwrap">
                             <Typography variant="body1">{subMenu.name}</Typography>
                             {subMenu.children.map((subMenuSecond, index: number) => (
                               <div key={`subMenuSecond-${index}`} className="dropdown-item">
