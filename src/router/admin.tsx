@@ -44,6 +44,7 @@ import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 import StructuredReportManagement from '@pages/admin/structured-report-management';
 import AdminHome from '@/pages/admin/AdminHome';
+import { useFaqLoader, useQnaLoader } from '@/hooks/useLoader';
 
 const adminRouter = [
   {
@@ -147,6 +148,7 @@ const adminRouter = [
                   },
                   {
                     path: 'faq',
+                    loader: useFaqLoader,
                     children: [
                       { index: true, element: <Faq /> },
                       { path: 'reg', element: <FaqReg /> },
@@ -155,6 +157,7 @@ const adminRouter = [
                   },
                   {
                     path: 'qna',
+                    loader: useQnaLoader,
                     children: [
                       { index: true, element: <Qna /> },
                       { path: 'detail', element: <QnaDetail /> },
