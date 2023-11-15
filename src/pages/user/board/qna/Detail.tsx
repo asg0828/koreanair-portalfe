@@ -121,12 +121,14 @@ const Detail = () => {
 
   const handleCommentDelete = (qnaId: string) => {
     setCQnaId(qnaId);
-    openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.REMOVE,
-      content: '답글을 삭제하시겠습니까?',
-      onConfirm: cdMutate,
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.REMOVE,
+        content: '답글을 삭제하시겠습니까?',
+        onConfirm: cdMutate,
+      })
+    );
   };
 
   const onCreateCommentSubmit = (data: CreatedQnaInfo) => {
@@ -240,7 +242,7 @@ const Detail = () => {
                 <ul>
                   <li>{getCode(GroupCodeType.QNA_TYPE, qnaInfo?.clCode || '')?.codeNm}</li>
                   <li>{`${qnaInfo?.rgstDeptNm || ''} ${qnaInfo?.rgstNm || ''}`}</li>
-                  <li>{qnaInfo?.rgstDt}</li>
+                  <li>{qnaInfo?.modiDt}</li>
                   <li>{`조회수 ${qnaInfo?.viewCnt}`}</li>
                 </ul>
               </Stack>
@@ -300,7 +302,7 @@ const Detail = () => {
                     <Stack>
                       <Stack gap="SM" className="width-100">
                         <Typography variant="h6">{`${qnaItem.rgstDeptNm || ''} ${qnaItem.rgstNm || ''}`}</Typography>
-                        <Label>{qnaItem.rgstDt}</Label>
+                        <Label>{qnaItem.modiDt}</Label>
                       </Stack>
 
                       {watch().qnaId === qnaItem.qnaId ? (
