@@ -444,9 +444,8 @@ const SelfFeatureDetail = () => {
     if (
       !location.state.submissionStatus
       || location.state.submissionStatus === ""
-      || location.state.submissionStatus === subFeatStatus.SAVE
     ) {
-      // 등록(품의는 저장 x) / 품의 저장
+      // 등록(품의는 저장 x)
       return (
         <Stack justifyContent="End" gap="SM" className="width-100">
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
@@ -458,16 +457,31 @@ const SelfFeatureDetail = () => {
           <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
             수정
           </Button>
-          {/* <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-            승인 요청서
-          </Button> */}
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_ISRT_REQ)}>
             승인 요청
           </Button>
         </Stack>
       )
+    } else if (location.state.submissionStatus === subFeatStatus.SAVE) {
+      // 품의 저장(품의 저장의 경우 결재진행 전 단계로 가야할지?)
+      return (
+        <Stack justifyContent="End" gap="SM" className="width-100">
+          <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            목록
+          </Button>
+          <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.DELETE)}>
+            삭제
+          </Button>
+          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
+            수정
+          </Button>
+          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
+            요청 취소
+          </Button>
+        </Stack>
+      )
     } else if (location.state.submissionStatus === subFeatStatus.IN_APRV) {
-      // 결재 진행
+      // 결재 진행 -> 해당 승인 반려의 경우 결재 목록에서 노출
       // if (location.state.id.includes('ADM')) {
       //   return (
       //     <Stack justifyContent="End" gap="SM" className="width-100">
@@ -483,14 +497,15 @@ const SelfFeatureDetail = () => {
       //     </Stack>
       //   )
       // } else {
+        // 결재 진행이지만 1차 승인 이전의 상태인 경우만 요청 취소 버튼 노출
         return (
           <Stack justifyContent="End" gap="SM" className="width-100">
             <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
               목록
             </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
+            {/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
               요청 취소
-            </Button>
+            </Button> */}
           </Stack>
         )
       //}
@@ -501,9 +516,6 @@ const SelfFeatureDetail = () => {
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
             목록
           </Button>
-          {/* <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-          승인 요청서
-          </Button> */}
         </Stack>
       )
     } else if (location.state.submissionStatus === subFeatStatus.REJT) {
@@ -523,9 +535,6 @@ const SelfFeatureDetail = () => {
         <Stack justifyContent="End" gap="SM" className="width-100">
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
             목록
-          </Button>
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
-            수정
           </Button>
         </Stack>
       )
