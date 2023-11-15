@@ -1,9 +1,10 @@
 import { KeyboardArrowDownIcon, LogoutOutlinedIcon, MenuOutlinedIcon } from '@/assets/icons';
 import { Avatar, DropdownMenu, Page, Stack, Typography } from '@/components/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath } from '@/models/common/Constants';
+import { ContextPath, ModalTitle, ModalType } from '@/models/common/Constants';
 import { MenuItem } from '@/models/common/Menu';
 import { setIsDropMenu } from '@/reducers/menuSlice';
+import { openModal } from '@/reducers/modalSlice';
 import SessionApis from '@api/common/SessionApis';
 import SessionUtil from '@utils/SessionUtil';
 import { useState } from 'react';
@@ -50,10 +51,19 @@ const Header = () => {
     }
   };
 
-  const handleLogout = async () => {
-    await sessionApis.logoutSession();
-    await sessionApis.revokeToken();
-    sessionUtil.googleLogout();
+  const handleLogout = () => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '로그아웃 하시겠습니까??',
+        onConfirm: async () => {
+          await sessionApis.logoutSession();
+          await sessionApis.revokeToken();
+          sessionUtil.googleLogout();
+        },
+      })
+    );
   };
 
   const handleDropMenu = () => {
