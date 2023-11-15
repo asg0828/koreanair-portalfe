@@ -25,6 +25,7 @@ import {
     aggregateOptionStrTim,
 } from "@/pages/user/self-feature/data"
 import {
+    ColDataType,
     ModalType,
 } from '@/models/selfFeature/FeatureCommon';
 
@@ -281,7 +282,7 @@ const BehvDropItem = ({
                 rtn = rtn.map((ft: FormulaTrgtListProps) => {
                     if (ft.targetId === targetItem.targetId) {
                         if (v === "count" || v === "distinct_count") {
-                            ft.dataType = "number"
+                            ft.dataType = ColDataType.NUM
                         } else {
                             ft.dataType = targetItem.targetDataType
                         }
@@ -418,6 +419,7 @@ const BehvDropItem = ({
                                     itemIdx={index}
                                     isPossibleEdit={isPossibleEdit}
                                     trgtFilterItem={trgtFilterItem}
+                                    columnList={columnList}
                                     setTrgtFilterList={setTrgtFilterList}
                                     deleteTrgtFilterInfo={deleteTrgtFilterInfo}
                                 />
@@ -477,10 +479,10 @@ const BehvDropItem = ({
                             onchangeSelectHandler(e, value, "operator")
                         }}
                     >
-                        {dataTypeCol === "number" && aggregateOptionNum.map((item, index) => (
+                        {dataTypeCol === ColDataType.NUM && aggregateOptionNum.map((item, index) => (
                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                         ))}
-                        {dataTypeCol !== "number" && aggregateOptionStrTim.map((item, index) => (
+                        {dataTypeCol !== ColDataType.NUM && aggregateOptionStrTim.map((item, index) => (
                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                         ))}
                     </Select>

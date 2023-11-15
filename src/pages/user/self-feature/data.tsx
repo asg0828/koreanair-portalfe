@@ -56,14 +56,51 @@ export const filterOption = [
     { value: 'ANY', text: '아래 조건중 하나라도 만족하는 경우' },
     { value: 'CUS', text: '조건 사이의 관계를 직접 입력' },
 ]
-// 변환식 함수
-export const transFuncOtion = [
+// 변환식 함수(number)
+export const transFuncOtionNum = [
+    { value: '',    text: '선택' },
+    { value: 'NVL', text: 'NVL' },
+]
+// 변환식 함수(string)
+export const transFuncOtionStr = [
     { value: '',          text: '선택' },
     { value: 'NVL',       text: 'NVL' },
     { value: 'SUBSTRING', text: 'Substring' },
     { value: 'LENGTH',    text: 'Length' },
     { value: 'CONCAT',    text: 'Concat' },
     { value: 'TO_NUMBER', text: 'To Number' },
+]
+// 변환식 함수(timstamp)
+export const transFuncOtionTim = [
+    { value: '',         text: '선택' },
+    { value: 'TO_CHAR',  text: 'To Char' },
+    { value: 'DATEADD',  text: 'Date Add' },
+    { value: 'DATEDIFF', text: 'Date Diff' },
+]
+// 변환식 timestamp(to char) 형식 옵션
+export const tsToCharOption = [
+    { value: '',                    text: '선택' },
+    { value: 'yyyy',                text: 'Year' },
+    { value: 'MM',                  text: 'Month' },
+    { value: 'dd',                  text: 'Day' },
+    { value: 'hh',                  text: 'Hour' },
+    { value: 'HH',                  text: 'Hour(24)' },
+    { value: 'mm',                  text: 'Minute' },
+    { value: 'ss',                  text: 'Second' },
+    { value: 'yyyyMMdd',            text: 'YYYYMMDD' },
+    { value: 'yyyyMMddHHmmss',      text: 'YYYYMMDDHH24MISS' },
+    { value: 'yyyy-MM-dd',          text: 'YYYY-MM-DD' },
+    { value: 'yyyy-MM-dd HH:mm:ss', text: 'YYYY-MM-DD HH24:MI:SS' },
+]
+// 변환식 timestamp(date add / date diff) 단위 옵션
+export const tsDtAddDiffOption = [
+    { value: '',                    text: '선택' },
+    { value: 'yyyy',                text: 'Year' },
+    { value: 'MM',                  text: 'Month' },
+    { value: 'dd',                  text: 'Day' },
+    { value: 'hh',                  text: 'Hour' },
+    { value: 'mm',                  text: 'Minute' },
+    { value: 'ss',                  text: 'Second' },
 ]
 // 연산자 목록(number)
 export const operatorOptionNum = [

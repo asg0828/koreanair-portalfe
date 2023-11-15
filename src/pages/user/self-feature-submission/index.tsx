@@ -56,7 +56,7 @@ const SfSubmissionRequest = () => {
 
     const navigate = useNavigate()
 
-    const [ requestDateFrom, setRequestDateFrom ] = useState<string>('')
+    const [ requestDateFrom, setRequestDateFrom ] = useState<string>('2023-01-01')
     const [ requestDateTo, setRequestDateTo ] = useState<string>('')
 
     const [ search, setSearch ] = useState<SearchProps>({

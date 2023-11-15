@@ -3,6 +3,7 @@ import { cloneDeep } from "lodash"
 
 import { FormulaTrgtListProps, FormulaValidRslt } from "@/models/selfFeature/FeatureInfo"
 import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
+import { ColDataType } from "@/models/selfFeature/FeatureCommon"
 
 /*
     사칙연산 or Target ID를 확인해 주세요.
@@ -83,7 +84,7 @@ export const ValidationFormula = ({
 
         if (inptTrgtList.length === 1) return true
 
-        let notNumDtpTrgtList = formulaTrgtList.filter((ft: FormulaTrgtListProps) => ft.dataType !== "number")
+        let notNumDtpTrgtList = formulaTrgtList.filter((ft: FormulaTrgtListProps) => ft.dataType !== ColDataType.NUM)
         
         let inptTrgtNotNumList = notNumDtpTrgtList.filter((ft: FormulaTrgtListProps) => {
             return inptTrgtList.some(target => ft.targetId === target)
@@ -177,6 +178,30 @@ export const transFuncCalcStr = ({
 
     } else if (funcType === "TO_NUMBER") {
         rtnStr += ')'
+    } else if (funcType === "TO_CHAR") {
+
+        if (var1 === "") rtnStr += ', [형식])'
+        else rtnStr += `, [${var1}])`
+
+    } else if (funcType === "DATEADD") {
+
+        if (var1 === "") rtnStr += ', [단위]'
+        else rtnStr += `, [${var1}]`
+
+        if (var2 === "") rtnStr += ', [숫자])'
+        else rtnStr += `, [${var2}])`
+
+    } else if (funcType === "DATEDIFF") {
+
+        if (var1 === "") rtnStr += ', [단위]'
+        else rtnStr += `, [${var1}]`
+
+        if (var2 === "") rtnStr += ', [시작 일자]'
+        else rtnStr += `, [${var2}]`
+
+        if (var3 === "") rtnStr += ', [종료 일자])'
+        else rtnStr += `, [${var3}])`
+
     } else {
         rtnStr = ""
     }

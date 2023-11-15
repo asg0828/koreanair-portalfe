@@ -26,9 +26,6 @@ import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { 
   category,
   featListColumns as columns,
-  initSelfFeatureInfo,
-  initTbRsCustFeatRule,
-  protoTbRsCustFeatRuleList,
   submissionStatus,
 } from "./data";
 import { Method, callApi } from "@/utils/ApiUtil";
@@ -115,32 +112,34 @@ const SelfFeature = () => {
     console.log("[retrieveCustFeatRules] Response status       :: ", response.status)
     console.log("[retrieveCustFeatRules] Response successOrNot :: ", response.successOrNot)
     console.log("[retrieveCustFeatRules] Response result       :: ", response.result)
-    
-    setSelfFeatureList(() => {
-      let rtn = cloneDeep(response.result)
 
-      rtn = rtn.map((sf: TbRsCustFeatRule) => {
-        let t = cloneDeep(sf)
-        if (
-          !t.submissionStatus
-          || t.submissionStatus === "" 
-          || t.submissionStatus === submissionStatus[1].value
-        ) {
-          t.submissionStatusNm = submissionStatus[1].text
-        } else if (
-          t.submissionStatus === "requested" 
-          || t.submissionStatus === submissionStatus[2].value
-        ) {
-          t.submissionStatusNm = submissionStatus[2].text
-        } else if (t.submissionStatus === submissionStatus[3].value) {
-          t.submissionStatusNm = submissionStatus[3].text
-        } else if (t.submissionStatus === submissionStatus[4].value) {
-          t.submissionStatusNm = submissionStatus[4].text
-        }
-        return t
+    if (response.statusCode === StatusCode.SUCCESS) {
+      setSelfFeatureList(() => {
+        let rtn = cloneDeep(response.result)
+
+        rtn = rtn.map((sf: TbRsCustFeatRule) => {
+          let t = cloneDeep(sf)
+          if (
+            !t.submissionStatus
+            || t.submissionStatus === "" 
+            || t.submissionStatus === submissionStatus[1].value
+          ) {
+            t.submissionStatusNm = submissionStatus[1].text
+          } else if (
+            t.submissionStatus === "requested" 
+            || t.submissionStatus === submissionStatus[2].value
+          ) {
+            t.submissionStatusNm = submissionStatus[2].text
+          } else if (t.submissionStatus === submissionStatus[3].value) {
+            t.submissionStatusNm = submissionStatus[3].text
+          } else if (t.submissionStatus === submissionStatus[4].value) {
+            t.submissionStatusNm = submissionStatus[4].text
+          }
+          return t
+        })
+        return rtn
       })
-      return rtn
-    })
+    }
   }
 
   const deleteCustFeatRule =async () => {
@@ -192,7 +191,7 @@ const SelfFeature = () => {
     e.preventDefault()
     retrieveCustFeatRules()
   }
-
+  /*
   const getCheckList = (checkedList: Array<number>) => {
     setDelList(() => {
       let delList = checkedList.map((delItemIdx) => selfFeatureList[delItemIdx])
@@ -212,7 +211,7 @@ const SelfFeature = () => {
     setConfirmModalCont(ModalTitCont.DELETE.context)
     setIsOpenConfirmModal(true)
   }
-
+  */
   const onConfirm = () => {
     if (modalType === ModalType.CONFIRM) deleteCustFeatRule()
     setIsOpenConfirmModal(false)

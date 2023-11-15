@@ -9,6 +9,7 @@ export interface TargetDropListProps {
     trgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>
     setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+    attributes: Array<Attribute>
     behaviors: Array<Behavior>
     setFormulaTrgtList: React.Dispatch<React.SetStateAction<Array<FormulaTrgtListProps>>>
 }
@@ -19,6 +20,7 @@ export interface TargetDropProps {
     setIsSelectAggregateTop?: React.Dispatch<React.SetStateAction<Boolean>>
     targetItem: TbRsCustFeatRuleTrgt
     trgtFilterList?: Array<TbRsCustFeatRuleTrgtFilter>
+    columnList?: Array<AggregateCol>
     setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     delTargetInfo: (delIdx: number, delTrgtId: string) => void
@@ -30,6 +32,7 @@ export interface TargetDropFilterProps {
     itemIdx: number
     isPossibleEdit: Boolean
     trgtFilterItem: TbRsCustFeatRuleTrgtFilter
+    columnList?: Array<AggregateCol>
     setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     deleteTrgtFilterInfo: (idx: number) => void
 }
@@ -71,9 +74,13 @@ export interface FormulaTrgtListProps {
 export interface OperatorOperandProps {
     isPossibleEdit: Boolean
     trgtFormulaInput?: Boolean
+    itemIdx: number
     item: TbRsCustFeatRuleTrgtFilter | TbRsCustFeatRuleCase | undefined
     dataType: string
     delimiterSelected: Boolean
+    slctDateType: string
+    setCustFeatRuleCaseList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleCase>>>
+    setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     onchangeInputHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
     onchangeSelectHandler: (
         e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -87,7 +94,9 @@ export interface TransFuncProps {
     onClose?: (isOpen: boolean) => void
     isPossibleEdit?: Boolean
     itemIdx: number
+    dataType: string
     trgtItem: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
+    columnList?: Array<AggregateCol>
     setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     setTransFuncChecked?: React.Dispatch<React.SetStateAction<boolean>>

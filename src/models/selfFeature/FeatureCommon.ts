@@ -51,7 +51,6 @@ export const ModalTitCont = {
     SUBMISSION_APPROVAL: { title: "요청 정보 승인", context: "요청된 승인 정보를 승인 하시겠습니까?"},
     SUBMISSION_REJECT: { title: "요청 정보 반려", context: "요청된 승인 정보를 반려 하시겠습니까?"},
 }
-
 // 페이지명(path) setting
 export const selfFeatPgPpNm = {
     LIST: 'list', // 목록
@@ -78,4 +77,10 @@ export const subFeatStatus = {
     IN_APRV: 'inApproval', // 결재진행중
     APRV: 'approved', // 승인완료
     REJT: 'rejected', // 반려
+}
+// 컬럼 데이터타입
+export const ColDataType = {
+    NUM: 'number',
+    STR: 'string',
+    TIME:  'timestamp',
 }

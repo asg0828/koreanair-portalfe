@@ -42,6 +42,7 @@ import {
     initTbRsCustFeatRuleCalc, 
 } from "../self-feature/data";
 import { 
+    ColDataType,
     initApiRequest, 
     initCommonResponse, 
     initConfig, 
@@ -116,7 +117,7 @@ const SfSubmissionRequestDetail = () => {
             targetList[i].operator === "count"
             || targetList[i].operator === "distinct_count"
             ) {
-            dataType = "number"
+            dataType = ColDataType.NUM
             }
             t.dataType = dataType
 
@@ -313,6 +314,7 @@ const SfSubmissionRequestDetail = () => {
                         trgtFilterList={trgtFilterList} 
                         setTargetList={setTargetList} 
                         setTrgtFilterList={setTrgtFilterList} 
+                        attributes={mstrSgmtTableandColMetaInfo.attributes} 
                         behaviors={mstrSgmtTableandColMetaInfo.behaviors}
                         setFormulaTrgtList={setFormulaTrgtList}
                     />

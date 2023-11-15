@@ -40,20 +40,14 @@ import {
   FeatureTemp,
   TbRsCustFeatRuleSql,
   FormulaTrgtListProps,
-  Behavior,
-  TbCoMetaTblClmnInfo,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
   initMstrSgmtTableandColMetaInfo,
-  initBehavior,
-  initTbCoMetaTblClmnInfo,
-  initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
   initFeatureTemp,
   initTbRsCustFeatRuleSql,
-  protoTypeMstrSgmtTableandColMetaInfo,
 } from './data'
 import { Method, callApi } from "@/utils/ApiUtil";
 import {
@@ -64,6 +58,7 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
+  ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
 import { StatusCode } from "@/models/common/CommonResponse";
 
@@ -176,12 +171,12 @@ const SelfFeatureEdit = () => {
     for (let i = 0; i < targetList.length; i++) {
       let t = { targetId: `T${i+1}`, dataType: "" }
       let dataType = targetList[i].targetDataType
-      
+      // 집계함수 선택시 대상의 dataType 수정
       if (
         targetList[i].operator === "count"
         || targetList[i].operator === "distinct_count"
       ) {
-        dataType = "number"
+        dataType = ColDataType.NUM
       }
       t.dataType = dataType
 
@@ -327,6 +322,7 @@ const SelfFeatureEdit = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -337,6 +333,7 @@ const SelfFeatureEdit = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -347,6 +344,7 @@ const SelfFeatureEdit = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -366,6 +364,7 @@ const SelfFeatureEdit = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -376,6 +375,7 @@ const SelfFeatureEdit = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -386,6 +386,7 @@ const SelfFeatureEdit = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -580,6 +581,7 @@ const SelfFeatureEdit = () => {
               trgtFilterList={trgtFilterList} 
               setTargetList={setTargetList} 
               setTrgtFilterList={setTrgtFilterList} 
+              attributes={mstrSgmtTableandColMetaInfo.attributes} 
               behaviors={mstrSgmtTableandColMetaInfo.behaviors}
               setFormulaTrgtList={setFormulaTrgtList}
             />

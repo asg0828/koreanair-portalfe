@@ -15,6 +15,7 @@ const AttrDropItem = ({
     targetItem,
     setTargetList,
     delTargetInfo,
+    columnList,
 }: TargetDropProps) => {
 
     const onClickDeleteHandler = () => {
@@ -43,7 +44,9 @@ const AttrDropItem = ({
             <TransFunction 
                 isPossibleEdit={isPossibleEdit}
                 itemIdx={itemIdx}
+                dataType={targetItem.targetDataType}
                 trgtItem={targetItem}
+                columnList={columnList}
                 setTargetList={setTargetList!}
             />
             </Stack>

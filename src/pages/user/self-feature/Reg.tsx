@@ -42,6 +42,7 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
+  ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
 import { StatusCode } from '@/models/common/CommonResponse';
 
@@ -159,7 +160,7 @@ const SelfFeatureReg = () => {
         targetList[i].operator === "count"
         || targetList[i].operator === "distinct_count"
       ) {
-        dataType = "number"
+        dataType = ColDataType.NUM
       }
       t.dataType = dataType
 
@@ -238,6 +239,8 @@ const SelfFeatureReg = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
 
     if (response.statusCode === StatusCode.SUCCESS) {
+      response.result.behaviors[0].tbCoMetaTblClmnInfoList[0].dataTypeCategory = "number"
+      response.result.behaviors[0].tbCoMetaTblClmnInfoList[2].dataTypeCategory = "timestamp"
       setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
     }
   }
@@ -308,6 +311,7 @@ const SelfFeatureReg = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -318,6 +322,7 @@ const SelfFeatureReg = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -328,6 +333,7 @@ const SelfFeatureReg = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -347,6 +353,7 @@ const SelfFeatureReg = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -357,6 +364,7 @@ const SelfFeatureReg = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -367,6 +375,7 @@ const SelfFeatureReg = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -537,6 +546,7 @@ const SelfFeatureReg = () => {
                 trgtFilterList={trgtFilterList} 
                 setTargetList={setTargetList} 
                 setTrgtFilterList={setTrgtFilterList}
+                attributes={mstrSgmtTableandColMetaInfo.attributes} 
                 behaviors={mstrSgmtTableandColMetaInfo.behaviors}
                 setFormulaTrgtList={setFormulaTrgtList}
               />

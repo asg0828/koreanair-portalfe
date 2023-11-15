@@ -8,6 +8,7 @@ const FeatDropItem = ({
     itemIdx,
     isPossibleEdit,
     targetItem,
+    columnList,
     setTargetList,
     delTargetInfo,
 }: TargetDropProps) => {
@@ -36,7 +37,9 @@ const FeatDropItem = ({
             <TransFunction 
                 isPossibleEdit={isPossibleEdit}
                 itemIdx={itemIdx}
+                dataType={targetItem.targetDataType}
                 trgtItem={targetItem}
+                columnList={columnList}
                 setTargetList={setTargetList!}
             />
             {isPossibleEdit ? (

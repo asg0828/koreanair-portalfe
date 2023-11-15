@@ -24,7 +24,6 @@ import {
   FeatureTemp, 
   FormulaTrgtListProps, 
   MstrSgmtTableandColMetaInfo, 
-  TbRsCustFeatRule, 
   TbRsCustFeatRuleCalc, 
   TbRsCustFeatRuleCase, 
   TbRsCustFeatRuleSql, 
@@ -52,6 +51,7 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
+  ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
 import { 
   SfSubmissionApproval, 
@@ -179,7 +179,7 @@ const SelfFeatureDetail = () => {
         targetList[i].operator === "count"
         || targetList[i].operator === "distinct_count"
       ) {
-        dataType = "number"
+        dataType = ColDataType.NUM
       }
       t.dataType = dataType
 
@@ -705,6 +705,7 @@ const SelfFeatureDetail = () => {
                   trgtFilterList={trgtFilterList} 
                   setTargetList={setTargetList} 
                   setTrgtFilterList={setTrgtFilterList} 
+                  attributes={mstrSgmtTableandColMetaInfo.attributes} 
                   behaviors={mstrSgmtTableandColMetaInfo.behaviors}
                   setFormulaTrgtList={setFormulaTrgtList}
                 />

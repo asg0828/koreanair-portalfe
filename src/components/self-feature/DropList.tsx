@@ -13,7 +13,8 @@ import {
     TbCoMetaTblClmnInfo, 
     Attribute,
     TargetDropListProps,
-    Behavior, 
+    Behavior,
+    AggregateCol, 
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initAttribute, 
@@ -34,11 +35,13 @@ const DropList = ({
     trgtFilterList,
     setTargetList,
     setTrgtFilterList,
+    attributes,
     behaviors,
     setFormulaTrgtList,
 }: TargetDropListProps) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
+    const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
 
     // 수정가능 여부 판단
     useEffect(() => {
@@ -54,6 +57,20 @@ const DropList = ({
         }
 
     }, [featStatus])
+
+    // 속성 테이블의 해당 컬럼 리스트 set
+    useEffect(()=> {
+        let colList: Array<AggregateCol> = []
+        attributes?.map((colInfo: Attribute) => {
+            let col = { value: "", text: "", dataType: "" }
+            col.value = colInfo.metaTblClmnPhysNm
+            col.text  = colInfo.metaTblClmnLogiNm
+            col.dataType = colInfo.dataTypeCategory
+            colList.push(col)
+            return colInfo
+        })
+        setColumnList(colList)
+    }, [attributes])
 
     const [, drop] = useDrop(() => ({
         accept: Object.values(divisionTypes),
@@ -173,6 +190,7 @@ const DropList = ({
                             targetItem={targetItem} 
                             setTargetList={setTargetList}
                             delTargetInfo={deleteInfo}
+                            columnList={columnList}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {
                         return <FeatDropItem
