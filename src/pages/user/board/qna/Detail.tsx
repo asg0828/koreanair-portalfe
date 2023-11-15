@@ -297,59 +297,61 @@ const Detail = () => {
                   <ErrorLabel message={errors?.answ?.message} />
                 </form>
 
-                {qnaInfo?.comments.map((qnaItem) => (
-                  <Stack gap="SM" direction="Vertical">
-                    <Stack>
-                      <Stack gap="SM" className="width-100">
-                        <Typography variant="h6">{`${qnaItem.rgstDeptNm || ''} ${qnaItem.rgstNm || ''}`}</Typography>
-                        <Label>{qnaItem.modiDt}</Label>
-                      </Stack>
-
-                      {watch().qnaId === qnaItem.qnaId ? (
-                        <Stack>
-                          <Button appearance="Unfilled" onClick={handleCommentCancel}>
-                            취소
-                          </Button>
-                        </Stack>
-                      ) : (
-                        <Stack>
-                          <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
-                            수정
-                          </Button>
-                          <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
-                            삭제
-                          </Button>
-                        </Stack>
-                      )}
-                    </Stack>
+                {qnaInfo?.comments
+                  .sort((a, b) => new Date(a.rgstDt).getTime() - new Date(b.rgstDt).getTime())
+                  .map((qnaItem) => (
                     <Stack gap="SM" direction="Vertical">
-                      {watch().qnaId === qnaItem.qnaId ? (
-                        <form onSubmit={uHandleSubmit(onUpdateCommentSubmit)}>
+                      <Stack>
+                        <Stack gap="SM" className="width-100">
+                          <Typography variant="h6">{`${qnaItem.rgstDeptNm || ''} ${qnaItem.rgstNm || ''}`}</Typography>
+                          <Label>{qnaItem.modiDt}</Label>
+                        </Stack>
+
+                        {watch().qnaId === qnaItem.qnaId ? (
                           <Stack>
-                            <Stack gap="SM" className="width-100" direction="Vertical">
-                              <TextField
-                                multiline
-                                size="LG"
-                                className="width-100"
-                                autoFocus
-                                {...uRegister('answ', {
-                                  required: { value: true, message: 'answer is required.' },
-                                })}
-                                validation={uErrors?.answ?.message ? 'Error' : undefined}
-                              />
-                            </Stack>
-                            <Button type="submit" size="LG" className="btn-confirm">
-                              확인
+                            <Button appearance="Unfilled" onClick={handleCommentCancel}>
+                              취소
                             </Button>
                           </Stack>
-                          <ErrorLabel message={uErrors?.answ?.message} />
-                        </form>
-                      ) : (
-                        <Typography variant="body1">{qnaItem.answ}</Typography>
-                      )}
+                        ) : (
+                          <Stack>
+                            <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
+                              수정
+                            </Button>
+                            <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
+                              삭제
+                            </Button>
+                          </Stack>
+                        )}
+                      </Stack>
+                      <Stack gap="SM" direction="Vertical">
+                        {watch().qnaId === qnaItem.qnaId ? (
+                          <form onSubmit={uHandleSubmit(onUpdateCommentSubmit)}>
+                            <Stack>
+                              <Stack gap="SM" className="width-100" direction="Vertical">
+                                <TextField
+                                  multiline
+                                  size="LG"
+                                  className="width-100"
+                                  autoFocus
+                                  {...uRegister('answ', {
+                                    required: { value: true, message: 'answer is required.' },
+                                  })}
+                                  validation={uErrors?.answ?.message ? 'Error' : undefined}
+                                />
+                              </Stack>
+                              <Button type="submit" size="LG" className="btn-confirm">
+                                확인
+                              </Button>
+                            </Stack>
+                            <ErrorLabel message={uErrors?.answ?.message} />
+                          </form>
+                        ) : (
+                          <Typography variant="body1">{qnaItem.answ}</Typography>
+                        )}
+                      </Stack>
                     </Stack>
-                  </Stack>
-                ))}
+                  ))}
               </Stack>
             </TD>
           </TR>
