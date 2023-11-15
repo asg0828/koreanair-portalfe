@@ -22,6 +22,10 @@ export interface Column {
   headerName: string;
   field: string;
 }
+// export interface ColumnChild {
+//   headerName: [ColumnChild];
+//   field: string;
+// }
 
 export interface Profile {
   gender: string;

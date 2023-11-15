@@ -6,4 +6,5 @@ export enum PortalApiURL {
   FAQ = '/board/v1/faq',
   QNA = '/board/v1/qna',
   DATAROOM = '/board/v1/dataroom',
+  ONEID = '/pt/bo/admin/v1/oneId',
 }

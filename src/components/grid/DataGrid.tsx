@@ -17,6 +17,7 @@ const DataGrid: React.FC<DatagridProps> = ({
   onChange,
   buttonChildren,
   page,
+  rowSelection,
 }) => {
   const [pages, setPages] = useState<PageInfo>(initPage);
 

@@ -1,8 +1,6 @@
-import VerticalTable from '@/components/table/VerticalTable';
 import {
   Button,
   DatePicker,
-  Pagination,
   Radio,
   Select,
   SelectOption,
@@ -11,35 +9,65 @@ import {
   TH,
   TR,
   TextField,
+  useToast,
 } from '@ke-design/components';
-import { useState } from 'react';
+import SearchForm from '@/components/form/SearchForm';
+import { useState, useCallback, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { SelectValue } from '@mui/base/useSelect';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { onIdPaxData, oneIdPaxColumn, reason } from '../data';
-import { oneIdHistorySearch } from '@/models/oneId/OneIdInfo';
-import { Method, callApi } from '@/utils/ApiUtil';
-import { Service } from '@/models/common/Service';
-import { initApiRequest, initCommonResponse, initConfig } from '@/models/selfFeature/FeatureCommon';
-import { cloneDeep } from 'lodash';
+import { historyColumn, masterColumn, onIdPaxData, reason } from '../data';
+import { oneidHistorySearch } from '@/models/oneId/OneIdInfo';
+import { PageInfo, initPage } from '@/models/components/Page';
+import { useMasterHistoryList } from '@/hooks/queries/useOneIdQueries';
+import DataGrid from '@/components/grid/DataGrid';
+import { SearchKey } from '@/models/common/Constants';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(2개)
 export default function OneIdMasterHistory() {
-  const [searchInfo, setSearchInfo] = useState<oneIdHistorySearch>({
-    oneIdNum: '',
-    oneIdChgReason: '',
-    searchCri: 'one',
-    firstNameK: '',
-    lastNameK: '',
-    firstNameE: '',
-    lastNameE: '',
-    phoneNum: '',
-    telephoneNum: '',
-    eMailAdd: '',
-    birth: '',
-    startDate: '',
-    endDate: '',
+  const { toast } = useToast();
+  const [searchInfo, setSearchInfo] = useState<oneidHistorySearch>({
+    oneidNum: '',
+    oneidChgRsnCd: '',
+    criteria: 'one',
+    bfChgKorLname: '',
+    bfChgKorFname: '',
+    bfChgEngLname: '',
+    bfChgEngFname: '',
+    bfChgMobilePhoneNoInfo: '',
+    bfChgEmailAdrs: '',
+    bfChgBirthDtv: '',
+    creationStartDate: '',
+    creationEndDate: '',
   });
+  const [isChanged, setIsChanged] = useState(false);
+  const [page, setPage] = useState<PageInfo>(initPage);
+  const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const { refetch, data: response, isError } = useMasterHistoryList(searchInfo, page);
+  // const { data2: response2, isError } = useHistoryList(searchInfo, page);
+  const handleSearch = useCallback(() => {
+    refetch();
+  }, [refetch]);
+  const handlePage = (page: PageInfo) => {
+    setPage(page);
+    setIsChanged(true);
+  };
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.data) {
+        response.data.page.page = response.data.page.page - 1;
+        // response.data.contents.forEach(() => {});
+        // setRows(response.data.contents);
+        setPage(response.data.page);
+      }
+    }
+  }, [response, isError, toast]);
 
   const today = new Date();
 
@@ -50,30 +78,49 @@ export default function OneIdMasterHistory() {
   }
 
   /* 검색 버튼 */
-  const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    retriveMasterHistory();
-  };
+  // const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   retriveMasterHistory();
+  // };
 
   /* api 호출 */
-  const retriveMasterHistory = async () => {
-    let config = cloneDeep(initConfig);
-    config.isLoarding = true;
-    let request = cloneDeep(initApiRequest);
-    request.method = Method.GET;
-    request.url = '';
-    request.service = Service.KAL_BE;
-    request.params = {
-      bodyParams: {
-        searchInfo,
-      },
-    };
-    let response = cloneDeep(initCommonResponse);
-    response = await callApi(request);
+  // const retriveMasterHistory = async () => {
+  //   let config = cloneDeep(initConfig);
+  //   config.isLoarding = true;
+  //   let request = cloneDeep(initApiRequest);
+  //   request.method = Method.GET;
+  //   request.url = '';
+  //   request.service = Service.KAL_BE;
+  //   request.params = {
+  //     bodyParams: {
+  //       searchInfo,
+  //     },
+  //   };
+  //   let response = cloneDeep(initCommonResponse);
+  //   response = await callApi(request);
 
-    console.log(request.params);
-    console.log('[retrieve360] Response :: ', response);
-  };
+  //   console.log(request.params);
+  //   console.log('[retrieve360] Response :: ', response);
+  // };
+
+  // function handleClear() {
+  //   setSearchInfo({
+  //     ...searchInfo,
+  //     oneIdNum: '',
+  //     oneIdChgReason: '',
+  //     searchCri: 'one',
+  //     firstNameK: '',
+  //     lastNameK: '',
+  //     firstNameE: '',
+  //     lastNameE: '',
+  //     phoneNum: '',
+  //     telephoneNum: '',
+  //     eMailAdd: '',
+  //     birth: '',
+  //     startDate: '',
+  //     endDate: '',
+  //   });
+  // }
 
   /* select 입력 함수 */
   const onchangeSelectHandler = (
@@ -94,19 +141,18 @@ export default function OneIdMasterHistory() {
   function onClear() {
     setSearchInfo({
       ...searchInfo,
-      oneIdNum: '',
-      oneIdChgReason: '',
-      searchCri: 'one',
-      firstNameK: '',
-      lastNameK: '',
-      firstNameE: '',
-      lastNameE: '',
-      phoneNum: '',
-      telephoneNum: '',
-      eMailAdd: '',
-      birth: '',
-      startDate: '',
-      endDate: '',
+      oneidNum: '',
+      oneidChgRsnCd: '',
+      criteria: 'one',
+      bfChgKorLname: '',
+      bfChgKorFname: '',
+      bfChgEngLname: '',
+      bfChgEngFname: '',
+      bfChgMobilePhoneNoInfo: '',
+      bfChgEmailAdrs: '',
+      bfChgBirthDtv: '',
+      creationStartDate: '',
+      creationEndDate: '',
     });
   }
 
@@ -115,183 +161,224 @@ export default function OneIdMasterHistory() {
     let date = '';
     if (flag === 'today') {
       date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-      setSearchInfo({ ...searchInfo, endDate: date, startDate: date });
+      setSearchInfo({ ...searchInfo, creationEndDate: date, creationStartDate: date });
     } else if (flag === 'oneMonth') {
       date = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
-      setSearchInfo({ ...searchInfo, startDate: date });
+      setSearchInfo({ ...searchInfo, creationStartDate: date });
     } else if (flag === 'sixMonth') {
       date = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
-      setSearchInfo({ ...searchInfo, startDate: date });
+      setSearchInfo({ ...searchInfo, creationStartDate: date });
     } else if (flag === 'oneYear') {
       date = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
-      setSearchInfo({ ...searchInfo, startDate: date });
+      setSearchInfo({ ...searchInfo, creationStartDate: date });
     }
   }
 
   return (
-    <div style={{ width: '1200px' }}>
-      <div>
-        <Stack>
-          <form onSubmit={onsubmitHandler}>
-            <HorizontalTable>
-              <TR>
-                <TH align="right">OneId 번호</TH>
-                <TD>
-                  <TextField onChange={onSearchChangeHandler} placeholder="검색어를 입력하세요." id="oneIdNum" />
-                </TD>
-                <TH align="right">OneID변경이유코드</TH>
-                <TD>
-                  <Select
-                    appearance="Outline"
-                    placeholder="전체"
-                    onChange={(
-                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                      value: SelectValue<{}, false>
-                    ) => {
-                      onchangeSelectHandler(e, value, 'oneIdChgReason');
-                    }}
-                  >
-                    {reason.map((item, index) => (
-                      <SelectOption key={index} value={item.value}>
-                        {item.text}
-                      </SelectOption>
-                    ))}
-                  </Select>
-                </TD>
-                <TH align="right">조회기준</TH>
-                <TD>
-                  <Radio
-                    id="searchCri"
-                    name="searchCri"
-                    onChange={(e) => radioHandler(e)}
-                    label="History단건"
-                    value="one"
-                    defaultChecked
-                  />
-                  <Radio
-                    id="searchCri"
-                    name="searchCri"
-                    onChange={(e) => radioHandler(e)}
-                    label="해당History전체"
-                    value="all"
-                  />
-                </TD>
-              </TR>
+    <div>
+      <Stack>
+        <SearchForm onSearch={handleSearch} onClear={onClear}>
+          <form>
+            <div style={{ width: 1210 }}>
+              <HorizontalTable>
+                <TR>
+                  <TH colSpan={1} align="right">
+                    OneId 번호
+                  </TH>
+                  <TD colSpan={3}>
+                    <TextField
+                      className="width-100"
+                      onChange={onSearchChangeHandler}
+                      value={searchInfo.oneidNum}
+                      placeholder="검색어를 입력하세요."
+                      id="oneIdNum"
+                    />
+                  </TD>
+                  <TH colSpan={1} align="right">
+                    OneID변경이유코드
+                  </TH>
+                  <TD colSpan={3}>
+                    <Select
+                      appearance="Outline"
+                      placeholder="전체"
+                      className="width-100"
+                      value={searchInfo.oneidChgRsnCd}
+                      onChange={(
+                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                        value: SelectValue<{}, false>
+                      ) => {
+                        onchangeSelectHandler(e, value, 'oneIdChgReason');
+                      }}
+                    >
+                      {reason.map((item, index) => (
+                        <SelectOption key={index} value={item.value}>
+                          {item.text}
+                        </SelectOption>
+                      ))}
+                    </Select>
+                  </TD>
+                  <TH colSpan={1} align="right">
+                    조회기준
+                  </TH>
+                  <TD colSpan={3}>
+                    <Radio
+                      id="searchCri"
+                      name="searchCri"
+                      onChange={(e) => radioHandler(e)}
+                      label="History단건"
+                      value="one"
+                      defaultChecked
+                    />
+                    <Radio
+                      id="searchCri"
+                      name="searchCri"
+                      onChange={(e) => radioHandler(e)}
+                      label="해당History전체"
+                      value="all"
+                    />
+                  </TD>
+                </TR>
 
-              <TR>
-                <TH align="right">한글이름</TH>
-                <TD>
-                  <TextField id="firstNameK" onChange={onSearchChangeHandler} placeholder="성을 입력하세요." />
-                  <TextField id="lastNameK" onChange={onSearchChangeHandler} placeholder="이름을 입력하세요." />
-                </TD>
-              </TR>
+                <TR>
+                  <TH colSpan={1} align="right">
+                    한글이름
+                  </TH>
+                  <TD colSpan={3}>
+                    <TextField
+                      className="width-100"
+                      id="firstNameK"
+                      onChange={onSearchChangeHandler}
+                      placeholder="성을 입력하세요."
+                    />
+                    <TextField
+                      className="width-100"
+                      id="lastNameK"
+                      onChange={onSearchChangeHandler}
+                      placeholder="이름을 입력하세요."
+                    />
+                  </TD>
+                  <TH colSpan={1} align="right">
+                    영문이름
+                  </TH>
+                  <TD colSpan={3}>
+                    <TextField
+                      className="width-100"
+                      id="firstNameE"
+                      onChange={onSearchChangeHandler}
+                      placeholder="성을 입력하세요."
+                    />
+                    <TextField
+                      className="width-100"
+                      id="lastNameE"
+                      onChange={(e) => onSearchChangeHandler(e)}
+                      placeholder="이름을 입력하세요."
+                    />
+                  </TD>
+                </TR>
 
-              <TR>
-                <TH align="right">영문이름</TH>
-                <TD>
-                  <TextField id="firstNameE" onChange={onSearchChangeHandler} placeholder="성을 입력하세요." />
-                  <TextField
-                    id="lastNameE"
-                    onChange={(e) => onSearchChangeHandler(e)}
-                    placeholder="이름을 입력하세요."
-                  />
-                </TD>
-                <TH align="right">휴대전화번호</TH>
-                <TD>
-                  <TextField id="phoneNum" onChange={onSearchChangeHandler} placeholder="01011112222" />
-                </TD>
-              </TR>
+                <TR>
+                  <TH colSpan={1} align="right">
+                    휴대전화번호
+                  </TH>
+                  <TD colSpan={2}>
+                    <TextField
+                      className="width-100"
+                      id="phoneNum"
+                      onChange={onSearchChangeHandler}
+                      placeholder="01011112222"
+                    />
+                  </TD>
+                  <TH colSpan={1} align="right">
+                    일반전화번호
+                  </TH>
+                  <TD colSpan={2}>
+                    <TextField
+                      id="telephoneNum"
+                      className="width-100"
+                      onChange={onSearchChangeHandler}
+                      placeholder="성을 입력하세요."
+                    />
+                  </TD>
+                </TR>
 
-              <TR>
-                <TH align="right">일반전화번호</TH>
-                <TD>
-                  <TextField id="telephoneNum" onChange={onSearchChangeHandler} placeholder="성을 입력하세요." />
-                </TD>
-                <TH align="right">E-mail주소</TH>
-                <TD>
-                  <TextField id="eMailAdd" onChange={onSearchChangeHandler} placeholder="검색어를 입력하세요." />
-                </TD>
-                <TH align="right">출생일자</TH>
-                <TD>
-                  <DatePicker
-                    appearance="Outline"
-                    calendarViewMode="days"
-                    mode="single"
-                    shape="Square"
-                    size="MD"
-                    id="birth"
-                    value={searchInfo.birth}
-                    onValueChange={(nextVal) => {
-                      setSearchInfo({ ...searchInfo, birth: nextVal });
-                    }}
-                  />
-                </TD>
-              </TR>
+                <TR>
+                  <TH colSpan={1} align="right">
+                    E-mail주소
+                  </TH>
+                  <TD colSpan={2}>
+                    <TextField
+                      className="width-100"
+                      id="eMailAdd"
+                      onChange={onSearchChangeHandler}
+                      placeholder="검색어를 입력하세요."
+                    />
+                  </TD>
+                  <TH colSpan={1} align="right">
+                    출생일자
+                  </TH>
+                  <TD colSpan={2}>
+                    <DatePicker
+                      appearance="Outline"
+                      calendarViewMode="days"
+                      mode="single"
+                      shape="Square"
+                      size="MD"
+                      id="birth"
+                      value={searchInfo.bfChgBirthDtv}
+                      onValueChange={(nextVal) => {
+                        setSearchInfo({ ...searchInfo, bfChgBirthDtv: nextVal });
+                      }}
+                    />
+                  </TD>
+                </TR>
 
-              <TR>
-                <div style={{ width: 500 }}>
-                  <TH align="right">최초 생성일</TH>
-                </div>
-                <TD>
-                  <DatePicker
-                    appearance="Outline"
-                    calendarViewMode="days"
-                    mode="single"
-                    shape="Square"
-                    size="MD"
-                    id="startDate"
-                    value={searchInfo.startDate}
-                    onValueChange={(nextVal) => {
-                      setSearchInfo({ ...searchInfo, startDate: nextVal });
-                    }}
-                  />
-                  -
-                  <DatePicker
-                    appearance="Outline"
-                    calendarViewMode="days"
-                    mode="single"
-                    shape="Square"
-                    size="MD"
-                    id="endDate"
-                    value={searchInfo.endDate}
-                    onValueChange={(nextVal) => {
-                      setSearchInfo({ ...searchInfo, endDate: nextVal });
-                    }}
-                  />
-                  <Button onClick={() => duration('today')}>당일</Button>
-                  <Button onClick={() => duration('oneMonth')}>1개월</Button>
-                  <Button onClick={() => duration('sixMonth')}>6개월</Button>
-                  <Button onClick={() => duration('oneYear')}>1년</Button>
-                </TD>
-              </TR>
-            </HorizontalTable>
-            <div style={{ marginLeft: 1080 }}>
-              <Stack>
-                <Button type="submit">검색</Button>
-                <Button type="reset" onClick={onClear}>
-                  초기화
-                </Button>
-              </Stack>
+                <TR>
+                  <TH colSpan={1} align="right">
+                    최초 생성일
+                  </TH>
+                  <TD colSpan={5}>
+                    <DatePicker
+                      appearance="Outline"
+                      calendarViewMode="days"
+                      mode="single"
+                      shape="Square"
+                      size="MD"
+                      id="startDate"
+                      value={searchInfo.creationStartDate}
+                      onValueChange={(nextVal) => {
+                        setSearchInfo({ ...searchInfo, creationStartDate: nextVal });
+                      }}
+                    />
+                    -
+                    <DatePicker
+                      appearance="Outline"
+                      calendarViewMode="days"
+                      mode="single"
+                      shape="Square"
+                      size="MD"
+                      id="endDate"
+                      value={searchInfo.creationEndDate}
+                      onValueChange={(nextVal) => {
+                        setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
+                      }}
+                    />
+                    <Button onClick={() => duration('today')}>당일</Button>
+                    <Button onClick={() => duration('oneMonth')}>1개월</Button>
+                    <Button onClick={() => duration('sixMonth')}>6개월</Button>
+                    <Button onClick={() => duration('oneYear')}>1년</Button>
+                  </TD>
+                </TR>
+              </HorizontalTable>
             </div>
           </form>
-        </Stack>
-      </div>
+        </SearchForm>
+      </Stack>
 
-      <Typography variant="h6">마스터 {onIdPaxData.length}</Typography>
-      <div style={{ overflowX: 'scroll' }}>
-        <Stack>
-          <VerticalTable enableSort={true} showHeader={true} columns={oneIdPaxColumn} rows={onIdPaxData} />
-        </Stack>
-      </div>
-      <Pagination />
+      <Typography variant="h4">마스터 </Typography>
+      <DataGrid columns={masterColumn} rows={onIdPaxData} enableSort={true} page={page} onChange={handlePage} />
 
-      <Typography variant="h6">히스토리 {onIdPaxData.length}</Typography>
-      <div style={{ overflowX: 'scroll' }}>
-        <Stack>
-          <VerticalTable enableSort={true} showHeader={true} columns={oneIdPaxColumn} rows={onIdPaxData} />
-        </Stack>
-      </div>
-      <Pagination />
+      <Typography variant="h4">히스토리 </Typography>
+      <DataGrid columns={historyColumn} rows={onIdPaxData} enableSort={true} page={page} onChange={handlePage} />
     </div>
   );
 }
