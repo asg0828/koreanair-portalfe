@@ -360,6 +360,24 @@ svg {
 .btn-reg, .btn-confirm{
   height: 66px !important;
 }
+.btn-fav{
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  svg{
+    color: #ddd;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+  &.on{
+    svg{
+      color: #E72A40;
+    }
+  }
+}
+
+.verticalTable{
+  overflow-x: auto;
+}
 
 @media screen and (max-width: 1652px) {
   #aside {

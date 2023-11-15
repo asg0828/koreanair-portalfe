@@ -9,8 +9,12 @@ import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, u
 import AddIcon from '@mui/icons-material/Add';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const columns = [
+  // <Button appearance="Unfilled" iconOnly priority="Normal" className="btn-fav on">
+  //   <FavoriteIcon />
+  // </Button>
   { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
   { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
   { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
