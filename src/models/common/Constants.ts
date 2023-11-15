@@ -40,3 +40,11 @@ export enum GroupCodeType {
   QNA_TYPE = 'QNA_TYPE',
   QNA_STAT = 'QNA_STAT',
 }
+
+export enum ContextPath {
+  USER = '',
+  ADMIN = '/admin',
+  TEST = '/test',
+  POPUP = '/popup',
+  ADMIN_POPUP = '/admin/popup',
+}

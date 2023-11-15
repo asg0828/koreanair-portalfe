@@ -15,13 +15,15 @@ const menuSlice = createSlice({
   name: 'menu',
   initialState,
   reducers: {
-    setMenuList(state: MenuState, action: PayloadAction<Array<MenuItem>>) {
+    setMenuList(state: MenuState, action) {
       state.menuList = action.payload;
     },
-    setIsDropMenu(state: MenuState, action: PayloadAction<boolean>) {
+    setIsDropMenu(state: MenuState, action) {
       state.isDropMenu = action.payload;
     },
   },
 });
 
-export default menuSlice;
+export const { setMenuList, setIsDropMenu } = menuSlice.actions;
+
+export default menuSlice.reducer;

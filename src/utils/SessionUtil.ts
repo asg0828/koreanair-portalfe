@@ -1,4 +1,11 @@
-import { SessionInfo, Session, AccessTokenRefreshTokenInfo, AccessTokenRefrehTokenEnum } from '@models/common/Session';
+import {
+  AccessTokenRefrehTokenEnum,
+  AccessTokenRefreshTokenInfo,
+  SessionRequestTokenEnum,
+  SessionRequest,
+  Session,
+  SessionInfo,
+} from '@models/common/Session';
 
 export default class SessionUtil {
   public getSessionInfo = (): SessionInfo => {
@@ -12,6 +19,7 @@ export default class SessionUtil {
       languageCode: this.getSessionStorageValue('languageCode'),
       roleType: this.getSessionStorageValue('roleType'),
       memberStateCode: this.getSessionStorageValue('memberStateCode'),
+      employeeNumber: this.getSessionStorageValue('employeeNumber'),
     };
 
     return sessionInfo;
@@ -37,6 +45,34 @@ export default class SessionUtil {
 
   public setAccessTokenRefreshTokenInfo = (accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo): void => {
     for (const [key, value] of Object.entries(accessTokenRefreshTokenInfo)) {
+      this.setSessionStorageValue(key, value ?? '');
+    }
+  };
+
+  public getSessionRequestInfo = (): SessionRequest => {
+    let sessionRequestInfo: SessionRequest = {} as SessionRequest;
+
+    sessionRequestInfo = {
+      googleAccessToken: this.getSessionStorageValue(SessionRequestTokenEnum.GOOGLE_ACCESS_TOKEN),
+      googleIdToken: this.getSessionStorageValue(SessionRequestTokenEnum.GOOGLE_ID_TOKEN),
+    };
+
+    return sessionRequestInfo;
+  };
+
+  public getLocalSessionRequestInfo = (): SessionRequest => {
+    let sessionRequestInfo: SessionRequest = {} as SessionRequest;
+
+    sessionRequestInfo = {
+      googleAccessToken: this.getLocalStorageValue(SessionRequestTokenEnum.GOOGLE_ACCESS_TOKEN),
+      googleIdToken: this.getLocalStorageValue(SessionRequestTokenEnum.GOOGLE_ID_TOKEN),
+    };
+
+    return sessionRequestInfo;
+  };
+
+  public setSessionRequestInfo = (sessionRequestInfo: SessionRequest): void => {
+    for (const [key, value] of Object.entries(sessionRequestInfo)) {
       this.setSessionStorageValue(key, value ?? '');
     }
   };
@@ -121,12 +157,29 @@ export default class SessionUtil {
     return accessTokenRefreshTokenInfo;
   };
 
+  public getLocalSessionInfo = (): SessionInfo => {
+    let sessionInfo: SessionInfo = {} as SessionInfo;
+
+    sessionInfo = {
+      sessionId: this.getLocalStorageValue(Session.SESSION_ID),
+      memberId: this.getLocalStorageValue('memberId') !== '' ? Number(this.getLocalStorageValue('memberId')) : null,
+      memberName: this.getLocalStorageValue('memberName'),
+      email: this.getLocalStorageValue('email'),
+      languageCode: this.getLocalStorageValue('languageCode'),
+      roleType: this.getLocalStorageValue('roleType'),
+      memberStateCode: this.getLocalStorageValue('memberStateCode'),
+      employeeNumber: this.getSessionStorageValue('employeeNumber'),
+    };
+
+    return sessionInfo;
+  };
+
   public getRefreshLocalToken = (): string => {
     return this.getLocalStorageValue(AccessTokenRefrehTokenEnum.REFRESH_TOKEN);
   };
 
-  public setLocalStorageInfo = (accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo): void => {
-    for (const [key, value] of Object.entries(accessTokenRefreshTokenInfo)) {
+  public setLocalStorageInfo = (tokenInfo: any): void => {
+    for (const [key, value] of Object.entries(tokenInfo)) {
       this.setLocalStorageValue(key, value ?? '');
     }
   };

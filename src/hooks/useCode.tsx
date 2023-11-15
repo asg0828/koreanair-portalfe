@@ -1,9 +1,8 @@
-import { ReducerType } from '@/reducers';
+import { useAppSelector } from '@/hooks/useRedux';
 import { useCallback } from 'react';
-import { useSelector } from 'react-redux';
 
 const useCode = () => {
-  const codeList = useSelector((state: ReducerType) => state.code.codeList);
+  const codeList = useAppSelector((state) => state.code.codeList);
 
   const getCodeList = useCallback(
     (groupId: string) => {

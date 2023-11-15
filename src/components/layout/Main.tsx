@@ -1,15 +1,14 @@
+import { useAppSelector } from '@/hooks/useRedux';
 import MainNavigation from '@components/layout/MainNavigation';
 import { Loader, Stack, Typography } from '@components/ui';
 import { MenuItem } from '@models/common/Menu';
-import { ReducerType } from '@reducers';
 import { Suspense } from 'react';
-import { useSelector } from 'react-redux';
 import { Outlet, useLocation } from 'react-router-dom';
 import './Main.scss';
 
 const Main = () => {
   const location = useLocation();
-  const menuList = useSelector((state: ReducerType) => state.menu.menuList)!;
+  const menuList = useAppSelector((state) => state.menu.menuList)!;
 
   const getMenuRecursive = (menuList: MenuItem[]): MenuItem | undefined => {
     for (let i = 0; i < menuList.length; i++) {

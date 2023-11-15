@@ -5,21 +5,22 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import useCode from '@/hooks/useCode';
-import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { CreatedQnaInfo, QnaInfo, UpdatedQnaInfo } from '@/models/board/Qna';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { openModal } = useModal();
   const { getCode } = useCode();
   const [qnaInfo, setQnaInfo] = useState<QnaInfo>();
   const [prevQnaInfo, setPrevQnaInfo] = useState<QnaInfo>();
@@ -96,12 +97,14 @@ const Detail = () => {
   };
 
   const handleDelete = () => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.REMOVE,
-      content: '삭제하시겠습니까?',
-      onConfirm: mutate,
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.REMOVE,
+        content: '삭제하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   const handleCommentUpdate = (qnaItem: QnaInfo) => {

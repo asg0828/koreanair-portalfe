@@ -1,10 +1,10 @@
+import { useAppDispatch } from '@/hooks/useRedux';
 import { defaultPathInfo } from '@/models/common/Menu';
-import { menuSlice, ReducerType } from '@/reducers';
+import { setIsDropMenu } from '@/reducers/menuSlice';
 import Body from '@components/layout/Body';
 import Footer from '@components/layout/Footer';
 import Header from '@components/layout/Header';
 import { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 export const defaultPath: defaultPathInfo = {
@@ -31,10 +31,10 @@ const RootLayout = () => {
   const routePath = defaultPath[pathname];
   const isPopup = pathname.includes('/popup');
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleCloseDropMenu = useCallback(() => {
-    dispatch(menuSlice.actions.setIsDropMenu(false));
+    dispatch(setIsDropMenu(false));
   }, [dispatch]);
 
   useEffect(() => {

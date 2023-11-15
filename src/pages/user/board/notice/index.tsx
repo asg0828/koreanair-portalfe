@@ -5,7 +5,7 @@ import { NoticeInfo } from '@/models/board/Notice';
 import { SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
 import { RowsInfo } from '@/models/components/Table';
-import { getDateString } from '@/utils/FuncUtil';
+import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { useCallback, useEffect, useState } from 'react';

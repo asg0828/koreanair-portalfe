@@ -1,4 +1,4 @@
-import BaseURL from '@/models/common/ApiURL';
+import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
 import { PageInfo } from '@/models/components/Page';
 import { callApi, Method } from '@utils/ApiUtil';
@@ -6,7 +6,7 @@ import { callApi, Method } from '@utils/ApiUtil';
 export const getDataroomList = (searchKey: string, searchValue: string, page: PageInfo) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.DATAROOM}`,
+    url: `${PortalApiURL.DATAROOM}`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -22,7 +22,7 @@ export const getDataroomList = (searchKey: string, searchValue: string, page: Pa
 export const getDataroomById = (dataId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.DATAROOM}/${dataId}`,
+    url: `${PortalApiURL.DATAROOM}/${dataId}`,
     method: Method.GET,
   });
 };
@@ -30,7 +30,7 @@ export const getDataroomById = (dataId: string) => {
 export const createDataroom = (createdDataroom: object) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.DATAROOM}`,
+    url: `${PortalApiURL.DATAROOM}`,
     method: Method.POST,
     params: {
       bodyParams: createdDataroom,
@@ -41,7 +41,7 @@ export const createDataroom = (createdDataroom: object) => {
 export const updateDataroom = (dataId: string, updatedDataroom: object) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.DATAROOM}/${dataId}`,
+    url: `${PortalApiURL.DATAROOM}/${dataId}`,
     method: Method.PUT,
     params: {
       bodyParams: updatedDataroom,
@@ -52,7 +52,7 @@ export const updateDataroom = (dataId: string, updatedDataroom: object) => {
 export const deleteDataroom = (dataId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.DATAROOM}/${dataId}`,
+    url: `${PortalApiURL.DATAROOM}/${dataId}`,
     method: Method.DELETE,
     params: {
       bodyParams: {

@@ -3,7 +3,7 @@ import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import useCode from '@/hooks/useCode';
-import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { FaqInfo } from '@/models/board/Faq';
 import {
   GroupCodeType,
@@ -15,6 +15,7 @@ import {
   View,
 } from '@/models/common/Constants';
 import { PageInfo, initPage } from '@/models/components/Page';
+import { openModal } from '@/reducers/modalSlice';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { useCallback, useEffect, useState } from 'react';
@@ -26,9 +27,9 @@ const searchInfoList = [
 ];
 
 const List = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { openModal } = useModal();
   const { getCode } = useCode();
   const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
   const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
@@ -87,12 +88,14 @@ const List = () => {
   };
 
   const handleDelete = (faqId: string) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.REMOVE,
-      content: '삭제하시겠습니까?',
-      onConfirm: () => handleFaqId(faqId),
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.REMOVE,
+        content: '삭제하시겠습니까?',
+        onConfirm: () => handleFaqId(faqId),
+      })
+    );
   };
 
   useEffect(() => {

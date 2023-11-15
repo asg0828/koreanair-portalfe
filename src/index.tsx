@@ -1,22 +1,39 @@
+import store from '@/store';
+import { Providers } from '@components/ui';
+import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import rootReducer from '@reducers';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
-import { Providers } from '@components/ui';
 
-export const reduxStore = configureStore({
-  reducer: rootReducer,
-  devTools: process.env.REACT_APP_NODE_ENV !== 'prod',
+const queryClient: any = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error, query) => {},
+  }),
+  defaultOptions: {
+    queries: {
+      suspense: true,
+      enabled: true,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      staleTime: 0,
+      cacheTime: 0,
+    },
+    mutations: {
+      cacheTime: 0,
+      onError: (error, query) => {},
+    },
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 
 root.render(
-  <Provider store={reduxStore}>
+  <Provider store={store}>
     <Providers>
-      <App />
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
     </Providers>
   </Provider>
 );
