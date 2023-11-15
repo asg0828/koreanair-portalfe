@@ -46,7 +46,7 @@ export interface ApiRequest {
 
 export type BaseApiUrl = '/fo' | '/bo';
 
-let baseApiUrl: BaseApiUrl = '/fo';
+let baseApiUrl: BaseApiUrl = '/bo';
 
 export const setBaseApiUrl = (changedUrl: BaseApiUrl) => {
   baseApiUrl = changedUrl;
