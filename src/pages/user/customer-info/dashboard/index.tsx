@@ -13,7 +13,7 @@ import { Service } from '@/models/common/Service';
 import { initApiRequest, initCommonResponse, initConfig } from '@/models/selfFeature/FeatureCommon';
 import { cloneDeep } from 'lodash';
 import { Profile } from '@/models/customer-info/CustomerInfo';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 
 import { DetailDataComp } from './detailDataComp';
 import { useSelector } from 'react-redux';
@@ -23,7 +23,7 @@ export default function List() {
   const [skypassNum, setSkypassNum] = useState('');
   const [oneId, setOneId] = useState('');
   const [passengerNm, setPassengerNm] = useState('');
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   // 이런식으로 받아올 컴포넌트별로 state필요
   const [profile, setProfile] = useState<Profile>();
   const [rows, setRows] = useState<Array<any>>([]);

@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedDataroomInfo } from '@/models/board/Dataroom';
+import { CreatedDataroomModel } from '@/models/model/DataroomModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -23,7 +23,7 @@ const Reg = () => {
     control,
     getValues,
     formState: { errors },
-  } = useForm<CreatedDataroomInfo>({
+  } = useForm<CreatedDataroomModel>({
     mode: 'onChange',
     defaultValues: {
       sj: '',
@@ -38,7 +38,7 @@ const Reg = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: CreatedDataroomInfo) => {
+  const onSubmit = (data: CreatedDataroomModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

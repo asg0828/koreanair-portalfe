@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { oneIdDailyColumn, oneIdDailyData } from '../../one-id-main/data';
 import { DailyReportData, dailySearch } from '@/models/oneId/OneIdInfo';
 import DataGrid from '@/components/grid/DataGrid';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { useDaily } from '@/hooks/queries/useOneIdQueries';
 import HorizontalTable from '@/components/table/HorizontalTable';
 
@@ -17,7 +17,7 @@ export default function Daily() {
   });
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<DailyReportData>>([]);
   const { refetch, data: response, isError } = useDaily(searchInfo, page);
 
@@ -37,7 +37,7 @@ export default function Daily() {
     refetch();
   }, [refetch]);
 
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };

@@ -18,7 +18,7 @@ import { SelectValue } from '@mui/base/useSelect';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { historyColumn, masterColumn, onIdPaxData, reason } from '../data';
 import { oneidHistorySearch } from '@/models/oneId/OneIdInfo';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { useMasterHistoryList } from '@/hooks/queries/useOneIdQueries';
 import DataGrid from '@/components/grid/DataGrid';
 import { SearchKey } from '@/models/common/Constants';
@@ -41,7 +41,7 @@ export default function OneIdMasterHistory() {
     creationEndDate: '',
   });
   const [isChanged, setIsChanged] = useState(false);
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
   const [searchValue, setSearchValue] = useState<string>('');
   const { refetch, data: response, isError } = useMasterHistoryList(searchInfo, page);
@@ -49,7 +49,7 @@ export default function OneIdMasterHistory() {
   const handleSearch = useCallback(() => {
     refetch();
   }, [refetch]);
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };

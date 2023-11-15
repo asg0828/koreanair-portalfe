@@ -3,7 +3,7 @@ import HorizontalTable from '@/components/table/HorizontalTable';
 import { onIdPaxData, oneIdPaxColumn } from '../../one-id-main/data';
 import { CtiVocData, RelationData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
 import DataGrid from '@/components/grid/DataGrid';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { useCtiVoc, useRelation } from '@/hooks/queries/useOneIdQueries';
 import { useState } from 'react';
 
@@ -16,11 +16,11 @@ export default function Ctivoc() {
   });
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<CtiVocData>>([]);
   const { refetch, data: response, isError } = useCtiVoc(searchInfo, page);
 
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };

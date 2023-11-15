@@ -5,7 +5,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateFaq } from '@/hooks/mutations/useFaqMutations';
 import useCode from '@/hooks/useCode';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedFaqInfo } from '@/models/board/Faq';
+import { CreatedFaqModel } from '@/models/model/FaqModel';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -26,7 +26,7 @@ const Reg = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<CreatedFaqInfo>({
+  } = useForm<CreatedFaqModel>({
     mode: 'onChange',
     defaultValues: {
       clCode: '',
@@ -43,7 +43,7 @@ const Reg = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: CreatedFaqInfo) => {
+  const onSubmit = (data: CreatedFaqModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

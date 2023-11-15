@@ -4,7 +4,7 @@ import HorizontalTable from '@/components/table/HorizontalTable';
 import { errLogColumn, errLogData } from '../one-id-main/data';
 import { ErrLogData, errorSearch } from '@/models/oneId/OneIdInfo';
 import DataGrid from '@/components/grid/DataGrid';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { useErrorLog } from '@/hooks/queries/useOneIdQueries';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
@@ -21,7 +21,7 @@ export default function OneIdErrorHistory() {
   const today = new Date();
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<ErrLogData>>([]);
   const { refetch, data: response, isError } = useErrorLog(searchInfo, page);
 
@@ -30,7 +30,7 @@ export default function OneIdErrorHistory() {
     const { id, value } = e.target;
     setSearchInfo({ ...searchInfo, [id]: value });
   }
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };

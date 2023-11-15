@@ -1,4 +1,4 @@
-import { PageInfo, PageProps, initPage, pageSizeList } from '@/models/components/Page';
+import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
 import VerticalTable, { VerticalTableProps } from '@components/table/VerticalTable';
 import { Label, Pagination, Select, SelectOption, Stack } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
@@ -19,7 +19,7 @@ const DataGrid: React.FC<DatagridProps> = ({
   page,
   rowSelection,
 }) => {
-  const [pages, setPages] = useState<PageInfo>(initPage);
+  const [pages, setPages] = useState<PageModel>(initPage);
 
   useEffect(() => {
     page && setPages(page);

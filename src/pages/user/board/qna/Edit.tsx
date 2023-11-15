@@ -7,7 +7,7 @@ import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import useCode from '@/hooks/useCode';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedQnaInfo } from '@/models/board/Qna';
+import { UpdatedQnaModel } from '@/models/model/QnaModel';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -30,7 +30,7 @@ const Edit = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<UpdatedQnaInfo>({
+  } = useForm<UpdatedQnaModel>({
     mode: 'onChange',
     defaultValues: {
       qnaId: qnaId,
@@ -51,7 +51,7 @@ const Edit = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: UpdatedQnaInfo) => {
+  const onSubmit = (data: UpdatedQnaModel) => {
     dispatch(openModal({
       type: ModalType.CONFIRM,
       title: ModalTitle.MODIFY,

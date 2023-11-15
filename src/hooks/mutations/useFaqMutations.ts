@@ -1,12 +1,12 @@
 import { createFaq, deleteFaq, updateFaq } from '@/api/FaqAPI';
-import { CreatedFaqInfo, UpdatedFaqInfo } from '@/models/board/Faq';
+import { CreatedFaqModel, UpdatedFaqModel } from '@/models/model/FaqModel';
 import { useMutation } from '@tanstack/react-query';
 
-export const useCreateFaq = (createdFaq: CreatedFaqInfo) => {
+export const useCreateFaq = (createdFaq: CreatedFaqModel) => {
   return useMutation(['/faq/create', createdFaq], () => createFaq(createdFaq));
 };
 
-export const useUpdateFaq = (faqId: string, updatedFaq: UpdatedFaqInfo) => {
+export const useUpdateFaq = (faqId: string, updatedFaq: UpdatedFaqModel) => {
   return useMutation(['/faq/update', updatedFaq], () => updateFaq(faqId, updatedFaq));
 };
 

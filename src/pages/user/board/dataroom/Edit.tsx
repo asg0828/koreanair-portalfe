@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedDataroomInfo } from '@/models/board/Dataroom';
+import { UpdatedDataroomModel } from '@/models/model/DataroomModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -28,7 +28,7 @@ const Edit = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<UpdatedDataroomInfo>({
+  } = useForm<UpdatedDataroomModel>({
     mode: 'onChange',
     defaultValues: {
       dataId: dataId,
@@ -50,7 +50,7 @@ const Edit = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: UpdatedDataroomInfo) => {
+  const onSubmit = (data: UpdatedDataroomModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

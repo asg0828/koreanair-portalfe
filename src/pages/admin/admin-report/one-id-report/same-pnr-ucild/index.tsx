@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from 'react';
 import { oneIdSameColumn, oneIdSameData } from '../../one-id-main/data';
 import DataGrid from '@/components/grid/DataGrid';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { useSamePnr } from '@/hooks/queries/useOneIdQueries';
 import { useToast } from '@ke-design/components';
 import { OneIdSameData } from '@/models/oneId/OneIdInfo';
 
 export default function SamePnrUcild() {
   const { toast } = useToast();
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [isChanged, setIsChanged] = useState(false);
   const { refetch, data: response, isError } = useSamePnr(page);
   const [row, setRows] = useState<Array<OneIdSameData>>([]);
 
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };

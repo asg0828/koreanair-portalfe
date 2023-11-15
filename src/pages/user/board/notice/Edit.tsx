@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedNoticeInfo } from '@/models/board/Notice';
+import { UpdatedNoticeModel } from '@/models/model/NoticeModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -28,7 +28,7 @@ const Edit = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<UpdatedNoticeInfo>({
+  } = useForm<UpdatedNoticeModel>({
     mode: 'onChange',
     defaultValues: {
       noticeId: noticeId,
@@ -54,7 +54,7 @@ const Edit = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: UpdatedNoticeInfo) => {
+  const onSubmit = (data: UpdatedNoticeModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

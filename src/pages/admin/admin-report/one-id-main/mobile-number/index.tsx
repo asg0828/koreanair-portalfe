@@ -4,14 +4,14 @@ import HorizontalTable from '@/components/table/HorizontalTable';
 import { mobMasterColumn, mobMasterData, mobileColumn, mobileData } from '../data';
 import { MobMasterData, MobileData, mobileMasterSearch, mobileSearch } from '@/models/oneId/OneIdInfo';
 import DataGrid from '@/components/grid/DataGrid';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { useMobileMasterNumber, useMobileNumber } from '@/hooks/queries/useOneIdQueries';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(2개)
 export default function MobileNumber() {
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<MobileData>>([]);
   const [rowMaster, setRowMaster] = useState<Array<MobMasterData>>([]);
   const [searchInfo1, setSearchInfo] = useState<mobileSearch>({
@@ -40,7 +40,7 @@ export default function MobileNumber() {
     refetch1();
   }, [refetch1]);
 
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };

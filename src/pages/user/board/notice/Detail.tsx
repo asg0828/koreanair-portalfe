@@ -4,7 +4,7 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { NoticeInfo } from '@/models/board/Notice';
+import { NoticeModel } from '@/models/model/NoticeModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -18,11 +18,11 @@ const Detail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const [noticeInfo, setNoticeInfo] = useState<NoticeInfo>();
-  const [prevNoticeInfo, setPrevNoticeInfo] = useState<NoticeInfo>();
-  const [nextNoticeInfo, setNextNoticeInfo] = useState<NoticeInfo>();
+  const [NoticeModel, setNoticeModel] = useState<NoticeModel>();
+  const [prevNoticeModel, setPrevNoticeModel] = useState<NoticeModel>();
+  const [nextNoticeModel, setNextNoticeModel] = useState<NoticeModel>();
   const noticeId: string = location?.state?.noticeId || '';
-  const rows: Array<NoticeInfo> = location?.state?.rows;
+  const rows: Array<NoticeModel> = location?.state?.rows;
   const { data: response, isSuccess, isError } = useNoticeById(noticeId);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteNotice(noticeId);
 
@@ -61,8 +61,8 @@ const Detail = () => {
   useEffect(() => {
     if (rows?.length > 0) {
       const index = rows.findIndex((row) => row.noticeId === noticeId);
-      setPrevNoticeInfo(index === 0 ? undefined : rows[index - 1]);
-      setNextNoticeInfo(index === rows.length - 1 ? undefined : rows[index + 1]);
+      setPrevNoticeModel(index === 0 ? undefined : rows[index - 1]);
+      setNextNoticeModel(index === rows.length - 1 ? undefined : rows[index + 1]);
     }
   }, [noticeId, rows]);
 
@@ -73,7 +73,7 @@ const Detail = () => {
         content: '조회 중 에러가 발생했습니다.',
       });
     } else if (isSuccess) {
-      setNoticeInfo(response.data);
+      setNoticeModel(response.data);
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -109,12 +109,12 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">{noticeInfo?.sj}</Typography>
+              <Typography variant="h3">{NoticeModel?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={noticeInfo?.cn} disabled />
+              <TinyEditor content={NoticeModel?.cn} disabled />
             </TD>
           </TR>
           <TR>
@@ -138,9 +138,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {nextNoticeInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(nextNoticeInfo?.noticeId)}>
-                  {nextNoticeInfo?.sj}
+              {nextNoticeModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(nextNoticeModel?.noticeId)}>
+                  {nextNoticeModel?.sj}
                 </Link>
               )}
             </TD>
@@ -151,9 +151,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {prevNoticeInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(prevNoticeInfo?.noticeId)}>
-                  {prevNoticeInfo?.sj}
+              {prevNoticeModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(prevNoticeModel?.noticeId)}>
+                  {prevNoticeModel?.sj}
                 </Link>
               )}
             </TD>

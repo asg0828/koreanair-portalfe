@@ -1,9 +1,9 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
-import { NoticeInfo } from '@/models/board/Notice';
+import { NoticeModel } from '@/models/model/NoticeModel';
 import { SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { RowsInfo } from '@/models/components/Table';
 import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -28,9 +28,9 @@ const List = () => {
   const { toast } = useToast();
   const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
   const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [isChanged, setIsChanged] = useState(false);
-  const [rows, setRows] = useState<Array<NoticeInfo>>([]);
+  const [rows, setRows] = useState<Array<NoticeModel>>([]);
   const { refetch, data: response, isError } = useNoticeList(searchKey, searchValue, page);
 
   const goToReg = () => {
@@ -72,7 +72,7 @@ const List = () => {
     }
   };
 
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };
@@ -94,7 +94,7 @@ const List = () => {
     } else {
       if (response?.data) {
         response.data.page.page = response.data.page.page - 1;
-        response.data.contents.forEach((item: NoticeInfo) => {
+        response.data.contents.forEach((item: NoticeModel) => {
           item.rgstDt = getDateString(item.rgstDt, '-');
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
         });

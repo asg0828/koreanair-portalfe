@@ -1,6 +1,6 @@
 import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
-import { PageInfo } from '@/models/components/Page';
+import { PageModel } from '@/models/model/PageModel';
 import {
   ConversionSearch,
   ctiVocSearch,
@@ -15,7 +15,7 @@ import {
 import { callApi, Method } from '@utils/ApiUtil';
 
 // oneid 마스터
-export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageInfo) => {
+export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -32,7 +32,7 @@ export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageInfo)
 };
 
 // oneid 히스토리
-export const getHistory = (searchInfo: oneidHistorySearch, page: PageInfo) => {
+export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -49,7 +49,7 @@ export const getHistory = (searchInfo: oneidHistorySearch, page: PageInfo) => {
 };
 
 // oneid 팩스 매핑
-export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageInfo) => {
+export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -66,7 +66,7 @@ export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageInfo) => {
 };
 
 // 대리점 추정번호 마스터
-export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageInfo) => {
+export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -83,7 +83,7 @@ export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageInfo) 
 };
 
 // 대리점 추정번호
-export const getMobile = (searchInfo: mobileSearch, page: PageInfo) => {
+export const getMobile = (searchInfo: mobileSearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -100,7 +100,7 @@ export const getMobile = (searchInfo: mobileSearch, page: PageInfo) => {
 };
 
 // 관계이력
-export const getRelation = (searchInfo: relationSearch, page: PageInfo) => {
+export const getRelation = (searchInfo: relationSearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -117,7 +117,7 @@ export const getRelation = (searchInfo: relationSearch, page: PageInfo) => {
 };
 
 // 에러이력
-export const getErrorLog = (searchInfo: errorSearch, page: PageInfo) => {
+export const getErrorLog = (searchInfo: errorSearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -134,7 +134,7 @@ export const getErrorLog = (searchInfo: errorSearch, page: PageInfo) => {
 };
 
 // 데일리 리포트
-export const getDaily = (searchInfo: dailySearch, page: PageInfo) => {
+export const getDaily = (searchInfo: dailySearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -151,7 +151,7 @@ export const getDaily = (searchInfo: dailySearch, page: PageInfo) => {
 };
 
 // CTI/VOC 리포트
-export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageInfo) => {
+export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
@@ -168,7 +168,7 @@ export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageInfo) => {
 };
 
 // samePnrUciid
-export const getSamePnr = (page: PageInfo) => {
+export const getSamePnr = (page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.ONEID}`,
@@ -183,7 +183,7 @@ export const getSamePnr = (page: PageInfo) => {
 };
 
 // 데이버 변화
-export const getConversion = (searchInfo: ConversionSearch, page: PageInfo) => {
+export const getConversion = (searchInfo: ConversionSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.ONEID}`,

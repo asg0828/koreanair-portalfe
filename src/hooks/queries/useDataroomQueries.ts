@@ -1,8 +1,8 @@
 import { getDataroomById, getDataroomList } from '@/api/DataroomAPI';
-import { PageInfo } from '@/models/components/Page';
+import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
-export const useDataroomList = (searchKey: string, searchValue: string, page: PageInfo) => {
+export const useDataroomList = (searchKey: string, searchValue: string, page: PageModel) => {
   return useQuery(['/dataroom/list'], () => getDataroomList(searchKey, searchValue, page));
 };
 
