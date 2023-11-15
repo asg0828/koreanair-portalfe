@@ -239,8 +239,6 @@ const SelfFeatureReg = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
 
     if (response.statusCode === StatusCode.SUCCESS) {
-      response.result.behaviors[0].tbCoMetaTblClmnInfoList[0].dataTypeCategory = "number"
-      response.result.behaviors[0].tbCoMetaTblClmnInfoList[2].dataTypeCategory = "timestamp"
       setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
     }
   }
