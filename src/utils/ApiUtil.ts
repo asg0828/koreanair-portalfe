@@ -69,7 +69,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
     case Service.KAL_BE:
       baseURL =
         baseURL +
-        (process.env.REACT_APP_NODE_ENV === 'local' ? ':' + ServicePort.KAL_BE.toString() : '') +
+        // (process.env.REACT_APP_NODE_ENV === 'local' ? ':' + ServicePort.KAL_BE.toString() : '') +
         ServiceContextPath.KAL_BE +
         baseApiUrl;
       break;
