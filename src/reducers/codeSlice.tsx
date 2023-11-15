@@ -1,8 +1,8 @@
-import { CodeInfo } from '@/models/common/Code';
+import { CodeModel } from '@/models/model/CodeModel';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface CodeState {
-  codeList: Array<CodeInfo>;
+  codeList: Array<CodeModel>;
 }
 
 const initialState: CodeState = {

@@ -4,7 +4,7 @@ import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import useCode from '@/hooks/useCode';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { FaqInfo } from '@/models/board/Faq';
+import { FaqModel } from '@/models/model/FaqModel';
 import {
   GroupCodeType,
   ModalTitle,
@@ -14,7 +14,7 @@ import {
   ValidType,
   View,
 } from '@/models/common/Constants';
-import { PageInfo, initPage } from '@/models/components/Page';
+import { PageModel, initPage } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import AddIcon from '@mui/icons-material/Add';
@@ -33,9 +33,9 @@ const List = () => {
   const { getCode } = useCode();
   const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
   const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
-  const [page, setPage] = useState<PageInfo>(initPage);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [isChanged, setIsChanged] = useState(false);
-  const [rows, setRows] = useState<Array<FaqInfo>>([]);
+  const [rows, setRows] = useState<Array<FaqModel>>([]);
   const [faqId, setFaqId] = useState<string>(StringValue.DEFAULT);
   const { refetch, data: response, isError } = useFaqList(searchKey, searchValue, page);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteFaq(faqId);
@@ -70,7 +70,7 @@ const List = () => {
     }
   };
 
-  const handlePage = (page: PageInfo) => {
+  const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };
@@ -119,7 +119,7 @@ const List = () => {
     } else {
       if (response?.data) {
         response.data.page.page = response.data.page.page - 1;
-        response.data.contents.forEach((item: FaqInfo) => {
+        response.data.contents.forEach((item: FaqModel) => {
           item.clCode = getCode(GroupCodeType.FAQ_TYPE, item.clCode)?.codeNm || '';
         });
         setRows(response.data.contents);

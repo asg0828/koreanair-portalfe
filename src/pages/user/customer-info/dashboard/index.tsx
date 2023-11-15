@@ -1,32 +1,44 @@
 import { Button, Modal, Stack, TextField } from '@components/ui';
-import { pnrData, pnrTickerColumn } from './data';
+import { analysisResultData, contributeData, homepageData, pnrData, pnrTickerColumn } from './data';
 import { useState, useRef } from 'react';
-import AnalysisResult from './analysisResult';
+
 import { AnalysisIndex } from './analysisIndex';
 import Contact from './contact';
 import PnrTicketNumber from './pnrTickectNumber';
 import ProfileComp from './profile';
-import Contribution from './contribution';
-import Homepage from './homepage';
+
 import { TableDataComp } from './tableDataComp';
 import { Method, callApi } from '@/utils/ApiUtil';
 import { Service } from '@/models/common/Service';
 import { initApiRequest, initCommonResponse, initConfig } from '@/models/selfFeature/FeatureCommon';
 import { cloneDeep } from 'lodash';
 import { Profile } from '@/models/customer-info/CustomerInfo';
+import { PageModel, initPage } from '@/models/model/PageModel';
+
+import { DetailDataComp } from './detailDataComp';
+import { useSelector } from 'react-redux';
+import { htmlTagReg } from '@/utils/RegularExpression';
 
 export default function List() {
   const [skypassNum, setSkypassNum] = useState('');
   const [oneId, setOneId] = useState('');
   const [passengerNm, setPassengerNm] = useState('');
-
+  const [page, setPage] = useState<PageModel>(initPage);
   // 이런식으로 받아올 컴포넌트별로 state필요
   const [profile, setProfile] = useState<Profile>();
+  const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({
     skypassNum: '',
     oneId: '',
     passengerNm: '',
   });
+
+  // 홈페이지 데이터(삭제 예정)
+  const hmpData = useSelector((state) => homepageData);
+  // contribute 데이터(삭제 예정)
+  const ctrbuteData = useSelector((state) => contributeData);
+  // analysisResult 데이터(삭제 예정)
+  const analResultData = useSelector((state) => analysisResultData);
 
   const [isOpen, setOpen] = useState(false);
   const skypassNumId = useRef<any>(null);
@@ -43,16 +55,22 @@ export default function List() {
       setPassengerNm(currVal);
     }
   };
+
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setSearchInfo({ ...searchInfo, [id]: value });
   };
+
   function validation() {
     // 유효성검사 성공 여부 flag => 실패 시 api 요청 x
     let searchError = false;
 
     // 검색 조건 미입력 시 modal open
-    if (skypassNum.trim() === '' || oneId.trim() === '' || passengerNm.trim() === '') {
+    if (
+      skypassNum.replace(htmlTagReg, '').trim() === '' ||
+      oneId.replace(htmlTagReg, '').trim() === '' ||
+      passengerNm.replace(htmlTagReg, '').trim() === ''
+    ) {
       setOpen(true);
       searchError = true;
     }
@@ -66,13 +84,13 @@ export default function List() {
     if (validation()) return;
 
     // api 호출
-    retrieveanalysisIndex();
+    retrieveCdp();
 
     // 5초에 한번씩 api 호출(React.memo로 prop 변동 없을 시 rerendering x)
-    // setInterval(retrieveanalysisIndex, 5000);
+    // setInterval(retrieveCdp, 5000);
   }
 
-  const retrieveanalysisIndex = async () => {
+  const retrieveCdp = async () => {
     let config = cloneDeep(initConfig);
     config.isLoarding = true;
     let request = cloneDeep(initApiRequest);
@@ -80,13 +98,20 @@ export default function List() {
     request.url = '';
     request.service = Service.KAL_BE;
     request.params = {
-      bodyParams: { skypass: skypassNum, oneId: oneId, passengerNm: passengerNm },
+      bodyParams: {
+        skypass: skypassNum.replace(htmlTagReg, ''),
+        oneId: oneId.replace(htmlTagReg, ''),
+        passengerNm: passengerNm.replace(htmlTagReg, ''),
+        page: page.page + 1,
+        pageSize: page.pageSize,
+      },
     };
     let response = cloneDeep(initCommonResponse);
     response = await callApi(request);
+    setRows(response.data.contents);
+    setPage(response.data.page);
     console.log('[retrieve360] Response :: ', response);
-
-    // setReadSql(cloneDeep(initReadSql))
+    console.log('[retrieve360] request :: ', request);
   };
 
   return (
@@ -157,8 +182,8 @@ export default function List() {
           <div style={{ marginLeft: '13px' }}>
             <Stack direction="Vertical">
               <Stack direction="Horizontal">
-                <Contribution skypassNum={skypassNum} oneId={oneId} passengerNm={passengerNm}></Contribution>
-                <Homepage></Homepage>
+                <DetailDataComp init={hmpData} compName={'homepage'}></DetailDataComp>
+                <DetailDataComp init={ctrbuteData} compName={'contribution'}></DetailDataComp>
               </Stack>
               <PnrTicketNumber></PnrTicketNumber>
               <Stack>
@@ -169,7 +194,7 @@ export default function List() {
           </div>
         </Stack>
         <Stack direction="Vertical">
-          <AnalysisResult />
+          <DetailDataComp init={analResultData} compName={'analysisResult'}></DetailDataComp>
           <AnalysisIndex />
         </Stack>
       </Stack>

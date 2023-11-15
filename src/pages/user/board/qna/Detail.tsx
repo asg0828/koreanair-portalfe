@@ -6,7 +6,7 @@ import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQ
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import useCode from '@/hooks/useCode';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedQnaInfo, QnaInfo, UpdatedQnaInfo } from '@/models/board/Qna';
+import { CreatedQnaModel, QnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -22,19 +22,19 @@ const Detail = () => {
   const location = useLocation();
   const { toast } = useToast();
   const { getCode } = useCode();
-  const [qnaInfo, setQnaInfo] = useState<QnaInfo>();
-  const [prevQnaInfo, setPrevQnaInfo] = useState<QnaInfo>();
-  const [nextQnaInfo, setNextQnaInfo] = useState<QnaInfo>();
+  const [QnaModel, setQnaModel] = useState<QnaModel>();
+  const [prevQnaModel, setPrevQnaModel] = useState<QnaModel>();
+  const [nextQnaModel, setNextQnaModel] = useState<QnaModel>();
   const qnaId: string = location?.state?.qnaId || '';
   const [cQnaId, setCQnaId] = useState<string>('');
-  const rows: Array<QnaInfo> = location?.state?.rows;
+  const rows: Array<QnaModel> = location?.state?.rows;
   const {
     register,
     handleSubmit,
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<CreatedQnaInfo>({
+  } = useForm<CreatedQnaModel>({
     mode: 'onChange',
     defaultValues: {
       bfQnaId: qnaId,
@@ -56,7 +56,7 @@ const Detail = () => {
     setValue: uSetValue,
     formState: { errors: uErrors },
     watch,
-  } = useForm<UpdatedQnaInfo>({
+  } = useForm<UpdatedQnaModel>({
     mode: 'onChange',
     defaultValues: {
       qnaId: '',
@@ -107,7 +107,7 @@ const Detail = () => {
     );
   };
 
-  const handleCommentUpdate = (qnaItem: QnaInfo) => {
+  const handleCommentUpdate = (qnaItem: QnaModel) => {
     uSetValue('qnaId', qnaItem.qnaId);
     uSetValue('bfQnaId', qnaItem.bfQnaId);
     uSetValue('answ', qnaItem.answ);
@@ -131,11 +131,11 @@ const Detail = () => {
     );
   };
 
-  const onCreateCommentSubmit = (data: CreatedQnaInfo) => {
+  const onCreateCommentSubmit = (data: CreatedQnaModel) => {
     cMutate();
   };
 
-  const onUpdateCommentSubmit = (data: CreatedQnaInfo) => {
+  const onUpdateCommentSubmit = (data: CreatedQnaModel) => {
     cuMutate();
   };
 
@@ -189,8 +189,8 @@ const Detail = () => {
   useEffect(() => {
     if (rows?.length > 0) {
       const index = rows.findIndex((row) => row.qnaId === qnaId);
-      setPrevQnaInfo(index === 0 ? undefined : rows[index - 1]);
-      setNextQnaInfo(index === rows.length - 1 ? undefined : rows[index + 1]);
+      setPrevQnaModel(index === 0 ? undefined : rows[index - 1]);
+      setNextQnaModel(index === rows.length - 1 ? undefined : rows[index + 1]);
     }
   }, [qnaId, rows]);
 
@@ -201,7 +201,7 @@ const Detail = () => {
         content: '조회 중 에러가 발생했습니다.',
       });
     } else if (isSuccess) {
-      setQnaInfo(response.data);
+      setQnaModel(response.data);
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -238,19 +238,19 @@ const Detail = () => {
           <TR>
             <TH colSpan={4} className="headerName">
               <Stack className="headerNameWrap">
-                <Typography variant="h3">{qnaInfo?.sj}</Typography>
+                <Typography variant="h3">{QnaModel?.sj}</Typography>
                 <ul>
-                  <li>{getCode(GroupCodeType.QNA_TYPE, qnaInfo?.clCode || '')?.codeNm}</li>
-                  <li>{`${qnaInfo?.rgstDeptNm || ''} ${qnaInfo?.rgstNm || ''}`}</li>
-                  <li>{qnaInfo?.modiDt}</li>
-                  <li>{`조회수 ${qnaInfo?.viewCnt}`}</li>
+                  <li>{getCode(GroupCodeType.QNA_TYPE, QnaModel?.clCode || '')?.codeNm}</li>
+                  <li>{`${QnaModel?.rgstDeptNm || ''} ${QnaModel?.rgstNm || ''}`}</li>
+                  <li>{QnaModel?.modiDt}</li>
+                  <li>{`조회수 ${QnaModel?.viewCnt}`}</li>
                 </ul>
               </Stack>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={qnaInfo?.cn} disabled />
+              <TinyEditor content={QnaModel?.cn} disabled />
             </TD>
           </TR>
           <TR>
@@ -273,7 +273,7 @@ const Detail = () => {
               <Stack direction="Vertical" gap="SM" className="width-100">
                 <Typography variant="h6">
                   Comment
-                  <span className="total">{`${qnaInfo?.comments.length || 0}`}</span>건
+                  <span className="total">{`${QnaModel?.comments.length || 0}`}</span>건
                 </Typography>
 
                 <form onSubmit={handleSubmit(onCreateCommentSubmit)}>
@@ -297,7 +297,7 @@ const Detail = () => {
                   <ErrorLabel message={errors?.answ?.message} />
                 </form>
 
-                {qnaInfo?.comments
+                {QnaModel?.comments
                   .sort((a, b) => new Date(a.rgstDt).getTime() - new Date(b.rgstDt).getTime())
                   .map((qnaItem) => (
                     <Stack gap="SM" direction="Vertical">
@@ -361,9 +361,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {nextQnaInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(nextQnaInfo?.qnaId)}>
-                  {nextQnaInfo?.sj}
+              {nextQnaModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(nextQnaModel?.qnaId)}>
+                  {nextQnaModel?.sj}
                 </Link>
               )}
             </TD>
@@ -374,9 +374,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {prevQnaInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(prevQnaInfo?.qnaId)}>
-                  {prevQnaInfo?.sj}
+              {prevQnaModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(prevQnaModel?.qnaId)}>
+                  {prevQnaModel?.sj}
                 </Link>
               )}
             </TD>

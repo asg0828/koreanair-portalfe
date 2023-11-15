@@ -93,7 +93,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
             )}
             {columns.map((column, index) => (
               <TH
-                colSpan={column.colSpan ? column.colSpan : 1}
+                colSpan={column.colSpan ? column.colSpan : undefined}
                 key={`header-${index}`}
                 enableSort={enableSort}
                 onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
@@ -120,7 +120,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               {Object.keys(columns).map((column, index2) => (
                 <TD
                   key={`column-${index2}`}
-                  colSpan={columns[index2].colSpan ? columns[index2].colSpan : 1}
+                  colSpan={columns[index2].colSpan ? columns[index2].colSpan : undefined}
                   align={columns[index2].align ? columns[index2].align : AlignCode.CENTER}
                   onClick={() => handleClick(row, index)}
                 >

@@ -5,7 +5,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
 import useCode from '@/hooks/useCode';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedQnaInfo } from '@/models/board/Qna';
+import { CreatedQnaModel } from '@/models/model/QnaModel';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -26,7 +26,7 @@ const Reg = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<CreatedQnaInfo>({
+  } = useForm<CreatedQnaModel>({
     mode: 'onChange',
     defaultValues: {
       clCode: '',
@@ -44,7 +44,7 @@ const Reg = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: CreatedQnaInfo) => {
+  const onSubmit = (data: CreatedQnaModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

@@ -3,10 +3,10 @@ import { Service } from '@/models/common/Service';
 import { PageModel } from '@/models/model/PageModel';
 import { callApi, Method } from '@utils/ApiUtil';
 
-export const getFaqList = (searchKey: string, searchValue: string, page: PageModel) => {
+export const getFeatureList = (searchKey: string, searchValue: string, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.FAQ}`,
+    url: `${PortalApiURL.FEATURE}`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -19,44 +19,44 @@ export const getFaqList = (searchKey: string, searchValue: string, page: PageMod
   });
 };
 
-export const getFaqById = (faqId: string) => {
+export const getFeatureById = (featureId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.FAQ}/${faqId}`,
+    url: `${PortalApiURL.FEATURE}/${featureId}`,
     method: Method.GET,
   });
 };
 
-export const createFaq = (createdFaq: object) => {
+export const createFeature = (createdFeature: object) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.FAQ}`,
+    url: `${PortalApiURL.FEATURE}`,
     method: Method.POST,
     params: {
-      bodyParams: createdFaq,
+      bodyParams: createdFeature,
     },
   });
 };
 
-export const updateFaq = (faqId: string, updatedFaq: object) => {
+export const updateFeature = (featureId: string, updatedFeature: object) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.FAQ}/${faqId}`,
+    url: `${PortalApiURL.FEATURE}/${featureId}`,
     method: Method.PUT,
     params: {
-      bodyParams: updatedFaq,
+      bodyParams: updatedFeature,
     },
   });
 };
 
-export const deleteFaq = (faqId: string) => {
+export const deleteFeature = (featureId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.FAQ}/${faqId}`,
+    url: `${PortalApiURL.FEATURE}/${featureId}`,
     method: Method.DELETE,
     params: {
       bodyParams: {
-        faqId,
+        featureId,
       },
     },
   });

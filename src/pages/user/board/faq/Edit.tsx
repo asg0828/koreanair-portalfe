@@ -7,7 +7,7 @@ import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
 import useCode from '@/hooks/useCode';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedFaqInfo } from '@/models/board/Faq';
+import { UpdatedFaqModel } from '@/models/model/FaqModel';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -30,7 +30,7 @@ const Reg = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useForm<UpdatedFaqInfo>({
+  } = useForm<UpdatedFaqModel>({
     mode: 'onChange',
     defaultValues: {
       faqId: faqId,
@@ -49,7 +49,7 @@ const Reg = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: UpdatedFaqInfo) => {
+  const onSubmit = (data: UpdatedFaqModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

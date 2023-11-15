@@ -1,5 +1,5 @@
 import TinyEditor from '@/components/editor/TinyEditor';
-import { PageInfo, PageProps, initPage, pageSizeList } from '@/models/components/Page';
+import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
 import { RowsInfo } from '@/models/components/Table';
 import {
   Accordion,
@@ -24,7 +24,7 @@ export interface AccordionGridProps extends PageProps {
 }
 
 const AccordionGrid: React.FC<AccordionGridProps> = ({ buttonChildren, rows, onUpdate, onDelete, page, onChange }) => {
-  const [pages, setPages] = useState<PageInfo>(initPage);
+  const [pages, setPages] = useState<PageModel>(initPage);
 
   useEffect(() => {
     page && setPages(page);

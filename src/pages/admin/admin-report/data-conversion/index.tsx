@@ -29,13 +29,13 @@ export default function DataConversion() {
   function convert(search: string, flag: string) {
     // 변환 로직 (api든 함수든)
 
-    if (flag == 'phoneNum') {
+    if (flag === 'phoneNum') {
       setPhoneNumCR(search);
       setPhoneNumHash(search);
-    } else if (flag == 'eMail') {
+    } else if (flag === 'eMail') {
       setEmailCR(search);
       setEmailHash(search);
-    } else if (flag == 'fullName') {
+    } else if (flag === 'fullName') {
       setFullNameCR(search);
     }
   }
@@ -50,8 +50,8 @@ export default function DataConversion() {
               <TH>
                 <TR>
                   <Stack direction="Vertical">
-                    <TH>휴대전화번호</TH>
-                    <TH>E-mail주소</TH>
+                    <TH aria-rowspan={2}>휴대전화번호</TH>
+                    <TH aria-rowspan={2}>E-mail주소</TH>
                   </Stack>
                 </TR>
               </TH>
@@ -64,11 +64,13 @@ export default function DataConversion() {
                 <TR>
                   <Stack direction="Vertical">
                     <TextField
+                      className="width-100"
                       placeholder="검색어를 입력하세요."
                       onChange={(e) => onSearchChangeHandler(e, 'phoneNum')}
                       size="small"
                     />
                     <TextField
+                      className="width-100"
                       placeholder="검색어를 입력하세요."
                       onChange={(e) => onSearchChangeHandler(e, 'eMail')}
                       size="small"
@@ -85,7 +87,7 @@ export default function DataConversion() {
                 appearance="Outline"
                 priority="Normal"
                 shape="Square"
-                size="MD"
+                size="LG"
                 onClick={() => {
                   convert(phoneNum, 'phoneNum');
                   convert(eMail, 'eMail');
@@ -160,7 +162,7 @@ export default function DataConversion() {
                 appearance="Outline"
                 priority="Normal"
                 shape="Square"
-                size="MD"
+                size="LG"
                 onClick={() => convert(fullName, 'fullName')}
               >
                 변환

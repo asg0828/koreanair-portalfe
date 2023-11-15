@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedNoticeInfo } from '@/models/board/Notice';
+import { CreatedNoticeModel } from '@/models/model/NoticeModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -23,7 +23,7 @@ const Reg = () => {
     control,
     getValues,
     formState: { errors },
-  } = useForm<CreatedNoticeInfo>({
+  } = useForm<CreatedNoticeModel>({
     mode: 'onChange',
     defaultValues: {
       sj: '',
@@ -42,7 +42,7 @@ const Reg = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: CreatedNoticeInfo) => {
+  const onSubmit = (data: CreatedNoticeModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

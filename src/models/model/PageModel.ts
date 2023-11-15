@@ -1,4 +1,4 @@
-export interface PageInfo {
+export interface PageModel {
   page: number;
   pageSize: number;
   totalPage: number;
@@ -7,7 +7,7 @@ export interface PageInfo {
 
 export interface PageProps {
   onChange?: (pageSize: any) => void;
-  page?: PageInfo;
+  page?: PageModel;
 }
 
 export const initPage = {

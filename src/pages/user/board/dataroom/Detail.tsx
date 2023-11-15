@@ -4,7 +4,7 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { DataroomInfo } from '@/models/board/Dataroom';
+import { DataroomModel } from '@/models/model/DataroomModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -18,11 +18,11 @@ const Detail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const [dataroomInfo, setDataroomInfo] = useState<DataroomInfo>();
-  const [prevDataroomInfo, setPrevDataroomInfo] = useState<DataroomInfo>();
-  const [nextDataroomInfo, setNextDataroomInfo] = useState<DataroomInfo>();
+  const [DataroomModel, setDataroomModel] = useState<DataroomModel>();
+  const [prevDataroomModel, setPrevDataroomModel] = useState<DataroomModel>();
+  const [nextDataroomModel, setNextDataroomModel] = useState<DataroomModel>();
   const dataId: string = location?.state?.dataId || '';
-  const rows: Array<DataroomInfo> = location?.state?.rows;
+  const rows: Array<DataroomModel> = location?.state?.rows;
   const { data: response, isSuccess, isError } = useDataroomById(dataId);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteDataroom(dataId);
 
@@ -61,8 +61,8 @@ const Detail = () => {
   useEffect(() => {
     if (rows?.length > 0) {
       const index = rows.findIndex((row) => row.dataId === dataId);
-      setPrevDataroomInfo(index === 0 ? undefined : rows[index - 1]);
-      setNextDataroomInfo(index === rows.length - 1 ? undefined : rows[index + 1]);
+      setPrevDataroomModel(index === 0 ? undefined : rows[index - 1]);
+      setNextDataroomModel(index === rows.length - 1 ? undefined : rows[index + 1]);
     }
   }, [dataId, rows]);
 
@@ -73,7 +73,7 @@ const Detail = () => {
         content: '조회 중 에러가 발생했습니다.',
       });
     } else if (isSuccess) {
-      setDataroomInfo(response.data);
+      setDataroomModel(response.data);
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -109,12 +109,12 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">{dataroomInfo?.sj}</Typography>
+              <Typography variant="h3">{DataroomModel?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={dataroomInfo?.cn} disabled />
+              <TinyEditor content={DataroomModel?.cn} disabled />
             </TD>
           </TR>
           <TR>
@@ -138,9 +138,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {nextDataroomInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(nextDataroomInfo?.dataId)}>
-                  {nextDataroomInfo?.sj}
+              {nextDataroomModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(nextDataroomModel?.dataId)}>
+                  {nextDataroomModel?.sj}
                 </Link>
               )}
             </TD>
@@ -151,9 +151,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {prevDataroomInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(prevDataroomInfo?.dataId)}>
-                  {prevDataroomInfo?.sj}
+              {prevDataroomModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(prevDataroomModel?.dataId)}>
+                  {prevDataroomModel?.sj}
                 </Link>
               )}
             </TD>
