@@ -3,9 +3,10 @@ import TinyEditor from '@/components/editor/TinyEditor';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
-import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { CreatedNoticeInfo } from '@/models/board/Notice';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -13,9 +14,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 const Reg = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { openModal } = useModal();
   const {
     register,
     handleSubmit,
@@ -42,12 +43,14 @@ const Reg = () => {
   };
 
   const onSubmit = (data: CreatedNoticeInfo) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.SAVE,
-      content: '등록하시겠습니까?',
-      onConfirm: mutate,
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.SAVE,
+        content: '등록하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {

@@ -1,10 +1,10 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import SessionUtil from '@utils/SessionUtil';
 import SessionApis from '@api/common/SessionApis';
 import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
+import SessionUtil from '@utils/SessionUtil';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
+import { Service, ServiceContextPath, ServicePort } from '@models/common/Service';
 import { v4 as uuidv4 } from 'uuid';
-import { Service, ServicePort, ServicePath } from '@models/common/Service';
 
 export enum Method {
   GET = 'GET',
@@ -44,14 +44,16 @@ export interface ApiRequest {
   redirect?: string;
 }
 
+export type BaseApiUrl = '/fo' | '/bo';
+
+let baseApiUrl: BaseApiUrl = '/bo';
+
+export const setBaseApiUrl = (changedUrl: BaseApiUrl) => {
+  baseApiUrl = changedUrl;
+};
+
 /* istanbul ignore next */
 const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFile?: boolean): AxiosInstance => {
-  if (isLoading) {
-    // @ts-ignore
-    // eslint-disable-next-line
-    window.loadingSpinner.setAdd();
-  }
-
   axios.defaults.headers.get['Content-Type'] = 'application/json';
   axios.defaults.headers.post['Content-Type'] = 'application/json';
   axios.defaults.headers.put['Content-Type'] = 'application/json';
@@ -68,7 +70,8 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       baseURL =
         baseURL +
         (process.env.REACT_APP_NODE_ENV === 'local' ? ':' + ServicePort.KAL_BE.toString() : '') +
-        ServicePath.KAL_BE;
+        ServiceContextPath.KAL_BE +
+        baseApiUrl;
       break;
     // 2023-11-02 김태훈A Self-Feature BE API case 추가
     case Service.KAL_SF_BE:
@@ -117,27 +120,15 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
     (response: any): any => {
       const commonResponse: CommonResponse = response.data as CommonResponse;
       commonResponse.header = response?.headers;
-      commonResponse.statusCode = StatusCode.SUCCESS;
-      commonResponse.successOrNot = 'Y';
       commonResponse.status = response?.status;
       commonResponse.message = response?.message;
-
-      if (isLoading) {
-        // @ts-ignore
-        // eslint-disable-next-line
-        window.loadingSpinner.setMinus();
-      }
+      commonResponse.statusCode = StatusCode.SUCCESS;
+      commonResponse.successOrNot = 'Y';
 
       return commonResponse;
     },
 
     (error: any): any => {
-      if (isLoading) {
-        // @ts-ignore
-        // eslint-disable-next-line
-        window.loadingSpinner.setMinus();
-      }
-
       const unknownError: CommonResponse = {
         successOrNot: 'N',
         statusCode: StatusCode.UNKNOWN_ERROR,

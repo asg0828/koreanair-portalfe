@@ -10,10 +10,9 @@ import {
     TbRsCustFeatRuleTrgtFilter,
 } from '@/models/selfFeature/FeatureInfo'
 import { 
-    trgtFilterTit, 
-    operatorOption,
-    delimiterOption,
+    trgtFilterTit,
 } from '@/pages/user/self-feature/data'
+import OperatorOperand from '../OperatorOperand';
 
 const BehvColDropItem = ({
     itemIdx,
@@ -44,7 +43,6 @@ const BehvColDropItem = ({
         
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
             updtTrgtFilterList[itemIdx][id] = value
             tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtFilterItem.targetId)
@@ -65,7 +63,7 @@ const BehvColDropItem = ({
 
         if (
             keyNm === "delimiter" 
-            || (keyNm === "operator" && (v === "in_str" || v === "not_in_str"))
+            || (keyNm === "operator" && (v === "in_str" || v === "not_in_str" || v === "in_num" || v === "not_in_num"))
         ) {
             setDelimiterSelected(true)
             t = true
@@ -76,7 +74,6 @@ const BehvColDropItem = ({
 
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
             updtTrgtFilterList[itemIdx][keyNm] = v
             if (!t) {
@@ -111,60 +108,13 @@ const BehvColDropItem = ({
                     trgtItem={trgtFilterItem}
                     setTrgtFilterList={setTrgtFilterList!}
                 />
-                <Select 
-                    disabled={!isPossibleEdit}
-                    placeholder="연산자 선택" 
-                    appearance="Outline"
-                    value={trgtFilterItem.operator}
-                    shape="Square"
-                    size="MD"
-                    status="default"
-                    style={{
-                    width: '11.25rem'
-                    }}
-                    onChange={(
-                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                        value: SelectValue<{}, false>
-                    ) => {
-                        // 연산자 선택
-                        onchangeSelectHandler(e, value, "operator")
-                    }}
-                >
-                    {operatorOption.map((item, index) => (
-                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                    ))}
-                </Select>
-                {delimiterSelected &&
-                    <Select 
-                        disabled={!isPossibleEdit}
-                        placeholder="구분자 선택" 
-                        appearance="Outline"
-                        value={trgtFilterItem.delimiter}
-                        shape="Square"
-                        size="MD"
-                        status="default"
-                        style={{
-                        width: '11.25rem'
-                        }}
-                        onChange={(
-                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                            value: SelectValue<{}, false>
-                        ) => {
-                            // 구분자 선택
-                            onchangeSelectHandler(e, value, "delimiter")
-                        }}
-                    >
-                        {delimiterOption.map((item, index) => (
-                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                        ))}
-                    </Select>
-                }
-                <TextField 
-                    disabled={!isPossibleEdit}
-                    value={trgtFilterItem.operand1}
-                    placeholder="피연산자 입력"
-                    id="operand1"
-                    onChange={onchangeInputHandler}
+                <OperatorOperand
+                    isPossibleEdit={isPossibleEdit}
+                    item={trgtFilterItem}
+                    dataType={trgtFilterItem.columnDataTypeCode}
+                    delimiterSelected={delimiterSelected}
+                    onchangeInputHandler={onchangeInputHandler}
+                    onchangeSelectHandler={onchangeSelectHandler}
                 />
                 {isPossibleEdit ? (
                     <Button size="XS" onClick={onClickTrgtFilterDeleteHandler}>

@@ -3,9 +3,10 @@ import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
-import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { DataroomInfo } from '@/models/board/Dataroom';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -13,10 +14,10 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { openModal } = useModal();
   const [dataroomInfo, setDataroomInfo] = useState<DataroomInfo>();
   const [prevDataroomInfo, setPrevDataroomInfo] = useState<DataroomInfo>();
   const [nextDataroomInfo, setNextDataroomInfo] = useState<DataroomInfo>();
@@ -47,12 +48,14 @@ const Detail = () => {
   };
 
   const handleDelete = () => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.REMOVE,
-      content: '삭제하시겠습니까?',
-      onConfirm: mutate,
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.REMOVE,
+        content: '삭제하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {

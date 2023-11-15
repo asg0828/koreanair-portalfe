@@ -12,6 +12,8 @@ import {
     TbRsCustFeatRuleTrgtFilter,
     TbRsCustFeatRuleTrgt,
     TargetDropProps,
+    AggregateCol,
+    FormulaTrgtListProps,
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initTbCoMetaTblClmnInfo, 
@@ -19,15 +21,12 @@ import {
     trgtFilterTit, 
     divisionTypes,
     filterOption,
-    aggregateOption,
+    aggregateOptionNum,
+    aggregateOptionStrTim,
 } from "@/pages/user/self-feature/data"
 import {
     ModalType,
 } from '@/models/selfFeature/FeatureCommon';
-
-const columnList = [
-    { value: '세션번호', text: '세션번호' },
-]
 
 const BehvDropItem = ({
     itemIdx,
@@ -38,10 +37,14 @@ const BehvDropItem = ({
     setTargetList,
     setTrgtFilterList,
     delTargetInfo,
+    aggregateColList,
+    setFormulaTrgtList,
 }: TargetDropProps) => {
 
     const [ filterExpsn, setFilterExpsn ] = useState<string>(cloneDeep(targetItem.filterLogiExpsn))
+    const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
     const [ aggregateTopSelect, setAggregateTopSelect ] = useState<Boolean>(false)
+    const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
 
     const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
     const [ modalType, setModalType ] = useState<string>("")
@@ -57,7 +60,6 @@ const BehvDropItem = ({
 
             setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                 let tl = cloneDeep(state)
-                // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                 if (tl[itemIdx].targetId === targetItem.targetId) {
                     tl[itemIdx]["operator"] = "top"
                     tl[itemIdx]["operand1"] = ''
@@ -110,6 +112,15 @@ const BehvDropItem = ({
         }
     }, [trgtFilterList])
 
+    useEffect(() => {
+        columnList.map((col: AggregateCol) => {
+            if (col.value === targetItem.columnName) {
+                setDataTypeCol(col.dataType)
+            }
+            return col
+        })
+    }, [targetItem.columnName])
+
     // 수정시 집계함수가 top인 경우
     useEffect(() => {
         if (targetItem.operator === "top") {
@@ -124,7 +135,6 @@ const BehvDropItem = ({
         setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let tl = cloneDeep(state)
             tl.map((trgt: TbRsCustFeatRuleTrgt) => {
-                // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                 if (trgt.targetId === targetItem.targetId) {
                     trgt.filterLogiExpsn = filterExpsn
                 }
@@ -133,6 +143,20 @@ const BehvDropItem = ({
             return tl
         })
     }, [filterExpsn])
+
+    useEffect(() => {
+        //columnList
+        let colList: Array<AggregateCol> = []
+        aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
+            let col = { value: "", text: "", dataType: "" }
+            col.value = colInfo.metaTblClmnPhysNm
+            col.text  = colInfo.metaTblClmnLogiNm
+            col.dataType = colInfo.dataTypeCategory
+            colList.push(col)
+            return colInfo
+        })
+        setColumnList(colList)
+    }, [aggregateColList])
 
     const [, behvDrop] = useDrop(() => ({
         accept: divisionTypes.BEHV,
@@ -159,6 +183,7 @@ const BehvDropItem = ({
                     let trgtFilter = initTbRsCustFeatRuleTrgtFilter
                     trgtFilter.targetId  = targetItem.targetId // 고정
                     trgtFilter.columnName = targetObj.metaTblClmnLogiNm
+                    trgtFilter.columnDataTypeCode = targetObj.dataTypeCategory
                     tl.push(trgtFilter)
                     return tl
                 })
@@ -199,8 +224,7 @@ const BehvDropItem = ({
         } else {
             setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                 let tl = cloneDeep(state)
-                tl.map((trgt: TbRsCustFeatRuleTrgt) => {
-                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
+                tl = tl.map((trgt: TbRsCustFeatRuleTrgt) => {
                     if (trgt.targetId === targetItem.targetId) {
                         trgt[id] = value
                     }
@@ -221,6 +245,24 @@ const BehvDropItem = ({
 
         if (keyNm === "columnName" || keyNm === "filterLogiOption") {
             t = true
+            if (keyNm === "columnName") {
+                let colDtp = ""
+                columnList.map((col: AggregateCol) => {
+                    if (col.value === v) {
+                        colDtp = col.dataType
+                        setDataTypeCol(col.dataType)
+                    }
+                    return col
+                })
+                // 선택한 집계 컬럼 타입에 따라 case target validation을 위한 값 변경
+                setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+                    let tl = cloneDeep(state)
+                    if (tl[itemIdx].targetId === targetItem.targetId) {
+                        tl[itemIdx].targetDataType = colDtp
+                    }
+                    return tl
+                })
+            }
         } else if (keyNm === "operator") {
             if (v === "top") {
                 setModalType(ModalType.CONFIRM)
@@ -233,6 +275,21 @@ const BehvDropItem = ({
                 // 우측 drag 영역 삭제 여부 - 집계함수가 top이 아닌 경우는 drag list 노출
                 setIsSelectAggregateTop && setIsSelectAggregateTop(false)
             }
+            // 선택한 집계함수의 결과에 따라 case target validation을 위한 값 변경
+            setFormulaTrgtList && setFormulaTrgtList((ftl: Array<FormulaTrgtListProps>) => {
+                let rtn = cloneDeep(ftl)
+                rtn = rtn.map((ft: FormulaTrgtListProps) => {
+                    if (ft.targetId === targetItem.targetId) {
+                        if (v === "count" || v === "distinct_count") {
+                            ft.dataType = "number"
+                        } else {
+                            ft.dataType = targetItem.targetDataType
+                        }
+                    }
+                    return ft
+                })
+                return rtn
+            })
         } else if (
             keyNm === "operand1"
             || keyNm === "operand3"
@@ -246,7 +303,6 @@ const BehvDropItem = ({
 
         setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let tl = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             if (tl[itemIdx].targetId === targetItem.targetId) {
                 tl[itemIdx][keyNm] = v
                 if (!t) {
@@ -421,7 +477,10 @@ const BehvDropItem = ({
                             onchangeSelectHandler(e, value, "operator")
                         }}
                     >
-                        {aggregateOption.map((item, index) => (
+                        {dataTypeCol === "number" && aggregateOptionNum.map((item, index) => (
+                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                        ))}
+                        {dataTypeCol !== "number" && aggregateOptionStrTim.map((item, index) => (
                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                         ))}
                     </Select>
@@ -450,6 +509,7 @@ const BehvDropItem = ({
                             <SelectOption value="last">last</SelectOption>
                         </Select>
                         <TextField 
+                            type="number"
                             disabled={!isPossibleEdit}
                             value={targetItem.operand2}
                             placeholder="Top 숫자 입력"

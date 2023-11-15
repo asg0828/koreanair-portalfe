@@ -22,19 +22,16 @@ import {
   MstrSgmtTableandColMetaInfo,
   FeatureTemp,
   TbRsCustFeatRuleSql,
+  FormulaTrgtListProps,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
   initMstrSgmtTableandColMetaInfo,
-  initBehavior,
-  initTbCoMetaTblClmnInfo,
-  initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
   initTbRsCustFeatRuleCase,
   initFeatureTemp,
   initTbRsCustFeatRuleSql,
-  protoTypeMstrSgmtTableandColMetaInfo,
 } from './data'
 import { Method, callApi } from '@/utils/ApiUtil';
 import {
@@ -46,6 +43,7 @@ import {
   ModalType,
   ModalTitCont,
 } from '@/models/selfFeature/FeatureCommon';
+import { StatusCode } from '@/models/common/CommonResponse';
 
 const lCategory = [
   { value: '', text: '선택' },
@@ -83,7 +81,7 @@ const SelfFeatureReg = () => {
   // 계산식
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
-  const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
+  const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<FormulaTrgtListProps>>([])
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
   // SQL 등록
   // 속성 및 행동 데이터
@@ -155,8 +153,17 @@ const SelfFeatureReg = () => {
     // 계산식 validation을 위한 대상 list 추출
     let fList = []
     for (let i = 0; i < targetList.length; i++) {
-      let t = i + 1
-      fList.push(`T${t}`)
+      let t = { targetId: `T${i+1}`, dataType: "" }
+      let dataType = targetList[i].targetDataType
+      if (
+        targetList[i].operator === "count"
+        || targetList[i].operator === "distinct_count"
+      ) {
+        dataType = "number"
+      }
+      t.dataType = dataType
+
+      fList.push(t)
     }
     setFormulaTrgtList(fList)
   }, [targetList])
@@ -230,7 +237,9 @@ const SelfFeatureReg = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response successOrNot :: ", response.successOrNot)
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
 
-    setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
+    if (response.statusCode === StatusCode.SUCCESS) {
+      setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
+    }
   }
 
   const createCustFeatRule = async () => {
@@ -240,6 +249,7 @@ const SelfFeatureReg = () => {
       setIsOpenConfirmModal(true)
       return
     }
+    // 등록하면서 승인정보 저장도 진행되어야함. -> BE에서 transaction?
     /*
       Method      :: POST
       Url         :: /api/v1/customerfeatures
@@ -429,7 +439,7 @@ const SelfFeatureReg = () => {
               </TD>
               <TH colSpan={1} align="right" required>Feature 타입</TH>
               <TD colSpan={2}>
-                <TextField className="width-100" id="featureTyp" value={"self-feature"} readOnly onChange={onchangeInputHandler}/>
+                <TextField className="width-100" id="featureTyp" value={"Fact지수"} readOnly onChange={onchangeInputHandler}/>
               </TD>
             </TR>
             <TR>
@@ -473,17 +483,27 @@ const SelfFeatureReg = () => {
                   ))}
                 </Select>
               </TD>
-              <TH colSpan={1} align="right" required>카테고리</TH>
+              {/* 관리자가 승인 단계시 노출 */}
+              <TD colSpan={3}></TD>
+              {/* <TH colSpan={1} align="right" required>카테고리</TH>
               <TD colSpan={2}>
                 <Select className='width-100'  appearance="Outline" >
                     <SelectOption value={1}>test</SelectOption>
                 </Select>
-              </TD>
+              </TD> */}
             </TR>
             <TR>
               <TH colSpan={1} align="right" required>산출 로직</TH>
               <TD colSpan={5.01}>
-                <TextField className="width-100" multiline id="featureFm" onChange={onchangeInputHandler}/>
+                <TextField
+                  style={{
+                    height: "150px"
+                  }}
+                  className="width-100" 
+                  multiline 
+                  id="featureFm" 
+                  onChange={onchangeInputHandler}
+                />
               </TD>
             </TR>
             <TR>
@@ -516,7 +536,9 @@ const SelfFeatureReg = () => {
                 targetList={targetList}
                 trgtFilterList={trgtFilterList} 
                 setTargetList={setTargetList} 
-                setTrgtFilterList={setTrgtFilterList} 
+                setTrgtFilterList={setTrgtFilterList}
+                behaviors={mstrSgmtTableandColMetaInfo.behaviors}
+                setFormulaTrgtList={setFormulaTrgtList}
               />
               {/* drop 영역 */}
 
@@ -554,6 +576,7 @@ const SelfFeatureReg = () => {
           {(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
             <CalcValid
               featStatus={subFeatStatus.REG}
+              isSelectAggregateTop={isSelectAggregateTop}
               setIsValidFormula={setIsValidFormula}
               formulaTrgtList={formulaTrgtList}
               custFeatRuleCalc={custFeatRuleCalc}

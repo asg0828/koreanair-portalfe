@@ -4,9 +4,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
 import useCode from '@/hooks/useCode';
-import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { CreatedQnaInfo } from '@/models/board/Qna';
-import { ModalTitle, ModalType, ValidType, GroupCodeType } from '@/models/common/Constants';
+import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -14,9 +15,9 @@ import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 const Reg = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { openModal } = useModal();
   const { getCodeList } = useCode();
   const {
     register,
@@ -44,12 +45,14 @@ const Reg = () => {
   };
 
   const onSubmit = (data: CreatedQnaInfo) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.SAVE,
-      content: '등록하시겠습니까?',
-      onConfirm: mutate,
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.SAVE,
+        content: '등록하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {

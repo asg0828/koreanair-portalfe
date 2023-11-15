@@ -1,28 +1,29 @@
 import { KeyboardArrowDownIcon, LogoutOutlinedIcon, MenuOutlinedIcon } from '@/assets/icons';
 import { Avatar, DropdownMenu, Page, Stack, Typography } from '@/components/ui';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, ModalTitle, ModalType } from '@/models/common/Constants';
 import { MenuItem } from '@/models/common/Menu';
-import { ReducerType, menuSlice } from '@/reducers';
+import { setIsDropMenu } from '@/reducers/menuSlice';
+import { openModal } from '@/reducers/modalSlice';
 import SessionApis from '@api/common/SessionApis';
 import SessionUtil from '@utils/SessionUtil';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import './Header.scss';
 
 const Header = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const sessionApis = new SessionApis();
   const sessionUtil = new SessionUtil();
-  const accessTokenRefreshTokenInfo = sessionUtil.getAccessTokenRefreshTokenInfo;
-  const isDropMenu = useSelector((state: ReducerType) => state.menu.isDropMenu);
-  const menuList = useSelector((state: ReducerType) => state.menu.menuList);
-  const isAdminPage = useSelector((state: ReducerType) => state.auth.isAdminPage);
+  const isDropMenu = useAppSelector((state) => state.menu.isDropMenu);
+  const menuList = useAppSelector((state) => state.menu.menuList);
+  const contextPath = useAppSelector((state) => state.auth.contextPath);
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [subActiveIndex, setSubActiveIndex] = useState<number>(-1);
 
   const goToHome = () => {
-    navigate(isAdminPage ? '/admin' : '/');
+    navigate(contextPath);
   };
 
   const handleTrigger = (index: number) => {
@@ -43,25 +44,34 @@ const Header = () => {
   const handleNaviLink = (e: any, menu: MenuItem) => {
     if (menu.isPopup) {
       e.preventDefault();
-      sessionUtil.setLocalStorageInfo(accessTokenRefreshTokenInfo());
-      console.log(accessTokenRefreshTokenInfo());
+      sessionUtil.setLocalStorageInfo(sessionUtil.getAccessTokenRefreshTokenInfo());
+      sessionUtil.setLocalStorageInfo(sessionUtil.getSessionRequestInfo());
+      sessionUtil.setLocalStorageInfo(sessionUtil.getSessionInfo());
       window.open(`/popup${menu.path}`, '_blank', 'noopener, noreferrer');
     }
   };
 
-  const handleLogout = async () => {
-    await sessionApis.logoutSession();
-    await sessionApis.revokeToken();
-    sessionUtil.googleLogout();
-    localStorage.removeItem('accessPathname');
+  const handleLogout = () => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '로그아웃 하시겠습니까??',
+        onConfirm: async () => {
+          await sessionApis.logoutSession();
+          await sessionApis.revokeToken();
+          sessionUtil.googleLogout();
+        },
+      })
+    );
   };
 
   const handleDropMenu = () => {
-    dispatch(menuSlice.actions.setIsDropMenu(!isDropMenu));
+    dispatch(setIsDropMenu(!isDropMenu));
   };
 
   return (
-    <header id="header" className={isAdminPage ? 'admin' : ''}>
+    <header id="header" className={contextPath === ContextPath.ADMIN ? 'admin' : ''}>
       <Page fixedSize={true} style={{ padding: '0 20px' }}>
         <Stack direction="Horizontal" justifyContent="Between">
           <Stack gap="XL" className="logo-wrap">

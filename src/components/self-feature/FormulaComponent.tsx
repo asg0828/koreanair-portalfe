@@ -9,6 +9,7 @@ import {
 
 import { 
     FormulaCaseProps,
+    FormulaTrgtListProps,
     FormulaValidRslt,
     TbRsCustFeatRuleCalc,
 } from '@/models/selfFeature/FeatureInfo'
@@ -29,9 +30,15 @@ const FormulaComponent = ({
     useEffect(() => {
         if (!custFeatRuleCalc) return
 
+        let targetList: string[] = []
+        formulaTrgtList.map((v: FormulaTrgtListProps) => {
+            targetList.push(v.targetId)
+        })
+
         setFormulaValidRslt(cloneDeep(ValidationFormula({
             formula: cloneDeep(custFeatRuleCalc.formula),
-            targetList: cloneDeep(formulaTrgtList),
+            targetList: cloneDeep(targetList),
+            formulaTrgtList: cloneDeep(formulaTrgtList),
         })))
         
         setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
@@ -41,10 +48,29 @@ const FormulaComponent = ({
     useEffect(() => {
         if (formulaTrgtList.length < 1) return
 
-        setFormulaValidRslt(cloneDeep(ValidationFormula({
-            formula: cloneDeep(custFeatRuleCalc!.formula),
-            targetList: cloneDeep(formulaTrgtList),
-        })))
+        let targetList: string[] = []
+        formulaTrgtList.map((v: FormulaTrgtListProps) => {
+            targetList.push(v.targetId)
+        })
+
+        if (formulaTrgtList.length === 1) {
+            setCustFeatRuleCalc && setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
+                let rtn = cloneDeep(state)
+                rtn.formula = "T1"
+                return rtn
+            })
+            setFormulaValidRslt(cloneDeep(ValidationFormula({
+                formula: "T1",
+                targetList: cloneDeep(targetList),
+                formulaTrgtList: cloneDeep(formulaTrgtList),
+            })))
+        } else {
+            setFormulaValidRslt(cloneDeep(ValidationFormula({
+                formula: cloneDeep(custFeatRuleCalc!.formula),
+                targetList: cloneDeep(targetList),
+                formulaTrgtList: cloneDeep(formulaTrgtList),
+            })))
+        }
         
         setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
         

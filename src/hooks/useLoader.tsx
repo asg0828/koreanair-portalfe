@@ -1,11 +1,11 @@
 import { getCodeList as fetchCodeList } from '@/api/CodeAPI';
 import { CodeInfo } from '@/models/common/Code';
-import { codeSlice } from '@/reducers';
-import { reduxStore } from '@/index';
+import { addCodeList } from '@/reducers/codeSlice';
+import store from '@/store';
 
 const useLoader = () => {
-  const codeList = reduxStore.getState().code.codeList;
-  const dispatch = reduxStore.dispatch;
+  const codeList = store.getState().code.codeList;
+  const dispatch = store.dispatch;
 
   const getCodeListAsync = async (groupId: string): Promise<Array<CodeInfo>> => {
     const filterCodeList = codeList.filter((codeItem) => codeItem.groupId === groupId);
@@ -18,7 +18,7 @@ const useLoader = () => {
           if (response.successOrNot === 'N') {
           } else {
             codeList = response.data;
-            dispatch(codeSlice.actions.addCodeList(codeList));
+            dispatch(addCodeList(codeList));
           }
         })
         .catch((error) => {});

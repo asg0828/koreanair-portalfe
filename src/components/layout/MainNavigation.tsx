@@ -1,15 +1,14 @@
-import { useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useAppSelector } from '@/hooks/useRedux';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Stack } from '@components/ui';
 import { MenuItem } from '@models/common/Menu';
-import { ReducerType } from '@reducers';
-import { Stack, Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@components/ui';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const MainNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const pathnames = location.pathname.split('/').filter((path) => path);
-  const menuList = useSelector((state: ReducerType) => state.menu.menuList)!;
-  const isAdminPage = useSelector((state: ReducerType) => state.auth.isAdminPage);
+  const menuList = useAppSelector((state) => state.menu.menuList)!;
+  const isAdminPage = useAppSelector((state) => state.auth.isAdminPage);
 
   const getMenuRecursive = (menuList: MenuItem[], path: string): MenuItem | undefined => {
     for (let i = 0; i < menuList.length; i++) {
@@ -46,7 +45,7 @@ const MainNavigation = () => {
 
   const goToMenu = (path: string) => {
     navigate(path);
-  }
+  };
 
   return (
     <Stack>

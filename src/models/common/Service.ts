@@ -10,6 +10,6 @@ export enum ServicePort {
   KAL_SF_BE = 8080,
 }
 
-export enum ServicePath {
+export enum ServiceContextPath {
   KAL_BE = '/pt',
 }

@@ -29,12 +29,15 @@ import {
 } from "./data";
 import { 
     FeatureInfo, 
+    FormulaTrgtListProps, 
+    MstrSgmtTableandColMetaInfo, 
     TbRsCustFeatRuleCalc, 
     TbRsCustFeatRuleCase, 
     TbRsCustFeatRuleTrgt, 
     TbRsCustFeatRuleTrgtFilter,
 } from "@/models/selfFeature/FeatureInfo";
 import { 
+    initMstrSgmtTableandColMetaInfo,
     initSelfFeatureInfo, 
     initTbRsCustFeatRuleCalc, 
 } from "../self-feature/data";
@@ -44,8 +47,9 @@ import {
     initConfig, 
     selfFeatPgPpNm ,
 } from "@/models/selfFeature/FeatureCommon";
-import { Method } from "@/utils/ApiUtil";
+import { Method, callApi } from "@/utils/ApiUtil";
 import { RowsInfo } from "@/models/components/Table";
+import { StatusCode } from "@/models/common/CommonResponse";
 
 const SfSubmissionRequestDetail = () => {
 
@@ -54,12 +58,15 @@ const SfSubmissionRequestDetail = () => {
 
     const [ regType, setRegType ] = useState<string>('')
 
+    // 속성 및 행동 데이터
+    const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
+
     // 승인 정보
     const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
     const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
 
     // feature 정보
-    const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
+    const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<FormulaTrgtListProps>>([])
     const [ featureInfo, setFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
     const [ targetList, setTargetList ] = useState<Array<TbRsCustFeatRuleTrgt>>([])
     const [ trgtFilterList, setTrgtFilterList ] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
@@ -67,17 +74,55 @@ const SfSubmissionRequestDetail = () => {
     const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
 
     useEffect(() => {
+        getTableandColumnMetaInfoByMstrSgmtRuleId()
         retrieveCustFeatRuleInfos()
     }, [])
 
+    const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
+        /*
+            Method      :: GET
+            Url         :: /api/v1/mastersegment/table-columns-meta-info
+            path param  :: {mstrSgmtRuleId}
+            query param :: 
+        */
+        let mstrSgmtRuleId = 'MS_0006'
+        let config = cloneDeep(initConfig)
+        config.isLoarding = true
+        let request = cloneDeep(initApiRequest)
+        request.method = Method.GET
+        request.url = `/api/v1/mastersegment/table-columns-meta-info/${mstrSgmtRuleId}`
+        console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
+
+        let response = cloneDeep(initCommonResponse)
+        response = await callApi(request)
+        console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response header       :: ", response.header)
+        console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response statusCode   :: ", response.statusCode)
+        console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response status       :: ", response.status)
+        console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response successOrNot :: ", response.successOrNot)
+        console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
+
+        if (response.statusCode === StatusCode.SUCCESS) {
+            setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
+        }
+    }
+
     useEffect(() => {
-      // 계산식 validation을 위한 대상 list 추출
-      let fList = []
-      for (let i = 0; i < targetList.length; i++) {
-        let t = i + 1
-        fList.push(`T${t}`)
-      }
-      setFormulaTrgtList(fList)
+        // 계산식 validation을 위한 대상 list 추출
+        let fList = []
+        for (let i = 0; i < targetList.length; i++) {
+            let t = { targetId: `T${i+1}`, dataType: "" }
+            let dataType = targetList[i].targetDataType
+            if (
+            targetList[i].operator === "count"
+            || targetList[i].operator === "distinct_count"
+            ) {
+            dataType = "number"
+            }
+            t.dataType = dataType
+
+            fList.push(t)
+        }
+        setFormulaTrgtList(fList)
     }, [targetList])
 
     const retrieveCustFeatRuleInfos = async () => {
@@ -268,6 +313,8 @@ const SfSubmissionRequestDetail = () => {
                         trgtFilterList={trgtFilterList} 
                         setTargetList={setTargetList} 
                         setTrgtFilterList={setTrgtFilterList} 
+                        behaviors={mstrSgmtTableandColMetaInfo.behaviors}
+                        setFormulaTrgtList={setFormulaTrgtList}
                     />
                     {/* drop 영역 */}
                 </DndProvider>

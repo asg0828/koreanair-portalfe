@@ -5,9 +5,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
-import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { UpdatedDataroomInfo } from '@/models/board/Dataroom';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -15,10 +16,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { openModal } = useModal();
   const dataId = location?.state?.dataId;
   const {
     register,
@@ -50,12 +51,14 @@ const Edit = () => {
   };
 
   const onSubmit = (data: UpdatedDataroomInfo) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.MODIFY,
-      content: '수정하시겠습니까?',
-      onConfirm: mutate,
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.MODIFY,
+        content: '수정하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {

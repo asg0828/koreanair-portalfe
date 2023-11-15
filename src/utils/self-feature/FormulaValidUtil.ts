@@ -1,7 +1,7 @@
 // 계산식 validation 공통
 import { cloneDeep } from "lodash"
 
-import { FormulaValidRslt } from "@/models/selfFeature/FeatureInfo"
+import { FormulaTrgtListProps, FormulaValidRslt } from "@/models/selfFeature/FeatureInfo"
 import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
 
 /*
@@ -13,15 +13,20 @@ import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
 export interface Props {
     formula: string
     targetList: Array<string>
+    formulaTrgtList: Array<FormulaTrgtListProps>
 }
 
 export const ValidationFormula = ({
     formula,
     targetList,
+    formulaTrgtList,
 }: Props) => {
 
     let validRslt: FormulaValidRslt = cloneDeep(initFormulaValidRslt)
 
+    /*
+        입력한 target ID 존재 여부 체크
+    */
     const targetIdExistCheck = () => {
         let str = cloneDeep(formula).replace(/[^T0-9]/g, '')
 
@@ -53,7 +58,9 @@ export const ValidationFormula = ({
 
         return true
     }
-
+    /* 
+        괄호 체크
+    */
     const parenthesisCheck = () => {
         let str = cloneDeep(formula).replace(/[^()]/g, '')
         let cum = 0
@@ -65,109 +72,39 @@ export const ValidationFormula = ({
         }
         return cum === 0? true: false;
     }
+    /*
+        사칙연산 dataType 체크
+    */
+    const dataTypeCheck = () => {
 
-    const precedence = (s: string) => {
-        if (s === '(' || s === ')') return 0
-        else if (s === '+' || s === '-') return 1
-        else if (s === '*' || s === '/') return 2
-        else return 4
-    }
-    
-    const isCalc = (s: string) => {
-        if (s === '+' || s === '-' || s === '*' || s === '/') return true
-        else return false
-    }
-    
-    // 계산식 후위표기로 변환
-    const transPostFix = (s: string) => {
-    
-        let answer = ""
-        if (s.length < 1) return answer
-    
-        let stack = []
-        s = s.replace(/[^()+\-*/0-9]/g, '')
-    
-        for (const t of s) {
-            // (5*2)+(200+25)/2
-            if (!isNaN(Number(t))) answer += t
-            else if (t === '(') stack.push(t)
-            else if (t === ')') {
-                let op = stack.pop()
-                while (stack.length > 0 && op !== '(') {
-                    answer += ' ' + op
-                    op = stack.pop()
-                }
-            } else if (isCalc(t)) {
-                answer += ' '
-                if (stack.length < 1) stack.push(t)
-                else {
-                    let op = stack[stack.length - 1]
-                    if (precedence(t) <= precedence(op)) answer += stack.pop() + ' '
-                    stack.push(t) 
-                }
-            } else answer = ''
-    
-        }
-    
-        while (stack.length !== 0 && answer !== '') answer += ' ' + stack.pop()
-    
-        return answer
-    
-    }
-    // 후위표기 계산
-    const formulaValid = (v: string) => {
+        let inptTrgtList = formula.replace(/[^0-9T]/g, "").split("T")
+        inptTrgtList.splice(0, 1)
+        inptTrgtList = inptTrgtList.map((v) => "T"+v)
+
+        if (inptTrgtList.length === 1) return true
+
+        let notNumDtpTrgtList = formulaTrgtList.filter((ft: FormulaTrgtListProps) => ft.dataType !== "number")
         
-        let result: number = -1
-        let stack: Array<number> = []
-    
-        let vArr = transPostFix(v).split(' ')
-    
-        for (const t of vArr) {
-            
-            if (t === '') continue
-    
-            if (!isNaN(Number(t))) {
-                stack.push(Number(t))
-            } else {
-                
-                if (stack.length < 2 && !isCalc(t)) return Number('False')
-    
-                let r: number = Number(stack.pop())
-                let l: number = Number(stack.pop())
-                if (t === '+') stack.push(l + r)
-                else if (t === '-') stack.push(l - r)
-                else if (t === '*') stack.push(l * r)
-                else if (t === '/') stack.push(l / r)
-    
-            }
-    
-        }
-    
-        if (stack.length < 1 ) return Number('False')
+        let inptTrgtNotNumList = notNumDtpTrgtList.filter((ft: FormulaTrgtListProps) => {
+            return inptTrgtList.some(target => ft.targetId === target)
+        })
         
-        result = Number(stack.pop())
-        return result
+        return inptTrgtNotNumList.length > 0 ? false : true
     }
-    
+
     if (formula === "") {
         validRslt = cloneDeep(initFormulaValidRslt)
         return validRslt
-    } else if (isNaN(formulaValid(formula))) {
+    } else if (!/^(\s)*$|^(\(*\s*[T|t]{1}[0-9]+\s*\)*)(\s*[+\-*/]{1}(\s*\(*[T|t]{1}[0-9]+\s*\)*))*$/.test(formula)) {
+        /*
+            사칙연산 check
+        */
         validRslt.isValidFormula = false
 
         if (validRslt.text === '') {
             validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
         }
         
-    } else if (/([^()+\-*/T0-9])+/g.test(formula)) {
-        /* 
-            잘못된 문자열 입력 체크
-            변수할당이 아닌 정규식 그대로 적용
-              -> 변수 할당시 이전 test의 lastindex를 가지고 있기 때문에 결과값이 다름
-        */
-        validRslt.isValidFormula = false
-        validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
-        return validRslt
     } else if (!targetIdExistCheck()) {
         /*
             입력한 target ID 존재 여부 체크
@@ -179,6 +116,10 @@ export const ValidationFormula = ({
         */
         validRslt.isValidFormula = false
         validRslt.text = `괄호가 올바르게 열리고 닫히지 않았습니다.`
+        return validRslt
+    } else if (!dataTypeCheck()) {
+        validRslt.isValidFormula = false
+        validRslt.text = `사칙연산에 사용되는 dataType은 number 타입만 가능합니다.`
         return validRslt
     } else {
         validRslt.isValidFormula = true

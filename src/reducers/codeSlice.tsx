@@ -1,5 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CodeInfo } from '@/models/common/Code';
+import { createSlice } from '@reduxjs/toolkit';
 
 export interface CodeState {
   codeList: Array<CodeInfo>;
@@ -13,13 +13,15 @@ const codeSlice = createSlice({
   name: 'code',
   initialState,
   reducers: {
-    setCodeList(state, action: PayloadAction<Array<CodeInfo>>) {
+    setCodeList(state, action) {
       state.codeList = action.payload;
     },
-    addCodeList(state, action: PayloadAction<Array<CodeInfo>>) {
+    addCodeList(state, action) {
       state.codeList = state.codeList.concat(action.payload);
     },
   },
 });
 
-export default codeSlice;
+export const { setCodeList, addCodeList } = codeSlice.actions;
+
+export default codeSlice.reducer;

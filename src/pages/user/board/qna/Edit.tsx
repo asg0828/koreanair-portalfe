@@ -6,9 +6,10 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import useCode from '@/hooks/useCode';
-import useModal from '@/hooks/useModal';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { UpdatedQnaInfo } from '@/models/board/Qna';
-import { ModalTitle, ModalType, ValidType, GroupCodeType } from '@/models/common/Constants';
+import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -16,10 +17,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { openModal } = useModal();
   const { getCodeList } = useCode();
   const qnaId = location?.state?.qnaId;
   const {
@@ -51,12 +52,12 @@ const Edit = () => {
   };
 
   const onSubmit = (data: UpdatedQnaInfo) => {
-    openModal({
+    dispatch(openModal({
       type: ModalType.CONFIRM,
       title: ModalTitle.MODIFY,
       content: '수정하시겠습니까?',
       onConfirm: mutate,
-    });
+    }));
   };
 
   useEffect(() => {

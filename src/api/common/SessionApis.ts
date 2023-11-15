@@ -2,16 +2,17 @@ import { callApi, Method } from '@utils/ApiUtil';
 import { callAuthenticationApi, OAuthMethod } from '@utils/OAuthApiUtil';
 import { Service } from '@models/common/Service';
 import SessionUtil from '@utils/SessionUtil';
-import { LoginRequest, AccessTokenRefreshTokenRequest, AccessTokenRefreshTokenInfo } from '@models/common/Session';
+import { SessionRequest, AccessTokenRefreshTokenRequest, AccessTokenRefreshTokenInfo } from '@models/common/Session';
 import CommonResponse from '@/models/common/CommonResponse';
 import jwtDecode from 'jwt-decode';
+import { PortalApiURL } from '@/models/common/ApiURL';
 
 export default class SessionApis {
-  public login = async (loginReqeust: LoginRequest, isLoading = true) => {
+  public login = async (loginReqeust: SessionRequest, isLoading = true) => {
     return callApi({
       service: Service.KAL_BE,
-      url: '/api/v1/session',
-      method: Method.GET,
+      url: PortalApiURL.LOG_IN,
+      method: Method.POST,
       params: {
         bodyParams: loginReqeust,
       },
@@ -23,11 +24,11 @@ export default class SessionApis {
 
   public oauthLogin() {
     const apiUrl = process.env.REACT_APP_API_URL ? JSON.parse(process.env.REACT_APP_API_URL) : {};
-    const baseURL: string = apiUrl['APIGEE_BE'] || '';
+    const PortalApiURL: string = apiUrl['APIGEE_BE'] || '';
     const redirectUri: string = encodeURIComponent(process.env.REACT_APP_AUTHORIZATION_REDIRECT_URL || '');
     const clientId = process.env.REACT_APP_CLIENT_ID || '';
 
-    const googleOAuthUrl = baseURL + `/oauth2/v1/auth?redirect_uri=${redirectUri}&client_id=${clientId}`;
+    const googleOAuthUrl = PortalApiURL + `/oauth2/v1/auth?redirect_uri=${redirectUri}&client_id=${clientId}`;
 
     fetch(googleOAuthUrl, {
       redirect: 'manual',
@@ -71,7 +72,6 @@ export default class SessionApis {
         isAccessTokenRefreshToken: isAccessTokenRefreshToken,
       },
     });
-
 
     const accessTokenRefreshTokenJson = JSON.parse(accessTokenRefreshTokenResponse.data as string);
     const { given_name }: any = jwtDecode(accessTokenRefreshTokenJson.data.google_id_token);
@@ -143,7 +143,7 @@ export default class SessionApis {
   public logoutSession = async () => {
     return callApi({
       service: Service.KAL_BE,
-      url: '/api/v1/session',
+      url: PortalApiURL.LOG_OUT,
       method: Method.DELETE,
     });
   };
