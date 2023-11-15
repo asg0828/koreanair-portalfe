@@ -2,13 +2,11 @@ import { UserInfo } from '@/models/common/User';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface AuthState {
-  isAdminPage?: boolean;
   userInfo?: UserInfo;
   contextPath: string;
 }
 
 const initialState: AuthState = {
-  isAdminPage: false,
   userInfo: undefined,
   contextPath: '',
 };

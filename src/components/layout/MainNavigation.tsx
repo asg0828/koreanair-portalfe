@@ -8,7 +8,7 @@ const MainNavigation = () => {
   const navigate = useNavigate();
   const pathnames = location.pathname.split('/').filter((path) => path);
   const menuList = useAppSelector((state) => state.menu.menuList)!;
-  const isAdminPage = useAppSelector((state) => state.auth.isAdminPage);
+  const contextPath = useAppSelector((state) => state.auth.contextPath);
 
   const getMenuRecursive = (menuList: MenuItem[], path: string): MenuItem | undefined => {
     for (let i = 0; i < menuList.length; i++) {
@@ -40,7 +40,7 @@ const MainNavigation = () => {
   };
 
   const goToHome = () => {
-    navigate(isAdminPage ? '/admin' : '/');
+    navigate(contextPath);
   };
 
   const goToMenu = (path: string) => {
