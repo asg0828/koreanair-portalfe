@@ -22,6 +22,7 @@ const App = () => {
   const sessionUtil = new SessionUtil();
   const sessionApis = new SessionApis();
   const pathname = window.location.pathname;
+
   if (pathname.startsWith(ContextPath.ADMIN)) {
     dispatch(setContextPath(ContextPath.ADMIN));
     setBaseApiUrl('/bo');
