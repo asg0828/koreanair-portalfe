@@ -65,7 +65,7 @@ const SelfFeatureReg = () => {
 
   const navigate = useNavigate()
   const location = useLocation()
-
+  // 등록 구분(RuleDesign / SQL)
   const [ regType, setRegType ] = useState<string>(location.state.regType)
 
   // formData
@@ -90,6 +90,7 @@ const SelfFeatureReg = () => {
   // Top 집계함수 선택 여부
   const [ isSelectAggregateTop, setIsSelectAggregateTop ] = useState<Boolean>(false)
 
+  const [ clickType, setClickType ] = useState<string>('')
   const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
   const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
   const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
@@ -102,6 +103,11 @@ const SelfFeatureReg = () => {
         createCustFeatSQL()
       } else if (regType === selfFeatPgPpNm.RULE_REG) {
         createCustFeatRule()
+      }
+      // 대상선택 초기화
+      if (clickType === "trgtClear") {
+        setTargetList([])
+        setTrgtFilterList([])
       }
     }
     setIsOpenConfirmModal(false)
@@ -239,6 +245,8 @@ const SelfFeatureReg = () => {
     console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
 
     if (response.statusCode === StatusCode.SUCCESS) {
+      response.result.behaviors[0].tbCoMetaTblClmnInfoList[0].dataTypeCategory = "number"
+      response.result.behaviors[0].tbCoMetaTblClmnInfoList[2].dataTypeCategory = "timestamp"
       setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
     }
   }
@@ -387,6 +395,16 @@ const SelfFeatureReg = () => {
       navigate(`../${pageNm}`)
   }
 
+  const targetClearHanbler = () => {
+    if (targetList.length < 1) return
+    
+    setModalType(ModalType.CONFIRM)
+    setClickType("trgtClear")
+    setConfirmModalTit(ModalTitCont.TRGT_CLEAR.title)
+    setConfirmModalCont(ModalTitCont.TRGT_CLEAR.context)
+    setIsOpenConfirmModal(true)
+  }
+
   const onSubmitInsertHandler = () => {
     setModalType(ModalType.CONFIRM)
     setConfirmModalTit(ModalTitCont.REG.title)
@@ -525,7 +543,12 @@ const SelfFeatureReg = () => {
           {/* 대상 선택 */}
           {(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
           <>
-          <Typography variant="h4">대상 선택</Typography>
+          <Stack direction="Horizontal" gap="LG" justifyContent="start">
+            <Typography variant="h4">대상 선택</Typography>
+            <Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
+              초기화
+            </Button>
+          </Stack>
           {/* drag && drop 영역*/}
           <Stack 
               direction="Horizontal"

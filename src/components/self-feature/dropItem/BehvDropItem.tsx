@@ -406,9 +406,9 @@ const BehvDropItem = ({
                         <Page
                             ref={(behvDrop)}
                             style={{
-                                border:"1px solid rgb(218, 218, 218)",
-                                borderRadius: '5px',
-                                padding:"0.5rem"
+                                border:"3px solid rgb(218, 218, 218)",
+                                borderRadius: '8px',
+                                padding:"0.8rem"
                             }}
                         >
                             <Stack direction="Vertical" gap="SM">

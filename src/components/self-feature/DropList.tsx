@@ -5,7 +5,7 @@ import { cloneDeep } from 'lodash'
 import AttrDropItem from './dropItem/AttrDropItem'
 import BehvDropItem from './dropItem/BehvDropItem'
 import FeatDropItem from './dropItem/FeatDropItem'
-import { Page, Stack } from '@components/ui'
+import { Page, Stack, TextField, Typography } from '@components/ui'
 
 import { 
     TbRsCustFeatRuleTrgt, 
@@ -173,7 +173,7 @@ const DropList = ({
                 gap="MD"
                 justifyContent="Start"
             >
-            {
+            {targetList.length > 0 &&
                 targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
                     let targetId = targetItem.targetId
                     let tfList: Array<TbRsCustFeatRuleTrgtFilter> = []
@@ -217,6 +217,16 @@ const DropList = ({
                         />
                     }
                 })
+            }
+            {targetList.length === 0 &&
+                <TextField 
+                    size='LG' 
+                    shape='Round' 
+                    appearance='Filled'
+                    readOnly
+                    value={'오른쪽 속성/행동 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
+                >
+                </TextField>
             }
             </Stack>
         </Page>

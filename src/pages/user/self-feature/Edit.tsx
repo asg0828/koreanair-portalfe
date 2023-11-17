@@ -83,6 +83,8 @@ const SelfFeatureEdit = () => {
   // update 데이터
   const [ updtFeatureInfo, setUpdtFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
 
+  const [ regType, setRegType ] = useState<string>(location.state.regType)
+
   // 기본정보
   const [ featureTempInfo, setFeatureTempInfo ] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
   const [ custFeatRule, setCustFeatRule ] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
@@ -116,6 +118,11 @@ const SelfFeatureEdit = () => {
         || custFeatRule.sqlDirectInputYn === 'N'
       ) {
         updateCustFeatRule()
+      }
+
+      if (regType === "trgtClear") {
+        setTargetList([])
+        setTrgtFilterList([])
       }
     }
     setIsOpenConfirmModal(false)
@@ -401,6 +408,14 @@ const SelfFeatureEdit = () => {
         navigate(`../${pageNm}`)
   }
 
+  const targetClearHanbler = () => {
+    setModalType(ModalType.CONFIRM)
+    setRegType("trgtClear")
+    setConfirmModalTit(ModalTitCont.TRGT_CLEAR.title)
+    setConfirmModalCont(ModalTitCont.TRGT_CLEAR.context)
+    setIsOpenConfirmModal(true)
+  }
+
   const onSubmitUpdateHandler = () => {
     setModalType(ModalType.CONFIRM)
     setConfirmModalTit(ModalTitCont.EDIT.title)
@@ -562,7 +577,12 @@ const SelfFeatureEdit = () => {
         ) &&
         <>
         {/* 대상 선택 */}
-        <Typography variant="h4">대상 선택</Typography>
+        <Stack direction="Horizontal" gap="LG" justifyContent="start">
+          <Typography variant="h4">대상 선택</Typography>
+          <Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
+            초기화
+          </Button>
+        </Stack>
         {/* drag && drop 영역*/}
         <Stack 
             direction="Horizontal"
