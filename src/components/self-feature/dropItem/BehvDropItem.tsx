@@ -25,6 +25,7 @@ import {
     aggregateOptionStrTim,
 } from "@/pages/user/self-feature/data"
 import {
+    ColDataType,
     ModalType,
 } from '@/models/selfFeature/FeatureCommon';
 
@@ -281,7 +282,7 @@ const BehvDropItem = ({
                 rtn = rtn.map((ft: FormulaTrgtListProps) => {
                     if (ft.targetId === targetItem.targetId) {
                         if (v === "count" || v === "distinct_count") {
-                            ft.dataType = "number"
+                            ft.dataType = ColDataType.NUM
                         } else {
                             ft.dataType = targetItem.targetDataType
                         }
@@ -321,7 +322,7 @@ const BehvDropItem = ({
         <Stack 
             direction="Horizontal"
             justifyContent="Start" 
-            gap="SM" 
+            gap="MD" 
             className="width-100"
             style={{
                 backgroundColor: '#e6f9ff', 
@@ -336,7 +337,6 @@ const BehvDropItem = ({
                 gap="SM" 
                 className="width-100"
             >
-
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
@@ -353,84 +353,11 @@ const BehvDropItem = ({
                     </div>
                     <Typography variant="body2" style={{color:"inherit"}}>{targetItem.tableName}</Typography>
                 </Stack>
-                <Stack
-                    direction="Vertical"
-                    justifyContent="Start" 
-                    gap="SM" 
-                    className="width-100"
-                    style={{
-                        border:"1px solid rgb(218, 218, 218)",
-                        borderRadius: '5px',
-                    }}
-                >   
-                    <Stack
-                        direction="Horizontal"
-                        justifyContent="Between" 
-                        gap="SM" 
-                        className="width-100"
-                        style={{padding:"0.5rem"}}
-                    >
-                        <Stack gap="SM">
-                            <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
-                            <TextField 
-                                disabled={!isPossibleEdit}
-                                placeholder="논리 표현식" 
-                                value={filterExpsn}
-                                id="filterLogiExpsn"
-                                onChange={onchangeInputHandler}
-                            />
-                        </Stack>
-                        <Select
-                            disabled={!isPossibleEdit}
-                            appearance="Outline"
-                            value={targetItem.filterLogiOption}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                onchangeSelectHandler(e, value, "filterLogiOption")
-                            }}
-                        >
-                            {filterOption.map((item, index) => (
-                            <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                            ))}
-                        </Select>
-                    </Stack>
-                    <Stack
-                        direction="Horizontal"
-                        justifyContent="Start" 
-                        gap="SM" 
-                        className="width-100"
-                    >
-                        <Page
-                            ref={(behvDrop)}
-                            style={{
-                                border:"1px solid rgb(218, 218, 218)",
-                                borderRadius: '5px',
-                                padding:"0.5rem"
-                            }}
-                        >
-                            <Stack direction="Vertical" gap="SM">
-                            {(trgtFilterList && setTrgtFilterList) && 
-                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
-                                <BehvColDropItem 
-                                    key={`behvCol-${index}`}
-                                    itemIdx={index}
-                                    isPossibleEdit={isPossibleEdit}
-                                    trgtFilterItem={trgtFilterItem}
-                                    setTrgtFilterList={setTrgtFilterList}
-                                    deleteTrgtFilterInfo={deleteTrgtFilterInfo}
-                                />
-                            ))}
-                            </Stack>
-                        </Page>
-                    </Stack>
-                </Stack>
-
+                <Typography variant="h6" style={{color:"inherit"}}>SELECT</Typography>
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
-                    gap="SM" 
+                    gap="MD" 
                     className="width-100"
                     style={{
                         marginBottom: '1%',
@@ -477,10 +404,10 @@ const BehvDropItem = ({
                             onchangeSelectHandler(e, value, "operator")
                         }}
                     >
-                        {dataTypeCol === "number" && aggregateOptionNum.map((item, index) => (
+                        {dataTypeCol === ColDataType.NUM && aggregateOptionNum.map((item, index) => (
                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                         ))}
-                        {dataTypeCol !== "number" && aggregateOptionStrTim.map((item, index) => (
+                        {dataTypeCol !== ColDataType.NUM && aggregateOptionStrTim.map((item, index) => (
                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                         ))}
                     </Select>
@@ -563,6 +490,84 @@ const BehvDropItem = ({
                         </Select>
                         </>
                     }
+                </Stack>
+                <Typography variant="h6" style={{color:"inherit"}}>WHERE</Typography>
+                <Stack
+                    direction="Vertical"
+                    justifyContent="Start" 
+                    gap="SM" 
+                    className="width-100"
+                    style={{
+                        border:"1px solid rgb(218, 218, 218)",
+                        borderRadius: '5px',
+                    }}
+                >   
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Between" 
+                        gap="SM" 
+                        className="width-100"
+                        style={{padding:"0.5rem"}}
+                    >
+                        <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
+                        <Stack gap="SM" justifyContent="end">
+                            <TextField 
+                                disabled={!isPossibleEdit}
+                                placeholder="논리 표현식" 
+                                value={filterExpsn}
+                                id="filterLogiExpsn"
+                                onChange={onchangeInputHandler}
+                            />
+                            <Select
+                                disabled={!isPossibleEdit}
+                                appearance="Outline"
+                                value={targetItem.filterLogiOption}
+                                style={{
+                                width: '16rem'
+                                }}
+                                onChange={(
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
+                                ) => {
+                                    onchangeSelectHandler(e, value, "filterLogiOption")
+                                }}
+                            >
+                                {filterOption.map((item, index) => (
+                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                ))}
+                            </Select>
+                        </Stack>
+                    </Stack>
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Start" 
+                        gap="SM" 
+                        className="width-100"
+                    >
+                        <Page
+                            ref={(behvDrop)}
+                            style={{
+                                border:"3px solid rgb(218, 218, 218)",
+                                borderRadius: '8px',
+                                padding:"0.8rem"
+                            }}
+                        >
+                            <Stack direction="Vertical" gap="SM">
+                            {(trgtFilterList && setTrgtFilterList) && 
+                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
+                                <BehvColDropItem 
+                                    key={`behvCol-${index}`}
+                                    itemIdx={index}
+                                    isPossibleEdit={isPossibleEdit}
+                                    trgtFilterItem={trgtFilterItem}
+                                    columnList={columnList}
+                                    setTrgtFilterList={setTrgtFilterList}
+                                    deleteTrgtFilterInfo={deleteTrgtFilterInfo}
+                                />
+                            ))}
+                            </Stack>
+                        </Page>
+                    </Stack>
                 </Stack>
             </Stack>
             

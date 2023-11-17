@@ -1,59 +1,20 @@
-import { getCodeList as fetchCodeList } from '@/api/CodeAPI';
-import { CodeModel } from '@/models/model/CodeModel';
-import { addCodeList } from '@/reducers/codeSlice';
-import store from '@/store';
-
-const useLoader = () => {
-  const codeList = store.getState().code.codeList;
-  const dispatch = store.dispatch;
-
-  const getCodeListAsync = async (groupId: string): Promise<Array<CodeModel>> => {
-    const filterCodeList = codeList.filter((codeItem) => codeItem.groupId === groupId);
-
-    if (filterCodeList.length === 0) {
-      let codeList: Array<CodeModel> = [];
-
-      await fetchCodeList(groupId)
-        .then((response) => {
-          if (response.successOrNot === 'N') {
-          } else {
-            codeList = response.data;
-            dispatch(addCodeList(codeList));
-          }
-        })
-        .catch((error) => {});
-
-      return codeList;
-    }
-
-    return filterCodeList;
-  };
-
-  return {
-    getCodeListAsync,
-  };
-};
+import { getFeatureTypList } from '@/api/FeatureAPI';
+import { getCodeListWithOut } from '@/reducers/codeSlice';
 
 export const useFaqLoader = async ({ request, params }: any) => {
-  const { getCodeListAsync } = useLoader();
-
-  return await getCodeListAsync('FAQ_TYPE');
+  return await getCodeListWithOut('FAQ_TYPE');
 };
 
 export const useQnaLoader = async ({ request, params }: any) => {
-  const { getCodeListAsync } = useLoader();
-  const response1 = getCodeListAsync('QNA_TYPE');
-  const response2 = getCodeListAsync('QNA_STAT');
-
+  const response1 = getCodeListWithOut('QNA_TYPE');
+  const response2 = getCodeListWithOut('QNA_STAT');
   return await Promise.all([response1, response2]);
 };
 
 export const useFeatureLoader = async ({ request, params }: any) => {
-  const { getCodeListAsync } = useLoader();
-  const response1 = getCodeListAsync('QNA_TYPE');
-  const response2 = getCodeListAsync('QNA_STAT');
+  const response1 = getCodeListWithOut('FEATURE_TYPE');
+  const response2 = getFeatureTypList();
+  const response = await Promise.all([response1, response2]);
 
-  return await Promise.all([response1, response2]);
+  return response[1].data;
 };
-
-export default useLoader;

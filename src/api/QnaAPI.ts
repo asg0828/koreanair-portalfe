@@ -1,19 +1,18 @@
 import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
 import { PageModel } from '@/models/model/PageModel';
+import { QnaParams } from '@/models/model/QnaModel';
 import { callApi, Method } from '@utils/ApiUtil';
 
-export const getQnaList = (searchKey: string, searchValue: string, page: PageModel) => {
+export const getQnaList = (params: QnaParams, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.QNA}`,
     method: Method.GET,
     params: {
       queryParams: {
-        searchConditions: searchKey,
-        searchTable: searchValue,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...params,
+        ...page,
       },
     },
   });

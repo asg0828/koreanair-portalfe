@@ -58,7 +58,6 @@ export default function Daily() {
       });
     } else {
       if (response?.data) {
-        response.data.page.page = response.data.page.page - 1;
         // response.data.contents.forEach(() => {});
         setRows(response.data.contents);
         setPage(response.data.page);

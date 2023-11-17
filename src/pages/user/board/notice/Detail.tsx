@@ -16,15 +16,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const [NoticeModel, setNoticeModel] = useState<NoticeModel>();
+  const location = useLocation();
+  const [noticeModel, setNoticeModel] = useState<NoticeModel>();
   const [prevNoticeModel, setPrevNoticeModel] = useState<NoticeModel>();
   const [nextNoticeModel, setNextNoticeModel] = useState<NoticeModel>();
   const noticeId: string = location?.state?.noticeId || '';
   const rows: Array<NoticeModel> = location?.state?.rows;
   const { data: response, isSuccess, isError } = useNoticeById(noticeId);
-  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteNotice(noticeId);
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteNotice(noticeId);
 
   const goToList = () => {
     navigate('..');
@@ -109,12 +109,12 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">{NoticeModel?.sj}</Typography>
+              <Typography variant="h3">{noticeModel?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={NoticeModel?.cn} disabled />
+              <TinyEditor content={noticeModel?.cn} disabled />
             </TD>
           </TR>
           <TR>

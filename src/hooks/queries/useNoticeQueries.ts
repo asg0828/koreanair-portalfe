@@ -1,9 +1,10 @@
 import { getNoticeById, getNoticeList } from '@/api/NoticeAPI';
+import { NoticeParams } from '@/models/model/NoticeModel';
 import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
-export const useNoticeList = (searchKey: string, searchValue: string, page: PageModel) => {
-  return useQuery(['/notice/list'], () => getNoticeList(searchKey, searchValue, page));
+export const useNoticeList = (params: NoticeParams, page: PageModel) => {
+  return useQuery(['/notice/list'], () => getNoticeList(params, page));
 };
 
 export const useNoticeById = (noticeId: string) => {

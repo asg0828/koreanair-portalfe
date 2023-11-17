@@ -43,6 +43,7 @@ export const ModalTitCont = {
     DEL_VALID: { title: "Feature 삭제", context: "삭제할 항목이 없습니다." },
     REG_VALID: { title: "Feature 저장", context: "계산식을 확인해주세요."},
     EDIT_VALID: { title: "Feature 수정", context: "계산식을 확인해주세요."},
+    TRGT_CLEAR: { title: "대상 초기화", context: "등록한 대상 정보가 모두 초기화 됩니다. 정말 등록한 대상을 초기화 하시겠습니까?" },
     APRO_MAX_SLCT: { title: "결재자 선택", context: "최대 3명의 결재자 선택이 가능합니다."},
     APRO_MAX_APND: { title: "결재자 추가", context: "최대 3명의 결재자 선택이 가능합니다."},
     SUBMISSION_CANCEL: { title: "승인 정보 요청 취소", context: "요청한 승인 정보를 취소 하시겠습니까?"},
@@ -51,7 +52,6 @@ export const ModalTitCont = {
     SUBMISSION_APPROVAL: { title: "요청 정보 승인", context: "요청된 승인 정보를 승인 하시겠습니까?"},
     SUBMISSION_REJECT: { title: "요청 정보 반려", context: "요청된 승인 정보를 반려 하시겠습니까?"},
 }
-
 // 페이지명(path) setting
 export const selfFeatPgPpNm = {
     LIST: 'list', // 목록
@@ -78,4 +78,10 @@ export const subFeatStatus = {
     IN_APRV: 'inApproval', // 결재진행중
     APRV: 'approved', // 승인완료
     REJT: 'rejected', // 반려
+}
+// 컬럼 데이터타입
+export const ColDataType = {
+    NUM: 'number',
+    STR: 'string',
+    TIME:  'timestamp',
 }

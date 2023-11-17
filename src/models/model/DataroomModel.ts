@@ -1,5 +1,10 @@
 import { commonModel } from '@/models/model/CommonModel';
 
+export interface DataroomParams {
+  searchConditions: string;
+  searchTable: string;
+}
+
 export interface DataroomModel extends CreatedDataroomModel, commonModel {
   dataId: string;
 }

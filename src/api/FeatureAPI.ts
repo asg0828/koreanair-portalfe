@@ -1,19 +1,19 @@
 import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
+import { FeatureParams } from '@/models/model/FeatureModel';
 import { PageModel } from '@/models/model/PageModel';
 import { callApi, Method } from '@utils/ApiUtil';
 
-export const getFeatureList = (searchKey: string, searchValue: string, page: PageModel) => {
+export const getFeatureList = (params: FeatureParams, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.FEATURE}`,
     method: Method.GET,
     params: {
       queryParams: {
-        searchConditions: searchKey,
-        searchTable: searchValue,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...params,
+        searchConditions: JSON.stringify(params.searchConditions),
+        ...page,
       },
     },
   });
@@ -59,5 +59,21 @@ export const deleteFeature = (featureId: string) => {
         featureId,
       },
     },
+  });
+};
+
+export const getFeatureTypList = () => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.FEATURE_SEPARATES}/all`,
+    method: Method.GET,
+  });
+};
+
+export const getFeatureSeList = (seGrpId: string) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.FEATURE_SEPARATES}/${seGrpId}`,
+    method: Method.GET,
   });
 };

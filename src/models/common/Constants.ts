@@ -1,15 +1,3 @@
-export enum SearchKey {
-  ALL = 'all',
-  SJ = 'sj',
-  CN = 'cn',
-  QSTN = 'qstn',
-  ANSW = 'answ',
-}
-
-export enum StringValue {
-  DEFAULT = '',
-}
-
 export enum View {
   DETAIL = 'detail',
   REG = 'reg',
@@ -39,6 +27,7 @@ export enum GroupCodeType {
   FAQ_TYPE = 'FAQ_TYPE',
   QNA_TYPE = 'QNA_TYPE',
   QNA_STAT = 'QNA_STAT',
+  FEATURE_TYPE = 'FEATURE_TYPE',
 }
 
 export enum ContextPath {

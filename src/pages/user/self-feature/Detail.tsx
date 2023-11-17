@@ -8,7 +8,7 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import VerticalTable from '@/components/table/VerticalTable';
 import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
-import SubmissionRequestPop from '@/components/self-feature-submission/popup/SubmissionRequestPop';
+//import SubmissionRequestPop from '@/components/self-feature-submission/popup/SubmissionRequestPop';
 import {
     TR,
     TH,
@@ -24,7 +24,6 @@ import {
   FeatureTemp, 
   FormulaTrgtListProps, 
   MstrSgmtTableandColMetaInfo, 
-  TbRsCustFeatRule, 
   TbRsCustFeatRuleCalc, 
   TbRsCustFeatRuleCase, 
   TbRsCustFeatRuleSql, 
@@ -52,6 +51,7 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
+  ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
 import { 
   SfSubmissionApproval, 
@@ -90,7 +90,7 @@ const SelfFeatureDetail = () => {
   const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
   const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
 
-  const [ isOpenSubmissionRequestPop, setIsOpenSubmissionRequestPop ] = useState<boolean>(false)
+  //const [ isOpenSubmissionRequestPop, setIsOpenSubmissionRequestPop ] = useState<boolean>(false)
 
   useEffect(() => {
     // 초기 상세 정보 조회 API CALL
@@ -142,12 +142,6 @@ const SelfFeatureDetail = () => {
       } else if (regType === "cancel") {
         // 승인 요청 취소
         cancelRequestSubmission()
-      } else if (regType === "approval") {
-        // 승인 처리
-        approveSubmissionApproval()
-      } else if (regType === "reject") {
-        //cancelRequestSubmission()
-        // 팝업 오픈 - 반려 사유 작성 팝업
       } else if (regType === "delete") {
         // 삭제 처리
         deleteCustFeatRule()
@@ -179,7 +173,7 @@ const SelfFeatureDetail = () => {
         targetList[i].operator === "count"
         || targetList[i].operator === "distinct_count"
       ) {
-        dataType = "number"
+        dataType = ColDataType.NUM
       }
       t.dataType = dataType
 
@@ -217,20 +211,6 @@ const SelfFeatureDetail = () => {
       setConfirmModalTit(ModalTitCont.SUBMISSION_CANCEL.title)
       setConfirmModalCont(ModalTitCont.SUBMISSION_CANCEL.context)
       setIsOpenConfirmModal(true)
-    } else if (pageNm === selfFeatPgPpNm.SUB_APRV) {
-      // 승인 처리
-      setModalType(ModalType.CONFIRM)
-      setRegType("approval")
-      setConfirmModalTit(ModalTitCont.SUBMISSION_APPROVAL.title)
-      setConfirmModalCont(ModalTitCont.SUBMISSION_APPROVAL.context)
-      setIsOpenConfirmModal(true)
-    } else if (pageNm === selfFeatPgPpNm.SUB_REJT) {
-      // 반려 처리
-      setModalType(ModalType.CONFIRM)
-      setRegType("reject")
-      setConfirmModalTit(ModalTitCont.SUBMISSION_REJECT.title)
-      setConfirmModalCont(ModalTitCont.SUBMISSION_REJECT.context)
-      setIsOpenConfirmModal(true)
     } else if (pageNm === selfFeatPgPpNm.DELETE) {
       // 삭제 처리
       setModalType(ModalType.CONFIRM)
@@ -240,6 +220,35 @@ const SelfFeatureDetail = () => {
       setIsOpenConfirmModal(true)
     } else {
       navigate(`../${pageNm}`)
+    }
+  }
+
+  const retrieveCustFeatRuleInfos = async () => {
+    /*
+      Method      :: GET
+      Url         :: /api/v1/customerfeatures
+      path param  :: {custFeatRuleId}
+      query param :: 
+      body param  :: 
+    */
+    let config = cloneDeep(initConfig)
+    config.isLoarding = true
+    let request = cloneDeep(initApiRequest)
+    request.method = Method.GET
+    request.url = `/api/v1/customerfeatures/${location.state.id}`
+    console.log("[retrieveCustFeatRuleInfos] Request  :: ", request)
+
+    let response = cloneDeep(initCommonResponse)
+    response = await callApi(request)
+    console.log("[retrieveCustFeatRuleInfos] Response header       :: ", response.header)
+    console.log("[retrieveCustFeatRuleInfos] Response statusCode   :: ", response.statusCode)
+    console.log("[retrieveCustFeatRuleInfos] Response status       :: ", response.status)
+    console.log("[retrieveCustFeatRuleInfos] Response successOrNot :: ", response.successOrNot)
+    console.log("[retrieveCustFeatRuleInfos] Response result       :: ", response.result)
+
+    if (response.statusCode === StatusCode.SUCCESS) {
+      setFeatureInfo(cloneDeep(response.result))
+      retrieveSubmissionList()
     }
   }
   
@@ -316,35 +325,6 @@ const SelfFeatureDetail = () => {
     }
   }
 
-  const retrieveCustFeatRuleInfos = async () => {
-    /*
-      Method      :: GET
-      Url         :: /api/v1/customerfeatures
-      path param  :: {custFeatRuleId}
-      query param :: 
-      body param  :: 
-    */
-    let config = cloneDeep(initConfig)
-    config.isLoarding = true
-    let request = cloneDeep(initApiRequest)
-    request.method = Method.GET
-    request.url = `/api/v1/customerfeatures/${location.state.id}`
-    console.log("[retrieveCustFeatRuleInfos] Request  :: ", request)
-
-    let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
-    console.log("[retrieveCustFeatRuleInfos] Response header       :: ", response.header)
-    console.log("[retrieveCustFeatRuleInfos] Response statusCode   :: ", response.statusCode)
-    console.log("[retrieveCustFeatRuleInfos] Response status       :: ", response.status)
-    console.log("[retrieveCustFeatRuleInfos] Response successOrNot :: ", response.successOrNot)
-    console.log("[retrieveCustFeatRuleInfos] Response result       :: ", response.result)
-
-    if (response.statusCode === StatusCode.SUCCESS) {
-      setFeatureInfo(cloneDeep(response.result))
-      retrieveSubmissionList()
-    }
-  }
-
   const insertSubmissionRequest = async () => {
     /*
       승인 요청
@@ -391,30 +371,6 @@ const SelfFeatureDetail = () => {
     console.log("[CancelRequestSubmission] Response :: ", response)
   }
 
-  const approveSubmissionApproval = async () => {
-    /*
-      승인
-      Method      :: PUT
-      Url         :: /api/v1/users/${email}/submission-approvals/${approvalId}/approve
-      path param  :: email, approvalId
-      query param :: 
-      body param  :: { comment }
-    */
-    let config = cloneDeep(initConfig)
-    config.isLoarding = true
-    let request = cloneDeep(initApiRequest)
-    request.method = Method.PUT
-    let email = ""
-    let approvalId = ""
-    request.url = `/api/v1/users/${email}/submissions/${approvalId}/cancel`
-    request.params!.bodyParams = { comment: "" }
-    console.log("[approveSubmissionApproval] Request  :: ", request)
-
-    let response = cloneDeep(initCommonResponse)
-    //response = await callApi(request)
-    console.log("[approveSubmissionApproval] Response :: ", response)
-  }
-
   const deleteCustFeatRule = async () => {
     /*
       feature 삭제
@@ -444,9 +400,8 @@ const SelfFeatureDetail = () => {
     if (
       !location.state.submissionStatus
       || location.state.submissionStatus === ""
-      || location.state.submissionStatus === subFeatStatus.SAVE
     ) {
-      // 등록(품의는 저장 x) / 품의 저장
+      // 등록(품의는 저장 x)
       return (
         <Stack justifyContent="End" gap="SM" className="width-100">
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
@@ -458,42 +413,41 @@ const SelfFeatureDetail = () => {
           <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
             수정
           </Button>
-          {/* <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-            승인 요청서
-          </Button> */}
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_ISRT_REQ)}>
             승인 요청
           </Button>
         </Stack>
       )
+    } else if (location.state.submissionStatus === subFeatStatus.SAVE) {
+      // 품의 저장(품의 저장의 경우 결재진행 전 단계로 가야할지?)
+      return (
+        <Stack justifyContent="End" gap="SM" className="width-100">
+          <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            목록
+          </Button>
+          <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.DELETE)}>
+            삭제
+          </Button>
+          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
+            수정
+          </Button>
+          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
+            요청 취소
+          </Button>
+        </Stack>
+      )
     } else if (location.state.submissionStatus === subFeatStatus.IN_APRV) {
-      // 결재 진행
-      // if (location.state.id.includes('ADM')) {
-      //   return (
-      //     <Stack justifyContent="End" gap="SM" className="width-100">
-      //       <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
-      //         목록
-      //       </Button>
-      //       <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_APRV)}>
-      //         승인
-      //       </Button>
-      //       <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_REJT)}>
-      //         반려
-      //       </Button>
-      //     </Stack>
-      //   )
-      // } else {
-        return (
-          <Stack justifyContent="End" gap="SM" className="width-100">
-            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
-              목록
-            </Button>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
-              요청 취소
-            </Button>
-          </Stack>
-        )
-      //}
+      // 결재 진행이지만 1차 승인 이전의 상태인 경우만 요청 취소 버튼 노출
+      return (
+        <Stack justifyContent="End" gap="SM" className="width-100">
+          <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+            목록
+          </Button>
+          {/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_CANCEL)}>
+            요청 취소
+          </Button> */}
+        </Stack>
+      )
     } else if (location.state.submissionStatus === subFeatStatus.APRV) {
       // 승인 완료
       return (
@@ -501,9 +455,6 @@ const SelfFeatureDetail = () => {
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
             목록
           </Button>
-          {/* <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUBMCFRM)}>
-          승인 요청서
-          </Button> */}
         </Stack>
       )
     } else if (location.state.submissionStatus === subFeatStatus.REJT) {
@@ -523,9 +474,6 @@ const SelfFeatureDetail = () => {
         <Stack justifyContent="End" gap="SM" className="width-100">
           <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
             목록
-          </Button>
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.EDIT)}>
-            수정
           </Button>
         </Stack>
       )
@@ -705,6 +653,7 @@ const SelfFeatureDetail = () => {
                   trgtFilterList={trgtFilterList} 
                   setTargetList={setTargetList} 
                   setTrgtFilterList={setTrgtFilterList} 
+                  attributes={mstrSgmtTableandColMetaInfo.attributes} 
                   behaviors={mstrSgmtTableandColMetaInfo.behaviors}
                   setFormulaTrgtList={setFormulaTrgtList}
                 />
@@ -753,7 +702,7 @@ const SelfFeatureDetail = () => {
           }
 
           <Stack justifyContent="Between" className="width-100">
-              <Typography variant="h4">결재선</Typography>
+            <Typography variant="h4">결재선</Typography>
           </Stack>
           <VerticalTable
               columns={columns}
@@ -774,11 +723,11 @@ const SelfFeatureDetail = () => {
     {/* 버튼 영역 */}
 
     {/* 팝업 */}
-      <SubmissionRequestPop
+      {/* <SubmissionRequestPop
         isOpen={isOpenSubmissionRequestPop}
         onClose={(isOpen) => setIsOpenSubmissionRequestPop(isOpen)}
         featureInfo={featureInfo}
-      />
+      /> */}
     {/* 팝업 */}
 
     {/* Confirm 모달 */}

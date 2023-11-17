@@ -6,8 +6,8 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedNoticeModel } from '@/models/model/NoticeModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { UpdatedNoticeModel } from '@/models/model/NoticeModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -18,15 +18,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Edit = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
+  const location = useLocation();
   const noticeId = location?.state?.noticeId;
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    control,
     formState: { errors },
   } = useForm<UpdatedNoticeModel>({
     mode: 'onChange',
@@ -45,9 +45,9 @@ const Edit = () => {
   const { data: response, isSuccess, isError } = useNoticeById(values.noticeId);
   const {
     data: uResponse,
-    mutate,
     isSuccess: uIsSuccess,
     isError: uIsError,
+    mutate,
   } = useUpdateNotice(values.noticeId, values);
 
   const goToList = () => {
@@ -141,7 +141,7 @@ const Edit = () => {
               </Stack>
             </TD>
           </TR>
-          <TR>
+          {/* <TR>
             <TH>팝업공지여부</TH>
             <TD align="left">
               <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
@@ -203,7 +203,7 @@ const Edit = () => {
                 </Stack>
               </Stack>
             </TD>
-          </TR>
+          </TR> */}
           <TR>
             <TH>게시여부</TH>
             <TD align="left">

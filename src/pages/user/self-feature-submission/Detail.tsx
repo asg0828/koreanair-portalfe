@@ -25,7 +25,8 @@ import {
 import { 
     initSfSubmissionRequestInfo,
     sfSubmissionApprovalListColumns as columns,
-    initSfSubmissionApproval
+    initSfSubmissionApproval,
+    aprvSeqNm
 } from "./data";
 import { 
     FeatureInfo, 
@@ -42,6 +43,9 @@ import {
     initTbRsCustFeatRuleCalc, 
 } from "../self-feature/data";
 import { 
+    ColDataType,
+    ModalTitCont,
+    ModalType,
     initApiRequest, 
     initCommonResponse, 
     initConfig, 
@@ -50,6 +54,8 @@ import {
 import { Method, callApi } from "@/utils/ApiUtil";
 import { RowsInfo } from "@/models/components/Table";
 import { StatusCode } from "@/models/common/CommonResponse";
+import ConfirmModal from "@/components/modal/ConfirmModal";
+import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 
 const SfSubmissionRequestDetail = () => {
 
@@ -57,6 +63,10 @@ const SfSubmissionRequestDetail = () => {
     const location = useLocation()
 
     const [ regType, setRegType ] = useState<string>('')
+    const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
+    const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
+    const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
+    const [ modalType, setModalType ] = useState<string>('')
 
     // 속성 및 행동 데이터
     const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
@@ -77,6 +87,22 @@ const SfSubmissionRequestDetail = () => {
         getTableandColumnMetaInfoByMstrSgmtRuleId()
         retrieveCustFeatRuleInfos()
     }, [])
+
+    // modal 확인/취소 이벤트
+    const onConfirm = () => {
+        if (modalType === ModalType.CONFIRM) {
+            if (regType === "approval") {
+                approveSubmissionApproval()
+            } else if (regType === "reject") {
+                // 반려 팝업
+            }
+        }
+        setIsOpenConfirmModal(false)
+    }
+
+    const onCancel = () => {
+        setIsOpenConfirmModal(false)
+    }
 
     const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
         /*
@@ -116,7 +142,7 @@ const SfSubmissionRequestDetail = () => {
             targetList[i].operator === "count"
             || targetList[i].operator === "distinct_count"
             ) {
-            dataType = "number"
+            dataType = ColDataType.NUM
             }
             t.dataType = dataType
 
@@ -126,43 +152,158 @@ const SfSubmissionRequestDetail = () => {
     }, [targetList])
 
     const retrieveCustFeatRuleInfos = async () => {
-        
+        /*
+          Method      :: GET
+          Url         :: /api/v1/customerfeatures
+          path param  :: {custFeatRuleId}
+          query param :: 
+          body param  :: 
+        */
         let config = cloneDeep(initConfig)
         config.isLoarding = true
         let request = cloneDeep(initApiRequest)
         request.method = Method.GET
-        let custFeatRuleId = `\${${location.state.referenceNo}}`
-        request.url = `/api/v1/customerfeatures/${custFeatRuleId}`
-        console.log("[retrieveSubmissions] Request  :: ", request)
-
+        request.url = `/api/v1/customerfeatures/${location.state.id}`
+        console.log("[retrieveCustFeatRuleInfos] Request  :: ", request)
+    
         let response = cloneDeep(initCommonResponse)
-        //response = await callApi(request)
-        console.log("[retrieveSubmissions] Response :: ", response)
-
-        // custFeat Type에 따라 Rule / SQL 설정
-        if (response.data.tbRsCustFeatRule && response.data.tbRsCustFeatRule.sqlDirectInputYn === "Y")
-            setRegType(selfFeatPgPpNm.SQL_REG)
-        else
-            setRegType(selfFeatPgPpNm.RULE_REG)
-
-        setFeatureInfo(response.data)
+        response = await callApi(request)
+        console.log("[retrieveCustFeatRuleInfos] Response header       :: ", response.header)
+        console.log("[retrieveCustFeatRuleInfos] Response statusCode   :: ", response.statusCode)
+        console.log("[retrieveCustFeatRuleInfos] Response status       :: ", response.status)
+        console.log("[retrieveCustFeatRuleInfos] Response successOrNot :: ", response.successOrNot)
+        console.log("[retrieveCustFeatRuleInfos] Response result       :: ", response.result)
+    
+        if (response.statusCode === StatusCode.SUCCESS) {
+          setFeatureInfo(cloneDeep(response.result))
+          retrieveSubmissionList()
+        }
     }
 
-    const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
+    const retrieveSubmissionList = async () => {
+        /*
+            Method      :: GET
+            Url         :: /api/v1/submissions
+            path param  :: submissionId
+            query param :: type=&status=&referenceNo=&submissionNo=&requester=&title=&titleLike=&requestDateFrom=&requestDateTo=&approvalCompletionDateFrom=&approvalCompletionDateTo=
+            body param  :: 
+        */
+        let config = cloneDeep(initConfig)
+        config.isLoarding = true
+        let request = cloneDeep(initApiRequest)
+        request.method = Method.GET
+        request.url = `/api/v1/submissions`
+        request.params!.queryParams = { type: "CustomerFeature", referenceNo: location.state.id }
+        console.log("[retrieveSubmissionList] Request  :: ", request)
+
+        let response = cloneDeep(initCommonResponse)
+        response = await callApi(request)
+        console.log("[retrieveSubmissionList] Response header       :: ", response.header)
+        console.log("[retrieveSubmissionList] Response statusCode   :: ", response.statusCode)
+        console.log("[retrieveSubmissionList] Response status       :: ", response.status)
+        console.log("[retrieveSubmissionList] Response successOrNot :: ", response.successOrNot)
+        console.log("[retrieveSubmissionList] Response result       :: ", response.result)
+
+        if (response.statusCode === StatusCode.SUCCESS) {
+            if (response.result.length > 0) {
+                retrieveSubmissionInfo(response.result[0].id)
+            }
+        }
+
+    }
+
+    const retrieveSubmissionInfo = async (submissionNo: string) => {
+        /*
+            Method      :: GET
+            Url         :: /api/v1/submissions/${submissionId}
+            path param  :: submissionId
+            query param :: 
+            body param  :: 
+        */
+        let config = cloneDeep(initConfig)
+        config.isLoarding = true
+        let request = cloneDeep(initApiRequest)
+        request.method = Method.GET
+        request.url = `/api/v1/submissions/${submissionNo}`
+        console.log("[retrieveSubmission1] Request  :: ", request)
+
+        let response = cloneDeep(initCommonResponse)
+        response = await callApi(request)
+        console.log("[retrieveSubmission1] Response header       :: ", response.header)
+        console.log("[retrieveSubmission1] Response statusCode   :: ", response.statusCode)
+        console.log("[retrieveSubmission1] Response status       :: ", response.status)
+        console.log("[retrieveSubmission1] Response successOrNot :: ", response.successOrNot)
+        console.log("[retrieveSubmission1] Response result       :: ", response.result)
+        if (response.statusCode === StatusCode.SUCCESS) {
+
+        if (response.result.submission) setSfSubmissionRequestData(cloneDeep(response.result.submission))
+
+        if (response.result.approvals.length > 0) {
+            setSfSubmissionApprovalList(() => {
+                let rtn = cloneDeep(response.result.approvals)
+                rtn = rtn.map((approval: SfSubmissionApproval) => { 
+                    if (approval.approvalSequence === 1) approval.approvalSequenceNm = aprvSeqNm.FIRST
+                    else if (approval.approvalSequence === 2) approval.approvalSequenceNm = aprvSeqNm.SECOND
+                    else if (approval.approvalSequence === 3) approval.approvalSequenceNm = aprvSeqNm.LAST
+                    return approval
+                })
+                return rtn
+            })
+        }
+        }
+    }
+
+    const onClickPageMovHandler = (pageNm: string): void => {
         
         if (pageNm === selfFeatPgPpNm.LIST) {
             navigate('..')
         } else if (pageNm === selfFeatPgPpNm.SUB_APRV) {
-            console.log("승인처리")
+            // 반려 처리
+            setModalType(ModalType.CONFIRM)
+            setRegType("approval")
+            setConfirmModalTit(ModalTitCont.SUBMISSION_APPROVAL.title)
+            setConfirmModalCont(ModalTitCont.SUBMISSION_APPROVAL.context)
+            setIsOpenConfirmModal(true)
         } else if (pageNm === selfFeatPgPpNm.SUB_REJT) {
-            console.log("반려처리")
+            // 반려 처리
+            setModalType(ModalType.CONFIRM)
+            setRegType("reject")
+            setConfirmModalTit(ModalTitCont.SUBMISSION_REJECT.title)
+            setConfirmModalCont(ModalTitCont.SUBMISSION_REJECT.context)
+            setIsOpenConfirmModal(true)
         }
+    }
+
+    const approveSubmissionApproval = async () => {
+        /*
+            승인
+            Method      :: PUT
+            Url         :: /api/v1/users/${email}/submission-approvals/${approvalId}/approve
+            path param  :: email, approvalId
+            query param :: 
+            body param  :: { comment }
+        */
+        let config = cloneDeep(initConfig)
+        config.isLoarding = true
+        let request = cloneDeep(initApiRequest)
+        request.method = Method.PUT
+        let email = ""
+        let approvalId = ""
+        request.url = `/api/v1/users/${email}/submissions/${approvalId}/cancel`
+        request.params!.bodyParams = { comment: "" }
+        console.log("[approveSubmissionApproval] Request  :: ", request)
+
+        let response = cloneDeep(initCommonResponse)
+        //response = await callApi(request)
+        console.log("[approveSubmissionApproval] Response :: ", response)
     }
 
     return (
         <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
+            {/* 상단 버튼 영역 */}
+            <FeatQueryRsltButton />
             {/* 정보 영역 */}
-            <Typography variant="h2">승인 요청서 정보</Typography>
+            <Typography variant="h2">승인 정보</Typography>
             <Stack direction="Vertical" className="width-100" gap="MD">
                 <HorizontalTable className="width-100">
                     <TR>
@@ -201,34 +342,8 @@ const SfSubmissionRequestDetail = () => {
                             {sfSubmissionRequestData && sfSubmissionRequestData.requestDate}
                         </TD>
                     </TR>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        승인 제목
-                        </TH>
-                        <TD colSpan={5.01}>
-                            {sfSubmissionRequestData && sfSubmissionRequestData.title}
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        승인 내용
-                        </TH>
-                        <TD colSpan={5.01}>
-                            {sfSubmissionRequestData && sfSubmissionRequestData.content}
-                        </TD>
-                    </TR>
                 </HorizontalTable>
-
-                <Stack justifyContent="Between" className="width-100">
-                    <Typography variant="h4">결재선</Typography>
-                </Stack>
-                <VerticalTable
-                    columns={columns}
-                    rows={sfSubmissionApprovalList}
-                    enableSort={false}
-                />
             </Stack>
-            <Typography variant="h2">요청 상세</Typography>
             <Stack direction="Vertical" gap="MD">
             {/* 기본 정보 */}
             <Typography variant="h4">Feature 기본 정보</Typography>
@@ -313,6 +428,7 @@ const SfSubmissionRequestDetail = () => {
                         trgtFilterList={trgtFilterList} 
                         setTargetList={setTargetList} 
                         setTrgtFilterList={setTrgtFilterList} 
+                        attributes={mstrSgmtTableandColMetaInfo.attributes} 
                         behaviors={mstrSgmtTableandColMetaInfo.behaviors}
                         setFormulaTrgtList={setFormulaTrgtList}
                     />
@@ -354,6 +470,16 @@ const SfSubmissionRequestDetail = () => {
             {/* 계산식 */}
             </Stack>
             {/* 정보 영역 */}
+            {/* 결재선 영역 */}
+            <Stack justifyContent="Between" className="width-100">
+                <Typography variant="h4">결재선</Typography>
+            </Stack>
+            <VerticalTable
+                columns={columns}
+                rows={sfSubmissionApprovalList}
+                enableSort={false}
+            />
+            {/* 결재선 영역 */}
             {/* 버튼 영역 */}
             <Stack justifyContent="End" gap="SM" className="width-100">
                 <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
@@ -367,6 +493,17 @@ const SfSubmissionRequestDetail = () => {
                 </Button>
             </Stack>
             {/* 버튼 영역 */}
+            {/* Confirm 모달 */}
+            <ConfirmModal
+                isOpen={isOpenConfirmModal}
+                onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+                title={confirmModalTit}
+                content={confirmModalCont}
+                onConfirm={onConfirm}
+                onCancle={onCancel}
+                btnType={modalType}
+            />
+            {/* Confirm 모달 */}
         </Stack>
     )
 }

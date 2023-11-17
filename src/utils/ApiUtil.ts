@@ -5,6 +5,7 @@ import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 import { Service, ServiceContextPath, ServicePort } from '@models/common/Service';
 import { v4 as uuidv4 } from 'uuid';
+import { PageModel } from '@/models/model/PageModel';
 
 export enum Method {
   GET = 'GET',
@@ -69,7 +70,6 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
     case Service.KAL_BE:
       baseURL =
         baseURL +
-        (process.env.REACT_APP_NODE_ENV === 'local' ? ':' + ServicePort.KAL_BE.toString() : '') +
         ServiceContextPath.KAL_BE +
         baseApiUrl;
       break;
@@ -171,7 +171,21 @@ const getQueryStringFormat = (queryParams?: QueryParams) => {
   return queryString ? `?${queryString}` : '';
 };
 
+type ConvertPageType = 'request' | 'response';
+
+const convertPage = (type: ConvertPageType, data?: any) => {
+  if (data) {
+    if (type === 'request') {
+      data.page = data.page + 1;
+    } else {
+      data.page = data.page - 1;
+    }
+  }
+};
+
 export const callApi = async (apiRequest: ApiRequest): Promise<CommonResponse> => {
+  convertPage('request', apiRequest.params?.queryParams);
+
   const url: string = apiRequest.url + getQueryStringFormat(apiRequest.params?.queryParams);
   const isLoading = apiRequest.config?.isLoarding || false;
   const isFile = apiRequest.config?.isFile || false;
@@ -203,6 +217,8 @@ export const callApi = async (apiRequest: ApiRequest): Promise<CommonResponse> =
     default:
       break;
   }
+
+  convertPage('response', response?.data?.page);
   return response;
 };
 

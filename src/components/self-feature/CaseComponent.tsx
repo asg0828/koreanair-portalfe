@@ -16,6 +16,7 @@ import {
     whenYn, 
 } from '@/pages/user/self-feature/data'
 import OperatorOperand from './OperatorOperand';
+import { ColDataType } from '@/models/selfFeature/FeatureCommon';
 
 const CaseComponent = ({
     isPossibleEdit,
@@ -30,6 +31,7 @@ const CaseComponent = ({
     const [ trgtFormulaInput, setTrgtFormulaInput ] = useState<Boolean>(false)
     const [ formulaValidRslt, setFormulaValidRslt ] = useState<FormulaValidRslt>(cloneDeep(initFormulaValidRslt))
     const [ dataType, setDataType ] = useState<string>("")
+    const [ slctDateType, setSlctDateType ] = useState<string>("")
 
     const [ delimiterSelected, setDelimiterSelected ] = useState<Boolean>(false)
     const [ elseSelected, setElseSelected ] = useState<Boolean>(false)
@@ -43,6 +45,16 @@ const CaseComponent = ({
         } else {
             setDelimiterSelected(false)
         }
+
+        // 연산자가 날짜타입인 경우 초기 setting
+        if (
+            custFeatRuleCase.operator === "before" 
+            || custFeatRuleCase.operator === "after" 
+            || custFeatRuleCase.operator === "between"
+        ) {
+            setSlctDateType(custFeatRuleCase.operator)
+        }
+
     }, [custFeatRuleCase?.operator])
 
     useEffect(() => {
@@ -93,7 +105,7 @@ const CaseComponent = ({
                         setDataType(formulaTrgt.dataType)
                         break
                     } else {
-                        setDataType("number")
+                        setDataType(ColDataType.NUM)
                     }
                 }
             }
@@ -116,7 +128,7 @@ const CaseComponent = ({
                     setDataType(formulaTrgt.dataType)
                     break
                 } else {
-                    setDataType("number")
+                    setDataType(ColDataType.NUM)
                 }
             }
         }
@@ -180,41 +192,65 @@ const CaseComponent = ({
     ) => {
         let keyNm = String(id)
         let v = String(value)
-        let t = false // select 변경시 delimiter 초기화를 위한 flag
-        let t2 = false // else 구문 선택시 결과값 제외 다른 값 초기화를 위한 flag
+        let isClrDlmt = false // select 변경시 delimiter 초기화를 위한 flag
+        let isSlctElse = false // else 구문 선택시 결과값 제외 다른 값 초기화를 위한 flag
         if (
             keyNm === "delimiter" 
             || (keyNm === "operator" && (v === "in_str" || v === "not_in_str" || v === "in_num" || v === "not_in_num"))
         ) {
             setDelimiterSelected(true)
-            t = true
+            isClrDlmt = true
         } else if (keyNm === "whenYn") {
-            t = true
+            isClrDlmt = true
             if (v === "N") {
-                t2 = true
+                isSlctElse = true
                 setElseSelected(true)
             } else {
-                t2 = false
+                isSlctElse = false
                 setElseSelected(false)
             }
         } else {
-            if (keyNm === "operator" && (v !== "in_str" && v !== "not_in_str" && v !== "in_num" && v !== "not_in_num")) {
-                setDelimiterSelected(false)
-                t = false
-            }
+            setDelimiterSelected(false)
+            isClrDlmt = false
+        }
+
+        // 날짜 타입 select box show를 위한 state 설정
+        if (keyNm === "operator" && (v === "before" || v === "after" || v === "between")) {
+            setSlctDateType(v)
+        }
+        // 날짜(between)의 경우 날짜/조건식 중 날짜 선택시 operand 초기화
+        let isOprdDate1 = false
+        let isOprdDate2 = false
+        if (keyNm === "operand1" && v === "date") {
+            isOprdDate1 = true
+        } else {
+            isOprdDate1 = false
+        }
+        if (keyNm === "operand4" && v === "date") {
+            isOprdDate2 = true
+        } else {
+            isOprdDate2 = false
         }
 
         (setCustFeatRuleCaseList && (index || index === 0)) && setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
             let rtn = cloneDeep(state)
             rtn[index][keyNm] = v
-            if (!t) {
+            if (!isClrDlmt) {
                 //rtn[index]["delimiter"] = ''
             }
-            if (t2) {
+            if (isSlctElse) {
                 rtn[index]["targetFormula"] = ''
                 rtn[index]["operator"] = ''
                 rtn[index]["delimiter"] = ''
                 rtn[index]["operand1"] = ''
+            }
+            if (isOprdDate1) {
+                rtn[index]["operand2"] = ''
+                rtn[index]["operand3"] = ''
+            }
+            if (isOprdDate2) {
+                rtn[index]["operand5"] = ''
+                rtn[index]["operand6"] = ''
             }
             return rtn
         })
@@ -314,9 +350,12 @@ const CaseComponent = ({
                 <OperatorOperand
                     isPossibleEdit={isPossibleEdit}
                     trgtFormulaInput={trgtFormulaInput}
+                    itemIdx={(index || index === 0) ? index : 0}
                     item={custFeatRuleCase}
+                    setCustFeatRuleCaseList={setCustFeatRuleCaseList}
                     dataType={dataType}
                     delimiterSelected={delimiterSelected}
+                    slctDateType={slctDateType}
                     onchangeInputHandler={onchangeInputHandler}
                     onchangeSelectHandler={onchangeSelectHandler}
                 />

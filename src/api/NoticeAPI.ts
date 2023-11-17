@@ -1,19 +1,18 @@
 import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
+import { NoticeParams } from '@/models/model/NoticeModel';
 import { PageModel } from '@/models/model/PageModel';
 import { callApi, Method } from '@utils/ApiUtil';
 
-export const getNoticeList = (searchKey: string, searchValue: string, page: PageModel) => {
+export const getNoticeList = (params: NoticeParams, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.NOTICE}`,
     method: Method.GET,
     params: {
       queryParams: {
-        searchConditions: searchKey,
-        searchTable: searchValue,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...params,
+        ...page,
       },
     },
   });

@@ -40,20 +40,14 @@ import {
   FeatureTemp,
   TbRsCustFeatRuleSql,
   FormulaTrgtListProps,
-  Behavior,
-  TbCoMetaTblClmnInfo,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
   initMstrSgmtTableandColMetaInfo,
-  initBehavior,
-  initTbCoMetaTblClmnInfo,
-  initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
   initFeatureTemp,
   initTbRsCustFeatRuleSql,
-  protoTypeMstrSgmtTableandColMetaInfo,
 } from './data'
 import { Method, callApi } from "@/utils/ApiUtil";
 import {
@@ -64,6 +58,7 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
+  ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
 import { StatusCode } from "@/models/common/CommonResponse";
 
@@ -87,6 +82,8 @@ const SelfFeatureEdit = () => {
 
   // update 데이터
   const [ updtFeatureInfo, setUpdtFeatureInfo ] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
+
+  const [ regType, setRegType ] = useState<string>(location.state.regType)
 
   // 기본정보
   const [ featureTempInfo, setFeatureTempInfo ] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
@@ -121,6 +118,11 @@ const SelfFeatureEdit = () => {
         || custFeatRule.sqlDirectInputYn === 'N'
       ) {
         updateCustFeatRule()
+      }
+
+      if (regType === "trgtClear") {
+        setTargetList([])
+        setTrgtFilterList([])
       }
     }
     setIsOpenConfirmModal(false)
@@ -176,12 +178,12 @@ const SelfFeatureEdit = () => {
     for (let i = 0; i < targetList.length; i++) {
       let t = { targetId: `T${i+1}`, dataType: "" }
       let dataType = targetList[i].targetDataType
-      
+      // 집계함수 선택시 대상의 dataType 수정
       if (
         targetList[i].operator === "count"
         || targetList[i].operator === "distinct_count"
       ) {
-        dataType = "number"
+        dataType = ColDataType.NUM
       }
       t.dataType = dataType
 
@@ -327,6 +329,7 @@ const SelfFeatureEdit = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -337,6 +340,7 @@ const SelfFeatureEdit = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -347,6 +351,7 @@ const SelfFeatureEdit = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -366,6 +371,7 @@ const SelfFeatureEdit = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -376,6 +382,7 @@ const SelfFeatureEdit = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -386,6 +393,7 @@ const SelfFeatureEdit = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -398,6 +406,14 @@ const SelfFeatureEdit = () => {
         navigate(-1)
       else
         navigate(`../${pageNm}`)
+  }
+
+  const targetClearHanbler = () => {
+    setModalType(ModalType.CONFIRM)
+    setRegType("trgtClear")
+    setConfirmModalTit(ModalTitCont.TRGT_CLEAR.title)
+    setConfirmModalCont(ModalTitCont.TRGT_CLEAR.context)
+    setIsOpenConfirmModal(true)
   }
 
   const onSubmitUpdateHandler = () => {
@@ -561,7 +577,12 @@ const SelfFeatureEdit = () => {
         ) &&
         <>
         {/* 대상 선택 */}
-        <Typography variant="h4">대상 선택</Typography>
+        <Stack direction="Horizontal" gap="LG" justifyContent="start">
+          <Typography variant="h4">대상 선택</Typography>
+          <Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
+            초기화
+          </Button>
+        </Stack>
         {/* drag && drop 영역*/}
         <Stack 
             direction="Horizontal"
@@ -580,6 +601,7 @@ const SelfFeatureEdit = () => {
               trgtFilterList={trgtFilterList} 
               setTargetList={setTargetList} 
               setTrgtFilterList={setTrgtFilterList} 
+              attributes={mstrSgmtTableandColMetaInfo.attributes} 
               behaviors={mstrSgmtTableandColMetaInfo.behaviors}
               setFormulaTrgtList={setFormulaTrgtList}
             />

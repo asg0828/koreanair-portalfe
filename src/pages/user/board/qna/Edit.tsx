@@ -5,10 +5,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
-import useCode from '@/hooks/useCode';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedQnaModel } from '@/models/model/QnaModel';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { UpdatedQnaModel } from '@/models/model/QnaModel';
+import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -21,7 +21,6 @@ const Edit = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { getCodeList } = useCode();
   const qnaId = location?.state?.qnaId;
   const {
     register,
@@ -42,22 +41,24 @@ const Edit = () => {
     },
   });
   const values = getValues();
-  const codeList = getCodeList(GroupCodeType.QNA_TYPE);
-  const statCodeList = getCodeList(GroupCodeType.QNA_STAT);
+  const codeList = useAppSelector(selectCodeList(GroupCodeType.QNA_TYPE));
+  const statCodeList = useAppSelector(selectCodeList(GroupCodeType.QNA_STAT));
   const { data: response, isSuccess, isError } = useQnaById(values.qnaId);
-  const { data: uResponse, mutate, isSuccess: uIsSuccess, isError: uIsError } = useUpdateQna(values.qnaId, values);
+  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateQna(values.qnaId, values);
 
   const goToList = () => {
     navigate('..');
   };
 
   const onSubmit = (data: UpdatedQnaModel) => {
-    dispatch(openModal({
-      type: ModalType.CONFIRM,
-      title: ModalTitle.MODIFY,
-      content: '수정하시겠습니까?',
-      onConfirm: mutate,
-    }));
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.MODIFY,
+        content: '수정하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {

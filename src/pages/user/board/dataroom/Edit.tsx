@@ -6,8 +6,8 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedDataroomModel } from '@/models/model/DataroomModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { UpdatedDataroomModel } from '@/models/model/DataroomModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -18,8 +18,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Edit = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
+  const location = useLocation();
   const dataId = location?.state?.dataId;
   const {
     register,
@@ -41,9 +41,9 @@ const Edit = () => {
   const { data: response, isSuccess, isError } = useDataroomById(values.dataId);
   const {
     data: uResponse,
-    mutate,
     isSuccess: uIsSuccess,
     isError: uIsError,
+    mutate,
   } = useUpdateDataroom(values.dataId, values);
 
   const goToList = () => {

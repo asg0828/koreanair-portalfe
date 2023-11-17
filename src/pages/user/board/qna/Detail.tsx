@@ -4,7 +4,7 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
-import useCode from '@/hooks/useCode';
+import { getCode } from '@/reducers/codeSlice';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { CreatedQnaModel, QnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
@@ -21,8 +21,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
-  const { getCode } = useCode();
-  const [QnaModel, setQnaModel] = useState<QnaModel>();
+  const [qnaModel, setQnaModel] = useState<QnaModel>();
   const [prevQnaModel, setPrevQnaModel] = useState<QnaModel>();
   const [nextQnaModel, setNextQnaModel] = useState<QnaModel>();
   const qnaId: string = location?.state?.qnaId || '';
@@ -238,19 +237,19 @@ const Detail = () => {
           <TR>
             <TH colSpan={4} className="headerName">
               <Stack className="headerNameWrap">
-                <Typography variant="h3">{QnaModel?.sj}</Typography>
+                <Typography variant="h3">{qnaModel?.sj}</Typography>
                 <ul>
-                  <li>{getCode(GroupCodeType.QNA_TYPE, QnaModel?.clCode || '')?.codeNm}</li>
-                  <li>{`${QnaModel?.rgstDeptNm || ''} ${QnaModel?.rgstNm || ''}`}</li>
-                  <li>{QnaModel?.modiDt}</li>
-                  <li>{`조회수 ${QnaModel?.viewCnt}`}</li>
+                  <li>{getCode(GroupCodeType.QNA_TYPE, qnaModel?.clCode || '')?.codeNm}</li>
+                  <li>{`${qnaModel?.rgstDeptNm || ''} ${qnaModel?.rgstNm || ''}`}</li>
+                  <li>{qnaModel?.modiDt}</li>
+                  <li>{`조회수 ${qnaModel?.viewCnt}`}</li>
                 </ul>
               </Stack>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={QnaModel?.cn} disabled />
+              <TinyEditor content={qnaModel?.cn} disabled />
             </TD>
           </TR>
           <TR>
@@ -273,7 +272,7 @@ const Detail = () => {
               <Stack direction="Vertical" gap="SM" className="width-100">
                 <Typography variant="h6">
                   Comment
-                  <span className="total">{`${QnaModel?.comments.length || 0}`}</span>건
+                  <span className="total">{`${qnaModel?.comments.length || 0}`}</span>건
                 </Typography>
 
                 <form onSubmit={handleSubmit(onCreateCommentSubmit)}>
@@ -297,7 +296,7 @@ const Detail = () => {
                   <ErrorLabel message={errors?.answ?.message} />
                 </form>
 
-                {QnaModel?.comments
+                {qnaModel?.comments
                   .sort((a, b) => new Date(a.rgstDt).getTime() - new Date(b.rgstDt).getTime())
                   .map((qnaItem) => (
                     <Stack gap="SM" direction="Vertical">

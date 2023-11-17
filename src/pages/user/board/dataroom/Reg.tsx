@@ -4,8 +4,8 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedDataroomModel } from '@/models/model/DataroomModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { CreatedDataroomModel } from '@/models/model/DataroomModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -20,8 +20,8 @@ const Reg = () => {
   const {
     register,
     handleSubmit,
-    control,
     getValues,
+    control,
     formState: { errors },
   } = useForm<CreatedDataroomModel>({
     mode: 'onChange',
@@ -32,7 +32,7 @@ const Reg = () => {
     },
   });
   const values = getValues();
-  const { data: response, mutate, isSuccess, isError } = useCreateDataroom(values);
+  const { data: response, isSuccess, isError, mutate } = useCreateDataroom(values);
 
   const goToList = () => {
     navigate('..');

@@ -20,7 +20,9 @@ import { transFuncCalcStr } from "@/utils/self-feature/FormulaValidUtil"
 const TransFunction = ({
     isPossibleEdit,
     itemIdx,
+    dataType,
     trgtItem,
+    columnList,
     setTargetList,
     setTrgtFilterList,
 }: TransFuncProps) => {
@@ -120,7 +122,9 @@ const TransFunction = ({
             isOpen={isOpenTransFunctionPop}
             onClose={(isOpen) => setIsOpenTransFunctionPop(isOpen)}
             itemIdx={itemIdx}
+            dataType={dataType}
             trgtItem={trgtItem}
+            columnList={columnList}
             setTargetList={setTargetList}
             setTrgtFilterList={setTrgtFilterList}
             setTransFuncChecked={setTransFuncChecked}

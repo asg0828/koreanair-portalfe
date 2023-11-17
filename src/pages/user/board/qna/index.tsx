@@ -1,11 +1,12 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useQnaList } from '@/hooks/queries/useQnaQueries';
-import useCode from '@/hooks/useCode';
-import { QnaModel } from '@/models/model/QnaModel';
-import { GroupCodeType, SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
-import { PageModel, initPage } from '@/models/model/PageModel';
+import useDidMountEffect from '@/hooks/useDidMountEffect';
+import { GroupCodeType, ValidType, View } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
+import { PageModel, initPage } from '@/models/model/PageModel';
+import { QnaModel, QnaParams } from '@/models/model/QnaModel';
+import { getCode } from '@/reducers/codeSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import AddIcon from '@mui/icons-material/Add';
@@ -28,16 +29,18 @@ const searchInfoList = [
   { key: 'cn', value: '내용' },
 ];
 
+const initParams: QnaParams = {
+  searchConditions: 'all',
+  searchTable: '',
+};
+
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { getCode } = useCode();
-  const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
-  const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
+  const [params, setParams] = useState(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
-  const [isChanged, setIsChanged] = useState(false);
   const [rows, setRows] = useState<Array<QnaModel>>([]);
-  const { refetch, data: response, isError } = useQnaList(searchKey, searchValue, page);
+  const { data: response, isError, refetch } = useQnaList(params, page);
 
   const goToReg = () => {
     navigate(View.REG);
@@ -52,24 +55,12 @@ const List = () => {
     });
   };
 
-  const handleChangeSearchKey = (e: any, value: any) => {
-    if (!value) {
-      value = SearchKey.ALL;
-    }
-    setSearchKey(value);
-  };
-
-  const handleChangeSearchValue = (value: any) => {
-    setSearchValue(value);
-  };
-
   const handleSearch = useCallback(() => {
     refetch();
   }, [refetch]);
 
   const handleClear = () => {
-    setSearchKey(SearchKey.ALL);
-    setSearchValue('');
+    setParams(initParams);
   };
 
   const handleKeyDown = (e: any) => {
@@ -78,18 +69,20 @@ const List = () => {
     }
   };
 
-  const handlePage = (page: PageModel) => {
-    setPage(page);
-    setIsChanged(true);
+  const handleChangeParams = (name: string, value: any) => {
+    setParams((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
-  useEffect(() => {
-    isChanged && handleSearch();
+  const handlePage = (page: PageModel) => {
+    setPage(page);
+  };
 
-    return () => {
-      setIsChanged(false);
-    };
-  }, [isChanged, handleSearch]);
+  useDidMountEffect(() => {
+    handleSearch();
+  }, [page.page, page.pageSize, handleSearch]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -99,7 +92,6 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        response.data.page.page = response.data.page.page - 1;
         response.data.contents.forEach((item: QnaModel) => {
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
           item.rgstDt = getDateString(item.rgstDt, '-');
@@ -126,8 +118,8 @@ const List = () => {
                 appearance="Outline"
                 placeholder="전체"
                 className="select-basic"
-                onChange={handleChangeSearchKey}
-                value={searchKey}
+                onChange={(e, value) => handleChangeParams('searchConditions', value || 'all')}
+                value={params.searchConditions}
               >
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
@@ -136,8 +128,8 @@ const List = () => {
               <TextField
                 className="width-100"
                 onKeyDown={handleKeyDown}
-                value={searchValue}
-                onChange={(e) => handleChangeSearchValue(e.target.value)}
+                onChange={(e) => handleChangeParams('searchTable', e.target.value)}
+                value={params.searchTable}
               />
             </Stack>
           </TD>

@@ -5,10 +5,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
-import useCode from '@/hooks/useCode';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { UpdatedFaqModel } from '@/models/model/FaqModel';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { UpdatedFaqModel } from '@/models/model/FaqModel';
+import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -19,16 +19,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Reg = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const { getCodeList } = useCode();
+  const location = useLocation();
   const faqId = location?.state?.faqId;
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    control,
     formState: { errors },
   } = useForm<UpdatedFaqModel>({
     mode: 'onChange',
@@ -41,9 +40,9 @@ const Reg = () => {
     },
   });
   const values = getValues();
-  const codeList = getCodeList(GroupCodeType.FAQ_TYPE);
+  const codeList = useAppSelector(selectCodeList(GroupCodeType.FAQ_TYPE));
   const { data: response, isSuccess, isError } = useFaqById(values.faqId);
-  const { data: uResponse, mutate, isSuccess: uIsSuccess, isError: uIsError } = useUpdateFaq(values.faqId, values);
+  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFaq(values.faqId, values);
 
   const goToList = () => {
     navigate('..');

@@ -5,7 +5,7 @@ import { cloneDeep } from 'lodash'
 import AttrDropItem from './dropItem/AttrDropItem'
 import BehvDropItem from './dropItem/BehvDropItem'
 import FeatDropItem from './dropItem/FeatDropItem'
-import { Page, Stack } from '@components/ui'
+import { Page, Stack, TextField, Typography } from '@components/ui'
 
 import { 
     TbRsCustFeatRuleTrgt, 
@@ -13,7 +13,8 @@ import {
     TbCoMetaTblClmnInfo, 
     Attribute,
     TargetDropListProps,
-    Behavior, 
+    Behavior,
+    AggregateCol, 
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initAttribute, 
@@ -34,11 +35,13 @@ const DropList = ({
     trgtFilterList,
     setTargetList,
     setTrgtFilterList,
+    attributes,
     behaviors,
     setFormulaTrgtList,
 }: TargetDropListProps) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
+    const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
 
     // 수정가능 여부 판단
     useEffect(() => {
@@ -54,6 +57,20 @@ const DropList = ({
         }
 
     }, [featStatus])
+
+    // 속성 테이블의 해당 컬럼 리스트 set
+    useEffect(()=> {
+        let colList: Array<AggregateCol> = []
+        attributes?.map((colInfo: Attribute) => {
+            let col = { value: "", text: "", dataType: "" }
+            col.value = colInfo.metaTblClmnPhysNm
+            col.text  = colInfo.metaTblClmnLogiNm
+            col.dataType = colInfo.dataTypeCategory
+            colList.push(col)
+            return colInfo
+        })
+        setColumnList(colList)
+    }, [attributes])
 
     const [, drop] = useDrop(() => ({
         accept: Object.values(divisionTypes),
@@ -156,7 +173,7 @@ const DropList = ({
                 gap="MD"
                 justifyContent="Start"
             >
-            {
+            {targetList.length > 0 &&
                 targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
                     let targetId = targetItem.targetId
                     let tfList: Array<TbRsCustFeatRuleTrgtFilter> = []
@@ -173,6 +190,7 @@ const DropList = ({
                             targetItem={targetItem} 
                             setTargetList={setTargetList}
                             delTargetInfo={deleteInfo}
+                            columnList={columnList}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {
                         return <FeatDropItem
@@ -199,6 +217,16 @@ const DropList = ({
                         />
                     }
                 })
+            }
+            {targetList.length === 0 &&
+                <TextField 
+                    size='LG' 
+                    shape='Round' 
+                    appearance='Filled'
+                    readOnly
+                    value={'오른쪽 속성/행동 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
+                >
+                </TextField>
             }
             </Stack>
         </Page>

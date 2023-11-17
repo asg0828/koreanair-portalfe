@@ -1,3 +1,9 @@
+import SearchForm from '@/components/form/SearchForm';
+import DataGrid from '@/components/grid/DataGrid';
+import HorizontalTable from '@/components/table/HorizontalTable';
+import { useMasterHistoryList } from '@/hooks/queries/useOneIdQueries';
+import { PageModel, initPage } from '@/models/model/PageModel';
+import { oneidHistorySearch } from '@/models/oneId/OneIdInfo';
 import {
   Button,
   DatePicker,
@@ -11,17 +17,10 @@ import {
   TextField,
   useToast,
 } from '@ke-design/components';
-import SearchForm from '@/components/form/SearchForm';
-import { useState, useCallback, useEffect } from 'react';
-import { Typography } from '@mui/material';
 import { SelectValue } from '@mui/base/useSelect';
-import HorizontalTable from '@/components/table/HorizontalTable';
+import { Typography } from '@mui/material';
+import { useCallback, useEffect, useState } from 'react';
 import { historyColumn, masterColumn, onIdPaxData, reason } from '../data';
-import { oneidHistorySearch } from '@/models/oneId/OneIdInfo';
-import { PageModel, initPage } from '@/models/model/PageModel';
-import { useMasterHistoryList } from '@/hooks/queries/useOneIdQueries';
-import DataGrid from '@/components/grid/DataGrid';
-import { SearchKey } from '@/models/common/Constants';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(2개)
 export default function OneIdMasterHistory() {
@@ -40,10 +39,7 @@ export default function OneIdMasterHistory() {
     creationStartDate: '',
     creationEndDate: '',
   });
-  const [isChanged, setIsChanged] = useState(false);
   const [page, setPage] = useState<PageModel>(initPage);
-  const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
-  const [searchValue, setSearchValue] = useState<string>('');
   const { refetch, data: response, isError } = useMasterHistoryList(searchInfo, page);
   // const { data2: response2, isError } = useHistoryList(searchInfo, page);
   const handleSearch = useCallback(() => {
@@ -51,7 +47,6 @@ export default function OneIdMasterHistory() {
   }, [refetch]);
   const handlePage = (page: PageModel) => {
     setPage(page);
-    setIsChanged(true);
   };
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -61,7 +56,6 @@ export default function OneIdMasterHistory() {
       });
     } else {
       if (response?.data) {
-        response.data.page.page = response.data.page.page - 1;
         // response.data.contents.forEach(() => {});
         // setRows(response.data.contents);
         setPage(response.data.page);
