@@ -2,10 +2,10 @@ import { Button, Radio, DatePicker, TD, TH, TR, useToast, Stack } from '@ke-desi
 import { useCallback, useEffect, useState } from 'react';
 import { oneIdDailyColumn, oneIdDailyData } from '../../one-id-main/data';
 import { DailyReportData, dailySearch } from '@/models/oneId/OneIdInfo';
-import DataGrid from '@/components/grid/DataGrid';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useDaily } from '@/hooks/queries/useOneIdQueries';
 import HorizontalTable from '@/components/table/HorizontalTable';
+import DataGridChild from '@/components/grid/DataGridChild';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function Daily() {
@@ -167,7 +167,7 @@ export default function Daily() {
         </Stack>
       </form>
 
-      <DataGrid
+      <DataGridChild
         columns={oneIdDailyColumn}
         // rows={row}
         rows={oneIdDailyData}

@@ -1,11 +1,11 @@
 import { Button, DatePicker, Radio, Stack, TD, TH, TR, useToast } from '@ke-design/components';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { onIdPaxData, oneIdPaxColumn } from '../../one-id-main/data';
-import { CtiVocData, RelationData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
-import DataGrid from '@/components/grid/DataGrid';
+import { ctiVocColumn, ctiVocData } from '../../one-id-main/data';
+import { CtiVocData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
 import { PageModel, initPage } from '@/models/model/PageModel';
-import { useCtiVoc, useRelation } from '@/hooks/queries/useOneIdQueries';
+import { useCtiVoc } from '@/hooks/queries/useOneIdQueries';
 import { useState } from 'react';
+import DataGridChild from '@/components/grid/DataGridChild';
 
 export default function Ctivoc() {
   const today = new Date();
@@ -139,11 +139,11 @@ export default function Ctivoc() {
         </div>
       </form>
 
-      <DataGrid
+      <DataGridChild
         page={page}
-        columns={oneIdPaxColumn}
+        columns={ctiVocColumn}
         //row   = {row}
-        rows={onIdPaxData}
+        rows={ctiVocData}
         enableSort={true}
         clickable={true}
         onChange={handlePage}
