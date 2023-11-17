@@ -70,6 +70,14 @@ export const transFuncOtionStr = [
     { value: 'CONCAT',    text: 'Concat' },
     { value: 'TO_NUMBER', text: 'To Number' },
 ]
+// 변환식 함수(string-Non concat)
+export const transFuncOtionStrNonConcat = [
+    { value: '',          text: '선택' },
+    { value: 'NVL',       text: 'NVL' },
+    { value: 'SUBSTRING', text: 'Substring' },
+    { value: 'LENGTH',    text: 'Length' },
+    { value: 'TO_NUMBER', text: 'To Number' },
+]
 // 변환식 함수(timstamp)
 export const transFuncOtionTim = [
     { value: '',         text: '선택' },

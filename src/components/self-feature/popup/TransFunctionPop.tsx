@@ -24,6 +24,7 @@ import HorizontalTable from '@/components/table/HorizontalTable';
 import { 
     transFuncOtionNum,
     transFuncOtionStr,
+    transFuncOtionStrNonConcat,
     transFuncOtionTim,
     tsDtAddDiffOption,
     tsToCharOption, 
@@ -202,7 +203,7 @@ const TransFunctionPop = (
         if (!columnList) return
         // concat 함수 선택시 필요한 variable option 설정
         let strColList = cloneDeep(columnList).filter((col: AggregateCol) => (col.dataType === ColDataType.STR && col.text !== trgtItem.columnName))
-
+        
         setEnableColList(strColList)
         setVariable1SlctOpt(strColList)
         setVariable2SlctOpt(strColList)
@@ -217,6 +218,7 @@ const TransFunctionPop = (
             let tempList = cloneDeep(columnList).filter((col: AggregateCol) => (col.text === trgtItem.columnName))
             return [...rtn, ...tempList]
         })
+
     }, [columnList])
 
     const handleClose = useCallback(
@@ -422,8 +424,13 @@ const TransFunctionPop = (
                                     <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                                 ))
                                 }
-                                {dataType === ColDataType.STR &&
+                                {(dataType === ColDataType.STR && enableColList.length > 0) &&
                                 transFuncOtionStr.map((item, index) => (
+                                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                ))
+                                }
+                                {(dataType === ColDataType.STR && enableColList.length < 1) &&
+                                transFuncOtionStrNonConcat.map((item, index) => (
                                     <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                                 ))
                                 }

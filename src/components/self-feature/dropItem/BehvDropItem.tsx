@@ -522,6 +522,9 @@ const BehvDropItem = ({
                                 disabled={!isPossibleEdit}
                                 appearance="Outline"
                                 value={targetItem.filterLogiOption}
+                                style={{
+                                width: '16rem'
+                                }}
                                 onChange={(
                                     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                     value: SelectValue<{}, false>

@@ -397,7 +397,7 @@ const SelfFeatureReg = () => {
 
   const targetClearHanbler = () => {
     if (targetList.length < 1) return
-    
+
     setModalType(ModalType.CONFIRM)
     setClickType("trgtClear")
     setConfirmModalTit(ModalTitCont.TRGT_CLEAR.title)
