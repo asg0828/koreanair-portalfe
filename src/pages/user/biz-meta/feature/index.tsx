@@ -1,60 +1,55 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
-import { useFeatureList } from '@/hooks/queries/useFeatureQueries';
-import { FeatureModel } from '@/models/model/FeatureModel';
-import { SearchKey, StringValue, ValidType, View } from '@/models/common/Constants';
+import { useFeatureList, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
+import useDidMountEffect from '@/hooks/useDidMountEffect';
+import { ValidType, View } from '@/models/common/Constants';
+import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
-import { RowsInfo } from '@/models/components/Table';
-import { getDateString } from '@/utils/DateUtil';
-import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast, Checkbox } from '@components/ui';
+import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import AddIcon from '@mui/icons-material/Add';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 
 const columns = [
-  { headerName: 'No', field: 'rownum', colSpan: 1 },
-  { headerName: '제목', field: 'sj', colSpan: 6 },
-  { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
-  { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
+  { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
+  { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
+  { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
+  { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1 },
+  { headerName: '정의', field: 'featureDef', colSpan: 2 },
+  { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
+  { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
 ];
 
-const searchInfoList = [
-  { key: 'sj', value: '제목' },
-  { key: 'cn', value: '내용' },
-];
+const initParams: FeatureParams = {
+  featureSeGrp: '',
+  featureSe: '',
+  searchFeature: '',
+  searchConditions: [],
+  enrUserId: '',
+  enrDeptCode: '',
+};
 
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [searchKey, setSearchKey] = useState<SearchKey>(SearchKey.ALL);
-  const [searchValue, setSearchValue] = useState<string>(StringValue.DEFAULT);
+  const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
+  const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
+  const [params, setParams] = useState<FeatureParams>(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
-  const [isChanged, setIsChanged] = useState(false);
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
-  const { refetch, data: response, isError } = useFeatureList(searchKey, searchValue, page);
+  const { data: response, isError, refetch } = useFeatureList(params, page);
+  const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
 
   const goToReg = () => {
     navigate(View.REG);
   };
 
-  const goToDetail = (row: RowsInfo, index: number) => {
+  const goToDetail = (row: FeatureModel, index: number) => {
     navigate(View.DETAIL, {
       state: {
-        noticeId: row.noticeId,
-        rows: rows,
+        featureId: row.featureId,
       },
     });
-  };
-
-  const handleChangeSearchKey = (e: any, value: any) => {
-    if (!value) {
-      value = SearchKey.ALL;
-    }
-    setSearchKey(value);
-  };
-
-  const handleChangeSearchValue = (value: any) => {
-    setSearchValue(value);
   };
 
   const handleSearch = useCallback(() => {
@@ -62,28 +57,47 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setSearchKey(SearchKey.ALL);
-    setSearchValue('');
-  };
-
-  const handleKeyDown = (e: any) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+    setParams(initParams);
+    setFeatureSeList([]);
   };
 
   const handlePage = (page: PageModel) => {
     setPage(page);
-    setIsChanged(true);
+  };
+
+  const handleChangeParams = (name: string, value: any) => {
+    setParams((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleChangeSearchConditions = (name: string, checked: any) => {
+    setParams((prevState) => {
+      let newSearchConditions = [...prevState.searchConditions];
+
+      if (checked) {
+        newSearchConditions.push(name);
+      } else {
+        newSearchConditions = newSearchConditions.filter((itemName) => itemName !== name);
+      }
+
+      return {
+        ...prevState,
+        searchConditions: newSearchConditions,
+      };
+    });
   };
 
   useEffect(() => {
-    isChanged && handleSearch();
+    if (params.featureSeGrp) {
+      sRefetch();
+    }
+  }, [params.featureSeGrp, sRefetch]);
 
-    return () => {
-      setIsChanged(false);
-    };
-  }, [isChanged, handleSearch]);
+  useDidMountEffect(() => {
+    handleSearch();
+  }, [page.page, page.pageSize, handleSearch]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -93,16 +107,24 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        response.data.page.page = response.data.page.page - 1;
-        response.data.contents.forEach((item: FeatureModel) => {
-          item.rgstDt = getDateString(item.rgstDt, '-');
-          item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
-        });
         setRows(response.data.contents);
         setPage(response.data.page);
       }
     }
   }, [response, isError, toast]);
+
+  useEffect(() => {
+    if (sIsError || sResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (sResponse?.data) {
+        setFeatureSeList(sResponse.data);
+      }
+    }
+  }, [sResponse, sIsError, toast]);
 
   return (
     <>
@@ -112,16 +134,32 @@ const List = () => {
             대구분
           </TH>
           <TD colSpan={2}>
-            <Select appearance="Outline" placeholder="전체" className="width-100">
-              <SelectOption value={1}>테스트</SelectOption>
+            <Select
+              appearance="Outline"
+              placeholder="전체"
+              className="width-100"
+              onChange={(e, value) => handleChangeParams('featureSeGrp', value)}
+              value={params.featureSeGrp}
+            >
+              {featureTypList.map((item) => (
+                <SelectOption value={item.seId}>{item.seNm}</SelectOption>
+              ))}
             </Select>
           </TD>
           <TH colSpan={1} align="right">
             중구분
           </TH>
           <TD colSpan={2}>
-            <Select appearance="Outline" placeholder="전체" className="width-100">
-              <SelectOption value={1}>테스트</SelectOption>
+            <Select
+              appearance="Outline"
+              placeholder="전체"
+              className="width-100"
+              onChange={(e, value) => handleChangeParams('featureSe', value)}
+              value={params.featureSe}
+            >
+              {featureSeList.map((item) => (
+                <SelectOption value={item.seId}>{item.seNm}</SelectOption>
+              ))}
             </Select>
           </TD>
         </TR>
@@ -130,7 +168,12 @@ const List = () => {
             검색 Feature
           </TH>
           <TD colSpan={5.01} align="left">
-            <TextField className="width-100" size="MD" />
+            <TextField
+              className="width-100"
+              size="MD"
+              onChange={(e) => handleChangeParams('searchFeature', e.target.value)}
+              value={params.searchFeature}
+            />
           </TD>
         </TR>
         <TR>
@@ -138,9 +181,21 @@ const List = () => {
             검색 조건
           </TH>
           <TD colSpan={5.01} align="left">
-            <Checkbox label="Feature 한글명" />
-            <Checkbox label="Feature 영문명" />
-            <Checkbox label="정의" />
+            <Checkbox
+              label="Feature 한글명"
+              onCheckedChange={(checked) => handleChangeSearchConditions('featureKoNm', checked)}
+              checked={params.searchConditions.includes('featureKoNm')}
+            />
+            <Checkbox
+              label="Feature 영문명"
+              onCheckedChange={(checked) => handleChangeSearchConditions('featureEnNm', checked)}
+              checked={params.searchConditions.includes('featureEnNm')}
+            />
+            <Checkbox
+              label="정의"
+              onCheckedChange={(checked) => handleChangeSearchConditions('featureDef', checked)}
+              checked={params.searchConditions.includes('featureDef')}
+            />
           </TD>
         </TR>
         <TR>
@@ -149,7 +204,12 @@ const List = () => {
           </TH>
           <TD colSpan={2}>
             <Stack gap="SM" className="width-100">
-              <TextField className="width-100" size="MD" />
+              <TextField
+                className="width-100"
+                size="MD"
+                onChange={(e) => handleChangeParams('enrUserId', e.target.value)}
+                value={params.enrUserId}
+              />
               <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
                 <span className="searchIcon"></span>
               </Button>
@@ -160,7 +220,12 @@ const List = () => {
           </TH>
           <TD colSpan={2}>
             <Stack gap="SM" className="width-100">
-              <TextField className="width-100" size="MD" />
+              <TextField
+                className="width-100"
+                size="MD"
+                onChange={(e) => handleChangeParams('enrDeptCode', e.target.value)}
+                value={params.enrDeptCode}
+              />
               <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
                 <span className="searchIcon"></span>
               </Button>
@@ -177,6 +242,7 @@ const List = () => {
         page={page}
         onClick={goToDetail}
         onChange={handlePage}
+        rowSelection={() => {}}
         buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
             <AddIcon />

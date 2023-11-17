@@ -34,7 +34,7 @@ import CustomerInfo from '@pages/user/customer-info/dashboard';
 import StructuredReport from '@pages/user/report/structured-report';
 import UnStructuredReport from '@pages/user/report/unstructured-report';
 import Tableau from '@pages/user/tableau';
-import { useFaqLoader, useQnaLoader } from '@/hooks/useLoader';
+import { useFaqLoader, useQnaLoader, useFeatureLoader } from '@/hooks/useLoader';
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -43,7 +43,9 @@ const userRouter = [
     children: [
       { index: true, element: <Feature /> },
       {
+        id: '/biz-meta/feature',
         path: 'feature',
+        loader: useFeatureLoader,
         children: [
           { index: true, element: <Feature /> },
           { path: 'detail', element: <FeatureDetail /> },
