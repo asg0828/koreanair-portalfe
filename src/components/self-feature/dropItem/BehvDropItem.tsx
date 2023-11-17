@@ -353,16 +353,16 @@ const BehvDropItem = ({
                     </div>
                     <Typography variant="body2" style={{color:"inherit"}}>{targetItem.tableName}</Typography>
                 </Stack>
+                <Typography variant="h6" style={{color:"inherit"}}>SELECT</Typography>
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
-                    gap="SM" 
+                    gap="MD" 
                     className="width-100"
                     style={{
                         marginBottom: '1%',
                     }}
                 >
-                    <Typography variant="h6" style={{color:"inherit"}}>SELECT</Typography>
                     <Select 
                         disabled={!isPossibleEdit}
                         placeholder="집계할 컬럼" 
@@ -491,6 +491,7 @@ const BehvDropItem = ({
                         </>
                     }
                 </Stack>
+                <Typography variant="h6" style={{color:"inherit"}}>WHERE</Typography>
                 <Stack
                     direction="Vertical"
                     justifyContent="Start" 
@@ -534,7 +535,6 @@ const BehvDropItem = ({
                             </Select>
                         </Stack>
                     </Stack>
-                    <Typography variant="h6" style={{color:"inherit", marginLeft: "0.5rem"}}>WHERE</Typography>
                     <Stack
                         direction="Horizontal"
                         justifyContent="Start" 
