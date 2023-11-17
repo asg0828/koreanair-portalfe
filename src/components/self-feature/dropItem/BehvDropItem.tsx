@@ -322,7 +322,7 @@ const BehvDropItem = ({
         <Stack 
             direction="Horizontal"
             justifyContent="Start" 
-            gap="SM" 
+            gap="MD" 
             className="width-100"
             style={{
                 backgroundColor: '#e6f9ff', 
@@ -337,7 +337,6 @@ const BehvDropItem = ({
                 gap="SM" 
                 className="width-100"
             >
-
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
@@ -355,81 +354,6 @@ const BehvDropItem = ({
                     <Typography variant="body2" style={{color:"inherit"}}>{targetItem.tableName}</Typography>
                 </Stack>
                 <Stack
-                    direction="Vertical"
-                    justifyContent="Start" 
-                    gap="SM" 
-                    className="width-100"
-                    style={{
-                        border:"1px solid rgb(218, 218, 218)",
-                        borderRadius: '5px',
-                    }}
-                >   
-                    <Stack
-                        direction="Horizontal"
-                        justifyContent="Between" 
-                        gap="SM" 
-                        className="width-100"
-                        style={{padding:"0.5rem"}}
-                    >
-                        <Stack gap="SM">
-                            <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
-                            <TextField 
-                                disabled={!isPossibleEdit}
-                                placeholder="논리 표현식" 
-                                value={filterExpsn}
-                                id="filterLogiExpsn"
-                                onChange={onchangeInputHandler}
-                            />
-                        </Stack>
-                        <Select
-                            disabled={!isPossibleEdit}
-                            appearance="Outline"
-                            value={targetItem.filterLogiOption}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                onchangeSelectHandler(e, value, "filterLogiOption")
-                            }}
-                        >
-                            {filterOption.map((item, index) => (
-                            <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                            ))}
-                        </Select>
-                    </Stack>
-                    <Stack
-                        direction="Horizontal"
-                        justifyContent="Start" 
-                        gap="SM" 
-                        className="width-100"
-                    >
-                        <Page
-                            ref={(behvDrop)}
-                            style={{
-                                border:"3px solid rgb(218, 218, 218)",
-                                borderRadius: '8px',
-                                padding:"0.8rem"
-                            }}
-                        >
-                            <Stack direction="Vertical" gap="SM">
-                            {(trgtFilterList && setTrgtFilterList) && 
-                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
-                                <BehvColDropItem 
-                                    key={`behvCol-${index}`}
-                                    itemIdx={index}
-                                    isPossibleEdit={isPossibleEdit}
-                                    trgtFilterItem={trgtFilterItem}
-                                    columnList={columnList}
-                                    setTrgtFilterList={setTrgtFilterList}
-                                    deleteTrgtFilterInfo={deleteTrgtFilterInfo}
-                                />
-                            ))}
-                            </Stack>
-                        </Page>
-                    </Stack>
-                </Stack>
-
-                <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
                     gap="SM" 
@@ -438,6 +362,7 @@ const BehvDropItem = ({
                         marginBottom: '1%',
                     }}
                 >
+                    <Typography variant="h6" style={{color:"inherit"}}>SELECT</Typography>
                     <Select 
                         disabled={!isPossibleEdit}
                         placeholder="집계할 컬럼" 
@@ -565,6 +490,81 @@ const BehvDropItem = ({
                         </Select>
                         </>
                     }
+                </Stack>
+                <Stack
+                    direction="Vertical"
+                    justifyContent="Start" 
+                    gap="SM" 
+                    className="width-100"
+                    style={{
+                        border:"1px solid rgb(218, 218, 218)",
+                        borderRadius: '5px',
+                    }}
+                >   
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Between" 
+                        gap="SM" 
+                        className="width-100"
+                        style={{padding:"0.5rem"}}
+                    >
+                        <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
+                        <Stack gap="SM" justifyContent="end">
+                            <TextField 
+                                disabled={!isPossibleEdit}
+                                placeholder="논리 표현식" 
+                                value={filterExpsn}
+                                id="filterLogiExpsn"
+                                onChange={onchangeInputHandler}
+                            />
+                            <Select
+                                disabled={!isPossibleEdit}
+                                appearance="Outline"
+                                value={targetItem.filterLogiOption}
+                                onChange={(
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
+                                ) => {
+                                    onchangeSelectHandler(e, value, "filterLogiOption")
+                                }}
+                            >
+                                {filterOption.map((item, index) => (
+                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                ))}
+                            </Select>
+                        </Stack>
+                    </Stack>
+                    <Typography variant="h6" style={{color:"inherit", marginLeft: "0.5rem"}}>WHERE</Typography>
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Start" 
+                        gap="SM" 
+                        className="width-100"
+                    >
+                        <Page
+                            ref={(behvDrop)}
+                            style={{
+                                border:"3px solid rgb(218, 218, 218)",
+                                borderRadius: '8px',
+                                padding:"0.8rem"
+                            }}
+                        >
+                            <Stack direction="Vertical" gap="SM">
+                            {(trgtFilterList && setTrgtFilterList) && 
+                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
+                                <BehvColDropItem 
+                                    key={`behvCol-${index}`}
+                                    itemIdx={index}
+                                    isPossibleEdit={isPossibleEdit}
+                                    trgtFilterItem={trgtFilterItem}
+                                    columnList={columnList}
+                                    setTrgtFilterList={setTrgtFilterList}
+                                    deleteTrgtFilterInfo={deleteTrgtFilterInfo}
+                                />
+                            ))}
+                            </Stack>
+                        </Page>
+                    </Stack>
                 </Stack>
             </Stack>
             
