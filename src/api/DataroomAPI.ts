@@ -1,19 +1,18 @@
 import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
+import { DataroomParams } from '@/models/model/DataroomModel';
 import { PageModel } from '@/models/model/PageModel';
 import { callApi, Method } from '@utils/ApiUtil';
 
-export const getDataroomList = (searchKey: string, searchValue: string, page: PageModel) => {
+export const getDataroomList = (params: DataroomParams, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.DATAROOM}`,
     method: Method.GET,
     params: {
       queryParams: {
-        searchConditions: searchKey,
-        searchTable: searchValue,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...params,
+        ...page,
       },
     },
   });

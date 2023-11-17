@@ -3,10 +3,10 @@ import TinyEditor from '@/components/editor/TinyEditor';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
-import useCode from '@/hooks/useCode';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedQnaModel } from '@/models/model/QnaModel';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { CreatedQnaModel } from '@/models/model/QnaModel';
+import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -18,7 +18,6 @@ const Reg = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { getCodeList } = useCode();
   const {
     register,
     handleSubmit,
@@ -37,8 +36,8 @@ const Reg = () => {
     },
   });
   const values = getValues();
-  const codeList = getCodeList(GroupCodeType.QNA_TYPE);
-  const { data: response, mutate, isSuccess, isError } = useCreateQna(values);
+  const codeList = useAppSelector(selectCodeList(GroupCodeType.QNA_TYPE));
+  const { data: response, isSuccess, isError, mutate } = useCreateQna(values);
 
   const goToList = () => {
     navigate('..');

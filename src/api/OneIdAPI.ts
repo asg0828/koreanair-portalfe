@@ -24,8 +24,7 @@ export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -41,8 +40,7 @@ export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -58,8 +56,7 @@ export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => 
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -75,8 +72,7 @@ export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel)
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -92,8 +88,7 @@ export const getMobile = (searchInfo: mobileSearch, page: PageModel) => {
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -109,8 +104,7 @@ export const getRelation = (searchInfo: relationSearch, page: PageModel) => {
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -126,8 +120,7 @@ export const getErrorLog = (searchInfo: errorSearch, page: PageModel) => {
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -143,8 +136,7 @@ export const getDaily = (searchInfo: dailySearch, page: PageModel) => {
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -160,8 +152,7 @@ export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
     params: {
       queryParams: {
         ...searchInfo,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });
@@ -175,8 +166,7 @@ export const getSamePnr = (page: PageModel) => {
     method: Method.GET,
     params: {
       queryParams: {
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     },
   });

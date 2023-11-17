@@ -4,11 +4,11 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedNoticeModel } from '@/models/model/NoticeModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { CreatedNoticeModel } from '@/models/model/NoticeModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +36,7 @@ const Reg = () => {
     },
   });
   const values = getValues();
-  const { data: response, mutate, isSuccess, isError } = useCreateNotice(values);
+  const { data: response, isSuccess, isError, mutate } = useCreateNotice(values);
 
   const goToList = () => {
     navigate('..');
@@ -91,7 +91,7 @@ const Reg = () => {
               </Stack>
             </TD>
           </TR>
-          <TR>
+          {/* <TR>
             <TH>팝업공지여부</TH>
             <TD align="left">
               <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
@@ -153,7 +153,7 @@ const Reg = () => {
                 </Stack>
               </Stack>
             </TD>
-          </TR>
+          </TR> */}
           <TR>
             <TH>게시여부</TH>
             <TD align="left">

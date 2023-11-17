@@ -57,7 +57,14 @@ const DataGrid: React.FC<DatagridProps> = ({
           ))}
         </Select>
       </Stack>
-      <VerticalTable columns={columns} rows={rows} enableSort={enableSort} clickable={clickable} onClick={onClick} />
+      <VerticalTable
+        columns={columns}
+        rows={rows}
+        enableSort={enableSort}
+        clickable={clickable}
+        onClick={onClick}
+        rowSelection={rowSelection}
+      />
       <Stack className="pagination-layout">
         <Pagination
           size="LG"

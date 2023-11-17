@@ -8,4 +8,5 @@ export enum PortalApiURL {
   DATAROOM = '/board/v1/dataroom',
   ONEID = '/admin/v1/oneId',
   FEATURE = '/biz-meta/v1/features',
+  FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',
 }

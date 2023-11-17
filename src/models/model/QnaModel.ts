@@ -1,5 +1,10 @@
 import { commonModel } from '@/models/model/CommonModel';
 
+export interface QnaParams {
+  searchConditions: string;
+  searchTable: string;
+}
+
 export interface QnaModel extends CreatedQnaModel, commonModel {
   qnaId: string;
   comments: Array<QnaModel>;

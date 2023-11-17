@@ -1,10 +1,8 @@
 import { Button, Stack } from '@components/ui';
 
-import useCode from '@/hooks/useCode';
+import { getCode } from '@/reducers/codeSlice';
 
 const TestHook = () => {
-  const { getCodeList } = useCode();
-
   const handleCodeHook = () => {
   };
 

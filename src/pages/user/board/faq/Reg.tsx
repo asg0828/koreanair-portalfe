@@ -3,10 +3,10 @@ import TinyEditor from '@/components/editor/TinyEditor';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateFaq } from '@/hooks/mutations/useFaqMutations';
-import useCode from '@/hooks/useCode';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { CreatedFaqModel } from '@/models/model/FaqModel';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { CreatedFaqModel } from '@/models/model/FaqModel';
+import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -18,13 +18,12 @@ const Reg = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { getCodeList } = useCode();
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    control,
     formState: { errors },
   } = useForm<CreatedFaqModel>({
     mode: 'onChange',
@@ -36,8 +35,8 @@ const Reg = () => {
     },
   });
   const values = getValues();
-  const codeList = getCodeList(GroupCodeType.FAQ_TYPE);
-  const { data: response, mutate, isSuccess, isError } = useCreateFaq(values);
+  const codeList = useAppSelector(selectCodeList(GroupCodeType.FAQ_TYPE));
+  const { data: response, isSuccess, isError, mutate } = useCreateFaq(values);
 
   const goToList = () => {
     navigate('..');

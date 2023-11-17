@@ -4,8 +4,8 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { DataroomModel } from '@/models/model/DataroomModel';
 import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { DataroomModel } from '@/models/model/DataroomModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
@@ -16,15 +16,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const [DataroomModel, setDataroomModel] = useState<DataroomModel>();
-  const [prevDataroomModel, setPrevDataroomModel] = useState<DataroomModel>();
-  const [nextDataroomModel, setNextDataroomModel] = useState<DataroomModel>();
+  const location = useLocation();
   const dataId: string = location?.state?.dataId || '';
   const rows: Array<DataroomModel> = location?.state?.rows;
+  const [dataroomModel, setDataroomModel] = useState<DataroomModel>();
+  const [prevDataroomModel, setPrevDataroomModel] = useState<DataroomModel>();
+  const [nextDataroomModel, setNextDataroomModel] = useState<DataroomModel>();
   const { data: response, isSuccess, isError } = useDataroomById(dataId);
-  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteDataroom(dataId);
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteDataroom(dataId);
 
   const goToList = () => {
     navigate('..');
@@ -109,12 +109,12 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">{DataroomModel?.sj}</Typography>
+              <Typography variant="h3">{dataroomModel?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={DataroomModel?.cn} disabled />
+              <TinyEditor content={dataroomModel?.cn} disabled />
             </TD>
           </TR>
           <TR>
@@ -175,4 +175,5 @@ const Detail = () => {
     </>
   );
 };
+
 export default Detail;

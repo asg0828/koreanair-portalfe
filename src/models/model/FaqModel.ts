@@ -1,5 +1,10 @@
 import { commonModel } from '@/models/model/CommonModel';
 
+export interface FaqParams {
+  searchConditions: string;
+  searchTable: string;
+}
+
 export interface FaqModel extends CreatedFaqModel, commonModel {
   faqId: string;
 }

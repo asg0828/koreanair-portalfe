@@ -87,7 +87,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
         <THead>
           <TR>
             {isCheckbox && (
-              <TH>
+              <TH colSpan={0.5}>
                 <Checkbox checked={checkedAll} onCheckedChange={handleCheckedChangeAll} />
               </TH>
             )}
@@ -109,7 +109,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
           {rows.map((row, index) => (
             <TR key={`row-${index}`} selected={checkedList.includes(index)}>
               {isCheckbox && (
-                <TD>
+                <TD colSpan={0.5}>
                   <Checkbox
                     checked={checkedList.includes(index)}
                     onCheckedChange={(checked) => handleCheckedChange(checked, row, index)}
