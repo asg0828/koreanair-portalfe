@@ -17,6 +17,7 @@ import DropList from "@/components/self-feature/DropList";
 import DragList from "@/components/self-feature/DragList";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import ConfirmModal from "@/components/modal/ConfirmModal";
+import ApprovalList from "@/components/self-feature/ApprovalList";
 import { 
   Button, 
   Select, 
@@ -61,6 +62,8 @@ import {
   ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
 import { StatusCode } from "@/models/common/CommonResponse";
+import { SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionInfo";
+import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 
 const lCategory = [
   { value: '온라인행동', text: '온라인행동' },
@@ -97,7 +100,11 @@ const SelfFeatureEdit = () => {
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([])
   const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<FormulaTrgtListProps>>([])
-  const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
+  const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)  
+  // 승인 정보
+  const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
+  const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
+
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
   // Top 집계함수 선택 여부
@@ -145,6 +152,8 @@ const SelfFeatureEdit = () => {
     setCustFeatRuleCalc(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCalc))
     setCustFeatRuleCaseList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCaseList))
     setSqlQueryInfo(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleSql))
+    setSfSubmissionRequestData(cloneDeep(location.state.sfSubmissionRequestData))
+    setSfSubmissionApprovalList(cloneDeep(location.state.sfSubmissionApprovalList))
   }, [location.state])
 
   // 기본 정보 입력시 formData setting
@@ -226,7 +235,10 @@ const SelfFeatureEdit = () => {
   useEffect(() => {
     if (formulaTrgtList.length > 0) return 
     
-    if (location.state.featureInfo.tbRsCustFeatRuleCalc.formula === "") {
+    if (
+      location.state.featureInfo.tbRsCustFeatRuleCalc
+      && location.state.featureInfo.tbRsCustFeatRuleCalc.formula === ""
+    ) {
       setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
         let rtn = cloneDeep(state)
         rtn.formula = ''
@@ -234,7 +246,7 @@ const SelfFeatureEdit = () => {
       })
     }
     
-  }, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc.formula])
+  }, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc?.formula])
 
   const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
     /*
@@ -649,12 +661,19 @@ const SelfFeatureEdit = () => {
             className="width-100 height-100" 
             multiline 
             id="sqlQuery" 
-            value={sqlQueryInfo.sqlQuery}
+            value={sqlQueryInfo?.sqlQuery}
             onChange={onchangeInputHandler}
           />
         </Stack>
         </>
         }
+        {/* 결재선 */}
+        <ApprovalList
+          sfSubmissionRequestData={sfSubmissionRequestData}
+          sfSubmissionApprovalList={sfSubmissionApprovalList}
+          setSfSubmissionApprovalList={setSfSubmissionApprovalList}
+        />
+        {/* 결재선 */}
       </Stack>
       {/* 정보 영역 */}
 

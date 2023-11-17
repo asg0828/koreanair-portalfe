@@ -52,7 +52,6 @@ import {
     selfFeatPgPpNm ,
 } from "@/models/selfFeature/FeatureCommon";
 import { Method, callApi } from "@/utils/ApiUtil";
-import { RowsInfo } from "@/models/components/Table";
 import { StatusCode } from "@/models/common/CommonResponse";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
