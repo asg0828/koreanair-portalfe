@@ -102,8 +102,7 @@ export default function List() {
         skypass: skypassNum.replace(htmlTagReg, ''),
         oneId: oneId.replace(htmlTagReg, ''),
         passengerNm: passengerNm.replace(htmlTagReg, ''),
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...page,
       },
     };
     let response = cloneDeep(initCommonResponse);
