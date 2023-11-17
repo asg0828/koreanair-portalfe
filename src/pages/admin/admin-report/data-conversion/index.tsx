@@ -46,43 +46,43 @@ export default function DataConversion() {
         <Typography variant="h4">1. CleansingRule / Hash 변환 결과</Typography>
         <HorizontalTable>
           <TR>
-            <Stack direction="Vertical">
-              <TH>
-                <TR>
+            <Stack direction="Vertical" style={{ borderLeft: '1px solid #DADADA' }}>
+              <TH style={{ borderBottom: '1px solid #DADADA', height: '50%' }}>
+                <TR style={{ border: 'none' }}>
                   <Stack direction="Vertical">
-                    <TH aria-rowspan={2}>휴대전화번호</TH>
-                    <TH aria-rowspan={2}>E-mail주소</TH>
+                    <TH style={{ border: 'none' }}>휴대전화번호</TH>
+                    <TH style={{ border: 'none' }}>E-mail주소</TH>
                   </Stack>
                 </TR>
               </TH>
-              <TD></TD>
-              <TD></TD>
+              <TD style={{ height: '25%', border: 'none' }}></TD>
+              <TD style={{ height: '25%', border: 'none' }}></TD>
             </Stack>
 
-            <Stack direction="Vertical">
-              <TD>
-                <TR>
-                  <Stack direction="Vertical">
+            <Stack direction="Vertical" style={{ borderLeft: '1px solid #DADADA' }}>
+              <TD style={{ borderBottom: '1px solid #DADADA', height: '50%', borderRight: 'none' }}>
+                <TR style={{ border: 'none' }}>
+                  <Stack direction="Vertical" style={{ border: 'none' }}>
                     <TextField
-                      className="width-100"
                       placeholder="검색어를 입력하세요."
                       onChange={(e) => onSearchChangeHandler(e, 'phoneNum')}
                       size="small"
+                      style={{ border: 'none' }}
                     />
                     <TextField
-                      className="width-100"
                       placeholder="검색어를 입력하세요."
                       onChange={(e) => onSearchChangeHandler(e, 'eMail')}
                       size="small"
+                      style={{ border: 'none' }}
                     />
                   </Stack>
                 </TR>
               </TD>
-              <TD></TD>
-              <TD></TD>
+              <TD style={{ height: '25%', border: 'none' }}></TD>
+              <TD style={{ height: '25%', border: 'none' }}></TD>
             </Stack>
 
-            <TD>
+            <TD style={{ borderLeft: '1px solid #DADADA' }}>
               <Button
                 appearance="Outline"
                 priority="Normal"
@@ -97,47 +97,49 @@ export default function DataConversion() {
               </Button>
             </TD>
 
-            <TH>
+            <TH style={{ borderLeft: '0.1px solid #F5F5F5' }}>
               <Stack direction="Vertical">
                 <TH>
-                  <TR>
+                  <Stack direction="Vertical">
+                    <TR style={{ border: 'none', height: '50%' }}>
+                      <Stack direction="Vertical">
+                        <TH style={{ border: 'none', marginBottom: '30px' }}>전화번호</TH>
+                        <TH style={{ border: 'none' }}>E-mail주소</TH>
+                      </Stack>
+                    </TR>
+                  </Stack>
+                </TH>
+              </Stack>
+            </TH>
+
+            <TH style={{ borderLeft: '0.1px solid #F5F5F5 ' }}>
+              <Stack direction="Vertical">
+                <TH style={{ border: 'none' }}>
+                  <TR style={{ border: 'none' }}>
                     <Stack direction="Vertical">
-                      <TH>전화번호</TH>
-                      <TH>E-mail주소</TH>
+                      <TH style={{ border: 'none' }}>Cleansing Rule</TH>
+                      <TH style={{ border: 'none' }}>Hash값</TH>
+                    </Stack>
+                  </TR>
+                </TH>
+
+                <TH>
+                  <TR style={{ border: 'none' }}>
+                    <Stack direction="Vertical">
+                      <TH style={{ border: 'none' }}>Cleansing Rule</TH>
+                      <TH style={{ border: 'none' }}>Hash값</TH>
                     </Stack>
                   </TR>
                 </TH>
               </Stack>
             </TH>
 
-            <TH>
+            <TD style={{ borderLeft: '0.1px solid #F5F5F5 ' }}>
               <Stack direction="Vertical">
-                <TH>
-                  <TR>
-                    <Stack direction="Vertical">
-                      <TH>Cleansing Rule</TH>
-                      <TH>Hash값</TH>
-                    </Stack>
-                  </TR>
-                </TH>
-
-                <TH>
-                  <TR>
-                    <Stack direction="Vertical">
-                      <TH>Cleansing Rule</TH>
-                      <TH>Hash값</TH>
-                    </Stack>
-                  </TR>
-                </TH>
-              </Stack>
-            </TH>
-
-            <TD>
-              <Stack direction="Vertical">
-                <TD>{phoneNumCR}</TD>
-                <TD>{phoneNumHash}</TD>
-                <TD>{eMailCR}</TD>
-                <TD>{eMailHash}</TD>
+                <TD style={{ border: 'none' }}>{phoneNumCR}</TD>
+                <TD style={{ border: 'none' }}>{phoneNumHash}</TD>
+                <TD style={{ border: 'none' }}>{eMailCR}</TD>
+                <TD style={{ border: 'none' }}>{eMailHash}</TD>
               </Stack>
             </TD>
           </TR>

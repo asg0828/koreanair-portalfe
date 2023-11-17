@@ -56,53 +56,47 @@ export default function MobileNumber() {
   }
 
   return (
-    <>
-      <div>
-        <Stack>
-          <form onSubmit={onsubmitHandler}>
-            <div style={{ width: '1200px' }}>
-              <HorizontalTable>
-                <TR>
-                  <TH colSpan={1} align="right">
-                    OneId 번호
-                  </TH>
-                  <TD colSpan={2}>
-                    <TextField
-                      className="width-100"
-                      onChange={onSearchChangeHandler}
-                      placeholder="검색어를 입력하세요."
-                      value={searchInfo1.agtEstimatedMblfonNoInfo}
-                      id="agtEstimatedMblfonNoInfo"
-                    />
-                  </TD>
-                  <TH colSpan={1} align="right">
-                    PNR 번호
-                  </TH>
-                  <TD colSpan={2}>
-                    <TextField
-                      className="width-100"
-                      placeholder="검색어를 입력하세요."
-                      id="agtEstMblfonNoInfoHshVlu"
-                      value={searchInfo1.agtEstMblfonNoInfoHshVlu}
-                      onChange={onSearchChangeHandler}
-                    />
-                  </TD>
-                </TR>
-              </HorizontalTable>
-            </div>
+    <Stack direction="Vertical">
+      <form onSubmit={onsubmitHandler}>
+        <HorizontalTable>
+          <TR>
+            <TH colSpan={1} align="right">
+              OneId 번호
+            </TH>
+            <TD colSpan={2}>
+              <TextField
+                className="width-100"
+                onChange={onSearchChangeHandler}
+                placeholder="검색어를 입력하세요."
+                value={searchInfo1.agtEstimatedMblfonNoInfo}
+                id="agtEstimatedMblfonNoInfo"
+              />
+            </TD>
+            <TH colSpan={1} align="right">
+              PNR 번호
+            </TH>
+            <TD colSpan={2}>
+              <TextField
+                className="width-100"
+                placeholder="검색어를 입력하세요."
+                id="agtEstMblfonNoInfoHshVlu"
+                value={searchInfo1.agtEstMblfonNoInfoHshVlu}
+                onChange={onSearchChangeHandler}
+              />
+            </TD>
+          </TR>
+        </HorizontalTable>
 
-            <Stack gap="SM" justifyContent="Center">
-              <Button type="submit" priority="Primary" appearance="Contained" size="LG">
-                <span className="searchIcon"></span>
-                검색
-              </Button>
-              <Button type="reset" size="LG">
-                초기화
-              </Button>
-            </Stack>
-          </form>
+        <Stack gap="SM" justifyContent="Center">
+          <Button type="submit" priority="Primary" appearance="Contained" size="LG">
+            <span className="searchIcon"></span>
+            검색
+          </Button>
+          <Button type="reset" size="LG">
+            초기화
+          </Button>
         </Stack>
-      </div>
+      </form>
 
       <DataGrid
         columns={mobileColumn}
@@ -122,6 +116,6 @@ export default function MobileNumber() {
         // page={page}
         // onChange={handlePage}
       />
-    </>
+    </Stack>
   );
 }

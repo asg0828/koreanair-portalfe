@@ -89,71 +89,69 @@ export default function RelationshipHistoryTable() {
   }
 
   return (
-    <>
+    <Stack direction="Vertical" gap="LG" className="height-100">
       <form onSubmit={onsubmitHandler}>
-        <div style={{ width: 1210 }}>
-          <HorizontalTable>
-            <TR>
-              <TH colSpan={1} align="right">
-                OneId 번호
-              </TH>
-              <TD colSpan={4}>
-                <TextField
-                  className="width-100"
-                  onChange={onSearchChangeHandler}
-                  placeholder="검색어를 입력하세요."
-                  value={searchInfo.oneidNum}
-                  id="oneidNum"
-                />
-              </TD>
-            </TR>
-            <TR>
-              <TH colSpan={1} align="right">
-                최초 생성일
-              </TH>
-              <TD colSpan={4}>
-                <DatePicker
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  id="creationStartDate"
-                  value={searchInfo.creationStartDate}
-                  onValueChange={(nextVal) => {
-                    setSearchInfo({ ...searchInfo, creationStartDate: nextVal });
-                  }}
-                />
-                -
-                <DatePicker
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  id="creationEndDate"
-                  value={searchInfo.creationEndDate}
-                  onValueChange={(nextVal) => {
-                    setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
-                  }}
-                />
-                <Button onClick={() => duration('today')}>당일</Button>
-                <Button onClick={() => duration('oneMonth')}>1개월</Button>
-                <Button onClick={() => duration('sixMonth')}>6개월</Button>
-                <Button onClick={() => duration('oneYear')}>1년</Button>
-              </TD>
-            </TR>
-          </HorizontalTable>
-          <Stack gap="SM" justifyContent="Center">
-            <Button type="submit" priority="Primary" appearance="Contained" size="LG">
-              <span className="searchIcon"></span>
-              검색
-            </Button>
-            <Button onClick={onClear} type="reset" size="LG">
-              초기화
-            </Button>
-          </Stack>
-        </div>
+        <HorizontalTable>
+          <TR>
+            <TH colSpan={1} align="right">
+              OneId 번호
+            </TH>
+            <TD colSpan={4}>
+              <TextField
+                className="width-100"
+                onChange={onSearchChangeHandler}
+                placeholder="검색어를 입력하세요."
+                value={searchInfo.oneidNum}
+                id="oneidNum"
+              />
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              최초 생성일
+            </TH>
+            <TD colSpan={4}>
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="creationStartDate"
+                value={searchInfo.creationStartDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, creationStartDate: nextVal });
+                }}
+              />
+              -
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="creationEndDate"
+                value={searchInfo.creationEndDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
+                }}
+              />
+              <Button onClick={() => duration('today')}>당일</Button>
+              <Button onClick={() => duration('oneMonth')}>1개월</Button>
+              <Button onClick={() => duration('sixMonth')}>6개월</Button>
+              <Button onClick={() => duration('oneYear')}>1년</Button>
+            </TD>
+          </TR>
+        </HorizontalTable>
+        <Stack gap="SM" justifyContent="Center">
+          <Button type="submit" priority="Primary" appearance="Contained" size="LG">
+            <span className="searchIcon"></span>
+            검색
+          </Button>
+          <Button onClick={onClear} type="reset" size="LG">
+            초기화
+          </Button>
+        </Stack>
       </form>
 
       <DataGrid
@@ -165,6 +163,6 @@ export default function RelationshipHistoryTable() {
         page={page}
         onChange={handlePage}
       />
-    </>
+    </Stack>
   );
 }

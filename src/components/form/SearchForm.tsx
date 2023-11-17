@@ -14,7 +14,7 @@ const SearchForm: React.FC<SearchCommonFormProps> = ({ onSearch, onClear, childr
   };
 
   return (
-    <Stack direction="Vertical" gap="MD">
+    <Stack direction="Vertical" gap="LG" className="width-100">
       <HorizontalTable>{children}</HorizontalTable>
 
       <Stack gap="SM" justifyContent="Center">

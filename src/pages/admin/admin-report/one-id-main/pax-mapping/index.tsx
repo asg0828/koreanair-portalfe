@@ -97,99 +97,96 @@ export default function PaxMapping() {
   }
 
   return (
-    <>
-      <Stack>
-        <form onSubmit={onsubmitHandler}>
-          <div style={{ width: 1210 }}>
-            <HorizontalTable>
-              <TR>
-                <TH colSpan={1} align="right">
-                  OneId 번호
-                </TH>
-                <TD colSpan={3}>
-                  <TextField
-                    className="width-100"
-                    onChange={onSearchChangeHandler}
-                    placeholder="검색어를 입력하세요."
-                    value={searchInfo.oneidNum}
-                    id="oneidNum"
-                  />
-                </TD>
-                <TH colSpan={1} align="right">
-                  PNR 번호
-                </TH>
-                <TD colSpan={3}>
-                  <TextField
-                    className="width-100"
-                    id="pnrNumber"
-                    placeholder="검색어를 입력하세요."
-                    value={searchInfo.pnrNumber}
-                    onChange={onSearchChangeHandler}
-                  />
-                </TD>
-                <TH colSpan={1} align="right">
-                  UCIID
-                </TH>
-                <TD colSpan={3}>
-                  <TextField
-                    className="width-100"
-                    id="uciId"
-                    placeholder="검색어를 입력하세요."
-                    value={searchInfo.uciId}
-                    onChange={onSearchChangeHandler}
-                  />
-                </TD>
-              </TR>
-              <TR>
-                <TH colSpan={2} align="right">
-                  최초 생성일
-                </TH>
+    <Stack direction="Vertical" gap="LG" className="height-100">
+      <form onSubmit={onsubmitHandler}>
+        <HorizontalTable>
+          <TR>
+            <TH colSpan={1} align="right">
+              OneId 번호
+            </TH>
+            <TD colSpan={3}>
+              <TextField
+                className="width-100"
+                onChange={onSearchChangeHandler}
+                placeholder="검색어를 입력하세요."
+                value={searchInfo.oneidNum}
+                id="oneidNum"
+              />
+            </TD>
+            <TH colSpan={1} align="right">
+              PNR 번호
+            </TH>
+            <TD colSpan={3}>
+              <TextField
+                className="width-100"
+                id="pnrNumber"
+                placeholder="검색어를 입력하세요."
+                value={searchInfo.pnrNumber}
+                onChange={onSearchChangeHandler}
+              />
+            </TD>
+            <TH colSpan={1} align="right">
+              UCIID
+            </TH>
+            <TD colSpan={3}>
+              <TextField
+                className="width-100"
+                id="uciId"
+                placeholder="검색어를 입력하세요."
+                value={searchInfo.uciId}
+                onChange={onSearchChangeHandler}
+              />
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={2} align="right">
+              최초 생성일
+            </TH>
 
-                <TD colSpan={5}>
-                  <DatePicker
-                    appearance="Outline"
-                    calendarViewMode="days"
-                    mode="single"
-                    shape="Square"
-                    size="MD"
-                    id="creationStartDate"
-                    value={searchInfo.creationStartDate}
-                    onValueChange={(nextVal) => {
-                      setSearchInfo({ ...searchInfo, creationStartDate: nextVal });
-                    }}
-                  />
-                  -
-                  <DatePicker
-                    appearance="Outline"
-                    calendarViewMode="days"
-                    mode="single"
-                    shape="Square"
-                    size="MD"
-                    id="creationEndDate"
-                    value={searchInfo.creationEndDate}
-                    onValueChange={(nextVal) => {
-                      setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
-                    }}
-                  />
-                  <Button onClick={() => duration('today')}>당일</Button>
-                  <Button onClick={() => duration('oneMonth')}>1개월</Button>
-                  <Button onClick={() => duration('sixMonth')}>6개월</Button>
-                  <Button onClick={() => duration('oneYear')}>1년</Button>
-                </TD>
-              </TR>
-            </HorizontalTable>
-          </div>
-          <Stack gap="SM" justifyContent="Center">
-            <Button type="submit" priority="Primary" appearance="Contained" size="LG">
-              <span className="searchIcon"></span>
-              검색
-            </Button>
-            <Button type="reset" size="LG" onClick={onClear}>
-              초기화
-            </Button>
-          </Stack>
-        </form>
-      </Stack>
+            <TD colSpan={5}>
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="creationStartDate"
+                value={searchInfo.creationStartDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, creationStartDate: nextVal });
+                }}
+              />
+              -
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="creationEndDate"
+                value={searchInfo.creationEndDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
+                }}
+              />
+              <Button onClick={() => duration('today')}>당일</Button>
+              <Button onClick={() => duration('oneMonth')}>1개월</Button>
+              <Button onClick={() => duration('sixMonth')}>6개월</Button>
+              <Button onClick={() => duration('oneYear')}>1년</Button>
+            </TD>
+          </TR>
+        </HorizontalTable>
+
+        <Stack gap="SM" justifyContent="Center">
+          <Button type="submit" priority="Primary" appearance="Contained" size="LG">
+            <span className="searchIcon"></span>
+            검색
+          </Button>
+          <Button type="reset" size="LG" onClick={onClear}>
+            초기화
+          </Button>
+        </Stack>
+      </form>
 
       <DataGrid
         columns={oneIdPaxColumn}
@@ -200,6 +197,6 @@ export default function PaxMapping() {
         page={page}
         onChange={handlePage}
       />
-    </>
+    </Stack>
   );
 }

@@ -63,80 +63,78 @@ export default function Ctivoc() {
   }
 
   return (
-    <>
+    <Stack direction="Vertical" gap="LG" className="height-100">
       <form onSubmit={onsubmitHandler}>
-        <div style={{ width: 1210 }}>
-          <HorizontalTable>
-            <TR>
-              <TH colSpan={2} className="width-100" align="right">
-                최초 생성일
-              </TH>
+        <HorizontalTable>
+          <TR>
+            <TH colSpan={2} className="width-100" align="right">
+              최초 생성일
+            </TH>
 
-              <TD colSpan={9}>
-                <DatePicker
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  id="startDate"
-                  value={searchInfo.startDate}
-                  onValueChange={(nextVal) => {
-                    setSearchInfo({ ...searchInfo, startDate: nextVal });
-                  }}
-                />
-                -
-                <DatePicker
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  id="endDate"
-                  value={searchInfo.endDate}
-                  onValueChange={(nextVal) => {
-                    setSearchInfo({ ...searchInfo, endDate: nextVal });
-                  }}
-                />
-                <Button onClick={() => duration('today')}>당일</Button>
-                <Button onClick={() => duration('oneMonth')}>1개월</Button>
-                <Button onClick={() => duration('sixMonth')}>6개월</Button>
-                <Button onClick={() => duration('oneYear')}>1년</Button>
-              </TD>
+            <TD colSpan={9}>
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="startDate"
+                value={searchInfo.startDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, startDate: nextVal });
+                }}
+              />
+              -
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="endDate"
+                value={searchInfo.endDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, endDate: nextVal });
+                }}
+              />
+              <Button onClick={() => duration('today')}>당일</Button>
+              <Button onClick={() => duration('oneMonth')}>1개월</Button>
+              <Button onClick={() => duration('sixMonth')}>6개월</Button>
+              <Button onClick={() => duration('oneYear')}>1년</Button>
+            </TD>
 
-              <TH colSpan={2} align="right">
-                조회기준
-              </TH>
+            <TH colSpan={2} align="right">
+              조회기준
+            </TH>
 
-              <TD colSpan={4}>
-                <Radio
-                  id="searchCri"
-                  name="searchCri"
-                  onChange={(e) => radioHandler(e)}
-                  label="History단건"
-                  value="one"
-                  defaultChecked
-                />
-                <Radio
-                  id="searchCri"
-                  name="searchCri"
-                  onChange={(e) => radioHandler(e)}
-                  label="해당History전체"
-                  value="all"
-                />
-              </TD>
-            </TR>
-          </HorizontalTable>
-          <Stack gap="SM" justifyContent="Center">
-            <Button type="submit" priority="Primary" appearance="Contained" size="LG">
-              <span className="searchIcon"></span>
-              검색
-            </Button>
-            <Button onClick={onClear} type="reset" size="LG">
-              초기화
-            </Button>
-          </Stack>
-        </div>
+            <TD colSpan={4}>
+              <Radio
+                id="searchCri"
+                name="searchCri"
+                onChange={(e) => radioHandler(e)}
+                label="History단건"
+                value="one"
+                defaultChecked
+              />
+              <Radio
+                id="searchCri"
+                name="searchCri"
+                onChange={(e) => radioHandler(e)}
+                label="해당History전체"
+                value="all"
+              />
+            </TD>
+          </TR>
+        </HorizontalTable>
+        <Stack gap="SM" justifyContent="Center">
+          <Button type="submit" priority="Primary" appearance="Contained" size="LG">
+            <span className="searchIcon"></span>
+            검색
+          </Button>
+          <Button onClick={onClear} type="reset" size="LG">
+            초기화
+          </Button>
+        </Stack>
       </form>
 
       <DataGridChild
@@ -148,6 +146,6 @@ export default function Ctivoc() {
         clickable={true}
         onChange={handlePage}
       />
-    </>
+    </Stack>
   );
 }
