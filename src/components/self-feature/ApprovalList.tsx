@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { cloneDeep } from 'lodash'
 
 import { 
     Button,
@@ -10,7 +9,6 @@ import {
     THead,
     TR,
     Table,
-    TextField,
     Typography, 
 } from '@components/ui'
 
@@ -21,7 +19,6 @@ import {
 import {
     aprvSeqNm,
     sfSubmissionApprovalListColumns as columns,
-    initSfSubmissionApproval,
 } from '@pages/user/self-feature-submission/data'
 import { subFeatStatus } from "@/models/selfFeature/FeatureCommon"
 import SubAppdAprvPop from "../self-feature-submission/popup/SubAppdAprvPop"
@@ -36,29 +33,6 @@ const ApprovalList = ({
     // 결재선 선택 팝업
     const [ isOpenSubAppdAprvPop, setIsOpenSubAppdAprvPop ] = useState<boolean>(false)
     const [ aprvCategory, setAprvCategory ] = useState<string>("")
-
-    // useEffect(() => {
-    //     let t: Array<SfSubmissionApproval> = []
-
-    //     for (let i = 0; i < 3; i++) {
-
-    //         let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
-
-    //         if (sfSubmissionApprovalList && sfSubmissionApprovalList[i]) {
-    //             subAprv = cloneDeep(sfSubmissionApprovalList[i])
-    //         }
-
-    //         subAprv.approvalSequence = i + 1
-
-    //         if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-    //         else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-    //         else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
-
-    //         t.push(subAprv)
-    //     }
-
-    //     setDefaultSubAprvList(t)
-    // }, [sfSubmissionApprovalList])
 
     useEffect(() => {
         setSfSubmissionApprovalList(defaultSubAprvList)
