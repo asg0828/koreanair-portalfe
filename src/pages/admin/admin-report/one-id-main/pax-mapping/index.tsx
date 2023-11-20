@@ -176,7 +176,7 @@ export default function PaxMapping() {
             </TD>
           </TR>
         </HorizontalTable>
-
+        <br></br>
         <Stack gap="SM" justifyContent="Center">
           <Button type="submit" priority="Primary" appearance="Contained" size="LG">
             <span className="searchIcon"></span>

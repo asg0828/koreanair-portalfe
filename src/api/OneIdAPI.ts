@@ -3,6 +3,7 @@ import { Service } from '@/models/common/Service';
 import { PageModel } from '@/models/model/PageModel';
 import {
   ConversionCleansingHashSearch,
+  ConversionMetaphoneSearch,
   ctiVocSearch,
   dailySearch,
   errorSearch,
@@ -186,14 +187,14 @@ export const getConversionCleansingHash = (searchInfo: ConversionCleansingHashSe
 };
 
 // 데이터 변환 Double Metaphone
-export const getConversionMetaphone = (searchInfo: string) => {
+export const getConversionMetaphone = (searchInfo: ConversionMetaphoneSearch) => {
   console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.ONEID}`,
     method: Method.GET,
     params: {
-      queryParams: { searchInfo },
+      queryParams: { ...searchInfo },
     },
   });
 };

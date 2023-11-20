@@ -1,6 +1,6 @@
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { useConversionCleansingHash, useConversionMetaphone } from '@/hooks/queries/useOneIdQueries';
-import { ConversionCleansingHashSearch } from '@/models/oneId/OneIdInfo';
+import { ConversionCleansingHashSearch, ConversionMetaphoneSearch } from '@/models/oneId/OneIdInfo';
 import { useToast, Button, Stack, TD, TH, TR, Typography } from '@ke-design/components';
 import { TextField } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
@@ -10,7 +10,9 @@ export default function DataConversion() {
     inptPhone: '',
     inptEmail: '',
   });
-  const [bfConvertDoubleMetaphone, setBfConvertDoubleMetaphone] = useState('');
+  const [searchInfo2, setSearchInfo2] = useState<ConversionMetaphoneSearch>({
+    bfConvertDoubleMetaphone: '',
+  });
 
   /* 변환된 값 */
   const [phoneNumCR, setPhoneNumCR] = useState('');
@@ -20,28 +22,34 @@ export default function DataConversion() {
   const [afConvertDoubleMetaphone, setAfConvertDoubleMetaphone] = useState('');
 
   const { refetch: refetch1, data: response1, isError: isError1 } = useConversionCleansingHash(searchInfo);
-  const { refetch: refetch2, data: response2, isError: isError2 } = useConversionMetaphone(bfConvertDoubleMetaphone);
+  const { refetch: refetch2, data: response2, isError: isError2 } = useConversionMetaphone(searchInfo2);
   const { toast } = useToast();
 
   // refetch1
   const handleSearch1 = useCallback(() => {
-    refetch1();
+    if (Object.values({ ...searchInfo }).every((value) => value === '')) {
+      alert('값을 입력하세요');
+    } else {
+      refetch1();
+    }
   }, [refetch1]);
 
   // refetch2
   const handleSearch2 = useCallback(() => {
-    refetch2();
+    if (Object.values({ ...searchInfo2 }).every((value) => value === '')) {
+      alert('값을 입력하세요');
+    } else {
+      refetch2();
+    }
   }, [refetch2]);
 
   /* input state관리1 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
-    setSearchInfo({ ...searchInfo, [id]: value });
-  }
-
-  /* input state관리2 */
-  function onSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setBfConvertDoubleMetaphone(e.target.value);
+    if (id === 'inptPhone' || id === 'inptEmail') setSearchInfo({ ...searchInfo, [id]: value });
+    else {
+      setSearchInfo2({ ...searchInfo2, [id]: value });
+    }
   }
 
   // master 정보 useEffect
@@ -178,8 +186,8 @@ export default function DataConversion() {
                 name="bfConvertDoubleMetaphone"
                 id="bfConvertDoubleMetaphone"
                 placeholder="검색어를 입력하세요."
-                value={bfConvertDoubleMetaphone}
-                onChange={onSearchChange}
+                value={searchInfo2.bfConvertDoubleMetaphone}
+                onChange={onSearchChangeHandler}
               />
             </TD>
             <TD>
