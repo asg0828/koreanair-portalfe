@@ -7,7 +7,7 @@ import { ReactNode, useEffect, useState } from 'react';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
-  rows?: Array<RowsInfo>;
+  rows: Array<RowsInfo>;
   showHeader?: boolean;
   enableSort?: boolean;
   clickable?: boolean;
