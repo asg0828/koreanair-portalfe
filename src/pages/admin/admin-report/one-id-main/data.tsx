@@ -277,17 +277,17 @@ const mobileData: MobileData[] = [
 ];
 
 const mobMasterColumn: Column[] = [
-  { headerName: 'No', field: 'no' },
-  { headerName: 'OneID번호', field: 'oneId' },
-  { headerName: '영문FirstName', field: 'firstNameE' },
-  { headerName: '영문LastName', field: 'lastNameE' },
-  { headerName: '휴대전화번호정보', field: 'phoneNum' },
-  { headerName: 'E-Mail주소', field: 'eMailAdr' },
-  { headerName: '출생일자V', field: 'birth' },
-  { headerName: '한글FirstName', field: 'firstNameK' },
-  { headerName: '한글LastName', field: 'lastNameK' },
-  { headerName: '성별코드', field: 'gender' },
-  { headerName: '대리점추정코드', field: 'presumeCode' },
+  { headerName: 'No', field: 'no', colSpan: 0.09 },
+  { headerName: 'OneID번호', field: 'oneId', colSpan: 0.09 },
+  { headerName: '영문FirstName', field: 'firstNameE', colSpan: 0.09 },
+  { headerName: '영문LastName', field: 'lastNameE', colSpan: 0.09 },
+  { headerName: '휴대전화번호정보', field: 'phoneNum', colSpan: 0.09 },
+  { headerName: 'E-Mail주소', field: 'eMailAdr', colSpan: 0.09 },
+  { headerName: '출생일자V', field: 'birth', colSpan: 0.09 },
+  { headerName: '한글FirstName', field: 'firstNameK', colSpan: 0.0999999 },
+  { headerName: '한글LastName', field: 'lastNameK', colSpan: 0.09 },
+  { headerName: '성별코드', field: 'gender', colSpan: 0.09 },
+  { headerName: '대리점추정코드', field: 'presumeCode', colSpan: 0.09 },
 ];
 
 const mobMasterData: MobMasterData[] = [

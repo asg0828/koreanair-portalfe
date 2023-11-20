@@ -1,9 +1,9 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { useMasterHistoryList } from '@/hooks/queries/useOneIdQueries';
+import { useHistoryList, useMasterHistoryList } from '@/hooks/queries/useOneIdQueries';
 import { PageModel, initPage } from '@/models/model/PageModel';
-import { oneidHistorySearch } from '@/models/oneId/OneIdInfo';
+import { OneIdHistoryData, oneidHistorySearch } from '@/models/oneId/OneIdInfo';
 import {
   Button,
   DatePicker,
@@ -27,7 +27,7 @@ export default function OneIdMasterHistory() {
   const { toast } = useToast();
   const [searchInfo, setSearchInfo] = useState<oneidHistorySearch>({
     oneidNum: '',
-    oneidChgRsnCd: '',
+    oneidChgRsnCd: 'one',
     criteria: 'one',
     bfChgKorLname: '',
     bfChgKorFname: '',
@@ -38,30 +38,60 @@ export default function OneIdMasterHistory() {
     bfChgBirthDtv: '',
     creationStartDate: '',
     creationEndDate: '',
+    homePhoneNumberInfo: '',
   });
   const [page, setPage] = useState<PageModel>(initPage);
-  const { refetch, data: response, isError } = useMasterHistoryList(searchInfo, page);
-  // const { data2: response2, isError } = useHistoryList(searchInfo, page);
+  const [page2, setPage2] = useState<PageModel>(initPage);
+  const [row, setRows] = useState<Array<OneIdHistoryData>>([]);
+  const [row2, setRows2] = useState<Array<OneIdHistoryData>>([]);
+  const { refetch: refetch1, data: response1, isError: isError1 } = useMasterHistoryList(searchInfo, page);
+  const { refetch: refetch2, data: response2, isError: isError2 } = useHistoryList(searchInfo, page);
+
+  // refetch
   const handleSearch = useCallback(() => {
-    refetch();
-  }, [refetch]);
-  const handlePage = (page: PageModel) => {
-    setPage(page);
+    refetch1();
+    refetch2();
+  }, [refetch1, refetch2]);
+
+  const handlePage = (page: PageModel, flag: string) => {
+    if (flag === 'master') {
+      setPage(page);
+    } else {
+      setPage2(page);
+    }
   };
+
+  // master 정보 useEffect
   useEffect(() => {
-    if (isError || response?.successOrNot === 'N') {
+    if (isError1 || response1?.successOrNot === 'N') {
       toast({
         type: 'Error',
         content: '조회 중 에러가 발생했습니다.',
       });
     } else {
-      if (response?.data) {
+      if (response1?.data) {
         // response.data.contents.forEach(() => {});
-        // setRows(response.data.contents);
-        setPage(response.data.page);
+        setRows(response1.data.contents);
+        setPage(response1.data.page);
       }
     }
-  }, [response, isError, toast]);
+  }, [response1, isError1, toast]);
+
+  // history 정보 useEffect
+  useEffect(() => {
+    if (isError2 || response2?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response2?.data) {
+        // response.data.contents.forEach(() => {});
+        setRows2(response2.data.contents);
+        setPage2(response2.data.page);
+      }
+    }
+  }, [response2, isError2, toast]);
 
   const today = new Date();
 
@@ -70,51 +100,6 @@ export default function OneIdMasterHistory() {
     const { id, value } = e.target;
     setSearchInfo({ ...searchInfo, [id]: value });
   }
-
-  /* 검색 버튼 */
-  // const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   retriveMasterHistory();
-  // };
-
-  /* api 호출 */
-  // const retriveMasterHistory = async () => {
-  //   let config = cloneDeep(initConfig);
-  //   config.isLoarding = true;
-  //   let request = cloneDeep(initApiRequest);
-  //   request.method = Method.GET;
-  //   request.url = '';
-  //   request.service = Service.KAL_BE;
-  //   request.params = {
-  //     bodyParams: {
-  //       searchInfo,
-  //     },
-  //   };
-  //   let response = cloneDeep(initCommonResponse);
-  //   response = await callApi(request);
-
-  //   console.log(request.params);
-  //   console.log('[retrieve360] Response :: ', response);
-  // };
-
-  // function handleClear() {
-  //   setSearchInfo({
-  //     ...searchInfo,
-  //     oneIdNum: '',
-  //     oneIdChgReason: '',
-  //     searchCri: 'one',
-  //     firstNameK: '',
-  //     lastNameK: '',
-  //     firstNameE: '',
-  //     lastNameE: '',
-  //     phoneNum: '',
-  //     telephoneNum: '',
-  //     eMailAdd: '',
-  //     birth: '',
-  //     startDate: '',
-  //     endDate: '',
-  //   });
-  // }
 
   /* select 입력 함수 */
   const onchangeSelectHandler = (
@@ -136,7 +121,7 @@ export default function OneIdMasterHistory() {
     setSearchInfo({
       ...searchInfo,
       oneidNum: '',
-      oneidChgRsnCd: '',
+      oneidChgRsnCd: 'one',
       criteria: 'one',
       bfChgKorLname: '',
       bfChgKorFname: '',
@@ -147,6 +132,7 @@ export default function OneIdMasterHistory() {
       bfChgBirthDtv: '',
       creationStartDate: '',
       creationEndDate: '',
+      homePhoneNumberInfo: '',
     });
   }
 
@@ -184,7 +170,7 @@ export default function OneIdMasterHistory() {
                     onChange={onSearchChangeHandler}
                     value={searchInfo.oneidNum}
                     placeholder="검색어를 입력하세요."
-                    id="oneIdNum"
+                    id="oneidNum"
                   />
                 </TD>
                 <TH colSpan={1} align="right">
@@ -200,7 +186,7 @@ export default function OneIdMasterHistory() {
                       e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                       value: SelectValue<{}, false>
                     ) => {
-                      onchangeSelectHandler(e, value, 'oneIdChgReason');
+                      onchangeSelectHandler(e, value, 'oneidChgRsnCd');
                     }}
                   >
                     {reason.map((item, index) => (
@@ -215,16 +201,16 @@ export default function OneIdMasterHistory() {
                 </TH>
                 <TD colSpan={3}>
                   <Radio
-                    id="searchCri"
-                    name="searchCri"
+                    id="criteria"
+                    name="criteria"
                     onChange={(e) => radioHandler(e)}
                     label="History단건"
                     value="one"
                     defaultChecked
                   />
                   <Radio
-                    id="searchCri"
-                    name="searchCri"
+                    id="criteria"
+                    name="criteria"
                     onChange={(e) => radioHandler(e)}
                     label="해당History전체"
                     value="all"
@@ -239,15 +225,17 @@ export default function OneIdMasterHistory() {
                 <TD colSpan={3}>
                   <TextField
                     className="width-100"
-                    id="firstNameK"
+                    id="bfChgKorFname"
                     onChange={onSearchChangeHandler}
                     placeholder="성을 입력하세요."
+                    value={searchInfo.bfChgKorFname}
                   />
                   <TextField
                     className="width-100"
-                    id="lastNameK"
+                    id="bfChgKorLname"
                     onChange={onSearchChangeHandler}
                     placeholder="이름을 입력하세요."
+                    value={searchInfo.bfChgKorLname}
                   />
                 </TD>
                 <TH colSpan={1} align="right">
@@ -256,15 +244,17 @@ export default function OneIdMasterHistory() {
                 <TD colSpan={3}>
                   <TextField
                     className="width-100"
-                    id="firstNameE"
+                    id="bfChgEngFname"
                     onChange={onSearchChangeHandler}
                     placeholder="성을 입력하세요."
+                    value={searchInfo.bfChgEngFname}
                   />
                   <TextField
                     className="width-100"
-                    id="lastNameE"
+                    id="bfChgEngLname"
                     onChange={(e) => onSearchChangeHandler(e)}
                     placeholder="이름을 입력하세요."
+                    value={searchInfo.bfChgEngLname}
                   />
                 </TD>
               </TR>
@@ -276,9 +266,10 @@ export default function OneIdMasterHistory() {
                 <TD colSpan={2}>
                   <TextField
                     className="width-100"
-                    id="phoneNum"
+                    id="bfChgMobilePhoneNoInfo"
                     onChange={onSearchChangeHandler}
                     placeholder="01011112222"
+                    value={searchInfo.bfChgMobilePhoneNoInfo}
                   />
                 </TD>
                 <TH colSpan={1} align="right">
@@ -286,10 +277,11 @@ export default function OneIdMasterHistory() {
                 </TH>
                 <TD colSpan={2}>
                   <TextField
-                    id="telephoneNum"
+                    id="homePhoneNumberInfo"
                     className="width-100"
                     onChange={onSearchChangeHandler}
                     placeholder="성을 입력하세요."
+                    value={searchInfo.homePhoneNumberInfo}
                   />
                 </TD>
               </TR>
@@ -301,9 +293,10 @@ export default function OneIdMasterHistory() {
                 <TD colSpan={2}>
                   <TextField
                     className="width-100"
-                    id="eMailAdd"
+                    id="bfChgEmailAdrs"
                     onChange={onSearchChangeHandler}
-                    placeholder="검색어를 입력하세요."
+                    placeholder="이메일을 입력하세요."
+                    value={searchInfo.bfChgEmailAdrs}
                   />
                 </TD>
                 <TH colSpan={1} align="right">
@@ -316,7 +309,7 @@ export default function OneIdMasterHistory() {
                     mode="single"
                     shape="Square"
                     size="MD"
-                    id="birth"
+                    id="bfChgBirthDtv"
                     value={searchInfo.bfChgBirthDtv}
                     onValueChange={(nextVal) => {
                       setSearchInfo({ ...searchInfo, bfChgBirthDtv: nextVal });
@@ -336,7 +329,7 @@ export default function OneIdMasterHistory() {
                     mode="single"
                     shape="Square"
                     size="MD"
-                    id="startDate"
+                    id="creationStartDate"
                     value={searchInfo.creationStartDate}
                     onValueChange={(nextVal) => {
                       setSearchInfo({ ...searchInfo, creationStartDate: nextVal });
@@ -349,7 +342,7 @@ export default function OneIdMasterHistory() {
                     mode="single"
                     shape="Square"
                     size="MD"
-                    id="endDate"
+                    id="creationEndDate"
                     value={searchInfo.creationEndDate}
                     onValueChange={(nextVal) => {
                       setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
@@ -367,10 +360,22 @@ export default function OneIdMasterHistory() {
       </Stack>
 
       <Typography variant="h4">마스터 </Typography>
-      <DataGrid columns={masterColumn} rows={onIdPaxData} enableSort={true} page={page} onChange={handlePage} />
+      <DataGrid
+        columns={masterColumn}
+        rows={onIdPaxData}
+        enableSort={true}
+        page={page}
+        onChange={(flag: 'master') => handlePage(page, flag)}
+      />
 
       <Typography variant="h4">히스토리 </Typography>
-      <DataGrid columns={historyColumn} rows={onIdPaxData} enableSort={true} page={page} onChange={handlePage} />
+      <DataGrid
+        columns={historyColumn}
+        rows={onIdPaxData}
+        enableSort={true}
+        page={page}
+        onChange={(flag: 'history') => handlePage(page2, flag)}
+      />
     </Stack>
   );
 }

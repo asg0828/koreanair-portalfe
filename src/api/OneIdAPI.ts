@@ -2,7 +2,7 @@ import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
 import { PageModel } from '@/models/model/PageModel';
 import {
-  ConversionSearch,
+  ConversionCleansingHashSearch,
   ctiVocSearch,
   dailySearch,
   errorSearch,
@@ -172,14 +172,28 @@ export const getSamePnr = (page: PageModel) => {
   });
 };
 
-// 데이버 변화
-export const getConversion = (searchInfo: ConversionSearch, page: PageModel) => {
+// 데이터 변환 CleansingRule / Hash
+export const getConversionCleansingHash = (searchInfo: ConversionCleansingHashSearch) => {
+  console.log(searchInfo);
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.ONEID}`,
     method: Method.GET,
     params: {
-      queryParams: { ...searchInfo, page: page.page + 1, pageSize: page.pageSize },
+      queryParams: { ...searchInfo },
+    },
+  });
+};
+
+// 데이터 변환 Double Metaphone
+export const getConversionMetaphone = (searchInfo: string) => {
+  console.log(searchInfo);
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.ONEID}`,
+    method: Method.GET,
+    params: {
+      queryParams: { searchInfo },
     },
   });
 };

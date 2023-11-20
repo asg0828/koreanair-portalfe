@@ -1,5 +1,5 @@
 import { Button, DatePicker, Stack, TD, TH, TR, TextField, Radio, useToast } from '@ke-design/components';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { errLogColumn, errLogData } from '../one-id-main/data';
 import { ErrLogData, errorSearch } from '@/models/oneId/OneIdInfo';
@@ -17,6 +17,7 @@ export default function OneIdErrorHistory() {
     creationStartDate: '',
     creationEndDate: '',
     uciId: '',
+    pnrNumber: '',
   });
   const today = new Date();
   const { toast } = useToast();
@@ -25,6 +26,31 @@ export default function OneIdErrorHistory() {
   const [row, setRows] = useState<Array<ErrLogData>>([]);
   const { refetch, data: response, isError } = useErrorLog(searchInfo, page);
 
+  const handleSearch = useCallback(() => {
+    refetch();
+  }, [refetch]);
+  useEffect(() => {
+    isChanged && handleSearch();
+
+    return () => {
+      setIsChanged(false);
+    };
+  }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.data) {
+        // response.data.contents.forEach(() => {});
+        setRows(response.data.contents);
+        setPage(response.data.page);
+      }
+    }
+  }, [response, isError, toast]);
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
@@ -55,6 +81,7 @@ export default function OneIdErrorHistory() {
       creationStartDate: '',
       creationEndDate: '',
       uciId: '',
+      pnrNumber: '',
     });
   }
 
@@ -148,9 +175,10 @@ export default function OneIdErrorHistory() {
             </TH>
             <TD colSpan={1}>
               <TextField
+                id="pnrNumber"
                 placeholder="검색어를 입력하세요."
                 onChange={onSearchChangeHandler}
-                value={searchInfo.oneidFinalChgRelateNo}
+                value={searchInfo.pnrNumber}
                 disabled={searchInfo.oneidRegisChnlCd === 'ods' ? false : true}
               />
             </TD>
@@ -226,6 +254,7 @@ export default function OneIdErrorHistory() {
 
       <DataGrid
         columns={errLogColumn}
+        //rows = {row}
         rows={errLogData}
         enableSort={true}
         clickable={true}

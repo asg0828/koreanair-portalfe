@@ -22,6 +22,7 @@ export interface PnrData {
 export interface Column {
   headerName: string;
   field: string;
+  colSpan?: number;
 }
 
 export interface ColumnChild {

@@ -1,5 +1,5 @@
 import { Button, Stack, TD, TH, TR, TextField, useToast } from '@ke-design/components';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { mobMasterColumn, mobMasterData, mobileColumn, mobileData } from '../data';
 import { MobMasterData, MobileData, mobileMasterSearch, mobileSearch } from '@/models/oneId/OneIdInfo';
@@ -38,7 +38,8 @@ export default function MobileNumber() {
   };
   const handleSearch = useCallback(() => {
     refetch1();
-  }, [refetch1]);
+    refetch2();
+  }, [refetch1, refetch2]);
 
   const handlePage = (page: PageModel) => {
     setPage(page);
@@ -54,6 +55,43 @@ export default function MobileNumber() {
     console.log('??');
     // 받아온 데이터를 넣기
   }
+  useEffect(() => {
+    isChanged && handleSearch();
+
+    return () => {
+      setIsChanged(false);
+    };
+  }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    if (isError1 || response1?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response1?.data) {
+        // response.data.contents.forEach(() => {});
+        setRows(response1.data.contents);
+        setPage(response1.data.page);
+      }
+    }
+  }, [response1, isError1, toast]);
+
+  useEffect(() => {
+    if (isError2 || response2?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response2?.data) {
+        // response.data.contents.forEach(() => {});
+        setRows(response2.data.contents);
+        setPage(response2.data.page);
+      }
+    }
+  }, [response2, isError2, toast]);
 
   return (
     <Stack direction="Vertical">
@@ -92,7 +130,7 @@ export default function MobileNumber() {
             <span className="searchIcon"></span>
             검색
           </Button>
-          <Button type="reset" size="LG">
+          <Button onClick={onClear} type="reset" size="LG">
             초기화
           </Button>
         </Stack>
@@ -113,8 +151,8 @@ export default function MobileNumber() {
         rows={mobMasterData}
         enableSort={true}
         clickable={true}
-        // page={page}
-        // onChange={handlePage}
+        page={page}
+        onChange={handlePage}
       />
     </Stack>
   );

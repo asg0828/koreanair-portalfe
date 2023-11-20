@@ -4,7 +4,7 @@ import { ctiVocColumn, ctiVocData } from '../../one-id-main/data';
 import { CtiVocData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useCtiVoc } from '@/hooks/queries/useOneIdQueries';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import DataGridChild from '@/components/grid/DataGridChild';
 
 export default function Ctivoc() {
@@ -20,10 +20,38 @@ export default function Ctivoc() {
   const [row, setRows] = useState<Array<CtiVocData>>([]);
   const { refetch, data: response, isError } = useCtiVoc(searchInfo, page);
 
+  const handleSearch = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
   const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };
+
+  useEffect(() => {
+    isChanged && handleSearch();
+
+    return () => {
+      setIsChanged(false);
+    };
+  }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.data) {
+        // response.data.contents.forEach(() => {});
+        setRows(response.data.contents);
+        setPage(response.data.page);
+      }
+    }
+  }, [response, isError, toast]);
+
   /* 검색 버튼 */
   const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

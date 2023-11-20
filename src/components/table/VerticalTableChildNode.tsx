@@ -101,14 +101,14 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
             <TH
               colSpan={column.colSpan ? column.colSpan : 1}
               className="height-100"
-              style={{ border: '0.1px solid gray' }}
+              style={{ borderLeft: '1px solid #DADADA' }}
               enableSort={enableSort}
             >
               {column.headerName}
             </TH>
           ) : (
             <Stack direction="Vertical">
-              <TH colSpan={column.colSpan ? column.colSpan : 1} style={{ border: '0.1px solid gray' }}>
+              <TH colSpan={column.colSpan ? column.colSpan : 1} style={{ borderBottom: '1px solid #DADADA' }}>
                 {column.headerName}
               </TH>
               <Stack direction="Horizontal">
