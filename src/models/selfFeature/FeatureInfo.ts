@@ -1,7 +1,6 @@
 import { RowsInfo } from "@/models/components/Table"
 import { SelectValue } from '@mui/base/useSelect'
 
-
 export interface TargetDropListProps {
     featStatus: string
     setIsSelectAggregateTop?: React.Dispatch<React.SetStateAction<Boolean>>

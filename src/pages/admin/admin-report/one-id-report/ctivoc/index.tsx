@@ -1,11 +1,11 @@
 import { Button, DatePicker, Radio, Stack, TD, TH, TR, useToast } from '@ke-design/components';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { onIdPaxData, oneIdPaxColumn } from '../../one-id-main/data';
-import { CtiVocData, RelationData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
-import DataGrid from '@/components/grid/DataGrid';
+import { ctiVocColumn, ctiVocData } from '../../one-id-main/data';
+import { CtiVocData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
 import { PageModel, initPage } from '@/models/model/PageModel';
-import { useCtiVoc, useRelation } from '@/hooks/queries/useOneIdQueries';
-import { useState } from 'react';
+import { useCtiVoc } from '@/hooks/queries/useOneIdQueries';
+import { useCallback, useEffect, useState } from 'react';
+import DataGridChild from '@/components/grid/DataGridChild';
 
 export default function Ctivoc() {
   const today = new Date();
@@ -20,10 +20,38 @@ export default function Ctivoc() {
   const [row, setRows] = useState<Array<CtiVocData>>([]);
   const { refetch, data: response, isError } = useCtiVoc(searchInfo, page);
 
+  const handleSearch = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
   const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
   };
+
+  useEffect(() => {
+    isChanged && handleSearch();
+
+    return () => {
+      setIsChanged(false);
+    };
+  }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.data) {
+        // response.data.contents.forEach(() => {});
+        setRows(response.data.contents);
+        setPage(response.data.page);
+      }
+    }
+  }, [response, isError, toast]);
+
   /* 검색 버튼 */
   const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -63,91 +91,89 @@ export default function Ctivoc() {
   }
 
   return (
-    <>
+    <Stack direction="Vertical" gap="LG" className="height-100">
       <form onSubmit={onsubmitHandler}>
-        <div style={{ width: 1210 }}>
-          <HorizontalTable>
-            <TR>
-              <TH colSpan={2} className="width-100" align="right">
-                최초 생성일
-              </TH>
+        <HorizontalTable>
+          <TR>
+            <TH colSpan={2} className="width-100" align="right">
+              최초 생성일
+            </TH>
 
-              <TD colSpan={9}>
-                <DatePicker
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  id="startDate"
-                  value={searchInfo.startDate}
-                  onValueChange={(nextVal) => {
-                    setSearchInfo({ ...searchInfo, startDate: nextVal });
-                  }}
-                />
-                -
-                <DatePicker
-                  appearance="Outline"
-                  calendarViewMode="days"
-                  mode="single"
-                  shape="Square"
-                  size="MD"
-                  id="endDate"
-                  value={searchInfo.endDate}
-                  onValueChange={(nextVal) => {
-                    setSearchInfo({ ...searchInfo, endDate: nextVal });
-                  }}
-                />
-                <Button onClick={() => duration('today')}>당일</Button>
-                <Button onClick={() => duration('oneMonth')}>1개월</Button>
-                <Button onClick={() => duration('sixMonth')}>6개월</Button>
-                <Button onClick={() => duration('oneYear')}>1년</Button>
-              </TD>
+            <TD colSpan={9}>
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="startDate"
+                value={searchInfo.startDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, startDate: nextVal });
+                }}
+              />
+              -
+              <DatePicker
+                appearance="Outline"
+                calendarViewMode="days"
+                mode="single"
+                shape="Square"
+                size="MD"
+                id="endDate"
+                value={searchInfo.endDate}
+                onValueChange={(nextVal) => {
+                  setSearchInfo({ ...searchInfo, endDate: nextVal });
+                }}
+              />
+              <Button onClick={() => duration('today')}>당일</Button>
+              <Button onClick={() => duration('oneMonth')}>1개월</Button>
+              <Button onClick={() => duration('sixMonth')}>6개월</Button>
+              <Button onClick={() => duration('oneYear')}>1년</Button>
+            </TD>
 
-              <TH colSpan={2} align="right">
-                조회기준
-              </TH>
+            <TH colSpan={2} align="right">
+              조회기준
+            </TH>
 
-              <TD colSpan={4}>
-                <Radio
-                  id="searchCri"
-                  name="searchCri"
-                  onChange={(e) => radioHandler(e)}
-                  label="History단건"
-                  value="one"
-                  defaultChecked
-                />
-                <Radio
-                  id="searchCri"
-                  name="searchCri"
-                  onChange={(e) => radioHandler(e)}
-                  label="해당History전체"
-                  value="all"
-                />
-              </TD>
-            </TR>
-          </HorizontalTable>
-          <Stack gap="SM" justifyContent="Center">
-            <Button type="submit" priority="Primary" appearance="Contained" size="LG">
-              <span className="searchIcon"></span>
-              검색
-            </Button>
-            <Button onClick={onClear} type="reset" size="LG">
-              초기화
-            </Button>
-          </Stack>
-        </div>
+            <TD colSpan={4}>
+              <Radio
+                id="searchCri"
+                name="searchCri"
+                onChange={(e) => radioHandler(e)}
+                label="History단건"
+                value="one"
+                defaultChecked
+              />
+              <Radio
+                id="searchCri"
+                name="searchCri"
+                onChange={(e) => radioHandler(e)}
+                label="해당History전체"
+                value="all"
+              />
+            </TD>
+          </TR>
+        </HorizontalTable>
+        <Stack gap="SM" justifyContent="Center">
+          <Button type="submit" priority="Primary" appearance="Contained" size="LG">
+            <span className="searchIcon"></span>
+            검색
+          </Button>
+          <Button onClick={onClear} type="reset" size="LG">
+            초기화
+          </Button>
+        </Stack>
       </form>
 
-      <DataGrid
+      <DataGridChild
         page={page}
-        columns={oneIdPaxColumn}
+        columns={ctiVocColumn}
         //row   = {row}
-        rows={onIdPaxData}
+        rows={ctiVocData}
         enableSort={true}
         clickable={true}
         onChange={handlePage}
       />
-    </>
+    </Stack>
   );
 }

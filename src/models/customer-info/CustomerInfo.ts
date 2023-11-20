@@ -1,3 +1,4 @@
+import { Align } from '../common/Design';
 import { RowsInfo } from '../components/Table';
 
 export interface AnalysisIndexList {
@@ -21,11 +22,17 @@ export interface PnrData {
 export interface Column {
   headerName: string;
   field: string;
+  colSpan?: number;
 }
-// export interface ColumnChild {
-//   headerName: [ColumnChild];
-//   field: string;
-// }
+
+export interface ColumnChild {
+  headerName: string;
+  field: string;
+  colSpan?: number;
+  align?: Align;
+  length?: string | number | undefined;
+  childName?: ColumnChild[];
+}
 
 export interface Profile {
   gender: string;

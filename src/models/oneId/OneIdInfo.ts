@@ -10,6 +10,34 @@ export interface PaxData {
   skypassMemberNumber: string;
 }
 
+export interface OneIdHistoryData {
+  birthDatev: string;
+  creationDate: string;
+  emailAddress: string;
+  emailAdrsHashValue: string;
+  engFname: string;
+  engLname: string;
+  engNmSoundexValue: string;
+  finalInqDtim: string;
+  firstNameK: string;
+  lastNameK: string;
+  lastUpdateDate: string;
+  mobilePhoneNoInfoHashVlu: string;
+  mobilePhoneNumberInfo: string;
+  multiplePassportYn: string;
+  no: string;
+  oneidFinalChgChnlCd: string;
+  oneidFinalChgRelateNo: string;
+  oneidFinalChgUciId: string;
+  oneidNo: string;
+  oneidRegisChnlCd: string;
+  oneidSttsCd: string;
+  oneidTypeCd: string;
+  sexCode: string;
+  sexRegisChnlCd: string;
+  homePhoneNoInfoHashValue: string;
+  homePhoneNumberInfo: string;
+}
 export interface MobileData {
   no: string;
   presumeNum: string;
@@ -52,6 +80,7 @@ export interface errorSearch {
   detailErrorNm: string;
   oneidRegisChnlCd: string;
   oneidFinalChgRelateNo: string;
+  pnrNumber: string;
   uciId: string;
   creationStartDate: string;
   creationEndDate: string;
@@ -87,6 +116,7 @@ export interface oneidHistorySearch {
   bfChgBirthDtv: string;
   creationStartDate: string;
   creationEndDate: string;
+  homePhoneNumberInfo: string;
 }
 export interface oneidMasterSearch {
   oneidNum: string;
@@ -172,4 +202,7 @@ export interface OneIdSameData {
   sourcePaxMappingUciIdNo: string;
 }
 
-export interface ConversionSearch {}
+export interface ConversionCleansingHashSearch {
+  inptPhone?: string;
+  inptEmail?: string;
+}

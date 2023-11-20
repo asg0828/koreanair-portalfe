@@ -11,6 +11,7 @@ import CalcValid from '@/components/self-feature/CalcValid';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography } from '@components/ui'
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import ApprovalList from '@/components/self-feature/ApprovalList';
 
 import { 
   FeatureInfo,
@@ -45,6 +46,8 @@ import {
   ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
 import { StatusCode } from '@/models/common/CommonResponse';
+import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionInfo';
+import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data';
 
 const lCategory = [
   { value: '', text: '선택' },
@@ -84,7 +87,10 @@ const SelfFeatureReg = () => {
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
   const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<FormulaTrgtListProps>>([])
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
-  // SQL 등록
+  // 승인 정보
+  const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
+  const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
+
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
   // Top 집계함수 선택 여부
@@ -128,6 +134,24 @@ const SelfFeatureReg = () => {
       let rtn = cloneDeep(state)
       rtn = cloneDeep(initSelfFeatureInfo)
       return rtn
+    })
+    setSfSubmissionApprovalList(() => {
+      let t: Array<SfSubmissionApproval> = []
+
+      for (let i = 0; i < 3; i++) {
+
+          let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+
+          subAprv.approvalSequence = i + 1
+
+          if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+          else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+          else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+
+          t.push(subAprv)
+      }
+
+      return t
     })
   }
 
@@ -272,7 +296,8 @@ const SelfFeatureReg = () => {
     request.method = Method.POST
     request.url = "/api/v1/customerfeatures"
     featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
-    request.params!.bodyParams = featureInfo
+    request.params!.bodyParams = Object.assign(featureInfo, {sfSubmissionRequestData: sfSubmissionRequestData})
+    request.params!.bodyParams = Object.assign(request.params!.bodyParams, {sfSubmissionApprovalList: sfSubmissionApprovalList})
     console.log("[createCustFeatRule] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
@@ -297,7 +322,8 @@ const SelfFeatureReg = () => {
     request.method = Method.POST
     request.url = "/api/v1/korean-air/customerfeatures"
     featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
-    request.params!.bodyParams = featureInfo
+    request.params!.bodyParams = Object.assign(featureInfo, {sfSubmissionRequestData: sfSubmissionRequestData})
+    request.params!.bodyParams = Object.assign(request.params!.bodyParams, {sfSubmissionApprovalList: sfSubmissionApprovalList})
     console.log("[createCustFeatSQL] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
@@ -394,7 +420,7 @@ const SelfFeatureReg = () => {
     else
       navigate(`../${pageNm}`)
   }
-
+  // 대상선택 초기화
   const targetClearHanbler = () => {
     if (targetList.length < 1) return
 
@@ -602,7 +628,6 @@ const SelfFeatureReg = () => {
           </>
           }
           {/* SQL 입력 */}
-
           {/* 계산식 */}
           {(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
             <CalcValid
@@ -617,6 +642,12 @@ const SelfFeatureReg = () => {
             />
           }
           {/* 계산식 */}
+          {/* 결재선 */}
+          <ApprovalList
+            sfSubmissionApprovalList={sfSubmissionApprovalList}
+            setSfSubmissionApprovalList={setSfSubmissionApprovalList}
+          />
+          {/* 결재선 */}
       </Stack>
     {/* 정보 영역 */}
 

@@ -1,5 +1,6 @@
 import {
-  getConversion,
+  getConversionCleansingHash,
+  getConversionMetaphone,
   getCtiVoc,
   getDaily,
   getErrorLog,
@@ -13,7 +14,7 @@ import {
 } from '@/api/OneIdAPI';
 import { PageModel } from '@/models/model/PageModel';
 import {
-  ConversionSearch,
+  ConversionCleansingHashSearch,
   ctiVocSearch,
   dailySearch,
   errorSearch,
@@ -52,30 +53,37 @@ export const useMobileNumber = (searchInfo: mobileSearch, page: PageModel) => {
 
 // 관계이력
 export const useRelation = (searchInfo: relationSearch, page: PageModel) => {
-  return useQuery(['/one-id-main/mobile'], () => getRelation(searchInfo, page), { enabled: false });
+  return useQuery(['/one-id-main/relation'], () => getRelation(searchInfo, page), { enabled: false });
 };
 
 // 에러이력
 export const useErrorLog = (searchInfo: errorSearch, page: PageModel) => {
-  return useQuery(['/one-id-main/mobile'], () => getErrorLog(searchInfo, page), { enabled: false });
+  return useQuery(['/errorLog'], () => getErrorLog(searchInfo, page), { enabled: false });
 };
 
 // 데일리 리포트
 export const useDaily = (searchInfo: dailySearch, page: PageModel) => {
-  return useQuery(['/one-id-main/mobile'], () => getDaily(searchInfo, page), { enabled: false });
+  return useQuery(['/report/daily'], () => getDaily(searchInfo, page), { enabled: false });
 };
 
 // CTI/VOC 리포트
 export const useCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
-  return useQuery(['/one-id-main/mobile'], () => getCtiVoc(searchInfo, page), { enabled: false });
+  return useQuery(['/report/ctiVoc'], () => getCtiVoc(searchInfo, page), { enabled: false });
 };
 
 // samePnrUciid
 export const useSamePnr = (page: PageModel) => {
-  return useQuery(['/one-id-main/mobile'], () => getSamePnr(page));
+  return useQuery(['/report/samePnrUciid'], () => getSamePnr(page));
 };
 
-// 데이터 변환
-export const useConversion = (searchInfo: ConversionSearch, page: PageModel) => {
-  return useQuery(['/one-id-main/mobile'], () => getConversion(searchInfo, page), { enabled: false });
+// 데이터 변환 CleansingRule / Hash
+export const useConversionCleansingHash = (searchInfo: ConversionCleansingHashSearch) => {
+  return useQuery(['/conversion/cleansingHash'], () => getConversionCleansingHash(searchInfo), {
+    enabled: false,
+  });
+};
+
+// 데이터 변환 Double Metaphone
+export const useConversionMetaphone = (searchInfo: string) => {
+  return useQuery(['/conversion/metaphone'], () => getConversionMetaphone(searchInfo), { enabled: false });
 };

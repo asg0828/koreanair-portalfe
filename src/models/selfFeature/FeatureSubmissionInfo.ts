@@ -54,3 +54,9 @@ export interface SfSubmissionAppendApproval extends RowsInfo {
     teamNm: string
     defaultApproverUserId: string
 }
+
+export interface ApporvalListComponentProps {
+    sfSubmissionRequestData?: SfSubmissionRequestInfo
+    sfSubmissionApprovalList: Array<SfSubmissionApproval>
+    setSfSubmissionApprovalList: React.Dispatch<React.SetStateAction<Array<SfSubmissionApproval>>>
+}
