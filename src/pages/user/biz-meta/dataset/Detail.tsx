@@ -69,7 +69,7 @@ const Detail = () => {
       },
     },
   ];
-  const [rows, setRows] = useState<Array<DatasetColumnModel>>();
+  const [rows, setRows] = useState<Array<DatasetColumnModel>>([]);
   const { data: response, isSuccess, isError } = useDatasetById(mtsId);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteDataset(mtsId);
 
