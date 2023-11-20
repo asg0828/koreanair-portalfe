@@ -106,7 +106,7 @@ const SelfFeatureDetail = () => {
         path param  :: {mstrSgmtRuleId}
         query param :: 
     */
-    let mstrSgmtRuleId = 'MS_0006'
+    let mstrSgmtRuleId = 'MS_0032'
     let config = cloneDeep(initConfig)
     config.isLoarding = true
     let request = cloneDeep(initApiRequest)
@@ -564,7 +564,7 @@ const SelfFeatureDetail = () => {
                   <TH colSpan={1} align="right">
                   요청 일시
                   </TH>
-                  <TD colSpan={5.01} align="left">
+                  <TD colSpan={5} align="left">
                       {sfSubmissionRequestData.requestDate}
                   </TD>
               </TR>
@@ -572,7 +572,7 @@ const SelfFeatureDetail = () => {
                   <TH colSpan={1} align="right">
                   승인 제목
                   </TH>
-                  <TD colSpan={5.01} align="left">
+                  <TD colSpan={5} align="left">
                       {sfSubmissionRequestData.title}
                   </TD>
               </TR>
@@ -580,7 +580,7 @@ const SelfFeatureDetail = () => {
                   <TH colSpan={1} align="right">
                   승인 내용
                   </TH>
-                  <TD colSpan={5.01} align="left">
+                  <TD colSpan={5} align="left">
                       {sfSubmissionRequestData.content}
                   </TD>
               </TR> */}
@@ -625,7 +625,7 @@ const SelfFeatureDetail = () => {
               </TR>
               <TR>
                 <TH colSpan={1} align="right">Feature 정의</TH>
-                <TD colSpan={5.01} align='left'>
+                <TD colSpan={5} align='left'>
                   <TextField 
                     className="width-100" 
                     multiline
@@ -646,7 +646,7 @@ const SelfFeatureDetail = () => {
               </TR>
               <TR>
                 <TH colSpan={1} align="right">산출 로직</TH>
-                <TD colSpan={5.01} align='left'>
+                <TD colSpan={5} align='left'>
                   <TextField 
                     style={{
                       height: "150px"
@@ -660,7 +660,7 @@ const SelfFeatureDetail = () => {
               </TR>
               <TR>
                 <TH colSpan={1} align="right">비고</TH>
-                <TD colSpan={5.01} align='left'>
+                <TD colSpan={5} align='left'>
                   {featureInfo.featureTemp && `비고`}
                 </TD>
               </TR>

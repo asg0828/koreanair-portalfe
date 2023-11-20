@@ -171,7 +171,7 @@ const List = () => {
           <TH colSpan={1} align="right">
             검색 Feature
           </TH>
-          <TD colSpan={5.01} align="left">
+          <TD colSpan={5} align="left">
             <TextField
               className="width-100"
               size="MD"
@@ -184,7 +184,7 @@ const List = () => {
           <TH colSpan={1} align="right">
             검색 조건
           </TH>
-          <TD colSpan={5.01} align="left">
+          <TD colSpan={5} align="left">
             <Checkbox
               label="Feature 한글명"
               onCheckedChange={(checked) => handleChangeSearchConditions('featureKoNm', checked)}

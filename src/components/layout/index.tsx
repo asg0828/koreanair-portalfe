@@ -22,6 +22,7 @@ export const defaultPath: defaultPathInfo = {
   '/admin/user-portal-management': '/admin/user-portal-management/menu-management',
   '/admin/user-portal-management/board-management': '/admin/user-portal-management/board-management/notice',
   '/admin/admin-portal-management': '/admin/admin-portal-management/menu-management',
+  '/admin/self-feature-meta-management': '/admin/self-feature-meta-management/customer-meta-management',
   '/test': '/test/api',
 };
 

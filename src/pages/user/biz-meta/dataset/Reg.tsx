@@ -272,7 +272,7 @@ const Reg = () => {
               <TH required colSpan={1} align="right">
                 테이블 정의
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     multiline
@@ -292,7 +292,7 @@ const Reg = () => {
               <TH colSpan={1} required align="right">
                 컬럼 정의
               </TH>
-              <TD colSpan={5.01} className="height-300">
+              <TD colSpan={5} className="height-300">
                 <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
                   <VerticalTable columns={columns} rows={fields} />
                   <Stack className="width-100" justifyContent="Center">
@@ -307,7 +307,7 @@ const Reg = () => {
               <TH colSpan={1} align="right">
                 원천시스템
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
@@ -325,7 +325,7 @@ const Reg = () => {
               <TH colSpan={1} align="right">
                 원천테이블명
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
@@ -340,10 +340,10 @@ const Reg = () => {
               </TD>
             </TR>
             <TR>
-              <TH colSpan={1} align="right">
+              <TH colSpan={1} required align="right">
                 DB명
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <Controller
                     name="srcDbCd"
@@ -376,7 +376,7 @@ const Reg = () => {
               <TH colSpan={1} align="right">
                 비고
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"

@@ -41,6 +41,10 @@ import Daily from '@pages/admin/admin-report/one-id-report/daily';
 import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 import StructuredReportManagement from '@pages/admin/structured-report-management';
+import CustomerMetaManagement from '@/pages/admin/self-feature-meta-management/customer-meta-management';
+import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-management/customer-meta-management/Detail';
+import MasterProfileManagement from '@/pages/admin/self-feature-meta-management/master-profile-management';
+import MasterProfileManagementDetail from '@/pages/admin/self-feature-meta-management/master-profile-management/Detail';
 import AdminHome from '@/pages/admin/AdminHome';
 import { useFaqLoader, useQnaLoader } from '@/hooks/useLoader';
 
@@ -178,6 +182,26 @@ const adminRouter = [
           { path: 'menu-management', element: <AdminMenuManagement /> },
           { path: 'auth-group-management', element: <AdminAuthGroupManagement /> },
           { path: 'admin-auth-management', element: <AdminAdminAuthManagement /> },
+        ],
+      },
+      {
+        path: 'self-feature-meta-management',
+        children: [
+          { index: true, element: <CustomerMetaManagement /> },
+          {
+            path: 'customer-meta-management',
+            children: [
+              { index: true, element: <CustomerMetaManagement /> },
+              { path: 'detail', element: <CustomerMetaManagementDetail /> },
+            ],
+          },
+          {
+            path: 'master-profile-management',
+            children: [
+              { index: true, element: <MasterProfileManagement /> },
+              { path: 'detail', element: <MasterProfileManagementDetail /> },
+            ],
+          },
         ],
       },
     ],

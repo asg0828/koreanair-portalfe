@@ -113,7 +113,7 @@ const SfSubmissionRequestDetail = () => {
             path param  :: {mstrSgmtRuleId}
             query param :: 
         */
-        let mstrSgmtRuleId = 'MS_0006'
+        let mstrSgmtRuleId = 'MS_0032'
         let config = cloneDeep(initConfig)
         config.isLoarding = true
         let request = cloneDeep(initApiRequest)
@@ -337,7 +337,7 @@ const SfSubmissionRequestDetail = () => {
                         <TH colSpan={1} align="right">
                         요청 일시
                         </TH>
-                        <TD colSpan={5.01}>
+                        <TD colSpan={5}>
                             {sfSubmissionRequestData && sfSubmissionRequestData.requestDate}
                         </TD>
                     </TR>
@@ -379,7 +379,7 @@ const SfSubmissionRequestDetail = () => {
                 </TR>
                 <TR>
                     <TH colSpan={1} align="right">Feature 정의</TH>
-                    <TD colSpan={5.01} align='left'>
+                    <TD colSpan={5} align='left'>
                     {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.description}
                     </TD>
                 </TR>
@@ -395,13 +395,13 @@ const SfSubmissionRequestDetail = () => {
                 </TR>
                 <TR>
                     <TH colSpan={1} align="right">산출 로직</TH>
-                    <TD colSpan={5.01} align='left'>
+                    <TD colSpan={5} align='left'>
                     {featureInfo.tbRsCustFeatRule && `산출 로직`}
                     </TD>
                 </TR>
                 <TR>
                     <TH colSpan={1} align="right">비고</TH>
-                    <TD colSpan={5.01} align='left'>
+                    <TD colSpan={5} align='left'>
                     {featureInfo.tbRsCustFeatRule && `비고`}
                     </TD>
                 </TR>
