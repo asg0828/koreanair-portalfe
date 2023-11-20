@@ -10,7 +10,7 @@ import { PageModel, initPage } from '@/models/model/PageModel';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import AddIcon from '@mui/icons-material/Add';
+import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

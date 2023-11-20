@@ -20,7 +20,7 @@ import {
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
 import ConfirmModal from "@/components/modal/ConfirmModal";
-import AddIcon from '@mui/icons-material/Add'
+import { AddIcon } from '@/assets/icons';
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { 

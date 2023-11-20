@@ -6,7 +6,7 @@ import { ValidType, View } from '@/models/common/Constants';
 import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import AddIcon from '@mui/icons-material/Add';
+import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';

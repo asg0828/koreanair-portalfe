@@ -21,6 +21,7 @@ export enum ModalType {
   NORMAL = 'NORMAL',
   CONFIRM = 'CONFIRM',
   NOTICE = 'NOTICE',
+  CALCULATION_LOGIC = 'CALCULATION_LOGIC',
 }
 
 export enum GroupCodeType {
@@ -28,6 +29,7 @@ export enum GroupCodeType {
   QNA_TYPE = 'QNA_TYPE',
   QNA_STAT = 'QNA_STAT',
   FEATURE_TYPE = 'FEATURE_TYPE',
+  DBMS = 'DBMS',
 }
 
 export enum ContextPath {
