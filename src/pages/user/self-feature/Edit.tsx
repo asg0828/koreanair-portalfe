@@ -255,7 +255,7 @@ const SelfFeatureEdit = () => {
       path param  :: {mstrSgmtRuleId}
       query param :: 
     */
-    let mstrSgmtRuleId = 'MS_0006'
+    let mstrSgmtRuleId = 'MS_0032'
     let config = cloneDeep(initConfig)
     config.isLoarding = true
     let request = cloneDeep(initApiRequest)
