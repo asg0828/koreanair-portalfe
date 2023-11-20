@@ -9,7 +9,7 @@ import { QnaModel, QnaParams } from '@/models/model/QnaModel';
 import { getCode } from '@/reducers/codeSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import AddIcon from '@mui/icons-material/Add';
+import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 

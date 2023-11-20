@@ -382,15 +382,20 @@ const Reg = () => {
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
-                  <TextField
-                    className="width-100"
-                    {...register('enrUserId', {
-                      required: { value: true, message: 'enrUserId is required.' },
-                      maxLength: { value: 32, message: 'max length exceeded' },
-                    })}
-                    validation={errors?.enrUserId?.message ? 'Error' : undefined}
-                    autoFocus
-                  />
+                  <Stack gap="SM">
+                    <TextField
+                      className="width-100"
+                      {...register('enrUserId', {
+                        required: { value: true, message: 'enrUserId is required.' },
+                        maxLength: { value: 32, message: 'max length exceeded' },
+                      })}
+                      validation={errors?.enrUserId?.message ? 'Error' : undefined}
+                      autoFocus
+                    />
+                    <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+                      <span className="searchIcon"></span>
+                    </Button>
+                  </Stack>
                   <ErrorLabel message={errors?.enrUserId?.message} />
                 </Stack>
               </TD>

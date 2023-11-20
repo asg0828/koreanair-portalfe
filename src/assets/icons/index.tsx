@@ -20,6 +20,10 @@ import UploadIcon from '@mui/icons-material/Upload';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SearchOffOutlinedIcon from '@mui/icons-material/SearchOffOutlined';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 
 export {
   SettingsOutlinedIcon,
@@ -44,4 +48,8 @@ export {
   HighlightOffIcon,
   SearchOffOutlinedIcon,
   TextSnippetOutlinedIcon,
+  AddIcon,
+  RemoveIcon,
+  AddCircleOutlineOutlinedIcon,
+  RemoveCircleOutlineOutlinedIcon,
 };

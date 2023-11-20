@@ -206,3 +206,7 @@ export interface ConversionCleansingHashSearch {
   inptPhone?: string;
   inptEmail?: string;
 }
+
+export interface ConversionMetaphoneSearch {
+  bfConvertDoubleMetaphone: string;
+}

@@ -4,7 +4,7 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import TinyEditor from '@/components/editor/TinyEditor';
 import '@/assets/styles/Board.scss';
-import AddIcon from '@mui/icons-material/Add';
+import { AddIcon } from '@/assets/icons';
 
 const Reg = () => {
   const navigate = useNavigate();

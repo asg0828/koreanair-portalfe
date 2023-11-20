@@ -15,6 +15,7 @@ import {
 import { PageModel } from '@/models/model/PageModel';
 import {
   ConversionCleansingHashSearch,
+  ConversionMetaphoneSearch,
   ctiVocSearch,
   dailySearch,
   errorSearch,
@@ -84,6 +85,6 @@ export const useConversionCleansingHash = (searchInfo: ConversionCleansingHashSe
 };
 
 // 데이터 변환 Double Metaphone
-export const useConversionMetaphone = (searchInfo: string) => {
+export const useConversionMetaphone = (searchInfo: ConversionMetaphoneSearch) => {
   return useQuery(['/conversion/metaphone'], () => getConversionMetaphone(searchInfo), { enabled: false });
 };

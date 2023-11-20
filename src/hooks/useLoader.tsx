@@ -15,6 +15,9 @@ export const useFeatureLoader = async ({ request, params }: any) => {
   const response1 = getCodeListWithOut('FEATURE_TYPE');
   const response2 = getFeatureTypList();
   const response = await Promise.all([response1, response2]);
-
   return response[1].data;
+};
+
+export const useDatasetLoader = async ({ request, params }: any) => {
+  return await getCodeListWithOut('DBMS');
 };

@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ModalInfo } from '@/models/components/Modal';
 import { ModalType } from '@/models/common/Constants';
+import { ModalInfo } from '@/models/components/Modal';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: ModalInfo = {
   type: ModalType.NORMAL,

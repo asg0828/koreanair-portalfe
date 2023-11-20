@@ -1,13 +1,13 @@
-import { useState, ReactNode } from 'react';
-import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
-import { CheckedState, SortDirection, SortDirectionCode, AlignCode } from '@/models/common/Design';
-import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD, Stack, Loader } from '@components/ui';
 import NoResult from '@/components/emptyState/NoData';
+import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
+import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import '@components/table/VerticalTable.scss';
+import { Checkbox, TBody, TD, TH, THead, TR, Table, Typography } from '@components/ui';
+import { ReactNode, useEffect, useState } from 'react';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
-  rows: Array<RowsInfo>;
+  rows?: Array<RowsInfo>;
   showHeader?: boolean;
   enableSort?: boolean;
   clickable?: boolean;
@@ -81,6 +81,10 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     onClick && onClick(row, index);
   };
 
+  useEffect(() => {
+    setSortRows(rows);
+  }, [rows]);
+
   return (
     <Table variant="vertical" size="normal" align="center" className="verticalTable">
       {showHeader && columns?.length > 0 && (
@@ -93,8 +97,9 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
             )}
             {columns.map((column, index) => (
               <TH
-                colSpan={column.colSpan ? column.colSpan : undefined}
                 key={`header-${index}`}
+                required={column.require}
+                colSpan={column.colSpan ? column.colSpan : undefined}
                 enableSort={enableSort}
                 onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
               >
@@ -104,27 +109,37 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
           </TR>
         </THead>
       )}
-      {rows?.length > 0 ? (
+      {sortRows?.length > 0 ? (
         <TBody clickable={clickable}>
-          {rows.map((row, index) => (
-            <TR key={`row-${index}`} selected={checkedList.includes(index)}>
+          {sortRows.map((row, rowIndex) => (
+            <TR key={`row-${rowIndex}`} selected={checkedList.includes(rowIndex)}>
               {isCheckbox && (
                 <TD colSpan={0.5}>
                   <Checkbox
-                    checked={checkedList.includes(index)}
-                    onCheckedChange={(checked) => handleCheckedChange(checked, row, index)}
+                    checked={checkedList.includes(rowIndex)}
+                    onCheckedChange={(checked) => handleCheckedChange(checked, row, rowIndex)}
                   />
                 </TD>
               )}
 
-              {Object.keys(columns).map((column, index2) => (
+              {Object.keys(columns).map((column, columnIndex) => (
                 <TD
-                  key={`column-${index2}`}
-                  colSpan={columns[index2].colSpan ? columns[index2].colSpan : undefined}
-                  align={columns[index2].align ? columns[index2].align : AlignCode.CENTER}
-                  onClick={() => handleClick(row, index)}
+                  key={`column-${columnIndex}`}
+                  colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                  align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                  onClick={() => handleClick(row, rowIndex)}
                 >
-                  <Typography variant="body2">{row[columns[index2].field]}</Typography>
+                  {(() => {
+                    if (columns[columnIndex].render) {
+                      return columns[columnIndex].render?.(
+                        rowIndex,
+                        columns[columnIndex].field,
+                        columns[columnIndex].maxLength
+                      );
+                    } else {
+                      return <Typography variant="body2">{row[columns[columnIndex].field]}</Typography>;
+                    }
+                  })()}
                 </TD>
               ))}
             </TR>
