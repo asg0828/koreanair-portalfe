@@ -224,7 +224,7 @@ const DropList = ({
                     shape='Round' 
                     appearance='Filled'
                     readOnly
-                    value={'오른쪽 속성/행동 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
+                    value={'오른쪽 Fact/BaseFact 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
                 >
                 </TextField>
             }
