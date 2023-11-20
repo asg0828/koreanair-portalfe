@@ -340,7 +340,7 @@ const Reg = () => {
               </TD>
             </TR>
             <TR>
-              <TH colSpan={1} align="right">
+              <TH colSpan={1} required align="right">
                 DB명
               </TH>
               <TD colSpan={5.01}>
