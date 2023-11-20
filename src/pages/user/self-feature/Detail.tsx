@@ -277,6 +277,30 @@ const SelfFeatureDetail = () => {
     console.log("[retrieveSubmissionList] Response result       :: ", response.result)
 
     if (response.statusCode === StatusCode.SUCCESS) {
+      setSfSubmissionApprovalList(() => {
+        let rtn = cloneDeep(response.result.approvals)
+
+        let t: Array<SfSubmissionApproval> = []
+
+        for (let i = 0; i < 3; i++) {
+
+            let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+
+            if (rtn && rtn[i]) {
+                subAprv = cloneDeep(rtn[i])
+            }
+
+            subAprv.approvalSequence = i + 1
+
+            if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+            else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+            else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+
+            t.push(subAprv)
+        }
+
+        return t
+      })
       if (response.result.length > 0) {
         retrieveSubmissionInfo(response.result[0].id)
       }
@@ -310,18 +334,30 @@ const SelfFeatureDetail = () => {
 
       if (response.result.submission) setSfSubmissionRequestData(cloneDeep(response.result.submission))
 
-      if (response.result.approvals.length > 0) {
-        setSfSubmissionApprovalList(() => {
-          let rtn = cloneDeep(response.result.approvals)
-          rtn = rtn.map((approval: SfSubmissionApproval) => { 
-            if (approval.approvalSequence === 1) approval.approvalSequenceNm = aprvSeqNm.FIRST
-            else if (approval.approvalSequence === 2) approval.approvalSequenceNm = aprvSeqNm.SECOND
-            else if (approval.approvalSequence === 3) approval.approvalSequenceNm = aprvSeqNm.LAST
-            return approval
-          })
-          return rtn
-        })
-      }
+      setSfSubmissionApprovalList(() => {
+        let rtn = cloneDeep(response.result.approvals)
+
+        let t: Array<SfSubmissionApproval> = []
+
+        for (let i = 0; i < 3; i++) {
+
+            let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+
+            if (rtn && rtn[i]) {
+                subAprv = cloneDeep(rtn[i])
+            }
+
+            subAprv.approvalSequence = i + 1
+
+            if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+            else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+            else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+
+            t.push(subAprv)
+        }
+
+        return t
+      })
     }
   }
 

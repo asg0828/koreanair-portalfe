@@ -57,6 +57,6 @@ export interface SfSubmissionAppendApproval extends RowsInfo {
 
 export interface ApporvalListComponentProps {
     sfSubmissionRequestData?: SfSubmissionRequestInfo
-    sfSubmissionApprovalList?: Array<SfSubmissionApproval>
+    sfSubmissionApprovalList: Array<SfSubmissionApproval>
     setSfSubmissionApprovalList: React.Dispatch<React.SetStateAction<Array<SfSubmissionApproval>>>
 }

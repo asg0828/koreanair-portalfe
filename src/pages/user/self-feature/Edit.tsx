@@ -297,9 +297,10 @@ const SelfFeatureEdit = () => {
     let request = cloneDeep(initApiRequest)
     request.method = Method.PUT
     request.url = `/api/v1/customerfeatures/${custFeatRuleId}`
-    request.params!.bodyParams = updtFeatureInfo
+    request.params!.bodyParams = Object.assign(updtFeatureInfo, {sfSubmissionRequestData: sfSubmissionRequestData})
+    request.params!.bodyParams = Object.assign(request.params!.bodyParams, {sfSubmissionApprovalList: sfSubmissionApprovalList})
     console.log("[updateCustFeatRule] Request  :: ", request)
-
+    
     let response = cloneDeep(initCommonResponse)
     //response = await callApi(request)
     console.log("[updateCustFeatRule] Response :: ", response)
@@ -322,7 +323,8 @@ const SelfFeatureEdit = () => {
     let request = cloneDeep(initApiRequest)
     request.method = Method.PUT
     request.url = `/api/v1/korean-air/customerfeatures/${custFeatRuleId}`
-    request.params!.bodyParams = updtFeatureInfo
+    request.params!.bodyParams = Object.assign(updtFeatureInfo, {sfSubmissionRequestData: sfSubmissionRequestData})
+    request.params!.bodyParams = Object.assign(request.params!.bodyParams, {sfSubmissionApprovalList: sfSubmissionApprovalList})
     console.log("[updateCustFeatSQL] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)

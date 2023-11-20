@@ -10,7 +10,7 @@ export const sfSubmissionListColumns = [
 ]
 // Feature 결재선 리스트 table header
 export const sfSubmissionApprovalListColumns = [
-    { headerName: '단계(담당부서)',   field: 'approvalSequenceNm', colSpan: 2 },
+    { headerName: '단계(담당)',   field: 'approvalSequenceNm', colSpan: 2 },
     { headerName: '결재자', field: 'approver', colSpan: 4 },
     { headerName: '상태',   field: 'status', colSpan: 2 },
     { headerName: '일시',   field: 'approvedDate', colSpan: 4 },
@@ -40,8 +40,8 @@ export const sfSubmissionStatusOption = [
 ]
 
 export const aprvSeqNm = {
-    FIRST: "1차(운영부서)",
-    SECOND: "2차(품질부서)",
+    FIRST: "1차(운영)",
+    SECOND: "2차(품질)",
     LAST: "3차(최종 승인)",
 }
 

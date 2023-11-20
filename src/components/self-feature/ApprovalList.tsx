@@ -35,41 +35,41 @@ const ApprovalList = ({
     const [ defaultSubAprvList, setDefaultSubAprvList ] = useState<Array<SfSubmissionApproval>>([])
     // 결재선 선택 팝업
     const [ isOpenSubAppdAprvPop, setIsOpenSubAppdAprvPop ] = useState<boolean>(false)
+    const [ aprvCategory, setAprvCategory ] = useState<string>("")
+
+    // useEffect(() => {
+    //     let t: Array<SfSubmissionApproval> = []
+
+    //     for (let i = 0; i < 3; i++) {
+
+    //         let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+
+    //         if (sfSubmissionApprovalList && sfSubmissionApprovalList[i]) {
+    //             subAprv = cloneDeep(sfSubmissionApprovalList[i])
+    //         }
+
+    //         subAprv.approvalSequence = i + 1
+
+    //         if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+    //         else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+    //         else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+
+    //         t.push(subAprv)
+    //     }
+
+    //     setDefaultSubAprvList(t)
+    // }, [sfSubmissionApprovalList])
 
     useEffect(() => {
-
-        let t: Array<SfSubmissionApproval> = []
-
-        for (let i = 0; i < 3; i++) {
-
-            let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
-
-            if (sfSubmissionApprovalList && sfSubmissionApprovalList[i]) {
-                subAprv = cloneDeep(sfSubmissionApprovalList[i])
-            }
-
-            subAprv.approvalSequence = i + 1
-
-            if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-            else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-            else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
-
-            t.push(subAprv)
-        }
-
-        setDefaultSubAprvList(t)
-    }, [sfSubmissionApprovalList])
+        setSfSubmissionApprovalList(defaultSubAprvList)
+    }, [defaultSubAprvList])
 
     const appendAprvHanbler = (index: number) => {
-        console.log("결재선 선택 팝업 노출")
+        if (index === 0) setAprvCategory(aprvSeqNm.FIRST)
+        else if (index === 1) setAprvCategory(aprvSeqNm.SECOND)
+        else if (index === 2) setAprvCategory(aprvSeqNm.LAST)
+
         setIsOpenSubAppdAprvPop((prevState) => !prevState)
-        if (index === 0) {
-            console.log("운영")
-        } else if (index === 1) {
-            console.log("품질")
-        } else if (index === 2) {
-            console.log("최종")
-        }
     }
 
     return (
@@ -91,7 +91,7 @@ const ApprovalList = ({
                 </TR>
             </THead>
             <TBody>
-            {defaultSubAprvList.map((row, index) => (
+            {sfSubmissionApprovalList.map((row, index) => (
                 <TR key={`row-${index}`}>
                 {Object.keys(columns).map((column, index2) => (
                     <TD
@@ -145,6 +145,8 @@ const ApprovalList = ({
         <SubAppdAprvPop 
             isOpen={isOpenSubAppdAprvPop} 
             onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)} 
+            aprvCategory={aprvCategory}
+            setDefaultSubAprvList={setDefaultSubAprvList}
         />
         {/* 팝업 */}
         </>
