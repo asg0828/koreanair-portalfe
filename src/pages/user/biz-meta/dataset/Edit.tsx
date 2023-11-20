@@ -345,11 +345,9 @@ const Edit = () => {
               <TD colSpan={5.01} className="height-300 overflow-auto">
                 <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
                   <VerticalTable columns={columns} rows={fields} />
-                  <Stack className="width-100 height-100" justifyContent="Center">
-                    <Stack className="height-200">
-                      <Stack onClick={handleAdd}>
-                        <AddCircleOutlineOutlinedIcon fontSize="large" color="primary" />
-                      </Stack>
+                  <Stack className="width-100" justifyContent="Center">
+                    <Stack onClick={handleAdd}>
+                      <AddCircleOutlineOutlinedIcon fontSize="large" color="primary" />
                     </Stack>
                   </Stack>
                 </Stack>
