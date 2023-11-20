@@ -55,6 +55,7 @@ import { Method, callApi } from "@/utils/ApiUtil";
 import { StatusCode } from "@/models/common/CommonResponse";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
+import SubRejectPop from "@/components/self-feature-submission/popup/SubRejectPop";
 
 const SfSubmissionRequestDetail = () => {
 
@@ -62,6 +63,8 @@ const SfSubmissionRequestDetail = () => {
     const location = useLocation()
 
     const [ regType, setRegType ] = useState<string>('')
+
+    const [ isOpenSubRejectPop, setIsOpenSubRejectPop ] = useState<boolean>(false)
     const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
     const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
     const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
@@ -264,12 +267,8 @@ const SfSubmissionRequestDetail = () => {
             setConfirmModalCont(ModalTitCont.SUBMISSION_APPROVAL.context)
             setIsOpenConfirmModal(true)
         } else if (pageNm === selfFeatPgPpNm.SUB_REJT) {
-            // 반려 처리
-            setModalType(ModalType.CONFIRM)
-            setRegType("reject")
-            setConfirmModalTit(ModalTitCont.SUBMISSION_REJECT.title)
-            setConfirmModalCont(ModalTitCont.SUBMISSION_REJECT.context)
-            setIsOpenConfirmModal(true)
+            // 반려 팝업
+            setIsOpenSubRejectPop((prevState) => !prevState)
         }
     }
 
@@ -298,6 +297,7 @@ const SfSubmissionRequestDetail = () => {
     }
 
     return (
+        <>
         <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
             {/* 상단 버튼 영역 */}
             <FeatQueryRsltButton />
@@ -492,18 +492,27 @@ const SfSubmissionRequestDetail = () => {
                 </Button>
             </Stack>
             {/* 버튼 영역 */}
-            {/* Confirm 모달 */}
-            <ConfirmModal
-                isOpen={isOpenConfirmModal}
-                onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
-                title={confirmModalTit}
-                content={confirmModalCont}
-                onConfirm={onConfirm}
-                onCancle={onCancel}
-                btnType={modalType}
-            />
-            {/* Confirm 모달 */}
         </Stack>
+        {/* Confirm 모달 */}
+        <ConfirmModal
+            isOpen={isOpenConfirmModal}
+            onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+            title={confirmModalTit}
+            content={confirmModalCont}
+            onConfirm={onConfirm}
+            onCancle={onCancel}
+            btnType={modalType}
+        />
+        {/* Confirm 모달 */}
+        {/* 반려 팝업 */}
+        <SubRejectPop 
+            isOpen={isOpenSubRejectPop} 
+            onClose={(isOpen) => setIsOpenSubRejectPop(isOpen)}
+            sfSubmissionApprovalList={sfSubmissionApprovalList}
+            setSfSubmissionApprovalList={setSfSubmissionApprovalList}
+        />
+        {/* 반려 팝업 */}
+        </>
     )
 }
 
