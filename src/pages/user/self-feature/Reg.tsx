@@ -511,7 +511,7 @@ const SelfFeatureReg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right" required>Feature 정의</TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <TextField className="width-100" id="featureDef" multiline onChange={onchangeInputHandler}/>
               </TD>
             </TR>
@@ -545,7 +545,7 @@ const SelfFeatureReg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right" required>산출 로직</TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <TextField
                   style={{
                     height: "150px"
@@ -559,7 +559,7 @@ const SelfFeatureReg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">비고</TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <TextField className="width-100" id="description" onChange={onchangeInputHandler}/>
               </TD>
             </TR>

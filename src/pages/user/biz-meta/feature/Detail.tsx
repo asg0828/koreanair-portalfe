@@ -132,7 +132,7 @@ const Detail = () => {
             <TH colSpan={1} required align="right">
               Feature 정의
             </TH>
-            <TD colSpan={5.01} align="left">
+            <TD colSpan={5} align="left">
               {featureModel?.featureDef}
             </TD>
           </TR>
@@ -140,7 +140,7 @@ const Detail = () => {
             <TH colSpan={1} align="right">
               산출단위
             </TH>
-            <TD colSpan={5.01} align="left">
+            <TD colSpan={5} align="left">
               {featureModel?.featureFm}
             </TD>
           </TR>
@@ -148,7 +148,7 @@ const Detail = () => {
             <TH colSpan={1} align="right">
               산출로직
             </TH>
-            <TD colSpan={5.01} align="left">
+            <TD colSpan={5} align="left">
               {featureModel?.calcUnt}
             </TD>
           </TR>
@@ -156,7 +156,7 @@ const Detail = () => {
             <TH colSpan={1} align="right">
               비고
             </TH>
-            <TD colSpan={5.01} align="left">
+            <TD colSpan={5} align="left">
               {featureModel?.featureDsc}
             </TD>
           </TR>

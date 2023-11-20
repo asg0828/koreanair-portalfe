@@ -512,7 +512,7 @@ const SubmissionRequestPop = ({
                                 <TH colSpan={1} align="right">
                                 요청 일시
                                 </TH>
-                                <TD colSpan={5.01}>
+                                <TD colSpan={5}>
                                     <TextField className="width-100" readOnly value={submission.requestDate} />
                                 </TD>
                             </TR>
@@ -520,7 +520,7 @@ const SubmissionRequestPop = ({
                                 <TH colSpan={1} align="right">
                                 승인 제목
                                 </TH>
-                                <TD colSpan={5.01}>
+                                <TD colSpan={5}>
                                     <TextField 
                                         className="width-100"  
                                         id="title" 
@@ -533,7 +533,7 @@ const SubmissionRequestPop = ({
                                 <TH colSpan={1} align="right">
                                 승인 내용
                                 </TH>
-                                <TD colSpan={5.01}>
+                                <TD colSpan={5}>
                                     <TextField 
                                         className="width-100" 
                                         multiline  

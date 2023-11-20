@@ -306,7 +306,7 @@ const Reg = () => {
               <TH colSpan={1} required align="right">
                 Feature 정의
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
@@ -324,7 +324,7 @@ const Reg = () => {
               <TH colSpan={1} align="right">
                 산출단위
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
@@ -342,7 +342,7 @@ const Reg = () => {
               <TH colSpan={1} align="right">
                 산출로직
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
@@ -358,7 +358,7 @@ const Reg = () => {
               <TH colSpan={1} align="right">
                 비고
               </TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"

@@ -274,7 +274,7 @@ const SelfFeature = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">Feature 명</TH>
-          <TD colSpan={5.01}>
+          <TD colSpan={5}>
             <TextField className="width-100" id="custFeatRuleName" onChange={onchangeInputHandler}/>
           </TD>
         </TR>
