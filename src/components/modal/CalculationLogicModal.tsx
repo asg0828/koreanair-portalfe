@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 const CalculationLogicModal = ({
   isOpen = false,
   autoClose = true,
+  disabled = false,
   title,
   content,
   onConfirm,
@@ -49,18 +50,27 @@ const CalculationLogicModal = ({
           <TextField
             multiline
             autoFocus
+            disabled
             className="width-100 height-300"
             onChange={(e) => handleChange(e.target.value)}
             value={value}
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
-            저장
-          </Button>
-          <Button priority="Normal" appearance="Outline" onClick={handleCancle}>
-            취소
-          </Button>
+          {disabled ? (
+            <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
+              확인
+            </Button>
+          ) : (
+            <>
+              <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
+                저장
+              </Button>
+              <Button priority="Normal" appearance="Outline" onClick={handleCancle}>
+                취소
+              </Button>
+            </>
+          )}
         </Modal.Footer>
       </Modal>
     </Stack>

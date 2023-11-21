@@ -55,15 +55,13 @@ const Detail = () => {
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
         return (
           <Stack gap="SM" className="width-100" direction="Vertical">
-            {(() => {
-              const Content = <TextField multiline autoFocus disabled className="width-100 height-300" />;
-
-              return (
-                <Button className="width-100" appearance="Contained" onClick={() => openCalculationLogicModal(Content)}>
-                  보기
-                </Button>
-              );
-            })()}
+            <Button
+              className="width-100"
+              appearance="Contained"
+              onClick={() => openCalculationLogicModal(rowIndex, fieldName)}
+            >
+              보기
+            </Button>
           </Stack>
         );
       },
@@ -73,12 +71,13 @@ const Detail = () => {
   const { data: response, isSuccess, isError } = useDatasetById(mtsId);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteDataset(mtsId);
 
-  const openCalculationLogicModal = (content: any) => {
+  const openCalculationLogicModal = (rowIndex: number, fieldName: fieldType) => {
     dispatch(
       openModal({
         type: ModalType.CALCULATION_LOGIC,
         title: '산출로직',
-        content: content,
+        content: rows[rowIndex][fieldName],
+        disabled: true,
       })
     );
   };

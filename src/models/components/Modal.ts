@@ -5,6 +5,7 @@ export interface ModalInfo {
   type?: ModalType;
   isOpen?: boolean;
   autoClose?: boolean;
+  disabled?: boolean;
   title: string;
   content: ReactNode;
   onConfirm?: Function;

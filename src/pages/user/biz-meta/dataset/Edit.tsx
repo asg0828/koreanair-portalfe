@@ -151,9 +151,7 @@ const Edit = () => {
           <Button
             className="width-100"
             appearance="Contained"
-            onClick={() =>
-              openCalculationLogicModal(rowIndex, fieldName, getValues(`columnSpecs.${rowIndex}.${fieldName}`))
-            }
+            onClick={() => openCalculationLogicModal(rowIndex, fieldName)}
           >
             입력
           </Button>
@@ -163,7 +161,7 @@ const Edit = () => {
     );
   };
 
-  const openCalculationLogicModal = (rowIndex: number, fieldName: fieldType, value: string) => {
+  const openCalculationLogicModal = (rowIndex: number, fieldName: fieldType) => {
     dispatch(
       openModal({
         type: ModalType.CALCULATION_LOGIC,
