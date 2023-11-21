@@ -213,7 +213,7 @@ const List = () => {
               appearance="Outline"
               placeholder="전체"
               className="width-100"
-              onChange={(e, value) => handleChangeParams('featureSeGrp', value)}
+              onChange={(e, value) => value && handleChangeParams('featureSeGrp', value)}
               value={params.featureSeGrp}
             >
               {featureTypList.map((item) => (
@@ -229,7 +229,7 @@ const List = () => {
               appearance="Outline"
               placeholder="전체"
               className="width-100"
-              onChange={(e, value) => handleChangeParams('featureSe', value)}
+              onChange={(e, value) => value && handleChangeParams('featureSe', value)}
               value={params.featureSe}
             >
               {featureSeList.map((item) => (

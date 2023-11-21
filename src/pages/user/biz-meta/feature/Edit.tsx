@@ -171,7 +171,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureSeGrp?.message ? 'error' : undefined}
                         value={field.value}
                       >
@@ -202,7 +202,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureSe?.message ? 'error' : undefined}
                         value={field.value}
                       >
@@ -252,7 +252,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureTyp?.message ? 'error' : undefined}
                         value={field.value}
                       >

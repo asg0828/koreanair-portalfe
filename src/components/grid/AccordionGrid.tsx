@@ -55,7 +55,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({ buttonChildren, rows, onU
           size="LG"
           className="select-page"
           value={pages.pageSize}
-          onChange={(e, value) => handleChange('pageSize', value)}
+          onChange={(e, value) => value && handleChange('pageSize', value)}
         >
           {pageSizeList.map((pageSize) => (
             <SelectOption value={pageSize}>{`${pageSize} 건`}</SelectOption>

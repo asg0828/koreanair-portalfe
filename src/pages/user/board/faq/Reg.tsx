@@ -54,12 +54,6 @@ const Reg = () => {
   };
 
   useEffect(() => {
-    if (codeList.length > 0 && !values.clCode) {
-      setValue('clCode', codeList[0].codeId);
-    }
-  }, [codeList, values.clCode, setValue]);
-
-  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
@@ -111,7 +105,7 @@ const Reg = () => {
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      onChange={(e, value) => field.onChange(value)}
+                      onChange={(e, value) => value && field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
                       value={field.value}
                     >

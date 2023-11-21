@@ -399,7 +399,7 @@ const Edit = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.srcDbCd?.message ? 'error' : undefined}
                         value={field.value}
                       >
