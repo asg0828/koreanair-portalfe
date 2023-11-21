@@ -165,7 +165,7 @@ const List = () => {
                 appearance="Outline"
                 placeholder="전체"
                 className="select-basic"
-                onChange={(e, value) => handleChangeParams('srcDbCd', value)}
+                onChange={(e, value) => value && handleChangeParams('srcDbCd', value)}
                 value={params.srcDbCd}
               >
                 {codeList.map((codeItem: any) => (

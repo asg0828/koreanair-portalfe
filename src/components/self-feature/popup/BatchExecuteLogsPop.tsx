@@ -34,9 +34,14 @@ import {
 export interface Props {
     isOpen?: boolean
     onClose?: (isOpen: boolean) => void
+    custFeatRuleId: string
 }
 
-const BatchExecuteLogsPop = ({ isOpen = false, onClose }: Props) => {
+const BatchExecuteLogsPop = ({ 
+    isOpen = false, 
+    onClose,
+    custFeatRuleId, 
+}: Props) => {
     
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
     const [ batchExecuteLogList, setBatchExecuteLogList ] = useState<Array<BatchExecuteLog>>([])
@@ -71,7 +76,7 @@ const BatchExecuteLogsPop = ({ isOpen = false, onClose }: Props) => {
             path param  :: {ruleId}
             query param :: 
         */
-        let ruleId = ''
+        let ruleId = custFeatRuleId
         let config = cloneDeep(initConfig)
         config.isLoarding = true
         let request = cloneDeep(initApiRequest)
@@ -80,7 +85,7 @@ const BatchExecuteLogsPop = ({ isOpen = false, onClose }: Props) => {
         console.log("[retrieveBatchExecuteLogs] Request  :: ", request)
 
         let response = cloneDeep(initCommonResponse)
-        response = await callApi(request)
+        //response = await callApi(request)
         console.log("[retrieveBatchExecuteLogs] Response :: ", response)
         //setBatchExecuteLogList([{...initBatchExecuteLog}])
     }

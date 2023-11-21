@@ -17,7 +17,8 @@ import {
     SelectOption, 
     Select, 
     Label, 
-    TextField 
+    TextField, 
+    useToast
 } from '@components/ui';
 
 import { FeatPrntCild } from '@/models/selfFeature/FeatureInfo';
@@ -25,25 +26,39 @@ import {
     initFeatPrntCild, 
     featPrntClidListColumns as columns 
 } from '@/pages/user/self-feature/data';
+import { RuleId } from '@/models/selfFeature/FeatureCommon';
+import { useCustFeatParentChildList } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
+import { ValidType } from '@/models/common/Constants';
 
 export interface Props {
     isOpen?: boolean
     onClose?: (isOpen: boolean) => void
 }
 
+export interface SearchProps {
+    [key: string]: string
+    mstrSgmtRuleId: string
+    custFeatRuleName: string
+}
+
 const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
-    
+
+    const { toast } = useToast()
+
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
-    const [ srchInfo, setSrchInfo ] = useState<Object>({
-        custFeatRuleName: ''
+    const [ srchInfo, setSrchInfo ] = useState<SearchProps>({
+        mstrSgmtRuleId: RuleId.MASTERPROF,
+        custFeatRuleName: '',
     })
+    
+    //const { data: response, isError, refetch } = useCustFeatParentChildList(srchInfo.custFeatRuleName);
     const [ custFeatParentChildList, setCustFeatParentChildList ] = useState<Array<FeatPrntCild>>([])
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            retrieveCustFeatParentChildList()
+            //refetch()
         }
     }, [isOpen])
 
@@ -61,23 +76,28 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
     const handleConfirm = () => {
         handleClose(false)
     }
-    
-    const retrieveCustFeatParentChildList = () => {
-        /*
-            Method      :: GET
-            Url         :: /api/v1/customerfeatures/parent-child
-            query param :: mstrSgmtRuleId=&custFeatRuleName=
-        */
-        setCustFeatParentChildList([{...initFeatPrntCild}])
-    }
-
+    /*
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response) {
+                console.log(response)
+                //setCustFeatParentChildList()
+            }
+        }
+    }, [response, isError, toast])
+    */
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         setSrchInfo({...srchInfo, [id]: value,})
     }
 
     const onClickSrchHandler = () => {
-        retrieveCustFeatParentChildList()
+        //refetch()
     }
 
     return (

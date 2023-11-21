@@ -6,11 +6,11 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { UpdatedNoticeModel } from '@/models/model/NoticeModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -58,7 +58,7 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.MODIFY,
+        title: '수정',
         content: '수정하시겠습니까?',
         onConfirm: mutate,
       })

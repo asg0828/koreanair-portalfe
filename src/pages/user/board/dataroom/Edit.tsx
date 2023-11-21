@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { UpdatedDataroomModel } from '@/models/model/DataroomModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -54,7 +54,7 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.MODIFY,
+        title: '수정',
         content: '수정하시겠습니까?',
         onConfirm: mutate,
       })

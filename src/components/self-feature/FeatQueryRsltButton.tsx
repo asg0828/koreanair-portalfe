@@ -19,7 +19,14 @@ import {
 } from '@/models/selfFeature/FeatureCommon';
 import { Method, callApi } from '@/utils/ApiUtil';
 
-const FeatQueryRsltButton = () => {
+export interface Props {
+    [key: string]: string
+    custFeatRuleId: string
+}
+
+const FeatQueryRsltButton = ({
+    custFeatRuleId,
+}: Props) => {
 
     const [ isOpenQuerySampleDataPop, setIsOpenQuerySampleDataPop ] = useState<boolean>(false)
     const [ isOpenBatchExecuteLogsPop, setIsOpenBatchExecuteLogsPop ] = useState<boolean>(false)
@@ -47,7 +54,7 @@ const FeatQueryRsltButton = () => {
             query param :: 
             body param  :: 
         */
-        let id = ''
+        let id = custFeatRuleId
         let config = cloneDeep(initConfig)
         config.isLoarding = true
         let request = cloneDeep(initApiRequest)
@@ -56,7 +63,7 @@ const FeatQueryRsltButton = () => {
         console.log("[runScheduleByManually] Request  :: ", request)
 
         let response = cloneDeep(initCommonResponse)
-        response = await callApi(request)
+        //response = await callApi(request)
         console.log("[runScheduleByManually] Response :: ", response)
     }
 
@@ -97,15 +104,17 @@ const FeatQueryRsltButton = () => {
             <QuerySampleDataPop 
                 isOpen={isOpenQuerySampleDataPop}
                 onClose={(isOpen) => setIsOpenQuerySampleDataPop(isOpen)}
-
+                custFeatRuleId={custFeatRuleId}
             />
             <BatchExecuteLogsPop 
                 isOpen={isOpenBatchExecuteLogsPop} 
                 onClose={(isOpen) => setIsOpenBatchExecuteLogsPop(isOpen)}
+                custFeatRuleId={custFeatRuleId}
             />
             <ReadSqlPop 
                 isOpen={isOpenReadSqlPop} 
                 onClose={(isOpen) => setIsOpenReadSqlPop(isOpen)}
+                custFeatRuleId={custFeatRuleId}
             />
 
             {/* Confirm 모달 */}

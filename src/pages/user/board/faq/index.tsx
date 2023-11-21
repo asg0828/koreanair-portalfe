@@ -1,16 +1,16 @@
+import { AddIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType, View } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType, View } from '@/models/common/Constants';
 import { FaqModel, FaqParams } from '@/models/model/FaqModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -76,7 +76,7 @@ const List = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.REMOVE,
+        title: '삭제',
         content: '삭제하시겠습니까?',
         onConfirm: () => handleFaqId(faqId),
       })
@@ -140,7 +140,7 @@ const List = () => {
                 appearance="Outline"
                 placeholder="전체"
                 className="select-basic"
-                onChange={(e, value) => handleChangeParams('searchConditions', value || 'all')}
+                onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
               >
                 {searchInfoList.map((searchInfo) => (

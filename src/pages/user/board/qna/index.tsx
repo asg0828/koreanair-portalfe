@@ -103,7 +103,7 @@ const List = () => {
         setPage(response.data.page);
       }
     }
-  }, [response, isError, toast, getCode]);
+  }, [response, isError, toast]);
 
   return (
     <>
@@ -118,7 +118,7 @@ const List = () => {
                 appearance="Outline"
                 placeholder="전체"
                 className="select-basic"
-                onChange={(e, value) => handleChangeParams('searchConditions', value || 'all')}
+                onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
               >
                 {searchInfoList.map((searchInfo) => (
