@@ -77,7 +77,7 @@ export const CommonCode = {
 // Rule ID
 export const RuleId = {
     RESOLUTION: 'RS_0020',
-    MASTERPROF: 'MS_0032',
+    MASTERPROF: 'MS_0033',
 }
 
 // 모달 타입
