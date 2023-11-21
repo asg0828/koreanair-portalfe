@@ -13,6 +13,7 @@ import {
     TH,
     TR,
     TextField,
+    useToast,
 } from '@components/ui'
 import HorizontalTable from '@/components/table/HorizontalTable'
 import VerticalTable from '@/components/table/VerticalTable'
@@ -28,6 +29,8 @@ import {
 } from '@/models/selfFeature/FeatureSubmissionInfo'
 import ConfirmModal from '@/components/modal/ConfirmModal'
 import { ModalTitCont, ModalType } from '@/models/selfFeature/FeatureCommon'
+import { useApproverCandidate } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
+import { ValidType } from '@/models/common/Constants'
 
 export interface Props {
     isOpen?: boolean
@@ -42,6 +45,13 @@ const SubAppdAprvPop = ({
     aprvCategory,
     setDefaultSubAprvList
 }: Props) => {
+
+    const { toast } = useToast()
+    const { 
+      data: response, 
+      isError: isError, 
+      refetch: refetch 
+  } = useApproverCandidate()
 
     const [ isOpenSubAppedAprvPop, setIsOpenSubAppedAprvPop ] = useState<boolean>(false);
     const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
@@ -104,7 +114,7 @@ const SubAppdAprvPop = ({
         onClose(false)
     }
 
-    const retrieveSubmissions2 = async () => {
+    const retrieveSubmissions2 = () => {
         /*
           Method      :: GET
           Url         :: /api/v1/submission-types/{type}/approver-candidate
@@ -112,6 +122,8 @@ const SubAppdAprvPop = ({
           query param :: 
           body param  :: 
         */
+
+        refetch()
         // index에 따른 서로 다른 목록 호출 필요
         if (aprvCategory === aprvSeqNm.FIRST) {
             setAppendApprovals((state: Array<SfSubmissionAppendApproval>) => {
@@ -190,6 +202,20 @@ const SubAppdAprvPop = ({
             })
         }
     }
+
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response) {
+                console.log(response)
+                //setBatchExecuteLogList()
+            }
+        }
+    }, [response, isError, toast])
 
     const onClickAppendApprovals = () => {
 

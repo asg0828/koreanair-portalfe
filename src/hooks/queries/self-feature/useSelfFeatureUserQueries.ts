@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query"
 import { 
     getTableandColumnMetaInfoByMstrSgmtRuleId, 
+    retrieveApproverCandidate, 
     retrieveBatchExecuteLogs, 
     retrieveCustFeatParentChildList, 
     retrieveReadSql, 
@@ -25,4 +26,8 @@ export const useSampleData = (custFeatRuleId: string) => {
 
 export const useCustFeatParentChildList = (custFeatRuleName: string) => {
     return useQuery(['/cust-feat-parent-child-list'], () => retrieveCustFeatParentChildList(custFeatRuleName), { enabled: false })
+}
+
+export const useApproverCandidate = () => {
+    return useQuery(['/approver-candidate'], () => retrieveApproverCandidate(), { enabled: false })
 }

@@ -1,6 +1,6 @@
 import { SelfFeatureUserApiURL } from "@/models/common/ApiURL";
 import { Service } from "@/models/common/Service";
-import { RuleId } from "@/models/selfFeature/FeatureCommon";
+import { FeatureType, RuleId } from "@/models/selfFeature/FeatureCommon";
 import { Method, callApi } from "@/utils/ApiUtil";
 
 export const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
@@ -55,5 +55,13 @@ export const runScheduleByManually = (custFeatRuleId: string) => {
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureUserApiURL.RUN_SCDL}/${custFeatRuleId}`,
         method: Method.POST,
+    })
+}
+
+export const retrieveApproverCandidate = () => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.APRV_USER_PRE}/${FeatureType.CUST}${SelfFeatureUserApiURL.APRV_USER_POST}`,
+        method: Method.GET,
     })
 }

@@ -14,7 +14,7 @@ export enum PortalApiURL {
 }
 
 export enum SelfFeatureCmmApiURL {
-  CODE = '/api/v1/commCode/retireveCommCodes',
+  CODE = '/api/v1/commCode/retrieveCommCodes',
 }
 
 export enum SelfFeatureUserApiURL {
@@ -24,6 +24,8 @@ export enum SelfFeatureUserApiURL {
   BATCH_EXECUTE_LOGS = '/api/v1/batchdb/logs',
   SAMPLE_DATA = '/api/v1/customerfeatures/sample',
   PARENT_CHILD = '/api/v1/customerfeatures/parent-child',
+  APRV_USER_PRE = '/api/v1/submission-types',
+  APRV_USER_POST = '/approver-candidate',
 }
 
 export enum SelfFeatureAdmApiURL {
