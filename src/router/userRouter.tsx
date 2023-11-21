@@ -1,40 +1,40 @@
-import { useDatasetLoader, useFaqLoader, useFeatureLoader, useQnaLoader } from '@/hooks/useLoader';
-import Dataroom from '@/pages/user/board/dataroom';
-import DataroomDetail from '@/pages/user/board/dataroom/Detail';
-import DataroomEdit from '@/pages/user/board/dataroom/Edit';
-import DataroomReg from '@/pages/user/board/dataroom/Reg';
-import SfSubmissionRequest from '@/pages/user/self-feature-submission';
-import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Detail';
-import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
 import Home from '@pages/user/Home';
 import DataSet from '@pages/user/biz-meta/dataset';
 import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
-import DataSetEdit from '@pages/user/biz-meta/dataset/Edit';
 import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
+import DataSetEdit from '@pages/user/biz-meta/dataset/Edit';
 import Feature from '@pages/user/biz-meta/feature';
 import FeatureDetail from '@pages/user/biz-meta/feature/Detail';
-import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
 import FeatureReg from '@pages/user/biz-meta/feature/Reg';
-import Faq from '@pages/user/board/faq';
-import FaqEdit from '@pages/user/board/faq/Edit';
-import FaqReg from '@pages/user/board/faq/Reg';
+import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
 import Notice from '@pages/user/board/notice';
 import NoticeDetail from '@pages/user/board/notice/Detail';
-import NoticeEdit from '@pages/user/board/notice/Edit';
 import NoticeReg from '@pages/user/board/notice/Reg';
+import NoticeEdit from '@pages/user/board/notice/Edit';
+import Faq from '@pages/user/board/faq';
+import FaqReg from '@pages/user/board/faq/Reg';
+import FaqEdit from '@pages/user/board/faq/Edit';
 import Qna from '@pages/user/board/qna';
 import QnaDetail from '@pages/user/board/qna/Detail';
-import QnaEdit from '@pages/user/board/qna/Edit';
 import QnaReg from '@pages/user/board/qna/Reg';
-import CustomerInfo from '@pages/user/customer-info/dashboard';
+import QnaEdit from '@pages/user/board/qna/Edit';
+import Dataroom from '@/pages/user/board/dataroom';
+import DataroomDetail from '@/pages/user/board/dataroom/Detail';
+import DataroomReg from '@/pages/user/board/dataroom/Reg';
+import DataroomEdit from '@/pages/user/board/dataroom/Edit';
 import InterestFeature from '@pages/user/feature/interest';
 import PopularFeature from '@pages/user/feature/popular';
+import SelfFeature from '@pages/user/self-feature';
+import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
+import SelfFeatureReg from '@pages/user/self-feature/Reg';
+import SelfFeatureEdit from '@pages/user/self-feature/Edit';
+import SfSubmissionRequest from '@/pages/user/self-feature-submission';
+import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Detail';
+import CustomerInfo from '@pages/user/customer-info/dashboard';
 import StructuredReport from '@pages/user/report/structured-report';
 import UnStructuredReport from '@pages/user/report/unstructured-report';
-import SelfFeature from '@pages/user/self-feature';
-import SelfFeatureEdit from '@pages/user/self-feature/Edit';
-import SelfFeatureReg from '@pages/user/self-feature/Reg';
 import Tableau from '@pages/user/tableau';
+import { useFaqLoader, useQnaLoader, useFeatureLoader, useDatasetLoader } from '@/hooks/useLoader';
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -54,7 +54,6 @@ const userRouter = [
         ],
       },
       {
-        id: '/biz-meta/dataset',
         path: 'dataset',
         loader: useDatasetLoader,
         children: [
