@@ -1,53 +1,53 @@
-import UserManagement from '@pages/admin/user-management/user-management';
-import UserManagementDetail from '@pages/admin/user-management/user-management/Detail';
-import AuthGroupManagement from '@pages/admin/user-management/auth-group-management';
-import DepartmentGroupManagement from '@pages/admin/user-management/department-group-management';
-import UserExceptionManagement from '@pages/admin/user-management/user-exception-management';
-import MenuManagement from '@pages/admin/user-portal-management/menu-management';
-import MenuAuthManagement from '@pages/admin/user-portal-management/menu-auth-management';
-import AdminMenuManagement from '@pages/admin/admin-portal-management/menu-management';
-import AdminAuthGroupManagement from '@pages/admin/admin-portal-management/auth-group-management';
-import AdminAdminAuthManagement from '@pages/admin/admin-portal-management/admin-auth-management';
-import Notice from '@pages/user/board/notice';
-import NoticeDetail from '@pages/user/board/notice/Detail';
-import NoticeReg from '@pages/user/board/notice/Reg';
-import NoticeEdit from '@pages/user/board/notice/Edit';
-import Faq from '@pages/user/board/faq';
-import FaqReg from '@pages/user/board/faq/Reg';
-import FaqEdit from '@pages/user/board/faq/Edit';
-import Qna from '@pages/user/board/qna';
-import QnaDetail from '@pages/user/board/qna/Detail';
-import QnaReg from '@pages/user/board/qna/Reg';
-import QnaEdit from '@pages/user/board/qna/Edit';
-import Dataroom from '@/pages/user/board/dataroom';
-import DataroomDetail from '@/pages/user/board/dataroom/Detail';
-import DataroomReg from '@/pages/user/board/dataroom/Reg';
-import DataroomEdit from '@/pages/user/board/dataroom/Edit';
-import DataSet from '@pages/user/biz-meta/dataset';
-import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
-import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
-import DataSetEdit from '@pages/user/biz-meta/dataset/Edit';
-import Feature from '@pages/user/biz-meta/feature';
-import FeatureDetail from '@pages/user/biz-meta/feature/Detail';
-import FeatureReg from '@pages/user/biz-meta/feature/Reg';
-import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
-import MasterHistory from '@pages/admin/admin-report/one-id-main/master-history';
-import MobileNumber from '@pages/admin/admin-report/one-id-main/mobile-number';
-import PaxMapping from '@pages/admin/admin-report/one-id-main/pax-mapping';
-import RelationshipHistoryTable from '@pages/admin/admin-report/one-id-main/relationship-history-table';
-import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
-import Ctivoc from '@pages/admin/admin-report/one-id-report/ctivoc';
-import Daily from '@pages/admin/admin-report/one-id-report/daily';
-import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
-import DataConversion from '@pages/admin/admin-report/data-conversion';
-import StructuredReportManagement from '@pages/admin/structured-report-management';
+import { useDatasetLoader, useFaqLoader, useFeatureLoader, useQnaLoader } from '@/hooks/useLoader';
+import AdminHome from '@/pages/admin/AdminHome';
 import CustomerMetaManagement from '@/pages/admin/self-feature-meta-management/customer-meta-management';
 import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-management/customer-meta-management/Detail';
 import CustomerMetaManagementReg from '@/pages/admin/self-feature-meta-management/customer-meta-management/Reg';
 import MasterProfileManagement from '@/pages/admin/self-feature-meta-management/master-profile-management';
 import MasterProfileManagementDetail from '@/pages/admin/self-feature-meta-management/master-profile-management/Detail';
-import AdminHome from '@/pages/admin/AdminHome';
-import { useFaqLoader, useQnaLoader } from '@/hooks/useLoader';
+import Dataroom from '@/pages/user/board/dataroom';
+import DataroomDetail from '@/pages/user/board/dataroom/Detail';
+import DataroomEdit from '@/pages/user/board/dataroom/Edit';
+import DataroomReg from '@/pages/user/board/dataroom/Reg';
+import AdminAdminAuthManagement from '@pages/admin/admin-portal-management/admin-auth-management';
+import AdminAuthGroupManagement from '@pages/admin/admin-portal-management/auth-group-management';
+import AdminMenuManagement from '@pages/admin/admin-portal-management/menu-management';
+import DataConversion from '@pages/admin/admin-report/data-conversion';
+import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
+import MasterHistory from '@pages/admin/admin-report/one-id-main/master-history';
+import MobileNumber from '@pages/admin/admin-report/one-id-main/mobile-number';
+import PaxMapping from '@pages/admin/admin-report/one-id-main/pax-mapping';
+import RelationshipHistoryTable from '@pages/admin/admin-report/one-id-main/relationship-history-table';
+import Ctivoc from '@pages/admin/admin-report/one-id-report/ctivoc';
+import Daily from '@pages/admin/admin-report/one-id-report/daily';
+import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
+import StructuredReportManagement from '@pages/admin/structured-report-management';
+import AuthGroupManagement from '@pages/admin/user-management/auth-group-management';
+import DepartmentGroupManagement from '@pages/admin/user-management/department-group-management';
+import UserExceptionManagement from '@pages/admin/user-management/user-exception-management';
+import UserManagement from '@pages/admin/user-management/user-management';
+import UserManagementDetail from '@pages/admin/user-management/user-management/Detail';
+import MenuAuthManagement from '@pages/admin/user-portal-management/menu-auth-management';
+import MenuManagement from '@pages/admin/user-portal-management/menu-management';
+import DataSet from '@pages/user/biz-meta/dataset';
+import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
+import DataSetEdit from '@pages/user/biz-meta/dataset/Edit';
+import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
+import Feature from '@pages/user/biz-meta/feature';
+import FeatureDetail from '@pages/user/biz-meta/feature/Detail';
+import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
+import FeatureReg from '@pages/user/biz-meta/feature/Reg';
+import Faq from '@pages/user/board/faq';
+import FaqEdit from '@pages/user/board/faq/Edit';
+import FaqReg from '@pages/user/board/faq/Reg';
+import Notice from '@pages/user/board/notice';
+import NoticeDetail from '@pages/user/board/notice/Detail';
+import NoticeEdit from '@pages/user/board/notice/Edit';
+import NoticeReg from '@pages/user/board/notice/Reg';
+import Qna from '@pages/user/board/qna';
+import QnaDetail from '@pages/user/board/qna/Detail';
+import QnaEdit from '@pages/user/board/qna/Edit';
+import QnaReg from '@pages/user/board/qna/Reg';
 
 const adminRouter = [
   {
@@ -59,7 +59,9 @@ const adminRouter = [
         children: [
           { index: true, element: <Feature /> },
           {
+            id: '/biz-meta/feature',
             path: 'feature',
+            loader: useFeatureLoader,
             children: [
               { index: true, element: <Feature /> },
               { path: 'detail', element: <FeatureDetail /> },
@@ -69,6 +71,7 @@ const adminRouter = [
           },
           {
             path: 'dataset',
+            loader: useDatasetLoader,
             children: [
               { index: true, element: <DataSet /> },
               { path: 'detail', element: <DataSetDetail /> },
