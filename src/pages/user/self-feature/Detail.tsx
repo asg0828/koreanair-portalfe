@@ -62,7 +62,7 @@ import { Method, callApi } from '@/utils/ApiUtil';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
 import { StatusCode } from '@/models/common/CommonResponse';
-import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/useSelfFeatureUserQueries';
+import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';
 
 const SelfFeatureDetail = () => {

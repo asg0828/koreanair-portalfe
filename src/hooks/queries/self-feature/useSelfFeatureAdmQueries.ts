@@ -2,7 +2,7 @@ import {
     retrieveColumnsAndComments,
     retrieveMetaTableLists, 
     retrieveSchemaList, 
-} from '@/api/SelfFeatureAdminAPI'
+} from '@/api/self-feature/SelfFeatureAdminAPI'
 import { CmSrchInfo } from '@/pages/admin/self-feature-meta-management/customer-meta-management'
 import { useQuery } from '@tanstack/react-query'
 

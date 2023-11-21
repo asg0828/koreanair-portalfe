@@ -57,7 +57,7 @@ import { StatusCode } from "@/models/common/CommonResponse";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import SubRejectPop from "@/components/self-feature-submission/popup/SubRejectPop";
-import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/useSelfFeatureUserQueries";
+import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { ValidType } from "@/models/common/Constants";
 
 const SfSubmissionRequestDetail = () => {

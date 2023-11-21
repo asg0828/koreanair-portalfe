@@ -12,6 +12,10 @@ export enum PortalApiURL {
   DATASET = '/biz-meta/v1/table-specs',
 }
 
+export enum SelfFeatureCmmApiURL {
+  CODE = '/api/v1/commCode/retireveCommCodes'
+}
+
 export enum SelfFeatureUserApiURL {
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
 }

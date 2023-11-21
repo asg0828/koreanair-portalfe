@@ -1,4 +1,4 @@
-import { getTableandColumnMetaInfoByMstrSgmtRuleId } from "@/api/SelfFeatureUserAPI"
+import { getTableandColumnMetaInfoByMstrSgmtRuleId } from "@/api/self-feature/SelfFeatureUserAPI"
 import { useQuery } from "@tanstack/react-query"
 
 export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
