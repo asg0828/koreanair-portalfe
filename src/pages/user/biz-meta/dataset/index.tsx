@@ -78,19 +78,19 @@ const List = () => {
     }));
   };
 
-  const handleChangeSearchConditions = (name: string, checked: any) => {
+  const handleChangeDataSetConditions = (name: string, checked: any) => {
     setParams((prevState) => {
-      let newSearchConditions = [...prevState.dataSetConditions];
+      let newDataSetConditions = [...prevState.dataSetConditions];
 
       if (checked) {
-        newSearchConditions.push(name);
+        newDataSetConditions.push(name);
       } else {
-        newSearchConditions = newSearchConditions.filter((itemName) => itemName !== name);
+        newDataSetConditions = newDataSetConditions.filter((itemName) => itemName !== name);
       }
 
       return {
         ...prevState,
-        searchConditions: newSearchConditions,
+        dataSetConditions: newDataSetConditions,
       };
     });
   };
@@ -136,22 +136,22 @@ const List = () => {
           <TD colSpan={5} align="left">
             <Checkbox
               label="테이블 한글명"
-              onCheckedChange={(checked) => handleChangeSearchConditions('mtsKoNm', checked)}
+              onCheckedChange={(checked) => handleChangeDataSetConditions('mtsKoNm', checked)}
               checked={params.dataSetConditions.includes('mtsKoNm')}
             />
             <Checkbox
               label="테이블 영문명"
-              onCheckedChange={(checked) => handleChangeSearchConditions('mtsEnNm', checked)}
+              onCheckedChange={(checked) => handleChangeDataSetConditions('mtsEnNm', checked)}
               checked={params.dataSetConditions.includes('mtsEnNm')}
             />
             <Checkbox
               label="테이블정의"
-              onCheckedChange={(checked) => handleChangeSearchConditions('mtsDef', checked)}
+              onCheckedChange={(checked) => handleChangeDataSetConditions('mtsDef', checked)}
               checked={params.dataSetConditions.includes('mtsDef')}
             />
             <Checkbox
               label="원천테이블명"
-              onCheckedChange={(checked) => handleChangeSearchConditions('srcTbNm', checked)}
+              onCheckedChange={(checked) => handleChangeDataSetConditions('srcTbNm', checked)}
               checked={params.dataSetConditions.includes('srcTbNm')}
             />
           </TD>

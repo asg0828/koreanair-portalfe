@@ -12,7 +12,7 @@ export const getDatasetList = (params: DatasetParams, page: PageModel) => {
     params: {
       queryParams: {
         ...params,
-        dataSetConditions: JSON.stringify(params.dataSetConditions),
+        dataSetConditions: params.dataSetConditions.join(),
         ...page,
       },
     },

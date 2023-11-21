@@ -12,7 +12,7 @@ export const getFeatureList = (params: FeatureParams, page: PageModel) => {
     params: {
       queryParams: {
         ...params,
-        searchConditions: JSON.stringify(params.searchConditions),
+        searchConditions: params.searchConditions.join(),
         ...page,
       },
     },
