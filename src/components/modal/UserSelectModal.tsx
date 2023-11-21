@@ -1,8 +1,7 @@
+import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
 import DeptTree from '@components/Tree/DeptTree';
-import { Modal, Button, Stack, TextField } from '@components/ui';
 import VerticalTable from '@components/table/VerticalTable';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import { Button, Modal, Stack, TextField } from '@components/ui';
 
 const columns = [
   { headerName: '직원명', field: 'column1', colSpan: 4 },
@@ -32,9 +31,7 @@ const UserSelect = ({ isOpen, onClose, onConfirm }: props) => {
     onClose(false);
   };
 
-  const rowSelection = () => {
-
-  }
+  const rowSelection = () => {};
 
   return (
     <Modal open={isOpen} onClose={onClose} size="LG">

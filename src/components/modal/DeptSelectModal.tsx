@@ -1,12 +1,9 @@
+import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
 import DeptTree from '@components/Tree/DeptTree';
-import { Modal, Button, Stack, TextField } from '@components/ui';
 import VerticalTable from '@components/table/VerticalTable';
-import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import { Button, Modal, Stack, TextField } from '@components/ui';
 
-const columns = [
-  { headerName: '부서명', field: 'column1', colSpan: 10 },
-];
+const columns = [{ headerName: '부서명', field: 'column1', colSpan: 10 }];
 
 const rows = [
   {
@@ -35,9 +32,7 @@ const DeptSelect = ({ isOpen, onClose, onRemove, onConfirm }: props) => {
     onClose(false);
   };
 
-  const rowSelection = () => {
-
-  }
+  const rowSelection = () => {};
 
   return (
     <Modal open={isOpen} onClose={onClose} size="LG">
@@ -71,9 +66,7 @@ const DeptSelect = ({ isOpen, onClose, onRemove, onConfirm }: props) => {
         <Button priority="Primary" appearance="Contained" onClick={handleRemove}>
           삭제
         </Button>
-        <Button onClick={handleConfirm}>
-          확인
-        </Button>
+        <Button onClick={handleConfirm}>확인</Button>
       </Modal.Footer>
     </Modal>
   );

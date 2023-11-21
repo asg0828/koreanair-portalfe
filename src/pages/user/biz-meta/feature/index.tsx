@@ -1,3 +1,4 @@
+import { AddIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useFeatureList, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
@@ -6,15 +7,10 @@ import { ValidType, View } from '@/models/common/Constants';
 import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const columns = [
-  // <Button appearance="Unfilled" iconOnly priority="Normal" className="btn-fav on">
-  //   <FavoriteIcon />
-  // </Button>
   { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
   { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
   { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
