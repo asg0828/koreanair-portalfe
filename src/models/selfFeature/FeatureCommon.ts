@@ -80,6 +80,11 @@ export const RuleId = {
     MASTERPROF: 'MS_0033',
 }
 
+// Feature type
+export const FeatureType = {
+    CUST: 'CustomerFeature',
+}
+
 // 모달 타입
 export const ModalType = {
     ALERT: 'alert',

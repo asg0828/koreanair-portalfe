@@ -16,7 +16,8 @@ import {
     Pagination, 
     SelectOption, 
     Select, 
-    Label, 
+    Label,
+    useToast, 
 } from '@components/ui';
 
 import { BatchExecuteLog } from '@/models/selfFeature/FeatureInfo';
@@ -30,6 +31,8 @@ import {
     initApiRequest,
     initCommonResponse
 } from '@/models/selfFeature/FeatureCommon';
+import { useBatchExecuteLogs } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
+import { ValidType } from '@/models/common/Constants';
 
 export interface Props {
     isOpen?: boolean
@@ -42,7 +45,11 @@ const BatchExecuteLogsPop = ({
     onClose,
     custFeatRuleId, 
 }: Props) => {
-    
+
+    const { toast } = useToast()
+
+    const { data: response, isError, refetch } = useBatchExecuteLogs(custFeatRuleId)
+
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
     const [ batchExecuteLogList, setBatchExecuteLogList ] = useState<Array<BatchExecuteLog>>([])
 
@@ -50,7 +57,7 @@ const BatchExecuteLogsPop = ({
         setIsOpenPopUp(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            retrieveBatchExecuteLogs()
+            refetch()
         }
     }, [isOpen])
 
@@ -68,27 +75,19 @@ const BatchExecuteLogsPop = ({
     const handleConfirm = () => {
         handleClose(false)
     }
-    
-    const retrieveBatchExecuteLogs = async () => {
-        /*
-            Method      :: GET
-            Url         :: /api/v1/batchdb/logs
-            path param  :: {ruleId}
-            query param :: 
-        */
-        let ruleId = custFeatRuleId
-        let config = cloneDeep(initConfig)
-        config.isLoarding = true
-        let request = cloneDeep(initApiRequest)
-        request.method = Method.GET
-        request.url = `/api/v1/batchdb/logs/${ruleId}`
-        console.log("[retrieveBatchExecuteLogs] Request  :: ", request)
-
-        let response = cloneDeep(initCommonResponse)
-        //response = await callApi(request)
-        console.log("[retrieveBatchExecuteLogs] Response :: ", response)
-        //setBatchExecuteLogList([{...initBatchExecuteLog}])
-    }
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response) {
+                console.log(response)
+                //setBatchExecuteLogList()
+            }
+        }
+    }, [response, isError, toast])
 
     return (
         <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>

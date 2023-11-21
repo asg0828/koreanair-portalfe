@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import { 
     getTableandColumnMetaInfoByMstrSgmtRuleId, 
+    retrieveApproverCandidate, 
+    retrieveBatchExecuteLogs, 
     retrieveCustFeatParentChildList, 
     retrieveReadSql, 
     retrieveSampleData, 
@@ -11,13 +13,21 @@ export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
 }
 
 export const useReadSql = (custFeatRuleId: string) => {
-    return useQuery(['/read-sql', custFeatRuleId], () => retrieveReadSql(custFeatRuleId))
+    return useQuery(['/read-sql', custFeatRuleId], () => retrieveReadSql(custFeatRuleId), { enabled: false })
+}
+
+export const useBatchExecuteLogs = (custFeatRuleId: string) => {
+    return useQuery(['/batch-execute-logs', custFeatRuleId], () => retrieveBatchExecuteLogs(custFeatRuleId), { enabled: false })
 }
 
 export const useSampleData = (custFeatRuleId: string) => {
-    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(custFeatRuleId))
+    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(custFeatRuleId), { enabled: false })
 }
 
 export const useCustFeatParentChildList = (custFeatRuleName: string) => {
-    return useQuery(['/cust-feat-parent-child-list'], () => retrieveCustFeatParentChildList(custFeatRuleName))
+    return useQuery(['/cust-feat-parent-child-list'], () => retrieveCustFeatParentChildList(custFeatRuleName), { enabled: false })
+}
+
+export const useApproverCandidate = () => {
+    return useQuery(['/approver-candidate'], () => retrieveApproverCandidate(), { enabled: false })
 }
