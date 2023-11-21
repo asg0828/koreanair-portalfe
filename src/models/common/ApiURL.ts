@@ -19,6 +19,10 @@ export enum SelfFeatureCmmApiURL {
 
 export enum SelfFeatureUserApiURL {
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
+  READ_SQL = '/api/v1/customerfeatures/read-sql',
+  RUN_SCDL = '/api/v1/airflow/runSchedule',
+  SAMPLE_DATA = '/api/v1/customerfeatures/sample',
+  PARENT_CHILD = '/api/v1/customerfeatures/parent-child',
 }
 
 export enum SelfFeatureAdmApiURL {

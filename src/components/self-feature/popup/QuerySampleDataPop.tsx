@@ -16,12 +16,12 @@ import {
     Pagination, 
     SelectOption, 
     Select, 
-    Label, 
+    Label,
+    useToast, 
 } from '@components/ui';
 
 import { FeatSampleData } from '@/models/selfFeature/FeatureInfo';
 import { 
-    initFeatSampleData, 
     querySampleDataListColumns as columns, 
 } from '@/pages/user/self-feature/data';
 import { Method, callApi } from '@/utils/ApiUtil';
@@ -31,22 +31,33 @@ import {
     initCommonResponse,
     initQueryParams
 } from '@/models/selfFeature/FeatureCommon';
+import { useSampleData } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
+import { ValidType } from '@/models/common/Constants';
 
 export interface Props {
     isOpen?: boolean
     onClose?: (isOpen: boolean) => void
+    custFeatRuleId: string
 }
 
-const QuerySampleDataPop = ({ isOpen = false, onClose }: Props) => {
+const QuerySampleDataPop = ({ 
+    isOpen = false, 
+    onClose,
+    custFeatRuleId,
+}: Props) => {
+
+    const { toast } = useToast()
     
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
     const [ querySampleDataList, setQuerySampleDatadList ] = useState<Array<FeatSampleData>>([])
+
+    const { data: response, isError, refetch } = useSampleData(custFeatRuleId)
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            retrieveSampleData()
+            refetch()
         }
     }, [isOpen])
 
@@ -65,27 +76,19 @@ const QuerySampleDataPop = ({ isOpen = false, onClose }: Props) => {
         handleClose(false)
     }
     
-    const retrieveSampleData = async () => {
-        /*
-            Method      :: GET
-            Url         :: /api/v1/customerfeatures/sample
-            path param  :: {custFeatRuleId}
-            query param :: rslnId=
-        */
-        let custFeatRuleId = ''
-        let config = cloneDeep(initConfig)
-        config.isLoarding = true
-        let request = cloneDeep(initApiRequest)
-        request.method = Method.GET
-        request.url = `/api/v1/customerfeatures/sample/${custFeatRuleId}`
-        request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), {rslnId: 'OneId'})
-        console.log("[retrieveSampleData] Request  :: ", request)
-
-        let response = cloneDeep(initCommonResponse)
-        response = await callApi(request)
-        console.log("[retrieveSampleData] Response :: ", response)
-        //setQuerySampleDatadList([{...initFeatSampleData}])
-    }
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response) {
+                console.log(response)
+                //setQuerySampleDatadList()
+            }
+        }
+    }, [response, isError, toast])
 
     return (
         <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>

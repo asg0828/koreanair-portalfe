@@ -442,7 +442,9 @@ const SelfFeatureEdit = () => {
     {/* 정보 영역 */}
       <Stack direction="Vertical" gap="MD" >
         {/* 상단 버튼 영역 */}
-        <FeatQueryRsltButton />
+        <FeatQueryRsltButton
+          custFeatRuleId={location.state.featureInfo.tbRsCustFeatRule.id}
+        />
         
         {/* 기본 정보 */}
         <Typography variant="h4">Feature 기본 정보</Typography>

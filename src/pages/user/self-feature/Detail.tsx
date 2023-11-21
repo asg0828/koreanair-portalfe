@@ -8,7 +8,6 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import VerticalTable from '@/components/table/VerticalTable';
 import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
-//import SubmissionRequestPop from '@/components/self-feature-submission/popup/SubmissionRequestPop';
 import {
     TR,
     TH,
@@ -105,8 +104,6 @@ const SelfFeatureDetail = () => {
   const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
   const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
 
-  //const [ isOpenSubmissionRequestPop, setIsOpenSubmissionRequestPop ] = useState<boolean>(false)
-
   useEffect(() => {
     // 초기 상세 정보 조회 API CALL
     initCustFeatRule()
@@ -186,7 +183,6 @@ const SelfFeatureDetail = () => {
   }, [targetList])
 
   const onClickPageMovHandler = (pageNm: string) => {
-    // else if (pageNm === selfFeatPgPpNm.SUBINFO || pageNm === selfFeatPgPpNm.SUBMCFRM) {setIsOpenSubmissionRequestPop(true)} 
     if (pageNm === selfFeatPgPpNm.LIST) {
       navigate('..')
     } else if (pageNm === selfFeatPgPpNm.EDIT) {
@@ -522,7 +518,9 @@ const SelfFeatureDetail = () => {
   return (
     <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
     {/* 상단 버튼 영역 */}
-      <FeatQueryRsltButton />
+      <FeatQueryRsltButton 
+        custFeatRuleId={location.state.id}
+      />
       
     {/* 정보 영역 */}
       {/* {sfSubmissionRequestData.submissionNo !== "" &&  */}
@@ -760,14 +758,6 @@ const SelfFeatureDetail = () => {
         <DetailBtnComponent/>
       </Stack>
     {/* 버튼 영역 */}
-
-    {/* 팝업 */}
-      {/* <SubmissionRequestPop
-        isOpen={isOpenSubmissionRequestPop}
-        onClose={(isOpen) => setIsOpenSubmissionRequestPop(isOpen)}
-        featureInfo={featureInfo}
-      /> */}
-    {/* 팝업 */}
 
     {/* Confirm 모달 */}
       <ConfirmModal
