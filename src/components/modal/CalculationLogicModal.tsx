@@ -50,7 +50,7 @@ const CalculationLogicModal = ({
           <TextField
             multiline
             autoFocus
-            disabled
+            disabled={disabled}
             className="width-100 height-300"
             onChange={(e) => handleChange(e.target.value)}
             value={value}
