@@ -3,7 +3,7 @@ import {
     Stack,
 } from '@components/ui'
 
-const MasterProfileManagementDetail = () => {
+const CustomerMetaManagementReg = () => {
     return (
         <Stack>
             
@@ -11,4 +11,4 @@ const MasterProfileManagementDetail = () => {
     )
 }
 
-export default MasterProfileManagementDetail
+export default CustomerMetaManagementReg

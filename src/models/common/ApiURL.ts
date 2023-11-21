@@ -11,3 +11,13 @@ export enum PortalApiURL {
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',
   DATASET = '/biz-meta/v1/table-specs',
 }
+
+export enum SelfFeatureUserApiURL {
+  FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info/MS_0032',
+}
+
+export enum SelfFeatureAdmApiURL {
+  SCHEMA = '/api/v1/batchdb/schemas',
+  META_TABLE_LIST = '/api/v1/metas/tables',
+  COL_AND_CMMT = '/api/v1/metas/columnsAndComments/tb_co_meta_tbl_info'
+}

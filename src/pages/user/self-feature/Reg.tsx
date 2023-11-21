@@ -9,7 +9,7 @@ import DragList from '@/components/self-feature/DragList';
 import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography } from '@components/ui'
+import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui'
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import ApprovalList from '@/components/self-feature/ApprovalList';
 
@@ -48,6 +48,8 @@ import {
 import { StatusCode } from '@/models/common/CommonResponse';
 import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionInfo';
 import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data';
+import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/useSelfFeatureUserQueries';
+import { ValidType } from '@/models/common/Constants';
 
 const lCategory = [
   { value: '', text: '선택' },
@@ -66,6 +68,9 @@ const calcUnit = [
 
 const SelfFeatureReg = () => {
 
+  const { toast } = useToast()
+  const { data: response1, isError: isError1, refetch: refetch1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+  
   const navigate = useNavigate()
   const location = useLocation()
   // 등록 구분(RuleDesign / SQL)
@@ -245,33 +250,16 @@ const SelfFeatureReg = () => {
     
   }, [formulaTrgtList])
 
-  const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
-    /*
-      Method      :: GET
-      Url         :: /api/v1/mastersegment/table-columns-meta-info
-      path param  :: {mstrSgmtRuleId}
-      query param :: 
-    */
-    let mstrSgmtRuleId = 'MS_0032'
-    let config = cloneDeep(initConfig)
-    config.isLoarding = true
-    let request = cloneDeep(initApiRequest)
-    request.method = Method.GET
-    request.url = `/api/v1/mastersegment/table-columns-meta-info/${mstrSgmtRuleId}`
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
-
-    let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response header       :: ", response.header)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response statusCode   :: ", response.statusCode)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response status       :: ", response.status)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response successOrNot :: ", response.successOrNot)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
-
-    if (response.statusCode === StatusCode.SUCCESS) {
-      response.result.behaviors[0].tbCoMetaTblClmnInfoList[0].dataTypeCategory = "number"
-      response.result.behaviors[0].tbCoMetaTblClmnInfoList[2].dataTypeCategory = "timestamp"
-      setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
+  const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
+    if (isError1 || response1?.successOrNot === 'N') {
+      toast({
+      type: ValidType.ERROR,
+      content: '조회 중 에러가 발생했습니다.',
+      })
+    } else {
+      if (response1 && (response1.statusCode === StatusCode.SUCCESS)) {
+        setMstrSgmtTableandColMetaInfo(cloneDeep(response1.result))
+      }
     }
   }
 
