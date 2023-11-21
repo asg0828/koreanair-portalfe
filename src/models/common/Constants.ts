@@ -11,12 +11,6 @@ export enum ValidType {
   INFO = 'Info',
 }
 
-export enum ModalTitle {
-  SAVE = '저장',
-  MODIFY = '수정',
-  REMOVE = '삭제',
-}
-
 export enum ModalType {
   NORMAL = 'NORMAL',
   CONFIRM = 'CONFIRM',

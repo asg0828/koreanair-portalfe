@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import VerticalTable from '@/components/table/VerticalTable';
 import { useCreateDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { CreatedDatasetModel, DatasetColumnModel } from '@/models/model/DatasetModel';
 import { selectCodeList } from '@/reducers/codeSlice';
@@ -199,7 +199,7 @@ const Reg = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
+        title: '저장',
         content: '등록하시겠습니까?',
         onConfirm: mutate,
       })

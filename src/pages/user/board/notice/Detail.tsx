@@ -5,7 +5,7 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { NoticeModel } from '@/models/model/NoticeModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -51,7 +51,7 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.REMOVE,
+        title: '삭제',
         content: '삭제하시겠습니까?',
         onConfirm: mutate,
       })

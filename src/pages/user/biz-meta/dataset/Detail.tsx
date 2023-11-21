@@ -4,13 +4,13 @@ import VerticalTable from '@/components/table/VerticalTable';
 import { useDeleteDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useDatasetById } from '@/hooks/queries/useDatasetQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetModel } from '@/models/model/DatasetModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
+import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -98,7 +98,7 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.REMOVE,
+        title: '삭제',
         content: '삭제하시겠습니까?',
         onConfirm: mutate,
       })

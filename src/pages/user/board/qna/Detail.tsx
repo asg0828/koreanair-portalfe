@@ -1,17 +1,17 @@
+import { ExpandLessIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
-import { getCode } from '@/reducers/codeSlice';
 import { useAppDispatch } from '@/hooks/useRedux';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedQnaModel, QnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
-import { ExpandLessIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -99,7 +99,7 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.REMOVE,
+        title: '삭제',
         content: '삭제하시겠습니까?',
         onConfirm: mutate,
       })
@@ -123,7 +123,7 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.REMOVE,
+        title: '삭제',
         content: '답글을 삭제하시겠습니까?',
         onConfirm: cdMutate,
       })

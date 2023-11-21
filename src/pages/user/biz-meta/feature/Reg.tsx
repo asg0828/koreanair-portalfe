@@ -3,7 +3,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateFeature } from '@/hooks/mutations/useFeatureMutations';
 import { useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedFeatureModel, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -76,7 +76,7 @@ const Reg = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
+        title: '저장',
         content: '등록하시겠습니까?',
         onConfirm: mutate,
       })

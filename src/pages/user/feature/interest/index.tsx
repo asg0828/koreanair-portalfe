@@ -2,11 +2,12 @@ import DataGrid from '@/components/grid/DataGrid';
 import { useDeleteMultipleUserFeature } from '@/hooks/mutations/useUserFeatureMutations';
 import { useUserFeatureList } from '@/hooks/queries/useUserFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
-import { useAppSelector } from '@/hooks/useRedux';
-import { ValidType, View } from '@/models/common/Constants';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ModalType, ValidType, View } from '@/models/common/Constants';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectSessionInfo } from '@/reducers/authSlice';
+import { openModal } from '@/reducers/modalSlice';
 import { Button, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ const columns = [
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
   const [featureIds, setFeatureIds] = useState<Array<string>>([]);
   const [page, setPage] = useState<PageModel>(initPage);
@@ -45,7 +47,21 @@ const List = () => {
   };
 
   const handleRemoveUserFeature = () => {
-    dmMutate();
+    if (featureIds.length === 0) {
+      toast({
+        type: ValidType.INFO,
+        content: '선택된 대상이 없습니다.',
+      });
+    } else {
+      dispatch(
+        openModal({
+          type: ModalType.CONFIRM,
+          title: '삭제',
+          content: '삭제하시겠습니까?',
+          onConfirm: dmMutate,
+        })
+      );
+    }
   };
 
   const handleSearch = useCallback(() => {
