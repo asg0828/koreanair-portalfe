@@ -100,7 +100,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                 key={`header-${index}`}
                 required={column.require}
                 colSpan={column.colSpan ? column.colSpan : undefined}
-                enableSort={column.field.length > 0 && enableSort}
+                // enableSort={column.field.length > 0 && enableSort}
                 onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
               >
                 {column.headerName}
