@@ -21,6 +21,7 @@ export enum SelfFeatureUserApiURL {
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
   READ_SQL = '/api/v1/customerfeatures/read-sql',
   RUN_SCDL = '/api/v1/airflow/runSchedule',
+  BATCH_EXECUTE_LOGS = '/api/v1/batchdb/logs',
   SAMPLE_DATA = '/api/v1/customerfeatures/sample',
   PARENT_CHILD = '/api/v1/customerfeatures/parent-child',
 }

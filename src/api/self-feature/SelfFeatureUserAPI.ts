@@ -19,6 +19,14 @@ export const retrieveReadSql = (custFeatRuleId: string) => {
     })
 }
 
+export const retrieveBatchExecuteLogs = (custFeatRuleId: string) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.BATCH_EXECUTE_LOGS}/${custFeatRuleId}`,
+        method: Method.GET,
+    })
+}
+
 export const retrieveSampleData = (custFeatRuleId: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
