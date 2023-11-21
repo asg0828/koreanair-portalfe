@@ -7,6 +7,7 @@ import FormulaComponent from './FormulaComponent';
 
 import { 
     FeatCalcValidProps,
+    TbRsCustFeatRuleCalc,
     TbRsCustFeatRuleCase, 
 } from '@/models/selfFeature/FeatureInfo'
 import { 
@@ -19,6 +20,7 @@ import {
 
 const ClacValid = ({
     featStatus,
+    isSelectAggregateTop,
     setIsValidFormula,
     formulaTrgtList,
     custFeatRuleCalc,
@@ -69,6 +71,11 @@ const ClacValid = ({
 
         if (!formulaCaseChecked) {
             //console.log("checked")
+            setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
+                let rtn = cloneDeep(state)
+                rtn.formula = ""
+                return rtn
+            })
         } else {
             // case문 사용 체크 해제시 입력값 초기화
             setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
@@ -87,7 +94,21 @@ const ClacValid = ({
             return rtn
         })
     }
-
+    // Top 선택시
+    useEffect(() => {
+        if (isSelectAggregateTop) {
+            setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
+                let rtn = cloneDeep(state)
+                rtn.formula = "T1"
+                return rtn
+            })
+            setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {
+                let rtn = [cloneDeep(initTbRsCustFeatRuleCase)]
+                return rtn
+            })
+            setFormulaCaseChecked(false)
+        }
+    }, [isSelectAggregateTop])
     return (
         // check box 선택시 case문 조건 설정 항목 show/hide 필요
         <>
@@ -97,7 +118,7 @@ const ClacValid = ({
             gap="MD" 
         >
             <Typography variant="h4">계산식</Typography>
-            {isPossibleEdit &&
+            {(isPossibleEdit && !isSelectAggregateTop) &&
             <>
             <Typography variant='body2'>CASE 사용</Typography>
             <Checkbox

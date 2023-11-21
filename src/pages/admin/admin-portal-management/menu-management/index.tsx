@@ -5,7 +5,7 @@ import { Stack, Button, TextField, TR, TH, TD, Radio } from '@components/ui';
 const List = () => {
   return (
     <>
-      <Stack>
+      <Stack alignItems="Start">
         <TreeMenuForm />
 
         <Stack direction="Vertical" className="height-100 width-50">

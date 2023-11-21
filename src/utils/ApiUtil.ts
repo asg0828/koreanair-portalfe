@@ -1,10 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import SessionUtil from '@utils/SessionUtil';
 import SessionApis from '@api/common/SessionApis';
 import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
+import SessionUtil from '@utils/SessionUtil';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
+import { Service, ServiceContextPath, ServicePort } from '@models/common/Service';
 import { v4 as uuidv4 } from 'uuid';
-import { Service, ServicePort } from '@models/common/Service';
+import { PageModel } from '@/models/model/PageModel';
 
 export enum Method {
   GET = 'GET',
@@ -44,14 +45,16 @@ export interface ApiRequest {
   redirect?: string;
 }
 
+export type BaseApiUrl = '/fo' | '/bo';
+
+let baseApiUrl: BaseApiUrl = '/bo';
+
+export const setBaseApiUrl = (changedUrl: BaseApiUrl) => {
+  baseApiUrl = changedUrl;
+};
+
 /* istanbul ignore next */
 const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFile?: boolean): AxiosInstance => {
-  if (isLoading) {
-    // @ts-ignore
-    // eslint-disable-next-line
-    window.loadingSpinner.setAdd();
-  }
-
   axios.defaults.headers.get['Content-Type'] = 'application/json';
   axios.defaults.headers.post['Content-Type'] = 'application/json';
   axios.defaults.headers.put['Content-Type'] = 'application/json';
@@ -63,18 +66,19 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
   const sessionUtil = new SessionUtil();
   const sessionApis = new SessionApis();
 
-  if (process.env.REACT_APP_NODE_ENV === 'local') {
-    switch (serviceName) {
-      case Service.KAL_BE:
-        baseURL += ':' + ServicePort.KAL_BE.toString();
-        break;
-      // 2023-11-02 김태훈A Self-Feature BE API case 추가
-      case Service.KAL_SF_BE:
-        baseURL = `${apiUrl['KAL_SF_BE']}:${ServicePort.KAL_SF_BE.toString()}`;
-        break;
-      default:
-        break;
-    }
+  switch (serviceName) {
+    case Service.KAL_BE:
+      baseURL =
+        baseURL +
+        ServiceContextPath.KAL_BE +
+        baseApiUrl;
+      break;
+    // 2023-11-02 김태훈A Self-Feature BE API case 추가
+    case Service.KAL_SF_BE:
+      baseURL = `${apiUrl['KAL_SF_BE']}`; //:${ServicePort.KAL_SF_BE.toString()}`;
+      break;
+    default:
+      break;
   }
 
   const instance = axios.create({
@@ -116,27 +120,15 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
     (response: any): any => {
       const commonResponse: CommonResponse = response.data as CommonResponse;
       commonResponse.header = response?.headers;
-      commonResponse.statusCode = StatusCode.SUCCESS;
-      commonResponse.successOrNot = 'Y';
       commonResponse.status = response?.status;
       commonResponse.message = response?.message;
-
-      if (isLoading) {
-        // @ts-ignore
-        // eslint-disable-next-line
-        window.loadingSpinner.setMinus();
-      }
+      commonResponse.statusCode = StatusCode.SUCCESS;
+      commonResponse.successOrNot = 'Y';
 
       return commonResponse;
     },
 
     (error: any): any => {
-      if (isLoading) {
-        // @ts-ignore
-        // eslint-disable-next-line
-        window.loadingSpinner.setMinus();
-      }
-
       const unknownError: CommonResponse = {
         successOrNot: 'N',
         statusCode: StatusCode.UNKNOWN_ERROR,
@@ -179,13 +171,28 @@ const getQueryStringFormat = (queryParams?: QueryParams) => {
   return queryString ? `?${queryString}` : '';
 };
 
+type ConvertPageType = 'request' | 'response';
+
+const convertPage = (type: ConvertPageType, data?: any) => {
+  if (data) {
+    if (type === 'request') {
+      data.page = data.page + 1;
+    } else {
+      data.page = data.page - 1;
+    }
+  }
+};
+
 export const callApi = async (apiRequest: ApiRequest): Promise<CommonResponse> => {
+  convertPage('request', apiRequest.params?.queryParams);
+
   const url: string = apiRequest.url + getQueryStringFormat(apiRequest.params?.queryParams);
   const isLoading = apiRequest.config?.isLoarding || false;
   const isFile = apiRequest.config?.isFile || false;
   let response: CommonResponse = {
     successOrNot: 'N',
     statusCode: StatusCode.UNKNOWN_ERROR,
+    result: {},
     data: {},
   };
 
@@ -210,6 +217,8 @@ export const callApi = async (apiRequest: ApiRequest): Promise<CommonResponse> =
     default:
       break;
   }
+
+  convertPage('response', response?.data?.page);
   return response;
 };
 

@@ -4,7 +4,7 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import TinyEditor from '@/components/editor/TinyEditor';
 import '@/assets/styles/Board.scss';
-import AddIcon from '@mui/icons-material/Add';
+import { AddIcon } from '@/assets/icons';
 
 const Reg = () => {
   const navigate = useNavigate();
@@ -20,7 +20,7 @@ const Reg = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={1} align='right'>질문</TH>
-            <TD colSpan={5.01}>
+            <TD colSpan={5}>
               <Stack gap="SM" className="width-100">
                 <TextField className="width-100" />
               </Stack>
@@ -43,13 +43,13 @@ const Reg = () => {
           </TR>
           <TR className="height-100">
             <TH colSpan={1} align='right'>답변</TH>
-            <TD colSpan={5.01} className="content">
+            <TD colSpan={5} className="content">
               <TinyEditor />            
             </TD>
           </TR>
           <TR>
             <TH colSpan={1} align='right'>첨부파일</TH>
-            <TD colSpan={5.01} className="attachFile">
+            <TD colSpan={5} className="attachFile">
               <UploadDropzone />
             </TD>
           </TR>

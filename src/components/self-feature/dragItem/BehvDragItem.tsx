@@ -9,12 +9,13 @@ import {
 import { TargetDragProps } from "@/models/selfFeature/FeatureInfo"
 
 const BehvDragItem = ({
+    metaTblLogiNm,
     behvTblClmnInfo
 }: TargetDragProps) => {
 
     const [{ isBehvDragging }, behvDragItem] = useDrag(() => ({
         type: divisionTypes.BEHV,
-        item: Object.assign({ divisionCode: divisionTypes.BEHV }, cloneDeep(behvTblClmnInfo)),
+        item: Object.assign({ divisionCode: divisionTypes.BEHV, metaTblLogiNm: metaTblLogiNm }, cloneDeep(behvTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 

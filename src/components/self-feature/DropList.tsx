@@ -5,14 +5,16 @@ import { cloneDeep } from 'lodash'
 import AttrDropItem from './dropItem/AttrDropItem'
 import BehvDropItem from './dropItem/BehvDropItem'
 import FeatDropItem from './dropItem/FeatDropItem'
-import { Page, Stack } from '@components/ui'
+import { Page, Stack, TextField, Typography } from '@components/ui'
 
 import { 
     TbRsCustFeatRuleTrgt, 
     TbRsCustFeatRuleTrgtFilter, 
     TbCoMetaTblClmnInfo, 
     Attribute,
-    TargetDropListProps, 
+    TargetDropListProps,
+    Behavior,
+    AggregateCol, 
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initAttribute, 
@@ -32,10 +34,14 @@ const DropList = ({
     targetList, 
     trgtFilterList,
     setTargetList,
-    setTrgtFilterList
+    setTrgtFilterList,
+    attributes,
+    behaviors,
+    setFormulaTrgtList,
 }: TargetDropListProps) => {
 
     const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
+    const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
 
     // 수정가능 여부 판단
     useEffect(() => {
@@ -52,53 +58,71 @@ const DropList = ({
 
     }, [featStatus])
 
+    // 속성 테이블의 해당 컬럼 리스트 set
+    useEffect(()=> {
+        let colList: Array<AggregateCol> = []
+        attributes?.map((colInfo: Attribute) => {
+            let col = { value: "", text: "", dataType: "" }
+            col.value = colInfo.metaTblClmnPhysNm
+            col.text  = colInfo.metaTblClmnLogiNm
+            col.dataType = colInfo.dataTypeCategory
+            colList.push(col)
+            return colInfo
+        })
+        setColumnList(colList)
+    }, [attributes])
+
     const [, drop] = useDrop(() => ({
         accept: Object.values(divisionTypes),
         drop(item, monitor) {
             const didDrop = monitor.didDrop()
             const targetType = monitor.getItemType()
+
+            /*
             const date: Date = new Date()
             const trgtUniqKey = `${date.getFullYear()}${date.getMonth()}${date.getDate()+1}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`
-            
+            */
+
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo | Attribute
-
                 if (targetType === divisionTypes.ATTR) {
                     targetObj = Object.assign(cloneDeep(initAttribute), item)
                 } else if (targetType === divisionTypes.BEHV) {
                     targetObj = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
                 }
-
                 let target: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
+                let t = 0
                 setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
+                    t = tl.length
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
-                    target.tableName = String(targetObj.metaTblId)
-                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-                    target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
+                    target.tableName = String(targetObj.metaTblLogiNm)
+                    target.targetId  = `T${t+1}`
                     target.columnName = String(targetObj.metaTblClmnLogiNm)
                     target.divisionCode = String(targetType)
+                    target.targetDataType = targetObj.dataTypeCategory//targetObj.dtpCd
                     tl.push(target)
                     return tl
                 })
-                // 행동 데이터의 경우에만 해당일까?
-                setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
-                    // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
-                    let tl = cloneDeep(state)
-                    target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
-                    target.tableName = String(targetObj.metaTblId)
-                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-                    target.targetId  = `${String(targetObj.metaTblId)}_${trgtUniqKey}`
-                    target.columnName = String(targetObj.metaTblClmnLogiNm)
-                    tl.push(target)
-                    return tl
-                })
+                // 행동 데이터의 경우에만
+                if (targetType === divisionTypes.BEHV) {
+                    setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+                        // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
+                        let tl = cloneDeep(state)
+                        target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
+                        target.tableName = String(targetObj.metaTblLogiNm)
+                        target.targetId  = `T${t+1}`
+                        target.columnName = String(targetObj.metaTblClmnLogiNm)
+                        target.columnDataTypeCode = targetObj.dataTypeCategory//targetObj.dtpCd
+                        tl.push(target)
+                        return tl
+                    })
+                }
             }
 
         },
         collect(monitor) {
-
         },
         
     }), [])
@@ -108,13 +132,26 @@ const DropList = ({
         setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let newTargetList = cloneDeep(state)
             newTargetList.splice(delIdx, 1)
+            newTargetList = newTargetList.map((target: TbRsCustFeatRuleTrgt, idx: number) => {
+                let rtn = cloneDeep(target)
+                rtn.targetId = `T${idx+1}`
+                return rtn
+            })
             return newTargetList
         })
         // target에 해당되는 target filter 리스트도 같이 삭제
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let newTrgtFilterList = cloneDeep(state)
             newTrgtFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== delTrgtId)
-            return newTrgtFilterList
+            let reIdxingFilterList: Array<TbRsCustFeatRuleTrgtFilter> = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId > delTrgtId)
+            reIdxingFilterList = reIdxingFilterList.map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
+                let rtn = cloneDeep(trgtFilter)
+                let idx = parseInt(rtn.targetId.replace("T", "")) - 1
+                rtn.targetId = `T${idx}`
+                return rtn
+            })
+            newTrgtFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId < delTrgtId)
+            return [...newTrgtFilterList, ...reIdxingFilterList]
         })
     }
 
@@ -136,10 +173,8 @@ const DropList = ({
                 gap="MD"
                 justifyContent="Start"
             >
-            {
+            {targetList.length > 0 &&
                 targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
-                    
-                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                     let targetId = targetItem.targetId
                     let tfList: Array<TbRsCustFeatRuleTrgtFilter> = []
                     trgtFilterList.map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
@@ -155,6 +190,7 @@ const DropList = ({
                             targetItem={targetItem} 
                             setTargetList={setTargetList}
                             delTargetInfo={deleteInfo}
+                            columnList={columnList}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.FEAT) {
                         return <FeatDropItem
@@ -165,6 +201,7 @@ const DropList = ({
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.BEHV) {
+                        let bs = behaviors.filter((behavior: Behavior) => (behavior.metaTblLogiNm === targetItem.tableName || behavior.metaTblId === targetItem.tableName))
                         return <BehvDropItem 
                             key={`dropItem-${index}`}
                             itemIdx={index}
@@ -175,9 +212,21 @@ const DropList = ({
                             setTargetList={setTargetList} 
                             setTrgtFilterList={setTrgtFilterList} 
                             delTargetInfo={deleteInfo}
+                            aggregateColList={bs[0]?.tbCoMetaTblClmnInfoList}
+                            setFormulaTrgtList={setFormulaTrgtList}
                         />
                     }
                 })
+            }
+            {targetList.length === 0 &&
+                <TextField 
+                    size='LG' 
+                    shape='Round' 
+                    appearance='Filled'
+                    readOnly
+                    value={'오른쪽 Fact/BaseFact 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
+                >
+                </TextField>
             }
             </Stack>
         </Page>

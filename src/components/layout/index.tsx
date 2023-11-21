@@ -1,11 +1,10 @@
+import { useAppDispatch } from '@/hooks/useRedux';
 import { defaultPathInfo } from '@/models/common/Menu';
-import { menuSlice } from '@/reducers';
+import { setIsDropMenu } from '@/reducers/menuSlice';
 import Body from '@components/layout/Body';
 import Footer from '@components/layout/Footer';
 import Header from '@components/layout/Header';
-import { ReducerType } from '@reducers';
 import { useCallback, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 
 export const defaultPath: defaultPathInfo = {
@@ -23,6 +22,7 @@ export const defaultPath: defaultPathInfo = {
   '/admin/user-portal-management': '/admin/user-portal-management/menu-management',
   '/admin/user-portal-management/board-management': '/admin/user-portal-management/board-management/notice',
   '/admin/admin-portal-management': '/admin/admin-portal-management/menu-management',
+  '/admin/self-feature-meta-management': '/admin/self-feature-meta-management/customer-meta-management',
   '/test': '/test/api',
 };
 
@@ -32,14 +32,11 @@ const RootLayout = () => {
   const routePath = defaultPath[pathname];
   const isPopup = pathname.includes('/popup');
 
-  const dispatch = useDispatch();
-  const isDropMenu = useSelector((state: ReducerType) => state.menu.isDropMenu);
+  const dispatch = useAppDispatch();
 
   const handleCloseDropMenu = useCallback(() => {
-    if (isDropMenu) {
-      dispatch(menuSlice.actions.setIsDropMenu(!isDropMenu));
-    }
-  }, [dispatch, isDropMenu]);
+    dispatch(setIsDropMenu(false));
+  }, [dispatch]);
 
   useEffect(() => {
     handleCloseDropMenu();

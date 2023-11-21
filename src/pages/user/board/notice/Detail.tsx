@@ -1,29 +1,30 @@
+import { ExpandLessIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
-import useModal, { ModalType } from '@/hooks/useModal';
-import { NoticeInfo } from '@/models/Board/Notice';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { NoticeModel } from '@/models/model/NoticeModel';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Stack, TD, TH, TR, Typography, Link, useToast } from '@components/ui';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const { openModal } = useModal();
-  const [noticeInfo, setNoticeInfo] = useState<NoticeInfo>();
-  const [prevNoticeInfo, setPrevNoticeInfo] = useState<NoticeInfo>();
-  const [nextNoticeInfo, setNextNoticeInfo] = useState<NoticeInfo>();
+  const location = useLocation();
+  const [noticeModel, setNoticeModel] = useState<NoticeModel>();
+  const [prevNoticeModel, setPrevNoticeModel] = useState<NoticeModel>();
+  const [nextNoticeModel, setNextNoticeModel] = useState<NoticeModel>();
   const noticeId: string = location?.state?.noticeId || '';
-  const rows: Array<NoticeInfo> = location?.state?.rows;
+  const rows: Array<NoticeModel> = location?.state?.rows;
   const { data: response, isSuccess, isError } = useNoticeById(noticeId);
-  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteNotice(noticeId);
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteNotice(noticeId);
 
   const goToList = () => {
     navigate('..');
@@ -32,7 +33,7 @@ const Detail = () => {
   const goToEdit = () => {
     navigate('../edit', {
       state: {
-        noticeId: noticeInfo?.noticeId,
+        noticeId: noticeId,
       },
     });
   };
@@ -47,44 +48,44 @@ const Detail = () => {
   };
 
   const handleDelete = () => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: '삭제',
-      content: '삭제하시겠습니까?',
-      onConfirm: mutate,
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.REMOVE,
+        content: '삭제하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {
     if (rows?.length > 0) {
       const index = rows.findIndex((row) => row.noticeId === noticeId);
-      setPrevNoticeInfo(index === 0 ? undefined : rows[index - 1]);
-      setNextNoticeInfo(index === rows.length - 1 ? undefined : rows[index + 1]);
+      setPrevNoticeModel(index === 0 ? undefined : rows[index - 1]);
+      setNextNoticeModel(index === rows.length - 1 ? undefined : rows[index + 1]);
     }
   }, [noticeId, rows]);
 
   useEffect(() => {
-    isSuccess && setNoticeInfo(response.data);
-  }, [isSuccess, response?.data]);
-
-  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
+    } else if (isSuccess) {
+      setNoticeModel(response.data);
     }
-  }, [response, isError, toast]);
+  }, [response, isSuccess, isError, toast]);
 
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '삭제 중 에러가 발생했습니다.',
       });
     } else if (dIsSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '삭제되었습니다.',
       });
       navigate('..');
@@ -108,12 +109,12 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">{noticeInfo?.sj}</Typography>
+              <Typography variant="h3">{noticeModel?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={noticeInfo?.cn} disabled />
+              <TinyEditor content={noticeModel?.cn} disabled />
             </TD>
           </TR>
           <TR>
@@ -137,9 +138,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {nextNoticeInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(nextNoticeInfo?.noticeId)}>
-                  {nextNoticeInfo?.sj}
+              {nextNoticeModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(nextNoticeModel?.noticeId)}>
+                  {nextNoticeModel?.sj}
                 </Link>
               )}
             </TD>
@@ -150,9 +151,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={3} className="nextContent">
-              {prevNoticeInfo?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(prevNoticeInfo?.noticeId)}>
-                  {prevNoticeInfo?.sj}
+              {prevNoticeModel?.sj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(prevNoticeModel?.noticeId)}>
+                  {prevNoticeModel?.sj}
                 </Link>
               )}
             </TD>

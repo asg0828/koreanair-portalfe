@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from "lodash";
 
+import { RowsInfo } from "@/models/components/Table";
 import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
 import {
@@ -18,15 +19,13 @@ import {
   Label,
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
-import ConfirmModal from "@/components/modal/ConfirmModal";
-import AddIcon from '@mui/icons-material/Add'
+import { AddIcon } from '@/assets/icons';
 
 import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
-import { RowsInfo } from "@/models/components/Table";
 import { 
+  category,
   featListColumns as columns,
-  initTbRsCustFeatRule,
-  protoTbRsCustFeatRuleList,
+  submissionStatus,
 } from "./data";
 import { Method, callApi } from "@/utils/ApiUtil";
 import { StatusCode } from "@/models/common/CommonResponse"
@@ -35,32 +34,10 @@ import {
   initConfig,
   initApiRequest,
   initCommonResponse,
-  ModalType,
-  ModalTitCont,
   initQueryParams,
+  subFeatStatus,
+  RuleId,
 } from '@/models/selfFeature/FeatureCommon';
-
-const category = [
-  { value: '', text: '선택' },
-  { value: 'PROPORTION', text: '비율' },
-  { value: 'SUM', text: '합계' },
-  { value: 'TOP_N', text: 'Top N' },
-  { value: 'CASE', text: 'Case문 사용' },
-  { value: 'COUNT', text: '건수' },
-  { value: 'AVG', text: '평균' },
-]
-const useYn = [
-  { value: '', text: '선택' },
-  { value: 'USE_Y', text: '사용' },
-  { value: 'USE_N', text: '미사용' },
-]
-const submissionStatus = [
-  { value: '', text: '전체' },
-  { value: 'saved', text: '등록' },
-  { value: 'inApproval', text: '결재진행중' },
-  { value: 'approved', text: '승인 완료' },
-  { value: 'rejected', text: '반려' },
-]
 
 export interface searchProps {
   mstrSgmtRuleId: string
@@ -76,7 +53,7 @@ const SelfFeature = () => {
   const location = useLocation()
 
   const [ searchInfo, setSearchInfo ] = useState<searchProps>({
-    mstrSgmtRuleId: '',
+    mstrSgmtRuleId: RuleId.MASTERPROF,
     custFeatRuleName: '',
     category: '',
     useYn: '',
@@ -84,20 +61,15 @@ const SelfFeature = () => {
   })
 
   const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
-  const [ delList, setDelList ] = useState<Array<TbRsCustFeatRule>>([])
 
   const [ isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop ] = useState<boolean>(false)
-  const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
-  const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
-  const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
-  const [ modalType, setModalType ] = useState<string>('')
 
   useEffect(() => {
     // 공통 코드 API CALL && 초기 LIST 조회 API CALL -> useQuery 사용하기
     if (location.state) {
       if (location.state.submissionStatus === "reg") {
         setSearchInfo((state: searchProps) => {
-          state.submissionStatus = "saved"
+          state.submissionStatus = subFeatStatus.SAVE
           return cloneDeep(state)
         })
       } else {
@@ -127,66 +99,40 @@ const SelfFeature = () => {
     console.log("[retrieveCustFeatRules] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
-    //response = await callApi(request)
-    console.log("[retrieveCustFeatRules] Response :: ", response)
+    response = await callApi(request)
+    console.log("[retrieveCustFeatRules] Response header       :: ", response.header)
+    console.log("[retrieveCustFeatRules] Response statusCode   :: ", response.statusCode)
+    console.log("[retrieveCustFeatRules] Response status       :: ", response.status)
+    console.log("[retrieveCustFeatRules] Response successOrNot :: ", response.successOrNot)
+    console.log("[retrieveCustFeatRules] Response result       :: ", response.result)
 
-    let list: Array<TbRsCustFeatRule> = []
-    /*
-    if (response.successOrNot === StatusCode.SUCCESS) {
-      list = response.data
+    if (response.statusCode === StatusCode.SUCCESS) {
+      setSelfFeatureList(() => {
+        let rtn = cloneDeep(response.result)
+
+        rtn = rtn.map((sf: TbRsCustFeatRule) => {
+          let t = cloneDeep(sf)
+          if (
+            !t.submissionStatus
+            || t.submissionStatus === "" 
+            || t.submissionStatus === submissionStatus[1].value
+          ) {
+            t.submissionStatusNm = submissionStatus[1].text
+          } else if (
+            t.submissionStatus === "requested" 
+            || t.submissionStatus === submissionStatus[2].value
+          ) {
+            t.submissionStatusNm = submissionStatus[2].text
+          } else if (t.submissionStatus === submissionStatus[3].value) {
+            t.submissionStatusNm = submissionStatus[3].text
+          } else if (t.submissionStatus === submissionStatus[4].value) {
+            t.submissionStatusNm = submissionStatus[4].text
+          }
+          return t
+        })
+        return rtn
+      })
     }
-    */
-    for (let i = 0; i < 10; i++) {
-      let selfFeature: TbRsCustFeatRule = cloneDeep(initTbRsCustFeatRule)
-      selfFeature.id = `ID_${String(i)}` //custFeatRuleId
-      selfFeature.name = `NAME_${String(i)}`
-      selfFeature.description = `DESCRIPTION_${String(i)}`
-      selfFeature.lastUpdDttm = `2023-10-16 10:11:1${String(i)}`
-      selfFeature.lastUpdUserNm = "UPDUSER_" + String(i)
-      if (i % 2) {
-        selfFeature.useYn = "Y"
-        selfFeature.submissionStatus = `reg`
-      } else {
-        selfFeature.useYn = "N"
-        selfFeature.submissionStatus = `subInfo`
-      }
-      list.push(selfFeature)
-    }
-    setSelfFeatureList((prevState: Array<TbRsCustFeatRule>) => {
-      if (searchInfo.submissionStatus !== "") {
-        if (searchInfo.submissionStatus === "reg" || searchInfo.submissionStatus === "saved") {
-          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === "" || v.submissionStatus === "saved")//list
-        } else if (searchInfo.submissionStatus) {
-          prevState = protoTbRsCustFeatRuleList.filter((v: TbRsCustFeatRule) => v.submissionStatus === searchInfo.submissionStatus)//list//list
-        }
-      } else {
-        prevState = protoTbRsCustFeatRuleList
-      }
-
-      return cloneDeep(prevState)
-    })
-  }
-
-  const deleteCustFeatRule =async () => {
-
-    if (delList.length < 1) return
-
-    let config = cloneDeep(initConfig)
-    config.isLoarding = true
-    let request = cloneDeep(initApiRequest)
-    request.method = Method.DELETE
-    request.url = "/api/v1/customerfeatures"
-    let custFeatRuleIds: Array<string> = []
-    delList.map((feature: TbRsCustFeatRule) => {
-      custFeatRuleIds.push(feature.id)
-    })
-    request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), {custFeatRuleIds: custFeatRuleIds.toString()})
-    console.log("[deleteCustFeatRule] Request  :: ", request)
-
-    let response = cloneDeep(initCommonResponse)
-    //response = await callApi(request)
-    console.log("[deleteCustFeatRule] Response :: ", response)
-
   }
   
   const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
@@ -217,42 +163,14 @@ const SelfFeature = () => {
     retrieveCustFeatRules()
   }
 
-  const getCheckList = (checkedList: Array<number>) => {
-    setDelList(() => {
-      let delList = checkedList.map((delItemIdx) => selfFeatureList[delItemIdx])
-      return cloneDeep(delList)
-    })
-  }
-
-  const deleteSelfFeature = () => {
-    setConfirmModalTit(ModalTitCont.DELETE.title)
-    if (delList.length < 1) {
-      setModalType(ModalType.ALERT)
-      setConfirmModalCont(ModalTitCont.DEL_VALID.context)
-      setIsOpenConfirmModal(true)
-      return
-    }
-    setModalType(ModalType.CONFIRM)
-    setConfirmModalCont(ModalTitCont.DELETE.context)
-    setIsOpenConfirmModal(true)
-  }
-
-  const onConfirm = () => {
-    if (modalType === ModalType.CONFIRM) deleteCustFeatRule()
-    setIsOpenConfirmModal(false)
-  }
-
-  const onCancel = () => {
-    setIsOpenConfirmModal(false)
-  }
-
   return (
   <Stack direction="Vertical" gap="LG" className="height-100">
-    <Stack direction="Horizontal" gap="MD" justifyContent="End">
+    {/* 관리자(1차)인 경우만 노출 */}
+    {/* <Stack direction="Horizontal" gap="MD" justifyContent="End">
       <Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.PRNTCHLD)}>
-      Feature 선후행 관계
+      Feature 연결 관계
       </Button>
-    </Stack>
+    </Stack> */}
     {/* 검색 영역 */}
     <form onSubmit={onsubmitHandler}>
     <Stack direction="Vertical" gap="LG">
@@ -298,7 +216,7 @@ const SelfFeature = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">Feature 명</TH>
-          <TD colSpan={5.01}>
+          <TD colSpan={5}>
             <TextField className="width-100" id="custFeatRuleName" onChange={onchangeInputHandler}/>
           </TD>
         </TR>
@@ -351,24 +269,25 @@ const SelfFeature = () => {
         columns={columns}
         rows={selfFeatureList}
         enableSort={true}
-        clickable={true}
-        rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
+        clickable={false}
+        //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
         onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
       />
       <Pagination size="MD" />
       <Stack className="pagination-layout">  
       <Stack justifyContent="End" gap="SM" className="width-100">
-        <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
+        {/* <Button priority="Normal" appearance="Outline" size="LG" onClick={deleteSelfFeature}>
         삭제
-        </Button>
+        </Button> */}
         <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.RULE_REG)}>
         <AddIcon />
-        Rule 등록
+        신규 등록
         </Button>
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
+        {/* 관리자(1차)인 경우만 노출 */}
+        {/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
         <AddIcon />
-        SQL 등록
-        </Button>
+        SQL 신규 등록
+        </Button> */}
       </Stack>
       </Stack>
     </Stack>
@@ -377,16 +296,6 @@ const SelfFeature = () => {
     <CustFeatParentChildListPop 
       isOpen={isOpenFeatPrntChldPop} 
       onClose={(isOpen) => setIsOpenFeatPrntChldPop(isOpen)} 
-    />
-    {/* Confirm 모달 */}
-    <ConfirmModal
-        isOpen={isOpenConfirmModal}
-        onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
-        title={confirmModalTit}
-        content={confirmModalCont}
-        onConfirm={onConfirm}
-        onCancle={onCancel}
-        btnType={modalType}
     />
 
   </Stack>

@@ -1,27 +1,32 @@
+import { UserInfo } from '@/models/common/User';
 import { createSlice } from '@reduxjs/toolkit';
-import { AuthInfo } from '@/models/common/Auth';
 
-const initialState: AuthInfo = {
-  isAdminPage: false,
+export interface AuthState {
+  userInfo?: UserInfo;
+  contextPath: string;
+}
+
+const initialState: AuthState = {
   userInfo: undefined,
+  contextPath: '',
 };
 
 const authSlice = createSlice({
   name: 'auth',
   initialState: initialState,
   reducers: {
-    login(state: AuthInfo, action) {
-      state.isAdminPage = action.payload.isAdminPage;
+    login(state, action) {
       state.userInfo = action.payload.userInfo;
     },
-    logout(state: AuthInfo) {
-      state.isAdminPage = false;
-      state.userInfo = undefined;
+    logout() {
+      return initialState;
     },
-    getUserInfo(state: AuthInfo) {
-      return state;
+    setContextPath(state, action) {
+      state.contextPath = action.payload;
     },
   },
 });
 
-export default authSlice;
+export const { login, logout, setContextPath } = authSlice.actions;
+
+export default authSlice.reducer;

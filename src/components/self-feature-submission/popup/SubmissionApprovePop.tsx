@@ -194,7 +194,6 @@ const SubmissionApprovePop = ({
     }
 
     const onClickTrgtSrchHandler = () => {
-        console.log(approvalSrch)
 
         if (approvalSrch.userNm.trim() === "" && approvalSrch.lginId.trim() === "") {
             setSearchApprovals(appendApprovals)

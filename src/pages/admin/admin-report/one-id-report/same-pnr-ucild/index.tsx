@@ -1,29 +1,61 @@
-import VerticalTable from '@/components/table/VerticalTable';
-import { Button, Pagination, Stack } from '@ke-design/components';
-
-import { Typography } from '@mui/material';
-import HorizontalTable from '@/components/table/HorizontalTable';
-import { onIdPaxData, oneIdPaxColumn } from '../../one-id-main/data';
+import { useCallback, useEffect, useState } from 'react';
+import { oneIdSameColumn, oneIdSameData } from '../../one-id-main/data';
+import DataGrid from '@/components/grid/DataGrid';
+import { PageModel, initPage } from '@/models/model/PageModel';
+import { useSamePnr } from '@/hooks/queries/useOneIdQueries';
+import { useToast } from '@ke-design/components';
+import { OneIdSameData } from '@/models/oneId/OneIdInfo';
 
 export default function SamePnrUcild() {
+  const { toast } = useToast();
+  const [page, setPage] = useState<PageModel>(initPage);
+  const [isChanged, setIsChanged] = useState(false);
+  const { refetch, data: response, isError } = useSamePnr(page);
+  const [row, setRows] = useState<Array<OneIdSameData>>([]);
+
+  const handlePage = (page: PageModel) => {
+    setPage(page);
+    setIsChanged(true);
+  };
+
+  const handleSearch = useCallback(() => {
+    refetch();
+  }, [refetch]);
+
+  useEffect(() => {
+    isChanged && handleSearch();
+
+    return () => {
+      setIsChanged(false);
+    };
+  }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.data) {
+        // response.data.contents.forEach(() => {});
+        setRows(response.data.contents);
+        setPage(response.data.page);
+      }
+    }
+  }, [response, isError, toast]);
+
   return (
-    <div style={{ width: '1200px' }}>
-      <div>
-        <Stack>
-          <HorizontalTable></HorizontalTable>
-        </Stack>
-        <div style={{ marginLeft: 1080 }}>
-          <Stack>
-            <Button>검색</Button>
-            {/* <Button onClick={onClear}>초기화</Button> */}
-          </Stack>
-        </div>
-      </div>
-      <Typography variant="h6">조회 결과 {onIdPaxData.length}</Typography>
-      <Stack>
-        <VerticalTable enableSort={true} showHeader={true} columns={oneIdPaxColumn} rows={onIdPaxData} />
-      </Stack>
-      <Pagination />
-    </div>
+    <>
+      <DataGrid
+        columns={oneIdSameColumn}
+        // rows ={row}
+        rows={oneIdSameData}
+        enableSort={true}
+        clickable={true}
+        page={page}
+        onChange={handlePage}
+      />
+    </>
   );
 }

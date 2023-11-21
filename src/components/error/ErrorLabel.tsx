@@ -6,10 +6,12 @@ export interface Props {
 }
 
 export const ErrorLabel = ({ message }: Props) => {
-  return (
+  return message ? (
     <Typography variant="body2" className="label-error-message">
       {message}
     </Typography>
+  ) : (
+    <></>
   );
 };
 

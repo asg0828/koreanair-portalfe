@@ -1,21 +1,21 @@
-import { useSelector } from 'react-redux';
-import { ReducerType } from '@reducers';
-import { ModalType } from '@/models/components/Modal';
+import CalculationLogicModal from '@/components/modal/CalculationLogicModal';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ModalType } from '@/models/common/Constants';
+import { closeModal } from '@/reducers/modalSlice';
 import ConfirmModal from './ConfirmModal';
-import { useDispatch } from 'react-redux';
-import { modalSlice } from '@/reducers';
-import { ModalInfo } from '@/models/components/Modal';
 
 const ModalContainer = () => {
-  const dispatch = useDispatch();
-  const modal = useSelector((state: ReducerType) => state.modal);
+  const dispatch = useAppDispatch();
+  const modal = useAppSelector((state) => state.modal);
 
-  const closeModal = () => {
-    dispatch(modalSlice.actions.closeModal());
+  const handleCloseModal = () => {
+    dispatch(closeModal());
   };
 
   if (modal?.type === ModalType.CONFIRM) {
-    return <ConfirmModal {...modal} onClose={closeModal} />;
+    return <ConfirmModal {...modal} onClose={handleCloseModal} />;
+  } else if (modal?.type === ModalType.CALCULATION_LOGIC) {
+    return <CalculationLogicModal {...modal} onClose={handleCloseModal} />;
   }
 
   return <></>;

@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@components/ui';
 import React from 'react';
 
-export const DetailData = React.memo((props: any) => {
+export const DetailDataComp = React.memo((props: any) => {
   const data = props.init;
   const flag = props.compName;
   return (

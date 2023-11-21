@@ -1,19 +1,20 @@
-import { useNavigate } from 'react-router-dom';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
+import { View } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
-import { TR, TH, TD, Stack, TextField, Select, SelectOption, Radio } from '@components/ui';
-import { listColumns as columns, listRows as rows } from '@/utils/data/tableSampleData';
+import { userColumns as columns, userRows as rows } from '@/utils/data/tableSampleData';
+import { Radio, Select, SelectOption, Stack, TD, TH, TR, TextField } from '@components/ui';
+import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const navigate = useNavigate();
 
   const goToReg = () => {
-    navigate('reg');
+    navigate(View.REG);
   };
 
   const goToDetail = (row: RowsInfo) => {
-    navigate('detail', { state: row });
+    navigate(View.DETAIL, { state: row });
   };
 
   const clickRow = (row: RowsInfo, index: number) => {

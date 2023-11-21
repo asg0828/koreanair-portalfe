@@ -109,8 +109,8 @@ const DragList = ({
                 style={{marginTop:"10px"}}
             >
                 <AccordionItem
-                    title='속성 정보'
-                    value='속성 정보'
+                    title='Fact 정보'
+                    value='Fact 정보'
                 >
                 {srchAttrRsltList.length > 0 &&
                 <Stack direction="Vertical" justifyContent="Center" gap="SM" >
@@ -136,8 +136,8 @@ const DragList = ({
                 type="multiple"
             >
                 <AccordionItem
-                    title='행동 정보'
-                    value='행동 정보'
+                    title='BaseFact 정보'
+                    value='BaseFact 정보'
                 >
                 {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
                     <Accordion
@@ -154,6 +154,7 @@ const DragList = ({
                         {behavior.tbCoMetaTblClmnInfoList.map((tbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo, clmnIdx: number) => (
                             <BehvDragItem
                                 key={clmnIdx}
+                                metaTblLogiNm={behavior.metaTblLogiNm}
                                 behvTblClmnInfo={tbCoMetaTblClmnInfo}
                             />
                         ))}

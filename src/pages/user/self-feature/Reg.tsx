@@ -9,8 +9,9 @@ import DragList from '@/components/self-feature/DragList';
 import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography } from '@components/ui'
+import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui'
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import ApprovalList from '@/components/self-feature/ApprovalList';
 
 import { 
   FeatureInfo,
@@ -22,13 +23,11 @@ import {
   MstrSgmtTableandColMetaInfo,
   FeatureTemp,
   TbRsCustFeatRuleSql,
+  FormulaTrgtListProps,
 } from '@/models/selfFeature/FeatureInfo';
 import {
   initSelfFeatureInfo,
   initMstrSgmtTableandColMetaInfo,
-  initBehavior,
-  initTbCoMetaTblClmnInfo,
-  initAttribute,
   initTbRsCustFeatRule,
   initTbRsCustFeatRuleCalc,
   initTbRsCustFeatRuleCase,
@@ -44,7 +43,13 @@ import {
   initCommonResponse,
   ModalType,
   ModalTitCont,
+  ColDataType,
 } from '@/models/selfFeature/FeatureCommon';
+import { StatusCode } from '@/models/common/CommonResponse';
+import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionInfo';
+import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data';
+import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
+import { ValidType } from '@/models/common/Constants';
 
 const lCategory = [
   { value: '', text: '선택' },
@@ -63,9 +68,12 @@ const calcUnit = [
 
 const SelfFeatureReg = () => {
 
+  const { toast } = useToast()
+  const { data: response1, isError: isError1, refetch: refetch1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+  
   const navigate = useNavigate()
   const location = useLocation()
-
+  // 등록 구분(RuleDesign / SQL)
   const [ regType, setRegType ] = useState<string>(location.state.regType)
 
   // formData
@@ -82,14 +90,18 @@ const SelfFeatureReg = () => {
   // 계산식
   const [ custFeatRuleCalc, setCustFeatRuleCalc ] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
   const [ custFeatRuleCaseList, setCustFeatRuleCaseList ] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
-  const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<string>>([])
+  const [ formulaTrgtList, setFormulaTrgtList ] = useState<Array<FormulaTrgtListProps>>([])
   const [ isValidFormula, setIsValidFormula ] = useState<Boolean>(true)
-  // SQL 등록
+  // 승인 정보
+  const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
+  const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
+
   // 속성 및 행동 데이터
   const [ mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo ] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
   // Top 집계함수 선택 여부
   const [ isSelectAggregateTop, setIsSelectAggregateTop ] = useState<Boolean>(false)
 
+  const [ clickType, setClickType ] = useState<string>('')
   const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
   const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
   const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
@@ -102,6 +114,11 @@ const SelfFeatureReg = () => {
         createCustFeatSQL()
       } else if (regType === selfFeatPgPpNm.RULE_REG) {
         createCustFeatRule()
+      }
+      // 대상선택 초기화
+      if (clickType === "trgtClear") {
+        setTargetList([])
+        setTrgtFilterList([])
       }
     }
     setIsOpenConfirmModal(false)
@@ -122,6 +139,24 @@ const SelfFeatureReg = () => {
       let rtn = cloneDeep(state)
       rtn = cloneDeep(initSelfFeatureInfo)
       return rtn
+    })
+    setSfSubmissionApprovalList(() => {
+      let t: Array<SfSubmissionApproval> = []
+
+      for (let i = 0; i < 3; i++) {
+
+          let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+
+          subAprv.approvalSequence = i + 1
+
+          if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+          else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+          else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+
+          t.push(subAprv)
+      }
+
+      return t
     })
   }
 
@@ -154,8 +189,17 @@ const SelfFeatureReg = () => {
     // 계산식 validation을 위한 대상 list 추출
     let fList = []
     for (let i = 0; i < targetList.length; i++) {
-      let t = i + 1
-      fList.push(`T${t}`)
+      let t = { targetId: `T${i+1}`, dataType: "" }
+      let dataType = targetList[i].targetDataType
+      if (
+        targetList[i].operator === "count"
+        || targetList[i].operator === "distinct_count"
+      ) {
+        dataType = ColDataType.NUM
+      }
+      t.dataType = dataType
+
+      fList.push(t)
     }
     setFormulaTrgtList(fList)
   }, [targetList])
@@ -206,78 +250,17 @@ const SelfFeatureReg = () => {
     
   }, [formulaTrgtList])
 
-  const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
-    /*
-      Method      :: GET
-      Url         :: /api/v1/mastersegment/table-columns-meta-info
-      path param  :: {mstrSgmtRuleId}
-      query param :: 
-    */
-    let mstrSgmtRuleId = ''
-    let config = cloneDeep(initConfig)
-    config.isLoarding = true
-    let request = cloneDeep(initApiRequest)
-    request.method = Method.GET
-    request.url = `/api/v1/mastersegment/table-columns-meta-info/${mstrSgmtRuleId}`
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
-
-    let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response :: ", response)
-
-    setMstrSgmtTableandColMetaInfo((state: MstrSgmtTableandColMetaInfo) => {
-      let temp = cloneDeep(state)
-      let attributes = []
-      let behaviors  = []
-      if (temp) {
-        temp.rslnRuleId = 'featureTest'
-
-        for (let i = 0; i < 4; i++) {
-
-          let behabvior = cloneDeep(initBehavior)
-
-          behabvior.metaTblId = `featureBehvTable${i+1}`
-          behabvior.metaTblLogiNm = `픽처테이블${i+1}`
-          behabvior.tbCoMetaTbInfo.dbNm = `selfFeature${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblDesc = `메타테이블설명${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblDvCd = `ATTR/BEHV${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblPhysNm = `행동물리명${i+1}`
-          behabvior.tbCoMetaTbInfo.metaTblLogiNm = `행동논리명${i+1}`
-
-          let tbCoMetaTblClmnInfoList = []
-          for (let j = 0; j < 4; j++) {
-
-            let tbCoMetaTblClmnInfo = cloneDeep(initTbCoMetaTblClmnInfo)
-
-            tbCoMetaTblClmnInfo.metaTblId = `featureBehvTable${i+1}`
-            tbCoMetaTblClmnInfo.metaTblClmnId = `featureBehvTable${i+1}Clmn${i+1}`
-            tbCoMetaTblClmnInfo.metaTblClmnPhysNm = `컬럼 물리명${j+1}`
-            tbCoMetaTblClmnInfo.metaTblClmnLogiNm = `컬럼 논리명${j+1}`
-            tbCoMetaTblClmnInfoList.push(tbCoMetaTblClmnInfo)
-          }
-
-          behabvior.tbCoMetaTblClmnInfoList = tbCoMetaTblClmnInfoList
-          behaviors.push(behabvior)
-        }
-
-        for (let i = 0; i < 4; i++) {
-
-          let attribute = cloneDeep(initAttribute)
-
-          attribute.metaTblId = `featureAttrTable${i+1}`
-          attribute.metaTblClmnId = `featureAttrTable${i+1}Clmn${i+1}`
-          attribute.metaTblClmnPhysNm = `속성컬럼물리명${i+1}`
-          attribute.metaTblClmnLogiNm = `속성컬럼논리명${i+1}`
-          
-          attributes.push(attribute)
-
-        }
-
-        temp.attributes = attributes
-        temp.behaviors  = behaviors
+  const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
+    if (isError1 || response1?.successOrNot === 'N') {
+      toast({
+      type: ValidType.ERROR,
+      content: '조회 중 에러가 발생했습니다.',
+      })
+    } else {
+      if (response1 && (response1.statusCode === StatusCode.SUCCESS)) {
+        setMstrSgmtTableandColMetaInfo(cloneDeep(response1.result))
       }
-      return cloneDeep(temp)
-    })
+    }
   }
 
   const createCustFeatRule = async () => {
@@ -287,6 +270,7 @@ const SelfFeatureReg = () => {
       setIsOpenConfirmModal(true)
       return
     }
+    // 등록하면서 승인정보 저장도 진행되어야함. -> BE에서 transaction?
     /*
       Method      :: POST
       Url         :: /api/v1/customerfeatures
@@ -299,7 +283,9 @@ const SelfFeatureReg = () => {
     let request = cloneDeep(initApiRequest)
     request.method = Method.POST
     request.url = "/api/v1/customerfeatures"
-    request.params!.bodyParams = featureInfo
+    featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
+    request.params!.bodyParams = Object.assign(featureInfo, {sfSubmissionRequestData: sfSubmissionRequestData})
+    request.params!.bodyParams = Object.assign(request.params!.bodyParams, {sfSubmissionApprovalList: sfSubmissionApprovalList})
     console.log("[createCustFeatRule] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
@@ -323,7 +309,9 @@ const SelfFeatureReg = () => {
     let request = cloneDeep(initApiRequest)
     request.method = Method.POST
     request.url = "/api/v1/korean-air/customerfeatures"
-    request.params!.bodyParams = featureInfo
+    featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
+    request.params!.bodyParams = Object.assign(featureInfo, {sfSubmissionRequestData: sfSubmissionRequestData})
+    request.params!.bodyParams = Object.assign(request.params!.bodyParams, {sfSubmissionApprovalList: sfSubmissionApprovalList})
     console.log("[createCustFeatSQL] Request  :: ", request)
 
     let response = cloneDeep(initCommonResponse)
@@ -343,6 +331,7 @@ const SelfFeatureReg = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -353,6 +342,7 @@ const SelfFeatureReg = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -363,6 +353,7 @@ const SelfFeatureReg = () => {
         if (key === id) {
           rtn[key] = value
         }
+        return key
       })
       return rtn
     })
@@ -382,6 +373,7 @@ const SelfFeatureReg = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -392,6 +384,7 @@ const SelfFeatureReg = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -402,6 +395,7 @@ const SelfFeatureReg = () => {
         if (key === keyNm) {
           rtn[key] = v
         }
+        return key
       })
       return rtn
     })
@@ -413,6 +407,16 @@ const SelfFeatureReg = () => {
       navigate('..')
     else
       navigate(`../${pageNm}`)
+  }
+  // 대상선택 초기화
+  const targetClearHanbler = () => {
+    if (targetList.length < 1) return
+
+    setModalType(ModalType.CONFIRM)
+    setClickType("trgtClear")
+    setConfirmModalTit(ModalTitCont.TRGT_CLEAR.title)
+    setConfirmModalCont(ModalTitCont.TRGT_CLEAR.context)
+    setIsOpenConfirmModal(true)
   }
 
   const onSubmitInsertHandler = () => {
@@ -474,7 +478,7 @@ const SelfFeatureReg = () => {
               </TD>
               <TH colSpan={1} align="right" required>Feature 타입</TH>
               <TD colSpan={2}>
-                <TextField className="width-100" id="featureTyp" value={"self-feature"} readOnly onChange={onchangeInputHandler}/>
+                <TextField className="width-100" id="featureTyp" value={"Fact지수"} readOnly onChange={onchangeInputHandler}/>
               </TD>
             </TR>
             <TR>
@@ -495,7 +499,7 @@ const SelfFeatureReg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right" required>Feature 정의</TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <TextField className="width-100" id="featureDef" multiline onChange={onchangeInputHandler}/>
               </TD>
             </TR>
@@ -518,22 +522,32 @@ const SelfFeatureReg = () => {
                   ))}
                 </Select>
               </TD>
-              <TH colSpan={1} align="right" required>카테고리</TH>
+              {/* 관리자가 승인 단계시 노출 */}
+              <TD colSpan={3}></TD>
+              {/* <TH colSpan={1} align="right" required>카테고리</TH>
               <TD colSpan={2}>
                 <Select className='width-100'  appearance="Outline" >
                     <SelectOption value={1}>test</SelectOption>
                 </Select>
-              </TD>
+              </TD> */}
             </TR>
             <TR>
               <TH colSpan={1} align="right" required>산출 로직</TH>
-              <TD colSpan={5.01}>
-                <TextField className="width-100" multiline id="featureFm" onChange={onchangeInputHandler}/>
+              <TD colSpan={5}>
+                <TextField
+                  style={{
+                    height: "150px"
+                  }}
+                  className="width-100" 
+                  multiline 
+                  id="featureFm" 
+                  onChange={onchangeInputHandler}
+                />
               </TD>
             </TR>
             <TR>
               <TH colSpan={1} align="right">비고</TH>
-              <TD colSpan={5.01}>
+              <TD colSpan={5}>
                 <TextField className="width-100" id="description" onChange={onchangeInputHandler}/>
               </TD>
             </TR>
@@ -543,7 +557,12 @@ const SelfFeatureReg = () => {
           {/* 대상 선택 */}
           {(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
           <>
-          <Typography variant="h4">대상 선택</Typography>
+          <Stack direction="Horizontal" gap="LG" justifyContent="start">
+            <Typography variant="h4">대상 선택</Typography>
+            <Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
+              초기화
+            </Button>
+          </Stack>
           {/* drag && drop 영역*/}
           <Stack 
               direction="Horizontal"
@@ -558,10 +577,13 @@ const SelfFeatureReg = () => {
               <DropList 
                 featStatus={subFeatStatus.REG}
                 setIsSelectAggregateTop={setIsSelectAggregateTop}
-                targetList={targetList} 
+                targetList={targetList}
                 trgtFilterList={trgtFilterList} 
                 setTargetList={setTargetList} 
-                setTrgtFilterList={setTrgtFilterList} 
+                setTrgtFilterList={setTrgtFilterList}
+                attributes={mstrSgmtTableandColMetaInfo.attributes} 
+                behaviors={mstrSgmtTableandColMetaInfo.behaviors}
+                setFormulaTrgtList={setFormulaTrgtList}
               />
               {/* drop 영역 */}
 
@@ -594,11 +616,11 @@ const SelfFeatureReg = () => {
           </>
           }
           {/* SQL 입력 */}
-
           {/* 계산식 */}
           {(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
             <CalcValid
               featStatus={subFeatStatus.REG}
+              isSelectAggregateTop={isSelectAggregateTop}
               setIsValidFormula={setIsValidFormula}
               formulaTrgtList={formulaTrgtList}
               custFeatRuleCalc={custFeatRuleCalc}
@@ -608,6 +630,12 @@ const SelfFeatureReg = () => {
             />
           }
           {/* 계산식 */}
+          {/* 결재선 */}
+          <ApprovalList
+            sfSubmissionApprovalList={sfSubmissionApprovalList}
+            setSfSubmissionApprovalList={setSfSubmissionApprovalList}
+          />
+          {/* 결재선 */}
       </Stack>
     {/* 정보 영역 */}
 

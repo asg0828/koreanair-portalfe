@@ -1,0 +1,12 @@
+import { getQnaById, getQnaList } from '@/api/QnaAPI';
+import { PageModel } from '@/models/model/PageModel';
+import { QnaParams } from '@/models/model/QnaModel';
+import { useQuery } from '@tanstack/react-query';
+
+export const useQnaList = (params: QnaParams, page: PageModel) => {
+  return useQuery(['/qna/list'], () => getQnaList(params, page));
+};
+
+export const useQnaById = (qnaId: string) => {
+  return useQuery(['/qna', qnaId], () => getQnaById(qnaId));
+};

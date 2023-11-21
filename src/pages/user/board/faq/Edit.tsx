@@ -1,12 +1,15 @@
 import '@/assets/styles/Board.scss';
-import EmptyState from '@/components/emptyState/EmptyState';
 import TinyEditor from '@/components/editor/TinyEditor';
+import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
-import useModal, { ModalType } from '@/hooks/useModal';
-import { UpdatedFaqInfo } from '@/models/Board/Faq';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { UpdatedFaqModel } from '@/models/model/FaqModel';
+import { selectCodeList } from '@/reducers/codeSlice';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -14,19 +17,19 @@ import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Reg = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const { openModal } = useModal();
+  const location = useLocation();
   const faqId = location?.state?.faqId;
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    control,
     formState: { errors },
-  } = useForm<UpdatedFaqInfo>({
+  } = useForm<UpdatedFaqModel>({
     mode: 'onChange',
     defaultValues: {
       faqId: faqId,
@@ -37,20 +40,23 @@ const Reg = () => {
     },
   });
   const values = getValues();
+  const codeList = useAppSelector(selectCodeList(GroupCodeType.FAQ_TYPE));
   const { data: response, isSuccess, isError } = useFaqById(values.faqId);
-  const { data: uResponse, mutate, isSuccess: uIsSuccess, isError: uIsError } = useUpdateFaq(values.faqId, values);
+  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFaq(values.faqId, values);
 
   const goToList = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: UpdatedFaqInfo) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: '수정',
-      content: '수정하시겠습니까?',
-      onConfirm: mutate,
-    });
+  const onSubmit = (data: UpdatedFaqModel) => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.MODIFY,
+        content: '수정하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {
@@ -66,7 +72,7 @@ const Reg = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     }
@@ -75,12 +81,12 @@ const Reg = () => {
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '수정 중 에러가 발생했습니다.',
       });
     } else if (uIsSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
       navigate('..');
@@ -110,8 +116,12 @@ const Reg = () => {
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
-                  {...register('qstn', { required: 'question is required.' })}
+                  {...register('qstn', {
+                    required: { value: true, message: 'question is required.' },
+                    maxLength: { value: 1000, message: 'max length exceeded' },
+                  })}
                   validation={errors?.qstn?.message ? 'Error' : undefined}
+                  autoFocus
                 />
                 <ErrorLabel message={errors?.qstn?.message} />
               </Stack>
@@ -124,19 +134,20 @@ const Reg = () => {
                 <Controller
                   name="clCode"
                   control={control}
-                  rules={{ required: 'code is required.' }}
+                  rules={{ required: { value: true, message: 'code is required.' } }}
                   render={({ field }) => (
                     <Select
                       appearance="Outline"
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      value={field.value}
                       onChange={(e, value) => field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
+                      value={field.value}
                     >
-                      <SelectOption value={'aa'}>분류1</SelectOption>
-                      <SelectOption value={'bb'}>분류2</SelectOption>
+                      {codeList.map((codeItem: any) => (
+                        <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+                      ))}
                     </Select>
                   )}
                 />
@@ -144,11 +155,9 @@ const Reg = () => {
               </Stack>
             </TD>
             <TH>게시여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-                <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
+              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
             </TD>
           </TR>
           <TR className="height-100">
@@ -160,7 +169,7 @@ const Reg = () => {
                 <Controller
                   name="answ"
                   control={control}
-                  rules={{ required: 'answer is required.' }}
+                  rules={{ required: { value: true, message: 'answer is required.' } }}
                   render={({ field }) => (
                     <TinyEditor
                       ref={field.ref}

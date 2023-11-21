@@ -4,6 +4,8 @@ import {
     useCallback 
 } from 'react'
 import { cloneDeep } from 'lodash'
+import CodeMirror from '@uiw/react-codemirror'
+import { sql } from '@codemirror/lang-sql'
 
 import VerticalTable from '../../table/VerticalTable';
 import { 
@@ -38,7 +40,7 @@ export interface Props {
 const ReadSqlPop = ({ isOpen = false, onClose }: Props) => {
     
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
-    const [ readSql, setReadSql ] = useState<ReadSql>()
+    const [ readSql, setReadSql ] = useState<ReadSql>(cloneDeep(initReadSql))
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
@@ -79,10 +81,13 @@ const ReadSqlPop = ({ isOpen = false, onClose }: Props) => {
         console.log("[retrieveReadSql] Request  :: ", request)
 
         let response = cloneDeep(initCommonResponse)
-        response = await callApi(request)
+        //response = await callApi(request)
         console.log("[retrieveReadSql] Response :: ", response)
 
-        setReadSql(cloneDeep(initReadSql))
+        setReadSql((state: ReadSql) => { 
+            state.sql = "SELECT *\nfrom a\nwhere\n1=1" 
+            return cloneDeep(state)
+        })
     }
 
     return (
@@ -90,7 +95,13 @@ const ReadSqlPop = ({ isOpen = false, onClose }: Props) => {
             <Modal.Header>쿼리 확인</Modal.Header>
             <Modal.Body>
                 <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
-                    {readSql?.sql}
+                    <CodeMirror
+                        readOnly
+                        value={readSql?.sql}
+                        height="400px"
+                        width='750px'
+                        extensions={[sql()]}
+                    />
                 </Stack>
             </Modal.Body>
             <Modal.Footer>

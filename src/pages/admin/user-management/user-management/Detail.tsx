@@ -40,8 +40,9 @@ const Detail = () => {
             <TD>
               <TextField disabled className="width-100" />
             </TD>
-            <TH></TH>
+            <TH>사번</TH>
             <TD>
+              <TextField disabled className="width-100" />
             </TD>
           </TR>
         </HorizontalTable>

@@ -1,19 +1,18 @@
-import BaseURL from '@/models/common/ApiURL';
+import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
-import { PageInfo } from '@/models/components/Page';
+import { NoticeParams } from '@/models/model/NoticeModel';
+import { PageModel } from '@/models/model/PageModel';
 import { callApi, Method } from '@utils/ApiUtil';
 
-export const getNoticeList = (searchKey: string, searchValue: string, page: PageInfo) => {
+export const getNoticeList = (params: NoticeParams, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.NOTICE}`,
+    url: `${PortalApiURL.NOTICE}`,
     method: Method.GET,
     params: {
       queryParams: {
-        searchConditions: searchKey,
-        searchTable: searchValue,
-        page: page.page + 1,
-        pageSize: page.pageSize,
+        ...params,
+        ...page,
       },
     },
   });
@@ -22,7 +21,7 @@ export const getNoticeList = (searchKey: string, searchValue: string, page: Page
 export const getNoticeById = (noticeId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.NOTICE}/${noticeId}`,
+    url: `${PortalApiURL.NOTICE}/${noticeId}`,
     method: Method.GET,
   });
 };
@@ -30,7 +29,7 @@ export const getNoticeById = (noticeId: string) => {
 export const createNotice = (createdNotice: object) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.NOTICE}`,
+    url: `${PortalApiURL.NOTICE}`,
     method: Method.POST,
     params: {
       bodyParams: createdNotice,
@@ -41,7 +40,7 @@ export const createNotice = (createdNotice: object) => {
 export const updateNotice = (noticeId: string, updatedNotice: object) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.NOTICE}/${noticeId}`,
+    url: `${PortalApiURL.NOTICE}/${noticeId}`,
     method: Method.PUT,
     params: {
       bodyParams: updatedNotice,
@@ -52,7 +51,7 @@ export const updateNotice = (noticeId: string, updatedNotice: object) => {
 export const deleteNotice = (noticeId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${BaseURL.NOTICE}/${noticeId}`,
+    url: `${PortalApiURL.NOTICE}/${noticeId}`,
     method: Method.DELETE,
     params: {
       bodyParams: {

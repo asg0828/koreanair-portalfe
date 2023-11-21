@@ -20,7 +20,9 @@ import { transFuncCalcStr } from "@/utils/self-feature/FormulaValidUtil"
 const TransFunction = ({
     isPossibleEdit,
     itemIdx,
+    dataType,
     trgtItem,
+    columnList,
     setTargetList,
     setTrgtFilterList,
 }: TransFuncProps) => {
@@ -55,7 +57,6 @@ const TransFunction = ({
         })
         setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let rtn = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             let updtTrgtFilterList = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtItem.targetId)
             updtTrgtFilterList[itemIdx].function = ''
             updtTrgtFilterList[itemIdx].variable1 = ''
@@ -121,7 +122,9 @@ const TransFunction = ({
             isOpen={isOpenTransFunctionPop}
             onClose={(isOpen) => setIsOpenTransFunctionPop(isOpen)}
             itemIdx={itemIdx}
+            dataType={dataType}
             trgtItem={trgtItem}
+            columnList={columnList}
             setTargetList={setTargetList}
             setTrgtFilterList={setTrgtFilterList}
             setTransFuncChecked={setTransFuncChecked}

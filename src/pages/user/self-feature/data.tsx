@@ -19,6 +19,28 @@ import {
     TbRsCustFeatRuleSql,
 } from "@/models/selfFeature/FeatureInfo";
 
+// feature 목록 검색 조건 필터
+export const category = [
+    { value: '', text: '선택' },
+    { value: 'PROPORTION', text: '비율' },
+    { value: 'SUM', text: '합계' },
+    { value: 'TOP_N', text: 'Top N' },
+    { value: 'CASE', text: 'Case문 사용' },
+    { value: 'COUNT', text: '건수' },
+    { value: 'AVG', text: '평균' },
+]
+export const useYn = [
+    { value: '', text: '선택' },
+    { value: 'USE_Y', text: '사용' },
+    { value: 'USE_N', text: '미사용' },
+]
+export const submissionStatus = [
+    { value: '', text: '전체' },
+    { value: 'saved', text: '등록' },
+    { value: 'inApproval', text: '결재진행중' },
+    { value: 'approved', text: '승인 완료' },
+    { value: 'rejected', text: '반려' },
+]
 
 // 대상선택(행동 데이터) 순번 setting(A,B,C ...)
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
@@ -28,15 +50,19 @@ export const initFormulaValidRslt: FormulaValidRslt = {
     isValidFormula: true,
     text:  '',
 }
-
 // 필터 옵션
 export const filterOption = [
     { value: 'ALL', text: '아래 조건을 모두 만족하는 경우' },
     { value: 'ANY', text: '아래 조건중 하나라도 만족하는 경우' },
     { value: 'CUS', text: '조건 사이의 관계를 직접 입력' },
 ]
-// 변환식 함수
-export const transFuncOtion = [
+// 변환식 함수(number)
+export const transFuncOtionNum = [
+    { value: '',    text: '선택' },
+    { value: 'NVL', text: 'NVL' },
+]
+// 변환식 함수(string)
+export const transFuncOtionStr = [
     { value: '',          text: '선택' },
     { value: 'NVL',       text: 'NVL' },
     { value: 'SUBSTRING', text: 'Substring' },
@@ -44,8 +70,61 @@ export const transFuncOtion = [
     { value: 'CONCAT',    text: 'Concat' },
     { value: 'TO_NUMBER', text: 'To Number' },
 ]
-// 연산자 목록
-export const operatorOption = [
+// 변환식 함수(string-Non concat)
+export const transFuncOtionStrNonConcat = [
+    { value: '',          text: '선택' },
+    { value: 'NVL',       text: 'NVL' },
+    { value: 'SUBSTRING', text: 'Substring' },
+    { value: 'LENGTH',    text: 'Length' },
+    { value: 'TO_NUMBER', text: 'To Number' },
+]
+// 변환식 함수(timstamp)
+export const transFuncOtionTim = [
+    { value: '',         text: '선택' },
+    { value: 'TO_CHAR',  text: 'To Char' },
+    { value: 'DATEADD',  text: 'Date Add' },
+    { value: 'DATEDIFF', text: 'Date Diff' },
+]
+// 변환식 timestamp(to char) 형식 옵션
+export const tsToCharOption = [
+    { value: '',                    text: '선택' },
+    { value: 'yyyy',                text: 'Year' },
+    { value: 'MM',                  text: 'Month' },
+    { value: 'dd',                  text: 'Day' },
+    { value: 'hh',                  text: 'Hour' },
+    { value: 'HH',                  text: 'Hour(24)' },
+    { value: 'mm',                  text: 'Minute' },
+    { value: 'ss',                  text: 'Second' },
+    { value: 'yyyyMMdd',            text: 'YYYYMMDD' },
+    { value: 'yyyyMMddHHmmss',      text: 'YYYYMMDDHH24MISS' },
+    { value: 'yyyy-MM-dd',          text: 'YYYY-MM-DD' },
+    { value: 'yyyy-MM-dd HH:mm:ss', text: 'YYYY-MM-DD HH24:MI:SS' },
+]
+// 변환식 timestamp(date add / date diff) 단위 옵션
+export const tsDtAddDiffOption = [
+    { value: '',                    text: '선택' },
+    { value: 'yyyy',                text: 'Year' },
+    { value: 'MM',                  text: 'Month' },
+    { value: 'dd',                  text: 'Day' },
+    { value: 'hh',                  text: 'Hour' },
+    { value: 'mm',                  text: 'Minute' },
+    { value: 'ss',                  text: 'Second' },
+]
+// 연산자 목록(number)
+export const operatorOptionNum = [
+    { value: '',           text: '선택' },
+    { value: '=',          text: 'Equal to' },
+    { value: '<>',         text: 'Not Equal to' },
+    { value: '>',          text: 'Greater Than' },
+    { value: '>=',         text: 'Greater or Equal' },
+    { value: '<',          text: 'Less Than' },
+    { value: '<=',         text: 'Less or Equal' },
+    { value: 'in_num',     text: 'In' },
+    { value: 'not_in_num', text: 'Not in' },
+]
+//Equal to(=) /  Not Equal to(<>) / Greater Than(>) / Greater or Equal(>=) / Less Than(<) / Less or Equal(<=) / In(in_num) / Not in(not_in_num)
+// 연산자 목록(string)
+export const operatorOptionStr = [
     { value: '',                text: '선택' },
     { value: 'match',           text: 'Match' },
     { value: 'not match',       text: 'Not Match' },
@@ -56,14 +135,37 @@ export const operatorOption = [
     { value: 'contains',        text: 'Contains' },
     { value: 'not contains',    text: 'Not Contains' },
 ]
-// 구분자 목록
-export const delimiterOption = [
+// 연산자 목록(timestamp)
+export const operatorOptionTim = [
+    { value: '',        text: '선택' },
+    { value: 'before',  text: 'before' },
+    { value: 'after',   text: 'after' },
+    { value: 'between', text: 'between' },
+]
+// 구분자 목록(number type)
+export const delimiterOptionNum = [
+    { value: ',', text: ',' },
+]
+// 구분자 목록(string/timestamp type)
+export const delimiterOptionStrTim = [
     { value: ',', text: ',' },
     { value: '/', text: '/' },
     { value: ':', text: ':' },
 ]
-// 집계함수 목록
-export const aggregateOption = [
+// 집계함수 목록(number)
+export const aggregateOptionNum = [
+    { value: 'count',           text: 'Count' },
+    { value: 'sum',           text: 'Sum' },
+    { value: 'max',             text: 'Max' },
+    { value: 'min',             text: 'Min' },
+    { value: 'distinct_count',  text: 'Distinct Count' },
+    { value: 'avg',           text: 'Avg' },
+    { value: 'first',           text: 'First' },
+    { value: 'last',            text: 'Last' },
+    { value: 'top',             text: 'Top' },
+]
+// 집계함수 목록(string, timestamp)
+export const aggregateOptionStrTim = [
     { value: 'count',           text: 'Count' },
     { value: 'max',             text: 'Max' },
     { value: 'min',             text: 'Min' },
@@ -148,7 +250,7 @@ export const initTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
 
 export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     id: 0,
-    custFeatRuleId: '',
+    custFeatRuleId: 'MS_0006',
     targetId: '',
     divisionCode: '',
     tableName: '',
@@ -174,7 +276,7 @@ export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
 export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {
     id: 0,
     custFeatRuleTrgtId: 0,
-    custFeatRuleId: '',
+    custFeatRuleId: 'MS_0006',
     targetId: '',
     filterId: '',
     columnName: '',
@@ -222,6 +324,8 @@ export const initFeatureTemp: FeatureTemp = {
     featureId: '',
     featureTyp: '',
     featureSe: '',
+    featureLSe: '',
+    featureMSe: '',
     featureNm: '',
     featureEngNm: '',
     calcUnt: '',
@@ -377,7 +481,7 @@ export const initReadSql: ReadSql = {
 export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
     {
         id: 'CFR_00000001',
-        name: '고객픽쳐테스트1',
+        name: '홈페이지방문횟수(예매)',
         description: '등록중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -388,7 +492,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         frstRegUserId: '',
         lastUpdDttm: '2023-11-01 13:52:11',
         lastUpdUserId: '',
-        category: '',
+        category: '고객행동(캠페인반응/온라인행동)',
         dataType: '',
         sqlDirectInputYn: '',
         frstRegUserNm: '',
@@ -398,8 +502,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '등록중',
     }, {
-        id: 'CFR_00000002',
-        name: '고객픽쳐테스트2',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '등록중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -410,9 +514,9 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         frstRegUserId: '',
         lastUpdDttm: '2023-11-02 13:52:11',
         lastUpdUserId: '',
-        category: '',
+        category: '고객행동(캠페인반응/온라인행동)',
         dataType: '',
-        sqlDirectInputYn: '',
+        sqlDirectInputYn: 'N',
         frstRegUserNm: '',
         lastUpdUserNm: '수정자2',
         submissionStatus: 'saved',
@@ -420,8 +524,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '등록중',
     }, /*{
-        id: 'CFR_00000003',
-        name: '고객픽쳐테스트3',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '승인요청',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -443,8 +547,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         submissionStatusNm: '승인요청',
     },*/
     {
-        id: 'CFR_00000004',
-        name: '고객픽쳐테스트4',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '결재진행중',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -455,7 +559,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         frstRegUserId: '',
         lastUpdDttm: '2023-11-04 13:52:11',
         lastUpdUserId: '',
-        category: '',
+        category: '고객행동(캠페인반응/온라인행동)',
         dataType: '',
         sqlDirectInputYn: '',
         frstRegUserNm: '',
@@ -465,8 +569,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '결재진행중',
     }, {
-        id: 'CFR_00000005',
-        name: '고객픽쳐테스트5',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '승인 완료',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -477,7 +581,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         frstRegUserId: '',
         lastUpdDttm: '2023-11-05 13:52:11',
         lastUpdUserId: '',
-        category: '',
+        category: '고객행동(캠페인반응/온라인행동)',
         dataType: '',
         sqlDirectInputYn: '',
         frstRegUserNm: '',
@@ -487,8 +591,8 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         lastUpdLginId: '',
         submissionStatusNm: '승인 완료',
     }, {
-        id: 'CFR_00000006',
-        name: '고객픽쳐테스트6',
+        id: 'CFR_00000001',
+        name: '홈페이지방문횟수(예매)',
         description: '반려',
         rslnRuleId: 'OneID',
         mstrSgmtRuleId: 'CustomerFeature',
@@ -499,7 +603,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         frstRegUserId: '',
         lastUpdDttm: '2023-11-06 13:52:11',
         lastUpdUserId: '',
-        category: '',
+        category: '고객행동(캠페인반응/온라인행동)',
         dataType: '',
         sqlDirectInputYn: '',
         frstRegUserNm: '',
@@ -508,27 +612,424 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
         metaTblId: '',
         lastUpdLginId: '',
         submissionStatusNm: '반려',
-    }, {
-        id: 'CFR_ADM_00000007',
-        name: '고객픽쳐테스트7(결재요청건)',
-        description: '결재요청건',
-        rslnRuleId: 'OneID',
-        mstrSgmtRuleId: 'CustomerFeature',
-        mstrSgmtRuleNm: '고객픽쳐',
-        useYn: 'Y',
-        batManualExecTestCnt: 0,
+    },
+    // {
+    //     id: 'CFR_ADM_00000007',
+    //     name: '고객픽쳐테스트7(결재요청건)',
+    //     description: '결재요청건',
+    //     rslnRuleId: 'OneID',
+    //     mstrSgmtRuleId: 'CustomerFeature',
+    //     mstrSgmtRuleNm: '고객픽쳐',
+    //     useYn: 'Y',
+    //     batManualExecTestCnt: 0,
+    //     frstRegDttm: '',
+    //     frstRegUserId: '',
+    //     lastUpdDttm: '2023-11-06 13:52:11',
+    //     lastUpdUserId: '',
+    //     category: '',
+    //     dataType: '',
+    //     sqlDirectInputYn: '',
+    //     frstRegUserNm: '',
+    //     lastUpdUserNm: '수정자6',
+    //     submissionStatus: 'inApproval',
+    //     metaTblId: '',
+    //     lastUpdLginId: '',
+    //     submissionStatusNm: '결재진행중',
+    // }
+]
+
+export const protoTypeFeatureTemp: FeatureTemp = {
+    featureId: 'CFR_00000001',
+    featureTyp: 'Fact 지수',
+    featureSe: '',
+    featureLSe: '온라인행동',
+    featureMSe: '홈페이지',
+    featureNm: '홈페이지방문횟수(예매)',
+    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
+    calcUnt: '횟수',
+    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
+    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
+    enrUserId: '',
+    enrDeptCode: '',
+    delYn: '',
+    rgstDt: '',
+    rgstId: '',
+    modiDt: '',
+    modiId: '',
+    featureRelTb: '',
+}
+export const protoTypeFeatureTempSaved: FeatureTemp = {
+    featureId: 'CFR_00000002',
+    featureTyp: 'Fact 지수',
+    featureSe: '',
+    featureLSe: '온라인행동',
+    featureMSe: '홈페이지',
+    featureNm: '홈페이지방문횟수(예매)',
+    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
+    calcUnt: '횟수',
+    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
+    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
+    enrUserId: '',
+    enrDeptCode: '',
+    delYn: '',
+    rgstDt: '',
+    rgstId: '',
+    modiDt: '',
+    modiId: '',
+    featureRelTb: '',
+}
+export const protoTypeFeatureTempInApproval: FeatureTemp = {
+    featureId: 'CFR_00000004',
+    featureTyp: 'Fact 지수',
+    featureSe: '',
+    featureLSe: '온라인행동',
+    featureMSe: '홈페이지',
+    featureNm: '홈페이지방문횟수(예매)',
+    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
+    calcUnt: '횟수',
+    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
+    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
+    enrUserId: '',
+    enrDeptCode: '',
+    delYn: '',
+    rgstDt: '',
+    rgstId: '',
+    modiDt: '',
+    modiId: '',
+    featureRelTb: '',
+}
+export const protoTypeFeatureTempApproved: FeatureTemp = {
+    featureId: 'CFR_00000005',
+    featureTyp: 'Fact 지수',
+    featureSe: '',
+    featureLSe: '온라인행동',
+    featureMSe: '홈페이지',
+    featureNm: '홈페이지방문횟수(예매)',
+    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
+    calcUnt: '횟수',
+    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
+    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
+    enrUserId: '',
+    enrDeptCode: '',
+    delYn: '',
+    rgstDt: '',
+    rgstId: '',
+    modiDt: '',
+    modiId: '',
+    featureRelTb: '',
+}
+export const protoTypeFeatureTempRejected: FeatureTemp = {
+    featureId: 'CFR_00000006',
+    featureTyp: 'Fact 지수',
+    featureSe: '',
+    featureLSe: '온라인행동',
+    featureMSe: '홈페이지',
+    featureNm: '홈페이지방문횟수(예매)',
+    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
+    calcUnt: '횟수',
+    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
+    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
+    enrUserId: '',
+    enrDeptCode: '',
+    delYn: '',
+    rgstDt: '',
+    rgstId: '',
+    modiDt: '',
+    modiId: '',
+    featureRelTb: '',
+}
+
+export const protoTypeTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
+    id: 0,
+    custFeatRuleId: '',
+    formula: 'T1',
+    frstRegDttm: '',
+    frstRegUserId: '',
+    lastUpdDttm: '',
+    lastUpdUserId: ''
+}
+
+export const protoTypeTbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt> = [
+    {
+        id: 0,
+        custFeatRuleId: '',
+        targetId: 'T1',
+        divisionCode: 'BEHV',
+        tableName: '[행동]대한항공 설치 테스트',
+        filterLogiOption: 'ALL',
+        filterLogiExpsn: '',
+        operator: 'distinct_count',
+        operand1: '',
+        columnName: '세션번호',
         frstRegDttm: '',
         frstRegUserId: '',
-        lastUpdDttm: '2023-11-06 13:52:11',
+        lastUpdDttm: '',
         lastUpdUserId: '',
-        category: '',
-        dataType: '',
-        sqlDirectInputYn: '',
-        frstRegUserNm: '',
-        lastUpdUserNm: '수정자6',
-        submissionStatus: 'inApproval',
-        metaTblId: '',
-        lastUpdLginId: '',
-        submissionStatusNm: '결재진행중',
+        operand2: '',
+        operand3: '',
+        operand4: '',
+        function: '',
+        variable1: '',
+        variable2: '',
+        variable3: '',
+        targetDataType: '',
     }
 ]
+
+export const protoTypeTbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgtFilter> = [
+    {
+        id: 0,
+        custFeatRuleTrgtId: 0,
+        custFeatRuleId: '',
+        targetId: 'T1',
+        filterId: '',
+        columnName: '페이지그룹구분',
+        columnDataTypeCode: '',
+        operator: 'match',
+        operand1: 'Booking',
+        operand2: '',
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        delimiter: '',
+        operand3: '',
+        operand4: '',
+        operand5: '',
+        operand6: '',
+        function: '',
+        variable1: '',
+        variable2: '',
+        variable3: '',
+    }
+]
+
+export const protoTypeTbCoMetaTbInfo: TbCoMetaTbInfo = {
+    metaTblId: 'L2_homepagebehv_B_id',
+    metaTblPhysNm: 'L2_homepagebehv_B',
+    metaTblLogiNm: 'L2_홈페이지행동_B',
+    metaTblDesc: 'L2_홈페이지행동_B',
+    dbNm: 'SelfFeature',
+    dataClaCd: '',
+    dataSrcDvCd: '',
+    keepCylcCd: '',
+    metaTblUseYn: '',
+    metaTblDvCd: '',
+    rtmTblYn: '',
+    topicId: '',
+    frstRegDttm: '',
+    frstRegUserId: '',
+    lastUpdDttm: '',
+    lastUpdUserId: '',
+}
+
+export const protoTypeTbCoMetaTblClmnList: Array<TbCoMetaTblClmnInfo> = [
+    {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepagebehv_B_id',
+        metaTblClmnId: 'L2_homepagebehv_B_clmn_id1',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '방문일',
+        metaTblClmnDesc: '방문일',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    },
+    {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepagebehv_B_id',
+        metaTblClmnId: 'L2_homepagebehv_B_clmn_id2',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '세션번호',
+        metaTblClmnDesc: '세션번호',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    },
+    {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepagebehv_B_id',
+        metaTblClmnId: 'L2_homepagebehv_B_clmn_id3',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '페이지그룹구분',
+        metaTblClmnDesc: '페이지그룹구분',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    },
+    {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepagebehv_B_id',
+        metaTblClmnId: 'L2_homepagebehv_B_clmn_id4',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '접속시간대',
+        metaTblClmnDesc: '접속시간대',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    },
+]
+
+export const protoTypeBehaviors: Array<Behavior> = [
+    {
+        metaTblId: 'L2_homepagebehv_B_id',
+        metaTblLogiNm: 'L2_홈페이지행동_B',
+        tbCoMetaTbInfo: protoTypeTbCoMetaTbInfo,
+        tbCoMetaTblClmnInfoList: protoTypeTbCoMetaTblClmnList,
+        rtmTblYn: '',
+    },
+]
+
+export const protoTypeAttributes: Array<Attribute> = [
+    {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepageattr_A_id',
+        metaTblClmnId: 'L2_homepageattr_A_clmn_id1',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '성별',
+        metaTblClmnDesc: '성별',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    }, {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepageattr_A_id',
+        metaTblClmnId: 'L2_homepageattr_A_clmn_id2',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '연령',
+        metaTblClmnDesc: '연령',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    }, {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepageattr_A_id',
+        metaTblClmnId: 'L2_homepageattr_A_clmn_id3',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '국적',
+        metaTblClmnDesc: '국적',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    }, {
+        rtmTblYn: '',
+        metaTblId: 'L2_homepageattr_A_id',
+        metaTblClmnId: 'L2_homepageattr_A_clmn_id4',
+        metaTblClmnPhysNm: '',
+        metaTblClmnLogiNm: '선호영역',
+        metaTblClmnDesc: '선호영역',
+        dtpCd: '',
+        dtpLenVal: '',
+        pkYn: '',
+        nullYn: '',
+        defltVal: '',
+        clmnUseYn: '',
+        clmnSortOrd: 0,
+        frstRegDttm: '',
+        frstRegUserId: '',
+        lastUpdDttm: '',
+        lastUpdUserId: '',
+        chgDtpCd: '',
+        dataFormat: '',
+        baseTimeYn: '',
+        maskingRuleCd: '',
+        dataTypeCategory: '',
+    }
+]
+
+export const protoTypeMstrSgmtTableandColMetaInfo: MstrSgmtTableandColMetaInfo = {
+    rslnRuleId: 'featureTest',
+    behaviors: protoTypeBehaviors,
+    attributes: protoTypeAttributes
+}

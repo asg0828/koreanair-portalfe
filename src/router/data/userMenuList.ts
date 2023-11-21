@@ -1,6 +1,6 @@
 const userMenuList = [
   {
-    name: 'BiZ 메타',
+    name: 'BIZ 메타',
     path: '/biz-meta',
     children: [
       {
@@ -60,14 +60,14 @@ const userMenuList = [
         children: [
           { name: 'Feature 등록', path: '/self-feature/self-feature/reg', children: [] },
           { name: 'Feature 상세', path: '/self-feature/self-feature/detail', children: [] },
-          { name: 'Feature 수정', path: '/self-feature/self-feature/edit', children: [] },
+          { name: 'Feature 등록', path: '/self-feature/self-feature/edit', children: [] },
         ],
       },
       {
-        name: 'Feature 승인 요청 목록',
+        name: 'Feature 결재 요청 목록',
         path: '/self-feature/submission-request',
         children: [
-          { name: 'Feature 승인 요청 상세', path: '/self-feature/submission-request/detail', children: [] },
+          { name: 'Feature 결재 요청 상세', path: '/self-feature/submission-request/detail', children: [] },
         ],
       },
     ],

@@ -83,7 +83,7 @@ const NoticeModal = ({ isOpen = false, onClose }: Props) => {
         <Stack className="width-100">
           <Checkbox label="오늘 하루 보지 않음" onCheckedChange={handleChecked} />
           <Stack justifyContent="End" className="width-100">
-            <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
+            <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
               확인
             </Button>
           </Stack>

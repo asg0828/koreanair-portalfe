@@ -29,7 +29,7 @@ import {
 import { 
     SfSubmissionRequestInfo,
 } from "@/models/selfFeature/FeatureSubmissionInfo"
-import { Method } from "@/utils/ApiUtil"
+import { Method, callApi } from "@/utils/ApiUtil"
 import {
     initApiRequest, 
     initCommonResponse, 
@@ -56,11 +56,11 @@ const SfSubmissionRequest = () => {
 
     const navigate = useNavigate()
 
-    const [ requestDateFrom, setRequestDateFrom ] = useState<string>('')
+    const [ requestDateFrom, setRequestDateFrom ] = useState<string>('2023-01-01')
     const [ requestDateTo, setRequestDateTo ] = useState<string>('')
 
     const [ search, setSearch ] = useState<SearchProps>({
-        type: "",
+        type: "CustomerFeature",
         status: "",
         title: "",
         requestDateFrom: "",
@@ -81,28 +81,27 @@ const SfSubmissionRequest = () => {
             query param :: type=&status=&referenceNo=&submissionNo=&requester=&title=&titleLike=&requestDateFrom=&requestDateTo=&approvalCompletionDateFrom=&approvalCompletionDateTo=
             body param  :: 
         */
-        let email = ''
         let config = cloneDeep(initConfig)
         config.isLoarding = true
         let request = cloneDeep(initApiRequest)
         request.method = Method.GET
-        request.url = `/api/v1/users/${email}/submissions`
+        request.url = `/api/v1/submissions`
         request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), search)
         console.log("[retrieveSubmissions] Request  :: ", request)
 
         let response = cloneDeep(initCommonResponse)
-        //response = await callApi(request)
+        response = await callApi(request)
         console.log("[retrieveSubmissions] Response :: ", response)
 
         setSfSubmissionList((state: Array<SfSubmissionRequestInfo>) => {
             let rtn = cloneDeep(state)
             let t = []
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 5; i++) {
                 let a = cloneDeep(initSfSubmissionRequestInfo)
-                a.type = "CustomerFeature"
+                a.type = "Rule-Design"
                 a.referenceNo = "custFeatRuleId"
-                a.title = `승인요청목록${i+1}`
-                a.status = "saved"
+                a.title = `결재요청목록${i+1}`
+                a.status = "결재진행중"
                 a.requesterName = "요청자"
                 let rd = new Date("2023-11-03T02:28:59.114Z")
                 a.requestDate = `${rd.getFullYear()}-${(rd.getMonth())}-${rd.getDate()+1} ${rd.getHours()}:${rd.getMinutes()}:${rd.getSeconds()}`
@@ -144,8 +143,8 @@ const SfSubmissionRequest = () => {
             <Stack direction="Vertical" gap="LG">
                 <HorizontalTable>
                     <TR>
-                        <TH align="center" colSpan={1}>요청 일자</TH>
-                        <TD colSpan={2}>
+                        <TH align="center" colSpan={0.905}>요청 일자</TH>
+                        <TD colSpan={2.5}>
                             <DatePicker
                                 value={requestDateFrom}
                                 appearance="Outline"
@@ -181,7 +180,7 @@ const SfSubmissionRequest = () => {
                             />
                         </TD>
                         <TH align="center" colSpan={1}>유형</TH>
-                        <TD colSpan={2}>
+                        <TD colSpan={1.7}>
                             <Select 
                                 appearance="Outline" 
                                 placeholder="전체" 
@@ -200,7 +199,7 @@ const SfSubmissionRequest = () => {
                             </Select>
                         </TD>
                         <TH align="center" colSpan={1}>상태</TH>
-                        <TD colSpan={2}>
+                        <TD colSpan={1}>
                             <Select 
                                 appearance="Outline" 
                                 placeholder="전체" 

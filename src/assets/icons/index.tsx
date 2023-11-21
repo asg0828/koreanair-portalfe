@@ -20,6 +20,14 @@ import UploadIcon from '@mui/icons-material/Upload';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import SearchOffOutlinedIcon from '@mui/icons-material/SearchOffOutlined';
 import TextSnippetOutlinedIcon from '@mui/icons-material/TextSnippetOutlined';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 export {
   SettingsOutlinedIcon,
@@ -44,4 +52,12 @@ export {
   HighlightOffIcon,
   SearchOffOutlinedIcon,
   TextSnippetOutlinedIcon,
+  KeyboardDoubleArrowDownIcon,
+  KeyboardDoubleArrowUpIcon,
+  AddIcon,
+  RemoveIcon,
+  AddCircleOutlineOutlinedIcon,
+  RemoveCircleOutlineOutlinedIcon,
+  FavoriteIcon,
+  ExpandLessIcon,
 };

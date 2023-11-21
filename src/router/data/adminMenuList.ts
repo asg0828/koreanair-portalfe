@@ -193,6 +193,39 @@ const adminMenulist = [
       },
     ],
   },
+  {
+    name: 'Feature 메타 관리',
+    path: '/admin/self-feature-meta-management',
+    children: [
+      {
+        name: 'Customer 메타 관리',
+        path: '/admin/self-feature-meta-management/customer-meta-management',
+        children: [
+          { 
+            name: 'Customer 메타 관리 상세', 
+            path: '/admin/self-feature-meta-management/customer-meta-management/detail', 
+            children: [] 
+          },
+          { 
+            name: 'Customer 메타 관리 등록', 
+            path: '/admin/self-feature-meta-management/customer-meta-management/reg', 
+            children: [] 
+          },
+        ],
+      },
+      {
+        name: 'Master Profile 관리',
+        path: '/admin/self-feature-meta-management/master-profile-management',
+        children: [
+          { 
+            name: 'Master Profile 관리 상세', 
+            path: '/admin/self-feature-meta-management/master-profile-management/detail', 
+            children: [] 
+          },
+        ],
+      },
+    ],
+  },
 ];
 
 export default adminMenulist;

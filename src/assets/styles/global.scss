@@ -57,6 +57,18 @@ svg {
   }
 }
 
+.hidden {
+  display: none !important;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+/* height */
+.height-200 { height: 200px; }
+.height-300 { height: 300px; }
+
 /* margin */
 .margin-top-8 { margin-top: 8px; }
 .margin-top-100 { margin-top: 100px; }
@@ -316,15 +328,80 @@ svg {
         font-size: 0.875rem;
       }
     }
+    .sc-kgOKUu.dldJrs{
+      position: relative;
+    }
     .answer{
       padding-left: 22px;
+      position: relative;
     }
     .answer::after{
       content: 'A.';
       display: inline-block;
       position: absolute;
-      left: 12px;
+      left: 1px;
+      top: -60px;
+      z-index: 1;
       font-size: 0.875rem;
     }
+  }
+}
+
+.no-data-wrap {
+  border-bottom: 1px solid rgb(218, 218, 218);
+  height: 240px;
+}
+.tree-wrap{
+  border-right: 1px solid #ddd;
+}
+.user-search{
+  min-width: 250px;
+}
+.user-seleted{
+  min-width: 500px;
+}
+.updown-btns{
+  padding: 10px 0;
+  button{
+    svg{
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+}
+.btn-reg, .btn-confirm{
+  height: 66px !important;
+}
+.btn-fav{
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  svg{
+    color: #ddd;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+  &.on{
+    svg{
+      color: #E72A40;
+    }
+  }
+}
+
+.verticalTable{
+  overflow-x: auto;
+}
+
+@media screen and (max-width: 1652px) {
+  #aside {
+    transform: unset !important;
+  }
+  #home,#main {
+    padding-left: calc(1.75rem + 170px) !important;
+  }
+  .home_icon_01, .home_icon_02, .home_icon_03 {
+    width: 70px !important;
+  }
+  .box1 h3{
+    font-size:1rem !important;
   }
 }

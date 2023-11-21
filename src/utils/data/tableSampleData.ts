@@ -1,5 +1,139 @@
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@components/ui';
+const userColumns = [
+  { headerName: 'NO.', field: 'column1', colSpan: 1 },
+  { headerName: '이메일', field: 'column2', colSpan: 2 },
+  { headerName: '성명', field: 'column3', colSpan: 2 },
+  { headerName: '사번', field: 'column4', colSpan: 2 },
+  { headerName: '부서명', field: 'column5', colSpan: 2 },
+  { headerName: '회사명', field: 'column6', colSpan: 2 },
+  { headerName: '사용자권한', field: 'column7', colSpan: 2 },
+  { headerName: '사용기간', field: 'column8', colSpan: 3 },
+  { headerName: '최종접속기간', field: 'column9', colSpan: 3 },
+  { headerName: '재직구분', field: 'column10', colSpan: 1 },
+];
+
+const userRows = [
+  {
+    column1: '10',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '9',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '8',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '7',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '6',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '5',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '4',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '3',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '2',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+  {
+    column1: '1',
+    column2: 'abc@abc.co.kr',
+    column3: '홍길동',
+    column4: '123123',
+    column5: '마케팅팀',
+    column6: 'KBSYS',
+    column7: '사용자권한',
+    column8: '0000.00.00~0000.00.00',
+    column9: '0000.00.00~0000.00.00',
+    column10: 'Y',
+  },
+];
+
 
 const tableColumns = [
   { headerName: '물리명', field: 'column1', colSpan: 1 },
@@ -328,6 +462,77 @@ const popularRows = [
   },
 ];
 
+const authGroupColumns = [
+  { headerName: 'No', field: 'column1', colSpan: 1 },
+  { headerName: '권한그룹ID', field: 'column2', colSpan: 2 },
+  { headerName: '권한그룹명', field: 'column3', colSpan: 2 },
+  { headerName: '비고', field: 'column4', colSpan: 5 },
+];
+
+const authGroupRows = [
+  {
+    column1: '10',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '9',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '8',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '7',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '6',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '5',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '4',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '3',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '2',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+  {
+    column1: '1',
+    column2: 'admin',
+    column3: '관리자그룹',
+    column4: '관리자 권한입니다.',
+  },
+
+];
+
 const listColumns = [
   { headerName: 'No', field: 'column1', colSpan: 1 },
   { headerName: '제목', field: 'column2', colSpan: 7 },
@@ -418,6 +623,10 @@ const regRows = [
 ];
 
 export {
+  authGroupColumns, 
+  authGroupRows,
+  userColumns,
+  userRows,
   popularColumns,
   popularRows,
   interestColumns,

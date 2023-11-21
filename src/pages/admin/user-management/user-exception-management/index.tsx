@@ -5,7 +5,7 @@ import { Stack, Button, TextField, TR, TH, TD, Select, SelectOption } from '@com
 const List = () => {
   return (
     <>
-      <Stack>
+      <Stack alignItems="Start">
         <TreeMenuForm />
 
         <Stack direction="Vertical" className="height-100 width-50">
@@ -15,11 +15,15 @@ const List = () => {
               <TD><TextField disabled className="width-100" /></TD>
             </TR>
             <TR>
-              <TH>부서명</TH>
+              <TH>예외그룹명</TH>
               <TD><TextField className="width-100" /></TD>
             </TR>
             <TR>
-              <TH>부서순서</TH>
+              <TH>예외그룹순서</TH>
+              <TD><TextField disabled className="width-100" /></TD>
+            </TR>
+            <TR>
+              <TH>예외그룹코드</TH>
               <TD><TextField disabled className="width-100" /></TD>
             </TR>
             <TR>

@@ -1,5 +1,5 @@
-import { useRef, useState, useEffect, forwardRef, useImperativeHandle, ForwardedRef } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react';
 import './TinyEditor.scss';
 
 export interface TinyEditorProps {
@@ -10,16 +10,10 @@ export interface TinyEditorProps {
 
 const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content, disabled, onEditorChange }, ref) => {
   const editorRef = useRef<any>(null);
-  const [editorContent, setEditorContent] = useState(content);
-
-  useEffect(() => {
-    setEditorContent(content);
-  }, [content]);
 
   useImperativeHandle(ref, () => editorRef.current.editor);
 
   const handleEditorChange = (content: string, editor: any) => {
-    setEditorContent(content);
     onEditorChange && onEditorChange(content, editor);
   };
 
@@ -34,7 +28,7 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content,
       tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
       ref={editorRef}
       onLoadContent={initEditorContentStyle}
-      value={editorContent}
+      value={content}
       onEditorChange={handleEditorChange}
       disabled={disabled}
       init={{

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect';
 
-import { Button, Select, SelectOption, Stack, TextField, Typography } from '@components/ui'
+import { Button, Stack, Typography } from '@components/ui'
 import TransFunction from './TransFunction'
 
 import { 
@@ -10,27 +10,42 @@ import {
     TbRsCustFeatRuleTrgtFilter,
 } from '@/models/selfFeature/FeatureInfo'
 import { 
-    trgtFilterTit, 
-    operatorOption,
-    delimiterOption,
+    trgtFilterTit,
 } from '@/pages/user/self-feature/data'
+import OperatorOperand from '../OperatorOperand';
 
 const BehvColDropItem = ({
     itemIdx,
     isPossibleEdit,
     trgtFilterItem,
+    columnList,
     setTrgtFilterList,
     deleteTrgtFilterInfo,
 }: TargetDropFilterProps) => {
 
     const [ delimiterSelected, setDelimiterSelected ] = useState<Boolean>(false)
+    const [ slctDateType, setSlctDateType ] = useState<string>("")
 
     useEffect(() => {
 
-        if (trgtFilterItem.operator === "in_str" || trgtFilterItem.operator === "not_in_str") {
+        if (
+            trgtFilterItem.operator === "in_str" 
+            || trgtFilterItem.operator === "not_in_str" 
+            || trgtFilterItem.operator === "in_num" 
+            || trgtFilterItem.operator === "not_in_num"
+        ) {
             setDelimiterSelected(true)
         } else {
             setDelimiterSelected(false)
+        }
+
+        // 연산자가 날짜타입인 경우 초기 setting
+        if (
+            trgtFilterItem.operator === "before" 
+            || trgtFilterItem.operator === "after" 
+            || trgtFilterItem.operator === "between"
+        ) {
+            setSlctDateType(trgtFilterItem.operator)
         }
 
     }, [trgtFilterItem.operator])
@@ -44,7 +59,6 @@ const BehvColDropItem = ({
         
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
             updtTrgtFilterList[itemIdx][id] = value
             tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtFilterItem.targetId)
@@ -61,26 +75,48 @@ const BehvColDropItem = ({
     ) => {
         let keyNm = String(id)
         let v = String(value)
-        let t = false
+        let isClrDlmt = false // 구분자를 필요로 하지 않는 연산자 선택의 경우 초기화를 위한 flag
 
+        // 구분자 select box show를 위한 state 설정
         if (
             keyNm === "delimiter" 
-            || (keyNm === "operator" && (v === "in_str" || v === "not_in_str"))
+            || (keyNm === "operator" && (v === "in_str" || v === "not_in_str" || v === "in_num" || v === "not_in_num"))
         ) {
             setDelimiterSelected(true)
-            t = true
+            isClrDlmt = true
         } else {
             setDelimiterSelected(false)
-            t = false
+            isClrDlmt = false
+        }
+        // 날짜 타입 select box show를 위한 state 설정
+        if (keyNm === "operator" && (v === "before" || v === "after" || v === "between")) {
+            setSlctDateType(v)
+        }
+        // 날짜(between)의 경우 날짜/조건식 중 날짜 선택시 operand 초기화
+        let isOprdDate1 = false
+        let isOprdDate2 = false
+        if ((keyNm === "operand1" || keyNm === "operand4") && (v === "date" || v === "now")) {
+            isOprdDate1 = true
+            isOprdDate2 = true
+        } else {
+            isOprdDate1 = false
+            isOprdDate2 = false
         }
 
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
             updtTrgtFilterList[itemIdx][keyNm] = v
-            if (!t) {
+            if (!isClrDlmt) {
                 updtTrgtFilterList[itemIdx]["delimiter"] = ''
+            }
+            if (isOprdDate1) {
+                updtTrgtFilterList[itemIdx]["operand2"] = ''
+                updtTrgtFilterList[itemIdx]["operand3"] = ''
+            }
+            if (isOprdDate2) {
+                updtTrgtFilterList[itemIdx]["operand5"] = ''
+                updtTrgtFilterList[itemIdx]["operand6"] = ''
             }
             tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtFilterItem.targetId)
             tl = [...tl, ...updtTrgtFilterList]
@@ -108,63 +144,21 @@ const BehvColDropItem = ({
                 <TransFunction 
                     isPossibleEdit={isPossibleEdit}
                     itemIdx={itemIdx}
+                    dataType={trgtFilterItem.columnDataTypeCode}
                     trgtItem={trgtFilterItem}
-                    setTrgtFilterList={setTrgtFilterList!}
+                    columnList={columnList}
+                    setTrgtFilterList={setTrgtFilterList}
                 />
-                <Select 
-                    disabled={!isPossibleEdit}
-                    placeholder="연산자 선택" 
-                    appearance="Outline"
-                    value={trgtFilterItem.operator}
-                    shape="Square"
-                    size="MD"
-                    status="default"
-                    style={{
-                    width: '11.25rem'
-                    }}
-                    onChange={(
-                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                        value: SelectValue<{}, false>
-                    ) => {
-                        // 연산자 선택
-                        onchangeSelectHandler(e, value, "operator")
-                    }}
-                >
-                    {operatorOption.map((item, index) => (
-                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                    ))}
-                </Select>
-                {delimiterSelected &&
-                    <Select 
-                        disabled={!isPossibleEdit}
-                        placeholder="구분자 선택" 
-                        appearance="Outline"
-                        value={trgtFilterItem.delimiter}
-                        shape="Square"
-                        size="MD"
-                        status="default"
-                        style={{
-                        width: '11.25rem'
-                        }}
-                        onChange={(
-                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                            value: SelectValue<{}, false>
-                        ) => {
-                            // 구분자 선택
-                            onchangeSelectHandler(e, value, "delimiter")
-                        }}
-                    >
-                        {delimiterOption.map((item, index) => (
-                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                        ))}
-                    </Select>
-                }
-                <TextField 
-                    disabled={!isPossibleEdit}
-                    value={trgtFilterItem.operand1}
-                    placeholder="피연산자 입력"
-                    id="operand1"
-                    onChange={onchangeInputHandler}
+                <OperatorOperand
+                    isPossibleEdit={isPossibleEdit}
+                    itemIdx={itemIdx}
+                    item={trgtFilterItem}
+                    dataType={trgtFilterItem.columnDataTypeCode}
+                    delimiterSelected={delimiterSelected}
+                    slctDateType={slctDateType}
+                    setTrgtFilterList={setTrgtFilterList}
+                    onchangeInputHandler={onchangeInputHandler}
+                    onchangeSelectHandler={onchangeSelectHandler}
                 />
                 {isPossibleEdit ? (
                     <Button size="XS" onClick={onClickTrgtFilterDeleteHandler}>

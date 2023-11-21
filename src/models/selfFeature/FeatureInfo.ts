@@ -1,4 +1,5 @@
-import { RowsInfo } from "@/models/components/Table";
+import { RowsInfo } from "@/models/components/Table"
+import { SelectValue } from '@mui/base/useSelect'
 
 export interface TargetDropListProps {
     featStatus: string
@@ -7,6 +8,9 @@ export interface TargetDropListProps {
     trgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>
     setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+    attributes: Array<Attribute>
+    behaviors: Array<Behavior>
+    setFormulaTrgtList: React.Dispatch<React.SetStateAction<Array<FormulaTrgtListProps>>>
 }
 
 export interface TargetDropProps {
@@ -15,28 +19,34 @@ export interface TargetDropProps {
     setIsSelectAggregateTop?: React.Dispatch<React.SetStateAction<Boolean>>
     targetItem: TbRsCustFeatRuleTrgt
     trgtFilterList?: Array<TbRsCustFeatRuleTrgtFilter>
+    columnList?: Array<AggregateCol>
     setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     delTargetInfo: (delIdx: number, delTrgtId: string) => void
+    aggregateColList?: Array<TbCoMetaTblClmnInfo>
+    setFormulaTrgtList?: React.Dispatch<React.SetStateAction<Array<FormulaTrgtListProps>>>
 }
 
 export interface TargetDropFilterProps {
     itemIdx: number
     isPossibleEdit: Boolean
     trgtFilterItem: TbRsCustFeatRuleTrgtFilter
+    columnList?: Array<AggregateCol>
     setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     deleteTrgtFilterInfo: (idx: number) => void
 }
 
 export interface TargetDragProps {
     attrTblClmnInfo?: Attribute
+    metaTblLogiNm?: string
     behvTblClmnInfo?: TbCoMetaTblClmnInfo
 }
 
 export interface FeatCalcValidProps {
     featStatus: string 
+    isSelectAggregateTop?: Boolean
     setIsValidFormula?: React.Dispatch<React.SetStateAction<Boolean>>
-    formulaTrgtList: Array<string>
+    formulaTrgtList: Array<FormulaTrgtListProps>
     custFeatRuleCalc: TbRsCustFeatRuleCalc 
     custFeatRuleCaseList:  Array<TbRsCustFeatRuleCase>
     setCustFeatRuleCalc:  React.Dispatch<React.SetStateAction<TbRsCustFeatRuleCalc>>
@@ -52,7 +62,30 @@ export interface FormulaCaseProps {
     setCustFeatRuleCalc?: React.Dispatch<React.SetStateAction<TbRsCustFeatRuleCalc>>
     setCustFeatRuleCaseList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleCase>>>
     setIsValidFormula: React.Dispatch<React.SetStateAction<Boolean>>
-    formulaTrgtList: Array<string>
+    formulaTrgtList: Array<FormulaTrgtListProps>
+}
+
+export interface FormulaTrgtListProps {
+    targetId: string
+    dataType: string
+}
+
+export interface OperatorOperandProps {
+    isPossibleEdit: Boolean
+    trgtFormulaInput?: Boolean
+    itemIdx: number
+    item: TbRsCustFeatRuleTrgtFilter | TbRsCustFeatRuleCase | undefined
+    dataType: string
+    delimiterSelected: Boolean
+    slctDateType: string
+    setCustFeatRuleCaseList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleCase>>>
+    setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
+    onchangeInputHandler: (e: React.ChangeEvent<HTMLInputElement>) => void
+    onchangeSelectHandler: (
+        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+        value: SelectValue<{}, false>,
+        id?: String
+    ) => void
 }
 
 export interface TransFuncProps {
@@ -60,7 +93,9 @@ export interface TransFuncProps {
     onClose?: (isOpen: boolean) => void
     isPossibleEdit?: Boolean
     itemIdx: number
+    dataType: string
     trgtItem: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
+    columnList?: Array<AggregateCol>
     setTargetList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList?: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     setTransFuncChecked?: React.Dispatch<React.SetStateAction<boolean>>
@@ -73,6 +108,13 @@ export interface MstrSgmtTableandColMetaInfo {
     rslnRuleId: string,
     behaviors: Array<Behavior>,
     attributes: Array<Attribute>
+}
+
+export interface AggregateCol {
+    [key: string]: string
+    value: string
+    text: string
+    dataType: string
 }
 
 export interface Behavior {
@@ -288,6 +330,8 @@ export interface FeatureTemp {
     featureId: string //example: 피쳐ID
     featureTyp: string //example: 피쳐타입
     featureSe: string //example: 피쳐구분
+    featureLSe: string //example: 피쳐대구분
+    featureMSe: string //example: 피쳐중구분
     featureNm: string //example: 피쳐명
     featureEngNm: string //example: 피쳐영문명
     calcUnt: string //example: 산출단위
@@ -365,7 +409,7 @@ export interface TbRsCustFeatRuleTrgt {
     variable2: string,
     //example: 변수3(팝업)-속성데이터
     variable3: string,
-    //example: 대상 데이터 타입
+    //example: 대상 데이터 타입()
     targetDataType: string,
 }
 

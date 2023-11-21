@@ -1,5 +1,6 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ModalType, ModalInfo } from '@/models/components/Modal';
+import { ModalType } from '@/models/common/Constants';
+import { ModalInfo } from '@/models/components/Modal';
+import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: ModalInfo = {
   type: ModalType.NORMAL,
@@ -16,12 +17,17 @@ const modalSlice = createSlice({
   name: 'modal',
   initialState,
   reducers: {
-    openModal(state: ModalInfo, action: PayloadAction<ModalInfo>) {
-      return action.payload;
+    openModal(state: ModalInfo, action) {
+      state = action.payload;
+      state.isOpen = true;
+      return state;
     },
     closeModal(state: ModalInfo) {
       return initialState;
     },
   },
 });
-export default modalSlice;
+
+export const { openModal, closeModal } = modalSlice.actions;
+
+export default modalSlice.reducer;

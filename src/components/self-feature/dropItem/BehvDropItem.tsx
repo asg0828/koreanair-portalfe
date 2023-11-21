@@ -12,6 +12,8 @@ import {
     TbRsCustFeatRuleTrgtFilter,
     TbRsCustFeatRuleTrgt,
     TargetDropProps,
+    AggregateCol,
+    FormulaTrgtListProps,
 } from '@/models/selfFeature/FeatureInfo'
 import { 
     initTbCoMetaTblClmnInfo, 
@@ -19,17 +21,13 @@ import {
     trgtFilterTit, 
     divisionTypes,
     filterOption,
-    aggregateOption,
+    aggregateOptionNum,
+    aggregateOptionStrTim,
 } from "@/pages/user/self-feature/data"
 import {
+    ColDataType,
     ModalType,
 } from '@/models/selfFeature/FeatureCommon';
-
-const columnList = [
-    { value: 'colum1', text: 'colum1' },
-    { value: 'colum2', text: 'colum2' },
-    { value: 'colum3', text: 'colum3' },
-]
 
 const BehvDropItem = ({
     itemIdx,
@@ -40,10 +38,14 @@ const BehvDropItem = ({
     setTargetList,
     setTrgtFilterList,
     delTargetInfo,
+    aggregateColList,
+    setFormulaTrgtList,
 }: TargetDropProps) => {
 
     const [ filterExpsn, setFilterExpsn ] = useState<string>(cloneDeep(targetItem.filterLogiExpsn))
+    const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
     const [ aggregateTopSelect, setAggregateTopSelect ] = useState<Boolean>(false)
+    const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
 
     const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
     const [ modalType, setModalType ] = useState<string>("")
@@ -59,7 +61,6 @@ const BehvDropItem = ({
 
             setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                 let tl = cloneDeep(state)
-                // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                 if (tl[itemIdx].targetId === targetItem.targetId) {
                     tl[itemIdx]["operator"] = "top"
                     tl[itemIdx]["operand1"] = ''
@@ -112,6 +113,15 @@ const BehvDropItem = ({
         }
     }, [trgtFilterList])
 
+    useEffect(() => {
+        columnList.map((col: AggregateCol) => {
+            if (col.value === targetItem.columnName) {
+                setDataTypeCol(col.dataType)
+            }
+            return col
+        })
+    }, [targetItem.columnName])
+
     // 수정시 집계함수가 top인 경우
     useEffect(() => {
         if (targetItem.operator === "top") {
@@ -126,7 +136,6 @@ const BehvDropItem = ({
         setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let tl = cloneDeep(state)
             tl.map((trgt: TbRsCustFeatRuleTrgt) => {
-                // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
                 if (trgt.targetId === targetItem.targetId) {
                     trgt.filterLogiExpsn = filterExpsn
                 }
@@ -136,6 +145,20 @@ const BehvDropItem = ({
         })
     }, [filterExpsn])
 
+    useEffect(() => {
+        //columnList
+        let colList: Array<AggregateCol> = []
+        aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
+            let col = { value: "", text: "", dataType: "" }
+            col.value = colInfo.metaTblClmnPhysNm
+            col.text  = colInfo.metaTblClmnLogiNm
+            col.dataType = colInfo.dataTypeCategory
+            colList.push(col)
+            return colInfo
+        })
+        setColumnList(colList)
+    }, [aggregateColList])
+
     const [, behvDrop] = useDrop(() => ({
         accept: divisionTypes.BEHV,
         drop(item, monitor) {
@@ -143,11 +166,12 @@ const BehvDropItem = ({
 
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
-                // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
-                let targetId = cloneDeep(targetItem.targetId)
-                let tableId  = targetId.split('_')[0]
-
-                if (tableId !== targetObj.metaTblId) {
+                /*
+                let tableIdArr  = targetId.split('_')
+                tableIdArr.pop()
+                let tableId = tableIdArr.join('_')
+                */
+                if (targetItem.tableName !== targetObj.metaTblLogiNm) {
                     setModalType(ModalType.ALERT)
                     setConfirmModalTit("대상 선택")
                     setConfirmModalCont("같은 테이블 조건이 아닙니다.")
@@ -158,8 +182,9 @@ const BehvDropItem = ({
                 setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     let tl = cloneDeep(state)
                     let trgtFilter = initTbRsCustFeatRuleTrgtFilter
-                    trgtFilter.targetId  = targetId // 고정
+                    trgtFilter.targetId  = targetItem.targetId // 고정
                     trgtFilter.columnName = targetObj.metaTblClmnLogiNm
+                    trgtFilter.columnDataTypeCode = targetObj.dataTypeCategory
                     tl.push(trgtFilter)
                     return tl
                 })
@@ -200,8 +225,7 @@ const BehvDropItem = ({
         } else {
             setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                 let tl = cloneDeep(state)
-                tl.map((trgt: TbRsCustFeatRuleTrgt) => {
-                    // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
+                tl = tl.map((trgt: TbRsCustFeatRuleTrgt) => {
                     if (trgt.targetId === targetItem.targetId) {
                         trgt[id] = value
                     }
@@ -222,6 +246,24 @@ const BehvDropItem = ({
 
         if (keyNm === "columnName" || keyNm === "filterLogiOption") {
             t = true
+            if (keyNm === "columnName") {
+                let colDtp = ""
+                columnList.map((col: AggregateCol) => {
+                    if (col.value === v) {
+                        colDtp = col.dataType
+                        setDataTypeCol(col.dataType)
+                    }
+                    return col
+                })
+                // 선택한 집계 컬럼 타입에 따라 case target validation을 위한 값 변경
+                setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
+                    let tl = cloneDeep(state)
+                    if (tl[itemIdx].targetId === targetItem.targetId) {
+                        tl[itemIdx].targetDataType = colDtp
+                    }
+                    return tl
+                })
+            }
         } else if (keyNm === "operator") {
             if (v === "top") {
                 setModalType(ModalType.CONFIRM)
@@ -234,6 +276,21 @@ const BehvDropItem = ({
                 // 우측 drag 영역 삭제 여부 - 집계함수가 top이 아닌 경우는 drag list 노출
                 setIsSelectAggregateTop && setIsSelectAggregateTop(false)
             }
+            // 선택한 집계함수의 결과에 따라 case target validation을 위한 값 변경
+            setFormulaTrgtList && setFormulaTrgtList((ftl: Array<FormulaTrgtListProps>) => {
+                let rtn = cloneDeep(ftl)
+                rtn = rtn.map((ft: FormulaTrgtListProps) => {
+                    if (ft.targetId === targetItem.targetId) {
+                        if (v === "count" || v === "distinct_count") {
+                            ft.dataType = ColDataType.NUM
+                        } else {
+                            ft.dataType = targetItem.targetDataType
+                        }
+                    }
+                    return ft
+                })
+                return rtn
+            })
         } else if (
             keyNm === "operand1"
             || keyNm === "operand3"
@@ -247,7 +304,6 @@ const BehvDropItem = ({
 
         setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let tl = cloneDeep(state)
-            // target과 그에 해당하는 targetFilter의 인덱싱은 바뀔 수 있음.
             if (tl[itemIdx].targetId === targetItem.targetId) {
                 tl[itemIdx][keyNm] = v
                 if (!t) {
@@ -266,7 +322,7 @@ const BehvDropItem = ({
         <Stack 
             direction="Horizontal"
             justifyContent="Start" 
-            gap="SM" 
+            gap="MD" 
             className="width-100"
             style={{
                 backgroundColor: '#e6f9ff', 
@@ -281,7 +337,6 @@ const BehvDropItem = ({
                 gap="SM" 
                 className="width-100"
             >
-
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
@@ -293,89 +348,16 @@ const BehvDropItem = ({
                 >
                     <Typography variant="h6" style={{color:"inherit"}}>T{itemIdx + 1}</Typography>
                     <div className="dragItemLocation">
-                        행동
+                        BaseFact
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.29498 16.59L12.875 12L8.29498 7.41L9.70498 6L15.705 12L9.70498 18L8.29498 16.59Z" fill="currentColor"></path></svg>
                     </div>
                     <Typography variant="body2" style={{color:"inherit"}}>{targetItem.tableName}</Typography>
                 </Stack>
-                <Stack
-                    direction="Vertical"
-                    justifyContent="Start" 
-                    gap="SM" 
-                    className="width-100"
-                    style={{
-                        border:"1px solid rgb(218, 218, 218)",
-                        borderRadius: '5px',
-                    }}
-                >   
-                    <Stack
-                        direction="Horizontal"
-                        justifyContent="Between" 
-                        gap="SM" 
-                        className="width-100"
-                        style={{padding:"0.5rem"}}
-                    >
-                        <Stack gap="SM">
-                            <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
-                            <TextField 
-                                disabled={!isPossibleEdit}
-                                placeholder="논리 표현식" 
-                                value={filterExpsn}
-                                id="filterLogiExpsn"
-                                onChange={onchangeInputHandler}
-                            />
-                        </Stack>
-                        <Select
-                            disabled={!isPossibleEdit}
-                            appearance="Outline"
-                            value={targetItem.filterLogiOption}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                onchangeSelectHandler(e, value, "filterLogiOption")
-                            }}
-                        >
-                            {filterOption.map((item, index) => (
-                            <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                            ))}
-                        </Select>
-                    </Stack>
-                    <Stack
-                        direction="Horizontal"
-                        justifyContent="Start" 
-                        gap="SM" 
-                        className="width-100"
-                    >
-                        <Page
-                            ref={(behvDrop)}
-                            style={{
-                                border:"1px solid rgb(218, 218, 218)",
-                                borderRadius: '5px',
-                                padding:"0.5rem"
-                            }}
-                        >
-                            <Stack direction="Vertical" gap="SM">
-                            {(trgtFilterList && setTrgtFilterList) && 
-                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
-                                <BehvColDropItem 
-                                    key={`behvCol-${index}`}
-                                    itemIdx={index}
-                                    isPossibleEdit={isPossibleEdit}
-                                    trgtFilterItem={trgtFilterItem}
-                                    setTrgtFilterList={setTrgtFilterList}
-                                    deleteTrgtFilterInfo={deleteTrgtFilterInfo}
-                                />
-                            ))}
-                            </Stack>
-                        </Page>
-                    </Stack>
-                </Stack>
-
+                <Typography variant="h6" style={{color:"inherit"}}>SELECT</Typography>
                 <Stack
                     direction="Horizontal"
                     justifyContent="Start" 
-                    gap="SM" 
+                    gap="MD" 
                     className="width-100"
                     style={{
                         marginBottom: '1%',
@@ -422,7 +404,10 @@ const BehvDropItem = ({
                             onchangeSelectHandler(e, value, "operator")
                         }}
                     >
-                        {aggregateOption.map((item, index) => (
+                        {dataTypeCol === ColDataType.NUM && aggregateOptionNum.map((item, index) => (
+                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                        ))}
+                        {dataTypeCol !== ColDataType.NUM && aggregateOptionStrTim.map((item, index) => (
                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                         ))}
                     </Select>
@@ -451,6 +436,7 @@ const BehvDropItem = ({
                             <SelectOption value="last">last</SelectOption>
                         </Select>
                         <TextField 
+                            type="number"
                             disabled={!isPossibleEdit}
                             value={targetItem.operand2}
                             placeholder="Top 숫자 입력"
@@ -504,6 +490,84 @@ const BehvDropItem = ({
                         </Select>
                         </>
                     }
+                </Stack>
+                <Typography variant="h6" style={{color:"inherit"}}>WHERE</Typography>
+                <Stack
+                    direction="Vertical"
+                    justifyContent="Start" 
+                    gap="SM" 
+                    className="width-100"
+                    style={{
+                        border:"1px solid rgb(218, 218, 218)",
+                        borderRadius: '5px',
+                    }}
+                >   
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Between" 
+                        gap="SM" 
+                        className="width-100"
+                        style={{padding:"0.5rem"}}
+                    >
+                        <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
+                        <Stack gap="SM" justifyContent="end">
+                            <TextField 
+                                disabled={!isPossibleEdit}
+                                placeholder="논리 표현식" 
+                                value={filterExpsn}
+                                id="filterLogiExpsn"
+                                onChange={onchangeInputHandler}
+                            />
+                            <Select
+                                disabled={!isPossibleEdit}
+                                appearance="Outline"
+                                value={targetItem.filterLogiOption}
+                                style={{
+                                width: '16rem'
+                                }}
+                                onChange={(
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
+                                ) => {
+                                    onchangeSelectHandler(e, value, "filterLogiOption")
+                                }}
+                            >
+                                {filterOption.map((item, index) => (
+                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                ))}
+                            </Select>
+                        </Stack>
+                    </Stack>
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Start" 
+                        gap="SM" 
+                        className="width-100"
+                    >
+                        <Page
+                            ref={(behvDrop)}
+                            style={{
+                                border:"3px solid rgb(218, 218, 218)",
+                                borderRadius: '8px',
+                                padding:"0.8rem"
+                            }}
+                        >
+                            <Stack direction="Vertical" gap="SM">
+                            {(trgtFilterList && setTrgtFilterList) && 
+                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
+                                <BehvColDropItem 
+                                    key={`behvCol-${index}`}
+                                    itemIdx={index}
+                                    isPossibleEdit={isPossibleEdit}
+                                    trgtFilterItem={trgtFilterItem}
+                                    columnList={columnList}
+                                    setTrgtFilterList={setTrgtFilterList}
+                                    deleteTrgtFilterInfo={deleteTrgtFilterInfo}
+                                />
+                            ))}
+                            </Stack>
+                        </Page>
+                    </Stack>
                 </Stack>
             </Stack>
             

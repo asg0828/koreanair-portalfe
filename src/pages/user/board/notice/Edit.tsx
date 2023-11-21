@@ -5,8 +5,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
-import useModal, { ModalType } from '@/hooks/useModal';
-import { UpdatedNoticeInfo } from '@/models/Board/Notice';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { UpdatedNoticeModel } from '@/models/model/NoticeModel';
+import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, DatePicker, Label, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -14,19 +16,19 @@ import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
-  const { openModal } = useModal();
+  const location = useLocation();
   const noticeId = location?.state?.noticeId;
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    control,
     formState: { errors },
-  } = useForm<UpdatedNoticeInfo>({
+  } = useForm<UpdatedNoticeModel>({
     mode: 'onChange',
     defaultValues: {
       noticeId: noticeId,
@@ -43,22 +45,24 @@ const Edit = () => {
   const { data: response, isSuccess, isError } = useNoticeById(values.noticeId);
   const {
     data: uResponse,
-    mutate,
     isSuccess: uIsSuccess,
     isError: uIsError,
+    mutate,
   } = useUpdateNotice(values.noticeId, values);
 
   const goToList = () => {
     navigate('..');
   };
 
-  const onSubmit = (data: UpdatedNoticeInfo) => {
-    openModal({
-      type: ModalType.CONFIRM,
-      title: '수정',
-      content: '수정하시겠습니까?',
-      onConfirm: mutate,
-    });
+  const onSubmit = (data: UpdatedNoticeModel) => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: ModalTitle.MODIFY,
+        content: '수정하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   useEffect(() => {
@@ -76,7 +80,7 @@ const Edit = () => {
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     }
@@ -85,12 +89,12 @@ const Edit = () => {
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
-        type: 'Error',
+        type: ValidType.ERROR,
         content: '수정 중 에러가 발생했습니다.',
       });
     } else if (uIsSuccess) {
       toast({
-        type: 'Confirm',
+        type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
       navigate('..');
@@ -126,20 +130,22 @@ const Edit = () => {
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
-                  {...register('sj', { required: 'subject is required.' })}
+                  {...register('sj', {
+                    required: { value: true, message: 'subject is required.' },
+                    maxLength: { value: 100, message: 'max length exceeded' },
+                  })}
                   validation={errors?.sj?.message ? 'Error' : undefined}
+                  autoFocus
                 />
                 <ErrorLabel message={errors?.sj?.message} />
               </Stack>
             </TD>
           </TR>
-          <TR>
+          {/* <TR>
             <TH>팝업공지여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
-                <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
+              <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
             </TD>
             <TH>팝업공지일자</TH>
             <TD>
@@ -149,7 +155,7 @@ const Edit = () => {
                     name="startDt"
                     control={control}
                     rules={{
-                      required: 'start date is required.',
+                      required: { value: true, message: 'start date is required.' },
                       pattern: {
                         value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
                         message: 'start date is invalid.',
@@ -172,7 +178,7 @@ const Edit = () => {
                     name="endDt"
                     control={control}
                     rules={{
-                      required: 'end date is required.',
+                      required: { value: true, message: 'end date is required.' },
                       pattern: {
                         value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
                         message: 'end date is invalid.',
@@ -197,31 +203,17 @@ const Edit = () => {
                 </Stack>
               </Stack>
             </TD>
-          </TR>
+          </TR> */}
           <TR>
             <TH>게시여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-                <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
-              </Stack>
+            <TD align="left">
+              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
+              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
             </TD>
             <TH>중요여부</TH>
-            <TD>
-              <Stack gap="LG">
-                <Radio
-                  label="중요"
-                  value="Y"
-                  defaultChecked={values.importantYn === 'Y'}
-                  {...register('importantYn')}
-                />
-                <Radio
-                  label="일반"
-                  value="N"
-                  defaultChecked={values.importantYn === 'N'}
-                  {...register('importantYn')}
-                />
-              </Stack>
+            <TD align="left">
+              <Radio label="중요" value="Y" defaultChecked={values.importantYn === 'Y'} {...register('importantYn')} />
+              <Radio label="일반" value="N" defaultChecked={values.importantYn === 'N'} {...register('importantYn')} />
             </TD>
           </TR>
           <TR className="height-100">
@@ -233,7 +225,9 @@ const Edit = () => {
                 <Controller
                   name="cn"
                   control={control}
-                  rules={{ required: 'content is required.' }}
+                  rules={{
+                    required: { value: true, message: 'content is required.' },
+                  }}
                   render={({ field }) => (
                     <TinyEditor
                       ref={field.ref}

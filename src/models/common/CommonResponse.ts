@@ -1,6 +1,7 @@
 export default interface CommonResponse {
   successOrNot: string;
   statusCode: string;
+  result?: any;
   data?: any;
   header?: any;
   status?: number;

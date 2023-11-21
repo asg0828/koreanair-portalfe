@@ -1,7 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { MenuInfo, MenuItem } from '@/models/common/Menu';
+import { MenuItem } from '@/models/common/Menu';
 
-const initialState: MenuInfo = {
+export interface MenuState {
+  menuList: Array<MenuItem>;
+  isDropMenu: boolean;
+}
+
+const initialState: MenuState = {
   menuList: [],
   isDropMenu: false,
 };
@@ -10,12 +15,15 @@ const menuSlice = createSlice({
   name: 'menu',
   initialState,
   reducers: {
-    setMenuList(state: MenuInfo, action: PayloadAction<Array<MenuItem>>) {
+    setMenuList(state: MenuState, action) {
       state.menuList = action.payload;
     },
-    setIsDropMenu(state: MenuInfo, action: PayloadAction<boolean>) {
+    setIsDropMenu(state: MenuState, action) {
       state.isDropMenu = action.payload;
     },
   },
 });
-export default menuSlice;
+
+export const { setMenuList, setIsDropMenu } = menuSlice.actions;
+
+export default menuSlice.reducer;
