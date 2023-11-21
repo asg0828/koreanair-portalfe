@@ -27,6 +27,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOutlineOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 export {
@@ -59,5 +60,6 @@ export {
   AddCircleOutlineOutlinedIcon,
   RemoveCircleOutlineOutlinedIcon,
   FavoriteIcon,
+  FavoriteBorderIcon,
   ExpandLessIcon,
 };
