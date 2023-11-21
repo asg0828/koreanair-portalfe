@@ -1,10 +1,14 @@
-const MasterProfileList = () => {
+
+import {
+    Stack,
+} from '@components/ui'
+
+const MasterProfileManagement = () => {
     return (
-      <>
-        <h1>MasterProfileList 준비중인 페이지입니다.</h1>
-      </>
-    );
-  };
-  
-  export default MasterProfileList;
-  
+        <Stack>
+            
+        </Stack>
+    )
+}
+
+export default MasterProfileManagement

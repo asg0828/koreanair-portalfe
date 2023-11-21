@@ -27,7 +27,8 @@ import {
   TH, 
   TR, 
   TextField, 
-  Typography 
+  Typography, 
+  useToast
 } from '@components/ui'
 
 import { 
@@ -64,6 +65,8 @@ import {
 import { StatusCode } from "@/models/common/CommonResponse";
 import { SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionInfo";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
+import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/useSelfFeatureUserQueries";
+import { ValidType } from "@/models/common/Constants";
 
 const lCategory = [
   { value: '온라인행동', text: '온라인행동' },
@@ -79,8 +82,10 @@ const calcUnit = [
 
 const SelfFeatureEdit = () => {
 
-  const navigate = useNavigate()
+  const { toast } = useToast()
+  const { data: response1, isError: isError1, refetch: refetch1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 
+  const navigate = useNavigate()
   const location = useLocation()
 
   // update 데이터
@@ -248,31 +253,16 @@ const SelfFeatureEdit = () => {
     
   }, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc?.formula])
 
-  const getTableandColumnMetaInfoByMstrSgmtRuleId = async () => {
-    /*
-      Method      :: GET
-      Url         :: /api/v1/mastersegment/table-columns-meta-info
-      path param  :: {mstrSgmtRuleId}
-      query param :: 
-    */
-    let mstrSgmtRuleId = 'MS_0032'
-    let config = cloneDeep(initConfig)
-    config.isLoarding = true
-    let request = cloneDeep(initApiRequest)
-    request.method = Method.GET
-    request.url = `/api/v1/mastersegment/table-columns-meta-info/${mstrSgmtRuleId}`
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Request  :: ", request)
-
-    let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response header       :: ", response.header)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response statusCode   :: ", response.statusCode)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response status       :: ", response.status)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response successOrNot :: ", response.successOrNot)
-    console.log("[getTableandColumnMetaInfoByMstrSgmtRuleId] Response result       :: ", response.result)
-
-    if (response.statusCode === StatusCode.SUCCESS) {
-      setMstrSgmtTableandColMetaInfo(cloneDeep(response.result))
+  const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
+    if (isError1 || response1?.successOrNot === 'N') {
+      toast({
+      type: ValidType.ERROR,
+      content: '조회 중 에러가 발생했습니다.',
+      })
+    } else {
+      if (response1 && (response1.statusCode === StatusCode.SUCCESS)) {
+        setMstrSgmtTableandColMetaInfo(cloneDeep(response1.result))
+      }
     }
   }
 

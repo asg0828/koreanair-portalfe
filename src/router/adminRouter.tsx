@@ -43,6 +43,7 @@ import DataConversion from '@pages/admin/admin-report/data-conversion';
 import StructuredReportManagement from '@pages/admin/structured-report-management';
 import CustomerMetaManagement from '@/pages/admin/self-feature-meta-management/customer-meta-management';
 import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-management/customer-meta-management/Detail';
+import CustomerMetaManagementReg from '@/pages/admin/self-feature-meta-management/customer-meta-management/Reg';
 import MasterProfileManagement from '@/pages/admin/self-feature-meta-management/master-profile-management';
 import MasterProfileManagementDetail from '@/pages/admin/self-feature-meta-management/master-profile-management/Detail';
 import AdminHome from '@/pages/admin/AdminHome';
@@ -193,6 +194,7 @@ const adminRouter = [
             children: [
               { index: true, element: <CustomerMetaManagement /> },
               { path: 'detail', element: <CustomerMetaManagementDetail /> },
+              { path: 'reg', element: <CustomerMetaManagementReg /> },
             ],
           },
           {
