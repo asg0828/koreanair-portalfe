@@ -54,7 +54,7 @@ const Edit = () => {
       columnSpecs: [],
     },
   });
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove, update } = useFieldArray({
     control,
     name: 'columnSpecs',
   });
@@ -101,39 +101,8 @@ const Edit = () => {
       field: 'clFm',
       colSpan: 1.1,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
-        return (
-          <Stack gap="SM" className="width-100" direction="Vertical">
-            <Stack>
-              {(() => {
-                const Content = (
-                  <TextField
-                    multiline
-                    autoFocus
-                    className="width-100 height-300"
-                    {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
-                      required: { value: true, message: `${fieldName} is required.` },
-                      maxLength: maxLength && { value: maxLength, message: 'max length exceeded' },
-                    })}
-                    onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
-                  />
-                );
-
-                return (
-                  <Button
-                    className="width-100"
-                    appearance="Contained"
-                    onClick={() => openCalculationLogicModal(rowIndex, fieldName, Content)}
-                  >
-                    입력
-                  </Button>
-                );
-              })()}
-            </Stack>
-            <ErrorLabel message={errors?.columnSpecs?.[rowIndex]?.[fieldName]?.message} />
-          </Stack>
-        );
-      },
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
+        CalculationLogicItem(rowIndex, fieldName, maxLength),
     },
     {
       headerName: '',
@@ -167,15 +136,47 @@ const Edit = () => {
     );
   };
 
-  const openCalculationLogicModal = (rowIndex: number, fieldName: fieldType, content: any) => {
+  const CalculationLogicItem = (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
+    return (
+      <Stack gap="SM" className="width-100" direction="Vertical">
+        <Stack>
+          <TextField
+            multiline
+            className="hidden"
+            {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
+              required: { value: true, message: `${fieldName} is required.` },
+              maxLength: maxLength && { value: maxLength, message: 'max length exceeded' },
+            })}
+          />
+          <Button
+            className="width-100"
+            appearance="Contained"
+            onClick={() =>
+              openCalculationLogicModal(rowIndex, fieldName, getValues(`columnSpecs.${rowIndex}.${fieldName}`))
+            }
+          >
+            입력
+          </Button>
+        </Stack>
+        <ErrorLabel message={errors?.columnSpecs?.[rowIndex]?.[fieldName]?.message} />
+      </Stack>
+    );
+  };
+
+  const openCalculationLogicModal = (rowIndex: number, fieldName: fieldType, value: string) => {
     dispatch(
       openModal({
         type: ModalType.CALCULATION_LOGIC,
         title: '산출로직',
-        content: content,
-        onCancle: () => handleChangeRows(rowIndex, fieldName, ''),
+        content: values.columnSpecs[rowIndex][fieldName],
+        onConfirm: (value: string) => setValue(`columnSpecs.${rowIndex}.${fieldName}`, value),
+        onCancle: () => setValue(`columnSpecs.${rowIndex}.${fieldName}`, values.columnSpecs[rowIndex][fieldName]),
       })
     );
+  };
+
+  const goToList = () => {
+    navigate('..');
   };
 
   const handleAdd = () => {
@@ -186,23 +187,17 @@ const Edit = () => {
   };
 
   const handleRemove = (rowIndex: number) => {
-    if (rowIndex === 0) {
-    } else {
+    if (rowIndex !== 0) {
       const newRows = [...fields];
       newRows.splice(rowIndex, 1);
       setValue('columnSpecs', newRows);
     }
   };
 
-  const goToList = () => {
-    navigate('..');
-  };
-
   const handleChangeRows = (rowIndex: number, field: string, value: string) => {
-    const newRows = [...fields];
-    const row = newRows[rowIndex];
+    const row = fields[rowIndex];
     row[field as keyof typeof row] = value;
-    setValue('columnSpecs', newRows);
+    update(rowIndex, row);
   };
 
   const onSubmit = (data: UpdatedDatasetModel) => {
@@ -238,8 +233,6 @@ const Edit = () => {
       });
     }
   }, [isSuccess, response?.data, setValue, append]);
-
-  console.log('files: ', fields);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
