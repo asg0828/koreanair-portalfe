@@ -65,7 +65,7 @@ import {
 import { StatusCode } from "@/models/common/CommonResponse";
 import { SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionInfo";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
-import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/useSelfFeatureUserQueries";
+import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { ValidType } from "@/models/common/Constants";
 
 const lCategory = [

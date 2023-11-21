@@ -18,7 +18,7 @@ import {
 import { 
     useColAndCmmtList,
     useMetaTableList, 
-} from '@/hooks/queries/useSelfFeatureAdmQueries'
+} from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
 import { ValidType } from '@/models/common/Constants'
 import { useYn } from '@/pages/user/self-feature/data'
 

@@ -28,6 +28,20 @@ export const initCommonResponse: CommonResponse = {
     data: {},
 }
 
+// 공통 코드 명
+export const CommonCode = {
+    OPERATOR: "OPERATOR", 
+    FUNCTION: "FUNCTION", 
+    DATA_TYPE_CONV_CD: "DATA_TYPE_CONV_CD", 
+    FORMAT: "FORMAT"
+}
+
+// Rule ID
+export const RuleId = {
+    RESOLUTION: 'RS_0020',
+    MASTERPROF: 'MS_0032',
+}
+
 // 모달 타입
 export const ModalType = {
     ALERT: 'alert',

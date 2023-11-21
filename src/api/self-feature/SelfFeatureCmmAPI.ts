@@ -1,11 +1,11 @@
-import { SelfFeatureUserApiURL } from "@/models/common/ApiURL";
+import { SelfFeatureCmmApiURL } from "@/models/common/ApiURL";
 import { Service } from "@/models/common/Service";
 import { Method, callApi } from "@/utils/ApiUtil";
 
-export const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
+export const retrieveCommCodes = (params: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
-        url: `${SelfFeatureUserApiURL.FACT_BASEFACT}`,
+        url: `${SelfFeatureCmmApiURL.CODE}/${params}`,
         method: Method.GET,
     });
 }
