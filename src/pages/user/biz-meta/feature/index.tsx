@@ -1,28 +1,19 @@
+import { AddIcon, FavoriteBorderIcon, FavoriteIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
+import { useCreateUserFeature, useDeleteUserFeature } from '@/hooks/mutations/useUserFeatureMutations';
 import { useFeatureList, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
+import { useAppSelector } from '@/hooks/useRedux';
 import { ValidType, View } from '@/models/common/Constants';
+import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
+import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
+import { selectSessionInfo } from '@/reducers/authSlice';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-
-const columns = [
-  // <Button appearance="Unfilled" iconOnly priority="Normal" className="btn-fav on">
-  //   <FavoriteIcon />
-  // </Button>
-  { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
-  { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
-  { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
-  { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1 },
-  { headerName: '정의', field: 'featureDef', colSpan: 2 },
-  { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
-  { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
-];
 
 const initParams: FeatureParams = {
   featureSeGrp: '',
@@ -36,13 +27,57 @@ const initParams: FeatureParams = {
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
+  const [featureId, setFeatureId] = useState<string>('');
   const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
   const [params, setParams] = useState<FeatureParams>(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
+  const columns: Array<ColumnsInfo> = [
+    {
+      headerName: '',
+      field: '',
+      colSpan: 0.5,
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => (
+        <Stack
+          className="width-100 height-100"
+          justifyContent="Center"
+          onClick={(e) => {
+            e.stopPropagation();
+            toast({
+              type: ValidType.INFO,
+              content: '준비중인 기능입니다.',
+            });
+          }}
+        >
+          {/* <FavoriteIcon color="error" /> */}
+          <FavoriteBorderIcon color="action" />
+        </Stack>
+      ),
+    },
+    { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
+    { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
+    { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
+    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1 },
+    { headerName: '정의', field: 'featureDef', colSpan: 2 },
+    { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
+    { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
+  ];
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = useFeatureList(params, page);
   const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
+  const {
+    data: cResponse,
+    isSuccess: cIsSuccess,
+    isError: cIsError,
+    mutate: cMutate,
+  } = useCreateUserFeature(userId, featureId);
+  const {
+    data: dResponse,
+    isSuccess: dIsSuccess,
+    isError: dIsError,
+    mutate: dMutate,
+  } = useDeleteUserFeature(userId, featureId);
 
   const goToReg = () => {
     navigate(View.REG);
@@ -55,6 +90,14 @@ const List = () => {
       },
     });
   };
+
+  const handleAddUserFeature = () => {
+    cMutate();
+  }
+
+  const handleRemoveUserFeature = () => {
+    dMutate();
+  }
 
   const handleSearch = useCallback(() => {
     refetch();
@@ -129,6 +172,34 @@ const List = () => {
       }
     }
   }, [sResponse, sIsError, toast]);
+
+  useEffect(() => {
+    if (cIsError || cResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '추가 중 에러가 발생했습니다.',
+      });
+    } else if (cIsSuccess) {
+      toast({
+        type: ValidType.CONFIRM,
+        content: '추가되었습니다.',
+      });
+    }
+  }, [cResponse, cIsSuccess, cIsError, toast]);
+
+  useEffect(() => {
+    if (dIsError || dResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '삭제 중 에러가 발생했습니다.',
+      });
+    } else if (dIsSuccess) {
+      toast({
+        type: ValidType.CONFIRM,
+        content: '삭제되었습니다.',
+      });
+    }
+  }, [dResponse, dIsSuccess, dIsError, toast]);
 
   return (
     <>
@@ -246,7 +317,6 @@ const List = () => {
         page={page}
         onClick={goToDetail}
         onChange={handlePage}
-        rowSelection={() => {}}
         buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
             <AddIcon />

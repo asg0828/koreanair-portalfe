@@ -11,7 +11,7 @@ import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import { ExpandLessIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';

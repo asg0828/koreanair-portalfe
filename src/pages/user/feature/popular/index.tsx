@@ -1,7 +1,7 @@
 import DataGrid from '@/components/grid/DataGrid';
 import { popularColumns as columns, popularRows as rows } from '@/utils/data/tableSampleData';
 import { Button, Tooltip } from '@components/ui';
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import { FavoriteIcon } from '@/assets/icons';
 
 const List = () => {
   return (

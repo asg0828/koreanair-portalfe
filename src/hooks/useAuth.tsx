@@ -1,3 +1,4 @@
+import { useAppDispatch } from '@/hooks/useRedux';
 import SessionApis from '@api/common/SessionApis';
 import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
 import { SessionInfo, SessionRequest } from '@models/common/Session';
@@ -5,6 +6,7 @@ import SessionUtil from '@utils/SessionUtil';
 import { useEffect, useState } from 'react';
 
 const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequestInfo?: SessionRequest) => {
+  const dispatch = useAppDispatch();
   const [sessionInfo, setSessionInfo] = useState<SessionInfo>(sessionUtil.getSessionInfo());
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -23,7 +25,7 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
         }
       })();
     }
-  }, [sessionApis, sessionUtil, sessionRequestInfo, sessionInfo, isError]);
+  }, [sessionApis, sessionUtil, sessionRequestInfo, sessionInfo, isError, dispatch]);
 
   return { sessionInfo, isError };
 };

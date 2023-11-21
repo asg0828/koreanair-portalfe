@@ -185,7 +185,7 @@ export const transFuncCalcStr = ({
 
     } else if (funcType === "DATEADD") {
 
-        if (var1 === "") rtnStr += ', [단위]'
+        if (var1 === "") rtnStr += ', [형식]'
         else rtnStr += `, [${var1}]`
 
         if (var2 === "") rtnStr += ', [숫자])'
@@ -193,7 +193,7 @@ export const transFuncCalcStr = ({
 
     } else if (funcType === "DATEDIFF") {
 
-        if (var1 === "") rtnStr += ', [단위]'
+        if (var1 === "") rtnStr += ', [형식]'
         else rtnStr += `, [${var1}]`
 
         if (var2 === "") rtnStr += ', [시작 일자]'

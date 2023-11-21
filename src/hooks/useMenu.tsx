@@ -1,13 +1,14 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath } from '@/models/common/Constants';
-import { setMenuList } from '@/reducers/menuSlice';
+import { login, selectContextPath } from '@/reducers/authSlice';
+import { selectMenuList, setMenuList } from '@/reducers/menuSlice';
 import { SessionInfo, SessionRequest } from '@models/common/Session';
 import { useEffect, useState } from 'react';
 
 const useMenu = (sessionRequestInfo: SessionRequest, sessionInfo: SessionInfo) => {
   const dispatch = useAppDispatch();
-  const menuList = useAppSelector((state) => state.menu.menuList);
-  const contextPath = useAppSelector((state) => state.auth.contextPath);
+  const menuList = useAppSelector(selectMenuList());
+  const contextPath = useAppSelector(selectContextPath());
   const [routerList, setRouterList] = useState<Array<any>>([]);
 
   useEffect(() => {
@@ -30,6 +31,7 @@ const useMenu = (sessionRequestInfo: SessionRequest, sessionInfo: SessionInfo) =
         const resultMenuList = await import(`@router/data/${menuFileName}`).then((module) => module.default);
         const resultRouterList = await import(`@router/${routerFileName}`).then((module) => module.default);
         setRouterList(resultRouterList);
+        dispatch(login(sessionInfo));
         dispatch(setMenuList(resultMenuList));
       })();
     }

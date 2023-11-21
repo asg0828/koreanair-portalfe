@@ -1,9 +1,10 @@
 import { KeyboardArrowDownIcon, LogoutOutlinedIcon, MenuOutlinedIcon } from '@/assets/icons';
 import { Avatar, DropdownMenu, Page, Stack, Typography } from '@/components/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath, ModalTitle, ModalType } from '@/models/common/Constants';
+import { ContextPath, ModalType } from '@/models/common/Constants';
 import { MenuItem } from '@/models/common/Menu';
-import { setIsDropMenu } from '@/reducers/menuSlice';
+import { selectContextPath } from '@/reducers/authSlice';
+import { selectIsDropMenu, selectMenuList, setIsDropMenu } from '@/reducers/menuSlice';
 import { openModal } from '@/reducers/modalSlice';
 import SessionApis from '@api/common/SessionApis';
 import SessionUtil from '@utils/SessionUtil';
@@ -16,9 +17,9 @@ const Header = () => {
   const dispatch = useAppDispatch();
   const sessionApis = new SessionApis();
   const sessionUtil = new SessionUtil();
-  const isDropMenu = useAppSelector((state) => state.menu.isDropMenu);
-  const menuList = useAppSelector((state) => state.menu.menuList);
-  const contextPath = useAppSelector((state) => state.auth.contextPath);
+  const isDropMenu = useAppSelector(selectIsDropMenu());
+  const menuList = useAppSelector(selectMenuList());
+  const contextPath = useAppSelector(selectContextPath());
   const [activeIndex, setActiveIndex] = useState<number>(-1);
   const [subActiveIndex, setSubActiveIndex] = useState<number>(-1);
 
