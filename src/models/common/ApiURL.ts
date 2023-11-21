@@ -13,7 +13,7 @@ export enum PortalApiURL {
 }
 
 export enum SelfFeatureUserApiURL {
-  FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info/MS_0032',
+  FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
 }
 
 export enum SelfFeatureAdmApiURL {

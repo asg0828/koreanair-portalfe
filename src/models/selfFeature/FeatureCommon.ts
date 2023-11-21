@@ -28,6 +28,12 @@ export const initCommonResponse: CommonResponse = {
     data: {},
 }
 
+// Rule ID
+export const RuleId = {
+    RESOLUTION: 'RS_0020',
+    MASTERPROF: 'MS_0032',
+}
+
 // 모달 타입
 export const ModalType = {
     ALERT: 'alert',
