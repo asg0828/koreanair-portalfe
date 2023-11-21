@@ -61,12 +61,15 @@ import {
   ModalType,
   ModalTitCont,
   ColDataType,
+  CommonCode,
+  CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon';
 import { StatusCode } from "@/models/common/CommonResponse";
 import { SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionInfo";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { ValidType } from "@/models/common/Constants";
+import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 
 const lCategory = [
   { value: '온라인행동', text: '온라인행동' },
@@ -84,6 +87,11 @@ const SelfFeatureEdit = () => {
 
   const { toast } = useToast()
   const { data: response1, isError: isError1, refetch: refetch1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+  const { 
+    data: cmmCodeAggrRes, 
+    isError: cmmCodeAggrErr, 
+    refetch: cmmCodeAggrRefetch 
+} = useCommCodes(CommonCode.STAC_CALC_TYPE)
 
   const navigate = useNavigate()
   const location = useLocation()
@@ -192,13 +200,15 @@ const SelfFeatureEdit = () => {
     for (let i = 0; i < targetList.length; i++) {
       let t = { targetId: `T${i+1}`, dataType: "" }
       let dataType = targetList[i].targetDataType
-      // 집계함수 선택시 대상의 dataType 수정
-      if (
-        targetList[i].operator === "count"
-        || targetList[i].operator === "distinct_count"
-      ) {
-        dataType = ColDataType.NUM
-      }
+      cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
+        if (option.cdv === targetList[i].operator) {
+            dataType = option.attr1
+            if (dataType === "") {
+                dataType = targetList[i].targetDataType
+            }
+        }
+        return option
+      })
       t.dataType = dataType
 
       fList.push(t)

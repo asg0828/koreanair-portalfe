@@ -1,3 +1,4 @@
+import { RuleId } from "@/models/selfFeature/FeatureCommon";
 import { 
     FeatureInfo,
     TbRsCustFeatRuleCalc,
@@ -56,35 +57,6 @@ export const filterOption = [
     { value: 'ANY', text: '아래 조건중 하나라도 만족하는 경우' },
     { value: 'CUS', text: '조건 사이의 관계를 직접 입력' },
 ]
-// 변환식 함수(number)
-export const transFuncOtionNum = [
-    { value: '',    text: '선택' },
-    { value: 'NVL', text: 'NVL' },
-]
-// 변환식 함수(string)
-export const transFuncOtionStr = [
-    { value: '',          text: '선택' },
-    { value: 'NVL',       text: 'NVL' },
-    { value: 'SUBSTRING', text: 'Substring' },
-    { value: 'LENGTH',    text: 'Length' },
-    { value: 'CONCAT',    text: 'Concat' },
-    { value: 'TO_NUMBER', text: 'To Number' },
-]
-// 변환식 함수(string-Non concat)
-export const transFuncOtionStrNonConcat = [
-    { value: '',          text: '선택' },
-    { value: 'NVL',       text: 'NVL' },
-    { value: 'SUBSTRING', text: 'Substring' },
-    { value: 'LENGTH',    text: 'Length' },
-    { value: 'TO_NUMBER', text: 'To Number' },
-]
-// 변환식 함수(timstamp)
-export const transFuncOtionTim = [
-    { value: '',         text: '선택' },
-    { value: 'TO_CHAR',  text: 'To Char' },
-    { value: 'DATEADD',  text: 'Date Add' },
-    { value: 'DATEDIFF', text: 'Date Diff' },
-]
 // 변환식 timestamp(to char) 형식 옵션
 export const tsToCharOption = [
     { value: '',                    text: '선택' },
@@ -109,70 +81,6 @@ export const tsDtAddDiffOption = [
     { value: 'hh',                  text: 'Hour' },
     { value: 'mm',                  text: 'Minute' },
     { value: 'ss',                  text: 'Second' },
-]
-// 연산자 목록(number)
-export const operatorOptionNum = [
-    { value: '',           text: '선택' },
-    { value: '=',          text: 'Equal to' },
-    { value: '<>',         text: 'Not Equal to' },
-    { value: '>',          text: 'Greater Than' },
-    { value: '>=',         text: 'Greater or Equal' },
-    { value: '<',          text: 'Less Than' },
-    { value: '<=',         text: 'Less or Equal' },
-    { value: 'in_num',     text: 'In' },
-    { value: 'not_in_num', text: 'Not in' },
-]
-//Equal to(=) /  Not Equal to(<>) / Greater Than(>) / Greater or Equal(>=) / Less Than(<) / Less or Equal(<=) / In(in_num) / Not in(not_in_num)
-// 연산자 목록(string)
-export const operatorOptionStr = [
-    { value: '',                text: '선택' },
-    { value: 'match',           text: 'Match' },
-    { value: 'not match',       text: 'Not Match' },
-    { value: 'start with',      text: 'Start With' },
-    { value: 'not start with',  text: 'Not Start With' },
-    { value: 'in_str',          text: 'In' },
-    { value: 'not_in_str',      text: 'Not in' },
-    { value: 'contains',        text: 'Contains' },
-    { value: 'not contains',    text: 'Not Contains' },
-]
-// 연산자 목록(timestamp)
-export const operatorOptionTim = [
-    { value: '',        text: '선택' },
-    { value: 'before',  text: 'before' },
-    { value: 'after',   text: 'after' },
-    { value: 'between', text: 'between' },
-]
-// 구분자 목록(number type)
-export const delimiterOptionNum = [
-    { value: ',', text: ',' },
-]
-// 구분자 목록(string/timestamp type)
-export const delimiterOptionStrTim = [
-    { value: ',', text: ',' },
-    { value: '/', text: '/' },
-    { value: ':', text: ':' },
-]
-// 집계함수 목록(number)
-export const aggregateOptionNum = [
-    { value: 'count',           text: 'Count' },
-    { value: 'sum',           text: 'Sum' },
-    { value: 'max',             text: 'Max' },
-    { value: 'min',             text: 'Min' },
-    { value: 'distinct_count',  text: 'Distinct Count' },
-    { value: 'avg',           text: 'Avg' },
-    { value: 'first',           text: 'First' },
-    { value: 'last',            text: 'Last' },
-    { value: 'top',             text: 'Top' },
-]
-// 집계함수 목록(string, timestamp)
-export const aggregateOptionStrTim = [
-    { value: 'count',           text: 'Count' },
-    { value: 'max',             text: 'Max' },
-    { value: 'min',             text: 'Min' },
-    { value: 'distinct_count',  text: 'Distinct Count' },
-    { value: 'first',           text: 'First' },
-    { value: 'last',            text: 'Last' },
-    { value: 'top',             text: 'Top' },
 ]
 // Rule Design 등록/수정시 case문
 export const whenYn = [
@@ -250,7 +158,7 @@ export const initTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
 
 export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     id: 0,
-    custFeatRuleId: 'MS_0006',
+    custFeatRuleId: RuleId.MASTERPROF,
     targetId: '',
     divisionCode: '',
     tableName: '',
@@ -276,7 +184,7 @@ export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
 export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {
     id: 0,
     custFeatRuleTrgtId: 0,
-    custFeatRuleId: 'MS_0006',
+    custFeatRuleId: RuleId.MASTERPROF,
     targetId: '',
     filterId: '',
     columnName: '',

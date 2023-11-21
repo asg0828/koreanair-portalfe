@@ -13,7 +13,7 @@ export enum PortalApiURL {
 }
 
 export enum SelfFeatureCmmApiURL {
-  CODE = '/api/v1/commCode/retireveCommCodes'
+  CODE = '/api/v1/commCode/retrieveCommCodes'
 }
 
 export enum SelfFeatureUserApiURL {

@@ -12,14 +12,8 @@ import {
 } from '@/components/ui'
 
 import { OperatorOperandProps, TbRsCustFeatRuleCase, TbRsCustFeatRuleTrgtFilter } from "@/models/selfFeature/FeatureInfo"
-import {
-    operatorOptionNum,
-    operatorOptionStr,
-    operatorOptionTim,
-    delimiterOptionNum,
-    delimiterOptionStrTim,
-} from '@/pages/user/self-feature/data'
-import { ColDataType } from '@/models/selfFeature/FeatureCommon'
+import { ColDataType, CommonCode, CommonCodeInfo, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon'
+import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 
 const OperatorOperand = ({
     isPossibleEdit,
@@ -35,8 +29,63 @@ const OperatorOperand = ({
     onchangeSelectHandler,
 }: OperatorOperandProps) => {
 
+    const { 
+        data: cmmCodeOprtRes, 
+        isError: cmmCodeOprtErr, 
+        refetch: cmmCodeOprtRefetch 
+    } = useCommCodes(CommonCode.OPERATOR)
+    const { 
+        data: cmmCodeDlimRes, 
+        isError: cmmCodeDlimErr, 
+        refetch: cmmCodeDlimRefetch 
+    } = useCommCodes(CommonCode.SGMT_DELIMITER)
+    const { 
+        data: cmmCodeFrmtRes, 
+        isError: cmmCodeFrmtErr, 
+        refetch: cmmCodeFrmtRefetch 
+    } = useCommCodes(CommonCode.FORMAT)
+
+    const [ operatorOption, setOperatorOption ] = useState<Array<CommonCodeInfo>>([])
+    const [ delimiterOption, setDelimiterOption ] = useState<Array<CommonCodeInfo>>([])
+    const [ tsDateFormatOption, setTsDateFormatOption ] = useState<Array<CommonCodeInfo>>([])
+
     const [ oprd2DpValue, setOprd2DpValue ] = useState<string>("")
     const [ oprd5DpValue, setOprd5DpValue ] = useState<string>("")
+
+    useEffect(() => {
+        if (cmmCodeOprtRes) {
+            setOperatorOption((prevState: Array<CommonCodeInfo>) => {
+                let rtn = cloneDeep(prevState)
+                rtn = cmmCodeOprtRes.result.filter((v: CommonCodeInfo) => (dataType !== "" && v.attr1.includes(dataType)))
+                return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+            })
+        }
+        if (delimiterSelected) {
+            if (cmmCodeDlimRes) {
+                setDelimiterOption((prevState: Array<CommonCodeInfo>) => {
+                    let rtn = cloneDeep(prevState)
+                    rtn = cmmCodeDlimRes.result.filter((v: CommonCodeInfo) => {
+                        if (dataType !== "") {
+                            if ((dataType === ColDataType.NUM) && v.cdv === ",") return true
+                            else if (dataType !== ColDataType.NUM) return true
+                            else return false
+                        }
+                    })
+                    return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+                })
+            }
+        }
+    }, [dataType, delimiterSelected])
+
+    useEffect(() => {
+        if (cmmCodeFrmtRes) {
+            setTsDateFormatOption((prevState: Array<CommonCodeInfo>) => {
+                let rtn = cloneDeep(prevState)
+                rtn = cmmCodeFrmtRes.result.filter((v: CommonCodeInfo) => (v.attr1.includes("Y")))
+                return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+            })
+        }
+    }, [cmmCodeFrmtRes])
 
     useEffect(() => {
         if (!item) return
@@ -84,24 +133,12 @@ const OperatorOperand = ({
                 onchangeSelectHandler(e, value, "operator")
             }}
         >
-        {dataType === ColDataType.NUM &&
-            operatorOptionNum.map((item, index) => (
-                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-            ))
-        }
-        {dataType === ColDataType.STR &&
-            operatorOptionStr.map((item, index) => (
-                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-            ))
-        }
-        {dataType === ColDataType.TIME &&
-            operatorOptionTim.map((item, index) => (
-                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-            ))
-        }
-        {(dataType !== ColDataType.NUM && dataType !== ColDataType.STR && dataType !== ColDataType.TIME) &&
-            <SelectOption value="">연산자 선택</SelectOption>
-        }
+            {operatorOption.map((item, index) => (
+                <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+            ))}
+            {operatorOption.length < 1 &&
+                <SelectOption value="">연산자 선택</SelectOption>
+            }
         </Select>
         }
         {(!isPossibleEdit) &&
@@ -125,17 +162,10 @@ const OperatorOperand = ({
                 onchangeSelectHandler(e, value, "delimiter")
             }}
         >
-        {dataType === ColDataType.NUM &&
-            delimiterOptionNum.map((item, index) => (
-                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-            ))
-        }
-        {(dataType === ColDataType.STR || dataType === ColDataType.TIME) &&
-            delimiterOptionStrTim.map((item, index) => (
-                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-            ))
-        }
-        {(dataType !== ColDataType.NUM && dataType !== ColDataType.STR && dataType !== ColDataType.TIME) &&
+        {delimiterOption.map((item, index) => (
+            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+        ))}
+        {delimiterOption.length < 1 &&
             <SelectOption value="">구분자 선택</SelectOption>
         }
         </Select>
@@ -240,10 +270,12 @@ const OperatorOperand = ({
                 onchangeSelectHandler(e, value, "operand3")
             }}
         >
-            <SelectOption value="">기간 단위</SelectOption>
-            <SelectOption value="yyyy">Year</SelectOption>
-            <SelectOption value="MM">Month</SelectOption>
-            <SelectOption value="dd">Day</SelectOption>
+        {tsDateFormatOption.map((item, index) => (
+            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+        ))}
+        {tsDateFormatOption.length < 1 &&
+            <SelectOption value="">선택</SelectOption>
+        }
         </Select>
         </>
         }
@@ -342,10 +374,12 @@ const OperatorOperand = ({
                         onchangeSelectHandler(e, value, "operand3")
                     }}
                 >
-                    <SelectOption value="">기간 단위</SelectOption>
-                    <SelectOption value="yyyy">Year</SelectOption>
-                    <SelectOption value="MM">Month</SelectOption>
-                    <SelectOption value="dd">Day</SelectOption>
+                {tsDateFormatOption.map((item, index) => (
+                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                ))}
+                {tsDateFormatOption.length < 1 &&
+                    <SelectOption value="">선택</SelectOption>
+                }
                 </Select>
                 </>
                 }
@@ -432,10 +466,12 @@ const OperatorOperand = ({
                         onchangeSelectHandler(e, value, "operand6")
                     }}
                 >
-                    <SelectOption value="">기간 단위</SelectOption>
-                    <SelectOption value="yyyy">Year</SelectOption>
-                    <SelectOption value="MM">Month</SelectOption>
-                    <SelectOption value="dd">Day</SelectOption>
+                {tsDateFormatOption.map((item, index) => (
+                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                ))}
+                {tsDateFormatOption.length < 1 &&
+                    <SelectOption value="">선택</SelectOption>
+                }
                 </Select>
                 </>
                 }

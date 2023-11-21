@@ -53,6 +53,8 @@ import {
   ModalType,
   ModalTitCont,
   ColDataType,
+  CommonCodeInfo,
+  CommonCode,
 } from '@/models/selfFeature/FeatureCommon';
 import { 
   SfSubmissionApproval, 
@@ -64,10 +66,16 @@ import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
 import { StatusCode } from '@/models/common/CommonResponse';
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';
+import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 
 const SelfFeatureDetail = () => {
 
   const { toast } = useToast()
+  const { 
+    data: cmmCodeAggrRes, 
+    isError: cmmCodeAggrErr, 
+    refetch: cmmCodeAggrRefetch 
+} = useCommCodes(CommonCode.STAC_CALC_TYPE)
   const { data: response1, isError: isError1, refetch: refetch1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
   
   const location = useLocation()
@@ -161,12 +169,15 @@ const SelfFeatureDetail = () => {
     for (let i = 0; i < targetList.length; i++) {
       let t = { targetId: `T${i+1}`, dataType: "" }
       let dataType = targetList[i].targetDataType
-      if (
-        targetList[i].operator === "count"
-        || targetList[i].operator === "distinct_count"
-      ) {
-        dataType = ColDataType.NUM
-      }
+      cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
+        if (option.cdv === targetList[i].operator) {
+            dataType = option.attr1
+            if (dataType === "") {
+                dataType = targetList[i].targetDataType
+            }
+        }
+        return option
+      })
       t.dataType = dataType
 
       fList.push(t)
