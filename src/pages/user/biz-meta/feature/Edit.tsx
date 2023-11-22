@@ -25,8 +25,8 @@ const Reg = () => {
     control,
     getValues,
     setValue,
-    formState: { errors },
     watch,
+    formState: { errors },
   } = useForm<CreatedFeatureModel>({
     mode: 'onChange',
     defaultValues: {
@@ -55,7 +55,14 @@ const Reg = () => {
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: CreatedFeatureModel) => {

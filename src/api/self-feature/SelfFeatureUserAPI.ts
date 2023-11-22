@@ -1,7 +1,25 @@
 import { SelfFeatureUserApiURL } from "@/models/common/ApiURL";
 import { Service } from "@/models/common/Service";
-import { FeatureType, RuleId } from "@/models/selfFeature/FeatureCommon";
-import { Method, callApi } from "@/utils/ApiUtil";
+import { 
+    FeatureType, 
+    RuleId 
+} from "@/models/selfFeature/FeatureCommon";
+import { FeatListSrchProps } from "@/models/selfFeature/FeatureInfo";
+import { 
+    Method, 
+    callApi 
+} from "@/utils/ApiUtil";
+
+export const retrieveCustFeatRules = (qParams: FeatListSrchProps) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_LIST}`,
+        method: Method.GET,
+        params: {
+            queryParams: qParams
+        }
+    })
+}
 
 export const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     return callApi({

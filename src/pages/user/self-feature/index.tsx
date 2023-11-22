@@ -17,123 +17,101 @@ import {
   Select,
   SelectOption,
   Label,
+  useToast,
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
 import { AddIcon } from '@/assets/icons';
 
-import {  TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
+import {  FeatListSrchProps, TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
 import { 
   category,
   featListColumns as columns,
   submissionStatus,
 } from "./data";
-import { Method, callApi } from "@/utils/ApiUtil";
 import { StatusCode } from "@/models/common/CommonResponse"
 import {
   selfFeatPgPpNm,
-  initConfig,
-  initApiRequest,
-  initCommonResponse,
-  initQueryParams,
   subFeatStatus,
   RuleId,
 } from '@/models/selfFeature/FeatureCommon';
-
-export interface searchProps {
-  mstrSgmtRuleId: string
-  custFeatRuleName: string
-  category: string
-  useYn: string
-  submissionStatus: string
-}
+import { useCustFeatRules } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
+import { ValidType } from "@/models/common/Constants";
 
 const SelfFeature = () => {
 
+
   const navigate = useNavigate()
   const location = useLocation()
+  const { toast } = useToast()
 
-  const [ searchInfo, setSearchInfo ] = useState<searchProps>({
+  const [ searchInfo, setSearchInfo ] = useState<FeatListSrchProps>({
     mstrSgmtRuleId: RuleId.MASTERPROF,
     custFeatRuleName: '',
     category: '',
     useYn: '',
     submissionStatus: '',
   })
+  const { data: response, isError, refetch } = useCustFeatRules(searchInfo)
 
   const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
 
   const [ isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop ] = useState<boolean>(false)
 
   useEffect(() => {
-    // 공통 코드 API CALL && 초기 LIST 조회 API CALL -> useQuery 사용하기
     if (location.state) {
       if (location.state.submissionStatus === "reg") {
-        setSearchInfo((state: searchProps) => {
+        setSearchInfo((state: FeatListSrchProps) => {
           state.submissionStatus = subFeatStatus.SAVE
           return cloneDeep(state)
         })
       } else {
-        setSearchInfo((state: searchProps) => {
+        setSearchInfo((state: FeatListSrchProps) => {
           state.submissionStatus = location.state.submissionStatus
           return cloneDeep(state)
         })
       }
     }
-    retrieveCustFeatRules()
   }, [])
 
-  const retrieveCustFeatRules = async () => {
-    /*
-    Method      :: GET
-    Url         :: /api/v1/customerfeatures
-    path param  :: 
-    query param :: mstrSgmtRuleId=&custFeatRuleName=&useYn=&category=&submissionStatus=
-    body param  :: 
-    */
-    let config = cloneDeep(initConfig)
-    config.isLoarding = true
-    let request = cloneDeep(initApiRequest)
-    request.method = Method.GET
-    request.url = "/api/v1/customerfeatures"
-    request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), searchInfo)
-    console.log("[retrieveCustFeatRules] Request  :: ", request)
-
-    let response = cloneDeep(initCommonResponse)
-    response = await callApi(request)
-    console.log("[retrieveCustFeatRules] Response header       :: ", response.header)
-    console.log("[retrieveCustFeatRules] Response statusCode   :: ", response.statusCode)
-    console.log("[retrieveCustFeatRules] Response status       :: ", response.status)
-    console.log("[retrieveCustFeatRules] Response successOrNot :: ", response.successOrNot)
-    console.log("[retrieveCustFeatRules] Response result       :: ", response.result)
-
-    if (response.statusCode === StatusCode.SUCCESS) {
-      setSelfFeatureList(() => {
-        let rtn = cloneDeep(response.result)
-
-        rtn = rtn.map((sf: TbRsCustFeatRule) => {
-          let t = cloneDeep(sf)
-          if (
-            !t.submissionStatus
-            || t.submissionStatus === "" 
-            || t.submissionStatus === submissionStatus[1].value
-          ) {
-            t.submissionStatusNm = submissionStatus[1].text
-          } else if (
-            t.submissionStatus === "requested" 
-            || t.submissionStatus === submissionStatus[2].value
-          ) {
-            t.submissionStatusNm = submissionStatus[2].text
-          } else if (t.submissionStatus === submissionStatus[3].value) {
-            t.submissionStatusNm = submissionStatus[3].text
-          } else if (t.submissionStatus === submissionStatus[4].value) {
-            t.submissionStatusNm = submissionStatus[4].text
-          }
-          return t
-        })
-        return rtn
-      })
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+        toast({
+            type: ValidType.ERROR,
+            content: '조회 중 에러가 발생했습니다.',
+        });
+    } else {
+        if (response) {
+            console.log(response)
+            if (response.statusCode === StatusCode.SUCCESS) {
+              setSelfFeatureList(() => {
+                let rtn = cloneDeep(response.result)
+        
+                rtn = rtn.map((sf: TbRsCustFeatRule) => {
+                  let t = cloneDeep(sf)
+                  if (
+                    !t.submissionStatus
+                    || t.submissionStatus === "" 
+                    || t.submissionStatus === submissionStatus[1].value
+                  ) {
+                    t.submissionStatusNm = submissionStatus[1].text
+                  } else if (
+                    t.submissionStatus === "requested" 
+                    || t.submissionStatus === submissionStatus[2].value
+                  ) {
+                    t.submissionStatusNm = submissionStatus[2].text
+                  } else if (t.submissionStatus === submissionStatus[3].value) {
+                    t.submissionStatusNm = submissionStatus[3].text
+                  } else if (t.submissionStatus === submissionStatus[4].value) {
+                    t.submissionStatusNm = submissionStatus[4].text
+                  }
+                  return t
+                })
+                return rtn
+              })
+            }
+        }
     }
-  }
+  }, [response, isError, refetch, toast])
   
   const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
     if (pageNm === selfFeatPgPpNm.DETL) {
@@ -160,7 +138,7 @@ const SelfFeature = () => {
   }
   const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    retrieveCustFeatRules()
+    refetch()
   }
 
   return (

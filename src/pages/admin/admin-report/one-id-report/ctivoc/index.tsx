@@ -10,7 +10,7 @@ import DataGridChild from '@/components/grid/DataGridChild';
 export default function Ctivoc() {
   const today = new Date();
   const [searchInfo, setSearchInfo] = useState<ctiVocSearch>({
-    searchCri: 'one',
+    searchCri: 'tow',
     startDate: '',
     endDate: '',
   });

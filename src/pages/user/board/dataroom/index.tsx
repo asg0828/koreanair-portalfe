@@ -109,7 +109,7 @@ const List = () => {
           <TH colSpan={1} align="right">
             검색
           </TH>
-          <TD colSpan={3}>
+          <TD colSpan={5}>
             <Stack gap="SM" className="width-100">
               <Select
                 appearance="Outline"

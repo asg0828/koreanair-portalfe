@@ -57,7 +57,6 @@ const adminRouter = [
       {
         path: 'biz-meta-management',
         children: [
-          { index: true, element: <Feature /> },
           {
             id: '/biz-meta/feature',
             path: 'feature',
@@ -115,7 +114,6 @@ const adminRouter = [
       {
         path: 'user-management',
         children: [
-          { index: true, element: <UserManagement /> },
           {
             path: 'user-management',
             children: [
@@ -131,13 +129,11 @@ const adminRouter = [
       {
         path: 'user-portal-management',
         children: [
-          { index: true, element: <MenuManagement /> },
           { path: 'menu-management', element: <MenuManagement /> },
           { path: 'menu-auth-management', element: <MenuAuthManagement /> },
           {
             path: 'board-management',
             children: [
-              { index: true, element: <Notice /> },
               {
                 path: 'notice',
                 children: [
@@ -182,7 +178,6 @@ const adminRouter = [
       {
         path: 'admin-portal-management',
         children: [
-          { index: true, element: <AdminMenuManagement /> },
           { path: 'menu-management', element: <AdminMenuManagement /> },
           { path: 'auth-group-management', element: <AdminAuthGroupManagement /> },
           { path: 'admin-auth-management', element: <AdminAdminAuthManagement /> },
@@ -191,7 +186,6 @@ const adminRouter = [
       {
         path: 'self-feature-meta-management',
         children: [
-          { index: true, element: <CustomerMetaManagement /> },
           {
             path: 'customer-meta-management',
             children: [

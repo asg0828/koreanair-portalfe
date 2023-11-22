@@ -38,6 +38,13 @@ const CalculationLogicModal = ({
     setValue(value);
   };
 
+  const handleInputTab = (e: any) => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      setValue(value + '\t');
+    }
+  };
+
   useEffect(() => {
     content && setValue(content);
   }, [content]);
@@ -53,20 +60,21 @@ const CalculationLogicModal = ({
             disabled={disabled}
             className="width-100 height-300"
             onChange={(e) => handleChange(e.target.value)}
+            onKeyDown={handleInputTab}
             value={value}
           />
         </Modal.Body>
         <Modal.Footer>
           {disabled ? (
-            <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={handleConfirm}>
               확인
             </Button>
           ) : (
             <>
-              <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={handleConfirm}>
                 저장
               </Button>
-              <Button priority="Normal" appearance="Outline" onClick={handleCancle}>
+              <Button priority="Normal" appearance="Outline" size="LG" onClick={handleCancle}>
                 취소
               </Button>
             </>

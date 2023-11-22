@@ -71,6 +71,7 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
 
     setCheckedList(newCheckedList);
     isCheckbox && rowSelection(newCheckedList, row, index, checked);
+    console.log(rowSelection);
   };
 
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
@@ -96,13 +97,14 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
   const ChildColumnGird = ({ columns }: ChildColumnProps) => {
     return (
       <>
-        {columns.map((column: ColumnChild) =>
+        {columns.map((column: ColumnChild, index) =>
           !column.childName ? (
             <TH
               colSpan={column.colSpan ? column.colSpan : 1}
               className="height-100"
               style={{ borderLeft: '1px solid #DADADA' }}
               enableSort={enableSort}
+              onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
             >
               {column.headerName}
             </TH>
