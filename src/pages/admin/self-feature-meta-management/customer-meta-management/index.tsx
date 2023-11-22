@@ -38,7 +38,7 @@ export interface MetaTableData {
   topicId: string;
 }
 const metaTableColumn: Column[] = [
-  { headerName: 'NO', field: 'dataClaCd' },
+  { headerName: 'dataClaCd', field: 'dataClaCd' },
   { headerName: 'NO', field: 'dataSrcDvCd' },
   { headerName: 'NO', field: 'dbNm' },
   { headerName: 'NO', field: 'frstRegDttm' },
