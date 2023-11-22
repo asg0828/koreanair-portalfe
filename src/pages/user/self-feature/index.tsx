@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from "lodash";
 
@@ -22,7 +22,7 @@ import {
 import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
 import { AddIcon } from '@/assets/icons';
 
-import {  FeatListSrchProps, TbRsCustFeatRule } from '@/models/selfFeature/FeatureInfo'
+import {  FeatListSrchProps, TbRsCustFeatRule } from '@/models/selfFeature/FeatureModel'
 import { 
   category,
   featListColumns as columns,
@@ -31,7 +31,6 @@ import {
 import { StatusCode } from "@/models/common/CommonResponse"
 import {
   selfFeatPgPpNm,
-  subFeatStatus,
   RuleId,
 } from '@/models/selfFeature/FeatureCommon';
 import { useCustFeatRules } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
@@ -41,7 +40,6 @@ const SelfFeature = () => {
 
 
   const navigate = useNavigate()
-  const location = useLocation()
   const { toast } = useToast()
 
   const [ searchInfo, setSearchInfo ] = useState<FeatListSrchProps>({
@@ -56,22 +54,6 @@ const SelfFeature = () => {
   const [ selfFeatureList, setSelfFeatureList ] = useState<Array<TbRsCustFeatRule>>([])
 
   const [ isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop ] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (location.state) {
-      if (location.state.submissionStatus === "reg") {
-        setSearchInfo((state: FeatListSrchProps) => {
-          state.submissionStatus = subFeatStatus.SAVE
-          return cloneDeep(state)
-        })
-      } else {
-        setSearchInfo((state: FeatListSrchProps) => {
-          state.submissionStatus = location.state.submissionStatus
-          return cloneDeep(state)
-        })
-      }
-    }
-  }, [])
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

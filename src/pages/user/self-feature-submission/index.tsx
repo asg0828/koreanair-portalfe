@@ -28,7 +28,7 @@ import {
 } from './data'
 import { 
     SfSubmissionRequestInfo,
-} from "@/models/selfFeature/FeatureSubmissionInfo"
+} from "@/models/selfFeature/FeatureSubmissionModel"
 import { Method, callApi } from "@/utils/ApiUtil"
 import {
     initApiRequest, 

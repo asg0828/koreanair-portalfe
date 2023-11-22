@@ -14,7 +14,7 @@ import {
     TargetDropProps,
     AggregateCol,
     FormulaTrgtListProps,
-} from '@/models/selfFeature/FeatureInfo'
+} from '@/models/selfFeature/FeatureModel'
 import { 
     initTbCoMetaTblClmnInfo, 
     initTbRsCustFeatRuleTrgtFilter, 

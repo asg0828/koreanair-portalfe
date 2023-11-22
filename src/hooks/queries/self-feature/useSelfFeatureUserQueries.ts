@@ -8,7 +8,7 @@ import {
     retrieveReadSql, 
     retrieveSampleData, 
 } from "@/api/self-feature/SelfFeatureUserAPI"
-import { FeatListSrchProps } from "@/models/selfFeature/FeatureInfo"
+import { FeatListSrchProps } from "@/models/selfFeature/FeatureModel"
 
 export const useCustFeatRules = (qParams: FeatListSrchProps) => {
     return useQuery(['/cust-feat-rules'], () => retrieveCustFeatRules(qParams))

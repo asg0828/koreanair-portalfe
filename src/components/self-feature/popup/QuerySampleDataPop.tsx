@@ -20,17 +20,10 @@ import {
     useToast, 
 } from '@components/ui';
 
-import { FeatSampleData } from '@/models/selfFeature/FeatureInfo';
+import { FeatSampleData } from '@/models/selfFeature/FeatureModel';
 import { 
     querySampleDataListColumns as columns, 
 } from '@/pages/user/self-feature/data';
-import { Method, callApi } from '@/utils/ApiUtil';
-import {
-    initConfig,
-    initApiRequest,
-    initCommonResponse,
-    initQueryParams
-} from '@/models/selfFeature/FeatureCommon';
 import { useSampleData } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';
 

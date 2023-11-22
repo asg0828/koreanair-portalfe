@@ -18,7 +18,7 @@ import {
     ReadSql,
     FeatureTemp,
     TbRsCustFeatRuleSql,
-} from "@/models/selfFeature/FeatureInfo";
+} from "@/models/selfFeature/FeatureModel";
 
 // feature 목록 검색 조건 필터
 export const category = [
@@ -29,11 +29,6 @@ export const category = [
     { value: 'CASE', text: 'Case문 사용' },
     { value: 'COUNT', text: '건수' },
     { value: 'AVG', text: '평균' },
-]
-export const useYn = [
-    { value: '', text: '선택' },
-    { value: 'USE_Y', text: '사용' },
-    { value: 'USE_N', text: '미사용' },
 ]
 export const submissionStatus = [
     { value: '', text: '전체' },
@@ -56,31 +51,6 @@ export const filterOption = [
     { value: 'ALL', text: '아래 조건을 모두 만족하는 경우' },
     { value: 'ANY', text: '아래 조건중 하나라도 만족하는 경우' },
     { value: 'CUS', text: '조건 사이의 관계를 직접 입력' },
-]
-// 변환식 timestamp(to char) 형식 옵션
-export const tsToCharOption = [
-    { value: '',                    text: '선택' },
-    { value: 'yyyy',                text: 'Year' },
-    { value: 'MM',                  text: 'Month' },
-    { value: 'dd',                  text: 'Day' },
-    { value: 'hh',                  text: 'Hour' },
-    { value: 'HH',                  text: 'Hour(24)' },
-    { value: 'mm',                  text: 'Minute' },
-    { value: 'ss',                  text: 'Second' },
-    { value: 'yyyyMMdd',            text: 'YYYYMMDD' },
-    { value: 'yyyyMMddHHmmss',      text: 'YYYYMMDDHH24MISS' },
-    { value: 'yyyy-MM-dd',          text: 'YYYY-MM-DD' },
-    { value: 'yyyy-MM-dd HH:mm:ss', text: 'YYYY-MM-DD HH24:MI:SS' },
-]
-// 변환식 timestamp(date add / date diff) 단위 옵션
-export const tsDtAddDiffOption = [
-    { value: '',                    text: '선택' },
-    { value: 'yyyy',                text: 'Year' },
-    { value: 'MM',                  text: 'Month' },
-    { value: 'dd',                  text: 'Day' },
-    { value: 'hh',                  text: 'Hour' },
-    { value: 'mm',                  text: 'Minute' },
-    { value: 'ss',                  text: 'Second' },
 ]
 // Rule Design 등록/수정시 case문
 export const whenYn = [

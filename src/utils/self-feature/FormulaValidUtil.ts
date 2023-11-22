@@ -1,7 +1,7 @@
 // 계산식 validation 공통
 import { cloneDeep } from "lodash"
 
-import { FormulaTrgtListProps, FormulaValidRslt } from "@/models/selfFeature/FeatureInfo"
+import { FormulaTrgtListProps, FormulaValidRslt } from "@/models/selfFeature/FeatureModel"
 import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
 import { ColDataType } from "@/models/selfFeature/FeatureCommon"
 

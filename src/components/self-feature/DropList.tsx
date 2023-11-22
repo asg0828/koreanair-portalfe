@@ -15,7 +15,7 @@ import {
     TargetDropListProps,
     Behavior,
     AggregateCol, 
-} from '@/models/selfFeature/FeatureInfo'
+} from '@/models/selfFeature/FeatureModel'
 import { 
     initAttribute, 
     initTbCoMetaTblClmnInfo, 

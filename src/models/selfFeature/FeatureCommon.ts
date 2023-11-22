@@ -80,6 +80,12 @@ export const RuleId = {
     MASTERPROF: 'MS_0033',
 }
 
+export const useYn = [
+    { value: '', text: '선택' },
+    { value: 'Y', text: '사용' },
+    { value: 'N', text: '미사용' },
+]
+
 // Feature type
 export const FeatureType = {
     CUST: 'CustomerFeature',

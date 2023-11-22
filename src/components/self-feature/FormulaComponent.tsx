@@ -12,7 +12,7 @@ import {
     FormulaTrgtListProps,
     FormulaValidRslt,
     TbRsCustFeatRuleCalc,
-} from '@/models/selfFeature/FeatureInfo'
+} from '@/models/selfFeature/FeatureModel'
 import { 
     initFormulaValidRslt,
 } from '@/pages/user/self-feature/data'

@@ -22,7 +22,7 @@ import {
 import { 
     SfSubmissionApproval,
     SfSubmissionRequestInfo,
-} from "@/models/selfFeature/FeatureSubmissionInfo";
+} from "@/models/selfFeature/FeatureSubmissionModel";
 import { 
     initSfSubmissionRequestInfo,
     sfSubmissionApprovalListColumns as columns,
@@ -37,7 +37,7 @@ import {
     TbRsCustFeatRuleCase, 
     TbRsCustFeatRuleTrgt, 
     TbRsCustFeatRuleTrgtFilter,
-} from "@/models/selfFeature/FeatureInfo";
+} from "@/models/selfFeature/FeatureModel";
 import { 
     initMstrSgmtTableandColMetaInfo,
     initSelfFeatureInfo, 

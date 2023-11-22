@@ -29,7 +29,7 @@ import {
   TbRsCustFeatRuleSql, 
   TbRsCustFeatRuleTrgt, 
   TbRsCustFeatRuleTrgtFilter, 
-} from '@/models/selfFeature/FeatureInfo';
+} from '@/models/selfFeature/FeatureModel';
 import { 
   initFeatureTemp,
   initMstrSgmtTableandColMetaInfo,
@@ -58,7 +58,7 @@ import {
 import { 
   SfSubmissionApproval, 
   SfSubmissionRequestInfo 
-} from '@/models/selfFeature/FeatureSubmissionInfo';
+} from '@/models/selfFeature/FeatureSubmissionModel';
 import { Method, callApi } from '@/utils/ApiUtil';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
