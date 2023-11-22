@@ -26,7 +26,7 @@ import {
 import { 
     SfSubmissionAppendApproval, 
     SfSubmissionApproval 
-} from '@/models/selfFeature/FeatureSubmissionInfo'
+} from '@/models/selfFeature/FeatureSubmissionModel'
 import ConfirmModal from '@/components/modal/ConfirmModal'
 import { ModalTitCont, ModalType } from '@/models/selfFeature/FeatureCommon'
 import { useApproverCandidate } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'

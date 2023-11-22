@@ -8,7 +8,7 @@ import TransFunction from './TransFunction'
 import { 
     TargetDropFilterProps,
     TbRsCustFeatRuleTrgtFilter,
-} from '@/models/selfFeature/FeatureInfo'
+} from '@/models/selfFeature/FeatureModel'
 import { 
     trgtFilterTit,
 } from '@/pages/user/self-feature/data'

@@ -28,7 +28,7 @@ import {
     initConfig,
 } from '@/models/selfFeature/FeatureCommon'
 import ConfirmModal from '@/components/modal/ConfirmModal'
-import { SfSubmissionApproval } from '@/models/selfFeature/FeatureSubmissionInfo'
+import { SfSubmissionApproval } from '@/models/selfFeature/FeatureSubmissionModel'
 
 export interface SubRejectPopProps {
     isOpen?: boolean

@@ -3,14 +3,14 @@ import {
     retrieveMetaTableLists, 
     retrieveSchemaList, 
 } from '@/api/self-feature/SelfFeatureAdminAPI'
-import { CmSrchInfo } from '@/pages/admin/self-feature-meta-management/customer-meta-management'
+import { CustMetaListSrchInfo } from '@/models/selfFeature/FeatureAdmModel'
 import { useQuery } from '@tanstack/react-query'
 
 export const useColAndCmmtList = () => {
     return useQuery(['/col-and-cmmt/list'], () => retrieveColumnsAndComments())
 }
 
-export const useMetaTableList = (params: CmSrchInfo) => {
+export const useMetaTableList = (params: CustMetaListSrchInfo) => {
     return useQuery(['/meta-table/list'], () => retrieveMetaTableLists(params))
 }
 

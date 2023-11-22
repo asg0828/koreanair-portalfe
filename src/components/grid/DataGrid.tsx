@@ -52,8 +52,8 @@ const DataGrid: React.FC<DatagridProps> = ({
           value={pages.pageSize}
           onChange={(e, value) => value && handleChange('pageSize', value)}
         >
-          {pageSizeList.map((pageSize) => (
-            <SelectOption value={pageSize}>{`${pageSize} 건`}</SelectOption>
+          {pageSizeList.map((pageSize, index) => (
+            <SelectOption key={index} value={pageSize}>{`${pageSize} 건`}</SelectOption>
           ))}
         </Select>
       </Stack>

@@ -1,4 +1,4 @@
-import { SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionInfo"
+import { SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel"
 
 // Feature 승인 요청 리스트 table header
 export const sfSubmissionListColumns = [

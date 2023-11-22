@@ -15,7 +15,7 @@ import {
 import { 
     ApporvalListComponentProps,
     SfSubmissionApproval,
-} from "@/models/selfFeature/FeatureSubmissionInfo"
+} from "@/models/selfFeature/FeatureSubmissionModel"
 import {
     aprvSeqNm,
     sfSubmissionApprovalListColumns as columns,

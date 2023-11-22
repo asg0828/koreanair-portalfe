@@ -2,7 +2,7 @@ import { Button, Stack, Typography } from "@components/ui"
 import TransFunction from "./TransFunction"
 import { 
     TargetDropProps,
-} from "@/models/selfFeature/FeatureInfo"
+} from "@/models/selfFeature/FeatureModel"
 
 const FeatDropItem = ({
     itemIdx,

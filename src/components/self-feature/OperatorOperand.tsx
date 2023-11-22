@@ -11,7 +11,7 @@ import {
     Typography, 
 } from '@/components/ui'
 
-import { OperatorOperandProps, TbRsCustFeatRuleCase, TbRsCustFeatRuleTrgtFilter } from "@/models/selfFeature/FeatureInfo"
+import { OperatorOperandProps, TbRsCustFeatRuleCase, TbRsCustFeatRuleTrgtFilter } from "@/models/selfFeature/FeatureModel"
 import { ColDataType, CommonCode, CommonCodeInfo, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 

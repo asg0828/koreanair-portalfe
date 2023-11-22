@@ -9,7 +9,7 @@ import {
     FeatCalcValidProps,
     TbRsCustFeatRuleCalc,
     TbRsCustFeatRuleCase, 
-} from '@/models/selfFeature/FeatureInfo'
+} from '@/models/selfFeature/FeatureModel'
 import { 
     initTbRsCustFeatRuleCase, 
 } from '@/pages/user/self-feature/data';

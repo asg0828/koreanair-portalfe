@@ -24,7 +24,7 @@ import {
   FeatureTemp,
   TbRsCustFeatRuleSql,
   FormulaTrgtListProps,
-} from '@/models/selfFeature/FeatureInfo';
+} from '@/models/selfFeature/FeatureModel';
 import {
   initSelfFeatureInfo,
   initMstrSgmtTableandColMetaInfo,
@@ -48,7 +48,7 @@ import {
   CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon';
 import { StatusCode } from '@/models/common/CommonResponse';
-import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionInfo';
+import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel';
 import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data';
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';

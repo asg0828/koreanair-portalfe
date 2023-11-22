@@ -7,7 +7,7 @@ import TransFunction from "./TransFunction"
 
 import { 
     TargetDropProps,
-} from "@/models/selfFeature/FeatureInfo"
+} from "@/models/selfFeature/FeatureModel"
 
 const AttrDropItem = ({
     itemIdx,

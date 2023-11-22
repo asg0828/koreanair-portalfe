@@ -14,7 +14,7 @@ import {
     TbRsCustFeatRuleTrgt,
     TbRsCustFeatRuleTrgtFilter,
     TransFuncProps 
-} from "@/models/selfFeature/FeatureInfo"
+} from "@/models/selfFeature/FeatureModel"
 import { transFuncCalcStr } from "@/utils/self-feature/FormulaValidUtil"
 
 const TransFunction = ({

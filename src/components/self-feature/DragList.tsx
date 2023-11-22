@@ -6,7 +6,7 @@ import {
   Behavior,
   TbCoMetaTblClmnInfo,
   Attribute
-} from '@/models/selfFeature/FeatureInfo';
+} from '@/models/selfFeature/FeatureModel';
 import { useEffect, useState } from "react";
 import { cloneDeep } from "lodash";
 

@@ -21,7 +21,7 @@ import {
     useToast
 } from '@components/ui';
 
-import { FeatPrntCild } from '@/models/selfFeature/FeatureInfo';
+import { FeatPrntCild } from '@/models/selfFeature/FeatureModel';
 import { 
     initFeatPrntCild, 
     featPrntClidListColumns as columns 

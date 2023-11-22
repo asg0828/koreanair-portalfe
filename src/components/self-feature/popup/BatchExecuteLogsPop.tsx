@@ -20,17 +20,10 @@ import {
     useToast, 
 } from '@components/ui';
 
-import { BatchExecuteLog } from '@/models/selfFeature/FeatureInfo';
+import { BatchExecuteLog } from '@/models/selfFeature/FeatureModel';
 import { 
-    initBatchExecuteLog, 
     batchExecuteLogListColumns as columns, 
 } from '@/pages/user/self-feature/data';
-import { Method, callApi } from '@/utils/ApiUtil';
-import {
-    initConfig,
-    initApiRequest,
-    initCommonResponse
-} from '@/models/selfFeature/FeatureCommon';
 import { useBatchExecuteLogs } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';
 

@@ -1,6 +1,6 @@
 import { SelfFeatureAdmApiURL } from "@/models/common/ApiURL";
 import { Service } from "@/models/common/Service";
-import { CmSrchInfo } from "@/pages/admin/self-feature-meta-management/customer-meta-management";
+import { CustMetaListSrchInfo } from "@/models/selfFeature/FeatureAdmModel";
 import { Method, callApi } from "@/utils/ApiUtil";
 
 export const retrieveColumnsAndComments = () => {
@@ -11,7 +11,7 @@ export const retrieveColumnsAndComments = () => {
     });
 }
 
-export const retrieveMetaTableLists = (params: CmSrchInfo) => {
+export const retrieveMetaTableLists = (params: CustMetaListSrchInfo) => {
     return callApi({
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureAdmApiURL.META_TABLE_LIST}`,

@@ -6,7 +6,7 @@ import { Typography } from "@components/ui"
 import { 
     divisionTypes,
 } from '@/pages/user/self-feature/data'
-import { TargetDragProps } from "@/models/selfFeature/FeatureInfo"
+import { TargetDragProps } from "@/models/selfFeature/FeatureModel"
 
 const AttrDragItem = ({
     attrTblClmnInfo

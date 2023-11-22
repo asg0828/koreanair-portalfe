@@ -10,7 +10,7 @@ import {
     FormulaTrgtListProps, 
     FormulaValidRslt, 
     TbRsCustFeatRuleCase, 
-} from '@/models/selfFeature/FeatureInfo';
+} from '@/models/selfFeature/FeatureModel';
 import { 
     initFormulaValidRslt, 
     whenYn, 

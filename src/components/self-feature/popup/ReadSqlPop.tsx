@@ -22,7 +22,7 @@ import {
     useToast, 
 } from '@components/ui';
 
-import { ReadSql } from '@/models/selfFeature/FeatureInfo';
+import { ReadSql } from '@/models/selfFeature/FeatureModel';
 import { 
     initReadSql, 
 } from '@/pages/user/self-feature/data';

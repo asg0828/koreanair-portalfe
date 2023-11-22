@@ -22,15 +22,11 @@ import {
 import HorizontalTable from '@/components/table/HorizontalTable';
 
 import { 
-    tsDtAddDiffOption,
-    tsToCharOption, 
-} from '@/pages/user/self-feature/data';
-import { 
     AggregateCol,
     TbRsCustFeatRuleTrgt,
     TbRsCustFeatRuleTrgtFilter,
     TransFuncProps
-} from '@/models/selfFeature/FeatureInfo';
+} from '@/models/selfFeature/FeatureModel';
 import { transFuncCalcStr } from '@/utils/self-feature/FormulaValidUtil';
 import { ColDataType, CommonCode, CommonCodeInfo, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';

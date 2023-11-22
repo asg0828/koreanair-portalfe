@@ -4,7 +4,7 @@ import {
     FeatureType, 
     RuleId 
 } from "@/models/selfFeature/FeatureCommon";
-import { FeatListSrchProps } from "@/models/selfFeature/FeatureInfo";
+import { FeatListSrchProps } from "@/models/selfFeature/FeatureModel";
 import { 
     Method, 
     callApi 
