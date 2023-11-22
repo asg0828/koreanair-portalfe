@@ -41,7 +41,6 @@ const userRouter = [
   {
     path: 'biz-meta',
     children: [
-      { index: true, element: <Feature /> },
       {
         id: '/biz-meta/feature',
         path: 'feature',
@@ -83,7 +82,6 @@ const userRouter = [
   {
     path: 'self-feature',
     children: [
-      { index: true, element: <SelfFeature /> },
       {
         path: 'self-feature',
         children: [
@@ -113,7 +111,6 @@ const userRouter = [
   {
     path: 'board',
     children: [
-      { index: true, element: <Notice /> },
       {
         path: 'notice',
         children: [

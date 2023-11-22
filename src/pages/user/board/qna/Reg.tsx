@@ -40,7 +40,14 @@ const Reg = () => {
   const { data: response, isSuccess, isError, mutate } = useCreateQna(values);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: CreatedQnaModel) => {

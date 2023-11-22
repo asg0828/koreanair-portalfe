@@ -47,7 +47,14 @@ const Edit = () => {
   } = useUpdateDataroom(values.dataId, values);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: UpdatedDataroomModel) => {
