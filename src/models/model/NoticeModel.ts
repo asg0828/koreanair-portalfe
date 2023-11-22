@@ -1,11 +1,11 @@
-import { commonModel } from '@/models/model/CommonModel';
+import { CommonModel } from '@/models/model/CommonModel';
 
 export interface NoticeParams {
   searchConditions: string;
   searchTable: string;
 }
 
-export interface NoticeModel extends CreatedNoticeModel, commonModel {
+export interface NoticeModel extends CreatedNoticeModel, CommonModel {
   noticeId: string;
 }
 

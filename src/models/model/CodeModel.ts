@@ -1,6 +1,6 @@
-import { commonModel } from '@/models/model/CommonModel';
+import { CommonModel } from '@/models/model/CommonModel';
 
-export interface CodeModel extends commonModel {
+export interface CodeModel extends CommonModel {
   groupId: string;
   codeId: string;
   codeNm: string;
