@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import { useUpdateFeature } from '@/hooks/mutations/useFeatureMutations';
 import { useFeatureById, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedFeatureModel, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -25,8 +25,8 @@ const Reg = () => {
     control,
     getValues,
     setValue,
-    formState: { errors },
     watch,
+    formState: { errors },
   } = useForm<CreatedFeatureModel>({
     mode: 'onChange',
     defaultValues: {
@@ -55,14 +55,21 @@ const Reg = () => {
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: CreatedFeatureModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
+        title: '저장',
         content: '수정하시겠습니까?',
         onConfirm: mutate,
       })
@@ -171,7 +178,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureSeGrp?.message ? 'error' : undefined}
                         value={field.value}
                       >
@@ -202,7 +209,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureSe?.message ? 'error' : undefined}
                         value={field.value}
                       >
@@ -252,7 +259,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureTyp?.message ? 'error' : undefined}
                         value={field.value}
                       >

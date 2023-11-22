@@ -28,9 +28,47 @@ export const initCommonResponse: CommonResponse = {
     data: {},
 }
 
+export interface CommonCodeInfo {
+    [key: string]: string
+    attr1: string
+    attr2: string
+    attr3: string
+    attr4: string
+    attr5: string
+    cdv: string
+    cdvCntn: string
+    cdvNm: string
+    comCd: string
+    frstRegDttm: string
+    frstRegUserId: string
+    lastUpdDttm: string
+    lastUpdUserId: string
+    sortRank: string
+    useYn: string
+}
+export const initCommonCodeInfo: CommonCodeInfo = {
+    attr1 : '',
+    attr2 : '',
+    attr3 : '',
+    attr4 : '',
+    attr5 : '',
+    cdv : '',
+    cdvCntn : '',
+    cdvNm : '선택',
+    comCd : '',
+    frstRegDttm : '',
+    frstRegUserId : '',
+    lastUpdDttm : '',
+    lastUpdUserId : '',
+    sortRank : '',
+    useYn : 'Y',
+}
+
 // 공통 코드 명
 export const CommonCode = {
     OPERATOR: "OPERATOR", 
+    SGMT_DELIMITER: "SGMT_DELIMITER",
+    STAC_CALC_TYPE: "STAC_CALC_TYPE",
     FUNCTION: "FUNCTION", 
     DATA_TYPE_CONV_CD: "DATA_TYPE_CONV_CD", 
     FORMAT: "FORMAT"
@@ -39,7 +77,12 @@ export const CommonCode = {
 // Rule ID
 export const RuleId = {
     RESOLUTION: 'RS_0020',
-    MASTERPROF: 'MS_0032',
+    MASTERPROF: 'MS_0033',
+}
+
+// Feature type
+export const FeatureType = {
+    CUST: 'CustomerFeature',
 }
 
 // 모달 타입

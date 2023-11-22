@@ -8,7 +8,6 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import VerticalTable from '@/components/table/VerticalTable';
 import DropList from '@/components/self-feature/DropList';
 import CalcValid from '@/components/self-feature/CalcValid';
-//import SubmissionRequestPop from '@/components/self-feature-submission/popup/SubmissionRequestPop';
 import {
     TR,
     TH,
@@ -53,6 +52,8 @@ import {
   ModalType,
   ModalTitCont,
   ColDataType,
+  CommonCodeInfo,
+  CommonCode,
 } from '@/models/selfFeature/FeatureCommon';
 import { 
   SfSubmissionApproval, 
@@ -64,10 +65,16 @@ import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
 import { StatusCode } from '@/models/common/CommonResponse';
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';
+import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 
 const SelfFeatureDetail = () => {
 
   const { toast } = useToast()
+  const { 
+    data: cmmCodeAggrRes, 
+    isError: cmmCodeAggrErr, 
+    refetch: cmmCodeAggrRefetch 
+} = useCommCodes(CommonCode.STAC_CALC_TYPE)
   const { data: response1, isError: isError1, refetch: refetch1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
   
   const location = useLocation()
@@ -96,8 +103,6 @@ const SelfFeatureDetail = () => {
   // 승인 정보
   const [ sfSubmissionRequestData, setSfSubmissionRequestData ] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
   const [ sfSubmissionApprovalList, setSfSubmissionApprovalList ] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
-
-  //const [ isOpenSubmissionRequestPop, setIsOpenSubmissionRequestPop ] = useState<boolean>(false)
 
   useEffect(() => {
     // 초기 상세 정보 조회 API CALL
@@ -161,12 +166,15 @@ const SelfFeatureDetail = () => {
     for (let i = 0; i < targetList.length; i++) {
       let t = { targetId: `T${i+1}`, dataType: "" }
       let dataType = targetList[i].targetDataType
-      if (
-        targetList[i].operator === "count"
-        || targetList[i].operator === "distinct_count"
-      ) {
-        dataType = ColDataType.NUM
-      }
+      cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
+        if (option.cdv === targetList[i].operator) {
+            dataType = option.attr1
+            if (dataType === "") {
+                dataType = targetList[i].targetDataType
+            }
+        }
+        return option
+      })
       t.dataType = dataType
 
       fList.push(t)
@@ -175,7 +183,6 @@ const SelfFeatureDetail = () => {
   }, [targetList])
 
   const onClickPageMovHandler = (pageNm: string) => {
-    // else if (pageNm === selfFeatPgPpNm.SUBINFO || pageNm === selfFeatPgPpNm.SUBMCFRM) {setIsOpenSubmissionRequestPop(true)} 
     if (pageNm === selfFeatPgPpNm.LIST) {
       navigate('..')
     } else if (pageNm === selfFeatPgPpNm.EDIT) {
@@ -511,7 +518,9 @@ const SelfFeatureDetail = () => {
   return (
     <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
     {/* 상단 버튼 영역 */}
-      <FeatQueryRsltButton />
+      <FeatQueryRsltButton 
+        custFeatRuleId={location.state.id}
+      />
       
     {/* 정보 영역 */}
       {/* {sfSubmissionRequestData.submissionNo !== "" &&  */}
@@ -749,14 +758,6 @@ const SelfFeatureDetail = () => {
         <DetailBtnComponent/>
       </Stack>
     {/* 버튼 영역 */}
-
-    {/* 팝업 */}
-      {/* <SubmissionRequestPop
-        isOpen={isOpenSubmissionRequestPop}
-        onClose={(isOpen) => setIsOpenSubmissionRequestPop(isOpen)}
-        featureInfo={featureInfo}
-      /> */}
-    {/* 팝업 */}
 
     {/* Confirm 모달 */}
       <ConfirmModal

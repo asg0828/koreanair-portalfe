@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedDataroomModel } from '@/models/model/DataroomModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -35,14 +35,21 @@ const Reg = () => {
   const { data: response, isSuccess, isError, mutate } = useCreateDataroom(values);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: CreatedDataroomModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
+        title: '저장',
         content: '등록하시겠습니까?',
         onConfirm: mutate,
       })

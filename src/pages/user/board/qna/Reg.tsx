@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedQnaModel } from '@/models/model/QnaModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -40,25 +40,26 @@ const Reg = () => {
   const { data: response, isSuccess, isError, mutate } = useCreateQna(values);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: CreatedQnaModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
+        title: '저장',
         content: '등록하시겠습니까?',
         onConfirm: mutate,
       })
     );
   };
-
-  useEffect(() => {
-    if (codeList.length > 0 && !values.clCode) {
-      setValue('clCode', codeList[0].codeId);
-    }
-  }, [codeList, values.clCode, setValue]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -114,7 +115,7 @@ const Reg = () => {
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      onChange={(e, value) => field.onChange(value)}
+                      onChange={(e, value) => value && field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
                       value={field.value}
                     >

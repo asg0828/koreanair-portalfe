@@ -40,27 +40,27 @@ const ConfirmModal = ({
   };
 
   const BtnComponent = () => {
-    if (btnType === "alert") {
+    if (btnType === 'alert') {
       return (
         <>
           <Button priority="Primary" appearance="Contained" onClick={handleCancle}>
             확인
           </Button>
         </>
-      )
+      );
     } else {
       return (
         <>
-          <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
+          <Button autoFocus priority="Primary" appearance="Contained" onClick={handleConfirm}>
             확인
           </Button>
           <Button priority="Normal" appearance="Outline" onClick={handleCancle}>
             취소
           </Button>
         </>
-      )
+      );
     }
-  }
+  };
 
   return (
     <Stack onKeyDown={handleKeyDown}>
@@ -68,7 +68,7 @@ const ConfirmModal = ({
         <Modal.Header>{title}</Modal.Header>
         <Modal.Body>{content}</Modal.Body>
         <Modal.Footer>
-          <BtnComponent/>
+          <BtnComponent />
         </Modal.Footer>
       </Modal>
     </Stack>

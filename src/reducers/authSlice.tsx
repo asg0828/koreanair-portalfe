@@ -1,13 +1,23 @@
-import { UserInfo } from '@/models/common/User';
-import { createSlice } from '@reduxjs/toolkit';
+import { SessionInfo } from '@/models/common/Session';
+import { RootState } from '@/store';
+import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 export interface AuthState {
-  userInfo?: UserInfo;
+  sessionInfo: SessionInfo;
   contextPath: string;
 }
 
 const initialState: AuthState = {
-  userInfo: undefined,
+  sessionInfo: {
+    sessionId: '',
+    memberId: null,
+    employeeNumber: '',
+    memberName: '',
+    email: '',
+    languageCode: '',
+    roleType: '',
+    memberStateCode: '',
+  },
   contextPath: '',
 };
 
@@ -16,7 +26,7 @@ const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     login(state, action) {
-      state.userInfo = action.payload.userInfo;
+      state.sessionInfo = action.payload;
     },
     logout() {
       return initialState;
@@ -28,5 +38,11 @@ const authSlice = createSlice({
 });
 
 export const { login, logout, setContextPath } = authSlice.actions;
+
+export const selectAuthState = (state: RootState) => state.auth;
+
+export const selectSessionInfo = () => createSelector([selectAuthState], (auth) => auth.sessionInfo);
+
+export const selectContextPath = () => createSelector([selectAuthState], (auth) => auth.contextPath);
 
 export default authSlice.reducer;

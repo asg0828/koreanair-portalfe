@@ -4,7 +4,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import VerticalTable from '@/components/table/VerticalTable';
 import { useCreateDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { CreatedDatasetModel, DatasetColumnModel } from '@/models/model/DatasetModel';
 import { selectCodeList } from '@/reducers/codeSlice';
@@ -171,7 +171,14 @@ const Reg = () => {
   };
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const handleAdd = () => {
@@ -199,7 +206,7 @@ const Reg = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
+        title: '저장',
         content: '등록하시겠습니까?',
         onConfirm: mutate,
       })
@@ -353,7 +360,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.srcDbCd?.message ? 'error' : undefined}
                         value={field.value}
                       >

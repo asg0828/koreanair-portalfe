@@ -6,7 +6,7 @@ import VerticalTable from '@/components/table/VerticalTable';
 import { useUpdateDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useDatasetById } from '@/hooks/queries/useDatasetQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, UpdatedDatasetModel } from '@/models/model/DatasetModel';
 import { selectCodeList } from '@/reducers/codeSlice';
@@ -174,7 +174,14 @@ const Edit = () => {
   };
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const handleAdd = () => {
@@ -202,7 +209,7 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
+        title: '저장',
         content: '수정하시겠습니까?',
         onConfirm: mutate,
       })
@@ -399,7 +406,7 @@ const Edit = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.srcDbCd?.message ? 'error' : undefined}
                         value={field.value}
                       >

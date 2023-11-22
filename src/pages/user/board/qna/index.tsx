@@ -103,7 +103,7 @@ const List = () => {
         setPage(response.data.page);
       }
     }
-  }, [response, isError, toast, getCode]);
+  }, [response, isError, toast]);
 
   return (
     <>
@@ -112,13 +112,13 @@ const List = () => {
           <TH colSpan={1} align="right">
             검색
           </TH>
-          <TD colSpan={3}>
+          <TD colSpan={5}>
             <Stack gap="SM" className="width-100">
               <Select
                 appearance="Outline"
                 placeholder="전체"
                 className="select-basic"
-                onChange={(e, value) => handleChangeParams('searchConditions', value || 'all')}
+                onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
               >
                 {searchInfoList.map((searchInfo) => (

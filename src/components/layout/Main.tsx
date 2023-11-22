@@ -1,4 +1,5 @@
 import { useAppSelector } from '@/hooks/useRedux';
+import { selectMenuList } from '@/reducers/menuSlice';
 import MainNavigation from '@components/layout/MainNavigation';
 import { Loader, Stack, Typography } from '@components/ui';
 import { MenuItem } from '@models/common/Menu';
@@ -8,7 +9,7 @@ import './Main.scss';
 
 const Main = () => {
   const location = useLocation();
-  const menuList = useAppSelector((state) => state.menu.menuList)!;
+  const menuList = useAppSelector(selectMenuList())!;
 
   const getMenuRecursive = (menuList: MenuItem[]): MenuItem | undefined => {
     for (let i = 0; i < menuList.length; i++) {

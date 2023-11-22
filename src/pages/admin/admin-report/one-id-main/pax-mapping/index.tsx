@@ -80,22 +80,19 @@ export default function PaxMapping() {
 
   /* 기간 별 버튼 */
   function duration(flag: string) {
-    let date = '';
+    let enddate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    let startdate = '';
     if (flag === 'today') {
-      date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-      setSearchInfo({ ...searchInfo, creationEndDate: date, creationStartDate: date });
+      startdate = enddate;
     } else if (flag === 'oneMonth') {
-      date = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
-      setSearchInfo({ ...searchInfo, creationStartDate: date });
+      startdate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
     } else if (flag === 'sixMonth') {
-      date = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
-      setSearchInfo({ ...searchInfo, creationStartDate: date });
+      startdate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
     } else if (flag === 'oneYear') {
-      date = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
-      setSearchInfo({ ...searchInfo, creationStartDate: date });
+      startdate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
     }
+    setSearchInfo({ ...searchInfo, creationEndDate: enddate, creationStartDate: startdate });
   }
-
   return (
     <Stack direction="Vertical" gap="LG" className="height-100">
       <form onSubmit={onsubmitHandler}>

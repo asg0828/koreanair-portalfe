@@ -9,19 +9,28 @@ export enum PortalApiURL {
   ONEID = '/admin/v1/oneId',
   FEATURE = '/biz-meta/v1/features',
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',
+  USER_FEATURE = '/user-mgmt/v1/users',
   DATASET = '/biz-meta/v1/table-specs',
 }
 
 export enum SelfFeatureCmmApiURL {
-  CODE = '/api/v1/commCode/retireveCommCodes'
+  CODE = '/api/v1/commCode/retrieveCommCodes',
 }
 
 export enum SelfFeatureUserApiURL {
+  FEAT_LIST = '/api/v1/customerfeatures',
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
+  READ_SQL = '/api/v1/customerfeatures/read-sql',
+  RUN_SCDL = '/api/v1/airflow/runSchedule',
+  BATCH_EXECUTE_LOGS = '/api/v1/batchdb/logs',
+  SAMPLE_DATA = '/api/v1/customerfeatures/sample',
+  PARENT_CHILD = '/api/v1/customerfeatures/parent-child',
+  APRV_USER_PRE = '/api/v1/submission-types',
+  APRV_USER_POST = '/approver-candidate',
 }
 
 export enum SelfFeatureAdmApiURL {
   SCHEMA = '/api/v1/batchdb/schemas',
   META_TABLE_LIST = '/api/v1/metas/tables',
-  COL_AND_CMMT = '/api/v1/metas/columnsAndComments/tb_co_meta_tbl_info'
+  COL_AND_CMMT = '/api/v1/metas/columnsAndComments/tb_co_meta_tbl_info',
 }

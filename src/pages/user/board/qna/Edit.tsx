@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { UpdatedQnaModel } from '@/models/model/QnaModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -47,14 +47,21 @@ const Edit = () => {
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateQna(values.qnaId, values);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: UpdatedQnaModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.MODIFY,
+        title: '수정',
         content: '수정하시겠습니까?',
         onConfirm: mutate,
       })
@@ -152,7 +159,7 @@ const Edit = () => {
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      onChange={(e, value) => field.onChange(value)}
+                      onChange={(e, value) => value && field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
                       value={field.value}
                     >
@@ -185,7 +192,7 @@ const Edit = () => {
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      onChange={(e, value) => field.onChange(value)}
+                      onChange={(e, value) => value && field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
                       value={field.value}
                     >

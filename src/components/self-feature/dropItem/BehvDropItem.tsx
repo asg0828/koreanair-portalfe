@@ -21,13 +21,15 @@ import {
     trgtFilterTit, 
     divisionTypes,
     filterOption,
-    aggregateOptionNum,
-    aggregateOptionStrTim,
 } from "@/pages/user/self-feature/data"
 import {
     ColDataType,
+    CommonCode,
+    CommonCodeInfo,
     ModalType,
+    initCommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon';
+import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 
 const BehvDropItem = ({
     itemIdx,
@@ -42,10 +44,17 @@ const BehvDropItem = ({
     setFormulaTrgtList,
 }: TargetDropProps) => {
 
+    const { 
+        data: cmmCodeAggrRes, 
+        isError: cmmCodeAggrErr, 
+        refetch: cmmCodeAggrRefetch 
+    } = useCommCodes(CommonCode.STAC_CALC_TYPE)
+
     const [ filterExpsn, setFilterExpsn ] = useState<string>(cloneDeep(targetItem.filterLogiExpsn))
     const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
     const [ aggregateTopSelect, setAggregateTopSelect ] = useState<Boolean>(false)
-    const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
+    const [ aggregateOption, setAggregateOption ] = useState<Array<CommonCodeInfo>>([])
+    //const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
 
     const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
     const [ modalType, setModalType ] = useState<string>("")
@@ -113,10 +122,27 @@ const BehvDropItem = ({
         }
     }, [trgtFilterList])
 
+    // 집계할 컬럼 변경시 dataType setting
     useEffect(() => {
         columnList.map((col: AggregateCol) => {
             if (col.value === targetItem.columnName) {
-                setDataTypeCol(col.dataType)
+                //setDataTypeCol(col.dataType)
+                // 집계함수 list 변경
+                if (cmmCodeAggrRes) {
+                    setAggregateOption((prevState: Array<CommonCodeInfo>) => {
+                        let rtn = cloneDeep(prevState)
+                        rtn = cmmCodeAggrRes.result.filter((v: CommonCodeInfo) => {
+                            if (v.attr4 === "N") {
+                                return false
+                            } else {
+                                if ((col.dataType === ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return true
+                                else if ((col.dataType !== ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return false
+                                else return true
+                            }
+                        })
+                        return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+                    })
+                }
             }
             return col
         })
@@ -251,7 +277,7 @@ const BehvDropItem = ({
                 columnList.map((col: AggregateCol) => {
                     if (col.value === v) {
                         colDtp = col.dataType
-                        setDataTypeCol(col.dataType)
+                        //setDataTypeCol(col.dataType)
                     }
                     return col
                 })
@@ -281,11 +307,15 @@ const BehvDropItem = ({
                 let rtn = cloneDeep(ftl)
                 rtn = rtn.map((ft: FormulaTrgtListProps) => {
                     if (ft.targetId === targetItem.targetId) {
-                        if (v === "count" || v === "distinct_count") {
-                            ft.dataType = ColDataType.NUM
-                        } else {
-                            ft.dataType = targetItem.targetDataType
-                        }
+                        aggregateOption.map((option: CommonCodeInfo) => {
+                            if (option.cdv === v) {
+                                ft.dataType = option.attr1
+                                if (ft.dataType === "") {
+                                    ft.dataType = targetItem.targetDataType
+                                }
+                            }
+                            return option
+                        })
                     }
                     return ft
                 })
@@ -404,11 +434,8 @@ const BehvDropItem = ({
                             onchangeSelectHandler(e, value, "operator")
                         }}
                     >
-                        {dataTypeCol === ColDataType.NUM && aggregateOptionNum.map((item, index) => (
-                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                        ))}
-                        {dataTypeCol !== ColDataType.NUM && aggregateOptionStrTim.map((item, index) => (
-                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                        {aggregateOption.map((item, index) => (
+                        <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                         ))}
                     </Select>
                     {aggregateTopSelect &&

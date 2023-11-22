@@ -3,7 +3,7 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateFeature } from '@/hooks/mutations/useFeatureMutations';
 import { useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedFeatureModel, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -23,6 +23,7 @@ const Reg = () => {
     control,
     getValues,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<CreatedFeatureModel>({
     mode: 'onChange',
@@ -49,11 +50,33 @@ const Reg = () => {
   const { data: response, mutate, isSuccess, isError } = useCreateFeature(values);
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
 
+  const goToList = () => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
+  };
+
+  const onSubmit = (data: CreatedFeatureModel) => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '저장',
+        content: '등록하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
+  };
+
   useEffect(() => {
     if (values.featureSeGrp) {
       sRefetch();
     }
-  }, [values.featureSeGrp, sRefetch]);
+  }, [watch().featureSeGrp, sRefetch]);
 
   useEffect(() => {
     if (sIsError || sResponse?.successOrNot === 'N') {
@@ -67,21 +90,6 @@ const Reg = () => {
       }
     }
   }, [sResponse, sIsError, toast]);
-
-  const goToList = () => {
-    navigate('..');
-  };
-
-  const onSubmit = (data: CreatedFeatureModel) => {
-    dispatch(
-      openModal({
-        type: ModalType.CONFIRM,
-        title: ModalTitle.SAVE,
-        content: '등록하시겠습니까?',
-        onConfirm: mutate,
-      })
-    );
-  };
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -122,7 +130,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureSeGrp?.message ? 'error' : undefined}
                         value={field.value}
                       >
@@ -153,7 +161,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureSe?.message ? 'error' : undefined}
                         value={field.value}
                       >
@@ -203,7 +211,7 @@ const Reg = () => {
                         placeholder="전체"
                         className="width-100"
                         ref={field.ref}
-                        onChange={(e, value) => field.onChange(value)}
+                        onChange={(e, value) => value && field.onChange(value)}
                         status={errors?.featureTyp?.message ? 'error' : undefined}
                         value={field.value}
                       >

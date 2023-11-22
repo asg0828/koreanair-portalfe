@@ -64,6 +64,7 @@ const DataGridChild: React.FC<DatagridProps> = ({
         enableSort={enableSort}
         clickable={clickable}
         onClick={onClick}
+        rowSelection={rowSelection}
       />
       <Stack className="pagination-layout">
         <Pagination

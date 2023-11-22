@@ -6,7 +6,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalTitle, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { UpdatedFaqModel } from '@/models/model/FaqModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -45,14 +45,21 @@ const Reg = () => {
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFaq(values.faqId, values);
 
   const goToList = () => {
-    navigate('..');
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '확인',
+        content: '목록으로 이동하시겠습니까?',
+        onConfirm: () => navigate('..'),
+      })
+    );
   };
 
   const onSubmit = (data: UpdatedFaqModel) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: ModalTitle.MODIFY,
+        title: '수정',
         content: '수정하시겠습니까?',
         onConfirm: mutate,
       })
@@ -141,7 +148,7 @@ const Reg = () => {
                       placeholder="전체"
                       className="width-100"
                       ref={field.ref}
-                      onChange={(e, value) => field.onChange(value)}
+                      onChange={(e, value) => value && field.onChange(value)}
                       status={errors?.clCode?.message ? 'error' : undefined}
                       value={field.value}
                     >

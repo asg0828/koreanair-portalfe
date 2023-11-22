@@ -22,10 +22,6 @@ import {
 import HorizontalTable from '@/components/table/HorizontalTable';
 
 import { 
-    transFuncOtionNum,
-    transFuncOtionStr,
-    transFuncOtionStrNonConcat,
-    transFuncOtionTim,
     tsDtAddDiffOption,
     tsToCharOption, 
 } from '@/pages/user/self-feature/data';
@@ -36,7 +32,8 @@ import {
     TransFuncProps
 } from '@/models/selfFeature/FeatureInfo';
 import { transFuncCalcStr } from '@/utils/self-feature/FormulaValidUtil';
-import { ColDataType } from '@/models/selfFeature/FeatureCommon';
+import { ColDataType, CommonCode, CommonCodeInfo, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
+import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 
 const TransFunctionPop = (
     { 
@@ -50,8 +47,22 @@ const TransFunctionPop = (
         setTrgtFilterList,
         setTransFuncChecked,
     }: TransFuncProps) => {
-    
+
+    const { 
+        data: cmmCodeFuncRes, 
+        isError: cmmCodeFuncErr, 
+        refetch: cmmCodeFuncRefetch 
+    } = useCommCodes(CommonCode.FUNCTION)
+    const { 
+        data: cmmCodeFrmtRes, 
+        isError: cmmCodeFrmtErr, 
+        refetch: cmmCodeFrmtRefetch 
+    } = useCommCodes(CommonCode.FORMAT)
+
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
+
+    const [ transFuncOtion, setTransFuncOtion ] = useState<Array<CommonCodeInfo>>([])
+    const [ tsDateFormatOption, setTsDateFormatOption ] = useState<Array<CommonCodeInfo>>([])
 
     const [ funcStrVal, setFuncStrVal ] = useState<string>('')
     const [ functionVal,  setFunctionVal ] = useState<string>('')
@@ -85,6 +96,23 @@ const TransFunctionPop = (
     }, [isOpen])
 
     useEffect(() => {
+        if (cmmCodeFuncRes) {
+            setTransFuncOtion((prevState: Array<CommonCodeInfo>) => {
+                let rtn = cloneDeep(prevState)
+                rtn = cmmCodeFuncRes.result.filter((v: CommonCodeInfo) => {
+                    if (dataType !== "" && v.attr1.includes(dataType)) {
+                        if (enableColList.length < 1 && v.cdv === "CONCAT") return false
+                        else return true
+                    } else {
+                        return false
+                    }
+                })
+                return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+            })
+        }
+    }, [dataType, enableColList])
+
+    useEffect(() => {
         transFuncCalcStr({
             colNm: trgtItem.columnName,
             setFuncStr: setFuncStrVal,
@@ -93,6 +121,29 @@ const TransFunctionPop = (
             var2: '',
             var3: '',
         })
+
+        // 형식 select option 변경
+        if (cmmCodeFrmtRes) {
+            if (functionVal === "TO_CHAR") {
+                setTsDateFormatOption((prevState: Array<CommonCodeInfo>) => {
+                    let rtn = cloneDeep(prevState)
+                    rtn = cmmCodeFrmtRes.result.filter((v: CommonCodeInfo) => (v.attr4.includes("Y")))
+                    return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+                })
+            } else if (functionVal === "DATEADD") {
+                setTsDateFormatOption((prevState: Array<CommonCodeInfo>) => {
+                    let rtn = cloneDeep(prevState)
+                    rtn = cmmCodeFrmtRes.result.filter((v: CommonCodeInfo) => (v.attr2.includes("Y")))
+                    return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+                })
+            } else if (functionVal === "DATEDIFF") {
+                setTsDateFormatOption((prevState: Array<CommonCodeInfo>) => {
+                    let rtn = cloneDeep(prevState)
+                    rtn = cmmCodeFrmtRes.result.filter((v: CommonCodeInfo) => (v.attr3.includes("Y")))
+                    return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+                })
+            }
+        }
 
         // 달력 체크 취소
         setStrtDtChecked(false)
@@ -419,27 +470,10 @@ const TransFunctionPop = (
                                     onchangeSelectHandler(e, value, "functionVal")
                                 }}
                             >
-                                {dataType === ColDataType.NUM &&
-                                transFuncOtionNum.map((item, index) => (
-                                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))
-                                }
-                                {(dataType === ColDataType.STR && enableColList.length > 0) &&
-                                transFuncOtionStr.map((item, index) => (
-                                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))
-                                }
-                                {(dataType === ColDataType.STR && enableColList.length < 1) &&
-                                transFuncOtionStrNonConcat.map((item, index) => (
-                                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))
-                                }
-                                {dataType === ColDataType.TIME &&
-                                transFuncOtionTim.map((item, index) => (
-                                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))
-                                }
-                                {(dataType !== ColDataType.NUM && dataType !== ColDataType.STR && dataType !== ColDataType.TIME) &&
+                                {transFuncOtion.map((item, index) => (
+                                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                ))}
+                                {transFuncOtion.length < 1 &&
                                     <SelectOption value="">함수 선택</SelectOption>
                                 }
                             </Select>
@@ -576,7 +610,7 @@ const TransFunctionPop = (
                     </TR>
                     </>
                     }
-                    {functionVal === "TO_CHAR" &&
+                    {(functionVal === "TO_CHAR" || functionVal === "DATEADD" || functionVal === "DATEDIFF") &&
                     <TR>
                         <TH colSpan={1} align="right">
                         형식
@@ -593,32 +627,8 @@ const TransFunctionPop = (
                                     onchangeSelectHandler(e, value, "variable1Val")
                                 }}
                             >
-                                {tsToCharOption.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))}
-                            </Select>
-                        </TD>
-                    </TR>
-                    }
-                    {(functionVal === "DATEADD" || functionVal === "DATEDIFF") &&
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        단위
-                        </TH>
-                        <TD colSpan={2}>
-                            <Select 
-                                appearance="Outline"
-                                className="width-100"
-                                value={variable1Val}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    onchangeSelectHandler(e, value, "variable1Val")
-                                }}
-                            >
-                                {tsDtAddDiffOption.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                {tsDateFormatOption.map((item, index) => (
+                                <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                                 ))}
                             </Select>
                         </TD>

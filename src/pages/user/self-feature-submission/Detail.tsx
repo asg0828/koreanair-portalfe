@@ -45,6 +45,8 @@ import {
 } from "../self-feature/data";
 import { 
     ColDataType,
+    CommonCode,
+    CommonCodeInfo,
     ModalTitCont,
     ModalType,
     initApiRequest, 
@@ -59,11 +61,17 @@ import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import SubRejectPop from "@/components/self-feature-submission/popup/SubRejectPop";
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { ValidType } from "@/models/common/Constants";
+import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 
 const SfSubmissionRequestDetail = () => {
 
     const { toast } = useToast()
     const { data: response1, isError: isError1, refetch: refetch1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+    const { 
+      data: cmmCodeAggrRes, 
+      isError: cmmCodeAggrErr, 
+      refetch: cmmCodeAggrRefetch 
+  } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 
     const navigate = useNavigate()
     const location = useLocation()
@@ -127,17 +135,20 @@ const SfSubmissionRequestDetail = () => {
         // 계산식 validation을 위한 대상 list 추출
         let fList = []
         for (let i = 0; i < targetList.length; i++) {
-            let t = { targetId: `T${i+1}`, dataType: "" }
-            let dataType = targetList[i].targetDataType
-            if (
-            targetList[i].operator === "count"
-            || targetList[i].operator === "distinct_count"
-            ) {
-            dataType = ColDataType.NUM
+          let t = { targetId: `T${i+1}`, dataType: "" }
+          let dataType = targetList[i].targetDataType
+          cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
+            if (option.cdv === targetList[i].operator) {
+                dataType = option.attr1
+                if (dataType === "") {
+                    dataType = targetList[i].targetDataType
+                }
             }
-            t.dataType = dataType
-
-            fList.push(t)
+            return option
+          })
+          t.dataType = dataType
+    
+          fList.push(t)
         }
         setFormulaTrgtList(fList)
     }, [targetList])
@@ -289,7 +300,9 @@ const SfSubmissionRequestDetail = () => {
         <>
         <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
             {/* 상단 버튼 영역 */}
-            <FeatQueryRsltButton />
+            <FeatQueryRsltButton
+                custFeatRuleId={location.state.id}
+            />
             {/* 정보 영역 */}
             <Typography variant="h2">승인 정보</Typography>
             <Stack direction="Vertical" className="width-100" gap="MD">
