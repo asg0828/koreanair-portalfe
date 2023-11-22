@@ -7,18 +7,18 @@ import { Button, Page, Select, SelectOption, Stack, TextField, Typography } from
 import BehvColDropItem from "./BehvColDropItem"
 import ConfirmModal from '@components/modal/ConfirmModal'
 
-import { 
-    TbCoMetaTblClmnInfo, 
+import {
+    TbCoMetaTblClmnInfo,
     TbRsCustFeatRuleTrgtFilter,
     TbRsCustFeatRuleTrgt,
     TargetDropProps,
     AggregateCol,
     FormulaTrgtListProps,
 } from '@/models/selfFeature/FeatureModel'
-import { 
-    initTbCoMetaTblClmnInfo, 
-    initTbRsCustFeatRuleTrgtFilter, 
-    trgtFilterTit, 
+import {
+    initTbCoMetaTblClmnInfo,
+    initTbRsCustFeatRuleTrgtFilter,
+    trgtFilterTit,
     divisionTypes,
     filterOption,
 } from "@/pages/user/self-feature/data"
@@ -44,22 +44,18 @@ const BehvDropItem = ({
     setFormulaTrgtList,
 }: TargetDropProps) => {
 
-    const { 
-        data: cmmCodeAggrRes, 
-        isError: cmmCodeAggrErr, 
-        refetch: cmmCodeAggrRefetch 
-    } = useCommCodes(CommonCode.STAC_CALC_TYPE)
+    const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 
-    const [ filterExpsn, setFilterExpsn ] = useState<string>(cloneDeep(targetItem.filterLogiExpsn))
-    const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
-    const [ aggregateTopSelect, setAggregateTopSelect ] = useState<Boolean>(false)
-    const [ aggregateOption, setAggregateOption ] = useState<Array<CommonCodeInfo>>([])
+    const [filterExpsn, setFilterExpsn] = useState<string>(cloneDeep(targetItem.filterLogiExpsn))
+    const [columnList, setColumnList] = useState<Array<AggregateCol>>([])
+    const [aggregateTopSelect, setAggregateTopSelect] = useState<Boolean>(false)
+    const [aggregateOption, setAggregateOption] = useState<Array<CommonCodeInfo>>([])
     //const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
 
-    const [ isOpenConfirmModal, setIsOpenConfirmModal ] = useState<boolean>(false)
-    const [ modalType, setModalType ] = useState<string>("")
-    const [ confirmModalTit, setConfirmModalTit ] = useState<string>('')
-    const [ confirmModalCont, setConfirmModalCont ] = useState<string>('')
+    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
+    const [modalType, setModalType] = useState<string>("")
+    const [confirmModalTit, setConfirmModalTit] = useState<string>('')
+    const [confirmModalCont, setConfirmModalCont] = useState<string>('')
 
     const onConfirm = () => {
         if (modalType === ModalType.CONFIRM) {
@@ -109,7 +105,7 @@ const BehvDropItem = ({
         let fe = ''
         if (targetItem.filterLogiOption === "ALL") op = " and "
         else if (targetItem.filterLogiOption === "ANY") op = " or "
-        
+
         if (op !== '') {
             for (let i = 0; i < trgtFilterList.length; i++) {
                 if (i === 0) {
@@ -177,7 +173,7 @@ const BehvDropItem = ({
         aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
             let col = { value: "", text: "", dataType: "" }
             col.value = colInfo.metaTblClmnPhysNm
-            col.text  = colInfo.metaTblClmnLogiNm
+            col.text = colInfo.metaTblClmnLogiNm
             col.dataType = colInfo.dataTypeCategory
             colList.push(col)
             return colInfo
@@ -208,7 +204,7 @@ const BehvDropItem = ({
                 setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     let tl = cloneDeep(state)
                     let trgtFilter = initTbRsCustFeatRuleTrgtFilter
-                    trgtFilter.targetId  = targetItem.targetId // 고정
+                    trgtFilter.targetId = targetItem.targetId // 고정
                     trgtFilter.columnName = targetObj.metaTblClmnLogiNm
                     trgtFilter.columnDataTypeCode = targetObj.dataTypeCategory
                     tl.push(trgtFilter)
@@ -218,16 +214,16 @@ const BehvDropItem = ({
 
         },
         collect(monitor) {
-            
+
         },
     }), [])
-    
+
     // 행동데이터 필터에 해당되는 컬럼 삭제시
     const deleteTrgtFilterInfo = (idx: number) => {
-        
+
         setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let newTrgtFilterList = cloneDeep(state)
-            
+
             let removeTrgetFilterList = []
             removeTrgetFilterList = newTrgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetItem.targetId)
             removeTrgetFilterList.splice(idx, 1)
@@ -346,275 +342,285 @@ const BehvDropItem = ({
             return tl
         })
     }
-      
+
     return (
         <>
-        <Stack 
-            direction="Horizontal"
-            justifyContent="Start" 
-            gap="MD" 
-            className="width-100"
-            style={{
-                backgroundColor: '#e6f9ff', 
-                color: '#00256c',
-                borderRadius: '5px',
-                padding:'0.5rem'
-            }}
-        >
             <Stack
-                direction="Vertical"
-                justifyContent="Start" 
-                gap="SM" 
+                direction="Horizontal"
+                justifyContent="Start"
+                gap="MD"
                 className="width-100"
+                style={{
+                    backgroundColor: '#e6f9ff',
+                    color: '#00256c',
+                    borderRadius: '5px',
+                    padding: '0.5rem'
+                }}
             >
                 <Stack
-                    direction="Horizontal"
-                    justifyContent="Start" 
-                    gap="SM" 
+                    direction="Vertical"
+                    justifyContent="Start"
+                    gap="SM"
                     className="width-100"
-                    style={{
-                        marginTop: '1%',
-                    }}
                 >
-                    <Typography variant="h6" style={{color:"inherit"}}>T{itemIdx + 1}</Typography>
-                    <div className="dragItemLocation">
-                        BaseFact
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.29498 16.59L12.875 12L8.29498 7.41L9.70498 6L15.705 12L9.70498 18L8.29498 16.59Z" fill="currentColor"></path></svg>
-                    </div>
-                    <Typography variant="body2" style={{color:"inherit"}}>{targetItem.tableName}</Typography>
-                </Stack>
-                <Typography variant="h6" style={{color:"inherit"}}>SELECT</Typography>
-                <Stack
-                    direction="Horizontal"
-                    justifyContent="Start" 
-                    gap="MD" 
-                    className="width-100"
-                    style={{
-                        marginBottom: '1%',
-                    }}
-                >
-                    <Select 
-                        disabled={!isPossibleEdit}
-                        placeholder="집계할 컬럼" 
-                        appearance="Outline"
-                        value={targetItem.columnName}
-                        shape="Square"
-                        size="MD"
-                        status="default"
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Start"
+                        gap="SM"
+                        className="width-100"
                         style={{
-                        width: '11.25rem'
-                        }}
-                        onChange={(
-                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                            value: SelectValue<{}, false>
-                        ) => {
-                            // 집계함수에 사용될 컬럼명
-                            onchangeSelectHandler(e, value, "columnName")
+                            marginTop: '1%',
                         }}
                     >
-                        {columnList.map((item, index) => (
-                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                        ))}
-                    </Select>
-                    <Select 
-                        disabled={!isPossibleEdit}
-                        placeholder="집계 함수 선택" 
-                        appearance="Outline"
-                        value={targetItem.operator}
-                        shape="Square"
-                        size="MD"
-                        status="default"
+                        <Typography variant="h6" style={{ color: "inherit" }}>T{itemIdx + 1}</Typography>
+                        <div className="dragItemLocation">
+                            BaseFact
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.29498 16.59L12.875 12L8.29498 7.41L9.70498 6L15.705 12L9.70498 18L8.29498 16.59Z" fill="currentColor"></path></svg>
+                        </div>
+                        <Typography variant="body2" style={{ color: "inherit" }}>{targetItem.tableName}</Typography>
+                    </Stack>
+                    <Typography variant="h6" style={{ color: "inherit" }}>SELECT</Typography>
+                    <Stack
+                        direction="Horizontal"
+                        justifyContent="Start"
+                        gap="MD"
+                        className="width-100"
                         style={{
-                        width: '11.25rem'
-                        }}
-                        onChange={(
-                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                            value: SelectValue<{}, false>
-                        ) => {
-                            onchangeSelectHandler(e, value, "operator")
+                            marginBottom: '1%',
                         }}
                     >
-                        {aggregateOption.map((item, index) => (
-                        <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                        ))}
-                    </Select>
-                    {aggregateTopSelect &&
-                        <>
-                        <Select 
+                        <Select
                             disabled={!isPossibleEdit}
-                            placeholder="Top 기준 함수" 
+                            placeholder="집계할 컬럼"
                             appearance="Outline"
-                            value={targetItem.operand1}
+                            value={targetItem.columnName}
                             shape="Square"
                             size="MD"
                             status="default"
                             style={{
-                            width: '11.25rem'
+                                width: '11.25rem'
                             }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                 value: SelectValue<{}, false>
                             ) => {
-                                // Top 기준 함수
-                                onchangeSelectHandler(e, value, "operand1")
-                            }}
-                        >
-                            <SelectOption value="count">count</SelectOption>
-                            <SelectOption value="last">last</SelectOption>
-                        </Select>
-                        <TextField 
-                            type="number"
-                            disabled={!isPossibleEdit}
-                            value={targetItem.operand2}
-                            placeholder="Top 숫자 입력"
-                            id="operand2"
-                            onChange={onchangeInputHandler}
-                        />
-                        <Select 
-                            appearance="Outline"
-                            disabled={!isPossibleEdit}
-                            placeholder="동률일 때 기준 컬럼" 
-                            value={targetItem.operand3}
-                            shape="Square"
-                            size="MD"
-                            status="default"
-                            style={{
-                            width: '11.25rem'
-                            }}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                // 동률일 때 기준 컬럼
-                                onchangeSelectHandler(e, value, "operand3")
+                                // 집계함수에 사용될 컬럼명
+                                onchangeSelectHandler(e, value, "columnName")
                             }}
                         >
                             {columnList.map((item, index) => (
-                            <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                             ))}
                         </Select>
-                        <Select 
-                            appearance="Outline"
+                        <Select
                             disabled={!isPossibleEdit}
-                            placeholder="동률일 때 기준 정렬" 
-                            value={targetItem.operand4}
+                            placeholder="집계 함수 선택"
+                            appearance="Outline"
+                            value={targetItem.operator}
                             shape="Square"
                             size="MD"
                             status="default"
                             style={{
-                            width: '11.25rem'
+                                width: '11.25rem'
                             }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                 value: SelectValue<{}, false>
                             ) => {
-                                // 동률일 때 기준 정렬
-                                onchangeSelectHandler(e, value, "operand4")
+                                onchangeSelectHandler(e, value, "operator")
                             }}
                         >
-                            <SelectOption value="asc">오름차순</SelectOption>
-                            <SelectOption value="desc">내림차순</SelectOption>
+                            {aggregateOption.map((item, index) => (
+                                <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                            ))}
                         </Select>
-                        </>
-                    }
-                </Stack>
-                <Typography variant="h6" style={{color:"inherit"}}>WHERE</Typography>
-                <Stack
-                    direction="Vertical"
-                    justifyContent="Start" 
-                    gap="SM" 
-                    className="width-100"
-                    style={{
-                        border:"1px solid rgb(218, 218, 218)",
-                        borderRadius: '5px',
-                    }}
-                >   
+                        {aggregateTopSelect &&
+                            <>
+                                <Select
+                                    disabled={!isPossibleEdit}
+                                    placeholder="Top 기준 함수"
+                                    appearance="Outline"
+                                    value={targetItem.operand1}
+                                    shape="Square"
+                                    size="MD"
+                                    status="default"
+                                    style={{
+                                        width: '11.25rem'
+                                    }}
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        // Top 기준 함수
+                                        onchangeSelectHandler(e, value, "operand1")
+                                    }}
+                                >
+                                    <SelectOption value="count">count</SelectOption>
+                                    <SelectOption value="last">last</SelectOption>
+                                </Select>
+                                <TextField
+                                    type="number"
+                                    disabled={!isPossibleEdit}
+                                    value={targetItem.operand2}
+                                    placeholder="Top 숫자 입력"
+                                    id="operand2"
+                                    onChange={onchangeInputHandler}
+                                />
+                                <Select
+                                    appearance="Outline"
+                                    disabled={!isPossibleEdit}
+                                    placeholder="동률일 때 기준 컬럼"
+                                    value={targetItem.operand3}
+                                    shape="Square"
+                                    size="MD"
+                                    status="default"
+                                    style={{
+                                        width: '11.25rem'
+                                    }}
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        // 동률일 때 기준 컬럼
+                                        onchangeSelectHandler(e, value, "operand3")
+                                    }}
+                                >
+                                    {columnList.map((item, index) => (
+                                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                    ))}
+                                </Select>
+                                <Select
+                                    appearance="Outline"
+                                    disabled={!isPossibleEdit}
+                                    placeholder="동률일 때 기준 정렬"
+                                    value={targetItem.operand4}
+                                    shape="Square"
+                                    size="MD"
+                                    status="default"
+                                    style={{
+                                        width: '11.25rem'
+                                    }}
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        // 동률일 때 기준 정렬
+                                        onchangeSelectHandler(e, value, "operand4")
+                                    }}
+                                >
+                                    <SelectOption value="asc">오름차순</SelectOption>
+                                    <SelectOption value="desc">내림차순</SelectOption>
+                                </Select>
+                            </>
+                        }
+                    </Stack>
+                    <Typography variant="h6" style={{ color: "inherit" }}>WHERE</Typography>
                     <Stack
-                        direction="Horizontal"
-                        justifyContent="Between" 
-                        gap="SM" 
+                        direction="Vertical"
+                        justifyContent="Start"
+                        gap="SM"
                         className="width-100"
-                        style={{padding:"0.5rem"}}
+                        style={{
+                            border: "1px solid rgb(218, 218, 218)",
+                            borderRadius: '5px',
+                        }}
                     >
-                        <Typography variant="h6" style={{color:"inherit"}}>필터 선택</Typography>
-                        <Stack gap="SM" justifyContent="end">
-                            <TextField 
-                                disabled={!isPossibleEdit}
-                                placeholder="논리 표현식" 
-                                value={filterExpsn}
-                                id="filterLogiExpsn"
-                                onChange={onchangeInputHandler}
-                            />
-                            <Select
-                                disabled={!isPossibleEdit}
-                                appearance="Outline"
-                                value={targetItem.filterLogiOption}
+                        <Stack
+                            direction="Horizontal"
+                            justifyContent="Between"
+                            gap="SM"
+                            className="width-100"
+                            style={{ padding: "0.5rem" }}
+                        >
+                            <Typography variant="h6" style={{ color: "inherit" }}>필터 선택</Typography>
+                            <Stack gap="SM" justifyContent="end">
+                                <TextField
+                                    disabled={!isPossibleEdit}
+                                    placeholder="논리 표현식"
+                                    value={filterExpsn}
+                                    id="filterLogiExpsn"
+                                    onChange={onchangeInputHandler}
+                                />
+                                <Select
+                                    disabled={!isPossibleEdit}
+                                    appearance="Outline"
+                                    value={targetItem.filterLogiOption}
+                                    style={{
+                                        width: '16rem'
+                                    }}
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        onchangeSelectHandler(e, value, "filterLogiOption")
+                                    }}
+                                >
+                                    {filterOption.map((item, index) => (
+                                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                    ))}
+                                </Select>
+                            </Stack>
+                        </Stack>
+                        <Stack
+                            direction="Horizontal"
+                            justifyContent="Start"
+                            gap="SM"
+                            className="width-100"
+                        >
+                            <Page
+                                ref={(behvDrop)}
                                 style={{
-                                width: '16rem'
-                                }}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    onchangeSelectHandler(e, value, "filterLogiOption")
+                                    border: "3px solid rgb(218, 218, 218)",
+                                    borderRadius: '8px',
+                                    padding: "0.8rem"
                                 }}
                             >
-                                {filterOption.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))}
-                            </Select>
+                                <Stack direction="Vertical" gap="SM">
+                                    {(trgtFilterList && setTrgtFilterList) &&
+                                        trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
+                                            <BehvColDropItem
+                                                key={`behvCol-${index}`}
+                                                itemIdx={index}
+                                                isPossibleEdit={isPossibleEdit}
+                                                trgtFilterItem={trgtFilterItem}
+                                                columnList={columnList}
+                                                setTrgtFilterList={setTrgtFilterList}
+                                                deleteTrgtFilterInfo={deleteTrgtFilterInfo}
+                                            />
+                                        ))}
+                                    {(!trgtFilterList || trgtFilterList.length === 0) &&
+                                        <TextField
+                                            size='MD'
+                                            shape='Round'
+                                            appearance='Filled'
+                                            readOnly
+                                            value={'오른쪽 BaseFact 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
+                                        >
+                                        </TextField>
+                                    }
+                                </Stack>
+                            </Page>
                         </Stack>
                     </Stack>
-                    <Stack
-                        direction="Horizontal"
-                        justifyContent="Start" 
-                        gap="SM" 
-                        className="width-100"
-                    >
-                        <Page
-                            ref={(behvDrop)}
-                            style={{
-                                border:"3px solid rgb(218, 218, 218)",
-                                borderRadius: '8px',
-                                padding:"0.8rem"
-                            }}
-                        >
-                            <Stack direction="Vertical" gap="SM">
-                            {(trgtFilterList && setTrgtFilterList) && 
-                            trgtFilterList.map((trgtFilterItem: TbRsCustFeatRuleTrgtFilter, index: number) => (
-                                <BehvColDropItem 
-                                    key={`behvCol-${index}`}
-                                    itemIdx={index}
-                                    isPossibleEdit={isPossibleEdit}
-                                    trgtFilterItem={trgtFilterItem}
-                                    columnList={columnList}
-                                    setTrgtFilterList={setTrgtFilterList}
-                                    deleteTrgtFilterInfo={deleteTrgtFilterInfo}
-                                />
-                            ))}
-                            </Stack>
-                        </Page>
-                    </Stack>
                 </Stack>
-            </Stack>
-            
-            {isPossibleEdit &&
-            <Button size="SM" onClick={onClickDeleteHandler}>
-            삭제
-            </Button>
-            }
-        </Stack>
 
-        {/* 확인 모달 */}
-        <ConfirmModal
-            isOpen={isOpenConfirmModal}
-            onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
-            title={confirmModalTit}
-            content={confirmModalCont}
-            onConfirm={onConfirm}
-            onCancle={onCancel}
-            btnType={modalType}
-        />
+                {isPossibleEdit &&
+                    <Button size="SM" onClick={onClickDeleteHandler}>
+                        삭제
+                    </Button>
+                }
+            </Stack>
+
+            {/* 확인 모달 */}
+            <ConfirmModal
+                isOpen={isOpenConfirmModal}
+                onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+                title={confirmModalTit}
+                content={confirmModalCont}
+                onConfirm={onConfirm}
+                onCancle={onCancel}
+                btnType={modalType}
+            />
         </>
     )
 }
