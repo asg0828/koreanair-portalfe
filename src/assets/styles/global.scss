@@ -405,3 +405,376 @@ svg {
     font-size:1rem !important;
   }
 }
+.dashBoardWrap{
+  width: 100%;
+}
+.topCard{
+  border-radius: 24px;
+  width: 100%;
+  display: flex;
+}
+.dashBoardWrap .dashBoardBox{
+  border: 1px solid #dddddd;
+}
+
+.dashBoardWrap .topCard{
+  background: #00256c;
+  border-radius: 24px;
+  overflow: hidden;
+}
+.dashBoardWrap .topCard .dashBoardBox{
+  height: 374px;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1{
+  background: #00256c;
+  width: 350px !important;
+  border: 0;
+  padding: 2rem;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .name{
+  font-size: 1.750rem;
+  letter-spacing: -1px;
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .name .en{
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-left: 8px;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .profile .top{
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: #8bc0ff;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .profile .top .kr{
+  padding-left: 8px;
+  margin-left: 8px;
+  font-size: 14px;
+  color: #ffffff;
+  font-weight: 500;
+  position: relative;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .profile .top .kr::before{
+  content: "";
+  display: block;
+  position: absolute;
+  width: 2px;
+  height: 12px;
+  background: rgba(255,255,255,0.3);
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .profile .item{
+  display: flex;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .profile .item .key{
+  font-size: 0.8125rem;
+  line-height: 24px;
+  color: #ffffff;
+  font-weight: 500;
+  width: 90px;
+  flex-shrink: 0;
+}
+.dashBoardWrap .topCard .dashBoardBox.n1 .profile .item .value{
+  width: 100%;
+  text-align: left;
+  font-size: 0.875rem;
+  line-height: 24px;
+  color: #ffffff;
+  font-weight: 500;
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dashBoardWrap .topCard .dashBoardBox.n2 .top,
+.dashBoardWrap .topCard .dashBoardBox.n3 .top{
+  font-size: 1rem;
+  color: #4876ef;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  height: 36px;
+  border-bottom: 1px solid #aaa;
+}
+.dashBoardWrap .topCard .dashBoardBox.n2 .top .kr,
+.dashBoardWrap .topCard .dashBoardBox.n3 .top .kr{
+  font-size: 0.8125rem;
+  color: #222222;
+  font-weight: 500;
+  margin-left: 8px;
+}
+.dashBoardWrap .topCard .dashBoardBox.n2,
+.dashBoardWrap .topCard .dashBoardBox.n3{
+  padding: 1.875rem;
+}
+
+
+.dashBoardWrap .topCard .dashBoardBox.n2{
+  width: calc(50% - 175px);
+  background: #FFF;
+  border: 1px solid #DDD;
+  border-right: 0;
+  border-radius: 22px 0 0 22px;
+  padding-right: 0;
+}
+.dashBoardWrap .topCard .dashBoardBox.n2 .item{
+  height: 34px;
+  display: flex;
+  align-items: center;
+  padding: 0 3px;
+  border-bottom: 1px solid #EEE;
+}
+.dashBoardWrap .topCard .dashBoardBox.n2 .item:last-child{
+  border-bottom: 0;
+}
+.dashBoardWrap .topCard .dashBoardBox.n2 .item .key{
+  width: 65%;
+  font-size: 0.8125rem;
+  color: #222222;
+  font-weight: 400;
+  padding-right: 1rem;
+  display: block;
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.dashBoardWrap .topCard .dashBoardBox.n2 .item .value{
+  width: 35%;
+  font-size: 0.875rem;
+  color: #222222;
+  font-weight: 700;
+  display: block;
+  overflow: hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+
+
+.dashBoardWrap .topCard .dashBoardBox.n3{
+  width: calc(50% - 175px);
+  background: #FFF;
+  border: 1px solid #DDD;
+  border-left: 0;
+  border-radius: 0 22px 22px 0;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 .middle{
+  display: flex;
+  height: 78px;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  padding: 0 3px;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 .middle .left,
+.dashBoardWrap .topCard .dashBoardBox.n3 .middle .right{
+  font-size: 0.875rem;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 .middle .left .num,
+.dashBoardWrap .topCard .dashBoardBox.n3 .middle .right .num{
+  font-size: 22px;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 500;
+  margin-left: 20px;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 .middle .left{
+  margin-right: 0.2rem;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 .middle .right{
+  margin-left:0.2rem;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 table{
+  width: 100%;
+  border-spacing: 0;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 table th{
+  height: 40px;
+  border-bottom: 1px solid #eeeeee;
+  font-size: 0.875rem;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 700;
+}
+.dashBoardWrap .topCard .dashBoardBox.n3 table td{
+  text-align: center;
+  font-size: 0.875rem;
+  height: 28px;
+  letter-spacing: -1px;
+  line-height:28px;
+  color: #222222;
+  font-weight: 400;
+  font-family: "Noto Sans KR";
+
+}
+.width-25{
+  width: 25%;
+}
+
+.dashBoardWrap .dashBoardBox.under{
+  padding: 1.125rem;
+  border-radius:16px;
+  border: 1px solid #dddddd;
+  min-height: 225px;
+  background: #FFF;
+}
+.dashBoardWrap .dashBoardBox.under .top{
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #aaa;
+  font-size: 1rem;
+  color: #4876ef;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.dashBoardWrap .top .kr{
+  margin-left: 8px;
+  font-size: 13px;
+  letter-spacing: -1px;
+  color: #373f57;
+  font-weight: 500; 
+}
+.dashBoardWrap .item .key{
+  padding-right: 10px;
+}
+.dashBoardWrap .item.middle{
+  font-size: 0.875rem;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 500;
+  min-height: 28px;
+  
+  padding: 0 3px;
+  line-height: 28px;
+}
+.dashBoardWrap  .item.middle .value .num{
+  font-size: 1rem;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 700;
+  margin-right: 8px;
+}
+.dashBoardWrap  .item.large{
+  min-height: 40px;
+  align-items: center;
+  padding: 0 3px;
+  font-size: 0.875rem;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 700;
+}
+.dashBoardWrap  .item.large >div{
+  min-height: 42px;
+}
+.dashBoardWrap  .item.large .value .num{
+  font-size: 1rem;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 700;
+  margin-right: 8px;
+}
+.dashBoardWrap .itemWrap{
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
+}
+.dashBoardWrap .link{
+  cursor: pointer;
+}
+.dashBoardWrap .link:hover{
+  text-decoration: underline;
+  text-underline-position: under;
+}
+.dashBoardWrap .viewMore{
+  display: flex;
+  margin: 20px auto 0;
+  width: 183px;
+  height: 38px;
+  border-radius: 6px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  align-items: center;
+  justify-content: center;
+}
+.dashBoardWrap .viewMore::after{
+  content: "";
+  display: block;
+  width: 12px;
+  height: 8px;
+  background: url('./../images/viewMoreArrow.png');
+  margin-left: 6px;
+}
+.dashBoardWrap .viewMore.true::after{
+  content: "";
+  display: block;
+  width: 12px;
+  height: 8px;
+  background: url('./../images/viewMoreArrow.png');
+  transform: rotate(180deg);
+  margin-left: 6px;
+}
+
+.dashBoardWrap .smallTitle{
+  font-size: 14px;
+  letter-spacing: -1px;
+  color: #00256c;
+  font-weight: 700;
+  min-height: 38px;
+  align-items: center;
+  display: flex;
+  padding: 0 3px;
+  border-bottom: 1px solid #e5e5e5;
+  padding-top: 6px;
+}
+.dashBoardWrap .hideContents table{
+  width: 100%;
+  padding-top: 6px;
+}
+.dashBoardWrap .hideContents table th{
+  height: 40px;
+  font-size: 0.875rem;
+  letter-spacing: -1px;
+  color: #00256c;
+  font-weight: 700;
+  border-bottom: 1px solid #e5e5e5;
+}
+.dashBoardWrap .hideContents table tbody tr:first-child td{
+  padding-top: 8px;
+}
+.dashBoardWrap .hideContents table td{
+  font-size: 0.875rem;
+  letter-spacing: -1px;
+  color: #222222;
+  font-weight: 700;
+  // min-height: 26px;
+  line-height: 26px;
+}
+.dashBoardWrap .hideContents table th,
+.dashBoardWrap .hideContents table td{
+  text-align: left;
+}
+.dashBoardWrap .hideContents .item .col{
+  margin-left: 4px;
+}
+
+.dashBoardWrap .hideContents table.centerTable th,
+.dashBoardWrap .hideContents table.centerTable td{
+  text-align: center;
+}
