@@ -45,16 +45,12 @@ export default function MobileNumber() {
     setPage(page);
     setIsChanged(true);
   };
+
   /* 초기화 버튼 */
   function onClear() {
     setSearchInfo({ ...searchInfo1, agtEstimatedMblfonNoInfo: '', agtEstMblfonNoInfoHshVlu: '' });
   }
 
-  // 행 클릭시 조회
-  function searchMaster() {
-    console.log('??');
-    // 받아온 데이터를 넣기
-  }
   useEffect(() => {
     isChanged && handleSearch();
 
@@ -92,6 +88,12 @@ export default function MobileNumber() {
       }
     }
   }, [response2, isError2, toast]);
+
+  // 행 클릭 조회 함수
+  const getClickRow = (rowData: any) => {
+    setSearchInfo2({ ...searchInfo2, mobilePhoneNumberInfo: rowData.presumeNum });
+    refetch2();
+  };
 
   return (
     <Stack direction="Vertical">
@@ -141,9 +143,9 @@ export default function MobileNumber() {
         rows={mobileData}
         enableSort={true}
         clickable={true}
-        onClick={searchMaster}
         page={page}
         onChange={handlePage}
+        onClick={getClickRow}
       />
       <DataGrid
         columns={mobMasterColumn}
