@@ -25,8 +25,8 @@ const Reg = () => {
     control,
     getValues,
     setValue,
-    formState: { errors },
     watch,
+    formState: { errors },
   } = useForm<CreatedFeatureModel>({
     mode: 'onChange',
     defaultValues: {

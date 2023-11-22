@@ -23,6 +23,7 @@ const Reg = () => {
     control,
     getValues,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<CreatedFeatureModel>({
     mode: 'onChange',
@@ -75,7 +76,7 @@ const Reg = () => {
     if (values.featureSeGrp) {
       sRefetch();
     }
-  }, [values.featureSeGrp, sRefetch]);
+  }, [watch().featureSeGrp, sRefetch]);
 
   useEffect(() => {
     if (sIsError || sResponse?.successOrNot === 'N') {
