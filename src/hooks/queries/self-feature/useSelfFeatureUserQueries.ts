@@ -4,9 +4,15 @@ import {
     retrieveApproverCandidate, 
     retrieveBatchExecuteLogs, 
     retrieveCustFeatParentChildList, 
+    retrieveCustFeatRules, 
     retrieveReadSql, 
     retrieveSampleData, 
 } from "@/api/self-feature/SelfFeatureUserAPI"
+import { FeatListSrchProps } from "@/models/selfFeature/FeatureInfo"
+
+export const useCustFeatRules = (qParams: FeatListSrchProps) => {
+    return useQuery(['/cust-feat-rules'], () => retrieveCustFeatRules(qParams))
+}
 
 export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId())

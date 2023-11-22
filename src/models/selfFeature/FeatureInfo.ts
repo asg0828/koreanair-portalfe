@@ -1,6 +1,15 @@
 import { RowsInfo } from "@/models/components/Table"
 import { SelectValue } from '@mui/base/useSelect'
 
+export interface FeatListSrchProps {
+    [key: string]: string
+    mstrSgmtRuleId: string
+    custFeatRuleName: string
+    category: string
+    useYn: string
+    submissionStatus: string
+}
+
 export interface TargetDropListProps {
     featStatus: string
     setIsSelectAggregateTop?: React.Dispatch<React.SetStateAction<Boolean>>
