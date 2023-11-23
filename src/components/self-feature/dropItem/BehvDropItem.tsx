@@ -118,6 +118,10 @@ const BehvDropItem = ({
         }
     }, [trgtFilterList])
 
+    useEffect(() => {
+        console.log(targetItem)
+    }, [targetItem])
+
     // 집계할 컬럼 변경시 dataType setting
     useEffect(() => {
         columnList.map((col: AggregateCol) => {
@@ -170,7 +174,7 @@ const BehvDropItem = ({
     useEffect(() => {
         //columnList
         let colList: Array<AggregateCol> = []
-        aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
+        aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo, index: number) => {
             let col = { value: "", text: "", dataType: "" }
             col.value = colInfo.metaTblClmnPhysNm
             col.text = colInfo.metaTblClmnLogiNm
@@ -178,7 +182,7 @@ const BehvDropItem = ({
             colList.push(col)
             return colInfo
         })
-        setColumnList(colList)
+        setColumnList([...[{ value: "", text: "선택", dataType: "" }], ...colList])
     }, [aggregateColList])
 
     const [, behvDrop] = useDrop(() => ({
@@ -193,7 +197,7 @@ const BehvDropItem = ({
                 tableIdArr.pop()
                 let tableId = tableIdArr.join('_')
                 */
-                if (targetItem.tableName !== targetObj.metaTblLogiNm) {
+                if (targetItem.tableName !== targetObj.metaTblId) {
                     setModalType(ModalType.ALERT)
                     setConfirmModalTit("대상 선택")
                     setConfirmModalCont("같은 테이블 조건이 아닙니다.")
@@ -377,7 +381,7 @@ const BehvDropItem = ({
                             BaseFact
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.29498 16.59L12.875 12L8.29498 7.41L9.70498 6L15.705 12L9.70498 18L8.29498 16.59Z" fill="currentColor"></path></svg>
                         </div>
-                        <Typography variant="body2" style={{ color: "inherit" }}>{targetItem.tableName}</Typography>
+                        <Typography variant="body2" style={{ color: "inherit" }}>{targetItem.tableLogiName}</Typography>
                     </Stack>
                     <Typography variant="h6" style={{ color: "inherit" }}>SELECT</Typography>
                     <Stack

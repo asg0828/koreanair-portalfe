@@ -1,11 +1,11 @@
-import { commonModel } from '@/models/model/CommonModel';
+import { CommonModel } from '@/models/model/CommonModel';
 
 export interface DataroomParams {
   searchConditions: string;
   searchTable: string;
 }
 
-export interface DataroomModel extends CreatedDataroomModel, commonModel {
+export interface DataroomModel extends CreatedDataroomModel, CommonModel {
   dataId: string;
 }
 

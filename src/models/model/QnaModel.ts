@@ -1,11 +1,11 @@
-import { commonModel } from '@/models/model/CommonModel';
+import { CommonModel } from '@/models/model/CommonModel';
 
 export interface QnaParams {
   searchConditions: string;
   searchTable: string;
 }
 
-export interface QnaModel extends CreatedQnaModel, commonModel {
+export interface QnaModel extends CreatedQnaModel, CommonModel {
   qnaId: string;
   comments: Array<QnaModel>;
 }

@@ -1,4 +1,4 @@
-import { RuleId } from "@/models/selfFeature/FeatureCommon";
+import { FeatureType, RuleId } from "@/models/selfFeature/FeatureCommon";
 import { 
     FeatureInfo,
     TbRsCustFeatRuleCalc,
@@ -96,8 +96,8 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     id: '',
     name: '',
     description: '',
-    rslnRuleId: '',
-    mstrSgmtRuleId: '',
+    rslnRuleId: RuleId.RESOLUTION,
+    mstrSgmtRuleId: RuleId.MASTERPROF,
     mstrSgmtRuleNm: '',
     useYn: 'Y',
     batManualExecTestCnt: 0,
@@ -128,10 +128,11 @@ export const initTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
 
 export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     id: 0,
-    custFeatRuleId: RuleId.MASTERPROF,
+    custFeatRuleId: '',
     targetId: '',
     divisionCode: '',
     tableName: '',
+    tableLogiName: '',
     filterLogiOption: 'ALL',
     filterLogiExpsn: '',
     operator: '',
@@ -154,10 +155,11 @@ export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
 export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {
     id: 0,
     custFeatRuleTrgtId: 0,
-    custFeatRuleId: RuleId.MASTERPROF,
+    custFeatRuleId: '',
     targetId: '',
     filterId: '',
     columnName: '',
+    columnLogiName: '',
     columnDataTypeCode: '',
     operator: '',
     operand1: '',
@@ -200,7 +202,7 @@ export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
 
 export const initFeatureTemp: FeatureTemp = {
     featureId: '',
-    featureTyp: '',
+    featureTyp: FeatureType.CUST,
     featureSe: '',
     featureLSe: '',
     featureMSe: '',
@@ -626,61 +628,6 @@ export const protoTypeTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
     lastUpdDttm: '',
     lastUpdUserId: ''
 }
-
-export const protoTypeTbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt> = [
-    {
-        id: 0,
-        custFeatRuleId: '',
-        targetId: 'T1',
-        divisionCode: 'BEHV',
-        tableName: '[행동]대한항공 설치 테스트',
-        filterLogiOption: 'ALL',
-        filterLogiExpsn: '',
-        operator: 'distinct_count',
-        operand1: '',
-        columnName: '세션번호',
-        frstRegDttm: '',
-        frstRegUserId: '',
-        lastUpdDttm: '',
-        lastUpdUserId: '',
-        operand2: '',
-        operand3: '',
-        operand4: '',
-        function: '',
-        variable1: '',
-        variable2: '',
-        variable3: '',
-        targetDataType: '',
-    }
-]
-
-export const protoTypeTbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgtFilter> = [
-    {
-        id: 0,
-        custFeatRuleTrgtId: 0,
-        custFeatRuleId: '',
-        targetId: 'T1',
-        filterId: '',
-        columnName: '페이지그룹구분',
-        columnDataTypeCode: '',
-        operator: 'match',
-        operand1: 'Booking',
-        operand2: '',
-        frstRegDttm: '',
-        frstRegUserId: '',
-        lastUpdDttm: '',
-        lastUpdUserId: '',
-        delimiter: '',
-        operand3: '',
-        operand4: '',
-        operand5: '',
-        operand6: '',
-        function: '',
-        variable1: '',
-        variable2: '',
-        variable3: '',
-    }
-]
 
 export const protoTypeTbCoMetaTbInfo: TbCoMetaTbInfo = {
     metaTblId: 'L2_homepagebehv_B_id',

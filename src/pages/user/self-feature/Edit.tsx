@@ -152,7 +152,6 @@ const SelfFeatureEdit = () => {
 	}
 
 	useEffect(() => {
-		//useQuery(['mstrSgmtTableandColMetaInfo'], () => )
 		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
 			getTableandColumnMetaInfoByMstrSgmtRuleId()
 	}, [])
@@ -345,6 +344,9 @@ const SelfFeatureEdit = () => {
 				}
 				return key
 			})
+			if (id === "featureNm") {
+				rtn.name = value
+			}
 			return rtn
 		})
 

@@ -1,4 +1,4 @@
-import { commonModel } from '@/models/model/CommonModel';
+import { CommonModel } from '@/models/model/CommonModel';
 
 export interface FeatureParams {
   featureSeGrp: string;
@@ -9,7 +9,7 @@ export interface FeatureParams {
   enrDeptCode: string;
 }
 
-export interface FeatureModel extends CreatedFeatureModel, commonModel {
+export interface FeatureModel extends CreatedFeatureModel, CommonModel {
   featureId: string;
   featureTypNm: string;
   featureSeGrpNm: string;

@@ -281,7 +281,6 @@ const SelfFeatureReg = () => {
 			setIsOpenConfirmModal(true)
 			return
 		}
-		// 등록하면서 승인정보 저장도 진행되어야함. -> BE에서 transaction?
 		/*
 		  Method      :: POST
 		  Url         :: /api/v1/customerfeatures
@@ -294,9 +293,18 @@ const SelfFeatureReg = () => {
 		let request = cloneDeep(initApiRequest)
 		request.method = Method.POST
 		request.url = "/api/v1/customerfeatures"
+
 		featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
-		request.params!.bodyParams = Object.assign(featureInfo, { sfSubmissionRequestData: sfSubmissionRequestData })
-		request.params!.bodyParams = Object.assign(request.params!.bodyParams, { sfSubmissionApprovalList: sfSubmissionApprovalList })
+		sfSubmissionRequestData.title = `${featureInfo.tbRsCustFeatRule.name}_승인정보`
+		sfSubmissionRequestData.content = `${featureInfo.tbRsCustFeatRule.description}_승인정보`
+		let param = {
+			customerFeature: featureInfo,
+			submissionInfo: {
+				submission: sfSubmissionRequestData,
+				approvals: sfSubmissionApprovalList
+			}
+		}
+		request.params!.bodyParams = param
 		console.log("[createCustFeatRule] Request  :: ", request)
 
 		let response = cloneDeep(initCommonResponse)
@@ -344,6 +352,10 @@ const SelfFeatureReg = () => {
 				}
 				return key
 			})
+
+			if (id === "featureNm") rtn.name = value
+			if (id === "featureDef") rtn.description = value
+
 			return rtn
 		})
 
@@ -482,16 +494,16 @@ const SelfFeatureReg = () => {
 							</Select>
 						</TD>
 					</TR>
-					<TR>
-						<TH colSpan={1} align="right" required>Feature ID</TH>
+					{/* <TR>
+						<TH colSpan={1} align="right">Feature ID</TH>
 						<TD colSpan={2}>
 							<TextField className="width-100" id="featureId" readOnly onChange={onchangeInputHandler} />
 						</TD>
-						<TH colSpan={1} align="right" required>Feature 타입</TH>
+						<TH colSpan={1} align="right">Feature 타입</TH>
 						<TD colSpan={2}>
 							<TextField className="width-100" id="featureTyp" value={"Fact지수"} readOnly onChange={onchangeInputHandler} />
 						</TD>
-					</TR>
+					</TR> */}
 					<TR>
 						<TH colSpan={1} align="right" required>한글명</TH>
 						<TD colSpan={2}>
@@ -559,7 +571,7 @@ const SelfFeatureReg = () => {
 					<TR>
 						<TH colSpan={1} align="right">비고</TH>
 						<TD colSpan={5}>
-							<TextField className="width-100" id="description" onChange={onchangeInputHandler} />
+							<TextField className="width-100" id="" onChange={onchangeInputHandler} />
 						</TD>
 					</TR>
 				</HorizontalTable>

@@ -1,6 +1,6 @@
 export type YN = 'Y' | 'N';
 
-export interface commonModel {
+export interface CommonModel {
   modiId: string;
   modiDt: string;
   modiNm?: string;

@@ -1,4 +1,4 @@
-import { commonModel } from '@/models/model/CommonModel';
+import { CommonModel } from '@/models/model/CommonModel';
 
 export interface DatasetParams {
   searchTable: string;
@@ -6,7 +6,7 @@ export interface DatasetParams {
   srcDbCd: string;
 }
 
-export interface DatasetModel extends CreatedDatasetModel, commonModel {
+export interface DatasetModel extends CreatedDatasetModel, CommonModel {
   mtsId: string;
 }
 
