@@ -153,8 +153,8 @@ export default function OneIdMasterHistory() {
   }
 
   return (
-    <Stack direction="Vertical">
-      <Stack className="height-100">
+    <>
+      <Stack direction="Vertical" gap="LG" className="width-100">
         <SearchForm onSearch={handleSearch} onClear={onClear}>
           <form>
             <HorizontalTable>
@@ -374,6 +374,6 @@ export default function OneIdMasterHistory() {
         page={page}
         onChange={(flag: 'history') => handlePage(page2, flag)}
       />
-    </Stack>
+    </>
   );
 }
