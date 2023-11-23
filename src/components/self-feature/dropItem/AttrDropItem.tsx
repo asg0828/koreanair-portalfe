@@ -23,7 +23,6 @@ const AttrDropItem = ({
     }
 
     return (
-        <Stack gap="SM">
         <Stack 
             justifyContent="Start" 
             gap="SM" 
@@ -33,6 +32,7 @@ const AttrDropItem = ({
                 color:'#00b21e',
                 padding:"0.5rem",
                 borderRadius: '5px',
+                position: "relative",
             }}
         >
             <Typography variant="h6" style={{color:"inherit"}}>T{itemIdx + 1}</Typography>
@@ -49,15 +49,25 @@ const AttrDropItem = ({
                 columnList={columnList}
                 setTargetList={setTargetList!}
             />
-            </Stack>
+            <Stack
+                direction="Vertical"
+                gap="SM"
+                style={{
+                    top: "20%",
+                    position: "absolute",
+                    left: "93%",
+                }}
+            >
             {isPossibleEdit ? (
-                <Button size="MD" onClick={onClickDeleteHandler}>
-                삭제
+                <Button size="SM" onClick={onClickDeleteHandler}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"></path>
+                    </svg>
                 </Button>
             ) : (
                 <></>
-            )
-        }
+            )}
+            </Stack>
         </Stack>
     )
 }

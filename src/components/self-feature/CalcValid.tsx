@@ -111,67 +111,74 @@ const ClacValid = ({
     }, [isSelectAggregateTop])
     return (
         // check box 선택시 case문 조건 설정 항목 show/hide 필요
-        <>
         <Stack
-            direction="Horizontal"
-            justifyContent="Start" 
-            gap="MD" 
+            direction="Vertical"
+            style={{
+                margin: "0.5rem"
+            }}
         >
-            <Typography variant="h4">계산식</Typography>
-            {(isPossibleEdit && !isSelectAggregateTop) &&
-            <>
-            <Typography variant='body2'>CASE 사용</Typography>
-            <Checkbox
-                checked={formulaCaseChecked}
-                onCheckedChange={onCheckedCaseChange}
-            />
-            </>
-            }
-        </Stack>
-        <div className='flex row'>
-            <Stack 
+            <Stack
                 direction="Horizontal"
                 justifyContent="Start" 
                 gap="MD" 
             >
-            </Stack>
-            {!formulaCaseChecked && 
-                <FormulaComponent 
-                    isPossibleEdit={isPossibleEdit}
-                    custFeatRuleCalc={custFeatRuleCalc}
-                    setCustFeatRuleCalc={setCustFeatRuleCalc}
-                    setIsValidFormula={setIsValidFormula!}
-                    formulaTrgtList={formulaTrgtList}
+                <Typography variant="h4">2. 생성 Feature</Typography>
+                <Typography variant="caption">숫자 타입의 TARGET명, +, -, *, /, 소괄호만 사용하여 계산식을 입력합니다. 예) (T1+T2)/T3 </Typography>
+                {/* 
+                {(isPossibleEdit && !isSelectAggregateTop) &&
+                <><Typography variant='body2'>CASE 사용</Typography>
+                <Checkbox
+                    checked={formulaCaseChecked}
+                    onCheckedChange={onCheckedCaseChange}
                 />
-            }
-            {formulaCaseChecked &&
-                <>
+                </>
+                } 
+                */}
+            </Stack>
+            <div className='flex row'>
                 <Stack 
                     direction="Horizontal"
                     justifyContent="Start" 
                     gap="MD" 
                 >
-                    <Typography variant='h6'>CASE</Typography>
-                    {(!elseSelected && isPossibleEdit) && <Button size="SM" onClick={onClickAddRuleCaseHandler}>
-                        추가
-                    </Button>}
                 </Stack>
-                {custFeatRuleCaseList.map((ruleCase: TbRsCustFeatRuleCase, index: number) => {
-                    return <CaseComponent
-                        key={`custFeatRuleCase-${index}`}
+                {!formulaCaseChecked && 
+                    <FormulaComponent 
                         isPossibleEdit={isPossibleEdit}
-                        index={index}
-                        lastIdx={(custFeatRuleCaseList.length-1)}
-                        custFeatRuleCase={ruleCase}
-                        setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+                        custFeatRuleCalc={custFeatRuleCalc}
+                        setCustFeatRuleCalc={setCustFeatRuleCalc}
                         setIsValidFormula={setIsValidFormula!}
                         formulaTrgtList={formulaTrgtList}
                     />
-                })}
-                </>
-            }
-        </div>
-        </>
+                }
+                {formulaCaseChecked &&
+                    <>
+                    <Stack 
+                        direction="Horizontal"
+                        justifyContent="Start" 
+                        gap="MD" 
+                    >
+                        <Typography variant='h6'>CASE</Typography>
+                        {(!elseSelected && isPossibleEdit) && <Button size="SM" onClick={onClickAddRuleCaseHandler}>
+                            추가
+                        </Button>}
+                    </Stack>
+                    {custFeatRuleCaseList.map((ruleCase: TbRsCustFeatRuleCase, index: number) => {
+                        return <CaseComponent
+                            key={`custFeatRuleCase-${index}`}
+                            isPossibleEdit={isPossibleEdit}
+                            index={index}
+                            lastIdx={(custFeatRuleCaseList.length-1)}
+                            custFeatRuleCase={ruleCase}
+                            setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+                            setIsValidFormula={setIsValidFormula!}
+                            formulaTrgtList={formulaTrgtList}
+                        />
+                    })}
+                    </>
+                }
+            </div>
+        </Stack>
     )
 }
 

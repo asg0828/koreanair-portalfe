@@ -88,20 +88,21 @@ const BehvColDropItem = ({
             setDelimiterSelected(false)
             isClrDlmt = false
         }
+        // 날짜 타입 select box 선택시 operand 초기화
+        let isOprtSlct = false
         // 날짜 타입 select box show를 위한 state 설정
         if (keyNm === "operator" && (v === "before" || v === "after" || v === "between")) {
+            isOprtSlct = true
             setSlctDateType(v)
         }
         // 날짜(between)의 경우 날짜/조건식 중 날짜 선택시 operand 초기화
         let isOprdDate1 = false
         let isOprdDate2 = false
-        if ((keyNm === "operand1" || keyNm === "operand4") && (v === "date" || v === "now")) {
-            isOprdDate1 = true
-            isOprdDate2 = true
-        } else {
-            isOprdDate1 = false
-            isOprdDate2 = false
-        }
+        if ((keyNm === "operand1") && (v === "date" || v === "now")) isOprdDate1 = true
+        else isOprdDate1 = false
+        
+        if ((keyNm === "operand4") && (v === "date" || v === "now")) isOprdDate2 = true
+        else isOprdDate2 = false
 
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
@@ -109,6 +110,14 @@ const BehvColDropItem = ({
             updtTrgtFilterList[itemIdx][keyNm] = v
             if (!isClrDlmt) {
                 updtTrgtFilterList[itemIdx]["delimiter"] = ''
+            }
+            if (isOprtSlct) {
+                updtTrgtFilterList[itemIdx]["operand1"] = ''
+                updtTrgtFilterList[itemIdx]["operand2"] = ''
+                updtTrgtFilterList[itemIdx]["operand3"] = ''
+                updtTrgtFilterList[itemIdx]["operand4"] = ''
+                updtTrgtFilterList[itemIdx]["operand5"] = ''
+                updtTrgtFilterList[itemIdx]["operand6"] = ''
             }
             if (isOprdDate1) {
                 updtTrgtFilterList[itemIdx]["operand2"] = ''
@@ -133,14 +142,30 @@ const BehvColDropItem = ({
                 gap="SM"
                 className="width-100"
                 style={{
+                    display: "inline-flex",
                     color: 'rgb(0, 99, 165)',
                     backgroundColor: 'rgb(200, 233, 255)',
                     borderRadius: '5px',
                     padding:"0.35rem"
                 }}
             >  
-                <Typography variant='h6' style={{color:"inherit"}}>{trgtFilterTit[itemIdx]}</Typography>
-                <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterItem.columnLogiName}</Typography>
+                <Stack
+                    gap="SM"
+                    style={{
+                        flex: "0 1 8%",
+                        maxWidth: "8%",
+                    }}
+                >
+                    <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterTit[itemIdx]}</Typography>
+                    <Typography variant="body2" style={{color:"inherit"}}>{trgtFilterItem.columnLogiName}</Typography>
+                </Stack>
+                <Stack
+                    gap="SM"
+                    style={{
+                        flex: "0 1 10%",
+                        maxWidth: "10%",
+                    }}
+                >
                 <TransFunction 
                     isPossibleEdit={isPossibleEdit}
                     itemIdx={itemIdx}
@@ -149,6 +174,17 @@ const BehvColDropItem = ({
                     columnList={columnList}
                     setTrgtFilterList={setTrgtFilterList}
                 />
+                </Stack>
+                <Stack
+                    justifyContent="Start"
+                    gap="MD"
+                    style={{
+                        display: "inline-flex",
+                        flex: "0 1 75%",
+                        maxWidth: "75%",
+                        alignItems: "flex-start",
+                    }}
+                >
                 <OperatorOperand
                     isPossibleEdit={isPossibleEdit}
                     itemIdx={itemIdx}
@@ -160,13 +196,25 @@ const BehvColDropItem = ({
                     onchangeInputHandler={onchangeInputHandler}
                     onchangeSelectHandler={onchangeSelectHandler}
                 />
+                </Stack>
+                <Stack
+                    justifyContent="End"
+                    gap="SM"
+                    style={{
+                        flex: "0 1 5%",
+                        maxWidth: "5%",
+                    }}
+                >
                 {isPossibleEdit ? (
                     <Button size="XS" onClick={onClickTrgtFilterDeleteHandler}>
-                    컬럼삭제
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"></path>
+                        </svg>
                     </Button>
                 ) : (
                     <></>
                 )}
+                </Stack>
             </Stack>
         }
         </>

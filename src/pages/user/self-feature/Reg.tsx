@@ -576,12 +576,26 @@ const SelfFeatureReg = () => {
 					</TR>
 				</HorizontalTable>
 				{/* 기본 정보 */}
-
+				
 				{/* 대상 선택 */}
+				<Stack
+					gap="LG"
+					direction="Vertical"
+					style={{
+						border: '2px solid rgb(162, 210, 235)',
+						borderRadius: '5px',
+					}}
+				>
 				{(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
-					<>
+					<Stack
+						direction="Vertical"
+						gap="SM"
+						style={{
+							margin: "0.5rem"
+						}}
+					>
 						<Stack direction="Horizontal" gap="LG" justifyContent="start">
-							<Typography variant="h4">대상 선택</Typography>
+							<Typography variant="h4">1. Feature 로직</Typography>
 							<Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
 								초기화
 							</Button>
@@ -592,7 +606,7 @@ const SelfFeatureReg = () => {
 							gap="MD"
 							justifyContent="Between"
 							style={{
-								height: '400px',
+								height: '700px',
 							}}
 						>
 							<DndProvider backend={HTML5Backend}>
@@ -619,12 +633,17 @@ const SelfFeatureReg = () => {
 								{/* drag 영역 */}
 							</DndProvider>
 						</Stack>
-					</>
+					</Stack>
 				}
 				{/* 대상 선택 */}
 				{/* SQL 입력 */}
 				{(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
-					<>
+					<Stack
+						direction="Vertical"
+						style={{
+							margin: "0.5rem"
+						}}
+					>
 						<Typography variant="h4">Feature 생성 Query</Typography>
 						<Stack
 							direction="Horizontal"
@@ -636,7 +655,7 @@ const SelfFeatureReg = () => {
 						>
 							<TextField className="width-100 height-100" multiline id="sqlQuery" onChange={onchangeInputHandler} />
 						</Stack>
-					</>
+					</Stack>
 				}
 				{/* SQL 입력 */}
 				{/* 계산식 */}
@@ -652,6 +671,7 @@ const SelfFeatureReg = () => {
 						setCustFeatRuleCaseList={setCustFeatRuleCaseList}
 					/>
 				}
+				</Stack>
 				{/* 계산식 */}
 				{/* 결재선 */}
 				<ApprovalList

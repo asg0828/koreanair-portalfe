@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useDrag } from "react-dnd"
 import { cloneDeep } from "lodash"
 
@@ -15,7 +16,7 @@ const BehvDragItem = ({
 
     const [{ isBehvDragging }, behvDragItem] = useDrag(() => ({
         type: divisionTypes.BEHV,
-        item: Object.assign({ divisionCode: divisionTypes.BEHV, metaTblLogiNm: metaTblLogiNm }, cloneDeep(behvTblClmnInfo)),
+        item: Object.assign({ divisionCode: divisionTypes.BEHV, tableLogiName: metaTblLogiNm }, cloneDeep(behvTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 
@@ -33,10 +34,16 @@ const BehvDragItem = ({
             {behvTblClmnInfo &&
                 <Typography 
                     ref={(behvDragItem)}
-                    style={{ opacity: behvOpacity,backgroundColor: '#e6f9ff', color: '#00256c',padding:"0.3rem" }}
+                    style={{ 
+                        opacity: behvOpacity,
+                        backgroundColor: '#e6f9ff', 
+                        color: '#00256c',
+                        padding:"0.3rem",
+                        fontSize: "smaller", 
+                    }}
                     variant="body2"
                 >
-                    {behvTblClmnInfo.metaTblClmnLogiNm}
+                    {behvTblClmnInfo.metaTblClmnLogiNm} / {behvTblClmnInfo.dataTypeCategory.slice(0, 1).toUpperCase()}
                 </Typography>
             }
         </>

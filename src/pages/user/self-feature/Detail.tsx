@@ -747,13 +747,26 @@ const SelfFeatureDetail = () => {
 				</HorizontalTable>
 				{/* 기본 정보 */}
 
-				{/* 대상 선택 */}
+				{/* Feature 로직 */}
+				<Stack
+					gap="LG"
+					direction="Vertical"
+					style={{
+						border: '2px solid rgb(162, 210, 235)',
+						borderRadius: '5px',
+					}}
+				>
 				{(
 					featureInfo.tbRsCustFeatRule.sqlDirectInputYn === ""
 					|| featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
 				) &&
-					<>
-						<Typography variant="h4">대상 선택</Typography>
+					<Stack
+						direction="Vertical"
+						style={{
+							margin: "0.5rem"
+						}}
+					>
+						<Typography variant="h4">1. Feature 로직</Typography>
 						{/* drag && drop 영역*/}
 						<Stack
 							direction="Horizontal"
@@ -780,23 +793,15 @@ const SelfFeatureDetail = () => {
 							</DndProvider>
 						</Stack>
 						{/* 대상 선택 */}
-
-						{/* 계산식 */}
-						{formulaTrgtList.length > 0 &&
-							<CalcValid
-								featStatus={selfFeatPgPpNm.DETL}
-								formulaTrgtList={formulaTrgtList}
-								custFeatRuleCalc={custFeatRuleCalc}
-								custFeatRuleCaseList={custFeatRuleCaseList}
-								setCustFeatRuleCalc={setCustFeatRuleCalc}
-								setCustFeatRuleCaseList={setCustFeatRuleCaseList}
-							/>
-						}
-						{/* 계산식 */}
-					</>
+					</Stack>
 				}
 				{featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
-					<>
+					<Stack
+						direction="Vertical"
+						style={{
+							margin: "0.5rem"
+						}}
+					>
 						<Typography variant="h4">Feature 생성 Query</Typography>
 						<Stack
 							direction="Horizontal"
@@ -814,9 +819,25 @@ const SelfFeatureDetail = () => {
 								defaultValue={featureInfo.tbRsCustFeatRuleSql?.sqlQuery}
 							/>
 						</Stack>
-					</>
+					</Stack>
 				}
 
+				{/* 계산식 */}
+				{((
+					featureInfo.tbRsCustFeatRule.sqlDirectInputYn === ""
+					|| featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
+				) && formulaTrgtList.length > 0) &&
+					<CalcValid
+						featStatus={selfFeatPgPpNm.DETL}
+						formulaTrgtList={formulaTrgtList}
+						custFeatRuleCalc={custFeatRuleCalc}
+						custFeatRuleCaseList={custFeatRuleCaseList}
+						setCustFeatRuleCalc={setCustFeatRuleCalc}
+						setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+					/>
+				}
+				{/* 계산식 */}
+				</Stack>
 				<Stack justifyContent="Between" className="width-100">
 					<Typography variant="h4">결재선</Typography>
 				</Stack>

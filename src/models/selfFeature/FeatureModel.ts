@@ -178,6 +178,7 @@ export interface TbCoMetaTblClmnInfo {
     [key: string]: string | number
     rtmTblYn: string,
     metaTblId: string,
+    metaTblLogiNm: string,
     metaTblClmnId: string,
     metaTblClmnPhysNm: string,
     //example: 메타테이블컬럼물리명

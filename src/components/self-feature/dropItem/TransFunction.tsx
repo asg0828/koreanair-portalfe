@@ -98,7 +98,7 @@ const TransFunction = ({
                     disabled={!isPossibleEdit || !transFuncChecked}
                     priority="Normal"
                     shape="Square"
-                    size="MD"
+                    size="SM"
                     onClick={() => onClickTransFuncHandler()}
                 >
                 변환
@@ -110,7 +110,7 @@ const TransFunction = ({
                 disabled={!isPossibleEdit || !transFuncChecked}
                 priority="Normal"
                 shape="Square"
-                size="MD"
+                size="SM"
                 onClick={() => onClickTransFuncHandler()}
             >
             변환

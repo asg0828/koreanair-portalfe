@@ -118,15 +118,10 @@ const BehvDropItem = ({
         }
     }, [trgtFilterList])
 
-    useEffect(() => {
-        console.log(targetItem)
-    }, [targetItem])
-
     // 집계할 컬럼 변경시 dataType setting
     useEffect(() => {
         columnList.map((col: AggregateCol) => {
             if (col.value === targetItem.columnName) {
-                //setDataTypeCol(col.dataType)
                 // 집계함수 list 변경
                 if (cmmCodeAggrRes) {
                     setAggregateOption((prevState: Array<CommonCodeInfo>) => {
@@ -174,7 +169,7 @@ const BehvDropItem = ({
     useEffect(() => {
         //columnList
         let colList: Array<AggregateCol> = []
-        aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo, index: number) => {
+        aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
             let col = { value: "", text: "", dataType: "" }
             col.value = colInfo.metaTblClmnPhysNm
             col.text = colInfo.metaTblClmnLogiNm
@@ -192,24 +187,20 @@ const BehvDropItem = ({
 
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
-                /*
-                let tableIdArr  = targetId.split('_')
-                tableIdArr.pop()
-                let tableId = tableIdArr.join('_')
-                */
+
                 if (targetItem.tableName !== targetObj.metaTblId) {
                     setModalType(ModalType.ALERT)
-                    setConfirmModalTit("대상 선택")
+                    setConfirmModalTit("Feature 로직")
                     setConfirmModalCont("같은 테이블 조건이 아닙니다.")
                     setIsOpenConfirmModal(true)
                     return null
                 }
-
                 setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                     let tl = cloneDeep(state)
                     let trgtFilter = initTbRsCustFeatRuleTrgtFilter
                     trgtFilter.targetId = targetItem.targetId // 고정
-                    trgtFilter.columnName = targetObj.metaTblClmnLogiNm
+                    trgtFilter.columnName = targetObj.metaTblClmnPhysNm
+                    trgtFilter.columnLogiName = targetObj.metaTblClmnLogiNm
                     trgtFilter.columnDataTypeCode = targetObj.dataTypeCategory
                     tl.push(trgtFilter)
                     return tl
@@ -358,7 +349,8 @@ const BehvDropItem = ({
                     backgroundColor: '#e6f9ff',
                     color: '#00256c',
                     borderRadius: '5px',
-                    padding: '0.5rem'
+                    padding: '0.5rem',
+                    position: "relative",
                 }}
             >
                 <Stack
@@ -383,26 +375,26 @@ const BehvDropItem = ({
                         </div>
                         <Typography variant="body2" style={{ color: "inherit" }}>{targetItem.tableLogiName}</Typography>
                     </Stack>
-                    <Typography variant="h6" style={{ color: "inherit" }}>SELECT</Typography>
                     <Stack
                         direction="Horizontal"
                         justifyContent="Start"
-                        gap="MD"
+                        gap="XL"
                         className="width-100"
                         style={{
                             marginBottom: '1%',
                         }}
                     >
+                        <Typography variant="h6" style={{ color: "inherit" }}>SELECT</Typography>
                         <Select
                             disabled={!isPossibleEdit}
                             placeholder="집계할 컬럼"
                             appearance="Outline"
                             value={targetItem.columnName}
                             shape="Square"
-                            size="MD"
+                            size="SM"
                             status="default"
                             style={{
-                                width: '11.25rem'
+                                width: '16rem'
                             }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -422,10 +414,10 @@ const BehvDropItem = ({
                             appearance="Outline"
                             value={targetItem.operator}
                             shape="Square"
-                            size="MD"
+                            size="SM"
                             status="default"
                             style={{
-                                width: '11.25rem'
+                                width: '16rem'
                             }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -446,7 +438,7 @@ const BehvDropItem = ({
                                     appearance="Outline"
                                     value={targetItem.operand1}
                                     shape="Square"
-                                    size="MD"
+                                    size="SM"
                                     status="default"
                                     style={{
                                         width: '11.25rem'
@@ -463,6 +455,7 @@ const BehvDropItem = ({
                                     <SelectOption value="last">last</SelectOption>
                                 </Select>
                                 <TextField
+                                    size="SM"
                                     type="number"
                                     disabled={!isPossibleEdit}
                                     value={targetItem.operand2}
@@ -476,7 +469,7 @@ const BehvDropItem = ({
                                     placeholder="동률일 때 기준 컬럼"
                                     value={targetItem.operand3}
                                     shape="Square"
-                                    size="MD"
+                                    size="SM"
                                     status="default"
                                     style={{
                                         width: '11.25rem'
@@ -499,7 +492,7 @@ const BehvDropItem = ({
                                     placeholder="동률일 때 기준 정렬"
                                     value={targetItem.operand4}
                                     shape="Square"
-                                    size="MD"
+                                    size="SM"
                                     status="default"
                                     style={{
                                         width: '11.25rem'
@@ -518,11 +511,9 @@ const BehvDropItem = ({
                             </>
                         }
                     </Stack>
-                    <Typography variant="h6" style={{ color: "inherit" }}>WHERE</Typography>
                     <Stack
                         direction="Vertical"
                         justifyContent="Start"
-                        gap="SM"
                         className="width-100"
                         style={{
                             border: "1px solid rgb(218, 218, 218)",
@@ -532,20 +523,17 @@ const BehvDropItem = ({
                         <Stack
                             direction="Horizontal"
                             justifyContent="Between"
-                            gap="SM"
+                            gap="XS"
                             className="width-100"
-                            style={{ padding: "0.5rem" }}
+                            style={{ padding: "0.3rem" }}
                         >
-                            <Typography variant="h6" style={{ color: "inherit" }}>필터 선택</Typography>
-                            <Stack gap="SM" justifyContent="end">
-                                <TextField
-                                    disabled={!isPossibleEdit}
-                                    placeholder="논리 표현식"
-                                    value={filterExpsn}
-                                    id="filterLogiExpsn"
-                                    onChange={onchangeInputHandler}
-                                />
+                            <Stack gap="SM" justifyContent="Start">
+                                <Typography variant="h6" style={{ color: "inherit", padding: "0.5rem" }}>WHERE</Typography>
+                                <Typography variant="caption" style={{ color: "inherit" }}>항목간 연산</Typography>
+                            </Stack>
+                            <Stack gap="SM" justifyContent="End">
                                 <Select
+                                    size="SM"
                                     disabled={!isPossibleEdit}
                                     appearance="Outline"
                                     value={targetItem.filterLogiOption}
@@ -563,6 +551,15 @@ const BehvDropItem = ({
                                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                                     ))}
                                 </Select>
+                                <TextField
+                                    size="SM"
+                                    disabled={!isPossibleEdit}
+                                    readOnly={(targetItem.filterLogiOption === "ALL") || (targetItem.filterLogiOption === "ANY")}
+                                    placeholder="논리 표현식"
+                                    value={filterExpsn}
+                                    id="filterLogiExpsn"
+                                    onChange={onchangeInputHandler}
+                                />
                             </Stack>
                         </Stack>
                         <Stack
@@ -570,12 +567,15 @@ const BehvDropItem = ({
                             justifyContent="Start"
                             gap="SM"
                             className="width-100"
+                            style={{
+                                padding: "0.3rem",
+                            }}
                         >
                             <Page
                                 ref={(behvDrop)}
                                 style={{
-                                    border: "3px solid rgb(218, 218, 218)",
-                                    borderRadius: '8px',
+                                    border: "2px solid rgb(218, 218, 218)",
+                                    borderRadius: '5px',
                                     padding: "0.8rem"
                                 }}
                             >
@@ -609,9 +609,21 @@ const BehvDropItem = ({
                 </Stack>
 
                 {isPossibleEdit &&
+                <Stack
+                    direction="Vertical"
+                    gap="SM"
+                    style={{
+                        top: "5%",
+                        position: "absolute",
+                        left: "93%",
+                    }}
+                >
                     <Button size="SM" onClick={onClickDeleteHandler}>
-                        삭제
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z" fill="currentColor"></path>
+                        </svg>
                     </Button>
+                </Stack>
                 }
             </Stack>
 

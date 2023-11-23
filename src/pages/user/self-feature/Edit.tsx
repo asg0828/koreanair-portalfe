@@ -589,14 +589,28 @@ const SelfFeatureEdit = () => {
 					</TR>
 				</HorizontalTable>
 				{/* 기본 정보 */}
+				<Stack
+					gap="LG"
+					direction="Vertical"
+					style={{
+						border: '2px solid rgb(162, 210, 235)',
+						borderRadius: '5px',
+					}}
+				>
 				{(
 					custFeatRule.sqlDirectInputYn === ""
 					|| custFeatRule.sqlDirectInputYn === "N"
 				) &&
-					<>
-						{/* 대상 선택 */}
+					<Stack
+						direction="Vertical"
+						gap="SM"
+						style={{
+							margin: "0.5rem"
+						}}
+					>
+						{/* Feature 로직 */}
 						<Stack direction="Horizontal" gap="LG" justifyContent="start">
-							<Typography variant="h4">대상 선택</Typography>
+							<Typography variant="h4">1. Feature 로직</Typography>
 							<Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
 								초기화
 							</Button>
@@ -607,7 +621,7 @@ const SelfFeatureEdit = () => {
 							gap="MD"
 							justifyContent="Between"
 							style={{
-								height: '400px',
+								height: '700px',
 							}}
 						>
 							<DndProvider backend={HTML5Backend}>
@@ -635,25 +649,15 @@ const SelfFeatureEdit = () => {
 							</DndProvider>
 						</Stack>
 						{/* 대상 선택 */}
-
-						{/* 계산식 */}
-						{formulaTrgtList.length > 0 &&
-							<CalcValid
-								featStatus={subFeatStatus.REG}
-								isSelectAggregateTop={isSelectAggregateTop}
-								setIsValidFormula={setIsValidFormula}
-								formulaTrgtList={formulaTrgtList}
-								custFeatRuleCalc={custFeatRuleCalc}
-								custFeatRuleCaseList={custFeatRuleCaseList}
-								setCustFeatRuleCalc={setCustFeatRuleCalc}
-								setCustFeatRuleCaseList={setCustFeatRuleCaseList}
-							/>
-						}
-						{/* 계산식 */}
-					</>
+					</Stack>
 				}
 				{custFeatRule.sqlDirectInputYn === "Y" &&
-					<>
+					<Stack
+						direction="Vertical"
+						style={{
+							margin: "0.5rem"
+						}}
+					>
 						<Typography variant="h4">Feature 생성 Query</Typography>
 						<Stack
 							direction="Horizontal"
@@ -671,8 +675,26 @@ const SelfFeatureEdit = () => {
 								onChange={onchangeInputHandler}
 							/>
 						</Stack>
-					</>
+					</Stack>
 				}
+				{/* 계산식 */}
+				{((
+					custFeatRule.sqlDirectInputYn === ""
+					|| custFeatRule.sqlDirectInputYn === "N"
+				) && formulaTrgtList.length > 0) &&
+					<CalcValid
+						featStatus={subFeatStatus.REG}
+						isSelectAggregateTop={isSelectAggregateTop}
+						setIsValidFormula={setIsValidFormula}
+						formulaTrgtList={formulaTrgtList}
+						custFeatRuleCalc={custFeatRuleCalc}
+						custFeatRuleCaseList={custFeatRuleCaseList}
+						setCustFeatRuleCalc={setCustFeatRuleCalc}
+						setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+					/>
+				}
+				{/* 계산식 */}
+				</Stack>
 				{/* 결재선 */}
 				<ApprovalList
 					sfSubmissionRequestData={sfSubmissionRequestData}
