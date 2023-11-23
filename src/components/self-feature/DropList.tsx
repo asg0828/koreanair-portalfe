@@ -97,9 +97,13 @@ const DropList = ({
                     let tl = cloneDeep(state)
                     t = tl.length
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
-                    target.tableName = String(targetObj.metaTblLogiNm)
+                    target.tableName = String(targetObj.metaTblId)
+                    target.tableLogiName = String(targetObj.metaTblLogiNm)
                     target.targetId  = `T${t+1}`
-                    target.columnName = String(targetObj.metaTblClmnLogiNm)
+                    if (targetType === divisionTypes.ATTR) {
+                        target.columnName = String(targetObj.metaTblClmnPhysNm)
+                        target.columnLogiName = String(targetObj.metaTblClmnLogiNm)
+                    }
                     target.divisionCode = String(targetType)
                     target.targetDataType = targetObj.dataTypeCategory//targetObj.dtpCd
                     tl.push(target)
@@ -111,9 +115,10 @@ const DropList = ({
                         // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                         let tl = cloneDeep(state)
                         target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
-                        target.tableName = String(targetObj.metaTblLogiNm)
+                        //target.tableName = String(targetObj.metaTblLogiNm)
                         target.targetId  = `T${t+1}`
-                        target.columnName = String(targetObj.metaTblClmnLogiNm)
+                        target.columnName = String(targetObj.metaTblClmnPhysNm)
+                        target.columnLogiName = String(targetObj.metaTblClmnLogiNm)
                         target.columnDataTypeCode = targetObj.dataTypeCategory//targetObj.dtpCd
                         tl.push(target)
                         return tl
@@ -201,7 +206,7 @@ const DropList = ({
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === divisionTypes.BEHV) {
-                        let bs = behaviors.filter((behavior: Behavior) => (behavior.metaTblLogiNm === targetItem.tableName || behavior.metaTblId === targetItem.tableName))
+                        let bs = behaviors.filter((behavior: Behavior) => (behavior.metaTblId === targetItem.tableName))
                         return <BehvDropItem 
                             key={`dropItem-${index}`}
                             itemIdx={index}

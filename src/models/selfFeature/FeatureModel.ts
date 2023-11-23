@@ -386,6 +386,7 @@ export interface TbRsCustFeatRuleTrgt {
     divisionCode: string,
     //Pattern: [\w-.]+ example: 테이블명
     tableName: string,
+    tableLogiName: string,
     //Pattern: ALL|ANY|CUS example: 필터옵션(ALL/ANY/CUS)-행동데이터
     filterLogiOption: string,
     //example: 필터논리표현식(A and B 등등)-행동데이터
@@ -434,6 +435,7 @@ export interface TbRsCustFeatRuleTrgtFilter {
     filterId: string,
     //example: 필터ID
     columnName: string,
+    columnLogiName: string,
     //Pattern: [\w-]+
     //example: 컬럼명
     columnDataTypeCode: string,

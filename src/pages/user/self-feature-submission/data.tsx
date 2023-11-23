@@ -1,3 +1,4 @@
+import { FeatureType } from "@/models/selfFeature/FeatureCommon"
 import { SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel"
 
 // Feature 승인 요청 리스트 table header
@@ -47,7 +48,7 @@ export const aprvSeqNm = {
 
 export const initSfSubmissionRequestInfo: SfSubmissionRequestInfo = {
     id: '',
-    type: 'Rule-Design',
+    type: FeatureType.CUST,
     referenceNo: '',
     submissionNo: '',
     status: '',

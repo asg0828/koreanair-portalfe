@@ -140,7 +140,7 @@ const BehvColDropItem = ({
                 }}
             >  
                 <Typography variant='h6' style={{color:"inherit"}}>{trgtFilterTit[itemIdx]}</Typography>
-                <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterItem.columnName}</Typography>
+                <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterItem.columnLogiName}</Typography>
                 <TransFunction 
                     isPossibleEdit={isPossibleEdit}
                     itemIdx={itemIdx}
