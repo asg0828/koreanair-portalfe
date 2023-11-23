@@ -177,7 +177,7 @@ export default function List() {
         </Button>
         <Modal open={isOpen} onClose={() => setOpen(false)}>
           <Modal.Header>오류</Modal.Header>
-          <Modal.Body>검색 조건을 모두 입력해주세요</Modal.Body>
+          <Modal.Body>검색 조건을 입력해주세요</Modal.Body>
           <Modal.Footer>
             <Button
               priority="Primary"
@@ -302,6 +302,7 @@ export default function List() {
                     <th>Name</th>
                   </thead>
                   <tbody>
+                    {/*여기서 맵으로 상위 데이터 5개 뽑아주고 */}
                     <tr>
                       <td>path1</td>
                       <td>024</td>

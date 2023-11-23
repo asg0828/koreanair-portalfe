@@ -57,7 +57,6 @@ export default function RelationshipHistoryTable() {
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
     setSearchInfo({ ...searchInfo, [id]: value });
-    console.log(searchInfo);
   }
 
   /* 검색 버튼 */
