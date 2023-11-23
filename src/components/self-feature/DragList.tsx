@@ -9,6 +9,7 @@ import {
 } from '@/models/selfFeature/FeatureModel';
 import { useEffect, useState } from "react";
 import { cloneDeep } from "lodash";
+import { TrgtDragAttrType } from "@/pages/user/self-feature/data";
 
 export interface Props {
     attributes: Array<Attribute>
@@ -23,11 +24,17 @@ const DragList = ({
     const [ keyword, setKeyword ] = useState<string>('')
     const [ srchAttrRsltList, setSrchAttrRsltList ] = useState<Array<Attribute>>([])
     const [ srchBehvRsltList, setSrchBehvRsltList ] = useState<Array<Behavior>>([])
+    const [ attrType1List, setAttrType1List ] = useState<Array<Attribute>>([])
+    const [ attrType2List, setAttrType2List ] = useState<Array<Attribute>>([])
+    const [ attrType3List, setAttrType3List ] = useState<Array<Attribute>>([])
 
     useEffect(() => {
         if (attributes.length < 1) return
 
         let attrList: Array<Attribute> = cloneDeep(attributes)
+        setAttrType1List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE1 === attribute.metaTblLogiNm))
+        setAttrType2List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE2 === attribute.metaTblLogiNm))
+        setAttrType3List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE3 === attribute.metaTblLogiNm))
         setSrchAttrRsltList(attrList)
     }, [attributes])
 
@@ -39,6 +46,10 @@ const DragList = ({
     }, [behaviors])
 
     useEffect(() => {
+        let attrList: Array<Attribute> = cloneDeep(srchAttrRsltList)
+        setAttrType1List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE1 === attribute.metaTblLogiNm))
+        setAttrType2List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE2 === attribute.metaTblLogiNm))
+        setAttrType3List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE3 === attribute.metaTblLogiNm))
     }, [srchAttrRsltList])
 
     useEffect(() => {
@@ -84,7 +95,7 @@ const DragList = ({
         <Page
             style={{
                 overflowY: 'auto',
-                width:'20%',
+                width:'25%',
                 height: '100%',
                 border: '1px solid rgb(218, 218, 218)',
                 borderRadius: '5px',
@@ -112,16 +123,84 @@ const DragList = ({
                     title='Fact 정보'
                     value='Fact 정보'
                 >
-                {srchAttrRsltList.length > 0 &&
+                    <Accordion
+                        align="Right"
+                        size="MD"
+                        type="multiple"
+                    >
+                        <AccordionItem
+                            title={TrgtDragAttrType.TYPE1}
+                            value={TrgtDragAttrType.TYPE1}
+                        >
+                            <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                            {attrType1List.map((attribute: Attribute, index: number) => {
+                                return (
+                                    <AttrDragItem
+                                        key={index}
+                                        metaTblLogiNm={TrgtDragAttrType.TYPE1}
+                                        attrTblClmnInfo={attribute}
+                                    />
+                                )
+                            })}
+                            </Stack>
+                        </AccordionItem>
+                    </Accordion>
+                    <Accordion
+                        align="Right"
+                        size="MD"
+                        type="multiple"
+                    >
+                        <AccordionItem
+                            title={TrgtDragAttrType.TYPE2}
+                            value={TrgtDragAttrType.TYPE2}
+                        >
+                            <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                            {attrType2List.map((attribute: Attribute, index: number) => {
+                                return (
+                                    <AttrDragItem
+                                        key={index}
+                                        metaTblLogiNm={TrgtDragAttrType.TYPE2}
+                                        attrTblClmnInfo={attribute}
+                                    />
+                                )
+                            })}
+                            </Stack>
+                        </AccordionItem>
+                    </Accordion>
+                    <Accordion
+                        align="Right"
+                        size="MD"
+                        type="multiple"
+                    >
+                        <AccordionItem
+                            title={TrgtDragAttrType.TYPE3}
+                            value={TrgtDragAttrType.TYPE3}
+                        >
+                            <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                            {attrType3List.map((attribute: Attribute, index: number) => {
+                                return (
+                                    <AttrDragItem
+                                        key={index}
+                                        metaTblLogiNm={TrgtDragAttrType.TYPE3}
+                                        attrTblClmnInfo={attribute}
+                                    />
+                                )
+                            })}
+                            </Stack>
+                        </AccordionItem>
+                    </Accordion>
+                {/* {srchAttrRsltList.length > 0 &&
                 <Stack direction="Vertical" justifyContent="Center" gap="SM" >
                 {srchAttrRsltList.map((attribute: Attribute, index: number) => {
-                    return <AttrDragItem
-                        key={index}
-                        attrTblClmnInfo={attribute}
-                    />
+                    return (
+                        <AttrDragItem
+                            key={index}
+                            attrTblClmnInfo={attribute}
+                        />
+                    )
                 })}
                 </Stack>
-                }
+                } */}
                 </AccordionItem>
             </Accordion>
             {/* Feature 정보

@@ -41,6 +41,13 @@ export const submissionStatus = [
 // 대상선택(행동 데이터) 순번 setting(A,B,C ...)
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
 
+// 대상선택 drag 리스트 구분
+export const TrgtDragAttrType = {
+    TYPE1: "고객 Fact지수",
+    TYPE2: "여객 Fact지수",
+    TYPE3: "고객행동 Fact지수",
+}
+
 // 계산식 validation 결과값
 export const initFormulaValidRslt: FormulaValidRslt = {
     isValidFormula: true,

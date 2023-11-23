@@ -78,12 +78,6 @@ const DropList = ({
             const didDrop = monitor.didDrop()
             const targetType = monitor.getItemType()
 
-            /*
-            const date: Date = new Date()
-            const trgtUniqKey = `${date.getFullYear()}${date.getMonth()}${date.getDate()+1}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`
-            */
-            console.log(item)
-
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo | Attribute
                 if (targetType === divisionTypes.ATTR) {
@@ -93,7 +87,6 @@ const DropList = ({
                 } else {
                     targetObj = initAttribute
                 }
-                console.log(item)
                 let target: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
                 let t = 0
                 setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {

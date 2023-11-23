@@ -9,12 +9,13 @@ import {
 import { TargetDragProps } from "@/models/selfFeature/FeatureModel"
 
 const AttrDragItem = ({
+    metaTblLogiNm,
     attrTblClmnInfo
 }: TargetDragProps) => {
 
     const [{ isAttrDragging }, attrDragItem] = useDrag(() => ({
         type: divisionTypes.ATTR,
-        item: Object.assign({ divisionCode: divisionTypes.ATTR }, cloneDeep(attrTblClmnInfo)),
+        item: Object.assign({ divisionCode: divisionTypes.ATTR, tableLogiName: metaTblLogiNm }, cloneDeep(attrTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 
