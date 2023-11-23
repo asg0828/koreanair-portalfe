@@ -262,7 +262,7 @@ const TransFunctionPop = (
                 text: "현재",
                 dataType: "timestamp",
             }]
-            let tempList = cloneDeep(columnList).filter((col: AggregateCol) => (col.text === trgtItem.columnName))
+            let tempList = cloneDeep(columnList).filter((col: AggregateCol) => (col.value === trgtItem.columnName))
             return [...rtn, ...tempList]
         })
 

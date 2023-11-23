@@ -411,9 +411,22 @@ const SfSubmissionRequestDetail = () => {
                     {/* 기본 정보 */}
 
                     {/* 대상 선택 */}
+                    <Stack
+					    gap="LG"
+                        direction="Vertical"
+                        style={{
+                            border: '2px solid rgb(162, 210, 235)',
+                            borderRadius: '5px',
+                        }}
+                    >
                     {(regType && (regType === selfFeatPgPpNm.RULE_REG) && targetList.length > 0) &&
-                        <>
-                            <Typography variant="h4">대상 선택</Typography>
+                        <Stack
+                            direction="Vertical"
+                            style={{
+                                margin: "0.5rem"
+                            }}
+                        >
+                            <Typography variant="h4">1. Feature 로직</Typography>
                             {/* drag && drop 영역*/}
                             <Stack
                                 direction="Horizontal"
@@ -436,24 +449,29 @@ const SfSubmissionRequestDetail = () => {
                                     {/* drop 영역 */}
                                 </DndProvider>
                             </Stack>
-                        </>
+                        </Stack>
                     }
                     {/* 대상 선택 */}
                     {/* SQL 입력 */}
                     {(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
-                        <>
+                        <Stack
+                            direction="Vertical"
+                            style={{
+                                margin: "0.5rem"
+                            }}
+                        >
                             <Typography variant="h4">Feature 생성 Query</Typography>
                             <Stack
                                 direction="Horizontal"
                                 gap="MD"
                                 justifyContent="Between"
                                 style={{
-                                    height: '400px',
+                                    height: '700px',
                                 }}
                             >
                                 <TextField className="width-100 height-100" multiline readOnly defaultValue="SQL 입력 영역" />
                             </Stack>
-                        </>
+                        </Stack>
                     }
                     {/* SQL 입력 */}
 
@@ -469,6 +487,7 @@ const SfSubmissionRequestDetail = () => {
                         />
                     }
                     {/* 계산식 */}
+                    </Stack>
                 </Stack>
                 {/* 정보 영역 */}
                 {/* 결재선 영역 */}

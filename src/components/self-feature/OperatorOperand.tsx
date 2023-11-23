@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { SelectValue } from '@mui/base/useSelect'
 import { cloneDeep } from 'lodash'
 
-import { 
+import {
     DatePicker,
-    Select, 
+    Select,
     SelectOption,
     Stack,
-    TextField, 
-    Typography, 
+    TextField,
+    Typography,
 } from '@/components/ui'
 
 import { OperatorOperandProps, TbRsCustFeatRuleCase, TbRsCustFeatRuleTrgtFilter } from "@/models/selfFeature/FeatureModel"
@@ -29,28 +29,16 @@ const OperatorOperand = ({
     onchangeSelectHandler,
 }: OperatorOperandProps) => {
 
-    const { 
-        data: cmmCodeOprtRes, 
-        isError: cmmCodeOprtErr, 
-        refetch: cmmCodeOprtRefetch 
-    } = useCommCodes(CommonCode.OPERATOR)
-    const { 
-        data: cmmCodeDlimRes, 
-        isError: cmmCodeDlimErr, 
-        refetch: cmmCodeDlimRefetch 
-    } = useCommCodes(CommonCode.SGMT_DELIMITER)
-    const { 
-        data: cmmCodeFrmtRes, 
-        isError: cmmCodeFrmtErr, 
-        refetch: cmmCodeFrmtRefetch 
-    } = useCommCodes(CommonCode.FORMAT)
+    const { data: cmmCodeOprtRes, } = useCommCodes(CommonCode.OPERATOR)
+    const { data: cmmCodeDlimRes, } = useCommCodes(CommonCode.SGMT_DELIMITER)
+    const { data: cmmCodeFrmtRes, } = useCommCodes(CommonCode.FORMAT)
 
-    const [ operatorOption, setOperatorOption ] = useState<Array<CommonCodeInfo>>([])
-    const [ delimiterOption, setDelimiterOption ] = useState<Array<CommonCodeInfo>>([])
-    const [ tsDateFormatOption, setTsDateFormatOption ] = useState<Array<CommonCodeInfo>>([])
+    const [operatorOption, setOperatorOption] = useState<Array<CommonCodeInfo>>([])
+    const [delimiterOption, setDelimiterOption] = useState<Array<CommonCodeInfo>>([])
+    const [tsDateFormatOption, setTsDateFormatOption] = useState<Array<CommonCodeInfo>>([])
 
-    const [ oprd2DpValue, setOprd2DpValue ] = useState<string>("")
-    const [ oprd5DpValue, setOprd5DpValue ] = useState<string>("")
+    const [oprd2DpValue, setOprd2DpValue] = useState<string>("")
+    const [oprd5DpValue, setOprd5DpValue] = useState<string>("")
 
     useEffect(() => {
         if (cmmCodeOprtRes) {
@@ -115,372 +103,480 @@ const OperatorOperand = ({
 
     return (
         <>
-        {(isPossibleEdit) &&
-        <Select 
-            value={item?.operator}
-            shape="Square"
-            size="MD"
-            status="default"
-            style={{
-            width: '11.25rem'
-            }}
-            appearance="Outline" 
-            placeholder="연산자 선택" 
-            onChange={(
-                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                value: SelectValue<{}, false>
-            ) => {
-                onchangeSelectHandler(e, value, "operator")
-            }}
-        >
-            {operatorOption.map((item, index) => (
-                <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-            ))}
-            {operatorOption.length < 1 &&
-                <SelectOption value="">연산자 선택</SelectOption>
-            }
-        </Select>
-        }
-        {(!isPossibleEdit) &&
-            <Typography variant='h5'>{item?.operator}</Typography>
-        }
-        {(delimiterSelected && isPossibleEdit) &&
-        <Select 
-            appearance="Outline"
-            value={item?.delimiter}
-            shape="Square"
-            size="MD"
-            status="default"
-            style={{
-            width: '11.25rem'
-            }}
-            onChange={(
-                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                value: SelectValue<{}, false>
-            ) => {
-                // 구분자 선택
-                onchangeSelectHandler(e, value, "delimiter")
-            }}
-        >
-        {delimiterOption.map((item, index) => (
-            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-        ))}
-        {delimiterOption.length < 1 &&
-            <SelectOption value="">구분자 선택</SelectOption>
-        }
-        </Select>
-        }
-        {(delimiterSelected && !isPossibleEdit) &&
-            <Typography variant='h5'>{item?.delimiter}</Typography>
-        }
-        {(isPossibleEdit && dataType === ColDataType.NUM) &&
-        <TextField 
-            type='number'
-            placeholder="피연산자 입력"
-            value={item?.operand1}
-            id='operand1'
-            onChange={onchangeInputHandler} 
-        />
-        }
-        {(isPossibleEdit && dataType === ColDataType.STR) &&
-        <TextField 
-            placeholder="피연산자 입력"
-            value={item?.operand1}
-            id='operand1'
-            onChange={onchangeInputHandler} 
-        />
-        }
-        {(
-            isPossibleEdit 
-            && dataType === ColDataType.TIME 
-            && (slctDateType === "before" || slctDateType === "after")
-        ) &&
-        <>
-        <Select 
-            appearance="Outline"
-            value={item?.operand1}
-            shape="Square"
-            size="MD"
-            status="default"
-            style={{
-            width: '11.25rem'
-            }}
-            onChange={(
-                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                value: SelectValue<{}, false>
-            ) => {
-                // 구분자 선택
-                onchangeSelectHandler(e, value, "operand1")
-            }}
-        >
-            <SelectOption value="date">날짜</SelectOption>
-            <SelectOption value="now">조건식</SelectOption>
-        </Select>
-        {item?.operand1 === "date" &&
-        <DatePicker
-            value={oprd2DpValue}
-            appearance="Outline"
-            calendarViewMode="days"
-            mode="single"
-            shape="Square"
-            size="MD"
-            onChange={(e) => {e.target.value = ""}}
-            onValueChange={(nextVal) => {
-                //operand2
-                setOprd2DpValue(nextVal)
-                onChangeDatePickerHandler("operand2", nextVal)
-                /*
-                setSearch((prevState: SearchProps) => {
-                    let rtn = cloneDeep(prevState)
-                    rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                    return rtn
-                });
-                */
-            }}
-        />
-        }
-        {item?.operand1 === "now" &&
-        <>
-        <TextField 
-            readOnly
-            value="now"
-        />
-        <TextField 
-            type='number'
-            placeholder='피연산자 입력'
-            value={item?.operand2}
-            id="operand2"
-            onChange={onchangeInputHandler} 
-        />
-        <Select 
-            placeholder='기간 단위'
-            appearance="Outline"
-            value={item?.operand3}
-            shape="Square"
-            size="MD"
-            status="default"
-            style={{
-            width: '11.25rem'
-            }}
-            onChange={(
-                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                value: SelectValue<{}, false>
-            ) => {
-                // 기간 단위
-                onchangeSelectHandler(e, value, "operand3")
-            }}
-        >
-        {tsDateFormatOption.map((item, index) => (
-            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-        ))}
-        {tsDateFormatOption.length < 1 &&
-            <SelectOption value="">선택</SelectOption>
-        }
-        </Select>
-        </>
-        }
-        </>
-        }
-        {(
-            isPossibleEdit 
-            && dataType === ColDataType.TIME 
-            && (slctDateType === "between")
-        ) &&
-        <Stack
-            direction="Vertical"
-            justifyContent="Start" 
-            gap="SM" 
-            className="width-100"
-        >
             <Stack
-                direction="Horizontal"
-                justifyContent="Start" 
-                gap="SM" 
-                className="width-100"
+                style={{
+                    flex: "0 1 20%",
+                    maxWidth: "20%",
+                }}
             >
-                <Typography variant='h5'>From</Typography>
-                <Select 
-                    appearance="Outline"
-                    value={item?.operand1}
-                    shape="Square"
-                    size="MD"
-                    status="default"
-                    style={{
-                    width: '11.25rem'
-                    }}
-                    onChange={(
-                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                        value: SelectValue<{}, false>
-                    ) => {
-                        // 구분자 선택
-                        onchangeSelectHandler(e, value, "operand1")
-                    }}
-                >
-                    <SelectOption value="date">날짜</SelectOption>
-                    <SelectOption value="now">조건식</SelectOption>
-                </Select>
-                {item?.operand1 === "date" &&
-                <DatePicker
-                    value={oprd2DpValue}
-                    appearance="Outline"
-                    calendarViewMode="days"
-                    mode="single"
-                    shape="Square"
-                    size="MD"
-                    onChange={(e) => {e.target.value = ""}}
-                    onValueChange={(nextVal) => {
-                        //operand2
-                        setOprd2DpValue(nextVal)
-                        onChangeDatePickerHandler("operand2", nextVal)
-                        /*
-                        setRequestDateFrom(nextVal)
-                        setSearch((prevState: SearchProps) => {
-                            let rtn = cloneDeep(prevState)
-                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                            return rtn
-                        });
-                        */
-                    }}
-                />
+                {(isPossibleEdit) &&
+                    <Select
+                        value={item?.operator}
+                        shape="Square"
+                        size="SM"
+                        status="default"
+                        style={{
+                            width: '11.25rem'
+                        }}
+                        appearance="Outline"
+                        placeholder="연산자 선택"
+                        onChange={(
+                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                            value: SelectValue<{}, false>
+                        ) => {
+                            onchangeSelectHandler(e, value, "operator")
+                        }}
+                    >
+                        {operatorOption.map((item, index) => (
+                            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                        ))}
+                        {operatorOption.length < 1 &&
+                            <SelectOption value="">연산자 선택</SelectOption>
+                        }
+                    </Select>
                 }
-                {item?.operand1 === "now" &&
-                <>
-                <TextField 
-                    readOnly
-                    value="now"
-                />
-                <TextField 
-                    type='number'
-                    placeholder='피연산자 입력'
-                    value={item?.operand2}
-                    id="operand2"
-                    onChange={onchangeInputHandler} 
-                />
-                <Select 
-                    placeholder='기간 단위'
-                    appearance="Outline"
-                    value={item?.operand3}
-                    shape="Square"
-                    size="MD"
-                    status="default"
-                    style={{
-                    width: '11.25rem'
-                    }}
-                    onChange={(
-                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                        value: SelectValue<{}, false>
-                    ) => {
-                        // 기간 단위
-                        onchangeSelectHandler(e, value, "operand3")
-                    }}
-                >
-                {tsDateFormatOption.map((item, index) => (
-                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                ))}
-                {tsDateFormatOption.length < 1 &&
-                    <SelectOption value="">선택</SelectOption>
-                }
-                </Select>
-                </>
+                {(!isPossibleEdit) &&
+                    <Typography variant='h5'>{item?.operator}</Typography>
                 }
             </Stack>
             <Stack
-                direction="Horizontal"
-                justifyContent="Start" 
-                gap="SM" 
-                className="width-100"
+                gap="LG"
+                style={{
+                    flex: "0 1 70%",
+                    maxWidth: "70%",
+                    display: "inline-flex",
+                }}
             >
-                <Typography variant='h5'>To</Typography>
-                <Select 
-                    appearance="Outline"
-                    value={item?.operand4}
-                    shape="Square"
-                    size="MD"
-                    status="default"
+                {(delimiterSelected && isPossibleEdit) &&
+                <Stack
                     style={{
-                    width: '11.25rem'
-                    }}
-                    onChange={(
-                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                        value: SelectValue<{}, false>
-                    ) => {
-                        // 구분자 선택
-                        onchangeSelectHandler(e, value, "operand4")
+                        flex: "0 1 30%",
+                        maxWidth: "30%",
                     }}
                 >
-                    <SelectOption value="date">날짜</SelectOption>
-                    <SelectOption value="now">조건식</SelectOption>
-                </Select>
-                {item?.operand4 === "date" &&
-                <DatePicker
-                    value={oprd5DpValue}
-                    appearance="Outline"
-                    calendarViewMode="days"
-                    mode="single"
-                    shape="Square"
-                    size="MD"
-                    onChange={(e) => {e.target.value = ""}}
-                    onValueChange={(nextVal) => {
-                        //operand5
-                        setOprd5DpValue(nextVal)
-                        onChangeDatePickerHandler("operand5", nextVal)
-                        /*
-                        setRequestDateFrom(nextVal)
-                        setSearch((prevState: SearchProps) => {
-                            let rtn = cloneDeep(prevState)
-                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                            return rtn
-                        });
-                        */
-                    }}
-                />
+                    <Select
+                        appearance="Outline"
+                        value={item?.delimiter}
+                        placeholder='구분자 선택'
+                        shape="Square"
+                        size="SM"
+                        status="default"
+                        style={{
+                            width: '11.25rem'
+                        }}
+                        onChange={(
+                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                            value: SelectValue<{}, false>
+                        ) => {
+                            // 구분자 선택
+                            onchangeSelectHandler(e, value, "delimiter")
+                        }}
+                    >
+                        {delimiterOption.map((item, index) => (
+                            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                        ))}
+                        {delimiterOption.length < 1 &&
+                            <SelectOption value="">구분자 선택</SelectOption>
+                        }
+                    </Select>
+                </Stack>
                 }
-                {item?.operand4 === "now" &&
-                <>
-                <TextField 
-                    readOnly
-                    value="now"
-                />
-                <TextField 
-                    type='number'
-                    placeholder='피연산자 입력'
-                    value={item?.operand5}
-                    id="operand5"
-                    onChange={onchangeInputHandler} 
-                />
-                <Select 
-                    placeholder='기간 단위'
-                    appearance="Outline"
-                    value={item?.operand6}
-                    shape="Square"
-                    size="MD"
-                    status="default"
+                {(delimiterSelected && !isPossibleEdit) &&
+                    <Typography variant='h5'>{item?.delimiter}</Typography>
+                }
+                {(isPossibleEdit && dataType === ColDataType.NUM) &&
+                <Stack
                     style={{
-                    width: '11.25rem'
-                    }}
-                    onChange={(
-                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                        value: SelectValue<{}, false>
-                    ) => {
-                        // 기간 단위
-                        onchangeSelectHandler(e, value, "operand6")
+                        flex: "0 1 30%",
+                        maxWidth: "30%",
                     }}
                 >
-                {tsDateFormatOption.map((item, index) => (
-                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                ))}
-                {tsDateFormatOption.length < 1 &&
-                    <SelectOption value="">선택</SelectOption>
+                    <TextField
+                        size="SM"
+                        type='number'
+                        placeholder="피연산자 입력"
+                        value={item?.operand1}
+                        id='operand1'
+                        onChange={onchangeInputHandler}
+                    />
+                </Stack>
                 }
-                </Select>
-                </>
+                {(isPossibleEdit && dataType === ColDataType.STR) &&
+                <Stack
+                    style={{
+                        flex: "0 1 30%",
+                        maxWidth: "30%",
+                    }}
+                >
+                    <TextField
+                        size="SM"
+                        placeholder="피연산자 입력"
+                        value={item?.operand1}
+                        id='operand1'
+                        onChange={onchangeInputHandler}
+                    />
+                </Stack>
+                }
+                {(
+                    isPossibleEdit
+                    && dataType === ColDataType.TIME
+                    && (slctDateType === "before" || slctDateType === "after")
+                ) &&
+                    <>
+                        <Stack
+                            style={{
+                                flex: "0 1 30%",
+                                maxWidth: "30%",
+                            }}
+                        >
+                            <Select
+                                appearance="Outline"
+                                value={item?.operand1}
+                                shape="Square"
+                                size="SM"
+                                status="default"
+                                style={{
+                                    width: '11.25rem'
+                                }}
+                                onChange={(
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
+                                ) => {
+                                    // 구분자 선택
+                                    onchangeSelectHandler(e, value, "operand1")
+                                }}
+                            >
+                                <SelectOption value="date">날짜</SelectOption>
+                                <SelectOption value="now">조건식</SelectOption>
+                            </Select>
+                        </Stack>
+                        {item?.operand1 === "date" &&
+                        <Stack
+                            style={{
+                                flex: "0 1 25%",
+                                maxWidth: "25%",
+                            }}
+                        >
+                            <DatePicker
+                                value={oprd2DpValue}
+                                appearance="Outline"
+                                calendarViewMode="days"
+                                mode="single"
+                                shape="Square"
+                                size="SM"
+                                onChange={(e) => { e.target.value = "" }}
+                                onValueChange={(nextVal) => {
+                                    //operand2
+                                    setOprd2DpValue(nextVal)
+                                    onChangeDatePickerHandler("operand2", nextVal)
+                                    /*
+                                    setSearch((prevState: SearchProps) => {
+                                        let rtn = cloneDeep(prevState)
+                                        rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                        return rtn
+                                    });
+                                    */
+                                }}
+                            />
+                        </Stack>
+                        }
+                        {item?.operand1 === "now" &&
+                        <Stack
+                            gap="MD"
+                            style={{
+                                flex: "0 1 75%",
+                                maxWidth: "75%",
+                            }}
+                        >
+                            <TextField
+                                size="SM"
+                                readOnly
+                                value="now"
+                            />
+                            <TextField
+                                size="SM"
+                                type='number'
+                                placeholder='피연산자 입력'
+                                value={item?.operand2}
+                                id="operand2"
+                                onChange={onchangeInputHandler}
+                            />
+                            <Select
+                                placeholder='기간 단위'
+                                appearance="Outline"
+                                value={item?.operand3}
+                                shape="Square"
+                                size="SM"
+                                status="default"
+                                style={{
+                                    width: '11.25rem'
+                                }}
+                                onChange={(
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
+                                ) => {
+                                    // 기간 단위
+                                    onchangeSelectHandler(e, value, "operand3")
+                                }}
+                            >
+                                {tsDateFormatOption.map((item, index) => (
+                                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                ))}
+                                {tsDateFormatOption.length < 1 &&
+                                    <SelectOption value="">선택</SelectOption>
+                                }
+                            </Select>
+                        </Stack>
+                        }
+                    </>
+                }
+                {(
+                    isPossibleEdit
+                    && dataType === ColDataType.TIME
+                    && (slctDateType === "between")
+                ) &&
+                    <Stack
+                        direction="Vertical"
+                        justifyContent="Start"
+                        gap="SM"
+                        className="width-100"
+                        style={{
+                            display: "inline-flex"
+                        }}
+                    >
+                        <Stack
+                            direction="Horizontal"
+                            justifyContent="Start"
+                            gap="SM"
+                        >
+                            <Typography style={{minWidth: "8%"}} variant='h5'>From</Typography>
+                            <Stack
+                                style={{
+                                    flex: "0 1 30%",
+                                    maxWidth: "30%",
+                                }}
+                            >
+                                <Select
+                                    appearance="Outline"
+                                    value={item?.operand1}
+                                    shape="Square"
+                                    size="SM"
+                                    status="default"
+                                    style={{
+                                        width: '11.25rem'
+                                    }}
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        // 구분자 선택
+                                        onchangeSelectHandler(e, value, "operand1")
+                                    }}
+                                >
+                                    <SelectOption value="date">날짜</SelectOption>
+                                    <SelectOption value="now">조건식</SelectOption>
+                                </Select>
+                            </Stack>
+                            {item?.operand1 === "date" &&
+                            <Stack
+                                style={{
+                                    flex: "0 1 40%",
+                                    maxWidth: "40%",
+                                }}
+                            >
+                                <DatePicker
+                                    value={oprd2DpValue}
+                                    appearance="Outline"
+                                    calendarViewMode="days"
+                                    mode="single"
+                                    shape="Square"
+                                    size="SM"
+                                    onChange={(e) => { e.target.value = "" }}
+                                    onValueChange={(nextVal) => {
+                                        //operand2
+                                        setOprd2DpValue(nextVal)
+                                        onChangeDatePickerHandler("operand2", nextVal)
+                                        /*
+                                        setRequestDateFrom(nextVal)
+                                        setSearch((prevState: SearchProps) => {
+                                            let rtn = cloneDeep(prevState)
+                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                            return rtn
+                                        });
+                                        */
+                                    }}
+                                />
+                            </Stack>
+                            }
+                            {item?.operand1 === "now" &&
+                            <Stack
+                                gap="MD"
+                                style={{
+                                    flex: "0 1 80%",
+                                    maxWidth: "80%",
+                                    display: "inline-flex"
+                                }}
+                            >
+                                    <TextField
+                                        size="SM"
+                                        readOnly
+                                        value="now"
+                                    />
+                                    <TextField
+                                        className='width-100'
+                                        size="SM"
+                                        type='number'
+                                        placeholder='피연산자 입력'
+                                        value={item?.operand2}
+                                        id="operand2"
+                                        onChange={onchangeInputHandler}
+                                    />
+                                    <Select
+                                        placeholder='기간 단위'
+                                        appearance="Outline"
+                                        value={item?.operand3}
+                                        shape="Square"
+                                        size="SM"
+                                        status="default"
+                                        className='width-100'
+                                        onChange={(
+                                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                            value: SelectValue<{}, false>
+                                        ) => {
+                                            // 기간 단위
+                                            onchangeSelectHandler(e, value, "operand3")
+                                        }}
+                                    >
+                                        {tsDateFormatOption.map((item, index) => (
+                                            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                        ))}
+                                        {tsDateFormatOption.length < 1 &&
+                                            <SelectOption value="">선택</SelectOption>
+                                        }
+                                    </Select>
+                                </Stack>
+                            }
+                        </Stack>
+                        <Stack
+                            direction="Horizontal"
+                            justifyContent="Start"
+                            gap="SM"
+                            className="width-100"
+                        >
+                            <Typography style={{minWidth: "8%"}} variant='h5'>To</Typography>
+                            <Stack
+                                style={{
+                                    flex: "0 1 30%",
+                                    maxWidth: "30%",
+                                }}
+                            >
+                                <Select
+                                    appearance="Outline"
+                                    value={item?.operand4}
+                                    shape="Square"
+                                    size="SM"
+                                    status="default"
+                                    style={{
+                                        width: '11.25rem'
+                                    }}
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        // 구분자 선택
+                                        onchangeSelectHandler(e, value, "operand4")
+                                    }}
+                                >
+                                    <SelectOption value="date">날짜</SelectOption>
+                                    <SelectOption value="now">조건식</SelectOption>
+                                </Select>
+                            </Stack>
+                            {item?.operand4 === "date" &&
+                            <Stack
+                                style={{
+                                    flex: "0 1 40%",
+                                    maxWidth: "40%",
+                                }}
+                            >
+                                <DatePicker
+                                    value={oprd5DpValue}
+                                    appearance="Outline"
+                                    calendarViewMode="days"
+                                    mode="single"
+                                    shape="Square"
+                                    size="SM"
+                                    onChange={(e) => { e.target.value = "" }}
+                                    onValueChange={(nextVal) => {
+                                        //operand5
+                                        setOprd5DpValue(nextVal)
+                                        onChangeDatePickerHandler("operand5", nextVal)
+                                        /*
+                                        setRequestDateFrom(nextVal)
+                                        setSearch((prevState: SearchProps) => {
+                                            let rtn = cloneDeep(prevState)
+                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                            return rtn
+                                        });
+                                        */
+                                    }}
+                                />
+                            </Stack>
+                            }
+                            {item?.operand4 === "now" &&
+                            <Stack
+                                gap="MD"
+                                style={{
+                                    flex: "0 1 80%",
+                                    maxWidth: "80%",
+                                    display: "inline-flex"
+                                }}
+                            >
+                                <TextField
+                                    size="SM"
+                                    readOnly
+                                    value="now"
+                                />
+                                <TextField
+                                    className='width-100'
+                                    size="SM"
+                                    type='number'
+                                    placeholder='피연산자 입력'
+                                    value={item?.operand5}
+                                    id="operand5"
+                                    onChange={onchangeInputHandler}
+                                />
+                                <Select
+                                    className='width-100'
+                                    placeholder='기간 단위'
+                                    appearance="Outline"
+                                    value={item?.operand6}
+                                    shape="Square"
+                                    size="SM"
+                                    status="default"
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        // 기간 단위
+                                        onchangeSelectHandler(e, value, "operand6")
+                                    }}
+                                >
+                                    {tsDateFormatOption.map((item, index) => (
+                                        <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                    ))}
+                                    {tsDateFormatOption.length < 1 &&
+                                        <SelectOption value="">선택</SelectOption>
+                                    }
+                                </Select>
+                            </Stack>
+                            }
+                        </Stack>
+                    </Stack>
+                }
+                {!isPossibleEdit &&
+                    <Typography variant='h5'>{item?.operand1}</Typography>
                 }
             </Stack>
-        </Stack>
-        }
-        {!isPossibleEdit &&
-            <Typography variant='h5'>{item?.operand1}</Typography>
-        }
         </>
     )
 

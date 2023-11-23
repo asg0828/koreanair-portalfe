@@ -82,6 +82,7 @@ const DropList = ({
             const date: Date = new Date()
             const trgtUniqKey = `${date.getFullYear()}${date.getMonth()}${date.getDate()+1}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`
             */
+            console.log(item)
 
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo | Attribute
@@ -89,7 +90,10 @@ const DropList = ({
                     targetObj = Object.assign(cloneDeep(initAttribute), item)
                 } else if (targetType === divisionTypes.BEHV) {
                     targetObj = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
+                } else {
+                    targetObj = initAttribute
                 }
+                console.log(item)
                 let target: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
                 let t = 0
                 setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
@@ -98,7 +102,7 @@ const DropList = ({
                     t = tl.length
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
                     target.tableName = String(targetObj.metaTblId)
-                    target.tableLogiName = String(targetObj.metaTblLogiNm)
+                    target.tableLogiName = String(targetObj.tableLogiName)
                     target.targetId  = `T${t+1}`
                     if (targetType === divisionTypes.ATTR) {
                         target.columnName = String(targetObj.metaTblClmnPhysNm)
@@ -132,7 +136,7 @@ const DropList = ({
         
     }), [])
 
-    // 대상 선택 정보 삭제시
+    // Feature 로직 정보 삭제시
     const deleteInfo = (delIdx: number, delTrgtId: string) => {
         setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
             let newTargetList = cloneDeep(state)

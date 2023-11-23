@@ -32,10 +32,16 @@ const AttrDragItem = ({
             {attrTblClmnInfo &&
             <Typography 
                 ref={(attrDragItem)}
-                style={{ opacity: attrOpacity,background:'#eff9f0',color:'#00b21e',padding:"0.3rem"}}
+                style={{ 
+                    opacity: attrOpacity,
+                    background:'#eff9f0',
+                    color:'#00b21e',
+                    padding:"0.3rem",
+                    fontSize: "smaller", 
+                }}
                 variant="body2"
             >
-                {attrTblClmnInfo.metaTblClmnLogiNm}
+                {attrTblClmnInfo.metaTblClmnLogiNm} / {attrTblClmnInfo.dataTypeCategory.slice(0, 1).toUpperCase()}
             </Typography>
             }
         </>
