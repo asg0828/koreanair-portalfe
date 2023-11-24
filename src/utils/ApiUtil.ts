@@ -123,7 +123,14 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
   // success / error 공통 처리
   instance.interceptors.response.use(
     (response: any): any => {
-      const commonResponse: CommonResponse = response.data as CommonResponse;
+      let commonResponse: CommonResponse;
+
+      if (isFile) {
+        commonResponse = response as CommonResponse;
+      } else {
+        commonResponse = response.data as CommonResponse;
+      }
+
       commonResponse.header = response?.headers;
       commonResponse.status = response?.status;
       commonResponse.message = response?.message;
