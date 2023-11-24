@@ -70,6 +70,39 @@ const adminMenulist = [
     ],
   },
   {
+    name: 'Self-Feature',
+    path: '/admin/self-feature-meta-management',
+    children: [
+      {
+        name: 'Customer Meta 관리',
+        path: '/admin/self-feature-meta-management/customer-meta-management',
+        children: [
+          { 
+            name: 'Customer Meta 관리 상세', 
+            path: '/admin/self-feature-meta-management/customer-meta-management/detail', 
+            children: [] 
+          },
+          { 
+            name: 'Customer Meta 관리 등록', 
+            path: '/admin/self-feature-meta-management/customer-meta-management/reg', 
+            children: [] 
+          },
+        ],
+      },
+      {
+        name: 'Master Profile 관리',
+        path: '/admin/self-feature-meta-management/master-profile-management',
+        children: [
+          { 
+            name: 'Master Profile 관리 상세', 
+            path: '/admin/self-feature-meta-management/master-profile-management/detail', 
+            children: [] 
+          },
+        ],
+      },
+    ],
+  },
+  {
     name: '사용자 관리',
     path: '/admin/user-management',
     children: [
@@ -190,39 +223,6 @@ const adminMenulist = [
         name: '관리자권한 관리',
         path: '/admin/admin-portal-management/admin-auth-management',
         children: [],
-      },
-    ],
-  },
-  {
-    name: 'Feature 메타 관리',
-    path: '/admin/self-feature-meta-management',
-    children: [
-      {
-        name: 'Customer 메타 관리',
-        path: '/admin/self-feature-meta-management/customer-meta-management',
-        children: [
-          { 
-            name: 'Customer 메타 관리 상세', 
-            path: '/admin/self-feature-meta-management/customer-meta-management/detail', 
-            children: [] 
-          },
-          { 
-            name: 'Customer 메타 관리 등록', 
-            path: '/admin/self-feature-meta-management/customer-meta-management/reg', 
-            children: [] 
-          },
-        ],
-      },
-      {
-        name: 'Master Profile 관리',
-        path: '/admin/self-feature-meta-management/master-profile-management',
-        children: [
-          { 
-            name: 'Master Profile 관리 상세', 
-            path: '/admin/self-feature-meta-management/master-profile-management/detail', 
-            children: [] 
-          },
-        ],
       },
     ],
   },
