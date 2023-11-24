@@ -63,45 +63,49 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content,
         image_title: true,
         automatic_uploads: true,
         file_picker_types: 'image',
-        file_picker_callback: function (callback, value, meta) {
-          if (meta.filetype === 'image') {
-            const input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-            input.click();
-            input.onchange = () => {
-              const file = (input.files as FileList)[0];
-              const reader = new FileReader();
-              reader.readAsDataURL(file);
-              reader.onload = function (e: ProgressEvent<FileReader>) {
-                callback((e.target as any).result, {
-                  alt: file.name,
-                  title: file.name,
-                });
-              };
-            };
-          }
-        },
-        images_upload_handler: async (blobInfo) => {
-          const formData = new FormData();
-          formData.append('fileCl', 'image');
-          formData.append('files', blobInfo.blob(), blobInfo.filename());
+        file_picker_callback: disabled
+          ? undefined
+          : (callback, value, meta) => {
+              if (meta.filetype === 'image') {
+                const input = document.createElement('input');
+                input.setAttribute('type', 'file');
+                input.setAttribute('accept', 'image/*');
+                input.click();
+                input.onchange = () => {
+                  const file = (input.files as FileList)[0];
+                  const reader = new FileReader();
+                  reader.readAsDataURL(file);
+                  reader.onload = function (e: ProgressEvent<FileReader>) {
+                    callback((e.target as any).result, {
+                      alt: file.name,
+                      title: file.name,
+                    });
+                  };
+                };
+              }
+            },
+        images_upload_handler: disabled
+          ? undefined
+          : async (blobInfo) => {
+              const formData = new FormData();
+              formData.append('fileCl', 'image');
+              formData.append('files', blobInfo.blob(), blobInfo.filename());
 
-          return new Promise(async (resolve, reject) => {
-            const response = await uploadFile(formData);
+              return new Promise(async (resolve, reject) => {
+                const response = await uploadFile(formData);
 
-            if (response?.data?.[0]) {
-              const fileId = response.data[0];
-              resolve(`${getFileDownloadPath()}/${fileId}`);
-            } else {
-              toast({
-                type: ValidType.ERROR,
-                content: '이미지 업로드 중 에러가 발생했습니다.',
+                if (response?.data?.[0]) {
+                  const fileId = response.data[0];
+                  resolve(`${getFileDownloadPath()}/${fileId}`);
+                } else {
+                  toast({
+                    type: ValidType.ERROR,
+                    content: '이미지 업로드 중 에러가 발생했습니다.',
+                  });
+                  reject(false);
+                }
               });
-              reject(false);
-            }
-          });
-        },
+            },
       }}
     />
   );
