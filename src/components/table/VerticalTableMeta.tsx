@@ -148,7 +148,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                     </TD>
                   );
                 } else if (columns[columnIndex].field === 'no') {
-                  return <TD>{rowIndex}</TD>;
+                  return <TD>{rowIndex + 1}</TD>;
                 }
 
                 // 그냥row
