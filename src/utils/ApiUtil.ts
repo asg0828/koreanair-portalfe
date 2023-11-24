@@ -124,13 +124,11 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
   instance.interceptors.response.use(
     (response: any): any => {
       let commonResponse: CommonResponse;
-
-      if (isFile) {
-        commonResponse = response as CommonResponse;
+      if (isFile && response.config.method === 'get') {
+        commonResponse = response;
       } else {
-        commonResponse = response.data as CommonResponse;
+        commonResponse = response.data;
       }
-
       commonResponse.header = response?.headers;
       commonResponse.status = response?.status;
       commonResponse.message = response?.message;
