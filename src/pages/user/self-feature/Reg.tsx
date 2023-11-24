@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { cloneDeep } from 'lodash';
-import { SelectValue } from '@mui/base/useSelect';
+import { useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { cloneDeep } from 'lodash'
+import { SelectValue } from '@mui/base/useSelect'
+import { useAppSelector } from '@/hooks/useRedux'
 
-import DragList from '@/components/self-feature/DragList';
-import DropList from '@/components/self-feature/DropList';
-import CalcValid from '@/components/self-feature/CalcValid';
-import HorizontalTable from '@/components/table/HorizontalTable';
+import DragList from '@/components/self-feature/DragList'
+import DropList from '@/components/self-feature/DropList'
+import CalcValid from '@/components/self-feature/CalcValid'
+import HorizontalTable from '@/components/table/HorizontalTable'
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui'
-import ConfirmModal from '@/components/modal/ConfirmModal';
-import ApprovalList from '@/components/self-feature/ApprovalList';
+import ConfirmModal from '@/components/modal/ConfirmModal'
+import ApprovalList from '@/components/self-feature/ApprovalList'
 
 import {
 	FeatureInfo,
@@ -24,45 +25,37 @@ import {
 	FeatureTemp,
 	TbRsCustFeatRuleSql,
 	FormulaTrgtListProps,
-} from '@/models/selfFeature/FeatureModel';
+	CustFeatureFormData,
+} from '@/models/selfFeature/FeatureModel'
 import {
 	initSelfFeatureInfo,
 	initMstrSgmtTableandColMetaInfo,
 	initTbRsCustFeatRule,
 	initTbRsCustFeatRuleCalc,
-	initTbRsCustFeatRuleCase,
 	initFeatureTemp,
 	initTbRsCustFeatRuleSql,
+	initCustFeatureFormData,
 } from './data'
-import { Method, callApi } from '@/utils/ApiUtil';
 import {
 	subFeatStatus,
 	selfFeatPgPpNm,
-	initConfig,
-	initApiRequest,
-	initCommonResponse,
 	ModalType,
 	ModalTitCont,
-	ColDataType,
 	CommonCode,
 	CommonCodeInfo,
-} from '@/models/selfFeature/FeatureCommon';
-import { StatusCode } from '@/models/common/CommonResponse';
-import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel';
-import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data';
-import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
-import { ValidType } from '@/models/common/Constants';
-import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
+} from '@/models/selfFeature/FeatureCommon'
+import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel'
+import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data'
+import { GroupCodeType, ValidType } from '@/models/common/Constants'
+import { FeatureSeparatesModel } from '@/models/model/FeatureModel'
 
-const lCategory = [
-	{ value: '', text: '선택' },
-	{ value: '1', text: '회원' },
-	{ value: '2', text: '항공' },
-]
-const mCategory = [
-	{ value: '', text: '선택' },
-	{ value: '1', text: '항공권' },
-]
+import { selectCodeList } from '@/reducers/codeSlice'
+import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
+import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
+import { useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries'
+import { useCreateCustFeatRule } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
+import { validationCustReatRule } from '@/utils/self-feature/FormulaValidUtil'
+
 const calcUnit = [
 	{ value: '', text: '선택' },
 	{ value: '1', text: '원' },
@@ -71,22 +64,32 @@ const calcUnit = [
 
 const SelfFeatureReg = () => {
 
-	const { toast } = useToast()
-	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
-	const {} = useCommCodes(CommonCode.FUNCTION)
-	const {} = useCommCodes(CommonCode.OPERATOR)
-	const {} = useCommCodes(CommonCode.FORMAT)
-	const {} = useCommCodes(CommonCode.SGMT_DELIMITER)
-	const { data: response1, isError: isError1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
-
 	const navigate = useNavigate()
 	const location = useLocation()
+	const { toast } = useToast()
+
+	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
+	const { } = useCommCodes(CommonCode.FUNCTION)
+	const { } = useCommCodes(CommonCode.OPERATOR)
+	const { } = useCommCodes(CommonCode.FORMAT)
+	const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
+	// 대구분
+	const { refetch: lRefetch, data: lResponse, isError: lIsError } = useFeatureTypList()
+	const [featureSeGrpList, setFeatureSeGrpList] = useState<Array<FeatureSeparatesModel>>([])
+	// 중구분
+	const [seGrpId, setSeGrpId] = useState<string>("")
+	const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(seGrpId)
+	const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([])
+	// 픽처타입
+	const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
+	// 속성, 행동정보
+	const { data: getTCByNSRRes, isError: getTCByNSRError, refetch: getTCByNSRRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	// 등록 구분(RuleDesign / SQL)
 	const [regType, setRegType] = useState<string>(location.state.regType)
-
 	// formData
+	const [custFeatureFormData, setCustFeatureFormData] = useState<CustFeatureFormData>(cloneDeep(initCustFeatureFormData))
+	// Customer Feature 정보
 	const [featureInfo, setFeatureInfo] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
-
 	// 기본정보
 	const [featureTempInfo, setFeatureTempInfo] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
 	const [custFeatRule, setCustFeatRule] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
@@ -97,13 +100,12 @@ const SelfFeatureReg = () => {
 	const [sqlQueryInfo, setSqlQueryInfo] = useState<TbRsCustFeatRuleSql>(cloneDeep(initTbRsCustFeatRuleSql))
 	// 계산식
 	const [custFeatRuleCalc, setCustFeatRuleCalc] = useState<TbRsCustFeatRuleCalc>(cloneDeep(initTbRsCustFeatRuleCalc))
-	const [custFeatRuleCaseList, setCustFeatRuleCaseList] = useState<Array<TbRsCustFeatRuleCase>>([cloneDeep(initTbRsCustFeatRuleCase)])
+	const [custFeatRuleCaseList, setCustFeatRuleCaseList] = useState<Array<TbRsCustFeatRuleCase>>([])
 	const [formulaTrgtList, setFormulaTrgtList] = useState<Array<FormulaTrgtListProps>>([])
 	const [isValidFormula, setIsValidFormula] = useState<Boolean>(true)
 	// 승인 정보
 	const [sfSubmissionRequestData, setSfSubmissionRequestData] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
 	const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
-
 	// 속성 및 행동 데이터
 	const [mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 	// Top 집계함수 선택 여부
@@ -114,6 +116,8 @@ const SelfFeatureReg = () => {
 	const [confirmModalTit, setConfirmModalTit] = useState<string>('')
 	const [confirmModalCont, setConfirmModalCont] = useState<string>('')
 	const [modalType, setModalType] = useState<string>('')
+	// 등록 API
+	const { data: insertRes, isSuccess, isError, mutate } = useCreateCustFeatRule(custFeatureFormData)
 
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
@@ -134,14 +138,11 @@ const SelfFeatureReg = () => {
 	const onCancel = () => {
 		setIsOpenConfirmModal(false)
 	}
-
+	// mount 시 수행
 	useEffect(() => {
-		// 초기 setting API Call
 		initCustFeatRule()
-		if (regType === selfFeatPgPpNm.RULE_REG)
-			getTableandColumnMetaInfoByMstrSgmtRuleId()
 	}, [])
-
+	// 정보초기화
 	const initCustFeatRule = () => {
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
@@ -167,7 +168,6 @@ const SelfFeatureReg = () => {
 			return t
 		})
 	}
-
 	// 기본 정보 입력시 formData setting
 	useEffect(() => {
 		setFeatureInfo((state: FeatureInfo) => {
@@ -183,7 +183,6 @@ const SelfFeatureReg = () => {
 			return rtn
 		})
 	}, [featureTempInfo])
-
 	// 대상 선택시 formData setting
 	useEffect(() => {
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
@@ -214,7 +213,6 @@ const SelfFeatureReg = () => {
 		}
 		setFormulaTrgtList(fList)
 	}, [targetList])
-
 	useEffect(() => {
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
@@ -222,7 +220,6 @@ const SelfFeatureReg = () => {
 			return rtn
 		})
 	}, [trgtFilterList])
-
 	// SQL 입력시 formData setting
 	useEffect(() => {
 		setFeatureInfo((state: FeatureInfo) => {
@@ -231,7 +228,6 @@ const SelfFeatureReg = () => {
 			return rtn
 		})
 	}, [sqlQueryInfo])
-
 	// 계산식 입력시 formData setting
 	useEffect(() => {
 		setFeatureInfo((state: FeatureInfo) => {
@@ -240,7 +236,7 @@ const SelfFeatureReg = () => {
 			return rtn
 		})
 	}, [custFeatRuleCalc])
-
+	// 계산식 case문 formData setting
 	useEffect(() => {
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
@@ -248,7 +244,6 @@ const SelfFeatureReg = () => {
 			return rtn
 		})
 	}, [custFeatRuleCaseList])
-
 	// 대상 선택 list가 없는 경우 formula reset
 	useEffect(() => {
 		if (formulaTrgtList.length > 0) return
@@ -260,59 +255,91 @@ const SelfFeatureReg = () => {
 		})
 
 	}, [formulaTrgtList])
-
-	const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
-		if (isError1 || response1?.successOrNot === 'N') {
+	// 속성,행동데이터 response callback
+	useEffect(() => {
+		if (getTCByNSRError || getTCByNSRRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
 				content: '조회 중 에러가 발생했습니다.',
 			})
 		} else {
-			if (response1 && (response1.statusCode === StatusCode.SUCCESS)) {
-				setMstrSgmtTableandColMetaInfo(cloneDeep(response1.result))
+			if (getTCByNSRRes) {
+				setMstrSgmtTableandColMetaInfo(cloneDeep(getTCByNSRRes.result))
 			}
 		}
-	}
-
-	const createCustFeatRule = async () => {
+	}, [getTCByNSRRes, getTCByNSRError])
+	// 대구분 선택시 중구분 select option setting
+	useEffect(() => {
+		if (seGrpId) {
+			sRefetch()
+		}
+	}, [seGrpId, sRefetch])
+	// 중구분 API response callback
+	useEffect(() => {
+		if (sIsError || sResponse?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (sResponse?.data) {
+				setFeatureSeList(sResponse.data);
+			}
+		}
+	}, [sResponse, sIsError, toast])
+	// 대구분 API response callback
+	useEffect(() => {
+		if (lIsError || lResponse?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (lResponse?.data) {
+				setFeatureSeGrpList(lResponse.data);
+			}
+		}
+	}, [lResponse, lIsError, toast])
+	// 등록 API callback
+	useEffect(() => {
+		if (isError || insertRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '등록 중 에러가 발생했습니다.',
+			})
+		} else if (isSuccess) {
+			toast({
+				type: ValidType.CONFIRM,
+				content: '등록되었습니다.',
+			})
+		}
+	}, [insertRes, isSuccess, isError, toast, navigate])
+	// 등록 API 호출
+	const createCustFeatRule = () => {
 		if (!isValidFormula) {
-			setModalType(ModalType.ALERT)
-			setConfirmModalCont(ModalTitCont.REG_VALID.context)
-			setIsOpenConfirmModal(true)
+			toast({
+				type: ValidType.ERROR,
+				content: ModalTitCont.REG_VALID.context,
+			})
 			return
 		}
-		/*
-		  Method      :: POST
-		  Url         :: /api/v1/customerfeatures
-		  path param  :: 
-		  query param :: 
-		  body param  :: featureInfo
-		*/
-		let config = cloneDeep(initConfig)
-		config.isLoarding = true
-		let request = cloneDeep(initApiRequest)
-		request.method = Method.POST
-		request.url = "/api/v1/customerfeatures"
 
 		featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
-		sfSubmissionRequestData.title = `${featureInfo.tbRsCustFeatRule.name}_승인정보`
-		sfSubmissionRequestData.content = `${featureInfo.tbRsCustFeatRule.description}_승인정보`
-		let param = {
-			customerFeature: featureInfo,
-			submissionInfo: {
-				submission: sfSubmissionRequestData,
-				approvals: sfSubmissionApprovalList
-			}
+		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
+		param.customerFeature = featureInfo
+		param.submissionInfo.submission = sfSubmissionRequestData
+		param.submissionInfo.approvals = sfSubmissionApprovalList
+		let validRslt = validationCustReatRule(param)
+		if (!validRslt.valid) {
+			toast({
+				type: ValidType.ERROR,
+				content: validRslt.text,
+			})
+			return
 		}
-		request.params!.bodyParams = param
-		console.log("[createCustFeatRule] Request  :: ", request)
 
-		let response = cloneDeep(initCommonResponse)
-		//response = await callApi(request)
-		console.log("[createCustFeatRule] Response :: ", response)
-
-		// API 정상 응답시 페이지 redirect
-
+		setCustFeatureFormData(param)
+		mutate()
 	}
 
 	const createCustFeatSQL = async () => {
@@ -323,6 +350,7 @@ const SelfFeatureReg = () => {
 		  query param :: 
 		  body param  :: featureInfo
 		*/
+		/*
 		let config = cloneDeep(initConfig)
 		config.isLoarding = true
 		let request = cloneDeep(initApiRequest)
@@ -336,7 +364,7 @@ const SelfFeatureReg = () => {
 		let response = cloneDeep(initCommonResponse)
 		//response = await callApi(request)
 		console.log("[createCustFeatSQL] Response :: ", response)
-
+		*/
 		// API 정상 응답시 페이지 redirect
 
 	}
@@ -353,9 +381,16 @@ const SelfFeatureReg = () => {
 				return key
 			})
 
-			if (id === "featureNm") rtn.name = value
+			if (id === "featureKoNm") rtn.name = value
 			if (id === "featureDef") rtn.description = value
 
+			return rtn
+		})
+
+		setSfSubmissionRequestData((state: SfSubmissionRequestInfo) => {
+			let rtn = cloneDeep(state)
+			if (id === "featureKoNm") rtn.title = `${value}_승인정보`
+			if (id === "featureDef") rtn.content = `${value}_승인정보`
 			return rtn
 		})
 
@@ -422,9 +457,13 @@ const SelfFeatureReg = () => {
 			})
 			return rtn
 		})
+		// 대구분 선택시 중구분 select ooption Group ID setting
+		if (keyNm === "featureSeGrp") {
+			setSeGrpId(v)
+		}
 
 	}
-
+	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string) => {
 		if (pageNm === selfFeatPgPpNm.LIST)
 			navigate('..')
@@ -441,7 +480,7 @@ const SelfFeatureReg = () => {
 		setConfirmModalCont(ModalTitCont.TRGT_CLEAR.context)
 		setIsOpenConfirmModal(true)
 	}
-
+	// 저장 버튼 클릭시
 	const onSubmitInsertHandler = () => {
 		setModalType(ModalType.CONFIRM)
 		setConfirmModalTit(ModalTitCont.REG.title)
@@ -467,11 +506,11 @@ const SelfFeatureReg = () => {
 									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
 									value: SelectValue<{}, false>
 								) => {
-									onchangeSelectHandler(e, value, "lCategory")
+									onchangeSelectHandler(e, value, "featureSeGrp")
 								}}
 							>
-								{lCategory.map((item, index) => (
-									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+								{featureSeGrpList.map((item, index) => (
+									<SelectOption key={index} value={item.seId}>{item.seNm}</SelectOption>
 								))}
 							</Select>
 						</TD>
@@ -485,11 +524,11 @@ const SelfFeatureReg = () => {
 									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
 									value: SelectValue<{}, false>
 								) => {
-									onchangeSelectHandler(e, value, "mCategory")
+									onchangeSelectHandler(e, value, "featureSe")
 								}}
 							>
-								{mCategory.map((item, index) => (
-									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+								{featureSeList.map((item, index) => (
+									<SelectOption key={index} value={item.seId}>{item.seNm}</SelectOption>
 								))}
 							</Select>
 						</TD>
@@ -499,26 +538,43 @@ const SelfFeatureReg = () => {
 						<TD colSpan={2}>
 							<TextField className="width-100" id="featureId" readOnly onChange={onchangeInputHandler} />
 						</TD>
-						<TH colSpan={1} align="right">Feature 타입</TH>
-						<TD colSpan={2}>
-							<TextField className="width-100" id="featureTyp" value={"Fact지수"} readOnly onChange={onchangeInputHandler} />
-						</TD>
 					</TR> */}
 					<TR>
 						<TH colSpan={1} align="right" required>한글명</TH>
 						<TD colSpan={2}>
 							<Stack gap="SM" className='width-100'>
-								<TextField className="width-100" id="featureNm" onChange={onchangeInputHandler} />
+								<TextField className="width-100" id="featureKoNm" onChange={onchangeInputHandler} />
 								<Button>중복확인</Button>
 							</Stack>
 						</TD>
 						<TH colSpan={1} align="right" required>영문명</TH>
 						<TD colSpan={2}>
 							<Stack gap="SM" className='width-100'>
-								<TextField className="width-100" id="featureEngNm" onChange={onchangeInputHandler} />
+								<TextField className="width-100" id="featureEnNm" onChange={onchangeInputHandler} />
 								<Button>중복확인</Button>
 							</Stack>
 						</TD>
+					</TR>
+					<TR>
+						<TH colSpan={1} align="right" required>Feature 타입</TH>
+						<TD colSpan={2}>
+							<Select
+								appearance="Outline"
+								placeholder="선택"
+								className="width-100"
+								onChange={(
+									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+									value: SelectValue<{}, false>
+								) => {
+									onchangeSelectHandler(e, value, "featureTyp")
+								}}
+							>
+								{codeList.map((codeItem: any, index) => (
+									<SelectOption key={index} value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+								))}
+							</Select>
+						</TD>
+						<TD colSpan={3}></TD>
 					</TR>
 					<TR>
 						<TH colSpan={1} align="right" required>Feature 정의</TH>
@@ -571,12 +627,12 @@ const SelfFeatureReg = () => {
 					<TR>
 						<TH colSpan={1} align="right">비고</TH>
 						<TD colSpan={5}>
-							<TextField className="width-100" id="" onChange={onchangeInputHandler} />
+							<TextField className="width-100" id="featureDsc" onChange={onchangeInputHandler} />
 						</TD>
 					</TR>
 				</HorizontalTable>
 				{/* 기본 정보 */}
-				
+
 				{/* 대상 선택 */}
 				<Stack
 					gap="LG"
@@ -586,91 +642,91 @@ const SelfFeatureReg = () => {
 						borderRadius: '5px',
 					}}
 				>
-				{(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
-					<Stack
-						direction="Vertical"
-						gap="SM"
-						style={{
-							margin: "0.5rem"
-						}}
-					>
-						<Stack direction="Horizontal" gap="LG" justifyContent="start">
-							<Typography variant="h4">1. Feature 로직</Typography>
-							<Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
-								초기화
-							</Button>
-						</Stack>
-						{/* drag && drop 영역*/}
+					{(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
 						<Stack
-							direction="Horizontal"
-							gap="MD"
-							justifyContent="Between"
+							direction="Vertical"
+							gap="SM"
 							style={{
-								height: '700px',
+								margin: "0.5rem"
 							}}
 						>
-							<DndProvider backend={HTML5Backend}>
-								{/* drop 영역 */}
-								<DropList
-									featStatus={subFeatStatus.REG}
-									setIsSelectAggregateTop={setIsSelectAggregateTop}
-									targetList={targetList}
-									trgtFilterList={trgtFilterList}
-									setTargetList={setTargetList}
-									setTrgtFilterList={setTrgtFilterList}
-									attributes={mstrSgmtTableandColMetaInfo.attributes}
-									behaviors={mstrSgmtTableandColMetaInfo.behaviors}
-									setFormulaTrgtList={setFormulaTrgtList}
-								/>
-								{/* drop 영역 */}
-
-								{/* drag 영역 */}
-								{(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) &&
-									<DragList
+							<Stack direction="Horizontal" gap="LG" justifyContent="start">
+								<Typography variant="h4">1. Feature 로직</Typography>
+								<Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
+									초기화
+								</Button>
+							</Stack>
+							{/* drag && drop 영역*/}
+							<Stack
+								direction="Horizontal"
+								gap="MD"
+								justifyContent="Between"
+								style={{
+									height: '700px',
+								}}
+							>
+								<DndProvider backend={HTML5Backend}>
+									{/* drop 영역 */}
+									<DropList
+										featStatus={subFeatStatus.REG}
+										setIsSelectAggregateTop={setIsSelectAggregateTop}
+										targetList={targetList}
+										trgtFilterList={trgtFilterList}
+										setTargetList={setTargetList}
+										setTrgtFilterList={setTrgtFilterList}
 										attributes={mstrSgmtTableandColMetaInfo.attributes}
 										behaviors={mstrSgmtTableandColMetaInfo.behaviors}
-									/>}
-								{/* drag 영역 */}
-							</DndProvider>
+										setFormulaTrgtList={setFormulaTrgtList}
+									/>
+									{/* drop 영역 */}
+
+									{/* drag 영역 */}
+									{(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) &&
+										<DragList
+											attributes={mstrSgmtTableandColMetaInfo.attributes}
+											behaviors={mstrSgmtTableandColMetaInfo.behaviors}
+										/>}
+									{/* drag 영역 */}
+								</DndProvider>
+							</Stack>
 						</Stack>
-					</Stack>
-				}
-				{/* 대상 선택 */}
-				{/* SQL 입력 */}
-				{(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
-					<Stack
-						direction="Vertical"
-						style={{
-							margin: "0.5rem"
-						}}
-					>
-						<Typography variant="h4">Feature 생성 Query</Typography>
+					}
+					{/* 대상 선택 */}
+					{/* SQL 입력 */}
+					{(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
 						<Stack
-							direction="Horizontal"
-							gap="MD"
-							justifyContent="Between"
+							direction="Vertical"
 							style={{
-								height: '400px',
+								margin: "0.5rem"
 							}}
 						>
-							<TextField className="width-100 height-100" multiline id="sqlQuery" onChange={onchangeInputHandler} />
+							<Typography variant="h4">Feature 생성 Query</Typography>
+							<Stack
+								direction="Horizontal"
+								gap="MD"
+								justifyContent="Between"
+								style={{
+									height: '400px',
+								}}
+							>
+								<TextField className="width-100 height-100" multiline id="sqlQuery" onChange={onchangeInputHandler} />
+							</Stack>
 						</Stack>
-					</Stack>
-				}
-				{/* SQL 입력 */}
-				{/* 계산식 */}
-				{(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
-					<CalcValid
-						featStatus={subFeatStatus.REG}
-						isSelectAggregateTop={isSelectAggregateTop}
-						setIsValidFormula={setIsValidFormula}
-						formulaTrgtList={formulaTrgtList}
-						custFeatRuleCalc={custFeatRuleCalc}
-						custFeatRuleCaseList={custFeatRuleCaseList}
-						setCustFeatRuleCalc={setCustFeatRuleCalc}
-						setCustFeatRuleCaseList={setCustFeatRuleCaseList}
-					/>
-				}
+					}
+					{/* SQL 입력 */}
+					{/* 계산식 */}
+					{(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
+						<CalcValid
+							featStatus={subFeatStatus.REG}
+							isSelectAggregateTop={isSelectAggregateTop}
+							setIsValidFormula={setIsValidFormula}
+							formulaTrgtList={formulaTrgtList}
+							custFeatRuleCalc={custFeatRuleCalc}
+							custFeatRuleCaseList={custFeatRuleCaseList}
+							setCustFeatRuleCalc={setCustFeatRuleCalc}
+							setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+						/>
+					}
 				</Stack>
 				{/* 계산식 */}
 				{/* 결재선 */}

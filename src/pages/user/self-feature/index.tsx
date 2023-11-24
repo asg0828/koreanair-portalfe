@@ -41,7 +41,8 @@ const SelfFeature = () => {
 
   const navigate = useNavigate()
   const { toast } = useToast()
-
+  
+  //Feature명칭(한글), Feature명(영문명), 진행상태, 부서
   const [ searchInfo, setSearchInfo ] = useState<FeatListSrchProps>({
     mstrSgmtRuleId: RuleId.MASTERPROF,
     custFeatRuleName: '',

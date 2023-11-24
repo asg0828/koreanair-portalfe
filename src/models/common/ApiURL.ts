@@ -20,6 +20,7 @@ export enum SelfFeatureCmmApiURL {
 
 export enum SelfFeatureUserApiURL {
   FEAT_LIST = '/api/v1/customerfeatures',
+  FEAT_INST_UPDT_BASE = '/api/v1/customerfeatures-with-submission',
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
   READ_SQL = '/api/v1/customerfeatures/read-sql',
   RUN_SCDL = '/api/v1/airflow/runSchedule',

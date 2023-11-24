@@ -18,7 +18,9 @@ import {
     ReadSql,
     FeatureTemp,
     TbRsCustFeatRuleSql,
+    CustFeatureFormData,
 } from "@/models/selfFeature/FeatureModel";
+import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 
 // feature 목록 검색 조건 필터
 export const category = [
@@ -99,6 +101,7 @@ export const divisionTypes = {
     BEHV: 'BEHV',
 }
 
+
 export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     id: '',
     name: '',
@@ -112,7 +115,7 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     frstRegUserId: '',
     lastUpdDttm: '',
     lastUpdUserId: '',
-    category: '',
+    category: ' ',
     dataType: '',
     sqlDirectInputYn: '',
     frstRegUserNm: '',
@@ -209,15 +212,15 @@ export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
 
 export const initFeatureTemp: FeatureTemp = {
     featureId: '',
-    featureTyp: FeatureType.CUST,
+    featureTyp: '',
+    featureSeGrp: '',
     featureSe: '',
-    featureLSe: '',
-    featureMSe: '',
-    featureNm: '',
-    featureEngNm: '',
+    featureKoNm: '',
+    featureEnNm: '',
     calcUnt: '',
     featureDef: '',
     featureFm: '',
+    featureDsc: '',
     enrUserId: '',
     enrDeptCode: '',
     delYn: '',
@@ -245,6 +248,14 @@ export const initSelfFeatureInfo: FeatureInfo = {
     tbRsCustFeatRuleCaseList: [{...initTbRsCustFeatRuleCase}],
     featureTemp: initFeatureTemp,
     tbRsCustFeatRuleSql: initTbRsCustFeatRuleSql,
+}
+
+export const initCustFeatureFormData: CustFeatureFormData = {
+    customerFeature: initSelfFeatureInfo,
+    submissionInfo: {
+        submission: initSfSubmissionRequestInfo,
+        approvals: [{...initSfSubmissionApproval}]
+    }
 }
 
 export const initTbCoMetaTbInfo: TbCoMetaTbInfo = {
@@ -526,106 +537,7 @@ export const protoTbRsCustFeatRuleList: Array<TbRsCustFeatRule> = [
     // }
 ]
 
-export const protoTypeFeatureTemp: FeatureTemp = {
-    featureId: 'CFR_00000001',
-    featureTyp: 'Fact 지수',
-    featureSe: '',
-    featureLSe: '온라인행동',
-    featureMSe: '홈페이지',
-    featureNm: '홈페이지방문횟수(예매)',
-    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
-    calcUnt: '횟수',
-    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
-    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
-    enrUserId: '',
-    enrDeptCode: '',
-    delYn: '',
-    rgstDt: '',
-    rgstId: '',
-    modiDt: '',
-    modiId: '',
-    featureRelTb: '',
-}
-export const protoTypeFeatureTempSaved: FeatureTemp = {
-    featureId: 'CFR_00000002',
-    featureTyp: 'Fact 지수',
-    featureSe: '',
-    featureLSe: '온라인행동',
-    featureMSe: '홈페이지',
-    featureNm: '홈페이지방문횟수(예매)',
-    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
-    calcUnt: '횟수',
-    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
-    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
-    enrUserId: '',
-    enrDeptCode: '',
-    delYn: '',
-    rgstDt: '',
-    rgstId: '',
-    modiDt: '',
-    modiId: '',
-    featureRelTb: '',
-}
-export const protoTypeFeatureTempInApproval: FeatureTemp = {
-    featureId: 'CFR_00000004',
-    featureTyp: 'Fact 지수',
-    featureSe: '',
-    featureLSe: '온라인행동',
-    featureMSe: '홈페이지',
-    featureNm: '홈페이지방문횟수(예매)',
-    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
-    calcUnt: '횟수',
-    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
-    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
-    enrUserId: '',
-    enrDeptCode: '',
-    delYn: '',
-    rgstDt: '',
-    rgstId: '',
-    modiDt: '',
-    modiId: '',
-    featureRelTb: '',
-}
-export const protoTypeFeatureTempApproved: FeatureTemp = {
-    featureId: 'CFR_00000005',
-    featureTyp: 'Fact 지수',
-    featureSe: '',
-    featureLSe: '온라인행동',
-    featureMSe: '홈페이지',
-    featureNm: '홈페이지방문횟수(예매)',
-    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
-    calcUnt: '횟수',
-    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
-    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
-    enrUserId: '',
-    enrDeptCode: '',
-    delYn: '',
-    rgstDt: '',
-    rgstId: '',
-    modiDt: '',
-    modiId: '',
-    featureRelTb: '',
-}
-export const protoTypeFeatureTempRejected: FeatureTemp = {
-    featureId: 'CFR_00000006',
-    featureTyp: 'Fact 지수',
-    featureSe: '',
-    featureLSe: '온라인행동',
-    featureMSe: '홈페이지',
-    featureNm: '홈페이지방문횟수(예매)',
-    featureEngNm: 'HMPG_TKT_BUY_VISIT_CNT',
-    calcUnt: '횟수',
-    featureDef: '홈페이지 예매 관련 페이지 방문 횟수(하나의 세션은 방문 1회 Count)',
-    featureFm: 'SELECT source_oneid_no, count(distinct 세션번호)\nFROM L2_홈페이지행동_B\nWHERE 대분류 = \'Booking\'\nGROUP BY source_oneid_no',
-    enrUserId: '',
-    enrDeptCode: '',
-    delYn: '',
-    rgstDt: '',
-    rgstId: '',
-    modiDt: '',
-    modiId: '',
-    featureRelTb: '',
-}
+
 
 export const protoTypeTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {
     id: 0,

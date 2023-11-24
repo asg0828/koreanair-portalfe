@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { cloneDeep } from 'lodash'
 
 import { 
     Button,
@@ -9,11 +10,13 @@ import {
     THead,
     TR,
     Table,
-    Typography, 
+    Typography,
+    useToast, 
 } from '@components/ui'
 
 import { 
     ApporvalListComponentProps,
+    SfSubmissionAppendApproval,
     SfSubmissionApproval,
 } from "@/models/selfFeature/FeatureSubmissionModel"
 import {
@@ -22,6 +25,8 @@ import {
 } from '@pages/user/self-feature-submission/data'
 import { subFeatStatus } from "@/models/selfFeature/FeatureCommon"
 import SubAppdAprvPop from "../self-feature-submission/popup/SubAppdAprvPop"
+import { useApproverCandidate } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries"
+import { ValidType } from "@/models/common/Constants"
 
 const ApprovalList = ({
     sfSubmissionRequestData,
@@ -29,22 +34,56 @@ const ApprovalList = ({
     setSfSubmissionApprovalList,
 }: ApporvalListComponentProps) => {
 
-    const [ defaultSubAprvList, setDefaultSubAprvList ] = useState<Array<SfSubmissionApproval>>([])
+    const { toast } = useToast()
+    const {
+        data: response,
+        isError: isError,
+        refetch: refetch
+    } = useApproverCandidate()
+    const [ aprvList, setAprvList ] = useState<Array<SfSubmissionAppendApproval>>([])
+    const [ aprvType1, setAprvType1 ] = useState<Array<SfSubmissionAppendApproval>>([])
+    const [ aprvType2, setAprvType2 ] = useState<Array<SfSubmissionAppendApproval>>([])
+    const [ aprvType3, setAprvType3 ] = useState<Array<SfSubmissionAppendApproval>>([])
+    const [ aprvType1Priority, setAprvType1Priority ] = useState<string>("")
+    const [ aprvType2Priority, setAprvType2Priority ] = useState<string>("")
+    const [ aprvType3Priority, setAprvType3Priority ] = useState<string>("")
     // 결재선 선택 팝업
     const [ isOpenSubAppdAprvPop, setIsOpenSubAppdAprvPop ] = useState<boolean>(false)
     const [ aprvCategory, setAprvCategory ] = useState<string>("")
-
-    useEffect(() => {
-        setSfSubmissionApprovalList(defaultSubAprvList)
-    }, [defaultSubAprvList])
-
+    
     const appendAprvHanbler = (index: number) => {
-        if (index === 0) setAprvCategory(aprvSeqNm.FIRST)
-        else if (index === 1) setAprvCategory(aprvSeqNm.SECOND)
-        else if (index === 2) setAprvCategory(aprvSeqNm.LAST)
+        if (index === 0) {
+            setAprvType1(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.FIRST))
+            setAprvCategory(aprvSeqNm.FIRST)
+        } else if (index === 1) {
+            setAprvType2(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.SECOND))
+            setAprvCategory(aprvSeqNm.SECOND)
+        } else if (index === 2) {
+            setAprvType3(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.LAST))
+            setAprvCategory(aprvSeqNm.LAST)
+        }
 
         setIsOpenSubAppdAprvPop((prevState) => !prevState)
     }
+
+    useEffect(() => {
+        setAprvType1Priority(aprvList.filter((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.FIRST) && aprroval.isPriority)[0]?.userEmail)
+        setAprvType2Priority(aprvList.filter((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.SECOND) && aprroval.isPriority)[0]?.userEmail)
+        setAprvType3Priority(aprvList.filter((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.LAST) && aprroval.isPriority)[0]?.userEmail)
+    }, [aprvList])
+
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response) {
+                setAprvList(response.result)
+            }
+        }
+    }, [response, isError, toast])
 
     return (
         <>
@@ -81,7 +120,27 @@ const ApprovalList = ({
                                     className="width-100" 
                                     variant="body2"
                                 >
-                                    {row[columns[index2].field]}
+                                    {(row[columns[index2].field] && row[columns[index2].field] !== "") &&
+                                        row[columns[index2].field]
+                                    }
+                                    {(
+                                        (!row[columns[index2].field] || row[columns[index2].field] === "")
+                                        && index === 0
+                                    ) &&
+                                        aprvType1Priority
+                                    }
+                                    {(
+                                        (!row[columns[index2].field] || row[columns[index2].field] === "")
+                                        && index === 1
+                                    ) &&
+                                        aprvType2Priority
+                                    }
+                                    {(
+                                        (!row[columns[index2].field] || row[columns[index2].field] === "")
+                                        && index === 2
+                                    ) &&
+                                        aprvType3Priority
+                                    }
                                 </Typography>
                                 {/* 신규등록 및 품의등록,승인요청전 상태인 경우 */}
                                 {(
@@ -116,12 +175,33 @@ const ApprovalList = ({
             </TBody>
         </Table>
         {/* 팝업 */}
+        {aprvCategory === aprvSeqNm.FIRST &&
         <SubAppdAprvPop 
             isOpen={isOpenSubAppdAprvPop} 
-            onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)} 
+            onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
+            aprvList={aprvType1}
             aprvCategory={aprvCategory}
-            setDefaultSubAprvList={setDefaultSubAprvList}
+            setSfSubmissionApprovalList={setSfSubmissionApprovalList}
         />
+        }
+        {aprvCategory === aprvSeqNm.SECOND &&
+        <SubAppdAprvPop 
+            isOpen={isOpenSubAppdAprvPop} 
+            onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
+            aprvList={aprvType2}
+            aprvCategory={aprvCategory}
+            setSfSubmissionApprovalList={setSfSubmissionApprovalList}
+        />
+        }
+        {aprvCategory === aprvSeqNm.LAST &&
+        <SubAppdAprvPop 
+            isOpen={isOpenSubAppdAprvPop} 
+            onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
+            aprvList={aprvType3}
+            aprvCategory={aprvCategory}
+            setSfSubmissionApprovalList={setSfSubmissionApprovalList}
+        />
+        }
         {/* 팝업 */}
         </>
     )

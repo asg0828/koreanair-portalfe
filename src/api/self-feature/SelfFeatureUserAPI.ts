@@ -10,6 +10,7 @@ import {
     callApi 
 } from "@/utils/ApiUtil";
 
+// Self-feature 목록 조회
 export const retrieveCustFeatRules = (qParams: FeatListSrchProps) => {
     return callApi({
         service: Service.KAL_SF_BE,
@@ -20,12 +21,23 @@ export const retrieveCustFeatRules = (qParams: FeatListSrchProps) => {
         }
     })
 }
-
+// Self-feature 속성,행동,FEAT 데이터 조회
 export const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     return callApi({
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureUserApiURL.FACT_BASEFACT}/${RuleId.MASTERPROF}`,
         method: Method.GET,
+    })
+}
+// Self-feature 등록
+export const createCustFeatRule = (bodyParams: Object) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_INST_UPDT_BASE}`,
+        method: Method.POST,
+        params: {
+            bodyParams: bodyParams
+        }
     })
 }
 
