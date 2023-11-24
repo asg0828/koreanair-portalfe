@@ -104,7 +104,11 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
           config.headers['x-session-id'] = sessionUtil.getSessionInfo().sessionId || '';
         }
         if (isFile) {
-          config.headers['Content-Type'] = 'multipart/form-data';
+          if (config.method === 'get') {
+            config['responseType'] = 'blob';
+          } else if (config.method === 'post') {
+            config.headers['Content-Type'] = 'multipart/form-data';
+          }
         } else {
           config.headers['x-correlation-id'] =
             window.location.pathname === '/'

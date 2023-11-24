@@ -1,4 +1,7 @@
 import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { ModalInfo } from '@/models/components/Modal';
+import { closeModal } from '@/reducers/modalSlice';
 import DeptTree from '@components/Tree/DeptTree';
 import VerticalTable from '@components/table/VerticalTable';
 import { Button, Modal, Stack, TextField } from '@components/ui';
@@ -14,28 +17,35 @@ const rows = [
   },
 ];
 
-export interface props {
-  isOpen: boolean;
-  onClose: (isOpen: boolean) => void;
-  onRemove?: Function;
-  onConfirm?: Function;
-}
-
-const DeptSelect = ({ isOpen, onClose, onRemove, onConfirm }: props) => {
-  const handleRemove = () => {
-    onRemove && onRemove();
-    onClose(false);
-  };
+const DeptSelectModal = ({
+  isOpen = false,
+  autoClose = true,
+  title = '부서 선택',
+  content,
+  onConfirm,
+  onCancle,
+  onClose,
+  btnType,
+}: ModalInfo) => {
+  const dispatch = useAppDispatch();
 
   const handleConfirm = () => {
     onConfirm && onConfirm();
-    onClose(false);
+    onClose && onClose(false);
+  };
+
+  const handleRemove = () => {
+    onClose && onClose(false);
+  };
+
+  const handleClose = () => {
+    dispatch(closeModal());
   };
 
   const rowSelection = () => {};
 
   return (
-    <Modal open={isOpen} onClose={onClose} size="LG">
+    <Modal open={isOpen} onClose={handleClose} size="LG">
       <Modal.Header>부서 선택</Modal.Header>
       <Modal.Body>
         <Stack className="width-100" alignItems="Start">
@@ -45,7 +55,7 @@ const DeptSelect = ({ isOpen, onClose, onRemove, onConfirm }: props) => {
           <Stack direction="Vertical" justifyContent="Start" className="user-seleted">
             <Stack direction="Vertical" className="user-search">
               <Stack className="search-wrap">
-                <TextField className="width-100" />
+                <TextField className="width-100" autoFocus />
                 <Button>검색</Button>
               </Stack>
               <VerticalTable columns={columns} rows={rows} rowSelection={rowSelection} />
@@ -72,4 +82,4 @@ const DeptSelect = ({ isOpen, onClose, onRemove, onConfirm }: props) => {
   );
 };
 
-export default DeptSelect;
+export default DeptSelectModal;

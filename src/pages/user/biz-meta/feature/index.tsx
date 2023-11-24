@@ -4,13 +4,14 @@ import DataGrid from '@/components/grid/DataGrid';
 import { useCreateUserFeature, useDeleteUserFeature } from '@/hooks/mutations/useUserFeatureMutations';
 import { useFeatureList, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
-import { useAppSelector } from '@/hooks/useRedux';
-import { ValidType, View } from '@/models/common/Constants';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ModalType, ValidType, View } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
 import { selectSessionInfo } from '@/reducers/authSlice';
+import { openModal } from '@/reducers/modalSlice';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
@@ -27,6 +28,7 @@ const initParams: FeatureParams = {
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
   const [featureId, setFeatureId] = useState<string>('');
   const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
@@ -93,11 +95,11 @@ const List = () => {
 
   const handleAddUserFeature = () => {
     cMutate();
-  }
+  };
 
   const handleRemoveUserFeature = () => {
     dMutate();
-  }
+  };
 
   const handleSearch = useCallback(() => {
     refetch();
@@ -134,6 +136,22 @@ const List = () => {
         searchConditions: newSearchConditions,
       };
     });
+  };
+
+  const handleUserSelectModal = () => {
+    dispatch(
+      openModal({
+        type: ModalType.USER_SELECT,
+      })
+    );
+  };
+
+  const handleDeptSelectModal = () => {
+    dispatch(
+      openModal({
+        type: ModalType.DEPT_SELECT,
+      })
+    );
   };
 
   useEffect(() => {
@@ -285,7 +303,7 @@ const List = () => {
                 onChange={(e) => handleChangeParams('enrUserId', e.target.value)}
                 value={params.enrUserId}
               />
-              <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+              <Button appearance="Contained" priority="Normal" shape="Square" size="MD" onClick={handleUserSelectModal}>
                 <span className="searchIcon"></span>
               </Button>
             </Stack>
@@ -301,7 +319,7 @@ const List = () => {
                 onChange={(e) => handleChangeParams('enrDeptCode', e.target.value)}
                 value={params.enrDeptCode}
               />
-              <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+              <Button appearance="Contained" priority="Normal" shape="Square" size="MD" onClick={handleDeptSelectModal}>
                 <span className="searchIcon"></span>
               </Button>
             </Stack>

@@ -12,15 +12,9 @@ const CalculationLogicModal = ({
   onCancle,
   onClose,
 }: ModalInfo) => {
-  const [isOpenModal, setIsOpenModal] = useState(isOpen);
   const [value, setValue] = useState<any>('');
 
-  useEffect(() => {
-    setIsOpenModal(isOpen);
-  }, [isOpen]);
-
   const handleClose = () => {
-    setIsOpenModal(false);
     onClose && onClose(false);
   };
 
@@ -51,7 +45,7 @@ const CalculationLogicModal = ({
 
   return (
     <Stack>
-      <Modal open={isOpenModal} onClose={handleClose} size="LG">
+      <Modal open={isOpen} onClose={handleClose} size="LG">
         <Modal.Header>{title}</Modal.Header>
         <Modal.Body>
           <TextField

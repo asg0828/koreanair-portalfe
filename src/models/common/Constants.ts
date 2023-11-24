@@ -16,6 +16,8 @@ export enum ModalType {
   CONFIRM = 'CONFIRM',
   NOTICE = 'NOTICE',
   CALCULATION_LOGIC = 'CALCULATION_LOGIC',
+  USER_SELECT = 'USER_SELECT',
+  DEPT_SELECT = 'DEPT_SELECT',
 }
 
 export enum GroupCodeType {
