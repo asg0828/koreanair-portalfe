@@ -1,4 +1,4 @@
-import { ExpandLessIcon } from '@/assets/icons';
+import { AttachFileIcon, ExpandLessIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
@@ -7,7 +7,9 @@ import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { DataroomModel } from '@/models/model/DataroomModel';
+import { FileModel } from '@/models/model/FileModel';
 import { openModal } from '@/reducers/modalSlice';
+import { getFileDownloadPath } from '@/utils/ApiUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
@@ -122,14 +124,18 @@ const Detail = () => {
               첨부파일
             </TH>
             <TD colSpan={3}>
-              {/* <ul className="attachFileList">
-                <li>
-                  <Link target="_blank">
-                    <AttachFileIcon />
-                    첨부파일입니다.
-                  </Link>
-                </li>
-              </ul> */}
+              <ul className="attachFileList">
+                {dataroomModel?.fileList.map((file: FileModel) => (
+                  <li>
+                    <Link href={`${getFileDownloadPath()}/${file.fileId}`}>
+                      <Stack>
+                        <AttachFileIcon />
+                        {file.fileNm}
+                      </Stack>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </TD>
           </TR>
           <TR>

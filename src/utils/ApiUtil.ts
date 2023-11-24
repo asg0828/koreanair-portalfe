@@ -3,9 +3,9 @@ import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
 import SessionUtil from '@utils/SessionUtil';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-import { Service, ServiceContextPath, ServicePort } from '@models/common/Service';
+import { Service, ServiceContextPath } from '@models/common/Service';
 import { v4 as uuidv4 } from 'uuid';
-import { PageModel } from '@/models/model/PageModel';
+import { PortalApiURL } from '@/models/common/ApiURL';
 
 export enum Method {
   GET = 'GET',
@@ -45,12 +45,20 @@ export interface ApiRequest {
   redirect?: string;
 }
 
+let baseApiUrl: BaseApiUrl = '/bo';
+
 export type BaseApiUrl = '/fo' | '/bo';
 
-let baseApiUrl: BaseApiUrl = '/bo';
+export const getBaseApiUrl = () => {
+  return baseApiUrl;
+};
 
 export const setBaseApiUrl = (changedUrl: BaseApiUrl) => {
   baseApiUrl = changedUrl;
+};
+
+export const getFileDownloadPath = () => {
+  return `${ServiceContextPath.KAL_BE + baseApiUrl + PortalApiURL.FILE}/download`;
 };
 
 /* istanbul ignore next */
@@ -68,10 +76,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
 
   switch (serviceName) {
     case Service.KAL_BE:
-      baseURL =
-        baseURL +
-        ServiceContextPath.KAL_BE +
-        baseApiUrl;
+      baseURL = baseURL + ServiceContextPath.KAL_BE + baseApiUrl;
       break;
     // 2023-11-02 김태훈A Self-Feature BE API case 추가
     case Service.KAL_SF_BE:
@@ -98,8 +103,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
           config.headers['x-session-id'] = sessionUtil.getSessionInfo().sessionId || '';
         }
         if (isFile) {
-          config['responseType'] = 'blob';
-          config.headers['accept'] = 'application/octet-stream';
+          config.headers['Content-Type'] = 'multipart/form-data';
         } else {
           config.headers['x-correlation-id'] =
             window.location.pathname === '/'

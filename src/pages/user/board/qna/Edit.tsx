@@ -25,9 +25,10 @@ const Edit = () => {
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    watch,
+    control,
     formState: { errors },
   } = useForm<UpdatedQnaModel>({
     mode: 'onChange',
@@ -38,6 +39,8 @@ const Edit = () => {
       cn: '',
       openYn: 'Y',
       useYn: 'Y',
+      fileIds: [],
+      fileList: [],
     },
   });
   const values = getValues();
@@ -68,6 +71,13 @@ const Edit = () => {
     );
   };
 
+  const handleUploadFiles = (files: Array<any>) => {
+    setValue(
+      'fileIds',
+      files.map((file) => file.fileId)
+    );
+  };
+
   useEffect(() => {
     if (isSuccess && response.data) {
       setValue('clCode', response.data.clCode);
@@ -76,6 +86,7 @@ const Edit = () => {
       setValue('cn', response.data.cn);
       setValue('openYn', response.data.openYn);
       setValue('useYn', response.data.useYn);
+      setValue('fileList', response.data.fileList);
     }
   }, [isSuccess, response?.data, setValue]);
 
@@ -233,7 +244,7 @@ const Edit = () => {
           <TR>
             <TH colSpan={1}>첨부파일</TH>
             <TD colSpan={3} className="attachFile">
-              <UploadDropzone />
+              <UploadDropzone fileCl="qna" uploadFiles={handleUploadFiles} fileList={watch().fileList} />
             </TD>
           </TR>
         </HorizontalTable>
