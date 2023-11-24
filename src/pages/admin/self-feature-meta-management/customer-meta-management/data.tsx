@@ -25,15 +25,15 @@ export const initCustMetaSrchItem: CustMetaSrchItem = {
 };
 
 export const customerMetaInfoColumn: Column[] = [
-  { headerName: '번호', field: '' },
-  { headerName: 'Key여부', field: '' },
-  { headerName: '사용여부', field: '' },
-  { headerName: '수집기준시간', field: '' },
-  { headerName: '컬럼명', field: '' },
-  { headerName: '컬럼 논리명', field: '' },
-  { headerName: '컬럼 설명', field: '' },
-  { headerName: '데이터타입', field: '' },
-  { headerName: '변경여부', field: '' },
-  { headerName: '변경 데이터타입', field: '' },
-  { headerName: '변경 데이터형식', field: '' },
+  { headerName: '번호', field: 'no' },
+  { headerName: 'Key여부', field: 'pkYn' },
+  { headerName: '사용여부', field: 'clmnUseYn' },
+  { headerName: '수집기준시간', field: 'baseTimeYn' },
+  { headerName: '컬럼명', field: 'metaTblClmnPhysNm' },
+  { headerName: '컬럼 논리명', field: 'metaTblClmnLogiNm' },
+  { headerName: '컬럼 설명', field: 'metaTblClmnDesc' },
+  { headerName: '데이터타입', field: 'dtpCd' },
+  { headerName: '변경여부', field: 'no' },
+  { headerName: '변경 데이터타입', field: 'chgDtpCd' },
+  { headerName: '변경 데이터형식', field: 'dataFormat' },
 ];

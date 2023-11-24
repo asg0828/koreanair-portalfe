@@ -32,6 +32,6 @@ export enum SelfFeatureUserApiURL {
 
 export enum SelfFeatureAdmApiURL {
   SCHEMA = '/api/v1/batchdb/schemas',
-  META_TABLE_LIST = '/api/v1/metas/tables',
+  META_TABLE = '/api/v1/metas/tables',
   COL_AND_CMMT = '/api/v1/metas/columnsAndComments/tb_co_meta_tbl_info',
 }
