@@ -394,12 +394,14 @@ const SelfFeatureEdit = () => {
 
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
 			let rtn = cloneDeep(state)
-			Object.keys(rtn).map((key) => {
-				if (key === keyNm) {
-					rtn[key] = v
-				}
-				return key
-			})
+			if (rtn) {
+				Object.keys(rtn).map((key) => {
+					if (key === keyNm) {
+						rtn[key] = v
+					}
+					return key
+				})
+			}
 			return rtn
 		})
 
@@ -455,7 +457,7 @@ const SelfFeatureEdit = () => {
 						<TH colSpan={1} align="center">대구분</TH>
 						<TD colSpan={3}>
 							<Select
-								defaultValue={location.state.featureInfo.featureTemp?.featureLSe}
+								//defaultValue={location.state.featureInfo.featureTemp?.featureSeGrp}
 								appearance="Outline"
 								placeholder="대구분"
 								className="width-100"
@@ -463,7 +465,7 @@ const SelfFeatureEdit = () => {
 									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
 									value: SelectValue<{}, false>
 								) => {
-									onchangeSelectHandler(e, value, "featureLSe")
+									onchangeSelectHandler(e, value, "featureSeGrp")
 								}}
 							>
 								{lCategory.map((item, index) => (
@@ -474,7 +476,7 @@ const SelfFeatureEdit = () => {
 						<TH colSpan={1} align="center">중구분</TH>
 						<TD colSpan={3}>
 							<Select
-								defaultValue={location.state.featureInfo.featureTemp?.featureMSe}
+								//defaultValue={location.state.featureInfo.featureTemp?.featureSe}
 								appearance="Outline"
 								placeholder="중구분"
 								className="width-100"
@@ -482,7 +484,7 @@ const SelfFeatureEdit = () => {
 									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
 									value: SelectValue<{}, false>
 								) => {
-									onchangeSelectHandler(e, value, "featureMSe")
+									onchangeSelectHandler(e, value, "featureSe")
 								}}
 							>
 								{mCategory.map((item, index) => (
@@ -518,7 +520,7 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="name"
-								defaultValue={location.state.featureInfo.featureTemp?.featureNm}
+								defaultValue={location.state.featureInfo.featureTemp?.featureKoNm}
 								onChange={onchangeInputHandler}
 							/>
 						</TD>
@@ -527,7 +529,7 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="name"
-								defaultValue={location.state.featureInfo.featureTemp?.featureEngNm}
+								defaultValue={location.state.featureInfo.featureTemp?.featureEnNm}
 								onChange={onchangeInputHandler}
 							/>
 						</TD>
@@ -584,7 +586,7 @@ const SelfFeatureEdit = () => {
 					<TR>
 						<TH colSpan={1} align="center">비고</TH>
 						<TD colSpan={7}>
-							{/* <TextField className="width-100" id="description" onChange={onchangeInputHandler}/> */}
+							<TextField className="width-100" id="featureDsc" onChange={onchangeInputHandler}/>
 						</TD>
 					</TR>
 				</HorizontalTable>

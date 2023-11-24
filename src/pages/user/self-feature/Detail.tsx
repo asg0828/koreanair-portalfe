@@ -70,6 +70,8 @@ import { StatusCode } from '@/models/common/CommonResponse';
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
+import { useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
+import { FeatureSeparatesModel } from '@/models/model/FeatureModel';
 
 const SelfFeatureDetail = () => {
 
@@ -84,6 +86,9 @@ const SelfFeatureDetail = () => {
 	const location = useLocation()
 	const navigate = useNavigate()
 
+	// 대구분
+	const { refetch: lRefetch, data: lResponse, isError: lIsError } = useFeatureTypList()
+	const [featureSeGrpList, setFeatureSeGrpList] = useState<Array<FeatureSeparatesModel>>([])
 
 	const [regType, setRegType] = useState<string>('')
 	const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
@@ -114,6 +119,20 @@ const SelfFeatureDetail = () => {
 		getTableandColumnMetaInfoByMstrSgmtRuleId()// useQuery로 쓰기
 		retrieveCustFeatRuleInfos()
 	}, [])
+
+	// 대구분 API response callback
+	useEffect(() => {
+		if (lIsError || lResponse?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (lResponse?.data) {
+				setFeatureSeGrpList(lResponse.data);
+			}
+		}
+	}, [lResponse, lIsError, toast])
 
 	const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
 		if (isError1 || response1?.successOrNot === 'N') {
@@ -676,11 +695,16 @@ const SelfFeatureDetail = () => {
 					<TR>
 						<TH colSpan={1} align="right">대구분</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && featureInfo.featureTemp.featureLSe}
+							{featureInfo.featureTemp && 
+								featureSeGrpList.some((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSeGrp) ?
+								featureSeGrpList.filter((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSeGrp)[0].seNm
+								:
+								featureInfo.featureTemp.featureSeGrp
+							}
 						</TD>
 						<TH colSpan={1} align="right">중구분</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && featureInfo.featureTemp.featureMSe}
+							{featureInfo.featureTemp && featureInfo.featureTemp.featureSe}
 						</TD>
 					</TR>
 					<TR>
@@ -696,11 +720,11 @@ const SelfFeatureDetail = () => {
 					<TR>
 						<TH colSpan={1} align="right">한글명</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && featureInfo.featureTemp.featureNm}
+							{featureInfo.featureTemp && featureInfo.featureTemp.featureKoNm}
 						</TD>
 						<TH colSpan={1} align="right">영문명</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && featureInfo.featureTemp.featureEngNm}
+							{featureInfo.featureTemp && featureInfo.featureTemp.featureEnNm}
 						</TD>
 					</TR>
 					<TR>
@@ -741,7 +765,7 @@ const SelfFeatureDetail = () => {
 					<TR>
 						<TH colSpan={1} align="right">비고</TH>
 						<TD colSpan={5} align='left'>
-							{featureInfo.featureTemp && `비고`}
+							{featureInfo.featureTemp && featureInfo.featureTemp.featureDsc}
 						</TD>
 					</TR>
 				</HorizontalTable>
