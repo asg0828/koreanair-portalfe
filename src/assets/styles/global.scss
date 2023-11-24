@@ -57,13 +57,9 @@ svg {
   }
 }
 
-.hidden {
-  display: none !important;
-}
-
-.overflow-auto {
-  overflow: auto;
-}
+.hidden { display: none !important; }
+.overflow-auto { overflow: auto; }
+.relative { position: relative; }
 
 /* height */
 .height-200 { height: 200px; }

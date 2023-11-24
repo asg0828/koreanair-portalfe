@@ -29,6 +29,7 @@ import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOut
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 
 export {
   SettingsOutlinedIcon,
@@ -62,4 +63,5 @@ export {
   FavoriteIcon,
   FavoriteBorderIcon,
   ExpandLessIcon,
+  AttachFileIcon,
 };

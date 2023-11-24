@@ -11,17 +11,15 @@ const useRouter = (routerList: any) => {
 
   useEffect(() => {
     if (routerList.length > 0 && !router) {
-      (async () => {
-        const router = [
-          {
-            path: '/',
-            element: <RootLayout />,
-            errorElement: <Error />,
-            children: routerList,
-          },
-        ];
-        setRouter(createBrowserRouter(router));
-      })();
+      const router = [
+        {
+          path: '/',
+          element: <RootLayout />,
+          errorElement: <Error />,
+          children: routerList,
+        },
+      ];
+      setRouter(createBrowserRouter(router));
     }
   }, [contextPath, routerList, router]);
 

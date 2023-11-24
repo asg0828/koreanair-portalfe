@@ -1,4 +1,5 @@
 import { CommonModel } from '@/models/model/CommonModel';
+import { FileInfo } from '@/models/model/FileModel';
 
 export interface QnaParams {
   searchConditions: string;
@@ -10,7 +11,7 @@ export interface QnaModel extends CreatedQnaModel, CommonModel {
   comments: Array<QnaModel>;
 }
 
-export interface CreatedQnaModel {
+export interface CreatedQnaModel extends FileInfo {
   clCode: string;
   sj: string;
   cn: string;

@@ -33,6 +33,8 @@ const Reg = () => {
       cn: '',
       openYn: 'Y',
       useYn: 'Y',
+      fileIds: [],
+      fileList: [],
     },
   });
   const values = getValues();
@@ -58,6 +60,13 @@ const Reg = () => {
         content: '등록하시겠습니까?',
         onConfirm: mutate,
       })
+    );
+  };
+
+  const handleUploadFiles = (files: Array<any>) => {
+    setValue(
+      'fileIds',
+      files.map((file) => file.fileId)
     );
   };
 
@@ -170,7 +179,7 @@ const Reg = () => {
           <TR>
             <TH colSpan={1}>첨부파일</TH>
             <TD colSpan={3} className="attachFile">
-              <UploadDropzone />
+              <UploadDropzone fileCl="qna" uploadFiles={handleUploadFiles} fileList={values.fileList} />
             </TD>
           </TR>
         </HorizontalTable>

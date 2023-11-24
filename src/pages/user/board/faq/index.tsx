@@ -2,7 +2,7 @@ import { AddIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
-import { useFaqList } from '@/hooks/queries/useFaqQueries';
+import { useFaqById, useFaqList } from '@/hooks/queries/useFaqQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType, View } from '@/models/common/Constants';
@@ -32,7 +32,9 @@ const List = () => {
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<FaqModel>>([]);
   const [faqId, setFaqId] = useState<string>('');
-  const { data: response, isError, refetch } = useFaqList(params, page);
+  const [dFaqId, setDFaqId] = useState<string>('');
+  const { data: response, isSuccess, isError, refetch } = useFaqList(params, page);
+  const { data: gResponse, isSuccess: gIsSuccess, isError: gIsError, refetch: gRefetch } = useFaqById(faqId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(faqId);
 
   const goToReg = () => {
@@ -60,8 +62,8 @@ const List = () => {
     }));
   };
 
-  const handleFaqId = (faqId: string) => {
-    setFaqId(faqId);
+  const handleDeleteFaqId = (faqId: string) => {
+    setDFaqId(faqId);
   };
 
   const handleUpdate = (faqId: string) => {
@@ -78,7 +80,7 @@ const List = () => {
         type: ModalType.CONFIRM,
         title: '삭제',
         content: '삭제하시겠습니까?',
-        onConfirm: () => handleFaqId(faqId),
+        onConfirm: () => handleDeleteFaqId(faqId),
       })
     );
   };
@@ -87,13 +89,21 @@ const List = () => {
     setPage(page);
   };
 
-  useEffect(() => {
-    faqId && mutate();
-  }, [faqId, mutate]);
+  const handleClick = (faqId: string) => {
+    setFaqId(faqId);
+  };
 
   useDidMountEffect(() => {
     handleSearch();
   }, [page.page, page.pageSize, handleSearch]);
+
+  useEffect(() => {
+    faqId && gRefetch();
+  }, [faqId, gRefetch]);
+
+  useEffect(() => {
+    dFaqId && mutate();
+  }, [dFaqId, mutate]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -101,7 +111,7 @@ const List = () => {
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
-    } else {
+    } else if (isSuccess) {
       if (response?.data) {
         response.data.contents.forEach((item: FaqModel) => {
           item.clCode = getCode(GroupCodeType.FAQ_TYPE, item.clCode)?.codeNm || '';
@@ -110,7 +120,25 @@ const List = () => {
         setPage(response.data.page);
       }
     }
-  }, [response, isError, toast]);
+  }, [response, isSuccess, isError, toast]);
+
+  useEffect(() => {
+    if (gIsError || gResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else if (gIsSuccess) {
+      if (gResponse?.data) {
+        const faqId = gResponse.data.faqId;
+        const newRows = [...rows];
+        const index = newRows.findIndex((item) => item.faqId === faqId);
+        newRows.splice(index, 1, gResponse.data);
+
+        setRows(newRows);
+      }
+    }
+  }, [gResponse, gIsSuccess, gIsError, toast]);
 
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {
@@ -160,10 +188,11 @@ const List = () => {
 
       <AccordionGrid
         rows={rows}
+        page={page}
+        onClick={handleClick}
         onChange={handlePage}
         onUpdate={handleUpdate}
         onDelete={handleDelete}
-        page={page}
         buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
             <AddIcon />

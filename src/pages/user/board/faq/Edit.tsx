@@ -27,6 +27,7 @@ const Reg = () => {
     handleSubmit,
     getValues,
     setValue,
+    watch,
     control,
     formState: { errors },
   } = useForm<UpdatedFaqModel>({
@@ -37,6 +38,8 @@ const Reg = () => {
       qstn: '',
       answ: '',
       useYn: 'Y',
+      fileIds: [],
+      fileList: [],
     },
   });
   const values = getValues();
@@ -66,6 +69,13 @@ const Reg = () => {
     );
   };
 
+  const handleUploadFiles = (files: Array<any>) => {
+    setValue(
+      'fileIds',
+      files.map((file) => file.fileId)
+    );
+  };
+
   useEffect(() => {
     if (isSuccess && response.data) {
       setValue('faqId', response.data.faqId);
@@ -73,6 +83,7 @@ const Reg = () => {
       setValue('qstn', response.data.qstn);
       setValue('answ', response.data.answ);
       setValue('useYn', response.data.useYn);
+      setValue('fileList', response.data.fileList);
     }
   }, [isSuccess, response?.data, setValue]);
 
@@ -192,7 +203,7 @@ const Reg = () => {
           <TR>
             <TH colSpan={1}>첨부파일</TH>
             <TD colSpan={3} className="attachFile">
-              <UploadDropzone />
+              <UploadDropzone fileCl="faq" uploadFiles={handleUploadFiles} fileList={watch().fileList} />
             </TD>
           </TR>
         </HorizontalTable>

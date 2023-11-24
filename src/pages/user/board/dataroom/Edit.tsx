@@ -24,9 +24,10 @@ const Edit = () => {
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    watch,
+    control,
     formState: { errors },
   } = useForm<UpdatedDataroomModel>({
     mode: 'onChange',
@@ -35,6 +36,8 @@ const Edit = () => {
       sj: '',
       cn: '',
       useYn: 'Y',
+      fileIds: [],
+      fileList: [],
     },
   });
   const values = getValues();
@@ -68,11 +71,19 @@ const Edit = () => {
     );
   };
 
+  const handleUploadFiles = (files: Array<any>) => {
+    setValue(
+      'fileIds',
+      files.map((file) => file.fileId)
+    );
+  };
+
   useEffect(() => {
     if (isSuccess && response.data) {
       setValue('sj', response.data.sj);
       setValue('cn', response.data.cn);
       setValue('useYn', response.data.useYn);
+      setValue('fileList', response.data.fileList);
     }
   }, [isSuccess, response?.data, setValue]);
 
@@ -174,7 +185,7 @@ const Edit = () => {
           <TR>
             <TH colSpan={1}>첨부파일</TH>
             <TD colSpan={3} className="attachFile">
-              <UploadDropzone />
+              <UploadDropzone fileCl="dataroom" uploadFiles={handleUploadFiles} fileList={watch().fileList} />
             </TD>
           </TR>
         </HorizontalTable>
