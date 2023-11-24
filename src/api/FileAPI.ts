@@ -29,7 +29,7 @@ export const downloadFile = async (fileId: string) => {
   if (response?.successOrNot === 'N') {
     return false;
   } else {
-    const blob = new Blob([response.data], { type: response.headers['content-type'] });
+    const blob = new Blob([response.data], { type: 'application/octet-stream' });
     let link = document.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.target = '_self';
