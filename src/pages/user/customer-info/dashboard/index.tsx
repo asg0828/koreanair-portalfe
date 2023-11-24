@@ -1,21 +1,10 @@
-import { Typography, Button, Modal, Stack, TextField, useToast } from '@components/ui';
-import { analysisResultData, contributeData, homepageData, pnrData, pnrTickerColumn } from './data';
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { AnalysisIndex } from './analysisIndex';
-import Contact from './contact';
-import PnrTicketNumber from './pnrTickectNumber';
-import ProfileComp from './profile';
-import { TableDataComp } from './tableDataComp';
-import { Method, callApi } from '@/utils/ApiUtil';
-import { Service } from '@/models/common/Service';
-import { initApiRequest, initCommonResponse, initConfig } from '@/models/selfFeature/FeatureCommon';
-import { cloneDeep } from 'lodash';
-import { Profile } from '@/models/customer-info/CustomerInfo';
-import { PageModel, initPage } from '@/models/model/PageModel';
-import { DetailDataComp } from './detailDataComp';
-import { useSelector } from 'react-redux';
-import { htmlTagReg } from '@/utils/RegularExpression';
 import { useCustomerInfo } from '@/hooks/queries/useCustomerInfoQueires';
+import { Profile } from '@/models/customer-info/CustomerInfo';
+import { htmlTagReg } from '@/utils/RegularExpression';
+import { Button, Modal, Stack, TextField, Typography, useToast } from '@components/ui';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { analysisResultData, contributeData, homepageData } from './data';
 
 export default function List() {
   useEffect(() => {
@@ -131,7 +120,7 @@ export default function List() {
     }
   }, [response, isError, toast]);
   return (
-    <Stack direction="Vertical" gap="MD" justifyContent="Start" className={'width-100'} wrap={true}>
+    <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       {/* searchBar 영역 */}
       <Stack>
         <div className="componentWrapper" style={{ width: '100%' }}>
@@ -193,8 +182,10 @@ export default function List() {
       </Stack>
       {/* searchBar 영역 */}
       <div className="dashBoardWrap">
-        <Stack gap="LG" direction="Vertical">
-          <Typography variant="h3">Customer Info.</Typography>
+        <Stack direction="Vertical">
+          <Typography variant="h3" className="dashboardTitle">
+            Customer Info.
+          </Typography>
           <div className="topCard">
             <div className="dashBoardBox n1">
               <div className="name">
@@ -333,7 +324,9 @@ export default function List() {
               </div>
             </div>
           </div>
-          <Typography variant="h3">Customer Reference.</Typography>
+          <Typography variant="h3" className="dashboardTitle">
+            Customer Reference.
+          </Typography>
           <Stack className="width-100" gap="LG" alignItems="Start">
             <div className="dashBoardBox under width-50">
               <div className="top">
@@ -489,7 +482,9 @@ export default function List() {
               </div>
             </Stack>
           </Stack>
-          <Typography variant="h3">Customer History.</Typography>
+          <Typography variant="h3" className="dashboardTitle">
+            Customer History.
+          </Typography>
           <Stack className="width-100" gap="LG" alignItems="Start">
             <div className="dashBoardBox under width-50">
               <div className="top">
@@ -789,7 +784,7 @@ export default function List() {
           <AnalysisIndex />
         </Stack>
       </Stack>
-      <div style={{ marginBottom: 20 }}>
+      <div style={{ marginTop: 20 }}>
         <Contact></Contact>
       </div> */}
     </Stack>

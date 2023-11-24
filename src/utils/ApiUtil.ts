@@ -58,7 +58,8 @@ export const setBaseApiUrl = (changedUrl: BaseApiUrl) => {
 };
 
 export const getFileDownloadPath = () => {
-  return `${ServiceContextPath.KAL_BE + baseApiUrl + PortalApiURL.FILE}/download`;
+  const apiUrl = process.env.REACT_APP_API_URL ? JSON.parse(process.env.REACT_APP_API_URL) : {};
+  return `${apiUrl['KAL_BE']}${ServiceContextPath.KAL_BE + baseApiUrl + PortalApiURL.FILE}/download`;
 };
 
 /* istanbul ignore next */
