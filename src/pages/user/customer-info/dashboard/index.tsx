@@ -276,10 +276,15 @@ export default function List() {
               </div>
             </div>
             <div className="dashBoardBox n3">
-              <div className="top">
+              <div className="top" style={{ position: 'relative' }}>
                 Family Member
-                <div className="kr">가족 </div>
-                <Button style={{ left: '18%' }} onClick={retrieveFamilyInfo}>
+                <div className="kr">가족</div>
+                <Button
+                  priority="Normal"
+                  appearance="Contained"
+                  style={{ position: 'absolute', right: 0 }}
+                  onClick={retrieveFamilyInfo}
+                >
                   등록가족 상세
                 </Button>
                 <Modal open={isOpenFamilyInfo} onClose={() => setOpenFamilyInfo(false)}>

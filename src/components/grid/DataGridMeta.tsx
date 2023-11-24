@@ -46,17 +46,6 @@ const DataGridMeta: React.FC<DatagridProps> = ({
         <Label>
           총 <span className="total">{pages.totalCount}</span> 건
         </Label>
-        <Select
-          appearance="Outline"
-          size="LG"
-          className="select-page"
-          value={pages.pageSize}
-          onChange={(e, value) => value && handleChange('pageSize', value)}
-        >
-          {pageSizeList.map((pageSize, index) => (
-            <SelectOption key={index} value={pageSize}>{`${pageSize} 건`}</SelectOption>
-          ))}
-        </Select>
       </Stack>
       <VerticalTableMeta
         columns={columns}
