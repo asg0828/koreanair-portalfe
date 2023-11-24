@@ -1,3 +1,4 @@
+import { downloadFile } from '@/api/FileAPI';
 import { AttachFileIcon, ExpandLessIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
@@ -11,7 +12,6 @@ import { FileModel } from '@/models/model/FileModel';
 import { CreatedQnaModel, QnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
-import { getFileDownloadPath } from '@/utils/ApiUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -140,6 +140,22 @@ const Detail = () => {
     cuMutate();
   };
 
+  const handleFileDownload = async (fileId: string) => {
+    const isSuccess = await downloadFile(fileId);
+
+    if (isSuccess) {
+      toast({
+        type: ValidType.INFO,
+        content: '파일이 다운로드되었습니다.',
+      });
+    } else {
+      toast({
+        type: ValidType.ERROR,
+        content: '파일 다운로드 중 에러가 발생했습니다.',
+      });
+    }
+  };
+
   useEffect(() => {
     if (cdIsError || cdResponse?.successOrNot === 'N') {
       toast({
@@ -262,7 +278,7 @@ const Detail = () => {
               <ul className="attachFileList">
                 {qnaModel?.fileList.map((file: FileModel) => (
                   <li>
-                    <Link href={`${getFileDownloadPath()}/${file.fileId}`}>
+                    <Link onClick={() => handleFileDownload(file.fileId)}>
                       <Stack>
                         <AttachFileIcon />
                         {file.fileNm}

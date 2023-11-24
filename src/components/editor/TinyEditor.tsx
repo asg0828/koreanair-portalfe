@@ -84,8 +84,8 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content,
         },
         images_upload_handler: async (blobInfo) => {
           const formData = new FormData();
-          formData.append('fileCl', 'notice');
-          formData.append('files', blobInfo.blob());
+          formData.append('fileCl', 'image');
+          formData.append('files', blobInfo.blob(), blobInfo.filename());
 
           return new Promise(async (resolve, reject) => {
             const response = await uploadFile(formData);

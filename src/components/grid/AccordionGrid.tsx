@@ -67,7 +67,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
     } else {
       toast({
         type: ValidType.ERROR,
-        content: '파일이 다운로드 중 에러가 발생했습니다.',
+        content: '파일 다운로드 중 에러가 발생했습니다.',
       });
     }
   };
