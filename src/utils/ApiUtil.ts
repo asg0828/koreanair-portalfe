@@ -105,6 +105,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
         }
         if (isFile) {
           if (config.method === 'get') {
+            config['responseType'] = 'blob';
           } else if (config.method === 'post') {
             config.headers['Content-Type'] = 'multipart/form-data';
           }

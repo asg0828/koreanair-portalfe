@@ -29,10 +29,16 @@ export const downloadFile = async (fileId: string) => {
   if (response?.successOrNot === 'N') {
     return false;
   } else {
-    const blob = new Blob([response.data], { type: 'application/octet-stream' });
+    const blob = new Blob([response.data], { type: response.headers['content-type'] });
     let link = document.createElement('a');
+    let fileName = 'unknown';
+    const contentDisposition = response.headers['content-disposition'];
+    if (contentDisposition) {
+      const [fileNameMatch] = contentDisposition.split(';').filter((str: string) => str.includes('filename'));
+      if (fileNameMatch) [, fileName] = fileNameMatch.split('=');
+    }
     link.href = window.URL.createObjectURL(blob);
-    link.target = '_self';
+    link.download = fileName;
     link.click();
     return true;
   }
