@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalInfo } from '@/models/components/Modal';
-import { Modal, Button, Stack } from '@components/ui';
+import { closeModal } from '@/reducers/modalSlice';
+import { Button, Modal, Stack } from '@components/ui';
 
 const ConfirmModal = ({
   isOpen = false,
@@ -12,15 +13,10 @@ const ConfirmModal = ({
   onClose,
   btnType,
 }: ModalInfo) => {
-  const [isOpenModal, setIsOpenModal] = useState(isOpen);
-
-  useEffect(() => {
-    setIsOpenModal(isOpen);
-  }, [isOpen]);
+  const dispatch = useAppDispatch();
 
   const handleClose = () => {
-    setIsOpenModal(false);
-    onClose && onClose(false);
+    dispatch(closeModal());
   };
 
   const handleConfirm = () => {
@@ -64,7 +60,7 @@ const ConfirmModal = ({
 
   return (
     <Stack onKeyDown={handleKeyDown}>
-      <Modal open={isOpenModal} onClose={handleClose} size="SM">
+      <Modal open={isOpen} onClose={handleClose} size="SM">
         <Modal.Header>{title}</Modal.Header>
         <Modal.Body>{content}</Modal.Body>
         <Modal.Footer>

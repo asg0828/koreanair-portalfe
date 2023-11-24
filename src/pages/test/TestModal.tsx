@@ -66,8 +66,8 @@ const TestModal = () => {
         <Button onClick={handleRemoveCache}>localStorage 삭제</Button>
       </Stack>
 
-      <UserSelectModal isOpen={isOpenUserModal} onClose={(isOpen) => setIsOpenUserModal(isOpen)} />
-      <DeptSelectModal isOpen={isOpenDeptModal} onClose={(isOpen) => setIsOpenDeptModal(isOpen)} />
+      <UserSelectModal title='사용자 선택' isOpen={isOpenUserModal} onClose={(isOpen) => setIsOpenUserModal(isOpen)} />
+      <DeptSelectModal title='부서 선택' isOpen={isOpenDeptModal} onClose={(isOpen) => setIsOpenDeptModal(isOpen)} />
       <ConfirmModal
         isOpen={isConfirmModal}
         onConfirm={handleConfirm}

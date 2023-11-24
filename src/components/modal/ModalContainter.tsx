@@ -1,21 +1,21 @@
 import CalculationLogicModal from '@/components/modal/CalculationLogicModal';
-import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import DeptSelectModal from '@/components/modal/DeptSelectModal';
+import UserSelectModal from '@/components/modal/UserSelectModal';
+import { useAppSelector } from '@/hooks/useRedux';
 import { ModalType } from '@/models/common/Constants';
-import { closeModal } from '@/reducers/modalSlice';
 import ConfirmModal from './ConfirmModal';
 
 const ModalContainer = () => {
-  const dispatch = useAppDispatch();
   const modal = useAppSelector((state) => state.modal);
 
-  const handleCloseModal = () => {
-    dispatch(closeModal());
-  };
-
   if (modal?.type === ModalType.CONFIRM) {
-    return <ConfirmModal {...modal} onClose={handleCloseModal} />;
+    return <ConfirmModal {...modal} />;
   } else if (modal?.type === ModalType.CALCULATION_LOGIC) {
-    return <CalculationLogicModal {...modal} onClose={handleCloseModal} />;
+    return <CalculationLogicModal {...modal} />;
+  } else if (modal?.type === ModalType.USER_SELECT) {
+    return <UserSelectModal {...modal} />;
+  } else if (modal?.type === ModalType.DEPT_SELECT) {
+    return <DeptSelectModal {...modal} />;
   }
 
   return <></>;
