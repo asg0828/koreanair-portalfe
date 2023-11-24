@@ -1,13 +1,23 @@
-import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField } from '@components/ui';
+import { Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import SearchForm from '@/components/form/SearchForm';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import DataGrid from '@/components/grid/DataGrid';
 import { customerMetaInfoColumn } from './data';
+import DataGridMeta from '@/components/grid/DataGridMeta';
+import { useMetaTableDetail } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import { useLocation } from 'react-router-dom';
 
 const CustomerMetaManagementDetail = () => {
-  const [searchInfo, setSearchInfo] = useState<any>({});
+  const location = useLocation();
+  const [searchInfo, setSearchInfo] = useState<any>({
+    metaTblId: location?.state?.metaTblId || '',
+  });
+
+  const [rows, setRows] = useState([]);
+  const { data: response, isError, refetch } = useMetaTableDetail(searchInfo.metaTblId);
+
+  const { toast } = useToast();
 
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -24,6 +34,20 @@ const CustomerMetaManagementDetail = () => {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
   };
 
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.result) {
+        console.log(response?.result.tbCoMetaTblClmnInfoList);
+
+        setRows(response?.result.tbCoMetaTblClmnInfoList);
+      }
+    }
+  }, [response, isError, toast]);
   return (
     <Stack direction="Vertical">
       <SearchForm>
@@ -98,11 +122,11 @@ const CustomerMetaManagementDetail = () => {
                   onchangeSelectHandler(e, value, 'oneidChgRsnCd');
                 }}
               >
-                {/* {reason.map((item, index) => (
-                  <SelectOption key={index} value={item.value}>
-                    {item.text}
-                  </SelectOption>
-                ))} */}
+                <SelectOption defaultChecked value={undefined}>
+                  속성
+                </SelectOption>
+
+                <SelectOption value={undefined}>행동</SelectOption>
               </Select>
             </TD>
             <TH colSpan={1} align="right">
@@ -121,11 +145,11 @@ const CustomerMetaManagementDetail = () => {
                   onchangeSelectHandler(e, value, 'oneidChgRsnCd');
                 }}
               >
-                {/* {reason.map((item, index) => (
-                  <SelectOption key={index} value={item.value}>
-                    {item.text}
-                  </SelectOption>
-                ))} */}
+                <SelectOption defaultChecked value={undefined}>
+                  사용
+                </SelectOption>
+
+                <SelectOption value={undefined}>미사용</SelectOption>
               </Select>
             </TD>{' '}
             <TH colSpan={1} align="right">
@@ -144,18 +168,18 @@ const CustomerMetaManagementDetail = () => {
                   onchangeSelectHandler(e, value, 'oneidChgRsnCd');
                 }}
               >
-                {/* {reason.map((item, index) => (
-                  <SelectOption key={index} value={item.value}>
-                    {item.text}
-                  </SelectOption>
-                ))} */}
+                <SelectOption defaultChecked value={undefined}>
+                  NO
+                </SelectOption>
+
+                <SelectOption value={undefined}>Yes</SelectOption>
               </Select>
             </TD>
           </TR>
         </HorizontalTable>
       </SearchForm>
 
-      <DataGrid columns={customerMetaInfoColumn} rows={[]}></DataGrid>
+      <DataGridMeta columns={customerMetaInfoColumn} rows={rows}></DataGridMeta>
     </Stack>
   );
 };

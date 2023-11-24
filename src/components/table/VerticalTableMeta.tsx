@@ -2,7 +2,7 @@ import NoResult from '@/components/emptyState/NoData';
 import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import '@components/table/VerticalTable.scss';
-import { Checkbox, TBody, TD, TH, THead, TR, Table, TextField, Typography } from '@components/ui';
+import { Checkbox, Radio, TBody, TD, TH, THead, TR, Table, TextField, Typography } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
 
 export interface VerticalTableProps {
@@ -26,21 +26,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
   onClick,
 }) => {
   const isCheckbox = typeof rowSelection === 'function';
-  const [checkedAll, setCheckedAll] = useState<boolean>(false);
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
-
-  const handleCheckedChangeAll = (checked: boolean): void => {
-    let newCheckedList: Array<number> = [];
-
-    if (checked) {
-      newCheckedList = new Array(rows.length).fill(null).map((v, i) => i);
-    }
-
-    setCheckedList(newCheckedList);
-    setCheckedAll(checked);
-    isCheckbox && rowSelection(newCheckedList);
-  };
 
   const handleCheckedChange = (checked: CheckedState, row: RowsInfo, index: number): void => {
     let newCheckedList: Array<number> = [];
@@ -49,12 +36,6 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       newCheckedList = [...checkedList, index];
     } else {
       newCheckedList = checkedList.filter((i) => i !== index);
-    }
-
-    if (newCheckedList.length === rows.length) {
-      setCheckedAll(true);
-    } else {
-      setCheckedAll(false);
     }
 
     setCheckedList(newCheckedList);
@@ -85,16 +66,15 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     setSortRows(rows);
   }, [rows]);
 
+  const timeStampChg = (e: any) => {
+    console.log(e);
+  };
+
   return (
     <Table variant="vertical" size="normal" align="center" className="verticalTable">
       {showHeader && columns?.length > 0 && (
         <THead>
           <TR>
-            {isCheckbox && (
-              <TH colSpan={0.5}>
-                <Checkbox checked={checkedAll} onCheckedChange={handleCheckedChangeAll} />
-              </TH>
-            )}
             {columns.map((column, index) => (
               <TH
                 key={`header-${index}`}
@@ -112,36 +92,89 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       {sortRows?.length > 0 ? (
         <TBody clickable={clickable}>
           {sortRows.map((row, rowIndex) => (
-            <TR key={`row-${rowIndex}`} selected={checkedList.includes(rowIndex)}>
-              {isCheckbox && (
-                <TD colSpan={0.5}>
-                  <Checkbox
-                    checked={checkedList.includes(rowIndex)}
-                    onCheckedChange={(checked) => handleCheckedChange(checked, row, rowIndex)}
-                  />
-                </TD>
-              )}
+            <TR key={`row-${rowIndex}`}>
+              {Object.keys(columns).map((column, columnIndex) => {
+                // 체크박스
+                if (columns[columnIndex].field.includes('Yn') && columns[columnIndex].field !== 'baseTimeYn') {
+                  console.log(columns[columnIndex].field);
+                  console.log(row[columns[columnIndex].field]);
 
-              {Object.keys(columns).map((column, columnIndex) => (
-                <TD
-                  key={`column-${columnIndex}`}
-                  colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-                  align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
-                  onClick={() => handleClick(row, rowIndex)}
-                >
-                  {(() => {
-                    if (columns[columnIndex].render) {
-                      return columns[columnIndex].render?.(
-                        rowIndex,
-                        columns[columnIndex].field,
-                        columns[columnIndex].maxLength
-                      );
-                    } else {
-                      return <TextField value={row[columns[columnIndex].field]} />;
-                    }
-                  })()}
-                </TD>
-              ))}
+                  return (
+                    <TD>
+                      <Checkbox
+                        key={`column-${columnIndex}`}
+                        defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                      />
+                    </TD>
+                  );
+                }
+                // 라디오 버튼
+                else if (columns[columnIndex].field === 'baseTimeYn') {
+                  return (
+                    <TD>
+                      <Radio
+                        key={`column-${columnIndex}`}
+                        name="metaCustomerRadio"
+                        onClick={timeStampChg}
+                        defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                      />
+                    </TD>
+                  );
+                }
+
+                // 텍스트필드
+                else if (
+                  columns[columnIndex].field === 'metaTblClmnLogiNm' ||
+                  columns[columnIndex].field === 'metaTblClmnDesc'
+                ) {
+                  return (
+                    <TD
+                      key={`column-${columnIndex}`}
+                      colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                      onClick={() => handleClick(row, rowIndex)}
+                    >
+                      {(() => {
+                        if (columns[columnIndex].render) {
+                          return columns[columnIndex].render?.(
+                            rowIndex,
+                            columns[columnIndex].field,
+                            columns[columnIndex].maxLength
+                          );
+                        } else {
+                          return <TextField value={row[columns[columnIndex].field]} />;
+                        }
+                      })()}
+                    </TD>
+                  );
+                } else if (columns[columnIndex].field === 'no') {
+                  return <TD>{rowIndex + 1}</TD>;
+                }
+
+                // 그냥row
+                else {
+                  return (
+                    <TD
+                      key={`column-${columnIndex}`}
+                      // colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      // align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                      onClick={() => handleClick(row, rowIndex)}
+                    >
+                      {(() => {
+                        if (columns[columnIndex].render) {
+                          return columns[columnIndex].render?.(
+                            rowIndex,
+                            columns[columnIndex].field,
+                            columns[columnIndex].maxLength
+                          );
+                        } else {
+                          return <Typography>{row[columns[columnIndex].field]} </Typography>;
+                        }
+                      })()}
+                    </TD>
+                  );
+                }
+              })}
             </TR>
           ))}
         </TBody>

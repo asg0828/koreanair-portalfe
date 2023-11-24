@@ -1,14 +1,16 @@
+import { AddIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
-import { ValidType, View } from '@/models/common/Constants';
+import { useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, ValidType, View } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
 import { NoticeModel, NoticeParams } from '@/models/model/NoticeModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,6 +34,7 @@ const initParams: NoticeParams = {
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const [params, setParams] = useState(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<NoticeModel>>([]);
@@ -137,10 +140,12 @@ const List = () => {
         onClick={goToDetail}
         onChange={handlePage}
         buttonChildren={
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-            <AddIcon />
-            등록
-          </Button>
+          contextPath === ContextPath.ADMIN && (
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
+              등록
+            </Button>
+          )
         }
       />
     </>

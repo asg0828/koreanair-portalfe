@@ -1,5 +1,5 @@
 import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
-import { VerticalTableProps } from '@components/table/VerticalTable';
+import VerticalTable, { VerticalTableProps } from '@components/table/VerticalTable';
 import { Label, Pagination, Select, SelectOption, Stack } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
 import './DataGrid.scss';

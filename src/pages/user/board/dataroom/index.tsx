@@ -1,22 +1,22 @@
+import { AddIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useDataroomList } from '@/hooks/queries/useDataroomQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
-import { ValidType, View } from '@/models/common/Constants';
+import { useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, ValidType, View } from '@/models/common/Constants';
 import { DataroomModel, DataroomParams } from '@/models/model/DataroomModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
-  { headerName: '제목', field: 'sj', colSpan: 2 },
-  { headerName: '내용', field: 'cn', colSpan: 4 },
-  { headerName: '게시여부', field: 'useYn', colSpan: 1 },
+  { headerName: '제목', field: 'sj', colSpan: 5 },
   { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
@@ -35,6 +35,7 @@ const initParams: DataroomParams = {
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const [params, setParams] = useState(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<DataroomModel>>([]);
@@ -142,10 +143,12 @@ const List = () => {
         onClick={goToDetail}
         onChange={handlePage}
         buttonChildren={
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-            <AddIcon />
-            등록
-          </Button>
+          contextPath === ContextPath.ADMIN && (
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
+              등록
+            </Button>
+          )
         }
       />
     </>

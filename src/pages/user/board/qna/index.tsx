@@ -2,7 +2,7 @@ import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useQnaList } from '@/hooks/queries/useQnaQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
-import { GroupCodeType, ValidType, View } from '@/models/common/Constants';
+import { ContextPath, GroupCodeType, ValidType, View } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { QnaModel, QnaParams } from '@/models/model/QnaModel';
@@ -12,13 +12,14 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { selectContextPath } from '@/reducers/authSlice';
+import { useAppSelector } from '@/hooks/useRedux';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
   { headerName: '분류', field: 'clCode', colSpan: 1 },
   { headerName: '제목', field: 'sj', colSpan: 3 },
   { headerName: '상태', field: 'qnaStat', colSpan: 1 },
-  { headerName: '게시여부', field: 'useYn', colSpan: 1 },
   { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
@@ -37,6 +38,7 @@ const initParams: QnaParams = {
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const [params, setParams] = useState(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<QnaModel>>([]);
@@ -145,10 +147,12 @@ const List = () => {
         onClick={goToDetail}
         onChange={handlePage}
         buttonChildren={
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-            <AddIcon />
-            등록
-          </Button>
+          contextPath === ContextPath.ADMIN && (
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
+              등록
+            </Button>
+          )
         }
       />
     </>

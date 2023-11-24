@@ -40,6 +40,11 @@ export default function List() {
     return searchError;
   };
 
+  // 등록가족 상세 모달 오픈 버튼
+  const retrieveFamilyInfo = () => {
+    setOpenFamilyInfo(true);
+  };
+
   // refetch
   const handleSearch = useCallback(() => {
     // 유효성 검사 실패 시 종료
@@ -90,7 +95,12 @@ export default function List() {
   // analysisResult 데이터(삭제 예정)
   const analResultData = useSelector((state) => analysisResultData);
 
+  //검색 조건 모달 state
   const [isOpen, setOpen] = useState(false);
+
+  // 등록가족 상세 버튼 모달 state
+  const [isOpenFamilyInfo, setOpenFamilyInfo] = useState(false);
+
   const skypassNumId = useRef<any>(null);
   const oneIdId = useRef<any>(null);
   // const passengerNmId = useRef<any>(null);
@@ -269,6 +279,24 @@ export default function List() {
               <div className="top">
                 Family Member
                 <div className="kr">가족 </div>
+                <Button style={{ left: '18%' }} onClick={retrieveFamilyInfo}>
+                  등록가족 상세
+                </Button>
+                <Modal open={isOpenFamilyInfo} onClose={() => setOpenFamilyInfo(false)}>
+                  <Modal.Header>등록가족 상세 페이지</Modal.Header>
+                  <Modal.Body>엄마, 아빠 </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      priority="Primary"
+                      appearance="Contained"
+                      onClick={() => {
+                        setOpenFamilyInfo(false);
+                      }}
+                    >
+                      확인
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
               </div>
               <div className="middle">
                 <div className="left">
