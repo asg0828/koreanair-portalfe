@@ -540,6 +540,7 @@ svg {
   color: #222222;
   font-weight: 400;
   padding-right: 1rem;
+  font-weight: 500;
   display: block;
   overflow: hidden;
   white-space:nowrap;
@@ -608,6 +609,9 @@ svg {
   color: #222222;
   font-weight: 700;
 }
+// .dashBoardWrap .topCard .dashBoardBox.n3 table td:first-child{
+//   font-weight: 500;
+// }
 .dashBoardWrap .topCard .dashBoardBox.n3 table td{
   text-align: center;
   font-size: 0.875rem;
@@ -615,9 +619,8 @@ svg {
   letter-spacing: -1px;
   line-height:28px;
   color: #222222;
-  font-weight: 400;
   font-family: "Noto Sans KR";
-
+  font-weight: 500;
 }
 .width-25{
   width: 25%;
@@ -773,4 +776,9 @@ svg {
 .dashBoardWrap .hideContents table.centerTable th,
 .dashBoardWrap .hideContents table.centerTable td{
   text-align: center;
+}
+.dashBoardWrap .dashboardTitle{
+  line-height: 1;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
 }
