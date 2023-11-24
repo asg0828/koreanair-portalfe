@@ -2,10 +2,12 @@ import { downloadFile } from '@/api/FileAPI';
 import { AttachFileIcon } from '@/assets/icons';
 import TinyEditor from '@/components/editor/TinyEditor';
 import NoResult from '@/components/emptyState/NoData';
-import { ValidType } from '@/models/common/Constants';
+import { useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, ValidType } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
 import { FileModel } from '@/models/model/FileModel';
 import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import {
   Accordion,
   AccordionItem,
@@ -40,6 +42,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
   onChange,
 }) => {
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const [pages, setPages] = useState<PageModel>(initPage);
 
   const handleChange = (key: string, value: any) => {
@@ -101,12 +104,16 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
               <div onClick={() => onClick && onClick(row.faqId)}>
                 <AccordionItem title={`[${row.clCode || ''}] ${row.qstn || ''}`} value={row.faqId}>
                   <Stack justifyContent="End" gap="SM" className="width-100">
-                    <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
-                      수정
-                    </Button>
-                    <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
-                      삭제
-                    </Button>
+                    {contextPath === ContextPath.ADMIN && (
+                      <>
+                        <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
+                          수정
+                        </Button>
+                        <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
+                          삭제
+                        </Button>
+                      </>
+                    )}
                   </Stack>
                   <Stack className="width-100">
                     <Typography variant="body1" className="answer"></Typography>

@@ -6,10 +6,11 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { CreatedQnaModel, QnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -21,8 +22,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
+  const location = useLocation();
+  const contextPath = useAppSelector(selectContextPath());
   const [qnaModel, setQnaModel] = useState<QnaModel>();
   const [prevQnaModel, setPrevQnaModel] = useState<QnaModel>();
   const [nextQnaModel, setNextQnaModel] = useState<QnaModel>();
@@ -406,12 +408,16 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-          수정
-        </Button>
-        <Button priority="Normal" size="LG" onClick={handleDelete}>
-          삭제
-        </Button>
+        {contextPath === ContextPath.ADMIN && (
+          <>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+              수정
+            </Button>
+            <Button priority="Normal" size="LG" onClick={handleDelete}>
+              삭제
+            </Button>
+          </>
+        )}
         <Button size="LG" onClick={goToList}>
           목록
         </Button>

@@ -4,10 +4,11 @@ import AccordionGrid from '@/components/grid/AccordionGrid';
 import { useDeleteFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById, useFaqList } from '@/hooks/queries/useFaqQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { GroupCodeType, ModalType, ValidType, View } from '@/models/common/Constants';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, GroupCodeType, ModalType, ValidType, View } from '@/models/common/Constants';
 import { FaqModel, FaqParams } from '@/models/model/FaqModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -28,6 +29,7 @@ const List = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const [params, setParams] = useState(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<FaqModel>>([]);
@@ -194,10 +196,12 @@ const List = () => {
         onUpdate={handleUpdate}
         onDelete={handleDelete}
         buttonChildren={
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-            <AddIcon />
-            등록
-          </Button>
+          contextPath === ContextPath.ADMIN && (
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
+              등록
+            </Button>
+          )
         }
       />
     </>
