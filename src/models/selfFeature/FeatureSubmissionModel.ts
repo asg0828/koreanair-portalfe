@@ -46,13 +46,19 @@ export interface SfSubmissionApproval extends RowsInfo {
 }
 
 export interface SfSubmissionAppendApproval extends RowsInfo {
-    [key: string]: string
-    lginId: string
+    [key: string]: string | Boolean
     userNm: string
-    mbltlno: string
-    cmpyNm: string
+    groupCode: string
+    groupNm: string
+    userId: string
+    userEmail: string
+    cmpyCd: string
     teamNm: string
-    defaultApproverUserId: string
+    isPriority: Boolean
+}
+
+export interface SubmissionGroupCode {
+    [key: string]: string
 }
 
 export interface ApporvalListComponentProps {

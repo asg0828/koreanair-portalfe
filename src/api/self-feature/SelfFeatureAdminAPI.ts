@@ -12,15 +12,15 @@ export const retrieveColumnsAndComments = () => {
 };
 
 export const retrieveMetaTableLists = (params: CustMetaListSrchInfo) => {
-  return callApi({
-    service: Service.KAL_SF_BE,
-    url: `${SelfFeatureAdmApiURL.META_TABLE}`,
-    method: Method.GET,
-    params: {
-      queryParams: params,
-    },
-  });
-};
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureAdmApiURL.META_TABLE}`,
+        method: Method.GET,
+        params: {
+            queryParams: params
+        }
+    });
+}
 
 export const retrieveSchemaList = () => {
   return callApi({

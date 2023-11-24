@@ -84,6 +84,7 @@ const userRouter = [
     children: [
       {
         path: 'self-feature',
+        loader: useFeatureLoader,
         children: [
           { index: true, element: <SelfFeature /> },
           { path: 'detail', element: <SelfFeatureDetail /> },
@@ -93,6 +94,7 @@ const userRouter = [
       },
       {
         path: 'submission-request',
+        loader: useFeatureLoader,
         children: [
           { index: true, element: <SfSubmissionRequest /> },
           { path: 'detail', element: <SfSubmissionRequestDetail /> },

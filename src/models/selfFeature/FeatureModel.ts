@@ -1,5 +1,6 @@
 import { RowsInfo } from "@/models/components/Table"
 import { SelectValue } from '@mui/base/useSelect'
+import { SfSubmissionApproval, SfSubmissionRequestInfo } from "./FeatureSubmissionModel"
 
 export interface FeatListSrchProps {
     [key: string]: string
@@ -271,6 +272,14 @@ export interface FormulaValidRslt {
     text: string,
 }
 
+export interface CustFeatureFormData {
+    customerFeature: FeatureInfo
+    submissionInfo: {
+        submission: SfSubmissionRequestInfo
+        approvals: Array<SfSubmissionApproval>
+    }
+}
+
 //Required: tbRsCustFeatRule,tbRsCustFeatRuleCalc
 export interface FeatureInfo {
     [key: string]: TbRsCustFeatRule | TbRsCustFeatRuleCalc 
@@ -339,14 +348,14 @@ export interface FeatureTemp {
     [key: string]: string
     featureId: string //example: 피쳐ID
     featureTyp: string //example: 피쳐타입
+    featureSeGrp: string
     featureSe: string //example: 피쳐구분
-    featureLSe: string //example: 피쳐대구분
-    featureMSe: string //example: 피쳐중구분
-    featureNm: string //example: 피쳐명
-    featureEngNm: string //example: 피쳐영문명
+    featureKoNm: string //example: 피쳐명
+    featureEnNm: string //example: 피쳐영문명
     calcUnt: string //example: 산출단위
     featureDef: string //example: 피쳐정의
     featureFm: string //example: 피쳐산식(산출로직)
+    featureDsc: string
     enrUserId: string //example: 신청자 ID
     enrDeptCode: string //example: 신청부서코드
     delYn: string //example: 삭제여부

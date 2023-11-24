@@ -35,5 +35,5 @@ export const useCustFeatParentChildList = (custFeatRuleName: string) => {
 }
 
 export const useApproverCandidate = () => {
-    return useQuery(['/approver-candidate'], () => retrieveApproverCandidate(), { enabled: false })
+    return useQuery(['/approver-candidate'], () => retrieveApproverCandidate())
 }
