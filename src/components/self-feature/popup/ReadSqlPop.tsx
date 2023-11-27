@@ -7,18 +7,10 @@ import { cloneDeep } from 'lodash'
 import CodeMirror from '@uiw/react-codemirror'
 import { sql } from '@codemirror/lang-sql'
 
-import VerticalTable from '../../table/VerticalTable';
 import { 
     Modal, 
     Button, 
     Stack, 
-    TR, 
-    TH, 
-    TD, 
-    Pagination, 
-    SelectOption, 
-    Select, 
-    Label,
     useToast, 
 } from '@components/ui';
 
@@ -81,7 +73,7 @@ const ReadSqlPop = ({
                 console.log(response)
                 //setReadSql()
                 setReadSql((state: ReadSql) => { 
-                    state.sql = "SELECT *\nfrom a\nwhere\n1=1" 
+                    state.sql = response.result
                     return cloneDeep(state)
                 })
             }
