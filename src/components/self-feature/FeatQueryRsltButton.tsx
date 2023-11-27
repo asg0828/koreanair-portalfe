@@ -63,7 +63,7 @@ const FeatQueryRsltButton = ({
         console.log("[runScheduleByManually] Request  :: ", request)
 
         let response = cloneDeep(initCommonResponse)
-        //response = await callApi(request)
+        response = await callApi(request)
         console.log("[runScheduleByManually] Response :: ", response)
     }
 

@@ -42,6 +42,7 @@ import {
 	FeatureTemp,
 	TbRsCustFeatRuleSql,
 	FormulaTrgtListProps,
+	CustFeatureFormData,
 } from '@/models/selfFeature/FeatureModel';
 import {
 	initSelfFeatureInfo,
@@ -50,6 +51,7 @@ import {
 	initTbRsCustFeatRuleCalc,
 	initFeatureTemp,
 	initTbRsCustFeatRuleSql,
+	initCustFeatureFormData,
 } from './data'
 import { Method, callApi } from "@/utils/ApiUtil";
 import {
@@ -68,8 +70,15 @@ import { StatusCode } from "@/models/common/CommonResponse";
 import { SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
-import { ValidType } from "@/models/common/Constants";
+import { GroupCodeType, ValidType } from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
+import { useFeatureSeList, useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
+import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
+import { selectCodeList } from "@/reducers/codeSlice";
+import { useAppSelector } from "@/hooks/useRedux";
+import { getFeatureSeList } from "@/api/FeatureAPI";
+import { CodeModel } from "@/models/model/CodeModel";
+import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
 
 const lCategory = [
 	{ value: '온라인행동', text: '온라인행동' },
@@ -95,6 +104,17 @@ const SelfFeatureEdit = () => {
 
 	const navigate = useNavigate()
 	const location = useLocation()
+
+	// 대구분
+	const { refetch: lRefetch, data: lResponse, isError: lIsError } = useFeatureTypList()
+	const [featureSeGrpList, setFeatureSeGrpList] = useState<Array<FeatureSeparatesModel>>([])
+	// 중구분
+	const [seGrpId, setSeGrpId] = useState<string>("")
+	const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(seGrpId)
+	const [featureSeAllList, setFeatureSeAllList] = useState<Array<FeatureSeparatesModel>>([])
+	const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([])
+	// 픽처타입
+	const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
 
 	// update 데이터
 	const [updtFeatureInfo, setUpdtFeatureInfo] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
@@ -167,6 +187,78 @@ const SelfFeatureEdit = () => {
 		setSfSubmissionRequestData(cloneDeep(location.state.sfSubmissionRequestData))
 		setSfSubmissionApprovalList(cloneDeep(location.state.sfSubmissionApprovalList))
 	}, [location.state])
+	// 대구분 선택시 중구분 select option setting
+	useEffect(() => {
+		if (seGrpId) {
+			sRefetch()
+		}
+	}, [seGrpId, sRefetch])
+	// 대구분 API response callback
+	useEffect(() => {
+		if (lIsError || lResponse?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (lResponse?.data) {
+				setFeatureSeGrpList(lResponse.data)
+			}
+		}
+	}, [lResponse, lIsError, toast])
+	// 중구분 API response callback
+	useEffect(() => {
+		if (sIsError || sResponse?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (sResponse?.data) {
+				setFeatureSeList(sResponse.data);
+			}
+		}
+	}, [sResponse, sIsError, toast])
+	useEffect(() => {
+		if (!featureSeGrpList || featureSeGrpList.length < 1) return
+
+		featureSeGrpList.map((featureSeGrp: FeatureSeparatesModel) => {
+			let response = getFeatureSeList(featureSeGrp.seId)
+
+			response.then((response) => {
+				if (response?.successOrNot === 'N') {
+					toast({
+						type: ValidType.ERROR,
+						content: '조회 중 에러가 발생했습니다.',
+					})
+				} else {
+					if (response?.data) {
+						setFeatureSeAllList((prevState: Array<FeatureSeparatesModel>) => {
+							let rtn = cloneDeep(prevState)
+							return [...rtn, ...response.data]
+						})
+
+					}
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
+			return featureSeGrp
+		})
+
+	}, [featureSeGrpList])
+	useEffect(() => {
+		if (!featureSeAllList || featureSeAllList.length < 1) return
+		
+		let seId = featureSeGrpList.find((grpItem: FeatureSeparatesModel) => {
+			return grpItem.seId === featureSeAllList.find((item: FeatureSeparatesModel) => item.seId === location.state.featureInfo.featureTemp.featureSe)?.seGrpId
+		})?.seId
+
+		if (seId) {
+			setSeGrpId(seId)
+		}
+
+	}, [featureSeAllList])
 
 	// 기본 정보 입력시 formData setting
 	useEffect(() => {
@@ -290,14 +382,25 @@ const SelfFeatureEdit = () => {
 		  query param :: 
 		  body param  :: updtFeatureInfo
 		*/
-		let custFeatRuleId = ''
+		let custFeatRuleId = updtFeatureInfo.tbRsCustFeatRule.id
 		let config = cloneDeep(initConfig)
 		config.isLoarding = true
 		let request = cloneDeep(initApiRequest)
 		request.method = Method.PUT
 		request.url = `/api/v1/customerfeatures/${custFeatRuleId}`
-		request.params!.bodyParams = Object.assign(updtFeatureInfo, { sfSubmissionRequestData: sfSubmissionRequestData })
-		request.params!.bodyParams = Object.assign(request.params!.bodyParams, { sfSubmissionApprovalList: sfSubmissionApprovalList })
+		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
+		param.customerFeature = updtFeatureInfo
+		param.submissionInfo.submission = sfSubmissionRequestData
+		param.submissionInfo.approvals = sfSubmissionApprovalList
+		let validRslt = validationCustReatRule(param)
+		if (!validRslt.valid) {
+			toast({
+				type: ValidType.ERROR,
+				content: validRslt.text,
+			})
+			return
+		}
+		request.params!.bodyParams = param
 		console.log("[updateCustFeatRule] Request  :: ", request)
 
 		let response = cloneDeep(initCommonResponse)
@@ -316,7 +419,7 @@ const SelfFeatureEdit = () => {
 		  query param :: 
 		  body param  :: updtFeatureInfo
 		*/
-		let custFeatRuleId = ''
+		let custFeatRuleId = updtFeatureInfo.tbRsCustFeatRule.id
 		let config = cloneDeep(initConfig)
 		config.isLoarding = true
 		let request = cloneDeep(initApiRequest)
@@ -347,6 +450,13 @@ const SelfFeatureEdit = () => {
 			if (id === "featureNm") {
 				rtn.name = value
 			}
+			return rtn
+		})
+
+		setSfSubmissionRequestData((state: SfSubmissionRequestInfo) => {
+			let rtn = cloneDeep(state)
+			if (id === "featureKoNm") rtn.title = `${value}_승인정보`
+			if (id === "featureDef") rtn.content = `${value}_승인정보`
 			return rtn
 		})
 
@@ -415,6 +525,10 @@ const SelfFeatureEdit = () => {
 			})
 			return rtn
 		})
+		// 대구분 선택시 중구분 select ooption Group ID setting
+		if (keyNm === "featureSeGrp") {
+			setSeGrpId(v)
+		}
 
 	}
 
@@ -457,7 +571,7 @@ const SelfFeatureEdit = () => {
 						<TH colSpan={1} align="center">대구분</TH>
 						<TD colSpan={3}>
 							<Select
-								//defaultValue={location.state.featureInfo.featureTemp?.featureSeGrp}
+								value={seGrpId}
 								appearance="Outline"
 								placeholder="대구분"
 								className="width-100"
@@ -468,15 +582,15 @@ const SelfFeatureEdit = () => {
 									onchangeSelectHandler(e, value, "featureSeGrp")
 								}}
 							>
-								{lCategory.map((item, index) => (
-									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+								{featureSeGrpList.map((item, index) => (
+									<SelectOption key={index} value={item.seId}>{item.seNm}</SelectOption>
 								))}
 							</Select>
 						</TD>
 						<TH colSpan={1} align="center">중구분</TH>
 						<TD colSpan={3}>
 							<Select
-								//defaultValue={location.state.featureInfo.featureTemp?.featureSe}
+								defaultValue={location.state.featureInfo.featureTemp.featureSe}
 								appearance="Outline"
 								placeholder="중구분"
 								className="width-100"
@@ -487,8 +601,8 @@ const SelfFeatureEdit = () => {
 									onchangeSelectHandler(e, value, "featureSe")
 								}}
 							>
-								{mCategory.map((item, index) => (
-									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+								{featureSeList.map((item, index) => (
+									<SelectOption key={index} value={item.seId}>{item.seNm}</SelectOption>
 								))}
 							</Select>
 						</TD>
@@ -497,21 +611,31 @@ const SelfFeatureEdit = () => {
 						<TH colSpan={1} align="center">Feature ID</TH>
 						<TD colSpan={3}>
 							<TextField
+								readOnly
 								className="width-100"
-								id="id"
+								id="featureId"
 								defaultValue={location.state.featureInfo.featureTemp?.featureId}
-								onChange={onchangeInputHandler}
+								//onChange={onchangeInputHandler}
 							/>
 						</TD>
 						<TH colSpan={1} align="center">Feature 타입</TH>
 						<TD colSpan={3}>
-							<TextField
+							<Select
+								defaultValue={codeList.find((featureType: CodeModel) => featureType.codeId === location.state.featureInfo.featureTemp.featureTyp)?.codeId}
+								appearance="Outline"
+								placeholder="Feature 타입"
 								className="width-100"
-								id="dataType"
-								readOnly
-								defaultValue={location.state.featureInfo.featureTemp?.featureTyp}
-								onChange={onchangeInputHandler}
-							/>
+								onChange={(
+									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+									value: SelectValue<{}, false>
+								) => {
+									onchangeSelectHandler(e, value, "featureTyp")
+								}}
+							>
+								{codeList.map((codeItem, index) => (
+									<SelectOption key={index} value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+								))}
+							</Select>
 						</TD>
 					</TR>
 					<TR>
@@ -519,7 +643,7 @@ const SelfFeatureEdit = () => {
 						<TD colSpan={3}>
 							<TextField
 								className="width-100"
-								id="name"
+								id="featureKoNm"
 								defaultValue={location.state.featureInfo.featureTemp?.featureKoNm}
 								onChange={onchangeInputHandler}
 							/>
@@ -528,7 +652,7 @@ const SelfFeatureEdit = () => {
 						<TD colSpan={3}>
 							<TextField
 								className="width-100"
-								id="name"
+								id="featureEnNm"
 								defaultValue={location.state.featureInfo.featureTemp?.featureEnNm}
 								onChange={onchangeInputHandler}
 							/>
@@ -540,7 +664,7 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								multiline
-								id="description"
+								id="featureDef"
 								defaultValue={featureTempInfo?.featureDef}
 								onChange={onchangeInputHandler}
 							/>

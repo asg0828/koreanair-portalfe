@@ -64,34 +64,31 @@ const SelfFeature = () => {
         });
     } else {
         if (response) {
-            console.log(response)
-            if (response.statusCode === StatusCode.SUCCESS) {
-              setSelfFeatureList(() => {
-                let rtn = cloneDeep(response.result)
-        
-                rtn = rtn.map((sf: TbRsCustFeatRule) => {
-                  let t = cloneDeep(sf)
-                  if (
-                    !t.submissionStatus
-                    || t.submissionStatus === "" 
-                    || t.submissionStatus === submissionStatus[1].value
-                  ) {
-                    t.submissionStatusNm = submissionStatus[1].text
-                  } else if (
-                    t.submissionStatus === "requested" 
-                    || t.submissionStatus === submissionStatus[2].value
-                  ) {
-                    t.submissionStatusNm = submissionStatus[2].text
-                  } else if (t.submissionStatus === submissionStatus[3].value) {
-                    t.submissionStatusNm = submissionStatus[3].text
-                  } else if (t.submissionStatus === submissionStatus[4].value) {
-                    t.submissionStatusNm = submissionStatus[4].text
-                  }
-                  return t
-                })
-                return rtn
-              })
-            }
+          setSelfFeatureList(() => {
+            let rtn = cloneDeep(response.result)
+    
+            rtn = rtn.map((sf: TbRsCustFeatRule) => {
+              let t = cloneDeep(sf)
+              if (
+                !t.submissionStatus
+                || t.submissionStatus === "" 
+                || t.submissionStatus === submissionStatus[1].value
+              ) {
+                t.submissionStatusNm = submissionStatus[1].text
+              } else if (
+                t.submissionStatus === "requested" 
+                || t.submissionStatus === submissionStatus[2].value
+              ) {
+                t.submissionStatusNm = submissionStatus[2].text
+              } else if (t.submissionStatus === submissionStatus[3].value) {
+                t.submissionStatusNm = submissionStatus[3].text
+              } else if (t.submissionStatus === submissionStatus[4].value) {
+                t.submissionStatusNm = submissionStatus[4].text
+              }
+              return t
+            })
+            return rtn
+          })
         }
     }
   }, [response, isError, refetch, toast])

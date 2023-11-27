@@ -78,7 +78,7 @@ const QuerySampleDataPop = ({
         } else {
             if (response) {
                 console.log(response)
-                //setQuerySampleDatadList()
+                setQuerySampleDatadList(response.result)
             }
         }
     }, [response, isError, toast])

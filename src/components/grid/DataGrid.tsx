@@ -6,6 +6,8 @@ import './DataGrid.scss';
 
 export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
+  showPageSizeSelect?: boolean;
+  showPagination?: boolean;
 }
 
 const DataGrid: React.FC<DatagridProps> = ({
@@ -18,6 +20,8 @@ const DataGrid: React.FC<DatagridProps> = ({
   buttonChildren,
   page,
   rowSelection,
+  showPagination = true,
+  showPageSizeSelect= true
 }) => {
   const [pages, setPages] = useState<PageModel>(initPage);
 
@@ -45,6 +49,7 @@ const DataGrid: React.FC<DatagridProps> = ({
         <Label>
           총 <span className="total">{pages.totalCount}</span> 건
         </Label>
+        {showPageSizeSelect && (
         <Select
           appearance="Outline"
           size="LG"
@@ -56,6 +61,7 @@ const DataGrid: React.FC<DatagridProps> = ({
             <SelectOption key={index} value={pageSize}>{`${pageSize} 건`}</SelectOption>
           ))}
         </Select>
+            )}
       </Stack>
       <VerticalTable
         columns={columns}
@@ -66,6 +72,7 @@ const DataGrid: React.FC<DatagridProps> = ({
         rowSelection={rowSelection}
       />
       <Stack className="pagination-layout">
+        {showPagination &&(
         <Pagination
           size="LG"
           className="pagination"
@@ -73,6 +80,7 @@ const DataGrid: React.FC<DatagridProps> = ({
           totalPages={pages.totalPage}
           onChangePage={(value) => handleChange('page', value)}
         />
+        )}
         <Stack justifyContent="End" gap="SM" className="width-100">
           {buttonChildren}
         </Stack>

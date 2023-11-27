@@ -109,9 +109,9 @@ export const ModalTitCont = {
     TRGT_CLEAR: { title: "대상 초기화", context: "등록한 대상 정보가 모두 초기화 됩니다. 정말 등록한 대상을 초기화 하시겠습니까?" },
     APRO_MAX_SLCT: { title: "결재자 선택", context: "1명의 결재자를 선택 해주세요."},
     APRO_MAX_APND: { title: "결재자 추가", context: "1명의 결재자 선택이 가능합니다."},
-    SUBMISSION_CANCEL: { title: "승인 정보 요청 취소", context: "요청한 승인 정보를 취소 하시겠습니까?"},
+    SUBMISSION_CANCEL: { title: "승인 요청 취소", context: "요청한 승인 정보를 취소 하시겠습니까?"},
     SUBMISSION_INSERT: { title: "승인 정보 저장", context: "입력한 승인 정보를 저장 하시겠습니까?"},
-    SUBMISSION_INSERT_REQ: { title: "승인 정보 승인 요청", context: "입력한 승인 정보로 승인 요청 하시겠습니까?"},
+    SUBMISSION_INSERT_REQ: { title: "승인 요청", context: "승인 요청 하시겠습니까?"},
     SUBMISSION_APPROVAL: { title: "요청 정보 승인", context: "요청된 승인 정보를 승인 하시겠습니까?"},
     SUBMISSION_REJECT: { title: "요청 정보 반려", context: "요청된 승인 정보를 반려 하시겠습니까?"},
 }

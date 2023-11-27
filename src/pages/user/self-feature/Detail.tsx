@@ -68,10 +68,15 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
 import { StatusCode } from '@/models/common/CommonResponse';
 import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
-import { ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ValidType } from '@/models/common/Constants';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
 import { FeatureSeparatesModel } from '@/models/model/FeatureModel';
+import { useAppSelector } from '@/hooks/useRedux';
+import { selectCodeList } from '@/reducers/codeSlice';
+import { CodeModel } from '@/models/model/CodeModel';
+import { getFeatureSeList } from '@/api/FeatureAPI';
+import { selectSessionInfo } from '@/reducers/authSlice';
 
 const SelfFeatureDetail = () => {
 
@@ -82,6 +87,7 @@ const SelfFeatureDetail = () => {
 	const { } = useCommCodes(CommonCode.FORMAT)
 	const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
 	const { data: response1, isError: isError1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+	const sessionInfo = useAppSelector(selectSessionInfo())
 
 	const location = useLocation()
 	const navigate = useNavigate()
@@ -89,6 +95,10 @@ const SelfFeatureDetail = () => {
 	// 대구분
 	const { refetch: lRefetch, data: lResponse, isError: lIsError } = useFeatureTypList()
 	const [featureSeGrpList, setFeatureSeGrpList] = useState<Array<FeatureSeparatesModel>>([])
+	// 중구분
+	const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([])
+	// 픽처타입
+	const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
 
 	const [regType, setRegType] = useState<string>('')
 	const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
@@ -116,10 +126,9 @@ const SelfFeatureDetail = () => {
 	useEffect(() => {
 		// 초기 상세 정보 조회 API CALL
 		initCustFeatRule()
-		getTableandColumnMetaInfoByMstrSgmtRuleId()// useQuery로 쓰기
+		getTableandColumnMetaInfoByMstrSgmtRuleId()
 		retrieveCustFeatRuleInfos()
 	}, [])
-
 	// 대구분 API response callback
 	useEffect(() => {
 		if (lIsError || lResponse?.successOrNot === 'N') {
@@ -129,10 +138,38 @@ const SelfFeatureDetail = () => {
 			})
 		} else {
 			if (lResponse?.data) {
-				setFeatureSeGrpList(lResponse.data);
+				setFeatureSeGrpList(lResponse.data)
 			}
 		}
 	}, [lResponse, lIsError, toast])
+	useEffect(() => {
+		if (!featureSeGrpList || featureSeGrpList.length < 1) return
+
+		featureSeGrpList.map((featureSeGrp: FeatureSeparatesModel) => {
+			let response = getFeatureSeList(featureSeGrp.seId)
+
+			response.then((response) => {
+				if (response?.successOrNot === 'N') {
+					toast({
+						type: ValidType.ERROR,
+						content: '조회 중 에러가 발생했습니다.',
+					})
+				} else {
+					if (response?.data) {
+						setFeatureSeList((prevState: Array<FeatureSeparatesModel>) => {
+							let rtn = cloneDeep(prevState)
+							return [...rtn, ...response.data]
+						})
+
+					}
+				}
+			}).catch((err) => {
+				console.log(err)
+			})
+			return featureSeGrp
+		})
+
+	}, [featureSeGrpList])
 
 	const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
 		if (isError1 || response1?.successOrNot === 'N') {
@@ -141,7 +178,7 @@ const SelfFeatureDetail = () => {
 				content: '조회 중 에러가 발생했습니다.',
 			})
 		} else {
-			if (response1 && (response1.statusCode === StatusCode.SUCCESS)) {
+			if (response1) {
 				setMstrSgmtTableandColMetaInfo(cloneDeep(response1.result))
 			}
 		}
@@ -471,8 +508,8 @@ const SelfFeatureDetail = () => {
 		config.isLoarding = true
 		let request = cloneDeep(initApiRequest)
 		request.method = Method.PUT
-		let email = ""
-		let submissionId = ""
+		let email = sessionInfo.email
+		let submissionId = sfSubmissionRequestData.id
 		request.url = `/api/v1/users/${email}/submissions/${submissionId}/request`
 		console.log("[insertSubmissionRequest] Request  :: ", request)
 
@@ -494,8 +531,8 @@ const SelfFeatureDetail = () => {
 		config.isLoarding = true
 		let request = cloneDeep(initApiRequest)
 		request.method = Method.PUT
-		let email = ""
-		let submissionId = ""
+		let email = sessionInfo.email
+		let submissionId = sfSubmissionRequestData.id
 		request.url = `/api/v1/users/${email}/submissions/${submissionId}/cancel`
 		console.log("[CancelRequestSubmission] Request  :: ", request)
 
@@ -533,6 +570,7 @@ const SelfFeatureDetail = () => {
 		if (
 			!location.state.submissionStatus
 			|| location.state.submissionStatus === ""
+			|| location.state.submissionStatus === subFeatStatus.SAVE
 		) {
 			// 등록(품의는 저장 x)
 			return (
@@ -551,7 +589,7 @@ const SelfFeatureDetail = () => {
 					</Button>
 				</Stack>
 			)
-		} else if (location.state.submissionStatus === subFeatStatus.SAVE) {
+		} else if (location.state.submissionStatus === subFeatStatus.REQ) {
 			// 품의 저장(품의 저장의 경우 결재진행 전 단계로 가야할지?)
 			return (
 				<Stack justifyContent="End" gap="SM" className="width-100">
@@ -696,15 +734,16 @@ const SelfFeatureDetail = () => {
 						<TH colSpan={1} align="right">대구분</TH>
 						<TD colSpan={2} align='left'>
 							{featureInfo.featureTemp && 
-								featureSeGrpList.some((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSeGrp) ?
-								featureSeGrpList.filter((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSeGrp)[0].seNm
-								:
-								featureInfo.featureTemp.featureSeGrp
+								featureSeGrpList.find((grpItem: FeatureSeparatesModel) => {
+									return grpItem.seId === featureSeList.find((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSe)?.seGrpId
+								})?.seNm
 							}
 						</TD>
 						<TH colSpan={1} align="right">중구분</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && featureInfo.featureTemp.featureSe}
+							{featureInfo.featureTemp && 
+								featureSeList.find((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSe)?.seNm
+							}
 						</TD>
 					</TR>
 					<TR>
@@ -714,7 +753,9 @@ const SelfFeatureDetail = () => {
 						</TD>
 						<TH colSpan={1} align="right">Feature 타입</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && featureInfo.featureTemp.featureTyp}
+							{featureInfo.featureTemp && 
+								codeList.find((featureType: CodeModel) => featureType.codeId === featureInfo.featureTemp.featureTyp)?.codeNm								
+							}
 						</TD>
 					</TR>
 					<TR>
