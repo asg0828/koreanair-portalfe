@@ -4,11 +4,15 @@ import {
     retrieveApproverCandidate, 
     retrieveBatchExecuteLogs, 
     retrieveCustFeatParentChildList, 
+    retrieveCustFeatRuleInfos, 
     retrieveCustFeatRules, 
     retrieveReadSql, 
-    retrieveSampleData, 
+    retrieveSampleData,
+    retrieveSubmissionInfo,
+    retrieveSubmissionList, 
 } from "@/api/self-feature/SelfFeatureUserAPI"
 import { FeatListSrchProps } from "@/models/selfFeature/FeatureModel"
+import { QueryParams } from "@/utils/ApiUtil"
 
 export const useCustFeatRules = (qParams: FeatListSrchProps) => {
     return useQuery(['/cust-feat-rules'], () => retrieveCustFeatRules(qParams))
@@ -16,6 +20,18 @@ export const useCustFeatRules = (qParams: FeatListSrchProps) => {
 
 export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId())
+}
+
+export const useCustFeatRuleInfos = (custFeatRuleId: string) => {
+    return useQuery(['/cust-feat-rule-infos', custFeatRuleId], () => retrieveCustFeatRuleInfos(custFeatRuleId))
+}
+
+export const useSubmissionList = (qParams: QueryParams) => {
+    return useQuery(['/submission-list'], () => retrieveSubmissionList(qParams), { enabled: false })
+}
+
+export const useSubmissionInfo = (submissionNo: number) => {
+    return useQuery(['/submission-info', submissionNo], () => retrieveSubmissionInfo(submissionNo), { enabled: false })
 }
 
 export const useReadSql = (custFeatRuleId: string) => {

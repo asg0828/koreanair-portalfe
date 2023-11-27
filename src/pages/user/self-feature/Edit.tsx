@@ -66,10 +66,9 @@ import {
 	CommonCode,
 	CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon';
-import { StatusCode } from "@/models/common/CommonResponse";
-import { SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
+import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
-import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
+import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { GroupCodeType, ValidType } from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { useFeatureSeList, useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
@@ -80,13 +79,6 @@ import { getFeatureSeList } from "@/api/FeatureAPI";
 import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
 
-const lCategory = [
-	{ value: '온라인행동', text: '온라인행동' },
-	{ value: '2', text: '항공' },
-]
-const mCategory = [
-	{ value: '홈페이지', text: '홈페이지' },
-]
 const calcUnit = [
 	{ value: '횟수', text: '횟수' },
 	{ value: '2', text: '명' },
@@ -95,7 +87,8 @@ const calcUnit = [
 const SelfFeatureEdit = () => {
 
 	const { toast } = useToast()
-	const { data: response1, isError: isError1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+	// 속성, 행동정보
+	const { data: getTCByNSRRes, isError: getTCByNSRError, refetch: getTCByNSRRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { } = useCommCodes(CommonCode.FUNCTION)
 	const { } = useCommCodes(CommonCode.OPERATOR)
@@ -137,7 +130,13 @@ const SelfFeatureEdit = () => {
 	// 승인 정보
 	const [sfSubmissionRequestData, setSfSubmissionRequestData] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
 	const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
-
+	// 결재선
+	const [aprvList, setAprvList] = useState<Array<SfSubmissionAppendApproval>>([])
+	const {
+		data: approverCandidateRes,
+		isError: approverCandidateErr,
+		refetch: approverCandidateRefetch
+	} = useApproverCandidate()
 	// 속성 및 행동 데이터
 	const [mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 	// Top 집계함수 선택 여부
@@ -172,9 +171,23 @@ const SelfFeatureEdit = () => {
 	}
 
 	useEffect(() => {
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
-			getTableandColumnMetaInfoByMstrSgmtRuleId()
+		// if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
+		// 	getTableandColumnMetaInfoByMstrSgmtRuleId()
 	}, [])
+	// 결재선 default setting을 위해
+	useEffect(() => {
+        if (approverCandidateErr || approverCandidateRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (approverCandidateRes) {
+				setAprvList(approverCandidateRes.result)
+            }
+        }
+    }, [approverCandidateRes, approverCandidateErr, toast])
+
 
 	useEffect(() => {
 		setFeatureTempInfo(cloneDeep(location.state.featureInfo.featureTemp))
@@ -249,7 +262,7 @@ const SelfFeatureEdit = () => {
 	}, [featureSeGrpList])
 	useEffect(() => {
 		if (!featureSeAllList || featureSeAllList.length < 1) return
-		
+
 		let seId = featureSeGrpList.find((grpItem: FeatureSeparatesModel) => {
 			return grpItem.seId === featureSeAllList.find((item: FeatureSeparatesModel) => item.seId === location.state.featureInfo.featureTemp.featureSe)?.seGrpId
 		})?.seId
@@ -354,18 +367,19 @@ const SelfFeatureEdit = () => {
 
 	}, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc?.formula])
 
-	const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
-		if (isError1 || response1?.successOrNot === 'N') {
+	// 속성,행동데이터 response callback
+	useEffect(() => {
+		if (getTCByNSRError || getTCByNSRRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
 				content: '조회 중 에러가 발생했습니다.',
 			})
 		} else {
-			if (response1 && (response1.statusCode === StatusCode.SUCCESS)) {
-				setMstrSgmtTableandColMetaInfo(cloneDeep(response1.result))
+			if (getTCByNSRRes) {
+				setMstrSgmtTableandColMetaInfo(cloneDeep(getTCByNSRRes.result))
 			}
 		}
-	}
+	}, [getTCByNSRRes, getTCByNSRError])
 
 	const updateCustFeatRule = async () => {
 
@@ -615,7 +629,7 @@ const SelfFeatureEdit = () => {
 								className="width-100"
 								id="featureId"
 								defaultValue={location.state.featureInfo.featureTemp?.featureId}
-								//onChange={onchangeInputHandler}
+							//onChange={onchangeInputHandler}
 							/>
 						</TD>
 						<TH colSpan={1} align="center">Feature 타입</TH>
@@ -710,7 +724,7 @@ const SelfFeatureEdit = () => {
 					<TR>
 						<TH colSpan={1} align="center">비고</TH>
 						<TD colSpan={7}>
-							<TextField className="width-100" id="featureDsc" onChange={onchangeInputHandler}/>
+							<TextField className="width-100" id="featureDsc" onChange={onchangeInputHandler} />
 						</TD>
 					</TR>
 				</HorizontalTable>
@@ -723,107 +737,108 @@ const SelfFeatureEdit = () => {
 						borderRadius: '5px',
 					}}
 				>
-				{(
-					custFeatRule.sqlDirectInputYn === ""
-					|| custFeatRule.sqlDirectInputYn === "N"
-				) &&
-					<Stack
-						direction="Vertical"
-						gap="SM"
-						style={{
-							margin: "0.5rem"
-						}}
-					>
-						{/* Feature 로직 */}
-						<Stack direction="Horizontal" gap="LG" justifyContent="start">
-							<Typography variant="h4">1. Feature 로직</Typography>
-							<Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
-								초기화
-							</Button>
-						</Stack>
-						{/* drag && drop 영역*/}
+					{(
+						custFeatRule.sqlDirectInputYn === ""
+						|| custFeatRule.sqlDirectInputYn === "N"
+					) &&
 						<Stack
-							direction="Horizontal"
-							gap="MD"
-							justifyContent="Between"
+							direction="Vertical"
+							gap="SM"
 							style={{
-								height: '700px',
+								margin: "0.5rem"
 							}}
 						>
-							<DndProvider backend={HTML5Backend}>
-								{/* drop 영역 */}
-								<DropList
-									featStatus={subFeatStatus.REG}
-									setIsSelectAggregateTop={setIsSelectAggregateTop}
-									targetList={targetList}
-									trgtFilterList={trgtFilterList}
-									setTargetList={setTargetList}
-									setTrgtFilterList={setTrgtFilterList}
-									attributes={mstrSgmtTableandColMetaInfo.attributes}
-									behaviors={mstrSgmtTableandColMetaInfo.behaviors}
-									setFormulaTrgtList={setFormulaTrgtList}
-								/>
-								{/* drop 영역 */}
-
-								{/* drag 영역 */}
-								{(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) &&
-									<DragList
+							{/* Feature 로직 */}
+							<Stack direction="Horizontal" gap="LG" justifyContent="start">
+								<Typography variant="h4">1. Feature 로직</Typography>
+								<Button type="button" priority="Normal" appearance="Outline" size="SM" onClick={targetClearHanbler}>
+									초기화
+								</Button>
+							</Stack>
+							{/* drag && drop 영역*/}
+							<Stack
+								direction="Horizontal"
+								gap="MD"
+								justifyContent="Between"
+								style={{
+									height: '700px',
+								}}
+							>
+								<DndProvider backend={HTML5Backend}>
+									{/* drop 영역 */}
+									<DropList
+										featStatus={subFeatStatus.REG}
+										setIsSelectAggregateTop={setIsSelectAggregateTop}
+										targetList={targetList}
+										trgtFilterList={trgtFilterList}
+										setTargetList={setTargetList}
+										setTrgtFilterList={setTrgtFilterList}
 										attributes={mstrSgmtTableandColMetaInfo.attributes}
 										behaviors={mstrSgmtTableandColMetaInfo.behaviors}
-									/>}
-								{/* drag 영역 */}
-							</DndProvider>
+										setFormulaTrgtList={setFormulaTrgtList}
+									/>
+									{/* drop 영역 */}
+
+									{/* drag 영역 */}
+									{(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) &&
+										<DragList
+											attributes={mstrSgmtTableandColMetaInfo.attributes}
+											behaviors={mstrSgmtTableandColMetaInfo.behaviors}
+										/>}
+									{/* drag 영역 */}
+								</DndProvider>
+							</Stack>
+							{/* 대상 선택 */}
 						</Stack>
-						{/* 대상 선택 */}
-					</Stack>
-				}
-				{custFeatRule.sqlDirectInputYn === "Y" &&
-					<Stack
-						direction="Vertical"
-						style={{
-							margin: "0.5rem"
-						}}
-					>
-						<Typography variant="h4">Feature 생성 Query</Typography>
+					}
+					{custFeatRule.sqlDirectInputYn === "Y" &&
 						<Stack
-							direction="Horizontal"
-							gap="MD"
-							justifyContent="Between"
+							direction="Vertical"
 							style={{
-								height: '400px',
+								margin: "0.5rem"
 							}}
 						>
-							<TextField
-								className="width-100 height-100"
-								multiline
-								id="sqlQuery"
-								value={sqlQueryInfo?.sqlQuery}
-								onChange={onchangeInputHandler}
-							/>
+							<Typography variant="h4">Feature 생성 Query</Typography>
+							<Stack
+								direction="Horizontal"
+								gap="MD"
+								justifyContent="Between"
+								style={{
+									height: '400px',
+								}}
+							>
+								<TextField
+									className="width-100 height-100"
+									multiline
+									id="sqlQuery"
+									value={sqlQueryInfo?.sqlQuery}
+									onChange={onchangeInputHandler}
+								/>
+							</Stack>
 						</Stack>
-					</Stack>
-				}
-				{/* 계산식 */}
-				{((
-					custFeatRule.sqlDirectInputYn === ""
-					|| custFeatRule.sqlDirectInputYn === "N"
-				) && formulaTrgtList.length > 0) &&
-					<CalcValid
-						featStatus={subFeatStatus.REG}
-						isSelectAggregateTop={isSelectAggregateTop}
-						setIsValidFormula={setIsValidFormula}
-						formulaTrgtList={formulaTrgtList}
-						custFeatRuleCalc={custFeatRuleCalc}
-						custFeatRuleCaseList={custFeatRuleCaseList}
-						setCustFeatRuleCalc={setCustFeatRuleCalc}
-						setCustFeatRuleCaseList={setCustFeatRuleCaseList}
-					/>
-				}
-				{/* 계산식 */}
+					}
+					{/* 계산식 */}
+					{((
+						custFeatRule.sqlDirectInputYn === ""
+						|| custFeatRule.sqlDirectInputYn === "N"
+					) && formulaTrgtList.length > 0) &&
+						<CalcValid
+							featStatus={subFeatStatus.REG}
+							isSelectAggregateTop={isSelectAggregateTop}
+							setIsValidFormula={setIsValidFormula}
+							formulaTrgtList={formulaTrgtList}
+							custFeatRuleCalc={custFeatRuleCalc}
+							custFeatRuleCaseList={custFeatRuleCaseList}
+							setCustFeatRuleCalc={setCustFeatRuleCalc}
+							setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+						/>
+					}
+					{/* 계산식 */}
 				</Stack>
 				{/* 결재선 */}
 				<ApprovalList
 					sfSubmissionRequestData={sfSubmissionRequestData}
+					aprvList={aprvList}
 					sfSubmissionApprovalList={sfSubmissionApprovalList}
 					setSfSubmissionApprovalList={setSfSubmissionApprovalList}
 				/>
