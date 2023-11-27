@@ -16,7 +16,7 @@ export const uploadFile = (formData: FormData) => {
   });
 };
 
-export const downloadFile = async (fileId: string) => {
+export const downloadFile = async (fileId: string, fileNm?: string) => {
   const response = await callApiForFile({
     service: Service.KAL_BE,
     url: `${PortalApiURL.FILE}/download/${fileId}`,
@@ -29,17 +29,15 @@ export const downloadFile = async (fileId: string) => {
   if (response?.successOrNot === 'N') {
     return false;
   } else {
-    const blob = new Blob([response.data], { type: response.headers['content-type'] });
-    let link = document.createElement('a');
-    let fileName = 'unknown';
+    const link = document.createElement('a');
+    const blobURL = window.URL.createObjectURL(response.data);
     const contentDisposition = response.headers['content-disposition'];
-    if (contentDisposition) {
-      const [fileNameMatch] = contentDisposition.split(';').filter((str: string) => str.includes('filename'));
-      if (fileNameMatch) [, fileName] = fileNameMatch.split('=');
-    }
-    link.href = window.URL.createObjectURL(blob);
+    const fileNameMatch = contentDisposition && contentDisposition.match(/filename="(.+)"/);
+    const fileName = fileNameMatch ? fileNameMatch[1] : fileNm;
+    link.href = blobURL;
     link.download = fileName;
     link.click();
+    window.URL.revokeObjectURL(blobURL);
     return true;
   }
 };

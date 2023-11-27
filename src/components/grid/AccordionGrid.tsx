@@ -59,8 +59,8 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
     });
   };
 
-  const handleFileDownload = async (fileId: string) => {
-    const isSuccess = await downloadFile(fileId);
+  const handleFileDownload = async (fileId: string, fileNm?: string) => {
+    const isSuccess = await downloadFile(fileId, fileNm);
 
     if (isSuccess) {
       toast({
@@ -122,7 +122,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                   <ul className="attachFileList">
                     {row.fileList?.map((file: FileModel) => (
                       <li>
-                        <Link onClick={() => handleFileDownload(file.fileId)}>
+                        <Link onClick={() => handleFileDownload(file.fileId, file.fileNm)}>
                           <Stack>
                             <AttachFileIcon />
                             {file.fileNm}
