@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
 import { useAppSelector } from '@/hooks/useRedux'
 
@@ -44,13 +44,13 @@ import {
 	CommonCode,
 	CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon'
-import { SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel'
+import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel'
 import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data'
 import { GroupCodeType, ValidType } from '@/models/common/Constants'
 import { FeatureSeparatesModel } from '@/models/model/FeatureModel'
 
 import { selectCodeList } from '@/reducers/codeSlice'
-import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
+import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 import { useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries'
 import { useCreateCustFeatRule } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
@@ -105,7 +105,17 @@ const SelfFeatureReg = () => {
 	const [isValidFormula, setIsValidFormula] = useState<Boolean>(true)
 	// 승인 정보
 	const [sfSubmissionRequestData, setSfSubmissionRequestData] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
-	const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
+	const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>([])
+	// 결재선
+	const [ aprvList, setAprvList ] = useState<Array<SfSubmissionAppendApproval>>([])
+    const [ aprvType1, setAprvType1 ] = useState<Array<SfSubmissionAppendApproval>>([])
+    const [ aprvType2, setAprvType2 ] = useState<Array<SfSubmissionAppendApproval>>([])
+    const [ aprvType3, setAprvType3 ] = useState<Array<SfSubmissionAppendApproval>>([])
+	const {
+        data: approverCandidateRes,
+        isError: approverCandidateErr,
+        refetch: approverCandidateRefetch
+    } = useApproverCandidate()
 	// 속성 및 행동 데이터
 	const [mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 	// Top 집계함수 선택 여부
@@ -142,6 +152,73 @@ const SelfFeatureReg = () => {
 	useEffect(() => {
 		initCustFeatRule()
 	}, [])
+	// 결재선 default setting을 위해
+	useEffect(() => {
+        if (approverCandidateErr || approverCandidateRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (approverCandidateRes) {
+				setAprvType1(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.FIRST))
+				setAprvType2(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.SECOND))
+				setAprvType3(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.LAST))
+                setAprvList(approverCandidateRes.result)
+            }
+        }
+    }, [approverCandidateRes, approverCandidateErr, toast])
+
+	useEffect(() => {
+		if (isEmpty(aprvType1)) return
+
+		setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
+			let rtn = cloneDeep(prevState)
+			let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.isPriority)
+			rtn = rtn.map((approval: SfSubmissionApproval) => {
+				if (approval.approvalSequence === 1) {
+					approval.approver = type1 ? type1.userEmail : ""
+					approval.approverNm = type1 ? type1.userNm : ""
+				}
+				return approval
+			})
+			return rtn
+		})
+	}, [aprvType1])
+	useEffect(() => {
+		if (isEmpty(aprvType2)) return
+
+		setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
+			let rtn = cloneDeep(prevState)
+			let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.isPriority)
+			rtn = rtn.map((approval: SfSubmissionApproval) => {
+				if (approval.approvalSequence === 2) {
+					approval.approver = type2 ? type2.userEmail : ""
+					approval.approverNm = type2 ? type2.userNm : ""
+				}
+				return approval
+			})
+			return rtn
+		})
+		
+	}, [aprvType2])
+	useEffect(() => {
+		if (isEmpty(aprvType3)) return
+
+		setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
+			let rtn = cloneDeep(prevState)
+			let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.isPriority)
+			rtn = rtn.map((approval: SfSubmissionApproval) => {
+				if (approval.approvalSequence === 3) {
+					approval.approver = type3 ? type3.userEmail : ""
+					approval.approverNm = type3 ? type3.userNm : ""
+				}
+				return approval
+			})
+			return rtn
+		})
+		
+	}, [aprvType3])
 	// 정보초기화
 	const initCustFeatRule = () => {
 		setFeatureInfo((state: FeatureInfo) => {
@@ -158,9 +235,13 @@ const SelfFeatureReg = () => {
 
 				subAprv.approvalSequence = i + 1
 
-				if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-				else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-				else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+				if (subAprv.approvalSequence === 1) {
+					subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+				} else if (subAprv.approvalSequence === 2) {
+					subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+				} else if (subAprv.approvalSequence === 3) {
+					subAprv.approvalSequenceNm = aprvSeqNm.LAST
+				}
 
 				t.push(subAprv)
 			}
@@ -731,6 +812,7 @@ const SelfFeatureReg = () => {
 				{/* 계산식 */}
 				{/* 결재선 */}
 				<ApprovalList
+					aprvList={aprvList}
 					sfSubmissionApprovalList={sfSubmissionApprovalList}
 					setSfSubmissionApprovalList={setSfSubmissionApprovalList}
 				/>

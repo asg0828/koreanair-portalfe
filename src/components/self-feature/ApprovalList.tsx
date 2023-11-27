@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { cloneDeep } from 'lodash'
+import { isEmpty } from 'lodash'
 
 import { 
     Button,
@@ -25,22 +25,14 @@ import {
 } from '@pages/user/self-feature-submission/data'
 import { subFeatStatus } from "@/models/selfFeature/FeatureCommon"
 import SubAppdAprvPop from "../self-feature-submission/popup/SubAppdAprvPop"
-import { useApproverCandidate } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries"
-import { ValidType } from "@/models/common/Constants"
 
 const ApprovalList = ({
     sfSubmissionRequestData,
+    aprvList,
     sfSubmissionApprovalList,
     setSfSubmissionApprovalList,
 }: ApporvalListComponentProps) => {
 
-    const { toast } = useToast()
-    const {
-        data: response,
-        isError: isError,
-        refetch: refetch
-    } = useApproverCandidate()
-    const [ aprvList, setAprvList ] = useState<Array<SfSubmissionAppendApproval>>([])
     const [ aprvType1, setAprvType1 ] = useState<Array<SfSubmissionAppendApproval>>([])
     const [ aprvType2, setAprvType2 ] = useState<Array<SfSubmissionAppendApproval>>([])
     const [ aprvType3, setAprvType3 ] = useState<Array<SfSubmissionAppendApproval>>([])
@@ -67,23 +59,14 @@ const ApprovalList = ({
     }
 
     useEffect(() => {
-        setAprvType1Priority(aprvList.filter((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.FIRST) && aprroval.isPriority)[0]?.userEmail)
-        setAprvType2Priority(aprvList.filter((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.SECOND) && aprroval.isPriority)[0]?.userEmail)
-        setAprvType3Priority(aprvList.filter((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.LAST) && aprroval.isPriority)[0]?.userEmail)
+        if (!aprvList || aprvList.length < 1) return
+        let type1 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.FIRST) && aprroval.isPriority)
+        let type2 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.SECOND) && aprroval.isPriority)
+        let type3 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.LAST) && aprroval.isPriority)
+        setAprvType1Priority(type1 ? type1.userNm : "")
+        setAprvType2Priority(type2 ? type2.userNm : "")
+        setAprvType3Priority(type3 ? type3.userNm : "")
     }, [aprvList])
-
-    useEffect(() => {
-        if (isError || response?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
-                content: '조회 중 에러가 발생했습니다.',
-            });
-        } else {
-            if (response) {
-                setAprvList(response.result)
-            }
-        }
-    }, [response, isError, toast])
 
     return (
         <>
@@ -111,7 +94,7 @@ const ApprovalList = ({
                         colSpan={columns[index2].colSpan ? columns[index2].colSpan : undefined}
                         key={`row-body-${index2}`}
                     >
-                        {columns[index2].field === "approver" && 
+                        {columns[index2].field === "approverNm" && 
                             <Stack gap="XS" className="width-100">
                                 <Typography 
                                     style={{
@@ -165,7 +148,7 @@ const ApprovalList = ({
                                 }
                             </Stack>
                         }
-                        {columns[index2].field !== "approver" && 
+                        {columns[index2].field !== "approverNm" && 
                             <Typography variant="body2">{row[columns[index2].field]}</Typography>
                         }
                     </TD>

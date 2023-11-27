@@ -158,10 +158,13 @@ const SubAppdAprvPop = ({
             //index에 따른 결재자 지정
             if (aprvCategory === aprvSeqNm.FIRST) {
                 t[0].approver = appendApprovalList[0].userEmail
+                t[0].approverNm = appendApprovalList[0].userNm
             } else if (aprvCategory === aprvSeqNm.SECOND) {
                 t[1].approver = appendApprovalList[0].userEmail
+                t[1].approverNm = appendApprovalList[0].userNm
             } else if (aprvCategory === aprvSeqNm.LAST) {
                 t[2].approver = appendApprovalList[0].userEmail
+                t[2].approverNm = appendApprovalList[0].userNm
             }
 
             return t

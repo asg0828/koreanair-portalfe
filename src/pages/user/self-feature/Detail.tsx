@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 
@@ -58,16 +58,18 @@ import {
 	ColDataType,
 	CommonCodeInfo,
 	CommonCode,
+	FeatureType,
 } from '@/models/selfFeature/FeatureCommon';
 import {
+	SfSubmissionAppendApproval,
 	SfSubmissionApproval,
 	SfSubmissionRequestInfo
 } from '@/models/selfFeature/FeatureSubmissionModel';
-import { Method, callApi } from '@/utils/ApiUtil';
+import { Method, QueryParams, callApi } from '@/utils/ApiUtil';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
 import { StatusCode } from '@/models/common/CommonResponse';
-import { useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
+import { useApproverCandidate, useCustFeatRuleInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { GroupCodeType, ValidType } from '@/models/common/Constants';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
@@ -81,6 +83,8 @@ import { selectSessionInfo } from '@/reducers/authSlice';
 const SelfFeatureDetail = () => {
 
 	const { toast } = useToast()
+	const location = useLocation()
+	const navigate = useNavigate()
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { } = useCommCodes(CommonCode.FUNCTION)
 	const { } = useCommCodes(CommonCode.OPERATOR)
@@ -88,9 +92,12 @@ const SelfFeatureDetail = () => {
 	const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
 	const { data: response1, isError: isError1 } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	const sessionInfo = useAppSelector(selectSessionInfo())
+	const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr } = useCustFeatRuleInfos(location.state.id)
+	const [qParams, setQParams] = useState<QueryParams>({})
+	const [submissionId, setSubmissionId] = useState<number>(0)
+	const { data: submissionListRes, isError: submissionListErr, refetch: submissionListRefetch } = useSubmissionList(qParams)
+	const { data: submissionInfoRes, isError: submissionInfoErr, refetch: submissionInfoRefetch } = useSubmissionInfo(submissionId)
 
-	const location = useLocation()
-	const navigate = useNavigate()
 
 	// 대구분
 	const { refetch: lRefetch, data: lResponse, isError: lIsError } = useFeatureTypList()
@@ -122,12 +129,21 @@ const SelfFeatureDetail = () => {
 	// 승인 정보
 	const [sfSubmissionRequestData, setSfSubmissionRequestData] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
 	const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
+	// 결재선
+	const [aprvList, setAprvList] = useState<Array<SfSubmissionAppendApproval>>([])
+	const [aprvType1, setAprvType1] = useState<Array<SfSubmissionAppendApproval>>([])
+	const [aprvType2, setAprvType2] = useState<Array<SfSubmissionAppendApproval>>([])
+	const [aprvType3, setAprvType3] = useState<Array<SfSubmissionAppendApproval>>([])
+	const {
+		data: approverCandidateRes,
+		isError: approverCandidateErr,
+		refetch: approverCandidateRefetch
+	} = useApproverCandidate()
 
 	useEffect(() => {
 		// 초기 상세 정보 조회 API CALL
 		initCustFeatRule()
-		getTableandColumnMetaInfoByMstrSgmtRuleId()
-		retrieveCustFeatRuleInfos()
+		//retrieveCustFeatRuleInfos()
 	}, [])
 	// 대구분 API response callback
 	useEffect(() => {
@@ -171,7 +187,7 @@ const SelfFeatureDetail = () => {
 
 	}, [featureSeGrpList])
 
-	const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
+	useEffect(() => {
 		if (isError1 || response1?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
@@ -182,7 +198,23 @@ const SelfFeatureDetail = () => {
 				setMstrSgmtTableandColMetaInfo(cloneDeep(response1.result))
 			}
 		}
-	}
+	}, [response1, isError1, toast])
+	// 결재선 default setting을 위해
+	useEffect(() => {
+        if (approverCandidateErr || approverCandidateRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (approverCandidateRes) {
+				setAprvType1(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.FIRST))
+				setAprvType2(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.SECOND))
+				setAprvType3(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.LAST))
+                setAprvList(approverCandidateRes.result)
+            }
+        }
+    }, [approverCandidateRes, approverCandidateErr, toast])
 	const initCustFeatRule = () => {
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
@@ -356,145 +388,152 @@ const SelfFeatureDetail = () => {
 			navigate(`../${pageNm}`)
 		}
 	}
-
-	const retrieveCustFeatRuleInfos = async () => {
-		/*
-		  Method      :: GET
-		  Url         :: /api/v1/customerfeatures
-		  path param  :: {custFeatRuleId}
-		  query param :: 
-		  body param  :: 
-		*/
-		let config = cloneDeep(initConfig)
-		config.isLoarding = true
-		let request = cloneDeep(initApiRequest)
-		request.method = Method.GET
-		request.url = `/api/v1/customerfeatures/${location.state.id}`
-		console.log("[retrieveCustFeatRuleInfos] Request  :: ", request)
-
-		let response = cloneDeep(initCommonResponse)
-		response = await callApi(request)
-		console.log("[retrieveCustFeatRuleInfos] Response header       :: ", response.header)
-		console.log("[retrieveCustFeatRuleInfos] Response statusCode   :: ", response.statusCode)
-		console.log("[retrieveCustFeatRuleInfos] Response status       :: ", response.status)
-		console.log("[retrieveCustFeatRuleInfos] Response successOrNot :: ", response.successOrNot)
-		console.log("[retrieveCustFeatRuleInfos] Response result       :: ", response.result)
-
-		if (response.statusCode === StatusCode.SUCCESS) {
-			setFeatureInfo(cloneDeep(response.result))
-			retrieveSubmissionList()
-		}
-	}
-
-	const retrieveSubmissionList = async () => {
-		/*
-		  Method      :: GET
-		  Url         :: /api/v1/submissions
-		  path param  :: submissionId
-		  query param :: type=&status=&referenceNo=&submissionNo=&requester=&title=&titleLike=&requestDateFrom=&requestDateTo=&approvalCompletionDateFrom=&approvalCompletionDateTo=
-		  body param  :: 
-		*/
-		let config = cloneDeep(initConfig)
-		config.isLoarding = true
-		let request = cloneDeep(initApiRequest)
-		request.method = Method.GET
-		request.url = `/api/v1/submissions`
-		request.params!.queryParams = { type: "CustomerFeature", referenceNo: location.state.id }
-		console.log("[retrieveSubmissionList] Request  :: ", request)
-
-		let response = cloneDeep(initCommonResponse)
-		response = await callApi(request)
-		console.log("[retrieveSubmissionList] Response header       :: ", response.header)
-		console.log("[retrieveSubmissionList] Response statusCode   :: ", response.statusCode)
-		console.log("[retrieveSubmissionList] Response status       :: ", response.status)
-		console.log("[retrieveSubmissionList] Response successOrNot :: ", response.successOrNot)
-		console.log("[retrieveSubmissionList] Response result       :: ", response.result)
-
-		if (response.statusCode === StatusCode.SUCCESS) {
-			setSfSubmissionApprovalList(() => {
-				let rtn = cloneDeep(response.result.approvals)
-
-				let t: Array<SfSubmissionApproval> = []
-
-				for (let i = 0; i < 3; i++) {
-
-					let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
-
-					if (rtn && rtn[i]) {
-						subAprv = cloneDeep(rtn[i])
-					}
-
-					subAprv.approvalSequence = i + 1
-
-					if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-					else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-					else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
-
-					t.push(subAprv)
-				}
-
-				return t
+	useEffect(() => {
+		if (custFeatRuleInfosErr || custFeatRuleInfosRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
 			})
-			if (response.result.length > 0) {
-				retrieveSubmissionInfo(response.result[0].id)
+		} else {
+			if (custFeatRuleInfosRes?.result) {
+				setFeatureInfo(cloneDeep(custFeatRuleInfosRes.result))
+				setQParams({ type: FeatureType.CUST, referenceNo: location.state.id })
 			}
 		}
+	}, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
+	useEffect(() => {
+		if (isEmpty(qParams)) return
+		submissionListRefetch()
+	}, [qParams])
+	useEffect(() => {
+		if (submissionListErr || submissionListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (submissionListRes?.result) {
+				setSfSubmissionApprovalList(() => {
+					let rtn = cloneDeep(submissionListRes.result.approvals)
 
-	}
+					let t: Array<SfSubmissionApproval> = []
 
-	const retrieveSubmissionInfo = async (submissionNo: string) => {
-		/*
-		  Method      :: GET
-		  Url         :: /api/v1/submissions/${submissionId}
-		  path param  :: submissionId
-		  query param :: 
-		  body param  :: 
-		*/
-		let config = cloneDeep(initConfig)
-		config.isLoarding = true
-		let request = cloneDeep(initApiRequest)
-		request.method = Method.GET
-		request.url = `/api/v1/submissions/${submissionNo}`
-		console.log("[retrieveSubmission1] Request  :: ", request)
+					for (let i = 0; i < 3; i++) {
 
-		let response = cloneDeep(initCommonResponse)
-		response = await callApi(request)
-		console.log("[retrieveSubmission1] Response header       :: ", response.header)
-		console.log("[retrieveSubmission1] Response statusCode   :: ", response.statusCode)
-		console.log("[retrieveSubmission1] Response status       :: ", response.status)
-		console.log("[retrieveSubmission1] Response successOrNot :: ", response.successOrNot)
-		console.log("[retrieveSubmission1] Response result       :: ", response.result)
-		if (response.statusCode === StatusCode.SUCCESS) {
+						let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
 
-			if (response.result.submission) setSfSubmissionRequestData(cloneDeep(response.result.submission))
+						if (rtn && rtn[i]) {
+							subAprv = cloneDeep(rtn[i])
+						}
 
-			setSfSubmissionApprovalList(() => {
-				let rtn = cloneDeep(response.result.approvals)
+						subAprv.approvalSequence = i + 1
 
-				let t: Array<SfSubmissionApproval> = []
+						
+						if (subAprv.approvalSequence === 1) {
+							let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+							subAprv.approverNm = type1 ? type1.userNm : ""
+						}
+						if (subAprv.approvalSequence === 2) {
+							let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+							subAprv.approverNm = type2 ? type2.userNm : ""
+						}
+						if (subAprv.approvalSequence === 3) {
+							let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = aprvSeqNm.LAST
+							subAprv.approverNm = type3 ? type3.userNm : ""
+						}
 
-				for (let i = 0; i < 3; i++) {
-
-					let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
-
-					if (rtn && rtn[i]) {
-						subAprv = cloneDeep(rtn[i])
+						t.push(subAprv)
 					}
 
-					subAprv.approvalSequence = i + 1
-
-					if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-					else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-					else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
-
-					t.push(subAprv)
+					return t
+				})
+				if (submissionListRes.result.length > 0) {
+					setSubmissionId(submissionListRes.result[0].id)
 				}
-
-				return t
-			})
+			}
 		}
-	}
+	}, [submissionListRes, submissionListErr, toast])
+	useEffect(() => {
+		if (submissionId === 0) return
+		submissionInfoRefetch()
+	}, [submissionId])
+	useEffect(() => {
+		if (submissionInfoErr || submissionInfoRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (submissionInfoRes?.result) {
 
+				if (submissionInfoRes.result.submission) setSfSubmissionRequestData(cloneDeep(submissionInfoRes.result.submission))
+
+				setSfSubmissionApprovalList(() => {
+					let rtn = cloneDeep(submissionInfoRes.result.approvals)
+
+					let t: Array<SfSubmissionApproval> = []
+
+					for (let i = 0; i < 3; i++) {
+
+						let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+
+						if (rtn && rtn[i]) {
+							subAprv = cloneDeep(rtn[i])
+						}
+						
+						subAprv.approvalSequence = i + 1
+
+						if (subAprv.approvalSequence === 1) {
+							let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+							subAprv.approverNm = type1 ? type1.userNm : ""
+						}
+						if (subAprv.approvalSequence === 2) {
+							let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+							subAprv.approverNm = type2 ? type2.userNm : ""
+						}
+						if (subAprv.approvalSequence === 3) {
+							let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = aprvSeqNm.LAST
+							subAprv.approverNm = type3 ? type3.userNm : ""
+						}
+
+						t.push(subAprv)
+					}
+
+					return t
+				})
+			}
+		}
+	}, [submissionInfoRes, submissionInfoErr, toast])
+	useEffect(() => {
+		if (isEmpty(aprvType1)) return
+
+		setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
+			let rtn = cloneDeep(prevState)
+			rtn = rtn.map((approval: SfSubmissionApproval) => {
+				if (approval.approvalSequence === 1) {
+					let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
+					approval.approverNm = type1 ? type1.userNm : ""
+				}
+				if (approval.approvalSequence === 2) {
+					let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
+					approval.approverNm = type2 ? type2.userNm : ""
+				}
+				if (approval.approvalSequence === 3) {
+					let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
+					approval.approverNm = type3 ? type3.userNm : ""
+				}
+				return approval
+			})
+			return rtn
+		})
+	}, [aprvType1, aprvType2, aprvType3])
+	
 	const insertSubmissionRequest = async () => {
 		/*
 		  승인 요청
@@ -733,7 +772,7 @@ const SelfFeatureDetail = () => {
 					<TR>
 						<TH colSpan={1} align="right">대구분</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && 
+							{featureInfo.featureTemp &&
 								featureSeGrpList.find((grpItem: FeatureSeparatesModel) => {
 									return grpItem.seId === featureSeList.find((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSe)?.seGrpId
 								})?.seNm
@@ -741,7 +780,7 @@ const SelfFeatureDetail = () => {
 						</TD>
 						<TH colSpan={1} align="right">중구분</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && 
+							{featureInfo.featureTemp &&
 								featureSeList.find((item: FeatureSeparatesModel) => item.seId === featureInfo.featureTemp.featureSe)?.seNm
 							}
 						</TD>
@@ -753,8 +792,8 @@ const SelfFeatureDetail = () => {
 						</TD>
 						<TH colSpan={1} align="right">Feature 타입</TH>
 						<TD colSpan={2} align='left'>
-							{featureInfo.featureTemp && 
-								codeList.find((featureType: CodeModel) => featureType.codeId === featureInfo.featureTemp.featureTyp)?.codeNm								
+							{featureInfo.featureTemp &&
+								codeList.find((featureType: CodeModel) => featureType.codeId === featureInfo.featureTemp.featureTyp)?.codeNm
 							}
 						</TD>
 					</TR>
@@ -821,87 +860,87 @@ const SelfFeatureDetail = () => {
 						borderRadius: '5px',
 					}}
 				>
-				{(
-					featureInfo.tbRsCustFeatRule.sqlDirectInputYn === ""
-					|| featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
-				) &&
-					<Stack
-						direction="Vertical"
-						style={{
-							margin: "0.5rem"
-						}}
-					>
-						<Typography variant="h4">1. Feature 로직</Typography>
-						{/* drag && drop 영역*/}
+					{(
+						featureInfo.tbRsCustFeatRule.sqlDirectInputYn === ""
+						|| featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
+					) &&
 						<Stack
-							direction="Horizontal"
-							gap="MD"
-							justifyContent="Between"
-							className='dropChild-100per'
-						>
-							<DndProvider backend={HTML5Backend}>
-								{/* drop 영역 */}
-								<DropList
-									featStatus={selfFeatPgPpNm.DETL}
-									targetList={targetList}
-									trgtFilterList={trgtFilterList}
-									setTargetList={setTargetList}
-									setTrgtFilterList={setTrgtFilterList}
-									attributes={mstrSgmtTableandColMetaInfo.attributes}
-									behaviors={mstrSgmtTableandColMetaInfo.behaviors}
-									setFormulaTrgtList={setFormulaTrgtList}
-								/>
-								{/* drop 영역 */}
-
-								{/* drag 영역 */}
-								{/* drag 영역 */}
-							</DndProvider>
-						</Stack>
-						{/* 대상 선택 */}
-					</Stack>
-				}
-				{featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
-					<Stack
-						direction="Vertical"
-						style={{
-							margin: "0.5rem"
-						}}
-					>
-						<Typography variant="h4">Feature 생성 Query</Typography>
-						<Stack
-							direction="Horizontal"
-							gap="MD"
-							justifyContent="Between"
+							direction="Vertical"
 							style={{
-								height: '400px',
+								margin: "0.5rem"
 							}}
 						>
-							<TextField
-								className="width-100 height-100"
-								multiline
-								id="sqlQuery"
-								readOnly
-								defaultValue={featureInfo.tbRsCustFeatRuleSql?.sqlQuery}
-							/>
-						</Stack>
-					</Stack>
-				}
+							<Typography variant="h4">1. Feature 로직</Typography>
+							{/* drag && drop 영역*/}
+							<Stack
+								direction="Horizontal"
+								gap="MD"
+								justifyContent="Between"
+								className='dropChild-100per'
+							>
+								<DndProvider backend={HTML5Backend}>
+									{/* drop 영역 */}
+									<DropList
+										featStatus={selfFeatPgPpNm.DETL}
+										targetList={targetList}
+										trgtFilterList={trgtFilterList}
+										setTargetList={setTargetList}
+										setTrgtFilterList={setTrgtFilterList}
+										attributes={mstrSgmtTableandColMetaInfo.attributes}
+										behaviors={mstrSgmtTableandColMetaInfo.behaviors}
+										setFormulaTrgtList={setFormulaTrgtList}
+									/>
+									{/* drop 영역 */}
 
-				{/* 계산식 */}
-				{((
-					featureInfo.tbRsCustFeatRule.sqlDirectInputYn === ""
-					|| featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
-				) && formulaTrgtList.length > 0) &&
-					<CalcValid
-						featStatus={selfFeatPgPpNm.DETL}
-						formulaTrgtList={formulaTrgtList}
-						custFeatRuleCalc={custFeatRuleCalc}
-						custFeatRuleCaseList={custFeatRuleCaseList}
-						setCustFeatRuleCalc={setCustFeatRuleCalc}
-						setCustFeatRuleCaseList={setCustFeatRuleCaseList}
-					/>
-				}
-				{/* 계산식 */}
+									{/* drag 영역 */}
+									{/* drag 영역 */}
+								</DndProvider>
+							</Stack>
+							{/* 대상 선택 */}
+						</Stack>
+					}
+					{featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
+						<Stack
+							direction="Vertical"
+							style={{
+								margin: "0.5rem"
+							}}
+						>
+							<Typography variant="h4">Feature 생성 Query</Typography>
+							<Stack
+								direction="Horizontal"
+								gap="MD"
+								justifyContent="Between"
+								style={{
+									height: '400px',
+								}}
+							>
+								<TextField
+									className="width-100 height-100"
+									multiline
+									id="sqlQuery"
+									readOnly
+									defaultValue={featureInfo.tbRsCustFeatRuleSql?.sqlQuery}
+								/>
+							</Stack>
+						</Stack>
+					}
+
+					{/* 계산식 */}
+					{((
+						featureInfo.tbRsCustFeatRule.sqlDirectInputYn === ""
+						|| featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
+					) && formulaTrgtList.length > 0) &&
+						<CalcValid
+							featStatus={selfFeatPgPpNm.DETL}
+							formulaTrgtList={formulaTrgtList}
+							custFeatRuleCalc={custFeatRuleCalc}
+							custFeatRuleCaseList={custFeatRuleCaseList}
+							setCustFeatRuleCalc={setCustFeatRuleCalc}
+							setCustFeatRuleCaseList={setCustFeatRuleCaseList}
+						/>
+					}
+					{/* 계산식 */}
 				</Stack>
 				<Stack justifyContent="Between" className="width-100">
 					<Typography variant="h4">결재선</Typography>

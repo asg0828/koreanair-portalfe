@@ -19,7 +19,8 @@ export enum SelfFeatureCmmApiURL {
 }
 
 export enum SelfFeatureUserApiURL {
-  FEAT_LIST = '/api/v1/customerfeatures',
+  FEAT_BASE = '/api/v1/customerfeatures',
+  FEAT_SUB_BASE = '/api/v1/submissions',
   FEAT_INST_UPDT_BASE = '/api/v1/customerfeatures-with-submission',
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
   READ_SQL = '/api/v1/customerfeatures/read-sql',

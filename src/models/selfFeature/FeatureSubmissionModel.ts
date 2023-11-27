@@ -35,6 +35,7 @@ export interface SfSubmissionApproval extends RowsInfo {
     status: string//[ requested, canceled, approved, rejected ]
     statusNm: string//[ requested, canceled, approved, rejected ]
     approver: string
+    approverNm: string
     comment: string
     requestDate: string
     approvedDate: string
@@ -63,6 +64,7 @@ export interface SubmissionGroupCode {
 
 export interface ApporvalListComponentProps {
     sfSubmissionRequestData?: SfSubmissionRequestInfo
+    aprvList: Array<SfSubmissionAppendApproval>
     sfSubmissionApprovalList: Array<SfSubmissionApproval>
     setSfSubmissionApprovalList: React.Dispatch<React.SetStateAction<Array<SfSubmissionApproval>>>
 }
