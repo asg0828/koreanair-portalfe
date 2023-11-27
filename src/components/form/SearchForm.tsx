@@ -2,9 +2,12 @@ import { CommonFormProps } from '@/models/components/Form';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack } from '@components/ui';
 
-export interface SearchCommonFormProps extends CommonFormProps {}
+export interface SearchCommonFormProps extends CommonFormProps {
+  showSearchButton?: boolean;
+  showClearButton?: boolean;
+}
 
-const SearchForm: React.FC<SearchCommonFormProps> = ({ onSearch, onClear, children }) => {
+const SearchForm: React.FC<SearchCommonFormProps> = ({ onSearch, onClear, children,  showSearchButton = true, showClearButton=true }) => {
   const handleSearch = (e: any) => {
     e.preventDefault();
     onSearch && onSearch();
@@ -20,13 +23,17 @@ const SearchForm: React.FC<SearchCommonFormProps> = ({ onSearch, onClear, childr
         <HorizontalTable>{children}</HorizontalTable>
 
         <Stack gap="SM" justifyContent="Center">
+          {showSearchButton && (
           <Button priority="Primary" appearance="Contained" size="LG" type="submit">
             <span className="searchIcon"></span>
             검색
           </Button>
+          )}
+          {showClearButton && (
           <Button size="LG" onClick={handleClear}>
             초기화
           </Button>
+          )}
         </Stack>
       </Stack>
     </form>
