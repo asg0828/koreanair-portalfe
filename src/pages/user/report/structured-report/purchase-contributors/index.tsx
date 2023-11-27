@@ -143,7 +143,7 @@ const List = () => {
 
     return (
         <>
-            <SearchForm onSearch={handleSearch} onClear={handleClear}>
+            <SearchForm onSearch={handleSearch} onClear={handleClear} showClearButton={false} showSearchButton={false}>
                 <TR>
                     <TH colSpan={1} align="left">
                         조회기준
