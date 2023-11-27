@@ -1,4 +1,5 @@
 import '@/assets/styles/global.scss';
+import ErrorAppBoundary from '@/components/error/ErrorAppBoundary';
 import Fallback from '@/components/fallback/Fallback';
 import ModalContainer from '@/components/modal/ModalContainter';
 import useAuth from '@/hooks/useAuth';
@@ -14,6 +15,7 @@ import { Toaster, useToast } from '@components/ui';
 import Watermark from '@uiw/react-watermark';
 import SessionUtil from '@utils/SessionUtil';
 import { Suspense, useEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import { RouterProvider } from 'react-router-dom';
 
 const App = () => {
@@ -72,18 +74,20 @@ const App = () => {
   }, [oIsError, isError, toast]);
 
   return (
-    <Suspense fallback={<Fallback />}>
-      {sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router ? (
-        <Watermark content={sessionInfo.email} className="width-100 height-100">
-          <RouterProvider router={router} />
-        </Watermark>
-      ) : (
-        <Fallback />
-      )}
+    <ErrorBoundary fallback={<ErrorAppBoundary />}>
+      <Suspense fallback={<Fallback />}>
+        {sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router ? (
+          <Watermark content={sessionInfo.email} className="width-100 height-100">
+            <RouterProvider router={router} />
+          </Watermark>
+        ) : (
+          <Fallback />
+        )}
 
-      <ModalContainer />
-      <Toaster />
-    </Suspense>
+        <ModalContainer />
+        <Toaster />
+      </Suspense>
+    </ErrorBoundary>
   );
 };
 export default App;

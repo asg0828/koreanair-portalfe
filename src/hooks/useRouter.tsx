@@ -1,9 +1,10 @@
 import { useAppSelector } from '@/hooks/useRedux';
-import Error from '@/pages/Error';
+import Error from '@/components/error/NotFound';
 import { selectContextPath } from '@/reducers/authSlice';
 import RootLayout from '@components/layout';
 import { useEffect, useState } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+import ErrorRouteBoundary from '@/components/error/ErrorRouteBoundary';
 
 const useRouter = (routerList: any) => {
   const contextPath = useAppSelector(selectContextPath());
@@ -15,7 +16,7 @@ const useRouter = (routerList: any) => {
         {
           path: '/',
           element: <RootLayout />,
-          errorElement: <Error />,
+          errorElement: <ErrorRouteBoundary />,
           children: routerList,
         },
       ];

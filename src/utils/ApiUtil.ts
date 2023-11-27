@@ -164,8 +164,8 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
             });
           });
         } else {
-          // sessionUtil.deleteSessionInfo();
-          // sessionApis.oauthLogin();
+          sessionUtil.deleteSessionInfo();
+          sessionApis.oauthLogin();
         }
       }
       return unknownError;
