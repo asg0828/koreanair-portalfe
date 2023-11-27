@@ -62,8 +62,8 @@ const Detail = () => {
     );
   };
 
-  const handleFileDownload = async (fileId: string) => {
-    const isSuccess = await downloadFile(fileId);
+  const handleFileDownload = async (fileId: string, fileNm?: string) => {
+    const isSuccess = await downloadFile(fileId, fileNm);
 
     if (isSuccess) {
       toast({
@@ -145,7 +145,7 @@ const Detail = () => {
               <ul className="attachFileList">
                 {dataroomModel?.fileList.map((file: FileModel) => (
                   <li>
-                    <Link onClick={() => handleFileDownload(file.fileId)}>
+                    <Link onClick={() => handleFileDownload(file.fileId, file.fileNm)}>
                       <Stack>
                         <AttachFileIcon />
                         {file.fileNm}
