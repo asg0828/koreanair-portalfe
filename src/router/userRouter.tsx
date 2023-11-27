@@ -79,7 +79,8 @@ const userRouter = [
       {
         path: 'structured-report',
         children: [
-          { index: true, element: <StructuredReport /> },
+          // { index: true, element: <StructuredReport /> },
+          { index: true, element: <PurchaseContributors /> },
           { path: 'purchase-contributors', element: <PurchaseContributors /> },
           { path: 'international-boarding', element: <InternationalBoarding /> },
         ]
