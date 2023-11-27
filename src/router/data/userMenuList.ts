@@ -41,7 +41,10 @@ const userMenuList = [
       {
         name: '정형 보고서',
         path: '/report/structured-report',
-        children: [],
+        children: [
+          {name: '구매 기여도 TOP 100', path: '/report/structured-report/purchase-contributors',children: []},
+          {name: '국제선 탑승 TOP 100', path: '/report/structured-report/international-boarding',children: []}
+        ],
       },
       {
         name: '비정형 보고서',

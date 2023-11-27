@@ -35,6 +35,8 @@ import StructuredReport from '@pages/user/report/structured-report';
 import UnStructuredReport from '@pages/user/report/unstructured-report';
 import Tableau from '@pages/user/tableau';
 import { useFaqLoader, useQnaLoader, useFeatureLoader, useDatasetLoader } from '@/hooks/useLoader';
+import PurchaseContributors from "@pages/user/report/structured-report/purchase-contributors";
+import InternationalBoarding from "@pages/user/report/structured-report/international-boarding";
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -74,8 +76,14 @@ const userRouter = [
   {
     path: 'report',
     children: [
-      { index: true, element: <StructuredReport /> },
-      { path: 'structured-report', element: <StructuredReport /> },
+      {
+        path: 'structured-report',
+        children: [
+          { index: true, element: <StructuredReport /> },
+          { path: 'purchase-contributors', element: <PurchaseContributors /> },
+          { path: 'international-boarding', element: <InternationalBoarding /> },
+        ]
+      },
       { path: 'unstructured-report', element: <UnStructuredReport /> },
     ],
   },
