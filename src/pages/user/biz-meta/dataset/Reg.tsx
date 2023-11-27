@@ -123,6 +123,10 @@ const Reg = () => {
         <TextField
           className="width-100"
           {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
+            pattern:
+              fieldName === 'mcsEnNm'
+                ? { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' }
+                : undefined,
             required: { value: true, message: `${fieldName} is required.` },
             maxLength: maxLength && { value: maxLength, message: 'max length exceeded' },
           })}
@@ -243,6 +247,7 @@ const Reg = () => {
                   <TextField
                     className="width-100"
                     {...register('mtsEnNm', {
+                      pattern: { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' },
                       required: { value: true, message: 'mtsEnNm is required.' },
                       maxLength: { value: 100, message: 'max length exceeded' },
                     })}
