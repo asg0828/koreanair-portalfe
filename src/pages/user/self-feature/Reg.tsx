@@ -85,7 +85,7 @@ const SelfFeatureReg = () => {
 	// 속성, 행동정보
 	const { data: getTCByNSRRes, isError: getTCByNSRError, refetch: getTCByNSRRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	// 등록 구분(RuleDesign / SQL)
-	const [regType, setRegType] = useState<string>(location.state.regType)
+	const [regType, setRegType] = useState<string>(location.state ? location.state.regType : selfFeatPgPpNm.RULE_REG)
 	// formData
 	const [custFeatureFormData, setCustFeatureFormData] = useState<CustFeatureFormData>(cloneDeep(initCustFeatureFormData))
 	// Customer Feature 정보
@@ -422,7 +422,20 @@ const SelfFeatureReg = () => {
 		setCustFeatureFormData(param)
 		mutate()
 	}
-
+	useEffect(() => {
+		if (isError || insertRes?.successOrNot === 'N') {
+		  toast({
+			type: ValidType.ERROR,
+			content: '등록 중 에러가 발생했습니다.',
+		  })
+		} else if (isSuccess) {
+		  toast({
+			type: ValidType.CONFIRM,
+			content: '등록되었습니다.',
+		  })
+		}
+		debugger
+	  }, [insertRes, isSuccess, isError, toast]);
 	const createCustFeatSQL = async () => {
 		/*
 		  Method      :: POST
