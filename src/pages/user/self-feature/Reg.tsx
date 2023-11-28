@@ -81,7 +81,7 @@ const SelfFeatureReg = () => {
 	const { refetch: seRefetch, data: seRes, isError: seErr } = useFeatureSeList(seGrpId)
 	const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([])
 	// 픽처타입
-	const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
+	//const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
 	// 속성, 행동정보
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	// 등록 구분(RuleDesign / SQL)
@@ -467,12 +467,14 @@ const SelfFeatureReg = () => {
 		})
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
 			let rtn = cloneDeep(state)
-			Object.keys(rtn).map((key) => {
-				if (key === id) {
-					rtn[key] = value
-				}
-				return key
-			})
+			if (rtn) {
+				Object.keys(rtn).map((key) => {
+					if (key === id) {
+						rtn[key] = value
+					}
+					return key
+				})
+			}
 			return rtn
 		})
 		setFeatureTempInfo((state: FeatureTemp) => {
@@ -506,12 +508,14 @@ const SelfFeatureReg = () => {
 		})
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
 			let rtn = cloneDeep(state)
-			Object.keys(rtn).map((key) => {
-				if (key === keyNm) {
-					rtn[key] = v
-				}
-				return key
-			})
+			if (rtn) {
+				Object.keys(rtn).map((key) => {
+					if (key === keyNm) {
+						rtn[key] = v
+					}
+					return key
+				})
+			}
 			return rtn
 		})
 		setFeatureTempInfo((state: FeatureTemp) => {
@@ -621,7 +625,7 @@ const SelfFeatureReg = () => {
 							</Stack>
 						</TD>
 					</TR>
-					<TR>
+					{/* <TR>
 						<TH colSpan={1} align="right" required>Feature 타입</TH>
 						<TD colSpan={2}>
 							<Select
@@ -641,7 +645,7 @@ const SelfFeatureReg = () => {
 							</Select>
 						</TD>
 						<TD colSpan={3}></TD>
-					</TR>
+					</TR> */}
 					<TR>
 						<TH colSpan={1} align="right" required>Feature 정의</TH>
 						<TD colSpan={5}>

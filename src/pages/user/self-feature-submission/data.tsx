@@ -1,18 +1,18 @@
 import { FeatureType } from "@/models/selfFeature/FeatureCommon"
-import { SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo, SubmissionGroupCode } from "@/models/selfFeature/FeatureSubmissionModel"
+import { AprvSubCommentProps, FeatureSubmissionSearchProps, SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo, SubmissionGroupCode } from "@/models/selfFeature/FeatureSubmissionModel"
 
 // Feature 승인 요청 리스트 table header
 export const sfSubmissionListColumns = [
     { headerName: '유형', field: 'type', colSpan: 4 },
     { headerName: '제목', field: 'title', colSpan: 8 },
-    { headerName: '상태', field: 'status', colSpan: 4 },
+    { headerName: '상태', field: 'statusNm', colSpan: 4 },
     { headerName: '요청자', field: 'requesterName', colSpan: 3 },
     { headerName: '요청 일시', field: 'requestDate', colSpan: 3 },
 ]
 // Feature 결재선 리스트 table header
 export const sfSubmissionApprovalListColumns = [
-    { headerName: '단계(담당)', field: 'approvalSequenceNm', colSpan: 2 },
-    { headerName: '결재자', field: 'approverNm', colSpan: 4 },
+    { headerName: '단계(담당)', field: 'approvalSequenceNm', colSpan: 4 },
+    { headerName: '결재자', field: 'approverNm', colSpan: 2 },
     { headerName: '상태', field: 'statusNm', colSpan: 2 },
     { headerName: '일시', field: 'approvedDate', colSpan: 4 },
     { headerName: '의견', field: 'comment', colSpan: 8 },
@@ -52,6 +52,23 @@ export const submissionGroupCode: SubmissionGroupCode = {
     sf_aprv_egroup3: "Self-Feature 3차승인(최종생성승인)",
 }
 
+export const initFeatureSubmissionSearchProps: FeatureSubmissionSearchProps = {
+    type: FeatureType.CUST,
+    status: '',
+    referenceNo: '',
+    submissionNo: '',
+    requester: '',
+    title: '',
+    titleLike: '',
+    requestDateFrom: '',
+    requestDateTo: '',
+    approvalCompletionDateFrom: '',
+    approvalCompletionDateTo: '',
+}
+
+export const initAprvSubCommentProps: AprvSubCommentProps = {
+    comment: '승인합니다.'
+}
 
 export const initSfSubmissionRequestInfo: SfSubmissionRequestInfo = {
     id: '',

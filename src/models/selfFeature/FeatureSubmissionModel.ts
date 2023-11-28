@@ -68,3 +68,29 @@ export interface ApporvalListComponentProps {
     sfSubmissionApprovalList: Array<SfSubmissionApproval>
     setSfSubmissionApprovalList: React.Dispatch<React.SetStateAction<Array<SfSubmissionApproval>>>
 }
+// 결재 목록 검색 조건 props
+export interface FeatureSubmissionSearchProps {
+    [key: string]: string
+    type: string
+    status: string
+    referenceNo: string
+    submissionNo: string
+    requester: string
+    title: string
+    titleLike: string
+    requestDateFrom: string
+    requestDateTo: string
+    approvalCompletionDateFrom: string
+    approvalCompletionDateTo: string
+}
+// 승인 bodyParam Props
+export interface AprvSubCommentProps {
+    [key: string]: string
+    comment: string
+}
+// 반려 팝업 Props
+export interface SubRejectPopProps {
+    isOpen?: boolean
+    onClose: (isOpen: boolean) => void
+    sfSubmissionApprovalList: Array<SfSubmissionApproval>
+}

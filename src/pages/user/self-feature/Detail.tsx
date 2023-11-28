@@ -82,13 +82,14 @@ const SelfFeatureDetail = () => {
 	const { toast } = useToast()
 	const location = useLocation()
 	const navigate = useNavigate()
+	const sessionInfo = useAppSelector(selectSessionInfo())
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { } = useCommCodes(CommonCode.FUNCTION)
 	const { } = useCommCodes(CommonCode.OPERATOR)
 	const { } = useCommCodes(CommonCode.FORMAT)
 	const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
-	const sessionInfo = useAppSelector(selectSessionInfo())
+	
 	// 상세 조회 API
 	const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr } = useCustFeatRuleInfos(location.state.id)
 	const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
@@ -157,7 +158,7 @@ const SelfFeatureDetail = () => {
 				setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
 			}
 		}
-	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, toast])
+	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, mstrSgmtTbandColRefetch, toast])
 	// 대구분 API response callback
 	useEffect(() => {
 		if (seGroupErr || seGroupRes?.successOrNot === 'N') {
@@ -246,7 +247,15 @@ const SelfFeatureDetail = () => {
 	// 상세 정보 조회 후 값 setting
 	useEffect(() => {
 		setFeatureTempInfo(cloneDeep(featureInfo.featureTemp))
-		// 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
+		setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
+		setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
+		setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
+		setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
+		setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
+	}, [featureInfo])
+	// 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
+	useEffect(() => {
+		if (isEmpty(mstrSgmtTableandColMetaInfo)) return
 		setTargetList(() => {
 			let tempTargetList = cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList).map((target: TbRsCustFeatRuleTrgt) => {
 				let metaTblId = target.tableName
@@ -313,7 +322,7 @@ const SelfFeatureDetail = () => {
 				if (clmnBehv.length > 0) {
 					let clmnInfo: Array<TbCoMetaTblClmnInfo> = []
 					clmnInfo = clmnBehv[0].tbCoMetaTblClmnInfoList.filter((clnmInfo: TbCoMetaTblClmnInfo) => colNm === clnmInfo.metaTblClmnPhysNm)
-					trgtFilter.columnLogiName = clmnInfo[0].metaTblClmnLogiNm
+					trgtFilter.columnLogiName = clmnInfo[0] ? clmnInfo[0].metaTblClmnLogiNm : colNm
 				} else {
 					trgtFilter.columnLogiName = colNm
 				}
@@ -321,10 +330,7 @@ const SelfFeatureDetail = () => {
 			})
 			return tempTargetFilterList
 		})
-		setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
-		setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
-		setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
-	}, [featureInfo])
+	}, [mstrSgmtTableandColMetaInfo])
 	// 계산식 validation을 위한 대상 list 추출
 	useEffect(() => {
 		let fList = []
@@ -720,71 +726,70 @@ const SelfFeatureDetail = () => {
 			/>
 
 			{/* 정보 영역 */}
-			<>
-				<Typography variant="h4">승인 정보</Typography>
-				<Stack direction="Vertical" className="width-100" gap="MD">
-					<HorizontalTable className="width-100">
-						<TR>
-							<TH colSpan={1} align="right">
-								승인 번호
-							</TH>
-							<TD colSpan={2} align="left">
-								{sfSubmissionRequestData.submissionNo}
-							</TD>
-							<TH colSpan={1} align="right">
-								요청자
-							</TH>
-							<TD colSpan={2} align="left">
-								{sfSubmissionRequestData.requesterName}
-							</TD>
-						</TR>
-						<TR>
-							<TH colSpan={1} align="right">
-								승인 유형
-							</TH>
-							<TD colSpan={2} align="left">
-								{sfSubmissionRequestData.type}
-							</TD>
-							<TH colSpan={1} align="right">
-								승인 상태
-							</TH>
-							<TD colSpan={2} align="left">
-								{(
-									!featureInfo.tbRsCustFeatRule.submissionStatus
-									|| featureInfo.tbRsCustFeatRule.submissionStatus === ""
-									|| featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.SAVE
-								) &&
-									subFeatStatusNm.SAVE
-								}
-								{(
-									featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.REQ
-									|| featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.IN_APRV
-								) &&
-									subFeatStatusNm.IN_APRV
-								}
-								{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.APRV &&
-									subFeatStatusNm.APRV
-								}
-								{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.REJT &&
-									subFeatStatusNm.REJT
-								}
-								{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.CNCL &&
-									subFeatStatusNm.CNCL
-								}
-								{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.DLET &&
-									subFeatStatusNm.DLET
-								}
-							</TD>
-						</TR>
-						<TR>
-							<TH colSpan={1} align="right">
-								요청 일시
-							</TH>
-							<TD colSpan={5} align="left">
-								{sfSubmissionRequestData.requestDate}
-							</TD>
-						</TR>
-						{/* <TR>
+			<Typography variant="h4">승인 정보</Typography>
+			<Stack direction="Vertical" className="width-100" gap="MD">
+				<HorizontalTable className="width-100">
+					<TR>
+						<TH colSpan={1} align="right">
+							승인 번호
+						</TH>
+						<TD colSpan={2} align="left">
+							{sfSubmissionRequestData.submissionNo}
+						</TD>
+						<TH colSpan={1} align="right">
+							요청자
+						</TH>
+						<TD colSpan={2} align="left">
+							{sfSubmissionRequestData.requesterName}
+						</TD>
+					</TR>
+					<TR>
+						<TH colSpan={1} align="right">
+							승인 유형
+						</TH>
+						<TD colSpan={2} align="left">
+							{sfSubmissionRequestData.type}
+						</TD>
+						<TH colSpan={1} align="right">
+							승인 상태
+						</TH>
+						<TD colSpan={2} align="left">
+							{(
+								!featureInfo.tbRsCustFeatRule.submissionStatus
+								|| featureInfo.tbRsCustFeatRule.submissionStatus === ""
+								|| featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.SAVE
+							) &&
+								subFeatStatusNm.SAVE
+							}
+							{(
+								featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.REQ
+								|| featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.IN_APRV
+							) &&
+								subFeatStatusNm.IN_APRV
+							}
+							{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.APRV &&
+								subFeatStatusNm.APRV
+							}
+							{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.REJT &&
+								subFeatStatusNm.REJT
+							}
+							{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.CNCL &&
+								subFeatStatusNm.CNCL
+							}
+							{featureInfo.tbRsCustFeatRule.submissionStatus === subFeatStatus.DLET &&
+								subFeatStatusNm.DLET
+							}
+						</TD>
+					</TR>
+					<TR>
+						<TH colSpan={1} align="right">
+							요청 일시
+						</TH>
+						<TD colSpan={5} align="left">
+							{sfSubmissionRequestData.requestDate}
+						</TD>
+					</TR>
+					{/* <TR>
                   <TH colSpan={1} align="right">
                   승인 제목
                   </TH>
@@ -800,10 +805,8 @@ const SelfFeatureDetail = () => {
                       {sfSubmissionRequestData.content}
                   </TD>
               </TR> */}
-					</HorizontalTable>
-				</Stack>
-			</>
-			{/* } */}
+				</HorizontalTable>
+			</Stack>
 
 			<Stack direction="Vertical" gap="MD">
 				{/* 기본 정보 */}

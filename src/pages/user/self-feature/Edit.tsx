@@ -211,6 +211,11 @@ const SelfFeatureEdit = () => {
 	// 대구분 선택시 중구분 select option setting
 	useEffect(() => {
 		if (seGrpId) {
+			setFeatureTempInfo((prevState: FeatureTemp) => {
+				let rtn = cloneDeep(prevState)
+				rtn.featureSeGrp = seGrpId
+				return rtn
+			})
 			seRefetch()
 		}
 	}, [seGrpId, seRefetch])
@@ -407,7 +412,10 @@ const SelfFeatureEdit = () => {
 				type: ValidType.CONFIRM,
 				content: '수정되었습니다.',
 			})
-			navigate(-1)
+			//navigate(-1)
+			// 상세로 redirect
+			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = subFeatStatus.SAVE
+			navigate(`../${selfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
 		}
 	}, [updtRuleDesignRes, updtRuleDesignSucc, updtRuleDesignErr, toast])
 
@@ -460,12 +468,14 @@ const SelfFeatureEdit = () => {
 		})
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
 			let rtn = cloneDeep(state)
-			Object.keys(rtn).map((key) => {
-				if (key === id) {
-					rtn[key] = value
-				}
-				return key
-			})
+			if (rtn) {
+				Object.keys(rtn).map((key) => {
+					if (key === id) {
+						rtn[key] = value
+					}
+					return key
+				})
+			}
 			return rtn
 		})
 		setFeatureTempInfo((state: FeatureTemp) => {
