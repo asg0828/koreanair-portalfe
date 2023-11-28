@@ -1,56 +1,13 @@
-import { Tree, NodeRendererProps, NodeApi } from 'react-arborist';
-import { Stack, Checkbox, Typography } from '@components/ui';
-import { CheckedState } from '@/models/common/Design';
 import {
   DescriptionOutlinedIcon,
   FolderOpenTwoToneIcon,
   FolderRoundedIcon,
-  KeyboardArrowRightOutlinedIcon,
   KeyboardArrowDownOutlinedIcon,
+  KeyboardArrowRightOutlinedIcon,
 } from '@/assets/icons';
-
-const data = [
-  {
-    id: '1',
-    name: '대한항공',
-    isChecked: false,
-    children: [
-      { id: 'c1', name: '디자인팀' },
-      { id: 'c2', name: '인프라팀' },
-      { id: 'c3', name: '개발팀' },
-      {
-        id: 'c4',
-        name: 'LG CNS',
-        isChecked: false,
-        children: [
-          { id: 'd1', name: 'A-1팀' },
-          { id: 'd2', name: 'A-2팀' },
-          { id: 'd3', name: 'A-3팀' },
-        ],
-      },
-      {
-        id: 'c5',
-        name: '케이비시스',
-        isChecked: false,
-        children: [
-          { id: 'e1', name: 'B-1팀' },
-          { id: 'e2', name: 'B-2팀' },
-          { id: 'e3', name: 'B-3팀' },
-        ],
-      },
-      {
-        id: 'c6',
-        name: '기타',
-        isChecked: false,
-        children: [
-          { id: 'f1', name: 'C-1팀' },
-          { id: 'f2', name: 'C-2팀' },
-          { id: 'f3', name: 'C-3팀' },
-        ],
-      },
-    ],
-  },
-];
+import { CheckedState } from '@/models/common/Design';
+import { Checkbox, Stack, Typography } from '@components/ui';
+import { NodeApi, NodeRendererProps, Tree } from 'react-arborist';
 
 const folderSx = {
   width: 30,
@@ -61,21 +18,38 @@ const fileSx = {
   color: '#777777',
 };
 
-export interface Props {
-  isChecked?: boolean
+export interface DeptInfo {
+  id: string;
+  name: string;
+  isChecked: boolean;
+  children: Array<DeptInfo>;
 }
 
-const DeptTree = ({
-  isChecked,
-}: Props) => {
+export interface Props {
+  isChecked?: boolean;
+  data?: Array<DeptInfo>;
+  onClickFile?: (deptItem: any) => void;
+}
+
+const DeptTree = ({ isChecked, data = [], onClickFile }: Props) => {
+  const handleClickFile = (deptItem: any) => {
+    onClickFile && onClickFile(deptItem);
+  };
+
   const NodeRenderer = ({ style, node, tree, dragHandle, preview }: NodeRendererProps<any>) => {
     const content = [];
+
+    if (node.children?.length === 0) {
+      node.children = null;
+    }
 
     if (node.isLeaf) {
       content.push(
         <>
-          {isChecked && <Checkbox checked={node.data.isChecked} onCheckedChange={(checked) => handleChecked(node, checked)} />}
-          <Stack className="width-100 hover">
+          {isChecked && (
+            <Checkbox checked={node.data.isChecked} onCheckedChange={(checked) => handleChecked(node, checked)} />
+          )}
+          <Stack className="width-100 hover" onClick={() => handleClickFile(node.data)}>
             <DescriptionOutlinedIcon sx={fileSx} />
             <Typography variant="body1">{node.data.name}</Typography>
           </Stack>
@@ -86,7 +60,9 @@ const DeptTree = ({
         content.push(
           <>
             <KeyboardArrowDownOutlinedIcon onClick={() => node.toggle()} />
-            {isChecked && <Checkbox checked={node.data.isChecked} onCheckedChange={(checked) => handleChecked(node, checked)} />}
+            {isChecked && (
+              <Checkbox checked={node.data.isChecked} onCheckedChange={(checked) => handleChecked(node, checked)} />
+            )}
             <Stack onClick={() => node.toggle()} className="width-100 hover">
               <FolderOpenTwoToneIcon sx={folderSx} />
               <Typography variant="body1">{node.data.name}</Typography>
@@ -97,7 +73,9 @@ const DeptTree = ({
         content.push(
           <>
             <KeyboardArrowRightOutlinedIcon onClick={() => node.toggle()} color="disabled" />
-            {isChecked && <Checkbox checked={node.data.isChecked} onCheckedChange={(checked) => handleChecked(node, checked)} />}
+            {isChecked && (
+              <Checkbox checked={node.data.isChecked} onCheckedChange={(checked) => handleChecked(node, checked)} />
+            )}
             <Stack onClick={() => node.toggle()} className="width-100 hover">
               <FolderRoundedIcon sx={folderSx} />
               <Typography variant="body1">{node.data.name}</Typography>
@@ -135,7 +113,7 @@ const DeptTree = ({
 
   return (
     <section className="padding-10 width-100">
-      <Tree initialData={data} width="100%">
+      <Tree data={data} width="100%">
         {NodeRenderer}
       </Tree>
     </section>

@@ -1,6 +1,8 @@
 export enum PortalApiURL {
   LOG_IN = '/session/v1/login',
   LOG_OUT = '/session/v1/logout',
+  USER_MGMT = '/user-mgmt/v1/users',
+  DEPT_MGMT = '/dept-mgmt/v1/depts',
   FILE = '/file',
   CODE = '/system/v1/code-groups',
   NOTICE = '/board/v1/notice',

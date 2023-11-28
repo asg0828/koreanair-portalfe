@@ -6,7 +6,9 @@ export interface FeatureParams {
   searchFeature: string;
   searchConditions: Array<string>;
   enrUserId: string;
+  enrUserNm?: string;
   enrDeptCode: string;
+  enrDeptNm?: string;
 }
 
 export interface FeatureModel extends CreatedFeatureModel, CommonModel {

@@ -1,4 +1,6 @@
+import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalInfo } from '@/models/components/Modal';
+import { closeModal } from '@/reducers/modalSlice';
 import { Button, Modal, Stack, TextField } from '@components/ui';
 import { useEffect, useState } from 'react';
 
@@ -12,10 +14,11 @@ const CalculationLogicModal = ({
   onCancle,
   onClose,
 }: ModalInfo) => {
+  const dispatch = useAppDispatch();
   const [value, setValue] = useState<any>('');
 
   const handleClose = () => {
-    onClose && onClose(false);
+    dispatch(closeModal());
   };
 
   const handleConfirm = () => {

@@ -1,4 +1,4 @@
-import { AddIcon, FavoriteBorderIcon, FavoriteIcon } from '@/assets/icons';
+import { AddIcon, FavoriteBorderIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useCreateUserFeature, useDeleteUserFeature } from '@/hooks/mutations/useUserFeatureMutations';
@@ -7,8 +7,10 @@ import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ModalType, ValidType, View } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
+import { DeptModel } from '@/models/model/DeptModel';
 import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
+import { UserModel } from '@/models/model/UserModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
 import { selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -22,7 +24,9 @@ const initParams: FeatureParams = {
   searchFeature: '',
   searchConditions: [],
   enrUserId: '',
+  enrUserNm: '',
   enrDeptCode: '',
+  enrDeptNm: '',
 };
 
 const List = () => {
@@ -118,6 +122,8 @@ const List = () => {
     setParams((prevState) => ({
       ...prevState,
       [name]: value,
+      enrUserId: '',
+      enrDeptCode: '',
     }));
   };
 
@@ -142,6 +148,13 @@ const List = () => {
     dispatch(
       openModal({
         type: ModalType.USER_SELECT,
+        onConfirm: (users: Array<UserModel>) => {
+          setParams((prevState) => ({
+            ...prevState,
+            enrUserId: users.length === 0 ? '' : users[users.length - 1].userId,
+            enrUserNm: users.length === 0 ? '' : users[users.length - 1].userNm,
+          }));
+        },
       })
     );
   };
@@ -150,6 +163,13 @@ const List = () => {
     dispatch(
       openModal({
         type: ModalType.DEPT_SELECT,
+        onConfirm: (depts: Array<DeptModel>) => {
+          setParams((prevState) => ({
+            ...prevState,
+            enrDeptCode: depts.length === 0 ? '' : depts[depts.length - 1].deptCode,
+            enrDeptNm: depts.length === 0 ? '' : depts[depts.length - 1].deptNm,
+          }));
+        },
       })
     );
   };
@@ -300,8 +320,9 @@ const List = () => {
               <TextField
                 className="width-100"
                 size="MD"
-                onChange={(e) => handleChangeParams('enrUserId', e.target.value)}
-                value={params.enrUserId}
+                onChange={(e) => handleChangeParams('enrUserNm', e.target.value)}
+                value={params.enrUserNm}
+                disabled
               />
               <Button appearance="Contained" priority="Normal" shape="Square" size="MD" onClick={handleUserSelectModal}>
                 <span className="searchIcon"></span>
@@ -316,8 +337,9 @@ const List = () => {
               <TextField
                 className="width-100"
                 size="MD"
-                onChange={(e) => handleChangeParams('enrDeptCode', e.target.value)}
-                value={params.enrDeptCode}
+                onChange={(e) => handleChangeParams('enrDeptNm', e.target.value)}
+                value={params.enrDeptNm}
+                disabled
               />
               <Button appearance="Contained" priority="Normal" shape="Square" size="MD" onClick={handleDeptSelectModal}>
                 <span className="searchIcon"></span>
