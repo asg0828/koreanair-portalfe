@@ -101,7 +101,7 @@ export const ModalTitCont = {
     DETAIL: { title: "", context: ""},
     REG: { title: "Feature 저장", context: "Feature 정보를 저장 하시겠습니까?"},
     EDIT: { title: "Feature 수정", context: "Feature 정보를 수정 하시겠습니까?"},
-    DELETE: { title: "Feature 삭제", context: "선택한 Feature 정보를 삭제 하시겠습니까?"},
+    DELETE: { title: "Feature 삭제", context: "정말로 Feature 정보를 삭제 하시겠습니까?"},
     BETCH: { title: "Feature 수동 실행", context: "Feature 수동 실행을 진행 하시겠습니까?" },
     DEL_VALID: { title: "Feature 삭제", context: "삭제할 항목이 없습니다." },
     REG_VALID: { title: "Feature 저장", context: "계산식을 확인해주세요."},
@@ -141,6 +141,18 @@ export const subFeatStatus = {
     IN_APRV: 'inApproval', // 결재진행중
     APRV: 'approved', // 승인완료
     REJT: 'rejected', // 반려
+    DLET: 'deleted', // 삭제
+    CNCL: 'canceled', // 요청취소
+}
+// feat 상태명
+export const subFeatStatusNm = {
+    SAVE: '등록', // 등록, 품의 저장
+    REQ: '승인요청', // 승인요청
+    IN_APRV: '결재진행중', // 결재진행중
+    APRV: '승인완료', // 승인완료
+    REJT: '반려', // 반려
+    DLET: '삭제', // 삭제
+    CNCL: '요청취소', // 요청취소
 }
 // 컬럼 데이터타입
 export const ColDataType = {

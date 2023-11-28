@@ -23,7 +23,7 @@ export enum SelfFeatureCmmApiURL {
 export enum SelfFeatureUserApiURL {
   FEAT_BASE = '/api/v1/customerfeatures',
   FEAT_SUB_BASE = '/api/v1/submissions',
-  FEAT_INST_UPDT_BASE = '/api/v1/customerfeatures-with-submission',
+  FEAT_WITH_SUB_BASE = '/api/v1/customerfeatures-with-submission',
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
   READ_SQL = '/api/v1/customerfeatures/read-sql',
   RUN_SCDL = '/api/v1/airflow/runSchedule',
@@ -32,6 +32,8 @@ export enum SelfFeatureUserApiURL {
   PARENT_CHILD = '/api/v1/customerfeatures/parent-child',
   APRV_USER_PRE = '/api/v1/submission-types',
   APRV_USER_POST = '/approver-candidate',
+  SUB_REQ_BASE_PRE = '/api/v1/users',
+  SUB_REQ_BASE_POST = '/submissions',
 }
 
 export enum SelfFeatureAdmApiURL {

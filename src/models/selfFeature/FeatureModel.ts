@@ -6,9 +6,12 @@ export interface FeatListSrchProps {
     [key: string]: string
     mstrSgmtRuleId: string
     custFeatRuleName: string
-    category: string
-    useYn: string
+    custFeatRuleKoName: string
+    custFeatRuleENName: string
+    // category: string
+    // useYn: string
     submissionStatus: string
+    teamCd: string
 }
 
 export interface TargetDropListProps {
