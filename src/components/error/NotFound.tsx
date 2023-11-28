@@ -12,7 +12,7 @@ const NotFound = () => {
   };
 
   const handleCancel = () => {
-    navigate('..');
+    navigate(-1);
   };
 
   return (

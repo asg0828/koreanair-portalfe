@@ -1,7 +1,7 @@
-import { AddIcon, FavoriteBorderIcon } from '@/assets/icons';
+import { AddIcon, FavoriteBorderIcon, FavoriteIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
-import { useCreateUserFeature, useDeleteUserFeature } from '@/hooks/mutations/useUserFeatureMutations';
+import { useCreateInterestFeature, useDeleteInterestFeature } from '@/hooks/mutations/useUserFeatureMutations';
 import { useFeatureList, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
@@ -11,7 +11,6 @@ import { DeptModel } from '@/models/model/DeptModel';
 import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { UserModel } from '@/models/model/UserModel';
-import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
 import { selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -34,7 +33,8 @@ const List = () => {
   const { toast } = useToast();
   const dispatch = useAppDispatch();
   const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
-  const [featureId, setFeatureId] = useState<string>('');
+  const [createdFeatureId, setCreatedFeatureId] = useState<string>('');
+  const [deletedFeatureId, setDeletedFeatureId] = useState<string>('');
   const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
   const [params, setParams] = useState<FeatureParams>(initParams);
@@ -42,24 +42,30 @@ const List = () => {
   const columns: Array<ColumnsInfo> = [
     {
       headerName: '',
-      field: '',
+      field: 'isInterestFeature',
       colSpan: 0.5,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => (
-        <Stack
-          className="width-100 height-100"
-          justifyContent="Center"
-          onClick={(e) => {
-            e.stopPropagation();
-            toast({
-              type: ValidType.INFO,
-              content: '준비중인 기능입니다.',
-            });
-          }}
-        >
-          {/* <FavoriteIcon color="error" /> */}
-          <FavoriteBorderIcon color="action" />
-        </Stack>
-      ),
+      render: (rowIndex: number) => {
+        const isInterestFeature = rows[rowIndex]?.isInterestFeature;
+        const featureId = rows[rowIndex]?.featureId;
+
+        return (
+          <Stack
+            className="width-100 height-100"
+            justifyContent="Center"
+            onClick={(e) => {
+              e.stopPropagation();
+
+              if (isInterestFeature) {
+                handleRemoveInterestFeature(featureId);
+              } else {
+                handleAddInterestFeature(featureId);
+              }
+            }}
+          >
+            {isInterestFeature ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon color="action" />}
+          </Stack>
+        );
+      },
     },
     { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
     { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
@@ -77,13 +83,13 @@ const List = () => {
     isSuccess: cIsSuccess,
     isError: cIsError,
     mutate: cMutate,
-  } = useCreateUserFeature(userId, featureId);
+  } = useCreateInterestFeature(userId, createdFeatureId);
   const {
     data: dResponse,
     isSuccess: dIsSuccess,
     isError: dIsError,
     mutate: dMutate,
-  } = useDeleteUserFeature(userId, featureId);
+  } = useDeleteInterestFeature(userId, deletedFeatureId);
 
   const goToReg = () => {
     navigate(View.REG);
@@ -97,12 +103,12 @@ const List = () => {
     });
   };
 
-  const handleAddUserFeature = () => {
-    cMutate();
+  const handleAddInterestFeature = (featureId: string) => {
+    setCreatedFeatureId(featureId);
   };
 
-  const handleRemoveUserFeature = () => {
-    dMutate();
+  const handleRemoveInterestFeature = (featureId: string) => {
+    setDeletedFeatureId(featureId);
   };
 
   const handleSearch = useCallback(() => {
@@ -175,6 +181,14 @@ const List = () => {
   };
 
   useEffect(() => {
+    createdFeatureId && cMutate();
+  }, [createdFeatureId, cMutate]);
+
+  useEffect(() => {
+    deletedFeatureId && dMutate();
+  }, [deletedFeatureId, dMutate]);
+
+  useEffect(() => {
     if (params.featureSeGrp) {
       sRefetch();
     }
@@ -215,29 +229,31 @@ const List = () => {
     if (cIsError || cResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '추가 중 에러가 발생했습니다.',
+        content: '관심 Feature 추가 중 에러가 발생했습니다.',
       });
     } else if (cIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '추가되었습니다.',
+        content: '관심 Feature에 추가되었습니다.',
       });
+      refetch();
     }
-  }, [cResponse, cIsSuccess, cIsError, toast]);
+  }, [cResponse, cIsSuccess, cIsError, toast, refetch]);
 
   useEffect(() => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: '관심 Feature 삭제 중 에러가 발생했습니다.',
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: '관심 Feature에서 삭제되었습니다.',
       });
+      refetch();
     }
-  }, [dResponse, dIsSuccess, dIsError, toast]);
+  }, [dResponse, dIsSuccess, dIsError, toast, refetch]);
 
   return (
     <>

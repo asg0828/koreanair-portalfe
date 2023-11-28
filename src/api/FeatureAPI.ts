@@ -77,3 +77,58 @@ export const getFeatureSeList = (seGrpId: string) => {
     method: Method.GET,
   });
 };
+
+export const getInterestFeatureList = (userId: string, page: PageModel) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features`,
+    method: Method.GET,
+    params: {
+      queryParams: {
+        ...page,
+      },
+    },
+  });
+};
+
+export const createInterestFeature = (userId: string, featureId: string) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features`,
+    method: Method.POST,
+    params: {
+      bodyParams: {
+        featureId,
+      },
+    },
+  });
+};
+
+export const deleteInterestFeature = (userId: string, featureId: string) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features/${featureId}`,
+    method: Method.DELETE,
+  });
+};
+
+export const deleteMultipleInterestFeature = (userId: string, featureIds: Array<string>) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features`,
+    method: Method.DELETE,
+    params: {
+      queryParams: {
+        featureIds: featureIds.join(),
+      },
+    },
+  });
+};
+
+export const getPopularFeatureList = () => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.POPULAR_FEATURE}`,
+    method: Method.GET,
+  });
+};

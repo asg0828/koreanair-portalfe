@@ -1,14 +1,16 @@
-import { createUserFeature, deleteMultipleUserFeature, deleteUserFeature } from '@/api/UserFeatureAPI';
+import { createInterestFeature, deleteInterestFeature, deleteMultipleInterestFeature } from '@/api/FeatureAPI';
 import { useMutation } from '@tanstack/react-query';
 
-export const useCreateUserFeature = (userId: string, featureId: string) => {
-  return useMutation(['/user-feature/create', userId, featureId], () => createUserFeature(userId, featureId));
+export const useCreateInterestFeature = (userId: string, featureId: string) => {
+  return useMutation(['/user-feature/create', userId, featureId], () => createInterestFeature(userId, featureId));
 };
 
-export const useDeleteUserFeature = (userId: string, featureId: string) => {
-  return useMutation(['/user-feature/delete', userId, featureId], () => deleteUserFeature(userId, featureId));
+export const useDeleteInterestFeature = (userId: string, featureId: string) => {
+  return useMutation(['/user-feature/delete', userId, featureId], () => deleteInterestFeature(userId, featureId));
 };
 
-export const useDeleteMultipleUserFeature = (userId: string, featureIds: Array<string>) => {
-  return useMutation(['/user-feature/delete', userId, featureIds], () => deleteMultipleUserFeature(userId, featureIds));
+export const useDeleteMultipleInterestFeature = (userId: string, featureIds: Array<string>) => {
+  return useMutation(['/user-feature/delete', userId, featureIds], () =>
+    deleteMultipleInterestFeature(userId, featureIds)
+  );
 };
