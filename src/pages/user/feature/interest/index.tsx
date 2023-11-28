@@ -1,9 +1,9 @@
 import DataGrid from '@/components/grid/DataGrid';
-import { useDeleteMultipleUserFeature } from '@/hooks/mutations/useUserFeatureMutations';
-import { useUserFeatureList } from '@/hooks/queries/useUserFeatureQueries';
+import { useDeleteMultipleInterestFeature } from '@/hooks/mutations/useUserFeatureMutations';
+import { useInterestFeatureList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ModalType, ValidType, View } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectSessionInfo } from '@/reducers/authSlice';
@@ -30,23 +30,15 @@ const List = () => {
   const [featureIds, setFeatureIds] = useState<Array<string>>([]);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
-  const { data: response, isError, refetch } = useUserFeatureList(userId, page);
+  const { data: response, isError, refetch } = useInterestFeatureList(userId, page);
   const {
     data: dmResponse,
     isSuccess: dmIsSuccess,
     isError: dmIsError,
     mutate: dmMutate,
-  } = useDeleteMultipleUserFeature(userId, featureIds);
+  } = useDeleteMultipleInterestFeature(userId, featureIds);
 
-  const goToDetail = (row: FeatureModel, index: number) => {
-    navigate(View.DETAIL, {
-      state: {
-        featureId: row.featureId,
-      },
-    });
-  };
-
-  const handleRemoveUserFeature = () => {
+  const handleRemoveInterestFeature = () => {
     if (featureIds.length === 0) {
       toast({
         type: ValidType.INFO,
@@ -57,7 +49,7 @@ const List = () => {
         openModal({
           type: ModalType.CONFIRM,
           title: '삭제',
-          content: '삭제하시겠습니까?',
+          content: '관심 Feature를 삭제하시겠습니까?',
           onConfirm: dmMutate,
         })
       );
@@ -94,12 +86,12 @@ const List = () => {
     if (dmIsError || dmResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: '관심 Feature 삭제 중 에러가 발생했습니다.',
       });
     } else if (dmIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: '관심 Feature에서 삭제되었습니다.',
       });
       handleSearch();
     }
@@ -113,13 +105,12 @@ const List = () => {
         enableSort={true}
         clickable={true}
         page={page}
-        onClick={goToDetail}
         onChange={handlePage}
         rowSelection={(list: Array<number>) => {
           setFeatureIds(list.map((index) => rows[index].featureId));
         }}
         buttonChildren={
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={handleRemoveUserFeature}>
+          <Button priority="Primary" appearance="Contained" size="LG" onClick={handleRemoveInterestFeature}>
             관심 해제
           </Button>
         }

@@ -12,7 +12,8 @@ export enum PortalApiURL {
   ONEID = '/admin/v1/oneId',
   FEATURE = '/biz-meta/v1/features',
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',
-  USER_FEATURE = '/user-mgmt/v1/users',
+  INTEREST_FEATURE = '/user-mgmt/v1/users',
+  POPULAR_FEATURE = '/user-mgmt/v1/user-popular-features',
   DATASET = '/biz-meta/v1/table-specs',
 }
 

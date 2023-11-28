@@ -6,8 +6,8 @@ export interface FeatureParams {
   searchFeature: string;
   searchConditions: Array<string>;
   enrUserId: string;
-  enrUserNm?: string;
   enrDeptCode: string;
+  enrUserNm?: string;
   enrDeptNm?: string;
 }
 
@@ -16,8 +16,7 @@ export interface FeatureModel extends CreatedFeatureModel, CommonModel {
   featureTypNm: string;
   featureSeGrpNm: string;
   featureSeNm: string;
-  enrUserNm: string;
-  enrDeptNm: string;
+  isInterestFeature: boolean;
 }
 
 export interface FeatureSeparatesModel {
@@ -41,6 +40,8 @@ export interface CreatedFeatureModel {
   enrDeptCode: string;
   featureRelTb: string;
   featureDsc: string;
+  enrUserNm?: string;
+  enrDeptNm?: string;
 }
 
 export interface UpdatedFeatureModel extends CreatedFeatureModel {

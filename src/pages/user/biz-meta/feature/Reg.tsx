@@ -5,6 +5,7 @@ import { useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedFeatureModel, FeatureSeparatesModel } from '@/models/model/FeatureModel';
+import { UserModel } from '@/models/model/UserModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -68,6 +69,20 @@ const Reg = () => {
         title: '저장',
         content: '등록하시겠습니까?',
         onConfirm: mutate,
+      })
+    );
+  };
+
+  const handleUserSelectModal = () => {
+    dispatch(
+      openModal({
+        type: ModalType.USER_SELECT,
+        onConfirm: (users: UserModel) => {
+          setValue('enrUserId', users.userId);
+          setValue('enrUserNm', users.userNm);
+          setValue('enrDeptCode', users.deptCode);
+          setValue('enrDeptNm', users.deptNm);
+        },
       })
     );
   };
@@ -315,6 +330,22 @@ const Reg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
+                연관테이블
+              </TH>
+              <TD colSpan={5}>
+                <Stack gap="SM" className="width-100" direction="Vertical">
+                  <TextField
+                    className="width-100"
+                    {...register('featureRelTb', {})}
+                    validation={errors?.featureRelTb?.message ? 'Error' : undefined}
+                    autoFocus
+                  />
+                  <ErrorLabel message={errors?.featureRelTb?.message} />
+                </Stack>
+              </TD>
+            </TR>
+            <TR>
+              <TH colSpan={1} align="right">
                 비고
               </TH>
               <TD colSpan={5}>
@@ -344,18 +375,24 @@ const Reg = () => {
                   <Stack gap="SM">
                     <TextField
                       className="width-100"
-                      {...register('enrUserId', {
-                        required: { value: true, message: 'enrUserId is required.' },
+                      {...register('enrUserNm', {
+                        required: { value: true, message: 'enrUserNm is required.' },
                         maxLength: { value: 32, message: 'max length exceeded' },
                       })}
-                      validation={errors?.enrUserId?.message ? 'Error' : undefined}
+                      validation={errors?.enrUserNm?.message ? 'Error' : undefined}
                       autoFocus
                     />
-                    <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+                    <Button
+                      appearance="Contained"
+                      priority="Normal"
+                      shape="Square"
+                      size="MD"
+                      onClick={handleUserSelectModal}
+                    >
                       <span className="searchIcon"></span>
                     </Button>
                   </Stack>
-                  <ErrorLabel message={errors?.enrUserId?.message} />
+                  <ErrorLabel message={errors?.enrUserNm?.message} />
                 </Stack>
               </TD>
               <TH align="right" colSpan={1}>
@@ -365,14 +402,14 @@ const Reg = () => {
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
-                    {...register('enrDeptCode', {
+                    {...register('enrDeptNm', {
                       maxLength: { value: 16, message: 'max length exceeded' },
                     })}
-                    validation={errors?.enrDeptCode?.message ? 'Error' : undefined}
+                    validation={errors?.enrDeptNm?.message ? 'Error' : undefined}
                     autoFocus
                     disabled
                   />
-                  <ErrorLabel message={errors?.enrDeptCode?.message} />
+                  <ErrorLabel message={errors?.enrDeptNm?.message} />
                 </Stack>
               </TD>
             </TR>
