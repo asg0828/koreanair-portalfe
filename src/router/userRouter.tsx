@@ -31,12 +31,13 @@ import SelfFeatureEdit from '@pages/user/self-feature/Edit';
 import SfSubmissionRequest from '@/pages/user/self-feature-submission';
 import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Detail';
 import CustomerInfo from '@pages/user/customer-info/dashboard';
-import StructuredReport from '@pages/user/report/structured-report';
-import UnStructuredReport from '@pages/user/report/unstructured-report';
 import Tableau from '@pages/user/tableau';
 import { useFaqLoader, useQnaLoader, useFeatureLoader, useDatasetLoader } from '@/hooks/useLoader';
-import PurchaseContributors from "@pages/user/report/structured-report/purchase-contributors";
-import InternationalBoarding from "@pages/user/report/structured-report/international-boarding";
+import PurchaseContributors from "@pages/user/structured-report/purchase-contributors";
+import InternationalBoarding from "@pages/user/structured-report/international-boarding";
+import DomesticBoarding from "@pages/user/structured-report/domestic-boarding";
+import VipCustomerFlightStatus from "@pages/user/structured-report/vip-customer-flight-status";
+import SavedMileage from "@pages/user/structured-report/saved-mileage";
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -74,18 +75,13 @@ const userRouter = [
     ],
   },
   {
-    path: 'report',
+    path: 'structured-report',
     children: [
-      {
-        path: 'structured-report',
-        children: [
-          // { index: true, element: <StructuredReport /> },
-          { index: true, element: <PurchaseContributors /> },
-          { path: 'purchase-contributors', element: <PurchaseContributors /> },
-          { path: 'international-boarding', element: <InternationalBoarding /> },
-        ]
-      },
-      { path: 'unstructured-report', element: <UnStructuredReport /> },
+      { path: 'purchase-contributors', element: <PurchaseContributors /> },
+      { path: 'international-boarding', element: <InternationalBoarding /> },
+      { path: 'domestic-boarding', element: <DomesticBoarding /> },
+      { path: 'vip-customer-flight-status', element: <VipCustomerFlightStatus /> },
+      { path: 'saved-mileage', element: <SavedMileage /> },
     ],
   },
   {
