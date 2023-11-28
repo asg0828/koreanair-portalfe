@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDrop } from "react-dnd"
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect';
 
 import { Button, Page, Select, SelectOption, Stack, TextField, Typography } from "@components/ui"
@@ -118,30 +118,48 @@ const BehvDropItem = ({
         }
     }, [trgtFilterList])
 
-    // 집계할 컬럼 변경시 dataType setting
     useEffect(() => {
-        columnList.map((col: AggregateCol) => {
-            if (col.value === targetItem.columnName) {
-                // 집계함수 list 변경
-                if (cmmCodeAggrRes) {
-                    setAggregateOption((prevState: Array<CommonCodeInfo>) => {
-                        let rtn = cloneDeep(prevState)
-                        rtn = cmmCodeAggrRes.result.filter((v: CommonCodeInfo) => {
-                            if (v.attr4 === "N") {
-                                return false
-                            } else {
-                                if ((col.dataType === ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return true
-                                else if ((col.dataType !== ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return false
-                                else return true
-                            }
-                        })
-                        return [...cloneDeep([initCommonCodeInfo]), ...rtn]
-                    })
-                }
-            }
-            return col
+        
+        if (isEmpty(trgtFilterList) || (trgtFilterList && trgtFilterList?.length > 1)) return
+
+        // 최초 filterId 설정
+        setTrgtFilterList && setTrgtFilterList((targetFilter: Array<TbRsCustFeatRuleTrgtFilter>) => {
+            let rtn = cloneDeep(targetFilter)
+            let tFlist = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== targetItem.targetId)
+            let nFlist = rtn.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetItem.targetId)
+            nFlist = nFlist.map((filter, index) => {
+                filter.filterId = trgtFilterTit[index]
+                return filter
+            })
+            return [...tFlist, ...nFlist]
         })
-    }, [targetItem.columnName])
+
+    }, [trgtFilterList?.length])
+
+    
+    // useEffect(() => {
+    //     columnList.map((col: AggregateCol) => {
+    //         if (col.value === targetItem.columnName) {
+    //             // 집계함수 list 변경
+    //             if (cmmCodeAggrRes) {
+    //                 setAggregateOption((prevState: Array<CommonCodeInfo>) => {
+    //                     let rtn = cloneDeep(prevState)
+    //                     rtn = cmmCodeAggrRes.result.filter((v: CommonCodeInfo) => {
+    //                         if (v.attr4 === "N") {
+    //                             return false
+    //                         } else {
+    //                             if ((col.dataType === ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return true
+    //                             else if ((col.dataType !== ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return false
+    //                             else return true
+    //                         }
+    //                     })
+    //                     return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+    //                 })
+    //             }
+    //         }
+    //         return col
+    //     })
+    // }, [targetItem.columnName])
 
     // 수정시 집계함수가 top인 경우
     useEffect(() => {
@@ -178,7 +196,30 @@ const BehvDropItem = ({
             return colInfo
         })
         setColumnList([...[{ value: "", text: "선택", dataType: "" }], ...colList])
-    }, [aggregateColList])
+        // 집계할 컬럼 변경시 dataType setting
+        colList.map((col: AggregateCol) => {
+            if (col.value === targetItem.columnName) {
+                // 집계함수 list 변경
+                if (cmmCodeAggrRes) {
+                    setAggregateOption((prevState: Array<CommonCodeInfo>) => {
+                        let rtn = cloneDeep(prevState)
+                        rtn = cmmCodeAggrRes.result.filter((v: CommonCodeInfo) => {
+                            if (v.attr4 === "N") {
+                                return false
+                            } else {
+                                if ((col.dataType === ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return true
+                                else if ((col.dataType !== ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return false
+                                else return true
+                            }
+                        })
+                        return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+                    })
+                }
+            }
+            return col
+        })
+
+    }, [aggregateColList, targetItem.columnName])
 
     const [, behvDrop] = useDrop(() => ({
         accept: divisionTypes.BEHV,
@@ -199,11 +240,18 @@ const BehvDropItem = ({
                     let tl = cloneDeep(state)
                     let trgtFilter = initTbRsCustFeatRuleTrgtFilter
                     trgtFilter.targetId = targetItem.targetId // 고정
+                    trgtFilter.filterId = trgtFilterTit[itemIdx]
                     trgtFilter.columnName = targetObj.metaTblClmnPhysNm
                     trgtFilter.columnLogiName = targetObj.metaTblClmnLogiNm
                     trgtFilter.columnDataTypeCode = targetObj.dataTypeCategory
                     tl.push(trgtFilter)
-                    return tl
+                    let tFlist = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== targetItem.targetId)
+                    let nFlist = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetItem.targetId)
+                    nFlist = nFlist.map((filter, index) => {
+                        filter.filterId = trgtFilterTit[index]
+                        return filter
+                    })
+                    return [...tFlist, ...nFlist]
                 })
             }
 
@@ -277,6 +325,8 @@ const BehvDropItem = ({
                     let tl = cloneDeep(state)
                     if (tl[itemIdx].targetId === targetItem.targetId) {
                         tl[itemIdx].targetDataType = colDtp
+                        // 집계함수 초기화
+                        tl[itemIdx].operator = ""
                     }
                     return tl
                 })

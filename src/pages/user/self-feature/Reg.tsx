@@ -434,7 +434,6 @@ const SelfFeatureReg = () => {
 			content: '등록되었습니다.',
 		  })
 		}
-		debugger
 	  }, [insertRes, isSuccess, isError, toast]);
 	const createCustFeatSQL = async () => {
 		/*

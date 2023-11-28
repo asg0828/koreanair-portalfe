@@ -143,7 +143,6 @@ const SelfFeatureDetail = () => {
 	useEffect(() => {
 		// 초기 상세 정보 조회 API CALL
 		initCustFeatRule()
-		//retrieveCustFeatRuleInfos()
 	}, [])
 	// 대구분 API response callback
 	useEffect(() => {
