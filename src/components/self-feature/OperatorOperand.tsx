@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { SelectValue } from '@mui/base/useSelect'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 
 import {
     DatePicker,
@@ -17,7 +17,7 @@ import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQuer
 
 const OperatorOperand = ({
     isPossibleEdit,
-    trgtFormulaInput,
+    //trgtFormulaInput,
     itemIdx,
     item,
     dataType,
@@ -64,6 +64,24 @@ const OperatorOperand = ({
             }
         }
     }, [dataType, delimiterSelected])
+    // 수정시 delimiter 값이 있는 경우 option setting
+    useEffect(() => {
+        if (isEmpty(item?.delimiter) || item?.delimiter === "null") return
+
+        if (cmmCodeDlimRes) {
+            setDelimiterOption((prevState: Array<CommonCodeInfo>) => {
+                let rtn = cloneDeep(prevState)
+                rtn = cmmCodeDlimRes.result.filter((v: CommonCodeInfo) => {
+                    if (dataType !== "") {
+                        if ((dataType === ColDataType.NUM) && v.cdv === ",") return true
+                        else if (dataType !== ColDataType.NUM) return true
+                        else return false
+                    }
+                })
+                return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+            })
+        }
+    }, [item?.delimiter])
 
     useEffect(() => {
         if (cmmCodeFrmtRes) {
