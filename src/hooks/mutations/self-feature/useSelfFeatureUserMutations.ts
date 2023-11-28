@@ -5,8 +5,13 @@ import {
   insertSubmissionRequest,
   updateCustFeatRule,
 } from '@/api/self-feature/SelfFeatureUserAPI';
+<<<<<<< HEAD
 import { QueryParams } from '@/utils/OAuthApiUtil';
 import { useMutation } from '@tanstack/react-query';
+=======
+import { QueryParams } from '@/utils/ApiUtil';
+import { useMutation } from '@tanstack/react-query'
+>>>>>>> b884ae0 (fix: self-feature 승인요청,취소시 redirect 수정)
 
 // customer feature 등록 (Rule-Design)
 export const useCreateCustFeatRule = (bodyParams: Object) => {

@@ -407,7 +407,7 @@ const SelfFeatureDetail = () => {
 	useEffect(() => {
 		if (isEmpty(subListQueryParams)) return
 		submissionListRefetch()
-	}, [subListQueryParams])
+	}, [subListQueryParams, location.state.submissionStatus])
 	// 승인 정보 리스트 호출 API Callback
 	useEffect(() => {
 		if (submissionListErr || submissionListRes?.successOrNot === 'N') {
@@ -455,7 +455,7 @@ const SelfFeatureDetail = () => {
 	useEffect(() => {
 		if (submissionId === 0) return
 		submissionInfoRefetch()
-	}, [submissionId])
+	}, [submissionId, location.state.submissionStatus])
 	// 승인정보 상세 API Callback
 	useEffect(() => {
 		if (submissionInfoErr || submissionInfoRes?.successOrNot === 'N') {
@@ -566,8 +566,10 @@ const SelfFeatureDetail = () => {
 				type: ValidType.CONFIRM,
 				content: '승인 요청 되었습니다.',
 			})
-			// 목록으로 redirect
-			navigate('..')
+			featureInfo.tbRsCustFeatRule.id = insrtSubReqRes.result.referenceNo
+			featureInfo.tbRsCustFeatRule.submissionStatus = insrtSubReqRes.result.status
+			// 상세로 redirect
+			navigate(`../${selfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
 		}
 	}, [insrtSubReqRes, insrtSubReqSucc, insrtSubReqErr])
 	// 승인요청 취소 API 호출
@@ -595,8 +597,10 @@ const SelfFeatureDetail = () => {
 				type: ValidType.CONFIRM,
 				content: '승인요청이 취소 되었습니다.',
 			})
-			// 목록으로 redirect
-			navigate('..')
+			featureInfo.tbRsCustFeatRule.id = cnclReqSubRes.result.referenceNo
+			featureInfo.tbRsCustFeatRule.submissionStatus = cnclReqSubRes.result.status
+			// 상세로 redirect
+			navigate(`../${selfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
 		}
 	}, [cnclReqSubRes, cnclReqSubSucc, cnclReqSubErr])
 	// 삭제 param setting & mutate
