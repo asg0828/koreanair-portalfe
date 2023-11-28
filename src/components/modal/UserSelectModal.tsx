@@ -1,4 +1,3 @@
-import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useUserAllList } from '@/hooks/queries/useUserQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
@@ -18,6 +17,11 @@ const columns = [
   { headerName: '부서', field: 'deptNm', colSpan: 4 },
 ];
 
+const defaultResultInfo = {
+  userId: '',
+  userNm: '',
+};
+
 const UserSelectModal = ({
   isOpen = false,
   autoClose = true,
@@ -31,21 +35,18 @@ const UserSelectModal = ({
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [keyword, setKeyword] = useState<string>('');
-  const [deptData, setDeptData] = useState<Array<any>>([]);
+  const [deptTreeData, setDeptTreeData] = useState<Array<any>>([]);
   const [userData, setUsetData] = useState<Array<any>>([]);
   const [prevRows, setPrevRows] = useState<Array<UserModel>>([]);
-  const [nextRows, setNextRows] = useState<Array<UserModel>>([]);
-  const [initPrevRows, setInitPrevRows] = useState<Array<UserModel>>([]);
   const [prevCheckedList, setPrevCheckedList] = useState<Array<UserModel>>([]);
-  const [nextCheckedList, setNextCheckedList] = useState<Array<UserModel>>([]);
   const { data: response, isError, refetch } = useDeptAllList();
   const { data: uResponse, isError: uIsError, refetch: uRefetch } = useUserAllList();
 
   const handleSearch = () => {
     if (keyword) {
-      setPrevRows(initPrevRows.filter((item) => item.userNm.includes(keyword) || item.deptNm.includes(keyword)));
+      setPrevRows(userData.filter((item) => item.userNm?.includes(keyword)));
     } else {
-      setPrevRows(initPrevRows);
+      setPrevRows(userData);
     }
   };
 
@@ -59,17 +60,12 @@ const UserSelectModal = ({
     }
   };
 
-  const handlePrevRowSelection = (prevCheckedList: Array<any>) => {
-    setPrevCheckedList(prevRows.filter((item, index) => prevCheckedList.some((index2) => index === index2)));
-  };
-
-  const handleNextRowSelection = (nextCheckedList: Array<any>) => {
-    setNextCheckedList(nextRows.filter((item, index) => nextCheckedList.some((index2) => index === index2)));
+  const handlePrevRowSelection = (prevCheckedIndexList: Array<number>, prevCheckedList: Array<any>) => {
+    setPrevCheckedList(prevCheckedList);
   };
 
   const handleClickFile = (deptItem: any) => {
     const prevUsers = userData.filter((item: UserModel) => item.deptCode === deptItem.deptCode);
-    setInitPrevRows(prevUsers);
     setPrevRows(prevUsers);
 
     if (prevUsers.length === 0) {
@@ -80,30 +76,8 @@ const UserSelectModal = ({
     }
   };
 
-  const handleAddUsers = () => {
-    setNextRows((prevState) => {
-      const addList = prevCheckedList.filter(
-        (item) => !prevState.some((nextItem: UserModel) => nextItem.userId === item.userId)
-      );
-
-      return prevState.concat(addList);
-    });
-    setNextCheckedList([]);
-  };
-
-  const handleRemoveUsers = () => {
-    setNextRows((prevState) => {
-      const filterList = prevState.filter(
-        (item) => !nextCheckedList.some((nextItem: UserModel) => nextItem.userId === item.userId)
-      );
-
-      return filterList;
-    });
-    setNextCheckedList([]);
-  };
-
   const handleConfirm = () => {
-    onConfirm && onConfirm(nextRows);
+    onConfirm && onConfirm(prevCheckedList.length === 0 ? defaultResultInfo : prevCheckedList[0]);
     autoClose && handleClose();
   };
 
@@ -132,7 +106,7 @@ const UserSelectModal = ({
           isChecked: false,
           children: hierarchyList,
         };
-        setDeptData([root]);
+        setDeptTreeData([root]);
       }
     }
   }, [response, isError, toast]);
@@ -156,7 +130,7 @@ const UserSelectModal = ({
       <Modal.Body>
         <Stack className="width-100" alignItems="Start">
           <Stack className="tree-wrap width-100">
-            <DeptTree data={deptData} onClickFile={handleClickFile} />
+            <DeptTree data={deptTreeData} onClickFile={handleClickFile} />
           </Stack>
           <Stack direction="Vertical" justifyContent="Start" className="user-seleted">
             <Stack direction="Vertical" className="user-search">
@@ -169,17 +143,13 @@ const UserSelectModal = ({
                 />
                 <Button onClick={handleSearch}>검색</Button>
               </Stack>
-              <VerticalTable columns={columns} rows={prevRows} rowSelection={handlePrevRowSelection} />
+              <VerticalTable
+                isMultiSelected={false}
+                columns={columns}
+                rows={prevRows}
+                rowSelection={handlePrevRowSelection}
+              />
             </Stack>
-            <Stack alignItems="Center" direction="Horizontal" justifyContent="Center" className="updown-btns">
-              <Button size="LG" appearance="Unfilled" iconOnly onClick={handleAddUsers}>
-                <KeyboardDoubleArrowDownIcon />
-              </Button>
-              <Button size="LG" appearance="Unfilled" iconOnly onClick={handleRemoveUsers}>
-                <KeyboardDoubleArrowUpIcon />
-              </Button>
-            </Stack>
-            <VerticalTable columns={columns} rows={nextRows} rowSelection={handleNextRowSelection} />
           </Stack>
         </Stack>
       </Modal.Body>

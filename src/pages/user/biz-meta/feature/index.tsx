@@ -148,11 +148,11 @@ const List = () => {
     dispatch(
       openModal({
         type: ModalType.USER_SELECT,
-        onConfirm: (users: Array<UserModel>) => {
+        onConfirm: (users: UserModel) => {
           setParams((prevState) => ({
             ...prevState,
-            enrUserId: users.length === 0 ? '' : users[users.length - 1].userId,
-            enrUserNm: users.length === 0 ? '' : users[users.length - 1].userNm,
+            enrUserId: users.userId,
+            enrUserNm: users.userNm,
           }));
         },
       })
@@ -163,11 +163,11 @@ const List = () => {
     dispatch(
       openModal({
         type: ModalType.DEPT_SELECT,
-        onConfirm: (depts: Array<DeptModel>) => {
+        onConfirm: (depts: DeptModel) => {
           setParams((prevState) => ({
             ...prevState,
-            enrDeptCode: depts.length === 0 ? '' : depts[depts.length - 1].deptCode,
-            enrDeptNm: depts.length === 0 ? '' : depts[depts.length - 1].deptNm,
+            enrDeptCode: depts.deptCode,
+            enrDeptNm: depts.deptNm,
           }));
         },
       })
