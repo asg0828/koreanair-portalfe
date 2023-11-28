@@ -1,5 +1,5 @@
 import { Column } from '@/models/customer-info/CustomerInfo';
-import { CustMetaSrchItem, CustMetaListSrchInfo } from '@/models/selfFeature/FeatureAdmModel';
+import { CustMetaSrchItem, CustMetaListSrchInfo, CustMetaDetailInfo } from '@/models/selfFeature/FeatureAdmModel';
 
 // Customer Meta List 테이블 헤더
 export const metaTableColumn: Column[] = [
@@ -33,7 +33,23 @@ export const customerMetaInfoColumn: Column[] = [
   { headerName: '컬럼 논리명', field: 'metaTblClmnLogiNm' },
   { headerName: '컬럼 설명', field: 'metaTblClmnDesc' },
   { headerName: '데이터타입', field: 'dtpCd' },
-  { headerName: '변경여부', field: 'no' },
+  { headerName: '변경여부', field: 'no2' },
   { headerName: '변경 데이터타입', field: 'chgDtpCd' },
   { headerName: '변경 데이터형식', field: 'dataFormat' },
+];
+
+export const initCustMetaDetailInfo: CustMetaDetailInfo[] = [
+  {
+    no: '',
+    pkYn: '',
+    clmnUseYn: '',
+    baseTimeYn: '',
+    metaTblClmnPhysNm: '',
+    metaTblClmnLogiNm: '',
+    metaTblClmnDesc: '',
+    dtpCd: '',
+    no2: '',
+    chgDtpCd: '',
+    dataFormat: '',
+  },
 ];

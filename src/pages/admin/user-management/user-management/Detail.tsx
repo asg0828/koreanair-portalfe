@@ -53,8 +53,7 @@ const Detail = () => {
         <HorizontalTable>
           <TR>
             <TH>이전 사용자 권한</TH>
-            <TD>
-            </TD>
+            <TD></TD>
             <TH>적용 사용자 권한</TH>
             <TD>
               <Select appearance="Outline" placeholder="전체" className="width-100">
@@ -66,8 +65,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH>이전 관리자 권한</TH>
-            <TD>
-            </TD>
+            <TD></TD>
             <TH>적용 관리자 권한</TH>
             <TD>
               <Select appearance="Outline" placeholder="전체" className="width-100">
@@ -79,11 +77,9 @@ const Detail = () => {
           </TR>
           <TR>
             <TH>최종변경일시</TH>
-            <TD>
-            </TD>
+            <TD></TD>
             <TH></TH>
-            <TD>
-            </TD>
+            <TD></TD>
           </TR>
         </HorizontalTable>
       </Stack>

@@ -1,12 +1,15 @@
-import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
-import VerticalTable, { VerticalTableProps } from '@components/table/VerticalTable';
-import { Label, Pagination, Select, SelectOption, Stack } from '@components/ui';
+import { PageModel, PageProps, initPage } from '@/models/model/PageModel';
+import { VerticalTableProps } from '@components/table/VerticalTable';
+import { Label, Pagination, Stack } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
 import './DataGrid.scss';
 import VerticalTableMeta from '../table/VerticalTableMeta';
+import { RowsInfo } from '@/models/components/Table';
 
 export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
+  props: any;
+  list: Array<RowsInfo>;
 }
 
 const DataGridMeta: React.FC<DatagridProps> = ({
@@ -16,57 +19,28 @@ const DataGridMeta: React.FC<DatagridProps> = ({
   clickable,
   onClick,
   onChange,
-  buttonChildren,
-  page,
   rowSelection,
+  props,
+  list,
 }) => {
-  const [pages, setPages] = useState<PageModel>(initPage);
-
-  useEffect(() => {
-    page && setPages(page);
-  }, [page]);
-
-  const handleChange = (key: string, value: any) => {
-    setPages((prevState) => {
-      const state = {
-        ...prevState,
-        [key]: value,
-      };
-      if (key === 'pageSize') {
-        state.page = 0;
-      }
-      onChange && onChange(state);
-      return state;
-    });
-  };
-
   return (
     <Stack className="dataGridWrap" direction="Vertical" gap="MD">
       <Stack className="total-layout">
         <Label>
-          총 <span className="total">{pages.totalCount}</span> 건
+          총 <span className="total">{rows.length}</span> 건
         </Label>
       </Stack>
       <VerticalTableMeta
+        props={props}
+        list={list}
         columns={columns}
         rows={rows}
         enableSort={enableSort}
         clickable={clickable}
         onClick={onClick}
         rowSelection={rowSelection}
+        onChange={onChange}
       />
-      <Stack className="pagination-layout">
-        <Pagination
-          size="LG"
-          className="pagination"
-          page={pages.page}
-          totalPages={pages.totalPage}
-          onChangePage={(value) => handleChange('page', value)}
-        />
-        <Stack justifyContent="End" gap="SM" className="width-100">
-          {buttonChildren}
-        </Stack>
-      </Stack>
     </Stack>
   );
 };
