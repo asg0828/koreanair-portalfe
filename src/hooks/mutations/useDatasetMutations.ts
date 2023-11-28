@@ -3,13 +3,13 @@ import { CreatedDatasetModel, UpdatedDatasetModel } from '@/models/model/Dataset
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateDataset = (createdDataset: CreatedDatasetModel) => {
-  return useMutation(['/dataset/create', createdDataset], () => createDataset(createdDataset));
+  return useMutation(() => createDataset(createdDataset));
 };
 
 export const useUpdateDataset = (mtsId: string, updatedDataset: UpdatedDatasetModel) => {
-  return useMutation(['/dataset/update', updatedDataset], () => updateDataset(mtsId, updatedDataset));
+  return useMutation(() => updateDataset(mtsId, updatedDataset));
 };
 
 export const useDeleteDataset = (mtsId: string) => {
-  return useMutation(['/dataset/delete', mtsId], () => deleteDataset(mtsId));
+  return useMutation(() => deleteDataset(mtsId));
 };

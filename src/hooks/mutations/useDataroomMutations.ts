@@ -3,13 +3,13 @@ import { CreatedDataroomModel, UpdatedDataroomModel } from '@/models/model/Datar
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateDataroom = (createdDataroom: CreatedDataroomModel) => {
-  return useMutation(['/dataroom/create', createdDataroom], () => createDataroom(createdDataroom));
+  return useMutation(() => createDataroom(createdDataroom));
 };
 
 export const useUpdateDataroom = (dataId: string, updatedDataroom: UpdatedDataroomModel) => {
-  return useMutation(['/dataroom/update', updatedDataroom], () => updateDataroom(dataId, updatedDataroom));
+  return useMutation(() => updateDataroom(dataId, updatedDataroom));
 };
 
 export const useDeleteDataroom = (dataId: string) => {
-  return useMutation(['/dataroom/delete', dataId], () => deleteDataroom(dataId));
+  return useMutation(() => deleteDataroom(dataId));
 };
