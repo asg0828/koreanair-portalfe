@@ -35,20 +35,32 @@ const userMenuList = [
     ],
   },
   {
-    name: '보고서',
-    path: '/report',
+    name: '정형 보고서',
+    path: '/structured-report',
     children: [
       {
-        name: '정형 보고서',
-        path: '/report/structured-report',
-        children: [
-          {name: '구매 기여도 TOP 100', path: '/report/structured-report/purchase-contributors',children: []},
-          {name: '국제선 탑승 TOP 100', path: '/report/structured-report/international-boarding',children: []}
-        ],
+        name: '구매기여도 Top100',
+        path: '/structured-report/purchase-contributors',
+        children: [],
       },
       {
-        name: '비정형 보고서',
-        path: '/report/unstructured-report',
+        name: '국제선 탑승횟수 Top100',
+        path: '/structured-report/international-boarding',
+        children: [],
+      },
+      {
+        name: '국내선 탑승횟수 Top100',
+        path: '/structured-report/domestic-boarding',
+        children: [],
+      },
+      {
+        name: 'VIP (3S) 고객의 항공현황',
+        path: '/structured-report/vip-customer-flight-status',
+        children: [],
+      },
+      {
+        name: '마일리지 적립 Top100',
+        path: '/structured-report/saved-mileage',
         children: [],
       },
     ],
