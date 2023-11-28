@@ -28,7 +28,6 @@ const List = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
-    const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
     const [selectedPeriod, setSelectedPeriod] = useState('1');
     const [dateRange, setDateRange] = useState('');
 
@@ -50,11 +49,9 @@ const List = () => {
         { headerName: 'FR 구매횟수', field: 'FrCount', colSpan: 1 },
         { headerName: 'PR 구매횟수', field: 'PrCount', colSpan: 1 },
     ];
-    // const [rows, setRows] = useState<Array<FeatureModel>>([]); // Feature -> 정형보고서 데이터로 수정
     const [rows, setRows] = useState(dummyData.data.contents);
     const { data: response, isError, refetch } = useFeatureList(params, page);
     const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
-    console.debug('rows', rows)
 
     const calculateDateRange = (period: string) => {
         const endDate = new Date();
@@ -133,18 +130,18 @@ const List = () => {
         handleSearch();
     }, [page.page, page.pageSize, handleSearch]);
 
-    useEffect(() => {
-        if (isError || response?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
-                content: '조회 중 에러가 발생했습니다.',
-            });
-        } else {
-            if (response?.data) {
-                setRows(response.data.contents);
-            }
-        }
-    }, [response, isError, toast]);
+    // useEffect(() => {
+    //     if (isError || response?.successOrNot === 'N') {
+    //         toast({
+    //             type: ValidType.ERROR,
+    //             content: '조회 중 에러가 발생했습니다.',
+    //         });
+    //     } else {
+    //         if (response?.data) {
+    //             setRows(response.data.contents);
+    //         }
+    //     }
+    // }, [response, isError, toast]);
 
     return (
         <>
