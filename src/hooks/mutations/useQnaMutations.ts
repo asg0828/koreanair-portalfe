@@ -3,13 +3,13 @@ import { CreatedQnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateQna = (createdQna: CreatedQnaModel) => {
-  return useMutation(['/qna/create', createdQna], () => createQna(createdQna));
+  return useMutation(() => createQna(createdQna));
 };
 
 export const useUpdateQna = (qnaId: string, updatedQna: UpdatedQnaModel) => {
-  return useMutation(['/qna/update', updatedQna], () => updateQna(qnaId, updatedQna));
+  return useMutation(() => updateQna(qnaId, updatedQna));
 };
 
 export const useDeleteQna = (qnaId: string) => {
-  return useMutation(['/qna/delete', qnaId], () => deleteQna(qnaId));
+  return useMutation(() => deleteQna(qnaId));
 };

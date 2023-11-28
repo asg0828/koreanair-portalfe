@@ -3,13 +3,13 @@ import { CreatedNoticeModel, UpdatedNoticeModel } from '@/models/model/NoticeMod
 import { useMutation } from '@tanstack/react-query';
 
 export const useCreateNotice = (createdNotice: CreatedNoticeModel) => {
-  return useMutation(['/notice/create', createdNotice], () => createNotice(createdNotice));
+  return useMutation(() => createNotice(createdNotice));
 };
 
 export const useUpdateNotice = (noticeId: string, updatedNotice: UpdatedNoticeModel) => {
-  return useMutation(['/notice/update', updatedNotice], () => updateNotice(noticeId, updatedNotice));
+  return useMutation(() => updateNotice(noticeId, updatedNotice));
 };
 
 export const useDeleteNotice = (noticeId: string) => {
-  return useMutation(['/notice/delete', noticeId], () => deleteNotice(noticeId));
+  return useMutation(() => deleteNotice(noticeId));
 };
