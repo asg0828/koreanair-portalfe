@@ -1,8 +1,10 @@
-import { useState, useEffect, useCallback } from 'react';
-import HorizontalTable from '@components/table/HorizontalTable';
-import { CheckedState } from '@/models/common/Design';
-import { Modal, Button, Stack, TR, TH, TD, Typography, Checkbox } from '@components/ui';
 import '@/assets/styles/Board.scss';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { CheckedState } from '@/models/common/Design';
+import { closeModal } from '@/reducers/modalSlice';
+import HorizontalTable from '@components/table/HorizontalTable';
+import { Button, Checkbox, Modal, Stack, TD, TH, TR, Typography } from '@components/ui';
+import { useCallback, useEffect } from 'react';
 
 export interface Props {
   isOpen?: boolean;
@@ -10,46 +12,33 @@ export interface Props {
 }
 
 const NoticeModal = ({ isOpen = false, onClose }: Props) => {
+  const dispatch = useAppDispatch();
   const hasVisited = localStorage.getItem('hasVisited');
-  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
-  const handleClose = useCallback(
-    (isOpenModal: boolean) => {
-      if (onClose) {
-        onClose(isOpenModal);
-      } else {
-        setIsOpenModal(isOpenModal);
-      }
-    },
-    [onClose]
-  );
+  const handleClose = useCallback(() => {
+    dispatch(closeModal());
+  }, [dispatch]);
 
   const handleConfirm = () => {
-    handleClose(false);
+    handleClose();
   };
 
   const handleChecked = (checked: CheckedState) => {
     if (checked) {
       const hasVisited = new Date().setHours(23, 59, 59, 0).toString();
       localStorage.setItem('hasVisited', hasVisited);
-      handleClose(false);
+      handleClose();
     }
   };
 
   useEffect(() => {
-    setIsOpenModal(isOpen);
-  }, [isOpen]);
-
-  useEffect(() => {
-    if (onClose) {
-      return;
-    } else if (!hasVisited || hasVisited < new Date().getTime().toString()) {
-      handleClose(true);
+    if (!hasVisited || hasVisited < new Date().getTime().toString()) {
+      handleClose();
     }
-  }, [hasVisited, handleClose, onClose]);
+  }, [hasVisited, handleClose]);
 
   return (
-    <Modal open={isOpenModal} onClose={handleClose} size="LG">
+    <Modal open={isOpen} onClose={handleClose} size="LG">
       <Modal.Header>공지사항</Modal.Header>
       <Modal.Body>
         <Stack direction="Vertical" gap="MD" className="height-100 width-100">

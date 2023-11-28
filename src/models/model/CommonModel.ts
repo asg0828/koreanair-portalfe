@@ -1,5 +1,3 @@
-export type YN = 'Y' | 'N';
-
 export interface CommonModel {
   modiId: string;
   modiDt: string;
@@ -12,5 +10,5 @@ export interface CommonModel {
   ordSeq?: number;
   viewCnt?: number;
   rownum?: number;
-  delYn?: YN;
+  delYn?: 'Y' | 'N';
 }

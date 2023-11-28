@@ -26,7 +26,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   onClick,
 }) => {
   const isCheckbox = typeof rowSelection === 'function';
-  const [checkedAll, setCheckedAll] = useState<boolean>(false);
+  const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
 
@@ -38,7 +38,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     }
 
     setCheckedList(newCheckedList);
-    setCheckedAll(checked);
+    setIsCheckedAll(checked);
     isCheckbox && rowSelection(newCheckedList);
   };
 
@@ -52,9 +52,9 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     }
 
     if (newCheckedList.length === rows.length) {
-      setCheckedAll(true);
+      setIsCheckedAll(true);
     } else {
-      setCheckedAll(false);
+      setIsCheckedAll(false);
     }
 
     setCheckedList(newCheckedList);
@@ -82,6 +82,8 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   };
 
   useEffect(() => {
+    setIsCheckedAll(false);
+    setCheckedList([]);
     setSortRows(rows);
   }, [rows]);
 
@@ -92,7 +94,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
           <TR>
             {isCheckbox && (
               <TH colSpan={0.5}>
-                <Checkbox checked={checkedAll} onCheckedChange={handleCheckedChangeAll} />
+                <Checkbox checked={isCheckedAll} onCheckedChange={handleCheckedChangeAll} />
               </TH>
             )}
             {columns.map((column, index) => (

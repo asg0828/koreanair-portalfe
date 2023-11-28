@@ -78,9 +78,18 @@ const BehvColDropItem = ({
         let isClrDlmt = false // 구분자를 필요로 하지 않는 연산자 선택의 경우 초기화를 위한 flag
 
         // 구분자 select box show를 위한 state 설정
-        if (
+        let oprtVal = trgtFilterItem.operator // 수정시 연산자 종류 판단
+        if (// 구분자 선택시
             keyNm === "delimiter" 
-            || (keyNm === "operator" && (v === "in_str" || v === "not_in_str" || v === "in_num" || v === "not_in_num"))
+            || 
+            (// 연산자 변경시
+                keyNm === "operator" 
+                && (v === "in_str" || v === "not_in_str" || v === "in_num" || v === "not_in_num")
+            )
+            || 
+            (// 수정시 연산자 종류 판단
+                (oprtVal === "in_str" || oprtVal === "not_in_str" || oprtVal === "in_num" || oprtVal === "not_in_num")
+            )
         ) {
             setDelimiterSelected(true)
             isClrDlmt = true
