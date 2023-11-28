@@ -5,7 +5,7 @@ import {
     insertSubmissionRequest,
     updateCustFeatRule,
   } from '@/api/self-feature/SelfFeatureUserAPI';
-  import { QueryParams } from '@/utils/OAuthApiUtil';
+  import { QueryParams } from '@/utils/ApiUtil';
   import { useMutation } from '@tanstack/react-query';
   
   // customer feature 등록 (Rule-Design)
