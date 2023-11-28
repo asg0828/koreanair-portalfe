@@ -19,7 +19,7 @@ export const useCustFeatRules = (qParams: FeatListSrchProps) => {
 }
 
 export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
-    return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId())
+    return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId(), { enabled: false })
 }
 
 export const useCustFeatRuleInfos = (custFeatRuleId: string) => {

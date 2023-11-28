@@ -13,7 +13,7 @@ export const sfSubmissionListColumns = [
 export const sfSubmissionApprovalListColumns = [
     { headerName: '단계(담당)', field: 'approvalSequenceNm', colSpan: 2 },
     { headerName: '결재자', field: 'approverNm', colSpan: 4 },
-    { headerName: '상태', field: 'status', colSpan: 2 },
+    { headerName: '상태', field: 'statusNm', colSpan: 2 },
     { headerName: '일시', field: 'approvedDate', colSpan: 4 },
     { headerName: '의견', field: 'comment', colSpan: 8 },
 ]

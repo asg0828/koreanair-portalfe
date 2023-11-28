@@ -78,6 +78,7 @@ import { useAppSelector } from "@/hooks/useRedux";
 import { getFeatureSeList } from "@/api/FeatureAPI";
 import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
+import { useUpdateCustFeatRule } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 
 const calcUnit = [
 	{ value: '횟수', text: '횟수' },
@@ -87,33 +88,31 @@ const calcUnit = [
 const SelfFeatureEdit = () => {
 
 	const { toast } = useToast()
+	const navigate = useNavigate()
+	const location = useLocation()
 	// 속성, 행동정보
-	const { data: getTCByNSRRes, isError: getTCByNSRError, refetch: getTCByNSRRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { } = useCommCodes(CommonCode.FUNCTION)
 	const { } = useCommCodes(CommonCode.OPERATOR)
 	const { } = useCommCodes(CommonCode.FORMAT)
 	const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
-
-	const navigate = useNavigate()
-	const location = useLocation()
-
 	// 대구분
-	const { refetch: lRefetch, data: lResponse, isError: lIsError } = useFeatureTypList()
+	const { data: seGroupRes, isError: seGroupErr } = useFeatureTypList()
 	const [featureSeGrpList, setFeatureSeGrpList] = useState<Array<FeatureSeparatesModel>>([])
 	// 중구분
 	const [seGrpId, setSeGrpId] = useState<string>("")
-	const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(seGrpId)
+	const { refetch: seRefetch, data: seRes, isError: seErr } = useFeatureSeList(seGrpId)
 	const [featureSeAllList, setFeatureSeAllList] = useState<Array<FeatureSeparatesModel>>([])
 	const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([])
 	// 픽처타입
 	const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
-
 	// update 데이터
 	const [updtFeatureInfo, setUpdtFeatureInfo] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
-
-	const [regType, setRegType] = useState<string>(location.state.regType)
-
+	// formData
+	const [custFeatureFormData, setCustFeatureFormData] = useState<CustFeatureFormData>(cloneDeep(initCustFeatureFormData))
+	// 대상선택 초기화시 flag
+	const [targetClear, setTargetClear] = useState<string>("")//location.state.TargetClear
 	// 기본정보
 	const [featureTempInfo, setFeatureTempInfo] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
 	const [custFeatRule, setCustFeatRule] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
@@ -132,11 +131,7 @@ const SelfFeatureEdit = () => {
 	const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
 	// 결재선
 	const [aprvList, setAprvList] = useState<Array<SfSubmissionAppendApproval>>([])
-	const {
-		data: approverCandidateRes,
-		isError: approverCandidateErr,
-		refetch: approverCandidateRefetch
-	} = useApproverCandidate()
+	const { data: approverCandidateRes, isError: approverCandidateErr } = useApproverCandidate()
 	// 속성 및 행동 데이터
 	const [mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
 	// Top 집계함수 선택 여부
@@ -146,7 +141,8 @@ const SelfFeatureEdit = () => {
 	const [confirmModalTit, setConfirmModalTit] = useState<string>('')
 	const [confirmModalCont, setConfirmModalCont] = useState<string>('')
 	const [modalType, setModalType] = useState<string>('')
-
+	// 수정 API(Rule-Design)
+	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
@@ -158,8 +154,8 @@ const SelfFeatureEdit = () => {
 			) {
 				updateCustFeatRule()
 			}
-
-			if (regType === "trgtClear") {
+			// 대상 초기화
+			if (targetClear === "trgtClear") {
 				setTargetList([])
 				setTrgtFilterList([])
 			}
@@ -169,11 +165,24 @@ const SelfFeatureEdit = () => {
 	const onCancel = () => {
 		setIsOpenConfirmModal(false)
 	}
-
+	// component mount
 	useEffect(() => {
-		// if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
-		// 	getTableandColumnMetaInfoByMstrSgmtRuleId()
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
+			mstrSgmtTbandColRefetch()
 	}, [])
+	// 속성,행동데이터 response callback
+	useEffect(() => {
+		if (mstrSgmtTbandColErr || mstrSgmtTbandColRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (mstrSgmtTbandColRes) {
+				setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
+			}
+		}
+	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr])
 	// 결재선 default setting을 위해
 	useEffect(() => {
         if (approverCandidateErr || approverCandidateRes?.successOrNot === 'N') {
@@ -187,7 +196,6 @@ const SelfFeatureEdit = () => {
             }
         }
     }, [approverCandidateRes, approverCandidateErr, toast])
-
 
 	useEffect(() => {
 		setFeatureTempInfo(cloneDeep(location.state.featureInfo.featureTemp))
@@ -203,35 +211,36 @@ const SelfFeatureEdit = () => {
 	// 대구분 선택시 중구분 select option setting
 	useEffect(() => {
 		if (seGrpId) {
-			sRefetch()
+			seRefetch()
 		}
-	}, [seGrpId, sRefetch])
+	}, [seGrpId, seRefetch])
 	// 대구분 API response callback
 	useEffect(() => {
-		if (lIsError || lResponse?.successOrNot === 'N') {
+		if (seGroupErr || seGroupRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
 				content: '조회 중 에러가 발생했습니다.',
 			})
 		} else {
-			if (lResponse?.data) {
-				setFeatureSeGrpList(lResponse.data)
+			if (seGroupRes?.data) {
+				setFeatureSeGrpList(seGroupRes.data)
 			}
 		}
-	}, [lResponse, lIsError, toast])
+	}, [seGroupRes, seGroupErr, toast])
 	// 중구분 API response callback
 	useEffect(() => {
-		if (sIsError || sResponse?.successOrNot === 'N') {
+		if (seErr || seRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
 				content: '조회 중 에러가 발생했습니다.',
 			})
 		} else {
-			if (sResponse?.data) {
-				setFeatureSeList(sResponse.data);
+			if (seRes?.data) {
+				setFeatureSeList(seRes.data);
 			}
 		}
-	}, [sResponse, sIsError, toast])
+	}, [seRes, seErr, toast])
+	// 중구분 전체 list setting
 	useEffect(() => {
 		if (!featureSeGrpList || featureSeGrpList.length < 1) return
 
@@ -260,6 +269,7 @@ const SelfFeatureEdit = () => {
 		})
 
 	}, [featureSeGrpList])
+	// 대구분에 따른 중구분 list setting
 	useEffect(() => {
 		if (!featureSeAllList || featureSeAllList.length < 1) return
 
@@ -272,7 +282,6 @@ const SelfFeatureEdit = () => {
 		}
 
 	}, [featureSeAllList])
-
 	// 기본 정보 입력시 formData setting
 	useEffect(() => {
 		setUpdtFeatureInfo((state: FeatureInfo) => {
@@ -288,7 +297,6 @@ const SelfFeatureEdit = () => {
 			return rtn
 		})
 	}, [custFeatRule])
-
 	// 대상 선택시 formData setting
 	useEffect(() => {
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
@@ -333,7 +341,6 @@ const SelfFeatureEdit = () => {
 			return rtn
 		})
 	}, [sqlQueryInfo])
-
 	// 계산식 입력시 formData setting
 	useEffect(() => {
 		setUpdtFeatureInfo((state: FeatureInfo) => {
@@ -349,7 +356,6 @@ const SelfFeatureEdit = () => {
 			return rtn
 		})
 	}, [custFeatRuleCaseList])
-
 	// 대상 선택 list가 없는 경우 formula reset
 	useEffect(() => {
 		if (formulaTrgtList.length > 0) return
@@ -366,42 +372,15 @@ const SelfFeatureEdit = () => {
 		}
 
 	}, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc?.formula])
-
-	// 속성,행동데이터 response callback
-	useEffect(() => {
-		if (getTCByNSRError || getTCByNSRRes?.successOrNot === 'N') {
+	// 수정 API 호출
+	const updateCustFeatRule = () => {
+		if (!isValidFormula) {
 			toast({
 				type: ValidType.ERROR,
-				content: '조회 중 에러가 발생했습니다.',
+				content: ModalTitCont.EDIT_VALID.context,
 			})
-		} else {
-			if (getTCByNSRRes) {
-				setMstrSgmtTableandColMetaInfo(cloneDeep(getTCByNSRRes.result))
-			}
-		}
-	}, [getTCByNSRRes, getTCByNSRError])
-
-	const updateCustFeatRule = async () => {
-
-		if (!isValidFormula) {
-			setModalType(ModalType.ALERT)
-			setConfirmModalCont(ModalTitCont.EDIT_VALID.context)
-			setIsOpenConfirmModal(true)
 			return
 		}
-		/*
-		  Method      :: PUT
-		  Url         :: /api/v1/customerfeatures
-		  path param  :: {custFeatRuleId}
-		  query param :: 
-		  body param  :: updtFeatureInfo
-		*/
-		let custFeatRuleId = updtFeatureInfo.tbRsCustFeatRule.id
-		let config = cloneDeep(initConfig)
-		config.isLoarding = true
-		let request = cloneDeep(initApiRequest)
-		request.method = Method.PUT
-		request.url = `/api/v1/customerfeatures/${custFeatRuleId}`
 		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
 		param.customerFeature = updtFeatureInfo
 		param.submissionInfo.submission = sfSubmissionRequestData
@@ -414,16 +393,23 @@ const SelfFeatureEdit = () => {
 			})
 			return
 		}
-		request.params!.bodyParams = param
-		console.log("[updateCustFeatRule] Request  :: ", request)
-
-		let response = cloneDeep(initCommonResponse)
-		//response = await callApi(request)
-		console.log("[updateCustFeatRule] Response :: ", response)
-
-		// API 정상 응답시 페이지 redirect
-
+		setCustFeatureFormData(param)
+		updtRuleDesignMutate()
 	}
+	useEffect(() => {
+		if (updtRuleDesignErr || updtRuleDesignRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '수정 중 에러가 발생했습니다.',
+			})
+		} else if (updtRuleDesignSucc) {
+			toast({
+				type: ValidType.CONFIRM,
+				content: '수정되었습니다.',
+			})
+			navigate(-1)
+		}
+	}, [updtRuleDesignRes, updtRuleDesignSucc, updtRuleDesignErr, toast])
 
 	const updateCustFeatSQL = async () => {
 		/*
@@ -449,10 +435,9 @@ const SelfFeatureEdit = () => {
 
 		// API 정상 응답시 페이지 redirect
 	}
-
+	// input 입력값 변경시
 	const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target
-
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
@@ -461,19 +446,18 @@ const SelfFeatureEdit = () => {
 				}
 				return key
 			})
-			if (id === "featureNm") {
-				rtn.name = value
-			}
+			// feature temp에 들어가는 값 중 setting 되어야하는 값 설정
+			if (id === "featureKoNm") rtn.name = value
+			if (id === "featureDef") rtn.description = value
 			return rtn
 		})
-
+		// 승인 필수 정보 default setting
 		setSfSubmissionRequestData((state: SfSubmissionRequestInfo) => {
 			let rtn = cloneDeep(state)
 			if (id === "featureKoNm") rtn.title = `${value}_승인정보`
 			if (id === "featureDef") rtn.content = `${value}_승인정보`
 			return rtn
 		})
-
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
@@ -484,7 +468,6 @@ const SelfFeatureEdit = () => {
 			})
 			return rtn
 		})
-
 		setFeatureTempInfo((state: FeatureTemp) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
@@ -495,8 +478,8 @@ const SelfFeatureEdit = () => {
 			})
 			return rtn
 		})
-
 	}
+	// select box 선택시
 	const onchangeSelectHandler = (
 		e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
 		value: SelectValue<{}, false>,
@@ -504,7 +487,6 @@ const SelfFeatureEdit = () => {
 	) => {
 		let keyNm = String(id)
 		let v = String(value)
-
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
@@ -515,7 +497,6 @@ const SelfFeatureEdit = () => {
 			})
 			return rtn
 		})
-
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
 			let rtn = cloneDeep(state)
 			if (rtn) {
@@ -528,7 +509,6 @@ const SelfFeatureEdit = () => {
 			}
 			return rtn
 		})
-
 		setFeatureTempInfo((state: FeatureTemp) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
@@ -539,13 +519,12 @@ const SelfFeatureEdit = () => {
 			})
 			return rtn
 		})
-		// 대구분 선택시 중구분 select ooption Group ID setting
+		// 대구분 선택시 중구분 select ooption Group Id setting
 		if (keyNm === "featureSeGrp") {
 			setSeGrpId(v)
 		}
-
 	}
-
+	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string) => {
 		if (pageNm === selfFeatPgPpNm.LIST)
 			//navigate('..')
@@ -553,15 +532,15 @@ const SelfFeatureEdit = () => {
 		else
 			navigate(`../${pageNm}`)
 	}
-
+	// 대상선택 초기화
 	const targetClearHanbler = () => {
 		setModalType(ModalType.CONFIRM)
-		setRegType("trgtClear")
+		setTargetClear("trgtClear")
 		setConfirmModalTit(ModalTitCont.TRGT_CLEAR.title)
 		setConfirmModalCont(ModalTitCont.TRGT_CLEAR.context)
 		setIsOpenConfirmModal(true)
 	}
-
+	// 수정 버튼 클릭시
 	const onSubmitUpdateHandler = () => {
 		setModalType(ModalType.CONFIRM)
 		setConfirmModalTit(ModalTitCont.EDIT.title)

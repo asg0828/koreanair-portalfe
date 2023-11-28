@@ -70,7 +70,6 @@ const ReadSqlPop = ({
             });
         } else {
             if (response) {
-                console.log(response)
                 //setReadSql()
                 setReadSql((state: ReadSql) => { 
                     state.sql = response.result

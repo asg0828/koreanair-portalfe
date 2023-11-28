@@ -61,11 +61,49 @@ export const retrieveSubmissionInfo = (submissionNo: number) => {
 export const createCustFeatRule = (bodyParams: Object) => {
     return callApi({
         service: Service.KAL_SF_BE,
-        url: `${SelfFeatureUserApiURL.FEAT_INST_UPDT_BASE}`,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_BASE}`,
         method: Method.POST,
         params: {
             bodyParams: bodyParams
         }
+    })
+}
+// Self-feature 수정
+export const updateCustFeatRule = (custFeatRuleId: string, bodyParams: Object) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_BASE}/${custFeatRuleId}`,
+        method: Method.PUT,
+        params: {
+            bodyParams: bodyParams
+        }
+    })
+}
+// Self-feature 삭제
+export const deleteCustFeatRule = (qParams: QueryParams) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_BASE}`,
+        method: Method.DELETE,
+        params: {
+            queryParams: qParams
+        }
+    })
+}
+// Self-feature 승인 요청
+export const insertSubmissionRequest = (email: string, submissionId: number) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.SUB_REQ_BASE_PRE}/${email}${SelfFeatureUserApiURL.SUB_REQ_BASE_POST}/${submissionId}/request`,
+        method: Method.PUT
+    })
+}
+// Self-feature 승인 요청 취소
+export const cancelRequestSubmission = (email: string, submissionId: number) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.SUB_REQ_BASE_PRE}/${email}${SelfFeatureUserApiURL.SUB_REQ_BASE_POST}/${submissionId}/cancel`,
+        method: Method.PUT
     })
 }
 

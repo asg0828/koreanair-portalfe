@@ -213,26 +213,51 @@ export const transFuncCalcStr = ({
 
 export const validationCustReatRule = (formData: CustFeatureFormData) => {
     let validInfo = { text: "", valid: true }
-    
-    if (formData.customerFeature.featureTemp.featureSeGrp === "") {
+    if (
+        !formData.customerFeature.featureTemp.featureSeGrp
+        || formData.customerFeature.featureTemp.featureSeGrp === ""
+        || formData.customerFeature.featureTemp.featureSeGrp === "null"
+    ) {
         validInfo.text = "대구분을 확인 해주세요."
         validInfo.valid = false
-    } else if (formData.customerFeature.featureTemp.featureSe === "") {
+    } else if (
+        !formData.customerFeature.featureTemp.featureSe
+        || formData.customerFeature.featureTemp.featureSe === ""
+        || formData.customerFeature.featureTemp.featureSe === "null"
+    ) {
         validInfo.text = "중구분을 확인 해주세요."
         validInfo.valid = false
-    } else if (formData.customerFeature.featureTemp.featureKoNm === "") {
+    } else if (
+        !formData.customerFeature.featureTemp.featureKoNm
+        || formData.customerFeature.featureTemp.featureKoNm === ""
+        || formData.customerFeature.featureTemp.featureKoNm === "null"
+    ) {
         validInfo.text = "한글명을 확인 해주세요."
         validInfo.valid = false
-    } else if (formData.customerFeature.featureTemp.featureEnNm === "") {
+    } else if (
+        !formData.customerFeature.featureTemp.featureEnNm
+        || formData.customerFeature.featureTemp.featureEnNm === ""
+        || formData.customerFeature.featureTemp.featureEnNm === "null"
+    ) {
         validInfo.text = "영문명을 확인 해주세요."
         validInfo.valid = false
-    } else if (formData.customerFeature.featureTemp.featureTyp === "") {
+    } else if (
+        !formData.customerFeature.featureTemp.featureTyp
+        || formData.customerFeature.featureTemp.featureTyp === ""
+        || formData.customerFeature.featureTemp.featureTyp === "null"
+    ) {
         validInfo.text = "Feature 타입을 확인 해주세요."
         validInfo.valid = false
-    } else if (formData.customerFeature.featureTemp.featureDef === "") {
+    } else if (
+        !formData.customerFeature.featureTemp.featureDef
+        || formData.customerFeature.featureTemp.featureDef === ""
+    ) {
         validInfo.text = "Feature 정의를 확인 해주세요."
         validInfo.valid = false
-    } else if (formData.customerFeature.featureTemp.featureFm === "") {
+    } else if (
+        !formData.customerFeature.featureTemp.featureFm
+        || formData.customerFeature.featureTemp.featureFm === ""
+    ) {
         validInfo.text = "산출 로직을 확인 해주세요."
         validInfo.valid = false
     }
