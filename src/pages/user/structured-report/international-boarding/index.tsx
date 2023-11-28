@@ -13,6 +13,7 @@ import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQuerie
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import {ReportParams} from "@models/model/ReportModel";
 import {category} from "./data";
+import { dummyData } from "./testData";
 
 const initParams: FeatureParams = {
     featureSeGrp: '',
@@ -23,38 +24,49 @@ const initParams: FeatureParams = {
     searchConditions: [],
 };
 
-
 const List = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
     const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
+    const [selectedPeriod, setSelectedPeriod] = useState('1');
+    const [dateRange, setDateRange] = useState('');
 
     const [params, setParams] = useState<FeatureParams>(initParams);
-    // const [params, setParams] = useState<ReportParams>(initParams);
-    const [page, setPage] = useState<PageModel>(initPage);
+    const [page, setPage] = useState<PageModel>({
+        ...initPage,
+        totalCount: 100
+    });
     const columns: Array<ColumnsInfo> = [
-        { headerName: 'Rank', field: 'featureSeGrpNm', colSpan: 1 },
-        { headerName: 'One ID', field: 'featureSeNm', colSpan: 1 },
-        { headerName: '회원번호', field: 'featureKoNm', colSpan: 1 },
-        { headerName: '이름', field: 'featureEnNm', colSpan: 1 },
-        { headerName: 'VIP 회원 분류', field: 'featureDef', colSpan: 2 },
-        { headerName: '구매금액', field: 'enrUserNm', colSpan: 1 },
-        { headerName: '구매횟수', field: 'enrDeptNm', colSpan: 1 },
-        { headerName: '국내선 구매금액', field: 'enrDeptNm', colSpan: 1 },
-        { headerName: '국제선 구매금액', field: 'enrDeptNm', colSpan: 1 },
-        { headerName: 'FR 구매횟수', field: 'enrDeptNm', colSpan: 1 },
-        { headerName: 'PR   구매횟수', field: 'enrDeptNm', colSpan: 1 },
+        { headerName: 'Rank', field: 'Rank', colSpan: 1. },
+        { headerName: 'One ID', field: 'oneId', colSpan: 1.3 },
+        { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
+        { headerName: '이름', field: 'name', colSpan: 2 },
+        { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
+        { headerName: '구매금액', field: 'purchaseAmount', colSpan: 1 },
+        { headerName: '구매횟수', field: 'purchaseCount', colSpan: 1 },
+        { headerName: '국내선 구매금액', field: 'domesticAmount', colSpan: 1 },
+        { headerName: '국제선 구매금액', field: 'internationalAmount', colSpan: 1 },
+        { headerName: 'FR 구매횟수', field: 'FrCount', colSpan: 1 },
+        { headerName: 'PR 구매횟수', field: 'PrCount', colSpan: 1 },
     ];
-    const [rows, setRows] = useState<Array<FeatureModel>>([]); // Feature -> 정형보고서 데이터로 수정
+    // const [rows, setRows] = useState<Array<FeatureModel>>([]); // Feature -> 정형보고서 데이터로 수정
+    const [rows, setRows] = useState(dummyData.data.contents);
     const { data: response, isError, refetch } = useFeatureList(params, page);
     const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
+    console.debug('rows', rows)
 
     const calculateDateRange = (period: string) => {
         const endDate = new Date();
         let startDate = new Date();
 
+        if (period === '선택') {
+            return '';
+        }
+
         switch (period) {
+            case '선택':
+                return '';
             case '1':
                 startDate = new Date(endDate.getFullYear() , 0, 2);
                 break;
@@ -97,11 +109,18 @@ const List = () => {
         setParams(initParams);
     };
 
+    useEffect(() => {
+        setDateRange(calculateDateRange(selectedPeriod)); // 선택된 기간에 따라 날짜 범위 계산
+    }, [selectedPeriod]);
+
     const handleChangeParams = (name: string, value: any) => {
         setParams((prevState) => ({
             ...prevState,
             [name]: value,
         }));
+        if (name === 'featureSeGrp') {
+            setSelectedPeriod(value);
+        }
     };
 
     useEffect(() => {
@@ -122,14 +141,14 @@ const List = () => {
             });
         } else {
             if (response?.data) {
-                // setRows(response.data.contents);
+                setRows(response.data.contents);
             }
         }
     }, [response, isError, toast]);
 
     return (
         <>
-            <SearchForm onSearch={handleSearch} onClear={handleClear}>
+            <SearchForm onSearch={handleSearch} onClear={handleClear} showClearButton={false} showSearchButton={false}>
                 <TR>
                     <TH colSpan={1} align="left">
                         조회기준
@@ -146,6 +165,7 @@ const List = () => {
                                 <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                             ))}
                         </Select>
+                        {dateRange}
                     </TD>
                 </TR>
             </SearchForm>
@@ -156,8 +176,9 @@ const List = () => {
                 enableSort={true}
                 clickable={true}
                 showPageSizeSelect={false}
+                showPagination={false}
                 page={page}
-                onClick={goToDetail}
+                // onClick={goToDetail}
                 onChange={handlePage}
             />
         </>

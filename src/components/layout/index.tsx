@@ -10,7 +10,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 export const defaultPath: defaultPathInfo = {
   '/biz-meta': '/biz-meta/feature',
   '/customer-info': '/customer-info/dashboard',
-  '/report': '/report/structured-report',
+  '/structured-report': '/structured-report',
   '/self-feature': '/self-feature/self-feature',
   '/feature': '/feature/interest',
   '/board': '/board/notice',
