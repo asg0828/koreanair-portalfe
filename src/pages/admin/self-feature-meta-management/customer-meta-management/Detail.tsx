@@ -7,16 +7,20 @@ import { customerMetaInfoColumn } from './data';
 import DataGridMeta from '@/components/grid/DataGridMeta';
 import { useMetaTableDetail } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { useLocation } from 'react-router-dom';
+import { RowsInfo } from '@/models/components/Table';
 
 const CustomerMetaManagementDetail = () => {
   const location = useLocation();
+  const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<Array<RowsInfo>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({
     metaTblId: location?.state?.metaTblId || '',
+    metaTblLogiNm: location?.state?.metaTblLogiNm || '',
+    rtmTblYn: location?.state?.rtmTblYn || '',
   });
 
-  const [rows, setRows] = useState([]);
+  // const [rows, setRows] = useState<Array<CustMetaDetailInfo>>(initCustMetaDetailInfo);
+  const [rows, setRows] = useState<any>([]);
   const { data: response, isError, refetch } = useMetaTableDetail(searchInfo.metaTblId);
-
   const { toast } = useToast();
 
   /* input state관리 */
@@ -42,12 +46,14 @@ const CustomerMetaManagementDetail = () => {
       });
     } else {
       if (response?.result) {
-        console.log(response?.result.tbCoMetaTblClmnInfoList);
+        // console.log(response?.result.tbCoMetaTblClmnInfoList);
 
         setRows(response?.result.tbCoMetaTblClmnInfoList);
+        setTbCoMetaTbInfo(response?.result.tbCoMetaTbInfo);
       }
     }
   }, [response, isError, toast]);
+
   return (
     <Stack direction="Vertical">
       <SearchForm>
@@ -179,7 +185,12 @@ const CustomerMetaManagementDetail = () => {
         </HorizontalTable>
       </SearchForm>
 
-      <DataGridMeta columns={customerMetaInfoColumn} rows={rows}></DataGridMeta>
+      <DataGridMeta
+        props={searchInfo}
+        list={tbCoMetaTbInfo}
+        columns={customerMetaInfoColumn}
+        rows={rows}
+      ></DataGridMeta>
     </Stack>
   );
 };

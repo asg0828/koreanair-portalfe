@@ -6,7 +6,7 @@ const ErrorPage = () => {
   const contextPath = useAppSelector(selectContextPath());
 
   const handleConfirm = () => {
-    window.history.pushState({}, '', contextPath);
+    window.location.href = contextPath;
   };
 
   return (

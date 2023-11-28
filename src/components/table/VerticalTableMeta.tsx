@@ -1,9 +1,14 @@
 import NoResult from '@/components/emptyState/NoData';
+import { useUpdateMetaTable } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { ModalType, View } from '@/models/common/Constants';
 import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
+import { openModal } from '@/reducers/modalSlice';
 import '@components/table/VerticalTable.scss';
-import { Checkbox, Radio, TBody, TD, TH, THead, TR, Table, TextField, Typography } from '@components/ui';
-import { ReactNode, useEffect, useState } from 'react';
+import { Button, Checkbox, Radio, TBody, TD, TH, THead, TR, Table, TextField, Typography } from '@components/ui';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -14,6 +19,9 @@ export interface VerticalTableProps {
   rowSelection?: Function;
   onClick?: Function;
   children?: ReactNode;
+  onChange?: Function;
+  props?: any;
+  list: Array<RowsInfo>;
 }
 
 const VerticalTableMeta: React.FC<VerticalTableProps> = ({
@@ -23,29 +31,29 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
   enableSort = false,
   clickable = false,
   rowSelection,
+  onChange,
   onClick,
+  props,
+  list,
 }) => {
+  const { metaTblId, metaTblLogiNm, rtmTblYn } = props;
+  const tbCoMetaTbInfo = list;
   const isCheckbox = typeof rowSelection === 'function';
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
-  const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
-
-  const handleCheckedChange = (checked: CheckedState, row: RowsInfo, index: number): void => {
-    let newCheckedList: Array<number> = [];
-
-    if (checked) {
-      newCheckedList = [...checkedList, index];
-    } else {
-      newCheckedList = checkedList.filter((i) => i !== index);
-    }
-
-    setCheckedList(newCheckedList);
-    isCheckbox && rowSelection(newCheckedList, row, index, checked);
-  };
+  const [tbCoMetaTblClmnInfoList, setTbCoMetaTblClmnInfoList] = useState<Array<RowsInfo>>(Array.from(rows));
+  const {
+    data: uResponse,
+    isSuccess: uIsSuccess,
+    isError: uIsError,
+    mutate,
+  } = useUpdateMetaTable(metaTblId, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList, rtmTblYn);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
     const oValue = order === SortDirectionCode.ASC ? 1 : order === SortDirectionCode.DESC ? -1 : 0;
 
-    const sortRows = rows.sort((a, b) => {
+    const tbCoMetaTblClmnInfoList = rows.sort((a, b) => {
       if (a[index] === b[index]) {
         return 0;
       } else if (a[index] < b[index]) {
@@ -55,7 +63,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       }
     });
 
-    setSortRows(sortRows);
+    setTbCoMetaTblClmnInfoList(tbCoMetaTblClmnInfoList);
   };
 
   const handleClick = (row: RowsInfo, index: number) => {
@@ -63,127 +71,225 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
   };
 
   useEffect(() => {
-    setSortRows(rows);
+    setTbCoMetaTblClmnInfoList(rows);
   }, [rows]);
 
-  const timeStampChg = (e: any) => {
-    console.log(e);
+  const timeStampChg = (rowIndex: number) => {
+    setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
+      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+        return {
+          ...row,
+          baseTimeYn: index === rowIndex ? 'Y' : 'N',
+          chgDtpCd: index === rowIndex ? 'timestamp' : '',
+          dataFormat: index === rowIndex ? 'yyyy-MM-dd HH:mm:ss' : '',
+        };
+      });
+      return updatedRows;
+    });
+  };
+
+  // 체크박스 클릭 시 값 변경 함수
+  const ynChg = (rowIndex: number, field: string) => {
+    setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
+      const updatedRows: RowsInfo[] = tbCoMetaTblClmnInfoList.map((row, index) => {
+        if (field === 'pkYn' && index === rowIndex) {
+          return {
+            ...row,
+            pkYn: tbCoMetaTblClmnInfoList[rowIndex].pkYn === 'Y' ? 'N' : 'Y',
+          };
+        } else if (field === 'clmnUseYn' && index === rowIndex) {
+          return {
+            ...row,
+            clmnUseYn: tbCoMetaTblClmnInfoList[rowIndex].clmnUseYn === 'Y' ? 'N' : 'Y',
+          };
+        }
+        return row;
+      });
+      return updatedRows;
+    });
+  };
+
+  /* input state관리 */
+  function onChangeHandler(e: any, rowIndex: number) {
+    const { id, value } = e.target;
+
+    setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
+      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+        if (index === rowIndex) {
+          return {
+            ...row,
+            [id]: value,
+          };
+        }
+        return row;
+      });
+
+      return updatedRows;
+    });
+  }
+
+  const editCustomerDetailInfo = (data: any) => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '저장',
+        content: '수정하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
+  };
+
+  const goToList = () => {
+    navigate('..');
   };
 
   return (
-    <Table variant="vertical" size="normal" align="center" className="verticalTable">
-      {showHeader && columns?.length > 0 && (
-        <THead>
-          <TR>
-            {columns.map((column, index) => (
-              <TH
-                key={`header-${index}`}
-                required={column.require}
-                colSpan={column.colSpan ? column.colSpan : undefined}
-                // enableSort={column.field.length > 0 && enableSort}
-                onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
-              >
-                {column.headerName}
-              </TH>
-            ))}
-          </TR>
-        </THead>
-      )}
-      {sortRows?.length > 0 ? (
-        <TBody clickable={clickable}>
-          {sortRows.map((row, rowIndex) => (
-            <TR key={`row-${rowIndex}`}>
-              {Object.keys(columns).map((column, columnIndex) => {
-                // 체크박스
-                if (columns[columnIndex].field.includes('Yn') && columns[columnIndex].field !== 'baseTimeYn') {
-                  console.log(columns[columnIndex].field);
-                  console.log(row[columns[columnIndex].field]);
-
-                  return (
-                    <TD>
-                      <Checkbox
-                        key={`column-${columnIndex}`}
-                        defaultChecked={row[columns[columnIndex].field] === 'Y'}
-                      />
-                    </TD>
-                  );
-                }
-                // 라디오 버튼
-                else if (columns[columnIndex].field === 'baseTimeYn') {
-                  return (
-                    <TD>
-                      <Radio
-                        key={`column-${columnIndex}`}
-                        name="metaCustomerRadio"
-                        onClick={timeStampChg}
-                        defaultChecked={row[columns[columnIndex].field] === 'Y'}
-                      />
-                    </TD>
-                  );
-                }
-
-                // 텍스트필드
-                else if (
-                  columns[columnIndex].field === 'metaTblClmnLogiNm' ||
-                  columns[columnIndex].field === 'metaTblClmnDesc'
-                ) {
-                  return (
-                    <TD
-                      key={`column-${columnIndex}`}
-                      colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-                      align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
-                      onClick={() => handleClick(row, rowIndex)}
-                    >
-                      {(() => {
-                        if (columns[columnIndex].render) {
-                          return columns[columnIndex].render?.(
-                            rowIndex,
-                            columns[columnIndex].field,
-                            columns[columnIndex].maxLength
-                          );
-                        } else {
-                          return <TextField value={row[columns[columnIndex].field]} />;
-                        }
-                      })()}
-                    </TD>
-                  );
-                } else if (columns[columnIndex].field === 'no') {
-                  return <TD>{rowIndex + 1}</TD>;
-                }
-
-                // 그냥row
-                else {
-                  return (
-                    <TD
-                      key={`column-${columnIndex}`}
-                      // colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-                      // align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
-                      onClick={() => handleClick(row, rowIndex)}
-                    >
-                      {(() => {
-                        if (columns[columnIndex].render) {
-                          return columns[columnIndex].render?.(
-                            rowIndex,
-                            columns[columnIndex].field,
-                            columns[columnIndex].maxLength
-                          );
-                        } else {
-                          return <Typography>{row[columns[columnIndex].field]} </Typography>;
-                        }
-                      })()}
-                    </TD>
-                  );
-                }
-              })}
+    <>
+      <Table
+        style={{ overflowY: 'scroll', height: '500px' }}
+        variant="vertical"
+        size="normal"
+        align="center"
+        className="verticalTable"
+      >
+        {showHeader && columns?.length > 0 && (
+          <THead>
+            <TR>
+              {columns.map((column, index) => (
+                <TH
+                  key={`header-${index}`}
+                  required={column.require}
+                  colSpan={column.colSpan ? column.colSpan : undefined}
+                  // enableSort={column.field.length > 0 && enableSort}
+                  onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
+                >
+                  {column.headerName}
+                </TH>
+              ))}
             </TR>
-          ))}
-        </TBody>
-      ) : (
-        <TBody className="no-data-wrap">
-          <NoResult />
-        </TBody>
-      )}
-    </Table>
+          </THead>
+        )}
+        {tbCoMetaTblClmnInfoList?.length > 0 ? (
+          <TBody clickable={clickable}>
+            {tbCoMetaTblClmnInfoList.map((row, rowIndex) => (
+              <TR key={`row-${rowIndex}`}>
+                {Object.keys(columns).map((column, columnIndex) => {
+                  // 체크박스
+                  if (columns[columnIndex].field.includes('Yn') && columns[columnIndex].field !== 'baseTimeYn') {
+                    return (
+                      <TD>
+                        <Checkbox
+                          key={`column-${columnIndex}`}
+                          defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                          onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
+                        />
+                      </TD>
+                    );
+                  }
+                  // 라디오 버튼
+                  else if (columns[columnIndex].field === 'baseTimeYn') {
+                    return (
+                      <TD>
+                        <Radio
+                          key={`column-${columnIndex}`}
+                          name="metaCustomerRadio"
+                          onChange={(e) => timeStampChg(rowIndex)}
+                          defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                        />
+                      </TD>
+                    );
+                  }
+
+                  // 텍스트필드
+                  else if (
+                    columns[columnIndex].field === 'metaTblClmnLogiNm' ||
+                    columns[columnIndex].field === 'metaTblClmnDesc'
+                  ) {
+                    return (
+                      <TD
+                        key={`column-${columnIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                        align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                        onClick={() => handleClick(row, rowIndex)}
+                      >
+                        {(() => {
+                          if (columns[columnIndex].render) {
+                            return columns[columnIndex].render?.(
+                              rowIndex,
+                              columns[columnIndex].field,
+                              columns[columnIndex].maxLength
+                            );
+                          } else {
+                            return (
+                              <TextField
+                                id={columns[columnIndex].field}
+                                onChange={(e) => onChangeHandler(e, rowIndex)}
+                                value={row[columns[columnIndex].field]}
+                              />
+                            );
+                          }
+                        })()}
+                      </TD>
+                    );
+                  } else if (columns[columnIndex].field === 'no') {
+                    return <TD>{rowIndex + 1}</TD>;
+                  }
+
+                  // 그냥row
+                  else {
+                    return (
+                      <TD
+                        key={`column-${columnIndex}`}
+                        // colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                        // align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                        onClick={() => handleClick(row, rowIndex)}
+                      >
+                        {(() => {
+                          if (columns[columnIndex].render) {
+                            return columns[columnIndex].render?.(
+                              rowIndex,
+                              columns[columnIndex].field,
+                              columns[columnIndex].maxLength
+                            );
+                          } else {
+                            return <Typography>{row[columns[columnIndex].field]} </Typography>;
+                          }
+                        })()}
+                      </TD>
+                    );
+                  }
+                })}
+              </TR>
+            ))}
+          </TBody>
+        ) : (
+          <TBody className="no-data-wrap">
+            <NoResult />
+          </TBody>
+        )}
+      </Table>
+      <Button
+        onClick={editCustomerDetailInfo}
+        style={{ width: 50 }}
+        type="submit"
+        priority="Primary"
+        appearance="Contained"
+        size="LG"
+      >
+        수정
+      </Button>
+      <Button
+        onClick={goToList}
+        style={{ width: 50 }}
+        type="submit"
+        priority="Primary"
+        appearance="Contained"
+        size="LG"
+      >
+        목록
+      </Button>
+    </>
   );
 };
+
 export default VerticalTableMeta;

@@ -11,7 +11,8 @@ export interface VerticalTableProps {
   showHeader?: boolean;
   enableSort?: boolean;
   clickable?: boolean;
-  rowSelection?: Function;
+  isMultiSelected?: boolean;
+  rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
   onClick?: Function;
   children?: ReactNode;
 }
@@ -22,43 +23,50 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   showHeader = true,
   enableSort = false,
   clickable = false,
+  isMultiSelected = true,
   rowSelection,
   onClick,
 }) => {
   const isCheckbox = typeof rowSelection === 'function';
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
-  const [checkedList, setCheckedList] = useState<Array<number>>([]);
+  const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);
+  const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
 
-  const handleCheckedChangeAll = (checked: boolean): void => {
-    let newCheckedList: Array<number> = [];
+  const handleCheckedChange = (isAll: boolean, checked: CheckedState, index: number): void => {
+    checked = checked ? true : false;
+    let newCheckedIndexList: Array<number> = [];
+    let newCheckedList: Array<RowsInfo> = [];
 
-    if (checked) {
-      newCheckedList = new Array(rows.length).fill(null).map((v, i) => i);
-    }
-
-    setCheckedList(newCheckedList);
-    setIsCheckedAll(checked);
-    isCheckbox && rowSelection(newCheckedList);
-  };
-
-  const handleCheckedChange = (checked: CheckedState, row: RowsInfo, index: number): void => {
-    let newCheckedList: Array<number> = [];
-
-    if (checked) {
-      newCheckedList = [...checkedList, index];
+    if (isAll) {
+      if (checked) {
+        if (isMultiSelected || rows.length <= 1) {
+          newCheckedIndexList = new Array(rows.length).fill(null).map((v, i) => i);
+        }
+      }
     } else {
-      newCheckedList = checkedList.filter((i) => i !== index);
+      if (checked) {
+        if (isMultiSelected) {
+          newCheckedIndexList = [...checkedIndexList, index];
+        } else {
+          newCheckedIndexList = [index];
+        }
+      } else {
+        newCheckedIndexList = checkedIndexList.filter((i) => i !== index);
+      }
     }
 
-    if (newCheckedList.length === rows.length) {
+    newCheckedList = rows.filter((item, index) => newCheckedIndexList.some((index2) => index === index2));
+
+    if (newCheckedIndexList.length === rows.length) {
       setIsCheckedAll(true);
     } else {
       setIsCheckedAll(false);
     }
 
+    setCheckedIndexList(newCheckedIndexList);
     setCheckedList(newCheckedList);
-    isCheckbox && rowSelection(newCheckedList, row, index, checked);
+    isCheckbox && rowSelection(newCheckedIndexList, newCheckedList);
   };
 
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
@@ -83,7 +91,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
 
   useEffect(() => {
     setIsCheckedAll(false);
-    setCheckedList([]);
+    setCheckedIndexList([]);
     setSortRows(rows);
   }, [rows]);
 
@@ -94,7 +102,10 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
           <TR>
             {isCheckbox && (
               <TH colSpan={0.5}>
-                <Checkbox checked={isCheckedAll} onCheckedChange={handleCheckedChangeAll} />
+                <Checkbox
+                  checked={isCheckedAll}
+                  onCheckedChange={(checked) => handleCheckedChange(true, checked, -1)}
+                />
               </TH>
             )}
             {columns.map((column, index) => (
@@ -114,12 +125,12 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
       {sortRows?.length > 0 ? (
         <TBody clickable={clickable}>
           {sortRows.map((row, rowIndex) => (
-            <TR key={`row-${rowIndex}`} selected={checkedList.includes(rowIndex)}>
+            <TR key={`row-${rowIndex}`} selected={checkedIndexList.includes(rowIndex)}>
               {isCheckbox && (
                 <TD colSpan={0.5}>
                   <Checkbox
-                    checked={checkedList.includes(rowIndex)}
-                    onCheckedChange={(checked) => handleCheckedChange(checked, row, rowIndex)}
+                    checked={checkedIndexList.includes(rowIndex)}
+                    onCheckedChange={(checked) => handleCheckedChange(false, checked, rowIndex)}
                   />
                 </TD>
               )}

@@ -103,6 +103,8 @@ const CustomerMetaManagement = () => {
     navigate(View.DETAIL, {
       state: {
         metaTblId: row.metaTblId,
+        metaTblLogiNm: row.metaTblLogiNm,
+        rtmTblYn: row.rtmTblYn,
       },
     });
   };
