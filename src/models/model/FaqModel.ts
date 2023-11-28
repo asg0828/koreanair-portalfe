@@ -8,6 +8,7 @@ export interface FaqParams {
 
 export interface FaqModel extends CreatedFaqModel, CommonModel {
   faqId: string;
+  codeNm: string;
 }
 
 export interface CreatedFaqModel extends FileInfo {

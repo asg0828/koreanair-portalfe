@@ -102,7 +102,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
           {rows && rows.length > 0 ? (
             rows.map((row) => (
               <div onClick={() => onClick && onClick(row.faqId)}>
-                <AccordionItem title={`[${row.clCode || ''}] ${row.qstn || ''}`} value={row.faqId}>
+                <AccordionItem title={`[${row.codeNm || ''}] ${row.qstn || ''}`} value={row.faqId}>
                   <Stack justifyContent="End" gap="SM" className="width-100">
                     {contextPath === ContextPath.ADMIN && (
                       <>

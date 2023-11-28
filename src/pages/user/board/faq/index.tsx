@@ -115,9 +115,9 @@ const List = () => {
       });
     } else if (isSuccess) {
       if (response?.data) {
-        response.data.contents.forEach((item: FaqModel) => {
-          item.clCode = getCode(GroupCodeType.FAQ_TYPE, item.clCode)?.codeNm || '';
-        });
+        response.data.contents.forEach(
+          (item: FaqModel) => (item.codeNm = getCode(GroupCodeType.FAQ_TYPE, item.clCode)?.codeNm || '')
+        );
         setRows(response.data.contents);
         setPage(response.data.page);
       }
@@ -132,11 +132,11 @@ const List = () => {
       });
     } else if (gIsSuccess) {
       if (gResponse?.data) {
-        const faqId = gResponse.data.faqId;
+        const data = gResponse.data;
         const newRows = [...rows];
-        const index = newRows.findIndex((item) => item.faqId === faqId);
-        newRows.splice(index, 1, gResponse.data);
-
+        const index = newRows.findIndex((item) => item.faqId === data.faqId);
+        data.codeNm = getCode(GroupCodeType.FAQ_TYPE, data.clCode)?.codeNm || '';
+        newRows.splice(index, 1, data);
         setRows(newRows);
       }
     }
