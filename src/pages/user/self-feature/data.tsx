@@ -226,7 +226,7 @@ export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
 
 export const initFeatureTemp: FeatureTemp = {
     featureId: '',
-    featureTyp: '',
+    featureTyp: 'FACT_INDEX',
     featureSeGrp: '',
     featureSe: '',
     featureKoNm: '',

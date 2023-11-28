@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
+import { useAppSelector } from "@/hooks/useRedux"
+import { selectSessionInfo } from "@/reducers/authSlice"
 
 import VerticalTable from "@/components/table/VerticalTable"
 import HorizontalTable from "@/components/table/HorizontalTable"
@@ -17,6 +19,7 @@ import {
     SelectOption,
     TextField,
     Label,
+    useToast,
 } from '@components/ui'
 
 import { RowsInfo } from "@/models/components/Table"
@@ -24,99 +27,104 @@ import {
     sfSubmissionListColumns as columns,
     sfSubmissionTypeOption,
     sfSubmissionStatusOption,
-    initSfSubmissionRequestInfo,
+    initFeatureSubmissionSearchProps,
 } from './data'
 import { 
+    FeatureSubmissionSearchProps,
+    SfSubmission,
     SfSubmissionRequestInfo,
 } from "@/models/selfFeature/FeatureSubmissionModel"
-import { Method, callApi } from "@/utils/ApiUtil"
 import {
-    initApiRequest, 
-    initCommonResponse, 
-    initConfig, 
-    initQueryParams,
-    selfFeatPgPpNm,
+    selfFeatPgPpNm, subFeatStatus, subFeatStatusNm,
 } from '@/models/selfFeature/FeatureCommon';
 
-export interface SearchProps {
-    type?: string | ''
-    status?: string | ''
-    referenceNo?: string | ''
-    submissionNo?: string | ''
-    requester?: string | ''
-    title?: string | ''
-    titleLike?: string | ''
-    requestDateFrom?: string | ''
-    requestDateTo?: string | ''
-    approvalCompletionDateFrom?: string | ''
-    approvalCompletionDateTo?: string | ''
-}
+import { useSubmissionRequests } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries"
+import { ValidType } from "@/models/common/Constants"
 
 const SfSubmissionRequest = () => {
 
-    const navigate = useNavigate()
+	const navigate = useNavigate()
+	const { toast } = useToast()
+    const sessionInfo = useAppSelector(selectSessionInfo())
 
-    const [ requestDateFrom, setRequestDateFrom ] = useState<string>('2023-01-01')
+    const [ requestDateFrom, setRequestDateFrom ] = useState<string>('')
     const [ requestDateTo, setRequestDateTo ] = useState<string>('')
 
-    const [ search, setSearch ] = useState<SearchProps>({
-        type: "CustomerFeature",
-        status: "",
-        title: "",
-        requestDateFrom: "",
-        requestDateTo: "",
-    })
-
-    const [ sfSubmissionList, setSfSubmissionList ] = useState<Array<SfSubmissionRequestInfo>>(cloneDeep([initSfSubmissionRequestInfo]))
-
+    const [ search, setSearch ] = useState<FeatureSubmissionSearchProps>(initFeatureSubmissionSearchProps)
+    const [ userEmail, setUserEmail ] = useState<string>("")
+    const { data: subReqListRes, isError: subReqListErr, refetch: subReqListRefetch } = useSubmissionRequests(userEmail, search)
+    const [ sfSubmissionList, setSfSubmissionList ] = useState<Array<SfSubmissionRequestInfo>>([])
+    
+	// component mount
     useEffect(() => {
         retrieveSubmissions()
     }, [])
-
-    const retrieveSubmissions = async () => {
-        /*
-            Method      :: GET
-            Url         :: /api/v1/users/{email}/submissions
-            path param  :: {email}
-            query param :: type=&status=&referenceNo=&submissionNo=&requester=&title=&titleLike=&requestDateFrom=&requestDateTo=&approvalCompletionDateFrom=&approvalCompletionDateTo=
-            body param  :: 
-        */
-        let config = cloneDeep(initConfig)
-        config.isLoarding = true
-        let request = cloneDeep(initApiRequest)
-        request.method = Method.GET
-        request.url = `/api/v1/submissions`
-        request.params!.queryParams = Object.assign(cloneDeep(initQueryParams), search)
-        console.log("[retrieveSubmissions] Request  :: ", request)
-
-        let response = cloneDeep(initCommonResponse)
-        response = await callApi(request)
-        console.log("[retrieveSubmissions] Response :: ", response)
-
-        setSfSubmissionList((state: Array<SfSubmissionRequestInfo>) => {
-            let rtn = cloneDeep(state)
-            let t = []
-            for (let i = 0; i < 5; i++) {
-                let a = cloneDeep(initSfSubmissionRequestInfo)
-                a.type = "Rule-Design"
-                a.referenceNo = "custFeatRuleId"
-                a.title = `결재요청목록${i+1}`
-                a.status = "결재진행중"
-                a.requesterName = "요청자"
-                let rd = new Date("2023-11-03T02:28:59.114Z")
-                a.requestDate = `${rd.getFullYear()}-${(rd.getMonth())}-${rd.getDate()+1} ${rd.getHours()}:${rd.getMinutes()}:${rd.getSeconds()}`
-                t.push(a)
-            }
-            rtn = t
-            return rtn
-        })
+    // 결재 목록 API 호출
+    const retrieveSubmissions = () => {
+		if (!sessionInfo.email) {
+			console.log("no session info email")
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다',
+			})
+			return
+		}
+		setUserEmail(sessionInfo.email)
     }
-
+    // 결재 목록 API refetch
+    useEffect(() => {
+        if (userEmail && userEmail !== "") {
+            subReqListRefetch()
+        }
+    }, [userEmail])
+    // 결재 목록 API callback
+	useEffect(() => {
+		if (subReqListErr || subReqListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (subReqListRes) {
+                setSfSubmissionList((state: Array<SfSubmissionRequestInfo>) => {
+                    let rtn = cloneDeep(state)
+                    rtn = subReqListRes.result.map((subReq: SfSubmission) => {
+                        let rd = new Date(subReq.submission.requestDate)
+                        subReq.submission.requestDate = `${rd.getFullYear()}-${(rd.getMonth())}-${rd.getDate()+1} ${rd.getHours()}:${rd.getMinutes()}:${rd.getSeconds()}`
+						// 진행 상태 check
+						if (
+							!subReq.submission.status
+							|| subReq.submission.status === ""
+							|| subReq.submission.status === subFeatStatus.SAVE
+						) {
+							subReq.submission.statusNm = subFeatStatusNm.SAVE
+						} else if (
+							subReq.submission.status === subFeatStatus.REQ
+							|| subReq.submission.status === subFeatStatus.IN_APRV
+						) {
+							subReq.submission.statusNm = subFeatStatusNm.IN_APRV
+						} else if (subReq.submission.status === subFeatStatus.APRV) {
+							subReq.submission.statusNm = subFeatStatusNm.APRV
+						} else if (subReq.submission.status === subFeatStatus.REJT) {
+							subReq.submission.statusNm = subFeatStatusNm.REJT
+						} else if (subReq.submission.status === subFeatStatus.CNCL) {
+							subReq.submission.statusNm = subFeatStatusNm.CNCL
+						} else if (subReq.submission.status === subFeatStatus.DLET) {
+							subReq.submission.statusNm = subFeatStatusNm.DLET
+						}
+                        return subReq.submission
+                    })
+                    return rtn
+                })
+			}
+		}
+	}, [subReqListRes, subReqListErr, subReqListRefetch, toast])
+    // 검색 input 입력시
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         setSearch({...search, [id]: value,})
     }
-
+    // 검색 select 선택시
     const onchangeSelectHandler = (
         e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
         value: SelectValue<{}, false>,
@@ -124,11 +132,11 @@ const SfSubmissionRequest = () => {
     ) => {
         setSearch({...search, [`${id}`]: String(value),})
     }
-
+    // 검색 버튼 클릭시
     const onClickSearch = () => {
         retrieveSubmissions()
     }
-    
+    // 페이지 이동
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
         if (pageNm === selfFeatPgPpNm.DETL) {
             navigate(pageNm, { state: rows })
@@ -154,7 +162,7 @@ const SfSubmissionRequest = () => {
                                 size="MD"
                                 onValueChange={(nextVal) => {
                                     setRequestDateFrom(nextVal)
-                                    setSearch((prevState: SearchProps) => {
+                                    setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
                                         rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
                                         return rtn
@@ -171,7 +179,7 @@ const SfSubmissionRequest = () => {
                                 size="MD"
                                 onValueChange={(nextVal) => {
                                     setRequestDateTo(nextVal)
-                                    setSearch((prevState: SearchProps) => {
+                                    setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
                                         rtn.requestDateTo = `${nextVal}T19:20:30+01:00`
                                         return rtn
