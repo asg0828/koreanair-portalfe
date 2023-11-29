@@ -39,21 +39,21 @@ export const useSubmissionInfo = (submissionNo: number) => {
 export const useSubmissionRequests = (email: string, qParams: QueryParams) => {
     return useQuery(['/submission-requests', email], () => retrieveSubmissionRequests(email, qParams), { enabled: false })
 }
-// Self-feature 쿼리확인 조회
+// Self-feature 쿼리확인 조회(팝업)
 export const useReadSql = (custFeatRuleId: string) => {
-    return useQuery(['/read-sql', custFeatRuleId], () => retrieveReadSql(custFeatRuleId), { enabled: false })
+    return useQuery(['/read-sql', custFeatRuleId], () => retrieveReadSql(custFeatRuleId), { enabled: false, suspense: false })
 }
-// Self-feature 배치 실행 내역 조회
+// Self-feature 배치 실행 내역 조회(팝업)
 export const useBatchExecuteLogs = (custFeatRuleId: string) => {
-    return useQuery(['/batch-execute-logs', custFeatRuleId], () => retrieveBatchExecuteLogs(custFeatRuleId), { enabled: false })
+    return useQuery(['/batch-execute-logs', custFeatRuleId], () => retrieveBatchExecuteLogs(custFeatRuleId), { enabled: false, suspense: false })
 }
-// Self-feature 실행 결과 샘플 조회
+// Self-feature 실행 결과 샘플 조회(팝업)
 export const useSampleData = (custFeatRuleId: string) => {
-    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(custFeatRuleId), { enabled: false })
+    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(custFeatRuleId), { enabled: false, suspense: false })
 }
-// Self-feature 선후행 관계 리스트 조회
+// Self-feature 선후행 관계 리스트 조회(팝업)
 export const useCustFeatParentChildList = (custFeatRuleName: string) => {
-    return useQuery(['/cust-feat-parent-child-list'], () => retrieveCustFeatParentChildList(custFeatRuleName), { enabled: false })
+    return useQuery(['/cust-feat-parent-child-list'], () => retrieveCustFeatParentChildList(custFeatRuleName), { enabled: false, suspense: false })
 }
 // Self-feature 결재선 조회
 export const useApproverCandidate = () => {
