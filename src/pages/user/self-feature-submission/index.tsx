@@ -257,16 +257,14 @@ const SfSubmissionRequest = () => {
                     </Select>
                 </Stack>
                 {/* 목록 영역 */}
-                <Stack className="pagination-layout">
-                    <VerticalTable
-                        columns={columns}
-                        rows={sfSubmissionList}
-                        enableSort={true}
-                        clickable={true}
-                        //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
-                        onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
-                    />
-                </Stack>
+                <VerticalTable
+                    columns={columns}
+                    rows={sfSubmissionList}
+                    enableSort={true}
+                    clickable={true}
+                    //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
+                    onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
+                />
                 <Pagination size="MD" />
                 {/* 목록 영역 */}
             </Stack>
