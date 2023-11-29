@@ -95,7 +95,9 @@ const TransFunctionPop = ({
                 transPopClear()
                 setIsOpenConfirmModal(false)
             }
-            if (btnType === "transApply") validationCheckModal()
+            if (btnType === "transApply") {
+                validationCheckModal()
+            }
         }
         if (modalType === ModalType.ALERT) {
             setIsOpenConfirmModal(false)
@@ -342,7 +344,7 @@ const TransFunctionPop = ({
             setConfirmModalCont("선택된 함수가 없습니다.")
             setIsOpenConfirmModal(true)
             //setTransFuncChecked && setTransFuncChecked(false)
-            setTrgtItem('', '', '', '')
+            //setTrgtItem('', '', '', '')
         } else {
             if (functionVal === "NVL") {
                 if (!variable1Val || variable1Val === "") {
@@ -352,6 +354,7 @@ const TransFunctionPop = ({
                     setIsOpenConfirmModal(true)
                 } else {
                     setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    setIsOpenConfirmModal(false)
                     handleClose(false)
                 }
             } else if (functionVal === "SUBSTRING") {
@@ -367,6 +370,7 @@ const TransFunctionPop = ({
                     setIsOpenConfirmModal(true)
                 } else {
                     setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    setIsOpenConfirmModal(false)
                     handleClose(false)
                 }
             } else if (functionVal === "CONCAT") {
@@ -377,10 +381,60 @@ const TransFunctionPop = ({
                     setIsOpenConfirmModal(true)
                 } else {
                     setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    setIsOpenConfirmModal(false)
+                    handleClose(false)
+                }
+            } else if (functionVal === "TO_CHAR") {
+                if (!variable1Val) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("단위를 선택해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else {
+                    setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    setIsOpenConfirmModal(false)
+                    handleClose(false)
+                }
+            } else if (functionVal === "DATEADD") {
+                if (!variable1Val) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("단위를 선택해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else if (!variable2Val) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("숫자를 입력해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else {
+                    setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    setIsOpenConfirmModal(false)
+                    handleClose(false)
+                }
+            } else if (functionVal === "DATEDIFF") {
+                if (!variable1Val) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("단위를 선택해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else if (!variable2Val || variable2Val === "") {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("시작일자를 설정해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else if (!variable3Val || variable3Val === "") {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("종료일자를 설정해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else {
+                    setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    setIsOpenConfirmModal(false)
                     handleClose(false)
                 }
             } else {
                 setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                setIsOpenConfirmModal(false)
                 handleClose(false)
             }
         }
