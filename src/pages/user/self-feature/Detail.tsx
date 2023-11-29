@@ -524,29 +524,29 @@ const SelfFeatureDetail = () => {
 		}
 	}, [submissionInfoRes, submissionInfoErr, toast])
 	// 결재선 이름 setting
-	useEffect(() => {
-		if (isEmpty(aprvType1)) return
+	// useEffect(() => {
+	// 	if (isEmpty(aprvType1)) return
 
-		setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
-			let rtn = cloneDeep(prevState)
-			rtn = rtn.map((approval: SfSubmissionApproval) => {
-				if (approval.approvalSequence === 1) {
-					let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-					approval.approverNm = type1 ? type1.userNm : ""
-				}
-				if (approval.approvalSequence === 2) {
-					let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-					approval.approverNm = type2 ? type2.userNm : ""
-				}
-				if (approval.approvalSequence === 3) {
-					let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-					approval.approverNm = type3 ? type3.userNm : ""
-				}
-				return approval
-			})
-			return rtn
-		})
-	}, [aprvType1, aprvType2, aprvType3])
+	// 	setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
+	// 		let rtn = cloneDeep(prevState)
+	// 		rtn = rtn.map((approval: SfSubmissionApproval) => {
+	// 			if (approval.approvalSequence === 1) {
+	// 				let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
+	// 				approval.approverNm = type1 ? type1.userNm : ""
+	// 			}
+	// 			if (approval.approvalSequence === 2) {
+	// 				let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
+	// 				approval.approverNm = type2 ? type2.userNm : ""
+	// 			}
+	// 			if (approval.approvalSequence === 3) {
+	// 				let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
+	// 				approval.approverNm = type3 ? type3.userNm : ""
+	// 			}
+	// 			return approval
+	// 		})
+	// 		return rtn
+	// 	})
+	// }, [aprvType1, aprvType2, aprvType3])
 	// 승인요청 API 호출
 	const insertSubmissionRequest = () => {
 		if (!sessionInfo.email) {

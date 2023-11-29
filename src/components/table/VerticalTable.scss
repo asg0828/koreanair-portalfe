@@ -1,13 +1,3 @@
 .verticalTable {
   width: 100%;
-
-  & > div:nth-child(2) > div > div {
-    overflow: hidden;
-
-    & > div > p {
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-  }
 }

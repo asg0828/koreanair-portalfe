@@ -3,7 +3,7 @@ import {
     useEffect,
     useCallback,
 } from 'react'
-import { isEmpty } from 'lodash'
+import { cloneDeep, isEmpty } from 'lodash'
 import { useNavigate } from 'react-router-dom'
 
 import {
@@ -20,11 +20,12 @@ import {
     subFeatStatus,
 } from '@/models/selfFeature/FeatureCommon'
 import ConfirmModal from '@/components/modal/ConfirmModal'
-import { SfSubmissionApproval, SubRejectPopProps } from '@/models/selfFeature/FeatureSubmissionModel'
+import { RjctSubAprvalBodyParamsProps, SfSubmissionApproval, SubRejectPopProps } from '@/models/selfFeature/FeatureSubmissionModel'
 import { useRejectSubmissionApproval } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
 import { ValidType } from '@/models/common/Constants'
 import { useAppSelector } from '@/hooks/useRedux'
 import { selectSessionInfo } from '@/reducers/authSlice'
+import { initRjctSubAprvalBodyParamsProps } from '@/pages/user/self-feature-submission/data'
 
 const SubRejectPop = ({
     isOpen = false,
@@ -43,22 +44,22 @@ const SubRejectPop = ({
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
     // 반려 API
+    const [comment, setComment] = useState<string>("")
     const [userEmail, setUserEmail] = useState<string>("")
     const [approvalId, setApprovalId] = useState<number>(0)
-    const [comment, setComment] = useState<string>("")
-    const { data: rjctSubAprvalRes, isSuccess: rjctSubAprvalSucc, isError: rjctSubAprvalErr, mutate: rjctSubAprvalMutate } = useRejectSubmissionApproval(userEmail, approvalId, { comment: comment })
+    const [rjctSubAprvalBodyParams, setRjctSubAprvalBodyParams] = useState<RjctSubAprvalBodyParamsProps>(cloneDeep(initRjctSubAprvalBodyParamsProps))
+    const { data: rjctSubAprvalRes, isSuccess: rjctSubAprvalSucc, isError: rjctSubAprvalErr, mutate: rjctSubAprvalMutate } = useRejectSubmissionApproval(userEmail, approvalId, rjctSubAprvalBodyParams)
 
     useEffect(() => {
         setIsOpenSubRejectPop(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            console.log(sfSubmissionApprovalList)
             if (!sessionInfo.email) {
                 console.log("no session info email")
                 return
             }
             setUserEmail(sessionInfo.email)
-            // 요청 및 승인완료인 경우
+            // 승인 요청 case만 check
             let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && (item.status === subFeatStatus.REQ))
             if (isEmpty(approval)) {
                 console.log("no approval Id")
@@ -71,6 +72,7 @@ const SubRejectPop = ({
         (isOpenSubRejectPop: boolean) => {
             if (onClose) {
                 // 초기화
+                //setRjctSubAprvalBodyParams(cloneDeep(initRjctSubAprvalBodyParamsProps))
                 setComment("")
                 onClose(isOpenSubRejectPop)
             } else {
@@ -99,6 +101,7 @@ const SubRejectPop = ({
     }
     // 반려 작성 팝업 닫을시 comment 초기화
     const onClickCancelSubRejectPop = () => {
+        //setRjctSubAprvalBodyParams(cloneDeep(initRjctSubAprvalBodyParamsProps))
         setComment("")
         setIsOpenSubRejectPop(false)
         onClose(false)
@@ -113,8 +116,7 @@ const SubRejectPop = ({
             })
             return
         }
-        // 요청 및 승인완료인 경우
-        if (isEmpty(approvalId)) {
+        if (!approvalId) {
             console.log("no approval Id")
             toast({
                 type: ValidType.ERROR,
@@ -122,6 +124,18 @@ const SubRejectPop = ({
             })
             return
         }
+        if (isEmpty(comment)) {
+            toast({
+                type: ValidType.ERROR,
+                content: '반려 사유를 작성 해주세요.',
+            })
+            return
+        }
+        setRjctSubAprvalBodyParams((prevState: RjctSubAprvalBodyParamsProps) => {
+            let rtn = cloneDeep(prevState)
+            rtn.comment = comment
+            return rtn
+        })
         rjctSubAprvalMutate()
     }
     // 반려 API Callback
@@ -164,7 +178,11 @@ const SubRejectPop = ({
                             onChange={(e) => {
                                 const { id, value } = e.target
                                 setComment(value)
-                                //setSfSubmissionApprovalList(value)
+                                // setRjctSubAprvalBodyParams((prevState: RjctSubAprvalBodyParamsProps) => {
+                                //     let rtn = cloneDeep(prevState)
+                                //     rtn.comment = value
+                                //     return rtn
+                                // })
                             }}
                         />
                     </Stack>

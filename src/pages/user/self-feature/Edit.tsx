@@ -53,7 +53,7 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 } from './data'
-import { Method, callApi } from "@/utils/ApiUtil";
+import { Method } from "@/utils/ApiUtil";
 import {
 	subFeatStatus,
 	selfFeatPgPpNm,
@@ -62,21 +62,24 @@ import {
 	initCommonResponse,
 	ModalType,
 	ModalTitCont,
-	ColDataType,
+//	ColDataType,
 	CommonCode,
 	CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon';
 import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
-import { GroupCodeType, ValidType } from "@/models/common/Constants";
+import { 
+	//GroupCodeType, 
+	ValidType,
+} from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { useFeatureSeList, useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
 import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
-import { selectCodeList } from "@/reducers/codeSlice";
-import { useAppSelector } from "@/hooks/useRedux";
+//import { selectCodeList } from "@/reducers/codeSlice";
+//import { useAppSelector } from "@/hooks/useRedux";
 import { getFeatureSeList } from "@/api/FeatureAPI";
-import { CodeModel } from "@/models/model/CodeModel";
+//import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
 import { useUpdateCustFeatRule } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 
@@ -106,13 +109,16 @@ const SelfFeatureEdit = () => {
 	const [featureSeAllList, setFeatureSeAllList] = useState<Array<FeatureSeparatesModel>>([])
 	const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([])
 	// 픽처타입
-	const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
+	//const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
 	// update 데이터
 	const [updtFeatureInfo, setUpdtFeatureInfo] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
 	// formData
 	const [custFeatureFormData, setCustFeatureFormData] = useState<CustFeatureFormData>(cloneDeep(initCustFeatureFormData))
 	// 대상선택 초기화시 flag
 	const [targetClear, setTargetClear] = useState<string>("")//location.state.TargetClear
+	// 한글 및 영문 입력시 입력값
+	const [ featureKoNmInput, setFeatureKoNmInput ] = useState<string>(cloneDeep(location.state.featureInfo.featureTemp?.featureKoNm))
+	const [ featureEnNmInput, setFeatureEnNmInput ] = useState<string>(cloneDeep(location.state.featureInfo.featureTemp?.featureEnNm))
 	// 기본정보
 	const [featureTempInfo, setFeatureTempInfo] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
 	const [custFeatRule, setCustFeatRule] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
@@ -446,24 +452,35 @@ const SelfFeatureEdit = () => {
 	// input 입력값 변경시
 	const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target
+		let inputValue = cloneDeep(value)
+		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+숫자만 / 영문 - 영문+숫자만)
+		if (id === "featureKoNm") {
+			inputValue = value.replace(/[^ㄱ-ㅎ|가-힣|0-9|\s]/g, "")
+			setFeatureKoNmInput(inputValue)
+		}
+		if (id === "featureEnNm") {
+			inputValue = value.replace(/[^a-z|A-Z|0-9|\s]/g, "")
+			setFeatureEnNmInput(inputValue)
+		}
+
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
 				if (key === id) {
-					rtn[key] = value
+					rtn[key] = inputValue
 				}
 				return key
 			})
 			// feature temp에 들어가는 값 중 setting 되어야하는 값 설정
-			if (id === "featureKoNm") rtn.name = value
-			if (id === "featureDef") rtn.description = value
+			if (id === "featureKoNm") rtn.name = inputValue
+			if (id === "featureDef") rtn.description = inputValue
 			return rtn
 		})
 		// 승인 필수 정보 default setting
 		setSfSubmissionRequestData((state: SfSubmissionRequestInfo) => {
 			let rtn = cloneDeep(state)
-			if (id === "featureKoNm") rtn.title = `${value}_승인정보`
-			if (id === "featureDef") rtn.content = `${value}_승인정보`
+			if (id === "featureKoNm") rtn.title = `${inputValue}_승인정보`
+			if (id === "featureDef") rtn.content = `${inputValue}_승인정보`
 			return rtn
 		})
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
@@ -471,7 +488,7 @@ const SelfFeatureEdit = () => {
 			if (rtn) {
 				Object.keys(rtn).map((key) => {
 					if (key === id) {
-						rtn[key] = value
+						rtn[key] = inputValue
 					}
 					return key
 				})
@@ -482,7 +499,7 @@ const SelfFeatureEdit = () => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
 				if (key === id) {
-					rtn[key] = value
+					rtn[key] = inputValue
 				}
 				return key
 			})
@@ -610,7 +627,7 @@ const SelfFeatureEdit = () => {
 							</Select>
 						</TD>
 					</TR>
-					<TR>
+					{/* <TR>
 						<TH colSpan={1} align="center">Feature ID</TH>
 						<TD colSpan={3}>
 							<TextField
@@ -640,14 +657,15 @@ const SelfFeatureEdit = () => {
 								))}
 							</Select>
 						</TD>
-					</TR>
+					</TR> */}
 					<TR>
 						<TH colSpan={1} align="center">한글명</TH>
 						<TD colSpan={3}>
 							<TextField
 								className="width-100"
 								id="featureKoNm"
-								defaultValue={location.state.featureInfo.featureTemp?.featureKoNm}
+								//defaultValue={location.state.featureInfo.featureTemp?.featureKoNm}
+								value={featureKoNmInput}
 								onChange={onchangeInputHandler}
 							/>
 						</TD>
@@ -656,7 +674,8 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="featureEnNm"
-								defaultValue={location.state.featureInfo.featureTemp?.featureEnNm}
+								//defaultValue={location.state.featureInfo.featureTemp?.featureEnNm}
+								value={featureEnNmInput}
 								onChange={onchangeInputHandler}
 							/>
 						</TD>

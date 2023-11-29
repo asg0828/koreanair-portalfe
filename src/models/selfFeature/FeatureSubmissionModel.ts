@@ -88,6 +88,10 @@ export interface AprvSubCommentProps {
     [key: string]: string
     comment: string
 }
+export interface RjctSubAprvalBodyParamsProps {
+    [key: string]: string
+    comment: string
+}
 // 반려 팝업 Props
 export interface SubRejectPopProps {
     isOpen?: boolean
