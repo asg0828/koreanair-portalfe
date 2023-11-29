@@ -1020,3 +1020,7 @@ svg {
   height: 180px;
   overflow: auto;
 }
+.tableTdScrollFix .verticalTableTD>div{
+  overflow-y: hidden;
+  min-height: unset;
+}
