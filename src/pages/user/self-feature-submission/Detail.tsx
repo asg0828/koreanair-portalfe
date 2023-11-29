@@ -80,6 +80,7 @@ import { useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
 import { selectCodeList } from "@/reducers/codeSlice";
 import { getFeatureSeList } from "@/api/FeatureAPI";
 import { useApproveSubmissionApproval } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
+import { getDateFormatType2, getDateFormatType3 } from "@/utils/DateUtil";
 
 const SfSubmissionRequestDetail = () => {
 
@@ -449,6 +450,7 @@ const SfSubmissionRequestDetail = () => {
                             let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
                             if (rtn && rtn[i]) subAprv = cloneDeep(rtn[i])
                             subAprv.approvalSequence = i + 1
+                            if (subAprv.approvedDate) subAprv.approvedDate = getDateFormatType3(subAprv.approvedDate)
                             if (subAprv.approvalSequence === 1) {
                                 let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
                                 subAprv.approvalSequenceNm = aprvSeqNm.FIRST
@@ -619,7 +621,7 @@ const SfSubmissionRequestDetail = () => {
                                 요청 일시
                             </TH>
                             <TD colSpan={5} align="left">
-                                {sfSubmissionRequestData.requestDate}
+                                {sfSubmissionRequestData.requestDate && getDateFormatType3(sfSubmissionRequestData.requestDate)}
                             </TD>
                         </TR>
                         {/* <TR>

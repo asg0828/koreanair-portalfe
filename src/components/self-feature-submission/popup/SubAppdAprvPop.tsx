@@ -221,7 +221,7 @@ const SubAppdAprvPop = ({
             <Modal
                 open={isOpenSubAppedAprvPop}
                 onClose={handleClose}
-                size="LG"
+                size="MD"
                 closeOnOutsideClick={false}
             >
                 <Modal.Header>결재선 선택</Modal.Header>
