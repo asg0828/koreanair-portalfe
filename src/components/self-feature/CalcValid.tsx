@@ -66,6 +66,7 @@ const ClacValid = ({
     }, [custFeatRuleCaseList])
 
     // case문 사용 체크시
+    /*
     const onCheckedCaseChange = () => {
         setFormulaCaseChecked(!formulaCaseChecked)
 
@@ -85,6 +86,7 @@ const ClacValid = ({
 
         }
     }
+    */
     // case문 구문 추가시
     const onClickAddRuleCaseHandler = () => {
         setCustFeatRuleCaseList((state: Array<TbRsCustFeatRuleCase>) => {

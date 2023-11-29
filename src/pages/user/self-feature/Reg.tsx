@@ -86,6 +86,9 @@ const SelfFeatureReg = () => {
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	// 등록 구분(RuleDesign / SQL)
 	const [regType, setRegType] = useState<string>(location.state ? location.state.regType : selfFeatPgPpNm.RULE_REG)
+	// 한글 및 영문 입력시 입력값
+	const [featureKoNmInput, setFeatureKoNmInput] = useState<string>("")
+	const [featureEnNmInput, setFeatureEnNmInput] = useState<string>("")
 	// formData
 	const [custFeatureFormData, setCustFeatureFormData] = useState<CustFeatureFormData>(cloneDeep(initCustFeatureFormData))
 	// Customer Feature 정보
@@ -444,25 +447,35 @@ const SelfFeatureReg = () => {
 	// input 입력 변경시
 	const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target
+		let inputValue = cloneDeep(value)
+		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+숫자만 / 영문 - 영문+숫자만)
+		if (id === "featureKoNm") {
+			inputValue = value.replace(/[^ㄱ-ㅎ|가-힣|0-9|\s]/g, "")
+			setFeatureKoNmInput(inputValue)
+		}
+		if (id === "featureEnNm") {
+			inputValue = value.replace(/[^a-z|A-Z|0-9|\s]/g, "")
+			setFeatureEnNmInput(inputValue)
+		}
 
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
 				if (key === id) {
-					rtn[key] = value
+					rtn[key] = inputValue
 				}
 				return key
 			})
-			// feature temp 값 중 동기화 되어야하는 값 변경시
-			if (id === "featureKoNm") rtn.name = value
-			if (id === "featureDef") rtn.description = value
+			// feature temp에 들어가는 값 중 setting 되어야하는 값 설정
+			if (id === "featureKoNm") rtn.name = inputValue
+			if (id === "featureDef") rtn.description = inputValue
 			return rtn
 		})
 		// 승인 필수 정보 default setting
 		setSfSubmissionRequestData((state: SfSubmissionRequestInfo) => {
 			let rtn = cloneDeep(state)
-			if (id === "featureKoNm") rtn.title = `${value}_승인정보`
-			if (id === "featureDef") rtn.content = `${value}_승인정보`
+			if (id === "featureKoNm") rtn.title = `${inputValue}_승인정보`
+			if (id === "featureDef") rtn.content = `${inputValue}_승인정보`
 			return rtn
 		})
 		setSqlQueryInfo((state: TbRsCustFeatRuleSql) => {
@@ -470,7 +483,7 @@ const SelfFeatureReg = () => {
 			if (rtn) {
 				Object.keys(rtn).map((key) => {
 					if (key === id) {
-						rtn[key] = value
+						rtn[key] = inputValue
 					}
 					return key
 				})
@@ -481,7 +494,7 @@ const SelfFeatureReg = () => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
 				if (key === id) {
-					rtn[key] = value
+					rtn[key] = inputValue
 				}
 				return key
 			})
@@ -613,14 +626,24 @@ const SelfFeatureReg = () => {
 						<TH colSpan={1} align="right" required>한글명</TH>
 						<TD colSpan={2}>
 							<Stack gap="SM" className='width-100'>
-								<TextField className="width-100" id="featureKoNm" onChange={onchangeInputHandler} />
+								<TextField
+									className="width-100"
+									id="featureKoNm"
+									value={featureKoNmInput}
+									onChange={onchangeInputHandler}
+								/>
 								<Button>중복확인</Button>
 							</Stack>
 						</TD>
 						<TH colSpan={1} align="right" required>영문명</TH>
 						<TD colSpan={2}>
 							<Stack gap="SM" className='width-100'>
-								<TextField className="width-100" id="featureEnNm" onChange={onchangeInputHandler} />
+								<TextField 
+									className="width-100" 
+									id="featureEnNm" 
+									value={featureEnNmInput}
+									onChange={onchangeInputHandler} 
+								/>
 								<Button>중복확인</Button>
 							</Stack>
 						</TD>

@@ -1,5 +1,5 @@
 import { FeatureType } from "@/models/selfFeature/FeatureCommon"
-import { AprvSubCommentProps, FeatureSubmissionSearchProps, SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo, SubmissionGroupCode } from "@/models/selfFeature/FeatureSubmissionModel"
+import { AprvSubCommentProps, FeatureSubmissionSearchProps, RjctSubAprvalBodyParamsProps, SfSubmission, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo, SubmissionGroupCode } from "@/models/selfFeature/FeatureSubmissionModel"
 
 // Feature 승인 요청 리스트 table header
 export const sfSubmissionListColumns = [
@@ -68,6 +68,10 @@ export const initFeatureSubmissionSearchProps: FeatureSubmissionSearchProps = {
 
 export const initAprvSubCommentProps: AprvSubCommentProps = {
     comment: '승인합니다.'
+}
+
+export const initRjctSubAprvalBodyParamsProps: RjctSubAprvalBodyParamsProps = {
+    comment: ''
 }
 
 export const initSfSubmissionRequestInfo: SfSubmissionRequestInfo = {

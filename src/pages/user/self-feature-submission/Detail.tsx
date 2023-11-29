@@ -131,6 +131,8 @@ const SfSubmissionRequestDetail = () => {
     // 승인 정보
     const [sfSubmissionRequestData, setSfSubmissionRequestData] = useState<SfSubmissionRequestInfo>(cloneDeep(initSfSubmissionRequestInfo))
     const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
+    // 승인, 반려 버튼 show 여부
+    const [isAprvRjctBtnShow, setIsAprvRjctBtnShow] = useState<Boolean>(false)
     // 결재선
     //const [aprvList, setAprvList] = useState<Array<SfSubmissionAppendApproval>>([])
     const [aprvType1, setAprvType1] = useState<Array<SfSubmissionAppendApproval>>([])
@@ -140,7 +142,7 @@ const SfSubmissionRequestDetail = () => {
     // feature 승인 API
     const [userEmail, setUserEmail] = useState<string>("")
     const [approvalId, setApprovalId] = useState<number>(0)
-    const [ aprvSubComment, setAprvSubComment ] = useState<AprvSubCommentProps>(initAprvSubCommentProps)
+    const [aprvSubComment, setAprvSubComment] = useState<AprvSubCommentProps>(initAprvSubCommentProps)
     const { data: aprvSubAprvalRes, isSuccess: aprvSubAprvalSucc, isError: aprvSubAprvalErr, mutate: aprvSubAprvalMutate } = useApproveSubmissionApproval(userEmail, approvalId, aprvSubComment)
     // component mount
     useEffect(() => {
@@ -425,81 +427,68 @@ const SfSubmissionRequestDetail = () => {
         } else {
             if (submissionInfoRes?.result) {
                 if (submissionInfoRes.result.submission) setSfSubmissionRequestData(cloneDeep(submissionInfoRes.result.submission))
-                setSfSubmissionApprovalList(() => {
-                    let rtn = cloneDeep(submissionInfoRes.result.approvals)
-                    let t: Array<SfSubmissionApproval> = []
-                    for (let i = 0; i < 3; i++) {
-                        let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
-                        if (rtn && rtn[i]) subAprv = cloneDeep(rtn[i])
-                        subAprv.approvalSequence = i + 1
-                        if (subAprv.approvalSequence === 1) {
-                            let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
-                            subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-                            subAprv.approverNm = type1 ? type1.userNm : ""
+                if (submissionInfoRes.result.approvals) {
+                    // 승인,반려버튼 show 여부 판단
+                    setIsAprvRjctBtnShow((isShow: Boolean) => {
+                        let rtn = cloneDeep(isShow)
+                        let approval = submissionInfoRes.result.approvals.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && item.status === subFeatStatus.REQ)
+                        if (isEmpty(approval)) rtn = false
+                        else rtn = true
+                        return rtn
+                    })
+                    // 결재자 리스트 setting
+                    setSfSubmissionApprovalList(() => {
+                        let rtn = cloneDeep(submissionInfoRes.result.approvals)
+                        let t: Array<SfSubmissionApproval> = []
+                        for (let i = 0; i < 3; i++) {
+                            let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+                            if (rtn && rtn[i]) subAprv = cloneDeep(rtn[i])
+                            subAprv.approvalSequence = i + 1
+                            if (subAprv.approvalSequence === 1) {
+                                let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+                                subAprv.approvalSequenceNm = aprvSeqNm.FIRST
+                                subAprv.approverNm = type1 ? type1.userNm : ""
+                            }
+                            if (subAprv.approvalSequence === 2) {
+                                let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+                                subAprv.approvalSequenceNm = aprvSeqNm.SECOND
+                                subAprv.approverNm = type2 ? type2.userNm : ""
+                            }
+                            if (subAprv.approvalSequence === 3) {
+                                let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+                                subAprv.approvalSequenceNm = aprvSeqNm.LAST
+                                subAprv.approverNm = type3 ? type3.userNm : ""
+                            }
+                            if (
+                                !subAprv.status
+                                || subAprv.status === ""
+                                || subAprv.status === subFeatStatus.SAVE
+                            ) {
+                                subAprv.statusNm = "결재 대기"
+                            } else if (
+                                subAprv.status === subFeatStatus.REQ
+                                || subAprv.status === subFeatStatus.IN_APRV
+                            ) {
+                                subAprv.statusNm = subFeatStatusNm.IN_APRV
+                            } else if (subAprv.status === subFeatStatus.APRV) {
+                                subAprv.statusNm = subFeatStatusNm.APRV
+                            } else if (subAprv.status === subFeatStatus.REJT) {
+                                subAprv.statusNm = subFeatStatusNm.REJT
+                            } else if (subAprv.status === subFeatStatus.CNCL) {
+                                subAprv.statusNm = subFeatStatusNm.CNCL
+                            } else if (subAprv.status === subFeatStatus.DLET) {
+                                subAprv.statusNm = subFeatStatusNm.DLET
+                            } else {
+                                subAprv.statusNm = subAprv.status
+                            }
+                            t.push(subAprv)
                         }
-                        if (subAprv.approvalSequence === 2) {
-                            let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
-                            subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-                            subAprv.approverNm = type2 ? type2.userNm : ""
-                        }
-                        if (subAprv.approvalSequence === 3) {
-                            let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
-                            subAprv.approvalSequenceNm = aprvSeqNm.LAST
-                            subAprv.approverNm = type3 ? type3.userNm : ""
-                        }
-                        if (
-                            !subAprv.status
-                            || subAprv.status === ""
-                            || subAprv.status === subFeatStatus.SAVE
-                        ) {
-                            subAprv.statusNm = "결재 대기"
-                        } else if (
-                            subAprv.status === subFeatStatus.REQ
-                            || subAprv.status === subFeatStatus.IN_APRV
-                        ) {
-                            subAprv.statusNm = subFeatStatusNm.IN_APRV
-                        } else if (subAprv.status === subFeatStatus.APRV) {
-                            subAprv.statusNm = subFeatStatusNm.APRV
-                        } else if (subAprv.status === subFeatStatus.REJT) {
-                            subAprv.statusNm = subFeatStatusNm.REJT
-                        } else if (subAprv.status === subFeatStatus.CNCL) {
-                            subAprv.statusNm = subFeatStatusNm.CNCL
-                        } else if (subAprv.status === subFeatStatus.DLET) {
-                            subAprv.statusNm = subFeatStatusNm.DLET
-                        } else {
-                            subAprv.statusNm = subAprv.status
-                        }
-                        t.push(subAprv)
-                    }
-                    return t
-                })
+                        return t
+                    })
+                }
             }
         }
     }, [submissionInfoRes, submissionInfoErr, toast])
-    // 결재선 이름 setting
-    useEffect(() => {
-        if (isEmpty(aprvType1)) return
-
-        setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
-            let rtn = cloneDeep(prevState)
-            rtn = rtn.map((approval: SfSubmissionApproval) => {
-                if (approval.approvalSequence === 1) {
-                    let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-                    approval.approverNm = type1 ? type1.userNm : ""
-                }
-                if (approval.approvalSequence === 2) {
-                    let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-                    approval.approverNm = type2 ? type2.userNm : ""
-                }
-                if (approval.approvalSequence === 3) {
-                    let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-                    approval.approverNm = type3 ? type3.userNm : ""
-                }
-                return approval
-            })
-            return rtn
-        })
-    }, [aprvType1, aprvType2, aprvType3])
     // 페이지 이동
     const onClickPageMovHandler = (pageNm: string): void => {
 
@@ -517,45 +506,45 @@ const SfSubmissionRequestDetail = () => {
             setIsOpenSubRejectPop((prevState) => !prevState)
         }
     }
-	// 승인 API 호출
-	const approveSubmissionApproval = () => {
-		if (!sessionInfo.email) {
-			console.log("no session info email")
-			toast({
-				type: ValidType.ERROR,
-				content: '승인 중 에러가 발생했습니다',
-			})
-			return
-		}
-		setUserEmail(sessionInfo.email)
+    // 승인 API 호출
+    const approveSubmissionApproval = () => {
+        if (!sessionInfo.email) {
+            console.log("no session info email")
+            toast({
+                type: ValidType.ERROR,
+                content: '승인 중 에러가 발생했습니다',
+            })
+            return
+        }
+        setUserEmail(sessionInfo.email)
         let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && item.status === subFeatStatus.REQ)
         if (isEmpty(approval)) {
-			console.log("no approval Id")
-			toast({
-				type: ValidType.ERROR,
-				content: '승인 중 에러가 발생했습니다',
-			})
-			return
+            console.log("no approval Id")
+            toast({
+                type: ValidType.ERROR,
+                content: '승인 중 에러가 발생했습니다',
+            })
+            return
         }
         setApprovalId(approval[0].id)
-		aprvSubAprvalMutate()
-	}
+        aprvSubAprvalMutate()
+    }
     // 승인 API Callback
-	useEffect(() => {
-		if (aprvSubAprvalErr || aprvSubAprvalRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: '승인 처리 중 에러가 발생했습니다',
-			})
-		} else if (aprvSubAprvalSucc) {
-			toast({
-				type: ValidType.CONFIRM,
-				content: '승인 처리 되었습니다.',
-			})
+    useEffect(() => {
+        if (aprvSubAprvalErr || aprvSubAprvalRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '승인 처리 중 에러가 발생했습니다',
+            })
+        } else if (aprvSubAprvalSucc) {
+            toast({
+                type: ValidType.CONFIRM,
+                content: '승인 처리 되었습니다.',
+            })
             // 목록으로
             navigate('..')
-		}
-	}, [aprvSubAprvalRes, aprvSubAprvalSucc, aprvSubAprvalErr])
+        }
+    }, [aprvSubAprvalRes, aprvSubAprvalSucc, aprvSubAprvalErr])
 
     return (
         <>
@@ -838,12 +827,16 @@ const SfSubmissionRequestDetail = () => {
                     <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
                         목록
                     </Button>
-                    <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_APRV)}>
-                        승인
-                    </Button>
-                    <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_REJT)}>
-                        반려
-                    </Button>
+                    {isAprvRjctBtnShow &&
+                        <>
+                            <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_APRV)}>
+                                승인
+                            </Button>
+                            <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SUB_REJT)}>
+                                반려
+                            </Button>
+                        </>
+                    }
                 </Stack>
                 {/* 버튼 영역 */}
             </Stack>
