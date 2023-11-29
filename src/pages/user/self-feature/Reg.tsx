@@ -290,6 +290,7 @@ const SelfFeatureReg = () => {
 		for (let i = 0; i < targetList.length; i++) {
 			let t = { targetId: `T${i + 1}`, dataType: "" }
 			let dataType = targetList[i].targetDataType
+			// 집계함수(행동데이터의 경우)
 			cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
 				if (option.cdv === targetList[i].operator) {
 					dataType = option.attr1
@@ -299,6 +300,11 @@ const SelfFeatureReg = () => {
 				}
 				return option
 			})
+			// 변환식(속성데이터의 경우)
+			if (targetList[i].function === "TO_NUMBER") dataType = "number"
+			if (targetList[i].function === "LENGTH") dataType = "number"
+			if (targetList[i].function === "TO_CHAR") dataType = "string"
+			if (targetList[i].function === "DATEDIFF") dataType = "number"
 			t.dataType = dataType
 			fList.push(t)
 		}
