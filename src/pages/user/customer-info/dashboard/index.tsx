@@ -193,9 +193,12 @@ export default function List() {
       {/* searchBar 영역 */}
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
-          <Typography variant="h3" className="dashboardTitle">
-            Customer Info.
-          </Typography>
+          <Stack>
+            <Typography variant="h3" className="dashboardTitle">
+              Customer Info.
+            </Typography>
+          </Stack>
+          <h5>어제 기준</h5>
           <div className="topCard">
             <div className="dashBoardBox n1">
               <div className="name">

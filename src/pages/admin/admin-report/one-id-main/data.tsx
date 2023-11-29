@@ -531,75 +531,74 @@ const oneIdDailyColumn: ColumnChild[] = [
   {
     headerName: 'PNR',
     field: '',
-    colSpan: 7,
     childName: [
       { headerName: '총 PNR 수', field: 'pnrTotal', colSpan: 1 },
       {
         headerName: 'UCI ID',
         field: '',
-        colSpan: 6,
-        childName: [
-          { headerName: '총 UCI ID 수', field: 'pnrUci' },
-          { headerName: '신규 OneID', field: 'newOneidTodayPnr' },
-          { headerName: 'SKYPASS OneID 재사용', field: 'pnrReuseSkypass' },
-          { headerName: '기존 비회원 OneID 재사용', field: 'pnrReuseNonSkypass' },
-          { headerName: '신규 Potentail OneID', field: 'pnrNewPotentialid' },
-          { headerName: 'OneID 미생성', field: 'pnrSkipped' },
-        ],
-      },
-    ],
-  },
-  {
-    headerName: '신규OneID(Potential 제외)',
-    field: '',
-    colSpan: 6,
-    childName: [
-      {
-        headerName: 'ODS',
-        field: '',
-        colSpan: 3,
-        childName: [
-          { headerName: '당일 PNR', field: 'newOneidTodayPnr' },
-          { headerName: '이전 PNR', field: 'newOneidPastPnr' },
-          { headerName: '이전 Potential 전환', field: 'newOneidPotentialConv' },
-        ],
-      },
-      { headerName: 'SKYPASS', field: 'newOneidSkypass' },
-      { headerName: 'Total', field: 'newOneidTotal' },
-      { headerName: '대리점 추정 Mobile OneID', field: 'oneidTotal' },
-    ],
-  },
 
-  {
-    headerName: '전체 OneID(Potential 제외)',
-    field: '',
-    colSpan: 4,
-    childName: [
-      { headerName: '총 OneID 개수(Master/Active)', field: '' },
-      { headerName: '총 단독 OneID 개수', field: 'oneidAlone' },
-      { headerName: '총 Target OneID 개수', field: 'oneidTarget' },
-      { headerName: '총 Source OneID 개수', field: 'oneidSource' },
-    ],
-  },
-
-  {
-    headerName: 'Merged(Source)OneID',
-    field: '',
-    colSpan: 4,
-    childName: [
-      {
-        headerName: 'OneID 엔진',
-        field: '',
-        colSpan: 3,
         childName: [
-          { headerName: '회원+회원', field: 'mergedSkypassToSkypass' },
-          { headerName: '회원+비회원', field: 'mergedNonSkypassToSkypass' },
-          { headerName: '비회원+비회원', field: 'mergedNonSkypassToNonSkypass' },
+          { headerName: '총 UCI ID 수', field: 'pnrUci', colSpan: 1 },
+          { headerName: '신규 OneID', field: 'newOneidTodayPnr', colSpan: 1 },
+          { headerName: 'SKYPASS OneID 재사용', field: 'pnrReuseSkypass', colSpan: 1 },
+          { headerName: '기존 비회원 OneID 재사용', field: 'pnrReuseNonSkypass', colSpan: 1 },
+          { headerName: '신규 Potentail OneID', field: 'pnrNewPotentialid', colSpan: 1 },
+          { headerName: 'OneID 미생성', field: 'pnrSkipped', colSpan: 1 },
         ],
       },
-      { headerName: 'SKYPASS 요청', field: 'mergedSkypassRequest' },
     ],
   },
+  // {
+  //   headerName: '신규OneID(Potential 제외)',
+  //   field: '',
+
+  //   childName: [
+  //     {
+  //       headerName: 'ODS',
+  //       field: '',
+  //       colSpan: 3,
+  //       childName: [
+  //         { headerName: '당일 PNR', field: 'newOneidTodayPnr' },
+  //         { headerName: '이전 PNR', field: 'newOneidPastPnr' },
+  //         { headerName: '이전 Potential 전환', field: 'newOneidPotentialConv' },
+  //       ],
+  //     },
+  //     { headerName: 'SKYPASS', field: 'newOneidSkypass' },
+  //     { headerName: 'Total', field: 'newOneidTotal' },
+  //     { headerName: '대리점 추정 Mobile OneID', field: 'oneidTotal' },
+  //   ],
+  // },
+
+  // {
+  //   headerName: '전체 OneID(Potential 제외)',
+  //   field: '',
+
+  //   childName: [
+  //     { headerName: '총 OneID 개수(Master/Active)', field: '' },
+  //     { headerName: '총 단독 OneID 개수', field: 'oneidAlone' },
+  //     { headerName: '총 Target OneID 개수', field: 'oneidTarget' },
+  //     { headerName: '총 Source OneID 개수', field: 'oneidSource' },
+  //   ],
+  // },
+
+  // {
+  //   headerName: 'Merged(Source)OneID',
+  //   field: '',
+
+  //   childName: [
+  //     {
+  //       headerName: 'OneID 엔진',
+  //       field: '',
+  //       colSpan: 3,
+  //       childName: [
+  //         { headerName: '회원+회원', field: 'mergedSkypassToSkypass' },
+  //         { headerName: '회원+비회원', field: 'mergedNonSkypassToSkypass' },
+  //         { headerName: '비회원+비회원', field: 'mergedNonSkypassToNonSkypass' },
+  //       ],
+  //     },
+  //     { headerName: 'SKYPASS 요청', field: 'mergedSkypassRequest' },
+  //   ],
+  // },
 ];
 
 const oneIdDailyData: DailyReportData[] = [
