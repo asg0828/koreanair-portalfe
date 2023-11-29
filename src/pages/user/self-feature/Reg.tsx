@@ -4,7 +4,7 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { cloneDeep, isEmpty } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
-import { useAppSelector } from '@/hooks/useRedux'
+//import { useAppSelector } from '@/hooks/useRedux'
 
 import DragList from '@/components/self-feature/DragList'
 import DropList from '@/components/self-feature/DropList'
@@ -46,10 +46,13 @@ import {
 } from '@/models/selfFeature/FeatureCommon'
 import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel'
 import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data'
-import { GroupCodeType, ValidType } from '@/models/common/Constants'
+import { 
+	//GroupCodeType, 
+	ValidType, 
+} from '@/models/common/Constants'
 import { FeatureSeparatesModel } from '@/models/model/FeatureModel'
 
-import { selectCodeList } from '@/reducers/codeSlice'
+//import { selectCodeList } from '@/reducers/codeSlice'
 import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 import { useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries'
