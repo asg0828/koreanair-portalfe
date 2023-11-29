@@ -90,10 +90,10 @@ const Reg = () => {
       <Stack direction="Vertical" gap="MD" className="height-100">
         <HorizontalTable className="height-100">
           <TR>
-            <TH colSpan={1} required>
+            <TH colSpan={1} align="right" required>
               제목
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={5} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
@@ -109,10 +109,10 @@ const Reg = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1} required>
+            <TH colSpan={1} align="right" required>
               분류
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={5} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <Controller
                   name="clCode"
@@ -139,24 +139,28 @@ const Reg = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>공개여부</TH>
-            <TD colSpan={3} align="left">
+            <TH colSpan={1} align="right">
+              공개여부
+            </TH>
+            <TD colSpan={5} align="left">
               <Radio label="공개" value="Y" defaultChecked={values.openYn === 'Y'} {...register('openYn')} />
               <Radio label="미공개" value="N" defaultChecked={values.openYn === 'N'} {...register('openYn')} />
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>게시여부</TH>
-            <TD colSpan={3} align="left">
+            <TH colSpan={1} align="right">
+              게시여부
+            </TH>
+            <TD colSpan={5} align="left">
               <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
               <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
             </TD>
           </TR>
           <TR className="height-100">
-            <TH colSpan={1} required>
+            <TH colSpan={1} align="right" required>
               내용
             </TH>
-            <TD colSpan={3} className="content">
+            <TD colSpan={5} align="left" className="content">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <Controller
                   name="cn"
@@ -177,8 +181,10 @@ const Reg = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>첨부파일</TH>
-            <TD colSpan={3} className="attachFile">
+            <TH colSpan={1} align="right">
+              첨부파일
+            </TH>
+            <TD colSpan={5} align="left" className="attachFile">
               <UploadDropzone fileCl="qna" uploadFiles={handleUploadFiles} fileList={values.fileList} />
             </TD>
           </TR>

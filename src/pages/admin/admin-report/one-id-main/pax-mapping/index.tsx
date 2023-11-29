@@ -98,10 +98,10 @@ export default function PaxMapping() {
       <form onSubmit={onsubmitHandler}>
         <HorizontalTable>
           <TR>
-            <TH colSpan={1} align="right">
+            <TH colSpan={1.005} align="right">
               OneId 번호
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={2}>
               <TextField
                 className="width-100"
                 onChange={onSearchChangeHandler}
@@ -113,7 +113,7 @@ export default function PaxMapping() {
             <TH colSpan={1} align="right">
               PNR 번호
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={2}>
               <TextField
                 className="width-100"
                 id="pnrNumber"
@@ -125,7 +125,7 @@ export default function PaxMapping() {
             <TH colSpan={1} align="right">
               UCIID
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={2}>
               <TextField
                 className="width-100"
                 id="uciId"
@@ -136,11 +136,11 @@ export default function PaxMapping() {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={2} align="right">
+            <TH colSpan={1} align="right">
               최초 생성일
             </TH>
 
-            <TD colSpan={5}>
+            <TD colSpan={8}>
               <DatePicker
                 appearance="Outline"
                 calendarViewMode="days"

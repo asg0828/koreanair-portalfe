@@ -159,10 +159,10 @@ export default function OneIdMasterHistory() {
           <form>
             <HorizontalTable>
               <TR>
-                <TH colSpan={1} align="right">
+                <TH colSpan={1.002} align="right">
                   OneId 번호
                 </TH>
-                <TD colSpan={3}>
+                <TD colSpan={2}>
                   <TextField
                     className="width-100"
                     onChange={onSearchChangeHandler}
@@ -174,7 +174,7 @@ export default function OneIdMasterHistory() {
                 <TH colSpan={1} align="right">
                   OneID변경이유코드
                 </TH>
-                <TD colSpan={3}>
+                <TD colSpan={2}>
                   <Select
                     appearance="Outline"
                     placeholder="전체"
@@ -194,10 +194,10 @@ export default function OneIdMasterHistory() {
                     ))}
                   </Select>
                 </TD>
-                <TH colSpan={1} align="right">
+                <TH colSpan={1.002} align="right">
                   조회기준
                 </TH>
-                <TD colSpan={3}>
+                <TD colSpan={2}>
                   <Radio
                     id="criteria"
                     name="criteria"
@@ -220,7 +220,7 @@ export default function OneIdMasterHistory() {
                 <TH colSpan={1} align="right">
                   한글이름
                 </TH>
-                <TD colSpan={3}>
+                <TD colSpan={5}>
                   <TextField
                     className="width-100"
                     id="bfChgKorFname"
@@ -237,9 +237,24 @@ export default function OneIdMasterHistory() {
                   />
                 </TD>
                 <TH colSpan={1} align="right">
+                  휴대전화번호
+                </TH>
+                <TD colSpan={2}>
+                  <TextField
+                    className="width-100"
+                    id="bfChgMobilePhoneNoInfo"
+                    onChange={onSearchChangeHandler}
+                    placeholder="01011112222"
+                    value={searchInfo.bfChgMobilePhoneNoInfo}
+                  />
+                </TD>
+              </TR>
+
+              <TR>
+                <TH colSpan={1} align="right">
                   영문이름
                 </TH>
-                <TD colSpan={3}>
+                <TD colSpan={5}>
                   <TextField
                     className="width-100"
                     id="bfChgEngFname"
@@ -253,21 +268,6 @@ export default function OneIdMasterHistory() {
                     onChange={(e) => onSearchChangeHandler(e)}
                     placeholder="이름을 입력하세요."
                     value={searchInfo.bfChgEngLname}
-                  />
-                </TD>
-              </TR>
-
-              <TR>
-                <TH colSpan={1} align="right">
-                  휴대전화번호
-                </TH>
-                <TD colSpan={2}>
-                  <TextField
-                    className="width-100"
-                    id="bfChgMobilePhoneNoInfo"
-                    onChange={onSearchChangeHandler}
-                    placeholder="01011112222"
-                    value={searchInfo.bfChgMobilePhoneNoInfo}
                   />
                 </TD>
                 <TH colSpan={1} align="right">
@@ -286,21 +286,9 @@ export default function OneIdMasterHistory() {
 
               <TR>
                 <TH colSpan={1} align="right">
-                  E-mail주소
-                </TH>
-                <TD colSpan={2}>
-                  <TextField
-                    className="width-100"
-                    id="bfChgEmailAdrs"
-                    onChange={onSearchChangeHandler}
-                    placeholder="이메일을 입력하세요."
-                    value={searchInfo.bfChgEmailAdrs}
-                  />
-                </TD>
-                <TH colSpan={1} align="right">
                   출생일자
                 </TH>
-                <TD colSpan={2}>
+                <TD colSpan={5}>
                   <DatePicker
                     appearance="Outline"
                     calendarViewMode="days"
@@ -314,13 +302,25 @@ export default function OneIdMasterHistory() {
                     }}
                   />
                 </TD>
+                <TH colSpan={1} align="right">
+                  E-mail주소
+                </TH>
+                <TD colSpan={2}>
+                  <TextField
+                    className="width-100"
+                    id="bfChgEmailAdrs"
+                    onChange={onSearchChangeHandler}
+                    placeholder="이메일을 입력하세요."
+                    value={searchInfo.bfChgEmailAdrs}
+                  />
+                </TD>
               </TR>
 
               <TR>
-                <TH colSpan={1} align="right">
+                <TH colSpan={0.999} align="right">
                   최초 생성일
                 </TH>
-                <TD colSpan={5}>
+                <TD colSpan={8}>
                   <DatePicker
                     appearance="Outline"
                     calendarViewMode="days"

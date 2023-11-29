@@ -3,22 +3,21 @@ import SearchForm from '@/components/form/SearchForm';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { customerMetaInfoColumn } from './data';
+import { customerMetaInfoColumn, initTbCoMetaTblInfo } from './data';
 import DataGridMeta from '@/components/grid/DataGridMeta';
 import { useMetaTableDetail } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { useLocation } from 'react-router-dom';
-import { RowsInfo } from '@/models/components/Table';
+import { TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
 
 const CustomerMetaManagementDetail = () => {
   const location = useLocation();
-  const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<Array<RowsInfo>>([]);
+  const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<TbCoMetaTbInfo>(initTbCoMetaTblInfo);
   const [searchInfo, setSearchInfo] = useState<any>({
     metaTblId: location?.state?.metaTblId || '',
     metaTblLogiNm: location?.state?.metaTblLogiNm || '',
     rtmTblYn: location?.state?.rtmTblYn || '',
   });
 
-  // const [rows, setRows] = useState<Array<CustMetaDetailInfo>>(initCustMetaDetailInfo);
   const [rows, setRows] = useState<any>([]);
   const { data: response, isError, refetch } = useMetaTableDetail(searchInfo.metaTblId);
   const { toast } = useToast();
@@ -26,7 +25,7 @@ const CustomerMetaManagementDetail = () => {
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
-    setSearchInfo({ ...searchInfo, [id]: value });
+    setTbCoMetaTbInfo({ ...searchInfo, [id]: value });
   }
 
   /* select 입력 함수 */
@@ -35,7 +34,7 @@ const CustomerMetaManagementDetail = () => {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    setSearchInfo({ ...searchInfo, [`${id}`]: value });
+    setTbCoMetaTbInfo({ ...tbCoMetaTbInfo, [`${id}`]: value });
   };
 
   useEffect(() => {
@@ -46,8 +45,6 @@ const CustomerMetaManagementDetail = () => {
       });
     } else {
       if (response?.result) {
-        // console.log(response?.result.tbCoMetaTblClmnInfoList);
-
         setRows(response?.result.tbCoMetaTblClmnInfoList);
         setTbCoMetaTbInfo(response?.result.tbCoMetaTbInfo);
       }
@@ -67,9 +64,9 @@ const CustomerMetaManagementDetail = () => {
                 disabled
                 className="width-100"
                 onChange={onSearchChangeHandler}
-                value={searchInfo.oneidNum}
+                value={tbCoMetaTbInfo.dbNm}
                 placeholder="검색어를 입력하세요."
-                id="oneidNum"
+                id="dbNm"
               />
             </TD>
             <TH colSpan={1} align="right">
@@ -80,9 +77,9 @@ const CustomerMetaManagementDetail = () => {
                 disabled
                 className="width-100"
                 onChange={onSearchChangeHandler}
-                value={searchInfo.oneidNum}
+                value={tbCoMetaTbInfo.metaTblPhysNm}
                 placeholder="검색어를 입력하세요."
-                id="oneidNum"
+                id="metaTblPhysNm"
               />
             </TD>
             <TH colSpan={1} align="right">
@@ -92,9 +89,9 @@ const CustomerMetaManagementDetail = () => {
               <TextField
                 className="width-100"
                 onChange={onSearchChangeHandler}
-                value={searchInfo.oneidNum}
+                value={tbCoMetaTbInfo.metaTblLogiNm}
                 placeholder="검색어를 입력하세요."
-                id="oneidNum"
+                id="metaTblLogiNm"
               />
             </TD>
             <TH colSpan={1} align="right">
@@ -104,9 +101,9 @@ const CustomerMetaManagementDetail = () => {
               <TextField
                 className="width-100"
                 onChange={onSearchChangeHandler}
-                value={searchInfo.oneidNum}
+                value={tbCoMetaTbInfo.metaTblDesc}
                 placeholder="검색어를 입력하세요."
-                id="oneidNum"
+                id="metaTblDesc"
               />
             </TD>
           </TR>
@@ -117,22 +114,20 @@ const CustomerMetaManagementDetail = () => {
             </TH>
             <TD colSpan={3}>
               <Select
+                id="metaTblDvCd"
                 appearance="Outline"
                 placeholder="전체"
                 className="width-100"
-                value={searchInfo.oneidChgRsnCd}
+                value={tbCoMetaTbInfo.metaTblDvCd}
                 onChange={(
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                   value: SelectValue<{}, false>
                 ) => {
-                  onchangeSelectHandler(e, value, 'oneidChgRsnCd');
+                  onchangeSelectHandler(e, value, 'metaTblDvCd');
                 }}
               >
-                <SelectOption defaultChecked value={undefined}>
-                  속성
-                </SelectOption>
-
-                <SelectOption value={undefined}>행동</SelectOption>
+                <SelectOption value={'ATTR'}>속성</SelectOption>
+                <SelectOption value={'BEHV'}>행동</SelectOption>
               </Select>
             </TD>
             <TH colSpan={1} align="right">
@@ -140,22 +135,20 @@ const CustomerMetaManagementDetail = () => {
             </TH>
             <TD colSpan={3}>
               <Select
+                id="metaTblUseYn"
                 appearance="Outline"
                 placeholder="전체"
                 className="width-100"
-                value={searchInfo.oneidChgRsnCd}
+                value={tbCoMetaTbInfo.metaTblUseYn}
                 onChange={(
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                   value: SelectValue<{}, false>
                 ) => {
-                  onchangeSelectHandler(e, value, 'oneidChgRsnCd');
+                  onchangeSelectHandler(e, value, 'metaTblUseYn');
                 }}
               >
-                <SelectOption defaultChecked value={undefined}>
-                  사용
-                </SelectOption>
-
-                <SelectOption value={undefined}>미사용</SelectOption>
+                <SelectOption value={'Y'}>사용</SelectOption>
+                <SelectOption value={'N'}>미사용</SelectOption>
               </Select>
             </TD>{' '}
             <TH colSpan={1} align="right">
@@ -163,22 +156,20 @@ const CustomerMetaManagementDetail = () => {
             </TH>
             <TD colSpan={3}>
               <Select
+                id="rtmTblYn"
                 appearance="Outline"
                 placeholder="전체"
                 className="width-100"
-                value={searchInfo.oneidChgRsnCd}
+                value={tbCoMetaTbInfo.rtmTblYn}
                 onChange={(
                   e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                   value: SelectValue<{}, false>
                 ) => {
-                  onchangeSelectHandler(e, value, 'oneidChgRsnCd');
+                  onchangeSelectHandler(e, value, 'rtmTblYn');
                 }}
               >
-                <SelectOption defaultChecked value={undefined}>
-                  NO
-                </SelectOption>
-
-                <SelectOption value={undefined}>Yes</SelectOption>
+                <SelectOption value={'N'}>NO</SelectOption>
+                <SelectOption value={'Y'}>Yes</SelectOption>
               </Select>
             </TD>
           </TR>

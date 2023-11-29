@@ -138,10 +138,10 @@ const Detail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1} className="attachFile">
+            <TH colSpan={1} align="right" className="attachFile">
               첨부파일
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={5} align="left">
               <ul className="attachFileList">
                 {dataroomModel?.fileList.map((file: FileModel) => (
                   <li>
@@ -157,11 +157,11 @@ const Detail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>
+            <TH colSpan={1} align="right">
               다음
               <ExpandLessIcon fontSize="small" />
             </TH>
-            <TD colSpan={3} className="nextContent">
+            <TD colSpan={5} align="left" className="nextContent">
               {nextDataroomModel?.sj && (
                 <Link linkType="Page" onClick={() => handleMoveDetail(nextDataroomModel?.dataId)}>
                   {nextDataroomModel?.sj}
@@ -170,11 +170,11 @@ const Detail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>
+            <TH colSpan={1} align="right">
               이전
               <ExpandLessIcon fontSize="small" />
             </TH>
-            <TD colSpan={3} className="nextContent">
+            <TD colSpan={5} align="left" className="nextContent">
               {prevDataroomModel?.sj && (
                 <Link linkType="Page" onClick={() => handleMoveDetail(prevDataroomModel?.dataId)}>
                   {prevDataroomModel?.sj}

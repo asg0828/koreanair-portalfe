@@ -1,7 +1,7 @@
 import { SelfFeatureAdmApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
 import { RowsInfo } from '@/models/components/Table';
-import { CustMetaDetailInfo, CustMetaListSrchInfo } from '@/models/selfFeature/FeatureAdmModel';
+import { CustMetaListSrchInfo } from '@/models/selfFeature/FeatureAdmModel';
 import { Method, callApi } from '@/utils/ApiUtil';
 
 export const retrieveColumnsAndComments = () => {
@@ -23,11 +23,14 @@ export const retrieveMetaTableLists = (params: CustMetaListSrchInfo) => {
   });
 };
 
-export const retrieveSchemaList = () => {
+export const retrieveSchemaList = (schemaName: string, ifUpdate: string) => {
   return callApi({
     service: Service.KAL_SF_BE,
-    url: `${SelfFeatureAdmApiURL.SCHEMA}`,
+    url: `${SelfFeatureAdmApiURL.SCHEMA}/${schemaName}`,
     method: Method.GET,
+    params: {
+      queryParams: { ifUpdate },
+    },
   });
 };
 
@@ -59,5 +62,27 @@ export const updateMetaTable = (
         rtmTblYn,
       },
     },
+  });
+};
+
+export const deleteMetaTable = (metaTblIds: Array<string>) => {
+  return callApi({
+    service: Service.KAL_SF_BE,
+    url: `${SelfFeatureAdmApiURL.META_TABLE}`,
+    method: Method.DELETE,
+    params: {
+      bodyParams: {
+        metaTblIds,
+      },
+    },
+  });
+};
+
+export const createMetaTableInfo = () => {
+  return callApi({
+    service: Service.KAL_SF_BE,
+    url: `${SelfFeatureAdmApiURL.META_TABLE}`,
+    method: Method.POST,
+    params: {},
   });
 };

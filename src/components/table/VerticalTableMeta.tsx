@@ -1,12 +1,12 @@
 import NoResult from '@/components/emptyState/NoData';
-import { useUpdateMetaTable } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import { useUpdateMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, View } from '@/models/common/Constants';
 import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { openModal } from '@/reducers/modalSlice';
 import '@components/table/VerticalTable.scss';
-import { Button, Checkbox, Radio, TBody, TD, TH, THead, TR, Table, TextField, Typography } from '@components/ui';
+import { Button, Modal, Checkbox, Radio, TBody, TD, TH, THead, TR, Table, TextField, Typography } from '@components/ui';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ export interface VerticalTableProps {
   children?: ReactNode;
   onChange?: Function;
   props?: any;
-  list: Array<RowsInfo>;
+  list: RowsInfo;
 }
 
 const VerticalTableMeta: React.FC<VerticalTableProps> = ({
@@ -49,6 +49,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
   } = useUpdateMetaTable(metaTblId, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList, rtmTblYn);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  // 수정중 페이지 이탈 모달
+  const [isOpen, setOpen] = useState(false);
 
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
     const oValue = order === SortDirectionCode.ASC ? 1 : order === SortDirectionCode.DESC ? -1 : 0;
@@ -62,7 +64,6 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
         return -oValue;
       }
     });
-
     setTbCoMetaTblClmnInfoList(tbCoMetaTblClmnInfoList);
   };
 
@@ -74,6 +75,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     setTbCoMetaTblClmnInfoList(rows);
   }, [rows]);
 
+  // 수집기준시간 변경 함수
   const timeStampChg = (rowIndex: number) => {
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
       const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
@@ -88,7 +90,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     });
   };
 
-  // 체크박스 클릭 시 값 변경 함수
+  // 체크박스 선택 값 변경 함수
   const ynChg = (rowIndex: number, field: string) => {
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
       const updatedRows: RowsInfo[] = tbCoMetaTblClmnInfoList.map((row, index) => {
@@ -128,6 +130,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     });
   }
 
+  // 수정 버튼
   const editCustomerDetailInfo = (data: any) => {
     dispatch(
       openModal({
@@ -139,8 +142,13 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     );
   };
 
+  // 목록 버튼
   const goToList = () => {
-    navigate('..');
+    if (rows !== tbCoMetaTblClmnInfoList) {
+      setOpen(true);
+    } else {
+      navigate('..');
+    }
   };
 
   return (
@@ -288,6 +296,30 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       >
         목록
       </Button>
+      <Modal open={isOpen} onClose={() => setOpen(false)}>
+        <Modal.Header>오류</Modal.Header>
+        <Modal.Body>작성중인 Data가 있습니다. 작성을 취소하고 이동하시겠습니까? </Modal.Body>
+        <Modal.Footer>
+          <Button
+            priority="Primary"
+            appearance="Contained"
+            onClick={() => {
+              navigate('..');
+            }}
+          >
+            확인
+          </Button>
+          <Button
+            priority="Normal"
+            appearance="Outline"
+            onClick={() => {
+              setOpen(false);
+            }}
+          >
+            취소
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

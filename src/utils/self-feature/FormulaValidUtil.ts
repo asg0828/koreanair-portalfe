@@ -154,54 +154,64 @@ export const transFuncCalcStr = ({
     if (funcType === "NVL") {
 
         if (var1 === "") rtnStr += ', [대체값])'
-        else rtnStr += `, [${var1}])`
+        else rtnStr += `, ${var1})`
 
     } else if (funcType === "SUBSTRING") {
 
         if (var1 === "") rtnStr += ', [시작위치]'
-        else rtnStr += `, [${var1}]`
+        else rtnStr += `, ${var1}`
 
         if (var2 === "") rtnStr += ', [길이])'
-        else rtnStr += `, [${var2}])`
+        else rtnStr += `, ${var2})`
         
     } else if (funcType === "LENGTH") {
         rtnStr += ')'
     } else if (funcType === "CONCAT") {
 
-        if (var1 === "") rtnStr += ', [컬럼1]'
-        else rtnStr += `, [${var1}]`
-
-        if (var2 === "") rtnStr += ', [컬럼2])'
-        else rtnStr += `, [${var2}]`
-
-        if (var3 === "") rtnStr += ', [컬럼3])'
-        else rtnStr += `, [${var3}])`
+        if (var1 !== "" && var2 !== "" && var3 !== "") {
+            rtnStr += `, ${var1}, ${var2}, ${var3})`
+        } else if (var1 !== "" && var2 !== "" && var3 === "") {
+            rtnStr += `, ${var1}, ${var2})`
+        } else if (var1 !== "" && var2 === "" && var3 !== "") {
+            rtnStr += `, ${var1}, ${var3})`
+        } else if (var1 !== "" && var2 === "" && var3 === "") {
+            rtnStr += `, ${var1})`
+        } else if (var1 === "" && var2 !== "" && var3 !== "") {
+            rtnStr += `, ${var2}, ${var3})`
+        } else if (var1 === "" && var2 !== "" && var3 === "") {
+            rtnStr += `, ${var2})`
+        } else if (var1 === "" && var2 === "" && var3 !== "") {
+            rtnStr += `, ${var3})`
+        } else {
+            rtnStr += `)`
+        }
 
     } else if (funcType === "TO_NUMBER") {
         rtnStr += ')'
     } else if (funcType === "TO_CHAR") {
 
-        if (var1 === "") rtnStr += ', [형식])'
-        else rtnStr += `, [${var1}])`
+        if (var1 === "") rtnStr += ', [단위])'
+        else rtnStr += `, ${var1})`
 
     } else if (funcType === "DATEADD") {
 
-        if (var1 === "") rtnStr += ', [형식]'
-        else rtnStr += `, [${var1}]`
+        if (var1 === "") rtnStr += ', [단위]'
+        else rtnStr += `, ${var1}`
 
         if (var2 === "") rtnStr += ', [숫자])'
-        else rtnStr += `, [${var2}])`
+        else rtnStr += `, ${var2})`
 
     } else if (funcType === "DATEDIFF") {
+        rtnStr = `${funcType}(`
 
-        if (var1 === "") rtnStr += ', [형식]'
-        else rtnStr += `, [${var1}]`
+        if (var1 === "") rtnStr += '[단위]'
+        else rtnStr += `${var1}`
 
         if (var2 === "") rtnStr += ', [시작 일자]'
-        else rtnStr += `, [${var2}]`
+        else rtnStr += `, ${var2}`
 
         if (var3 === "") rtnStr += ', [종료 일자])'
-        else rtnStr += `, [${var3}])`
+        else rtnStr += `, ${var3})`
 
     } else {
         rtnStr = ""

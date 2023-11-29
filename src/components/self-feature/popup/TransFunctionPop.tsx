@@ -1,13 +1,13 @@
-import { 
-    useState, 
-    useEffect, 
-    useCallback 
+import {
+    useState,
+    useEffect,
+    useCallback
 } from 'react'
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect';
 
-import { 
-    Modal, 
+import {
+    Modal,
     Button,
     Stack,
     TextField,
@@ -21,59 +21,57 @@ import {
 } from '@components/ui';
 import HorizontalTable from '@/components/table/HorizontalTable';
 
-import { 
+import {
     AggregateCol,
     TbRsCustFeatRuleTrgt,
     TbRsCustFeatRuleTrgtFilter,
     TransFuncProps
 } from '@/models/selfFeature/FeatureModel';
 import { transFuncCalcStr } from '@/utils/self-feature/FormulaValidUtil';
-import { ColDataType, CommonCode, CommonCodeInfo, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
+import { ColDataType, CommonCode, CommonCodeInfo, ModalType, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
+import { useAppDispatch } from '@/hooks/useRedux';
+import ConfirmModal from '@/components/modal/ConfirmModal';
 
-const TransFunctionPop = (
-    { 
-        isOpen = false, 
-        onClose, 
-        itemIdx,
-        dataType,
-        trgtItem,
-        columnList,
-        setTargetList,
-        setTrgtFilterList,
-        setTransFuncChecked,
-    }: TransFuncProps) => {
+const TransFunctionPop = ({
+    isOpen = false,
+    onClose,
+    itemIdx,
+    dataType,
+    trgtItem,
+    columnList,
+    setTargetList,
+    setTrgtFilterList,
+    setTransFuncChecked, }: TransFuncProps) => {
 
-    const { 
-        data: cmmCodeFuncRes, 
-        isError: cmmCodeFuncErr, 
-        refetch: cmmCodeFuncRefetch 
-    } = useCommCodes(CommonCode.FUNCTION)
-    const { 
-        data: cmmCodeFrmtRes, 
-        isError: cmmCodeFrmtErr, 
-        refetch: cmmCodeFrmtRefetch 
-    } = useCommCodes(CommonCode.FORMAT)
+    const { data: cmmCodeFuncRes } = useCommCodes(CommonCode.FUNCTION)
+    const { data: cmmCodeFrmtRes } = useCommCodes(CommonCode.FORMAT)
 
-    const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
+    const [isOpenPopUp, setIsOpenPopUp] = useState<boolean>(false)
 
-    const [ transFuncOtion, setTransFuncOtion ] = useState<Array<CommonCodeInfo>>([])
-    const [ tsDateFormatOption, setTsDateFormatOption ] = useState<Array<CommonCodeInfo>>([])
+    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
+    const [confirmModalTit, setConfirmModalTit] = useState<string>('')
+    const [confirmModalCont, setConfirmModalCont] = useState<string>('')
+    const [modalType, setModalType] = useState<string>('')
+    const [btnType, setBtnType] = useState<string>("")
 
-    const [ funcStrVal, setFuncStrVal ] = useState<string>('')
-    const [ functionVal,  setFunctionVal ] = useState<string>('')
-    const [ variable1Val, setVariable1Val ] = useState<string>('')
-    const [ variable2Val, setVariable2Val ] = useState<string>('')
-    const [ variable3Val, setVariable3Val ] = useState<string>('')
+    const [transFuncOtion, setTransFuncOtion] = useState<Array<CommonCodeInfo>>([])
+    const [tsDateFormatOption, setTsDateFormatOption] = useState<Array<CommonCodeInfo>>([])
 
-    const [ enableColList, setEnableColList ] = useState<Array<AggregateCol>>([])
-    const [ variable1SlctOpt, setVariable1SlctOpt ] = useState<Array<AggregateCol>>([])
-    const [ variable2SlctOpt, setVariable2SlctOpt ] = useState<Array<AggregateCol>>([])
-    const [ variable3SlctOpt, setVariable3SlctOpt ] = useState<Array<AggregateCol>>([])
+    const [funcStrVal, setFuncStrVal] = useState<string>('')
+    const [functionVal, setFunctionVal] = useState<string>('')
+    const [variable1Val, setVariable1Val] = useState<string>('')
+    const [variable2Val, setVariable2Val] = useState<string>('')
+    const [variable3Val, setVariable3Val] = useState<string>('')
 
-    const [ dtSlctOpt, setDtSlctOpt ] = useState<Array<AggregateCol>>([])
-    const [ strtDtChecked, setStrtDtChecked ] = useState(false)
-    const [ endDtChecked, setEndDtChecked ] = useState(false)
+    const [enableColList, setEnableColList] = useState<Array<AggregateCol>>([])
+    const [variable1SlctOpt, setVariable1SlctOpt] = useState<Array<AggregateCol>>([])
+    const [variable2SlctOpt, setVariable2SlctOpt] = useState<Array<AggregateCol>>([])
+    const [variable3SlctOpt, setVariable3SlctOpt] = useState<Array<AggregateCol>>([])
+
+    const [dtSlctOpt, setDtSlctOpt] = useState<Array<AggregateCol>>([])
+    const [strtDtChecked, setStrtDtChecked] = useState(false)
+    const [endDtChecked, setEndDtChecked] = useState(false)
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
@@ -90,7 +88,22 @@ const TransFunctionPop = (
             setTempTrgtItem(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
         }
     }, [isOpen])
-
+    // modal 확인/취소 이벤트
+    const onConfirm = () => {
+        if (modalType === ModalType.CONFIRM) {
+            if (btnType === "transClear") {
+                transPopClear()
+                setIsOpenConfirmModal(false)
+            }
+            if (btnType === "transApply") validationCheckModal()
+        }
+        if (modalType === ModalType.ALERT) {
+            setIsOpenConfirmModal(false)
+        }
+    }
+    const onCancel = () => {
+        setIsOpenConfirmModal(false)
+    }
     useEffect(() => {
         if (cmmCodeFuncRes) {
             setTransFuncOtion((prevState: Array<CommonCodeInfo>) => {
@@ -144,6 +157,8 @@ const TransFunctionPop = (
         // 달력 체크 취소
         setStrtDtChecked(false)
         setEndDtChecked(false)
+        // 모달 open false
+        setIsOpenConfirmModal(false)
 
         if (!columnList) return
         let strColList = cloneDeep(columnList).filter((col: AggregateCol) => (col.dataType === ColDataType.STR && col.text !== trgtItem.columnName))
@@ -180,7 +195,7 @@ const TransFunctionPop = (
     }, [variable1Val])
 
     useEffect(() => {
-        
+
         transFuncCalcStr({
             colNm: trgtItem.columnName,
             setFuncStr: setFuncStrVal,
@@ -250,7 +265,7 @@ const TransFunctionPop = (
         if (!columnList) return
         // concat 함수 선택시 필요한 variable option 설정
         let strColList = cloneDeep(columnList).filter((col: AggregateCol) => (col.dataType === ColDataType.STR && col.text !== trgtItem.columnName))
-        
+
         setEnableColList(strColList)
         setVariable1SlctOpt(strColList)
         setVariable2SlctOpt(strColList)
@@ -267,10 +282,11 @@ const TransFunctionPop = (
         })
 
     }, [columnList])
-
+    // 변환식 팝업 close
     const handleClose = useCallback(
         (isOpenPopUp: boolean) => {
             if (onClose) {
+                if (trgtItem.function === "") setTransFuncChecked && setTransFuncChecked(false)
                 onClose(isOpenPopUp)
             } else {
                 setIsOpenPopUp(isOpenPopUp)
@@ -278,7 +294,7 @@ const TransFunctionPop = (
         },
         [onClose]
     )
-
+    // 변환식 항목 값 setting
     const setTrgtItem = (
         funcType: string,
         var1: string,
@@ -306,7 +322,7 @@ const TransFunctionPop = (
             return rtn
         })
     }
-
+    // 팝업에서 보여지는 값 setting
     const setTempTrgtItem = (
         funcType: string,
         var1: string,
@@ -318,18 +334,66 @@ const TransFunctionPop = (
         setVariable2Val(var2)
         setVariable3Val(var3)
     }
-
-    // 적용
-    const handleConfirm = () => {
+    // 적용시 값 validation check
+    const validationCheckModal = () => {
         if (functionVal === "") {
-            setTransFuncChecked && setTransFuncChecked(false)
+            setModalType(ModalType.ALERT)
+            setConfirmModalTit("변환식")
+            setConfirmModalCont("선택된 함수가 없습니다.")
+            setIsOpenConfirmModal(true)
+            //setTransFuncChecked && setTransFuncChecked(false)
             setTrgtItem('', '', '', '')
         } else {
-            setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+            if (functionVal === "NVL") {
+                if (!variable1Val || variable1Val === "") {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("대체값을 입력해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else {
+                    setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    handleClose(false)
+                }
+            } else if (functionVal === "SUBSTRING") {
+                if (!variable1Val) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("시작위치을 입력해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else if (!variable2Val) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("길이를 입력해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else {
+                    setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    handleClose(false)
+                }
+            } else if (functionVal === "CONCAT") {
+                if (!variable1Val && !variable2Val && !variable3Val) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("변환식")
+                    setConfirmModalCont("컬럼을 1개 이상 선택해 주세요.")
+                    setIsOpenConfirmModal(true)
+                } else {
+                    setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                    handleClose(false)
+                }
+            } else {
+                setTrgtItem(functionVal, variable1Val, variable2Val, variable3Val)
+                handleClose(false)
+            }
         }
-        handleClose(false)
     }
-
+    // 적용
+    const handleConfirm = () => {
+		setModalType(ModalType.CONFIRM)
+        setBtnType("transApply")
+		setConfirmModalTit("변환식")
+		setConfirmModalCont("정말로 적용 하시겠습니까?")
+		setIsOpenConfirmModal(true)
+    }
+    // 닫기 버튼 클릭
     const handleClosePop = () => {
         if (trgtItem.function === "") {
             setTransFuncChecked && setTransFuncChecked(false)
@@ -339,18 +403,26 @@ const TransFunctionPop = (
         setTempTrgtItem('', '', '', '')
         handleClose(false)
     }
-    // 초기화
+    // 초기화 버튼 클릭
     const handleResetTransFunc = () => {
-        setTransFuncChecked && setTransFuncChecked(false)
-        setTrgtItem('', '', '', '')
+		setModalType(ModalType.CONFIRM)
+        setBtnType("transClear")
+		setConfirmModalTit("변환식")
+		setConfirmModalCont("정말로 초기화 하시겠습니까?")
+		setIsOpenConfirmModal(true)
+    }
+    // 변환식 팝업 항목 초기화
+    const transPopClear = () => {
+        // setTransFuncChecked && setTransFuncChecked(false)
+        // setTrgtItem('', '', '', '')
         setTempTrgtItem('', '', '', '')
         // 달력 체크 취소
         setStrtDtChecked(false)
         setEndDtChecked(false)
         // 팝업 close
-        handleClose(false)
+        //handleClose(false)
     }
-
+    // input 값 변경시
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
         if (id === "functionVal") setFunctionVal(value)
@@ -358,7 +430,7 @@ const TransFunctionPop = (
         else if (id === "variable2Val") setVariable2Val(value)
         else if (id === "variable3Val") setVariable3Val(value)
     }
-
+    // select 선택시
     const onchangeSelectHandler = (
         e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
         value: SelectValue<{}, false>,
@@ -389,10 +461,10 @@ const TransFunctionPop = (
                 // 현재 select 선택
                 if (keyNm === "variable2Val") {
                     // 시작일
-                    setVariable3Val(dtSlctOpt[dtSlctOpt.length-1].value)
+                    setVariable3Val(dtSlctOpt[dtSlctOpt.length - 1].value)
                 } else if (keyNm === "variable3Val") {
                     // 종료일
-                    setVariable2Val(dtSlctOpt[dtSlctOpt.length-1].value)
+                    setVariable2Val(dtSlctOpt[dtSlctOpt.length - 1].value)
                 }
             } else {
                 // 컬럼명 select 선택
@@ -406,7 +478,7 @@ const TransFunctionPop = (
             }
         }
 
-    } 
+    }
     // 달력 체크박스 선택시
     const handleChecked = (dtTp: string) => {
 
@@ -414,20 +486,20 @@ const TransFunctionPop = (
             setStrtDtChecked(true)
             setEndDtChecked(false)
             setVariable2Val("")
-            setVariable3Val(dtSlctOpt[dtSlctOpt.length-1].value)
+            setVariable3Val(dtSlctOpt[dtSlctOpt.length - 1].value)
         } else if (dtTp === "variable3Val") {
             setStrtDtChecked(false)
             setEndDtChecked(true)
-            setVariable2Val(dtSlctOpt[dtSlctOpt.length-1].value)
+            setVariable2Val(dtSlctOpt[dtSlctOpt.length - 1].value)
             setVariable3Val("")
         }
-    }   
+    }
 
     return (
-        <Modal 
-            open={isOpenPopUp} 
-            onClose={handleClose} 
-            size='SM'
+        <Modal
+            open={isOpenPopUp}
+            onClose={handleClose}
+            size='MD'
             closeOnOutsideClick={false}
         >
             <Modal.Header>변환식</Modal.Header>
@@ -440,7 +512,7 @@ const TransFunctionPop = (
                     <HorizontalTable className="width-100">
                         <TR>
                             <TH colSpan={1} align="right">
-                            변환식
+                                변환식
                             </TH>
                             <TD colSpan={2}>
                                 <Stack gap="SM" className="width-100">
@@ -450,318 +522,332 @@ const TransFunctionPop = (
                         </TR>
                     </HorizontalTable>
                     <HorizontalTable className="width-100 bdtb">
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        함수
-                        </TH>
-                        <TD colSpan={2}>
-                            <Select
-                                appearance="Outline"
-                                className="width-100"
-                                value={functionVal}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    onchangeSelectHandler(e, value, "functionVal")
-                                }}
-                            >
-                                {transFuncOtion.map((item, index) => (
-                                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                                ))}
-                                {transFuncOtion.length < 1 &&
-                                    <SelectOption value="">함수 선택</SelectOption>
-                                }
-                            </Select>
-                        </TD>
-                    </TR>
-                    {functionVal === "NVL" && dataType === ColDataType.NUM &&
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        대체값
-                        </TH>
-                        <TD colSpan={2}>
-                            <TextField 
-                                type='number'
-                                className="width-100" 
-                                value={variable1Val} 
-                                id='variable1Val' 
-                                onChange={onchangeInputHandler}
-                            ></TextField>
-                        </TD>
-                    </TR>
-                    }
-                    {functionVal === "NVL" && dataType === ColDataType.STR &&
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        대체값
-                        </TH>
-                        <TD colSpan={2}>
-                            <TextField 
-                                className="width-100" 
-                                value={variable1Val} 
-                                id='variable1Val' 
-                                onChange={onchangeInputHandler}
-                            ></TextField>
-                        </TD>
-                    </TR>
-                    }
-                    {functionVal === "SUBSTRING" &&
-                    <>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        시작위치
-                        </TH>
-                        <TD colSpan={2}>
-                            <TextField 
-                                className="width-100"
-                                value={variable1Val} 
-                                id='variable1Val' 
-                                onChange={onchangeInputHandler}
-                            ></TextField>
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        길이
-                        </TH>
-                        <TD colSpan={2}>
-                            <TextField 
-                                className="width-100"
-                                value={variable2Val} 
-                                id='variable2Val' 
-                                onChange={onchangeInputHandler}
-                            ></TextField>
-                        </TD>
-                    </TR>
-                    </>
-                    }
-                    {functionVal === "CONCAT" &&
-                    <>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        컬럼1
-                        </TH>
-                        <TD colSpan={2}>
-                            <Select 
-                                appearance="Outline"
-                                className="width-100"
-                                value={variable1Val}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    onchangeSelectHandler(e, value, "variable1Val")
-                                }}
-                            >
-                                {variable1SlctOpt.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))}
-                            </Select>
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        컬럼2
-                        </TH>
-                        <TD colSpan={2}>
-                            <Select 
-                                appearance="Outline"
-                                className="width-100"
-                                value={variable2Val}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    onchangeSelectHandler(e, value, "variable2Val")
-                                }}
-                            >
-                                {variable2SlctOpt.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))}
-                            </Select>
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        컬럼3
-                        </TH>
-                        <TD colSpan={2}>
-                            <Select 
-                                appearance="Outline"
-                                className="width-100"
-                                value={variable3Val}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    onchangeSelectHandler(e, value, "variable3Val")
-                                }}
-                            >
-                                {variable3SlctOpt.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                ))}
-                            </Select>
-                        </TD>
-                    </TR>
-                    </>
-                    }
-                    {(functionVal === "TO_CHAR" || functionVal === "DATEADD" || functionVal === "DATEDIFF") &&
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        형식
-                        </TH>
-                        <TD colSpan={2}>
-                            <Select 
-                                appearance="Outline"
-                                className="width-100"
-                                value={variable1Val}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    onchangeSelectHandler(e, value, "variable1Val")
-                                }}
-                            >
-                                {tsDateFormatOption.map((item, index) => (
-                                <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                                ))}
-                            </Select>
-                        </TD>
-                    </TR>
-                    }
-                    {functionVal === "DATEADD" &&
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        숫자
-                        </TH>
-                        <TD colSpan={2}>
-                            <TextField 
-                                type='number'
-                                className="width-100" 
-                                value={variable2Val} 
-                                id='variable2Val' 
-                                onChange={onchangeInputHandler}
-                            ></TextField>
-                        </TD>
-                    </TR>
-                    }
-                    {functionVal === "DATEDIFF" &&
-                    <>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        시작 일자
-                        </TH>
-                        <TD colSpan={2}>
-                            <Stack gap="MD" className="width-100">
-                                <Checkbox 
-                                    label="달력" 
-                                    checked={strtDtChecked}
-                                    onCheckedChange={() => {
-                                        handleChecked("variable2Val")
-                                    }}
-                                />
-                                {strtDtChecked &&
-                                <DatePicker
-                                    value={variable2Val}
+                        <TR>
+                            <TH colSpan={1} align="right">
+                                함수
+                            </TH>
+                            <TD colSpan={2}>
+                                <Select
                                     appearance="Outline"
-                                    calendarViewMode="days"
-                                    mode="single"
-                                    shape="Square"
-                                    size="MD"
-                                    //onChange={(e) => {e.target.value = ""}}
-                                    onValueChange={(nextVal) => {
-                                        setVariable2Val(nextVal)
-                                    }}
-                                />
-                                }
-                                {!strtDtChecked &&
-                                <Select 
-                                    value={variable2Val}
-                                    appearance="Outline" 
-                                    placeholder="선택" 
                                     className="width-100"
+                                    value={functionVal}
                                     onChange={(
                                         e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                         value: SelectValue<{}, false>
                                     ) => {
-                                        // 구분자 선택
-                                        onchangeSelectHandler(e, value, "variable2Val")
+                                        onchangeSelectHandler(e, value, "functionVal")
                                     }}
                                 >
-                                    {dtSlctOpt.map((item, index) => (
-                                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                    {transFuncOtion.map((item, index) => (
+                                        <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                                     ))}
+                                    {transFuncOtion.length < 1 &&
+                                        <SelectOption value="">함수 선택</SelectOption>
+                                    }
                                 </Select>
-                                }
-                            </Stack>
-                        </TD>
-                    </TR>
-                    <TR>
-                        <TH colSpan={1} align="right">
-                        종료 일자
-                        </TH>
-                        <TD colSpan={2}>
-                            <Stack gap="MD" className="width-100">
-                                <Checkbox 
-                                    label="달력" 
-                                    checked={endDtChecked}
-                                    onCheckedChange={() => {
-                                        handleChecked("variable3Val")
-                                    }}
-                                />
-                                {endDtChecked &&
-                                <DatePicker
-                                    value={variable3Val}
-                                    appearance="Outline"
-                                    calendarViewMode="days"
-                                    mode="single"
-                                    shape="Square"
-                                    size="MD"
-                                    //onChange={(e) => {e.target.value = ""}}
-                                    onValueChange={(nextVal) => {
-                                        setVariable3Val(nextVal)
-                                    }}
-                                />
-                                }
-                                {!endDtChecked &&
-                                <Select 
-                                    value={variable3Val}
-                                    appearance="Outline" 
-                                    placeholder="선택" 
-                                    className="width-100"
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // 구분자 선택
-                                        onchangeSelectHandler(e, value, "variable3Val")
-                                    }}
-                                >
-                                    {dtSlctOpt.map((item, index) => (
-                                    <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                                    ))}
-                                </Select>
-                                }
-                            </Stack>
-                        </TD>
-                    </TR>
-                    </>
-                    }
+                            </TD>
+                        </TR>
+                        {functionVal === "NVL" && dataType === ColDataType.NUM &&
+                            <TR>
+                                <TH colSpan={1} align="right">
+                                    대체값
+                                </TH>
+                                <TD colSpan={2}>
+                                    <TextField
+                                        type='number'
+                                        className="width-100"
+                                        value={variable1Val}
+                                        id='variable1Val'
+                                        onChange={onchangeInputHandler}
+                                    ></TextField>
+                                </TD>
+                            </TR>
+                        }
+                        {functionVal === "NVL" && dataType === ColDataType.STR &&
+                            <TR>
+                                <TH colSpan={1} align="right">
+                                    대체값
+                                </TH>
+                                <TD colSpan={2}>
+                                    <TextField
+                                        className="width-100"
+                                        value={variable1Val}
+                                        id='variable1Val'
+                                        onChange={onchangeInputHandler}
+                                    ></TextField>
+                                </TD>
+                            </TR>
+                        }
+                        {functionVal === "SUBSTRING" &&
+                            <>
+                                <TR>
+                                    <TH colSpan={1} align="right">
+                                        시작위치
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <TextField
+                                            type='number'
+                                            className="width-100"
+                                            value={variable1Val}
+                                            id='variable1Val'
+                                            onChange={onchangeInputHandler}
+                                        ></TextField>
+                                    </TD>
+                                </TR>
+                                <TR>
+                                    <TH colSpan={1} align="right">
+                                        길이
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <TextField
+                                            type='number'
+                                            className="width-100"
+                                            value={variable2Val}
+                                            id='variable2Val'
+                                            onChange={onchangeInputHandler}
+                                        ></TextField>
+                                    </TD>
+                                </TR>
+                            </>
+                        }
+                        {functionVal === "CONCAT" &&
+                            <>
+                                <TR>
+                                    <TH colSpan={1} align="right">
+                                        컬럼1
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Select
+                                            appearance="Outline"
+                                            className="width-100"
+                                            value={variable1Val}
+                                            onChange={(
+                                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                                value: SelectValue<{}, false>
+                                            ) => {
+                                                onchangeSelectHandler(e, value, "variable1Val")
+                                            }}
+                                        >
+                                            {variable1SlctOpt.map((item, index) => (
+                                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                            ))}
+                                        </Select>
+                                    </TD>
+                                </TR>
+                                <TR>
+                                    <TH colSpan={1} align="right">
+                                        컬럼2
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Select
+                                            appearance="Outline"
+                                            className="width-100"
+                                            value={variable2Val}
+                                            onChange={(
+                                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                                value: SelectValue<{}, false>
+                                            ) => {
+                                                onchangeSelectHandler(e, value, "variable2Val")
+                                            }}
+                                        >
+                                            {variable2SlctOpt.map((item, index) => (
+                                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                            ))}
+                                        </Select>
+                                    </TD>
+                                </TR>
+                                <TR>
+                                    <TH colSpan={1} align="right">
+                                        컬럼3
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Select
+                                            appearance="Outline"
+                                            className="width-100"
+                                            value={variable3Val}
+                                            onChange={(
+                                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                                value: SelectValue<{}, false>
+                                            ) => {
+                                                onchangeSelectHandler(e, value, "variable3Val")
+                                            }}
+                                        >
+                                            {variable3SlctOpt.map((item, index) => (
+                                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                            ))}
+                                        </Select>
+                                    </TD>
+                                </TR>
+                            </>
+                        }
+                        {(functionVal === "TO_CHAR" || functionVal === "DATEADD" || functionVal === "DATEDIFF") &&
+                            <TR>
+                                <TH colSpan={1} align="right">
+                                    단위
+                                </TH>
+                                <TD colSpan={2}>
+                                    <Select
+                                        appearance="Outline"
+                                        className="width-100"
+                                        value={variable1Val}
+                                        onChange={(
+                                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                            value: SelectValue<{}, false>
+                                        ) => {
+                                            onchangeSelectHandler(e, value, "variable1Val")
+                                        }}
+                                    >
+                                        {tsDateFormatOption.map((item, index) => (
+                                            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                        ))}
+                                    </Select>
+                                </TD>
+                            </TR>
+                        }
+                        {functionVal === "DATEADD" &&
+                            <TR>
+                                <TH colSpan={1} align="right">
+                                    숫자
+                                </TH>
+                                <TD colSpan={2}>
+                                    <TextField
+                                        type='number'
+                                        className="width-100"
+                                        value={variable2Val}
+                                        id='variable2Val'
+                                        onChange={onchangeInputHandler}
+                                    ></TextField>
+                                </TD>
+                            </TR>
+                        }
+                        {functionVal === "DATEDIFF" &&
+                            <>
+                                <TR>
+                                    <TH colSpan={1} align="right">
+                                        시작 일자
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Stack gap="MD" className="width-100">
+                                            <Checkbox
+                                                label="달력"
+                                                checked={strtDtChecked}
+                                                onCheckedChange={() => {
+                                                    handleChecked("variable2Val")
+                                                }}
+                                            />
+                                            {strtDtChecked &&
+                                                <DatePicker
+                                                    value={variable2Val}
+                                                    appearance="Outline"
+                                                    calendarViewMode="days"
+                                                    mode="single"
+                                                    shape="Square"
+                                                    size="MD"
+                                                    //onChange={(e) => {e.target.value = ""}}
+                                                    onValueChange={(nextVal) => {
+                                                        setVariable2Val(nextVal)
+                                                    }}
+                                                />
+                                            }
+                                            {!strtDtChecked &&
+                                                <Select
+                                                    value={variable2Val}
+                                                    appearance="Outline"
+                                                    placeholder="선택"
+                                                    className="width-100"
+                                                    onChange={(
+                                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                                        value: SelectValue<{}, false>
+                                                    ) => {
+                                                        // 구분자 선택
+                                                        onchangeSelectHandler(e, value, "variable2Val")
+                                                    }}
+                                                >
+                                                    {dtSlctOpt.map((item, index) => (
+                                                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                                    ))}
+                                                </Select>
+                                            }
+                                        </Stack>
+                                    </TD>
+                                </TR>
+                                <TR>
+                                    <TH colSpan={1} align="right">
+                                        종료 일자
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Stack gap="MD" className="width-100">
+                                            <Checkbox
+                                                label="달력"
+                                                checked={endDtChecked}
+                                                onCheckedChange={() => {
+                                                    handleChecked("variable3Val")
+                                                }}
+                                            />
+                                            {endDtChecked &&
+                                                <DatePicker
+                                                    value={variable3Val}
+                                                    appearance="Outline"
+                                                    calendarViewMode="days"
+                                                    mode="single"
+                                                    shape="Square"
+                                                    size="MD"
+                                                    //onChange={(e) => {e.target.value = ""}}
+                                                    onValueChange={(nextVal) => {
+                                                        setVariable3Val(nextVal)
+                                                    }}
+                                                />
+                                            }
+                                            {!endDtChecked &&
+                                                <Select
+                                                    value={variable3Val}
+                                                    appearance="Outline"
+                                                    placeholder="선택"
+                                                    className="width-100"
+                                                    onChange={(
+                                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                                        value: SelectValue<{}, false>
+                                                    ) => {
+                                                        // 구분자 선택
+                                                        onchangeSelectHandler(e, value, "variable3Val")
+                                                    }}
+                                                >
+                                                    {dtSlctOpt.map((item, index) => (
+                                                        <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                                    ))}
+                                                </Select>
+                                            }
+                                        </Stack>
+                                    </TD>
+                                </TR>
+                            </>
+                        }
                     </HorizontalTable>
                 </Stack>
             </Modal.Body>
             <Modal.Footer>
                 <Button priority="Normal" appearance="Outline" size="LG" onClick={handleResetTransFunc}>
-                초기화
+                    초기화
                 </Button>
                 <Button priority="Primary" appearance="Contained" size="LG" onClick={handleConfirm}>
-                적용
+                    적용
                 </Button>
                 <Button priority="Normal" appearance="Outline" size="LG" onClick={handleClosePop}>
-                닫기
+                    닫기
                 </Button>
             </Modal.Footer>
+
+
+            {/* Confirm 모달 */}
+            <ConfirmModal
+                isOpen={isOpenConfirmModal}
+                onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+                title={confirmModalTit}
+                content={confirmModalCont}
+                onConfirm={onConfirm}
+                onCancle={onCancel}
+                btnType={modalType}
+            />
         </Modal>
     )
 }

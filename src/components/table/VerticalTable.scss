@@ -1,3 +1,20 @@
 .verticalTable {
-  width: 100%;
+  text-overflow: ellipsis;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.verticalTableTD {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+}
+
+.verticalTableTH {
+  overflow: hidden;
+}
+
+.verticalTableDiv {
+  width: inherit;
+  min-width: 100%;
 }

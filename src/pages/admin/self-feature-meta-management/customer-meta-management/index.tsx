@@ -4,7 +4,7 @@ import { SelectValue } from '@mui/base/useSelect';
 import SearchForm from '@/components/form/SearchForm';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { ValidType, View } from '@/models/common/Constants';
+import { ModalType, ValidType, View } from '@/models/common/Constants';
 import DataGrid from '@/components/grid/DataGrid';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { PagingUtil, setPageList } from '@/utils/self-feature/PagingUtil';
@@ -13,9 +13,13 @@ import { CustMetaSrchItem, CustMetaTableData, CustMetaListSrchInfo } from '@/mod
 import { initCustMetaSrchItem, initCustMetaListSrchInfo, metaTableColumn } from './data';
 import { useYn } from '@/models/selfFeature/FeatureCommon';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { openModal } from '@/reducers/modalSlice';
+import { useDeleteMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations';
 
 const CustomerMetaManagement = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<CustMetaTableData>>([]);
   const { toast } = useToast();
@@ -24,7 +28,8 @@ const CustomerMetaManagement = () => {
   const { data: colCmmtRes, isError: colCmmtErr, refetch: colCmmtRefetch } = useColAndCmmtList();
   const [oriList, setOriList] = useState<Array<CustMetaTableData>>([]);
   const [srchItemListOption, setSrchItemListOption] = useState<Array<CustMetaSrchItem>>([]);
-
+  const [metaTblIds, setMetaTblsId] = useState<Array<string>>([]);
+  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteMetaTable(metaTblIds);
   // 검색 버튼 클릭시 목록 refetch
   const handleSearch = () => {
     metaTableRefetch();
@@ -90,13 +95,14 @@ const CustomerMetaManagement = () => {
     setSearchInfo({ ...searchInfo, [`${id}`]: String(value) });
   };
 
+  // 초기화 버튼
   const onClear = () => {
     setSearchInfo(cloneDeep(initCustMetaListSrchInfo));
   };
 
+  // 체크 목록 생성
   const getCheckList = (checkedList: Array<number>) => {
-    //checkedList = checkedList.sort((a: number, b: number) => a - b)
-    console.log(checkedList);
+    setMetaTblsId(checkedList.map((index) => rows[index].metaTblId));
   };
 
   const goToDetail = (row: CustMetaTableData, index: number) => {
@@ -107,6 +113,23 @@ const CustomerMetaManagement = () => {
         rtmTblYn: row.rtmTblYn,
       },
     });
+  };
+
+  // 메타테이블 컬럼 신규 등록 페이지 이동버튼
+  const goToReg = () => {
+    navigate(View.REG);
+  };
+
+  // 메타테이블컬럼 삭제 버튼
+  const deleteMetaTableColumn = () => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '삭제',
+        content: '삭제하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
   };
 
   return (
@@ -184,10 +207,10 @@ const CustomerMetaManagement = () => {
         rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
         buttonChildren={
           <>
-            <Button priority="Normal" appearance="Outline" size="LG">
+            <Button onClick={deleteMetaTableColumn} priority="Normal" appearance="Outline" size="LG">
               삭제
             </Button>
-            <Button priority="Primary" appearance="Contained" size="LG">
+            <Button onClick={goToReg} priority="Primary" appearance="Contained" size="LG">
               신규등록
             </Button>
           </>
@@ -198,3 +221,6 @@ const CustomerMetaManagement = () => {
 };
 
 export default CustomerMetaManagement;
+function setPage(arg0: PageModel) {
+  throw new Error('Function not implemented.');
+}
