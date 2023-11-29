@@ -341,7 +341,7 @@ const TransFunctionPop = ({
             setConfirmModalTit("변환식")
             setConfirmModalCont("선택된 함수가 없습니다.")
             setIsOpenConfirmModal(true)
-            setTransFuncChecked && setTransFuncChecked(false)
+            //setTransFuncChecked && setTransFuncChecked(false)
             setTrgtItem('', '', '', '')
         } else {
             if (functionVal === "NVL") {
