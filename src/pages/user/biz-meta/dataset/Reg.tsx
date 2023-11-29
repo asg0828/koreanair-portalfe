@@ -32,8 +32,6 @@ const Reg = () => {
   const { toast } = useToast();
   const {
     register,
-    unregister,
-    clearErrors,
     handleSubmit,
     getValues,
     setValue,
@@ -108,9 +106,11 @@ const Reg = () => {
       colSpan: 0.5,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
         return (
-          <Stack onClick={() => handleRemove(rowIndex)}>
-            <RemoveCircleOutlineOutlinedIcon color="action" />
-          </Stack>
+          fields.length > 1 && (
+            <Stack onClick={() => handleRemove(rowIndex)}>
+              <RemoveCircleOutlineOutlinedIcon color="action" />
+            </Stack>
+          )
         );
       },
     },
@@ -124,9 +124,7 @@ const Reg = () => {
           className="width-100"
           {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
             pattern:
-              fieldName === 'mcsEnNm'
-                ? { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' }
-                : undefined,
+              fieldName === 'mcsEnNm' ? { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' } : undefined,
             required: { value: true, message: `${fieldName} is required.` },
             maxLength: maxLength && { value: maxLength, message: 'max length exceeded' },
           })}
@@ -193,11 +191,7 @@ const Reg = () => {
   };
 
   const handleRemove = (rowIndex: number) => {
-    if (rowIndex !== 0) {
-      const newRows = [...fields];
-      newRows.splice(rowIndex, 1);
-      setValue('columnSpecs', newRows);
-    }
+    remove(rowIndex);
   };
 
   const handleChangeRows = (rowIndex: number, field: string, value: string) => {
@@ -216,6 +210,10 @@ const Reg = () => {
       })
     );
   };
+
+  useEffect(() => {
+    setValue('columnSpecs', fields);
+  }, [fields, setValue]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
