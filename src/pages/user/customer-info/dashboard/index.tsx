@@ -16,6 +16,8 @@ export default function List() {
   }, []);
   // const [page, setPage] = useState<PageModel>(initPage);
   // 이런식으로 받아올 컴포넌트별로 state필요
+  const today = new Date();
+  const batchDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 1}`;
   const [profile, setProfile] = useState<Profile>();
   const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({
@@ -115,6 +117,13 @@ export default function List() {
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState(false);
 
+  // 클릭 더보기 리스트 교체 함수
+  const listClickChange = (flag: string) => {
+    // flag에 따라서 setIsList를 비우고 넣고 하면 되는데
+    //지금은 무조건 그냥 반대로 들어가게 되어있는데
+    //
+  };
+
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
@@ -193,12 +202,12 @@ export default function List() {
       {/* searchBar 영역 */}
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
-          <Stack>
+          <Stack style={{ position: 'relative' }}>
             <Typography variant="h3" className="dashboardTitle">
               Customer Info.
             </Typography>
+            <h5 style={{ position: 'absolute', right: 10, bottom: 0, color: 'gray' }}>업데이트 날짜 : {batchDate}</h5>
           </Stack>
-          <h5>어제 기준</h5>
           <div className="topCard">
             <div className="dashBoardBox n1">
               <div className="name">
@@ -236,7 +245,7 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">홈페이지ID</div>
-                  <div className="value">gildong123 gildong123 gildong123 gildong123</div>
+                  <div className="value">gildong123</div>
                 </div>
               </div>
             </div>
@@ -292,7 +301,7 @@ export default function List() {
                 </Button>
                 <Modal open={isOpenFamilyInfo} onClose={() => setOpenFamilyInfo(false)}>
                   <Modal.Header>등록가족 상세 페이지</Modal.Header>
-                  <Modal.Body>엄마, 아빠 </Modal.Body>
+                  <Modal.Body>등록가족 상세 페이지</Modal.Body>
                   <Modal.Footer>
                     <Button
                       priority="Primary"
@@ -373,9 +382,13 @@ export default function List() {
                 <div className="item middle">
                   <Stack justifyContent="Between">
                     <div className="key">
-                      <a href="" className="link">
+                      <button
+                        onClick={() => {
+                          setIsListView1(!isListView1);
+                        }}
+                      >
                         PNR
-                      </a>
+                      </button>
                     </div>
                     <div className="value">
                       <span className="num">2</span>개
@@ -385,9 +398,13 @@ export default function List() {
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">
-                      <a href="" className="link">
+                      <button
+                        onClick={() => {
+                          setIsListView1(!isListView1);
+                        }}
+                      >
                         E-TKT
-                      </a>
+                      </button>
                     </div>
                     <div className="value">
                       <span className="num">2</span>개
@@ -531,9 +548,13 @@ export default function List() {
                 <div className="item middle">
                   <Stack justifyContent="Between">
                     <div className="key">
-                      <a href="#" className="link">
+                      <button
+                        onClick={() => {
+                          setIsListView2(!isListView2);
+                        }}
+                      >
                         탑승횟수
-                      </a>
+                      </button>
                     </div>
                     <div className="value">
                       <span className="num">942</span>회
@@ -543,9 +564,13 @@ export default function List() {
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">
-                      <a href="#" className="link">
+                      <button
+                        onClick={() => {
+                          setIsListView2(!isListView2);
+                        }}
+                      >
                         Pet 동반횟수
-                      </a>
+                      </button>
                     </div>
                     <div className="value">
                       <span className="num">2</span>개

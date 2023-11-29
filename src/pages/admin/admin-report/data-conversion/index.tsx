@@ -85,7 +85,7 @@ export default function DataConversion() {
         <Typography variant="h4">1. CleansingRule / Hash 변환 결과</Typography>
         <HorizontalTable>
           <TR>
-            <Stack direction="Vertical" style={{ borderLeft: '1px solid #DADADA' }}>
+            <Stack direction="Vertical" style={{ borderRight: '1px solid #DADADA' }}>
               <TH style={{ borderBottom: '1px solid #DADADA', height: '50%' }}>
                 <TR style={{ border: 'none' }}>
                   <Stack direction="Vertical">

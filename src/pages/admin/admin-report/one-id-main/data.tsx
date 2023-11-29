@@ -531,12 +531,13 @@ const oneIdDailyColumn: ColumnChild[] = [
   {
     headerName: 'PNR',
     field: '',
+    colSpan: 7,
     childName: [
       { headerName: '총 PNR 수', field: 'pnrTotal', colSpan: 1 },
       {
         headerName: 'UCI ID',
         field: '',
-
+        colSpan: 6,
         childName: [
           { headerName: '총 UCI ID 수', field: 'pnrUci', colSpan: 1 },
           { headerName: '신규 OneID', field: 'newOneidTodayPnr', colSpan: 1 },
@@ -572,12 +573,12 @@ const oneIdDailyColumn: ColumnChild[] = [
   // {
   //   headerName: '전체 OneID(Potential 제외)',
   //   field: '',
-
+  //   colSpan: 4,
   //   childName: [
-  //     { headerName: '총 OneID 개수(Master/Active)', field: '' },
-  //     { headerName: '총 단독 OneID 개수', field: 'oneidAlone' },
-  //     { headerName: '총 Target OneID 개수', field: 'oneidTarget' },
-  //     { headerName: '총 Source OneID 개수', field: 'oneidSource' },
+  //     { headerName: '총 OneID 개수(Master/Active)', field: '', colSpan: 1 },
+  //     { headerName: '총 단독 OneID 개수', field: 'oneidAlone', colSpan: 1 },
+  //     { headerName: '총 Target OneID 개수', field: 'oneidTarget', colSpan: 1 },
+  //     { headerName: '총 Source OneID 개수', field: 'oneidSource', colSpan: 1 },
   //   ],
   // },
 
