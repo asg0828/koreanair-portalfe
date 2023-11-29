@@ -346,7 +346,7 @@ const List = () => {
             </Stack>
           </TD>
           <TH colSpan={1} align="right">
-            신청부서
+            {`신청부서(팀)`}
           </TH>
           <TD colSpan={2}>
             <Stack gap="SM" className="width-100">
