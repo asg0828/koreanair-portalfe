@@ -1,14 +1,46 @@
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Typography, TR, TH, TD, Button, Stack, TextField, Select, SelectOption } from '@components/ui';
+import '@/assets/styles/Board.scss';
+import EmptyState from '@/components/emptyState/EmptyState';
+import { useUserById } from '@/hooks/queries/useUserQueries';
+import { ValidType } from '@/models/common/Constants';
+import { UserModel } from '@/models/model/UserModel';
 import HorizontalTable from '@components/table/HorizontalTable';
+import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
+import { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const location = useLocation();
+  const [userModel, setUserModel] = useState<UserModel>();
+  const userId: string = location?.state?.userId || '';
+  const { data: response, isSuccess, isError } = useUserById(userId);
 
   const goToList = () => {
     navigate('..');
   };
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else if (isSuccess) {
+      setUserModel(response.data);
+    }
+  }, [response, isSuccess, isError, toast]);
+
+  if (!userId) {
+    return (
+      <EmptyState
+        type="warning"
+        description="조회에 필요한 정보가 없습니다"
+        confirmText="돌아가기"
+        onConfirm={() => navigate('..')}
+      />
+    );
+  }
 
   return (
     <>
@@ -16,33 +48,45 @@ const Detail = () => {
         <Typography variant="h3">사용자 기본정보</Typography>
         <HorizontalTable>
           <TR>
-            <TH>ID</TH>
-            <TD>
-              <TextField disabled className="width-100" />
+            <TH colSpan={1} align="right">
+              이메일
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.userEmail}
             </TD>
-            <TH>성명</TH>
-            <TD>
-              <TextField disabled className="width-100" />
-            </TD>
-          </TR>
-          <TR>
-            <TH>회사명</TH>
-            <TD>
-              <TextField disabled className="width-100" />
-            </TD>
-            <TH>부서</TH>
-            <TD>
-              <TextField disabled className="width-100" />
+            <TH colSpan={1} align="right">
+              성명
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.userNm}
             </TD>
           </TR>
           <TR>
-            <TH>사용여부</TH>
-            <TD>
-              <TextField disabled className="width-100" />
+            <TH colSpan={1} align="right">
+              사번
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.userId}
             </TD>
-            <TH>사번</TH>
-            <TD>
-              <TextField disabled className="width-100" />
+            <TH colSpan={1} align="right">
+              부서
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.deptNm}
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              사용여부
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.useYn === 'Y' ? '예' : '아니오'}
+            </TD>
+            <TH colSpan={1} align="right">
+              사용자예외그룹
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.eUserAuthNm}
             </TD>
           </TR>
         </HorizontalTable>
@@ -52,42 +96,45 @@ const Detail = () => {
         <Typography variant="h3">사용자 권한정보</Typography>
         <HorizontalTable>
           <TR>
-            <TH>이전 사용자 권한</TH>
-            <TD></TD>
-            <TH>적용 사용자 권한</TH>
-            <TD>
-              <Select appearance="Outline" placeholder="전체" className="width-100">
-                <SelectOption className="width-100" value={1}>
-                  테스트
-                </SelectOption>
-              </Select>
+            <TH colSpan={1} align="right">
+              이전 사용자 권한
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.bfUserAuthNm}
+            </TD>
+            <TH colSpan={1} align="right">
+              적용 사용자 권한
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.apldUserAuthNm}
             </TD>
           </TR>
           <TR>
-            <TH>이전 관리자 권한</TH>
-            <TD></TD>
-            <TH>적용 관리자 권한</TH>
-            <TD>
-              <Select appearance="Outline" placeholder="전체" className="width-100">
-                <SelectOption className="width-100" value={1}>
-                  테스트
-                </SelectOption>
-              </Select>
+            <TH colSpan={1} align="right">
+              이전 관리자 권한
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.bfMgrAuthNm}
+            </TD>
+            <TH colSpan={1} align="right">
+              적용 관리자 권한
+            </TH>
+            <TD colSpan={2} align="left">
+              {userModel?.apldMgrAuthNm}
             </TD>
           </TR>
           <TR>
-            <TH>최종변경일시</TH>
-            <TD></TD>
-            <TH></TH>
-            <TD></TD>
+            <TH colSpan={1} align="right">
+              최종변경일시
+            </TH>
+            <TD colSpan={5} align="left">
+              {userModel?.rgstDt}
+            </TD>
           </TR>
         </HorizontalTable>
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        <Button priority="Primary" appearance="Contained" size="LG">
-          수정
-        </Button>
         <Button size="LG" onClick={goToList}>
           목록
         </Button>

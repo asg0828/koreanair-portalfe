@@ -5,12 +5,13 @@ import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-manage
 import CustomerMetaManagementReg from '@/pages/admin/self-feature-meta-management/customer-meta-management/Reg';
 import MasterProfileManagement from '@/pages/admin/self-feature-meta-management/master-profile-management';
 import MasterProfileManagementDetail from '@/pages/admin/self-feature-meta-management/master-profile-management/Detail';
+import AdminAuthGroupManagement from '@/pages/admin/user-management/admin-auth-group-management';
+import AuthGroupManagement from '@/pages/admin/user-management/user-auth-group-management';
 import Dataroom from '@/pages/user/board/dataroom';
 import DataroomDetail from '@/pages/user/board/dataroom/Detail';
 import DataroomEdit from '@/pages/user/board/dataroom/Edit';
 import DataroomReg from '@/pages/user/board/dataroom/Reg';
 import AdminAdminAuthManagement from '@pages/admin/admin-portal-management/admin-auth-management';
-import AdminAuthGroupManagement from '@pages/admin/admin-portal-management/auth-group-management';
 import AdminMenuManagement from '@pages/admin/admin-portal-management/menu-management';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
@@ -22,7 +23,6 @@ import Ctivoc from '@pages/admin/admin-report/one-id-report/ctivoc';
 import Daily from '@pages/admin/admin-report/one-id-report/daily';
 import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
 import StructuredReportManagement from '@pages/admin/structured-report-management';
-import AuthGroupManagement from '@pages/admin/user-management/auth-group-management';
 import DepartmentGroupManagement from '@pages/admin/user-management/department-group-management';
 import UserExceptionManagement from '@pages/admin/user-management/user-exception-management';
 import UserManagement from '@pages/admin/user-management/user-management';
@@ -121,7 +121,8 @@ const adminRouter = [
               { path: 'detail', element: <UserManagementDetail /> },
             ],
           },
-          { path: 'auth-group-management', element: <AuthGroupManagement /> },
+          { path: 'user-auth-group-management', element: <AuthGroupManagement /> },
+          { path: 'admin-auth-group-management', element: <AdminAuthGroupManagement /> },
           { path: 'department-management', element: <DepartmentGroupManagement /> },
           { path: 'user-exception-management', element: <UserExceptionManagement /> },
         ],
@@ -179,7 +180,6 @@ const adminRouter = [
         path: 'admin-portal-management',
         children: [
           { path: 'menu-management', element: <AdminMenuManagement /> },
-          { path: 'auth-group-management', element: <AdminAuthGroupManagement /> },
           { path: 'admin-auth-management', element: <AdminAdminAuthManagement /> },
         ],
       },

@@ -19,7 +19,7 @@ const Detail = () => {
   const [featureModel, setFeatureModel] = useState<FeatureModel>();
   const featureId: string = location?.state?.featureId || '';
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
-  const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteFeature(featureId);
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFeature(featureId);
 
   const goToList = () => {
     navigate('..');

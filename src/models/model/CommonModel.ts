@@ -1,4 +1,5 @@
 export interface CommonModel {
+  rownum?: number;
   modiId: string;
   modiDt: string;
   modiNm?: string;
@@ -9,6 +10,5 @@ export interface CommonModel {
   rgstDeptNm?: string;
   ordSeq?: number;
   viewCnt?: number;
-  rownum?: number;
   delYn?: 'Y' | 'N';
 }

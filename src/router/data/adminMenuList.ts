@@ -77,15 +77,15 @@ const adminMenulist = [
         name: 'Customer Meta 관리',
         path: '/admin/self-feature-meta-management/customer-meta-management',
         children: [
-          { 
-            name: 'Customer Meta 관리 상세', 
-            path: '/admin/self-feature-meta-management/customer-meta-management/detail', 
-            children: [] 
+          {
+            name: 'Customer Meta 관리 상세',
+            path: '/admin/self-feature-meta-management/customer-meta-management/detail',
+            children: [],
           },
-          { 
-            name: 'Customer Meta 관리 등록', 
-            path: '/admin/self-feature-meta-management/customer-meta-management/reg', 
-            children: [] 
+          {
+            name: 'Customer Meta 관리 등록',
+            path: '/admin/self-feature-meta-management/customer-meta-management/reg',
+            children: [],
           },
         ],
       },
@@ -93,10 +93,10 @@ const adminMenulist = [
         name: 'Master Profile 관리',
         path: '/admin/self-feature-meta-management/master-profile-management',
         children: [
-          { 
-            name: 'Master Profile 관리 상세', 
-            path: '/admin/self-feature-meta-management/master-profile-management/detail', 
-            children: [] 
+          {
+            name: 'Master Profile 관리 상세',
+            path: '/admin/self-feature-meta-management/master-profile-management/detail',
+            children: [],
           },
         ],
       },
@@ -112,12 +112,17 @@ const adminMenulist = [
         children: [{ name: '사용자 관리 상세', path: '/admin/user-management/user-management/detail', children: [] }],
       },
       {
-        name: '권한그룹 관리',
-        path: '/admin/user-management/auth-group-management',
+        name: '사용자 권한그룹 관리',
+        path: '/admin/user-management/user-auth-group-management',
         children: [],
       },
       {
-        name: '부서 관리',
+        name: '관리자 권한그룹 관리',
+        path: '/admin/user-management/admin-auth-group-management',
+        children: [],
+      },
+      {
+        name: '부서/팀 관리',
         path: '/admin/user-management/department-management',
         children: [],
       },
@@ -188,7 +193,11 @@ const adminMenulist = [
             name: '자료실',
             path: '/admin/user-portal-management/board-management/dataroom',
             children: [
-              { name: '자료실 등록', path: '/admin/user-portal-management/board-management/dataroom/reg', children: [] },
+              {
+                name: '자료실 등록',
+                path: '/admin/user-portal-management/board-management/dataroom/reg',
+                children: [],
+              },
               {
                 name: '자료실 상세',
                 path: '/admin/user-portal-management/board-management/dataroom/detail',
@@ -212,11 +221,6 @@ const adminMenulist = [
       {
         name: '메뉴 관리',
         path: '/admin/admin-portal-management/menu-management',
-        children: [],
-      },
-      {
-        name: '권한그룹 관리 (관리자)',
-        path: '/admin/admin-portal-management/auth-group-management',
         children: [],
       },
       {

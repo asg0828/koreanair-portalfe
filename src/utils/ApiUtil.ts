@@ -188,7 +188,7 @@ const getQueryStringFormat = (queryParams?: QueryParams) => {
 type ConvertPageType = 'request' | 'response';
 
 const convertPage = (type: ConvertPageType, data?: any) => {
-  if (data) {
+  if (data?.page) {
     if (type === 'request') {
       data.page = data.page + 1;
     } else {

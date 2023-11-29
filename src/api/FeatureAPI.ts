@@ -81,7 +81,7 @@ export const getFeatureSeList = (seGrpId: string) => {
 export const getInterestFeatureList = (userId: string, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features`,
+    url: `${PortalApiURL.USER_MGMT}/${userId}/features`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -94,7 +94,7 @@ export const getInterestFeatureList = (userId: string, page: PageModel) => {
 export const createInterestFeature = (userId: string, featureId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features`,
+    url: `${PortalApiURL.USER_MGMT}/${userId}/features`,
     method: Method.POST,
     params: {
       bodyParams: {
@@ -107,7 +107,7 @@ export const createInterestFeature = (userId: string, featureId: string) => {
 export const deleteInterestFeature = (userId: string, featureId: string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features/${featureId}`,
+    url: `${PortalApiURL.USER_MGMT}/${userId}/features/${featureId}`,
     method: Method.DELETE,
   });
 };
@@ -115,7 +115,7 @@ export const deleteInterestFeature = (userId: string, featureId: string) => {
 export const deleteMultipleInterestFeature = (userId: string, featureIds: Array<string>) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.INTEREST_FEATURE}/${userId}/features`,
+    url: `${PortalApiURL.USER_MGMT}/${userId}/features`,
     method: Method.DELETE,
     params: {
       queryParams: {
