@@ -71,7 +71,6 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
 
     setCheckedList(newCheckedList);
     isCheckbox && rowSelection(newCheckedList, row, index, checked);
-    console.log(rowSelection);
   };
 
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
@@ -100,9 +99,9 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
         {columns.map((column: ColumnChild, index) =>
           !column.childName ? (
             <TH
-              colSpan={column.colSpan ? column.colSpan : 1}
-              className="height-100"
-              style={{ borderLeft: '1px solid #DADADA' }}
+              className="verticalTableTH"
+              colSpan={column.colSpan ? column.colSpan : undefined}
+              style={{ borderLeft: '1px solid #DADADA', height: '100%' }}
               enableSort={enableSort}
               onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
             >
@@ -110,7 +109,11 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
             </TH>
           ) : (
             <Stack direction="Vertical">
-              <TH colSpan={column.colSpan ? column.colSpan : 1} style={{ borderBottom: '1px solid #DADADA' }}>
+              <TH
+                className="verticalTableTH"
+                colSpan={column.colSpan ? column.colSpan : undefined}
+                style={{ borderBottom: '1px solid #DADADA' }}
+              >
                 {column.headerName}
               </TH>
               <Stack direction="Horizontal">
@@ -129,8 +132,9 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
         {columns.map((column: ColumnChild, index2) =>
           !column.childName ? (
             <TD
+              className="verticalTableTD"
               key={`child-column-${index}-${index2}`}
-              colSpan={column.colSpan ? column.colSpan : 1}
+              colSpan={column.colSpan ? column.colSpan : undefined}
               align={column.align ? column.align : AlignCode.CENTER}
               onClick={() => handleClick(row, index)}
             >
@@ -146,39 +150,41 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
 
   return (
     <Table variant="vertical" size="normal" align="center" className="verticalTable">
-      {showHeader && columns?.length > 0 && (
-        <THead>
-          <TR>
-            {isCheckbox && (
-              <TH>
-                <Checkbox checked={checkedAll} onCheckedChange={handleCheckedChangeAll} />
-              </TH>
-            )}
-            <ChildColumnGird columns={columns} />
-          </TR>
-        </THead>
-      )}
-      {rows?.length > 0 ? (
-        <TBody clickable={clickable}>
-          {rows.map((row, index) => (
-            <TR key={`row-${index}`} selected={checkedList.includes(index)}>
+      <div className="verticalTableDiv">
+        {showHeader && columns?.length > 0 && (
+          <THead>
+            <TR>
               {isCheckbox && (
-                <TD>
-                  <Checkbox
-                    checked={checkedList.includes(index)}
-                    onCheckedChange={(checked) => handleCheckedChange(checked, row, index)}
-                  />
-                </TD>
+                <TH>
+                  <Checkbox checked={checkedAll} onCheckedChange={handleCheckedChangeAll} />
+                </TH>
               )}
-              <ChildRowGird columns={columns} row={row} index={index} />
+              <ChildColumnGird columns={columns} />
             </TR>
-          ))}
-        </TBody>
-      ) : (
-        <TBody className="no-data-wrap">
-          <NoResult />
-        </TBody>
-      )}
+          </THead>
+        )}
+        {rows?.length > 0 ? (
+          <TBody clickable={clickable}>
+            {rows.map((row, index) => (
+              <TR key={`row-${index}`} selected={checkedList.includes(index)}>
+                {isCheckbox && (
+                  <TD>
+                    <Checkbox
+                      checked={checkedList.includes(index)}
+                      onCheckedChange={(checked) => handleCheckedChange(checked, row, index)}
+                    />
+                  </TD>
+                )}
+                <ChildRowGird columns={columns} row={row} index={index} />
+              </TR>
+            ))}
+          </TBody>
+        ) : (
+          <TBody className="no-data-wrap">
+            <NoResult />
+          </TBody>
+        )}
+      </div>
     </Table>
   );
 };

@@ -332,6 +332,11 @@ const SelfFeatureEdit = () => {
 				}
 				return option
 			})
+			// 변환식(속성데이터의 경우)
+			if (targetList[i].function === "TO_NUMBER") dataType = "number"
+			if (targetList[i].function === "LENGTH") dataType = "number"
+			if (targetList[i].function === "TO_CHAR") dataType = "string"
+			if (targetList[i].function === "DATEDIFF") dataType = "number"
 			t.dataType = dataType
 
 			fList.push(t)
