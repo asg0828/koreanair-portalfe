@@ -59,14 +59,21 @@ const List = () => {
   };
 
   const handleDelete = () => {
-    dispatch(
-      openModal({
-        type: ModalType.CONFIRM,
-        title: '삭제',
-        content: '삭제하시겠습니까?',
-        onConfirm: () => dMutate(values.authId),
-      })
-    );
+    if (values.authId) {
+      dispatch(
+        openModal({
+          type: ModalType.CONFIRM,
+          title: '삭제',
+          content: '삭제하시겠습니까?',
+          onConfirm: () => dMutate(values.authId),
+        })
+      );
+    } else {
+      toast({
+        type: ValidType.INFO,
+        content: '선택된 권한그룹이 없습니다.',
+      });
+    }
   };
 
   const onSubmit = (data: UpdatedAuthModel) => {
@@ -183,7 +190,14 @@ const List = () => {
             </TH>
             <TD colSpan={2} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
-                <TextField className="width-100" validation={errors?.authId?.message ? 'Error' : undefined} disabled />
+                <TextField
+                  className="width-100"
+                  {...register('authId', {
+                    maxLength: { value: 100, message: 'max length exceeded' },
+                  })}
+                  validation={errors?.authId?.message ? 'Error' : undefined}
+                  disabled
+                />
                 <ErrorLabel message={errors?.authId?.message} />
               </Stack>
             </TD>
