@@ -97,72 +97,76 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
 
   return (
     <Table variant="vertical" size="normal" align="center" className="verticalTable">
-      {showHeader && columns?.length > 0 && (
-        <THead>
-          <TR>
-            {isCheckbox && (
-              <TH colSpan={0.5}>
-                <Checkbox
-                  checked={isCheckedAll}
-                  onCheckedChange={(checked) => handleCheckedChange(true, checked, -1)}
-                />
-              </TH>
-            )}
-            {columns.map((column, index) => (
-              <TH
-                key={`header-${index}`}
-                required={column.require}
-                colSpan={column.colSpan ? column.colSpan : undefined}
-                // enableSort={column.field.length > 0 && enableSort}
-                onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
-              >
-                {column.headerName}
-              </TH>
-            ))}
-          </TR>
-        </THead>
-      )}
-      {sortRows?.length > 0 ? (
-        <TBody clickable={clickable}>
-          {sortRows.map((row, rowIndex) => (
-            <TR key={`row-${rowIndex}`} selected={checkedIndexList.includes(rowIndex)}>
+      <div className="verticalTableDiv">
+        {showHeader && columns?.length > 0 && (
+          <THead>
+            <TR>
               {isCheckbox && (
-                <TD colSpan={0.5}>
+                <TH colSpan={0.5}>
                   <Checkbox
-                    checked={checkedIndexList.includes(rowIndex)}
-                    onCheckedChange={(checked) => handleCheckedChange(false, checked, rowIndex)}
+                    checked={isCheckedAll}
+                    onCheckedChange={(checked) => handleCheckedChange(true, checked, -1)}
                   />
-                </TD>
+                </TH>
               )}
-
-              {Object.keys(columns).map((column, columnIndex) => (
-                <TD
-                  key={`column-${columnIndex}`}
-                  colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-                  align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
-                  onClick={() => handleClick(row, rowIndex)}
+              {columns.map((column, index) => (
+                <TH
+                  className="verticalTableTH"
+                  key={`header-${index}`}
+                  required={column.require}
+                  colSpan={column.colSpan ? column.colSpan : undefined}
+                  // enableSort={column.field.length > 0 && enableSort}
+                  onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
                 >
-                  {(() => {
-                    if (columns[columnIndex].render) {
-                      return columns[columnIndex].render?.(
-                        rowIndex,
-                        columns[columnIndex].field,
-                        columns[columnIndex].maxLength
-                      );
-                    } else {
-                      return <Typography variant="body2">{row[columns[columnIndex].field]}</Typography>;
-                    }
-                  })()}
-                </TD>
+                  {column.headerName}
+                </TH>
               ))}
             </TR>
-          ))}
-        </TBody>
-      ) : (
-        <TBody className="no-data-wrap">
-          <NoResult />
-        </TBody>
-      )}
+          </THead>
+        )}
+        {sortRows?.length > 0 ? (
+          <TBody clickable={clickable}>
+            {sortRows.map((row, rowIndex) => (
+              <TR key={`row-${rowIndex}`} selected={checkedIndexList.includes(rowIndex)}>
+                {isCheckbox && (
+                  <TD colSpan={0.5}>
+                    <Checkbox
+                      checked={checkedIndexList.includes(rowIndex)}
+                      onCheckedChange={(checked) => handleCheckedChange(false, checked, rowIndex)}
+                    />
+                  </TD>
+                )}
+
+                {Object.keys(columns).map((column, columnIndex) => (
+                  <TD
+                    key={`column-${columnIndex}`}
+                    colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                    align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                    onClick={() => handleClick(row, rowIndex)}
+                    className="verticalTableTD"
+                  >
+                    {(() => {
+                      if (columns[columnIndex].render) {
+                        return columns[columnIndex].render?.(
+                          rowIndex,
+                          columns[columnIndex].field,
+                          columns[columnIndex].maxLength
+                        );
+                      } else {
+                        return <Typography variant="body2">{row[columns[columnIndex].field]}</Typography>;
+                      }
+                    })()}
+                  </TD>
+                ))}
+              </TR>
+            ))}
+          </TBody>
+        ) : (
+          <TBody className="no-data-wrap">
+            <NoResult />
+          </TBody>
+        )}
+      </div>
     </Table>
   );
 };
