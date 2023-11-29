@@ -40,6 +40,7 @@ import {
 
 import { useSubmissionRequests } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries"
 import { ValidType } from "@/models/common/Constants"
+import { getDateFormatType3 } from "@/utils/DateUtil"
 
 const SfSubmissionRequest = () => {
 
@@ -89,8 +90,7 @@ const SfSubmissionRequest = () => {
                 setSfSubmissionList((state: Array<SfSubmissionRequestInfo>) => {
                     let rtn = cloneDeep(state)
                     rtn = subReqListRes.result.map((subReq: SfSubmission) => {
-                        let rd = new Date(subReq.submission.requestDate)
-                        subReq.submission.requestDate = `${rd.getFullYear()}-${(rd.getMonth())}-${rd.getDate()+1} ${rd.getHours()}:${rd.getMinutes()}:${rd.getSeconds()}`
+                        if (subReq.submission.requestDate) subReq.submission.requestDate = getDateFormatType3(subReq.submission.requestDate)
 						// 진행 상태 check
 						if (
 							!subReq.submission.status
