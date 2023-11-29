@@ -3,6 +3,8 @@ export enum PortalApiURL {
   LOG_OUT = '/session/v1/logout',
   USER_MGMT = '/user-mgmt/v1/users',
   DEPT_MGMT = '/dept-mgmt/v1/depts',
+  USER_AUTH_MGMT = '/auth-mgmt/v1/user-auths',
+  ADMIN_AUTH_MGMT = '/auth-mgmt/v1/mgr-auths',
   FILE = '/file',
   CODE = '/system/v1/code-groups',
   NOTICE = '/board/v1/notice',
@@ -12,7 +14,6 @@ export enum PortalApiURL {
   ONEID = '/admin/v1/oneId',
   FEATURE = '/biz-meta/v1/features',
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',
-  INTEREST_FEATURE = '/user-mgmt/v1/users',
   POPULAR_FEATURE = '/user-mgmt/v1/user-popular-features',
   DATASET = '/biz-meta/v1/table-specs',
 }

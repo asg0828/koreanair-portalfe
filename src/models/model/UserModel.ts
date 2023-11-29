@@ -1,7 +1,16 @@
-export interface UserParams {}
+export interface UserParams {
+  userNm: string;
+  deptNm: string;
+  userAuthId: string;
+  mgrAuthId: string;
+  useYn: string;
+}
 
 export interface UserModel extends CreatedUserModel {
+  rownum: number;
   userId: string;
+  useYnNm: string;
+  companyNm: string;
 }
 
 export interface CreatedUserModel {
@@ -34,6 +43,10 @@ export interface CreatedUserModel {
   userAuthNm: '';
   mgrAuthId: '';
   mgrAuthNm: '';
+  eUserAuthId: '';
+  eUserAuthNm: '';
+  eMgrAuthId: '';
+  eMgrAuthNm: '';
   bfUserAuthId: '';
   bfUserAuthNm: '';
   bfMgrAuthId: '';
