@@ -9,7 +9,7 @@ import { ModalType, ValidType } from '@/models/common/Constants';
 import { AuthModel, UpdatedAuthModel } from '@/models/model/AuthModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
-import { getAddedRownum, getTotalPage } from '@/utils/PagingUtil';
+import { getStartRownum, getTotalPage } from '@/utils/PagingUtil';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -113,8 +113,8 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        const addedRownum = getAddedRownum(page);
-        response.data.forEach((item: AuthModel, index: number) => (item.rownum = index + addedRownum));
+        const startRownum = getStartRownum(page);
+        response.data.forEach((item: AuthModel, index: number) => (item.rownum = index + startRownum));
         setRows(response.data);
         setPage((prevState) => ({
           ...prevState,

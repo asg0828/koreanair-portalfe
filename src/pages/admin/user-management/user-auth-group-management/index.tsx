@@ -3,15 +3,14 @@ import DataGrid from '@/components/grid/DataGrid';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { useCreateUserAuth, useDeleteUserAuth, useUpdateUserAuth } from '@/hooks/mutations/useAuthMutations';
 import { useUserAuthAllList } from '@/hooks/queries/useAuthQueries';
-import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { AuthModel, UpdatedAuthModel } from '@/models/model/AuthModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
-import { getAddedRownum, getTotalPage } from '@/utils/PagingUtil';
+import { getPagingList, getTotalPage } from '@/utils/PagingUtil';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const columns = [
@@ -48,10 +47,6 @@ const List = () => {
   const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMuate } = useCreateUserAuth();
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMuate } = useUpdateUserAuth();
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteUserAuth();
-
-  const handleSearch = useCallback(() => {
-    refetch();
-  }, [refetch]);
 
   const handlePage = (page: PageModel) => {
     setPage(page);
@@ -101,10 +96,6 @@ const List = () => {
     reset();
   };
 
-  useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
-
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
@@ -113,8 +104,6 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        const addedRownum = getAddedRownum(page);
-        response.data.forEach((item: AuthModel, index: number) => (item.rownum = index + addedRownum));
         setRows(response.data);
         setPage((prevState) => ({
           ...prevState,
@@ -123,7 +112,7 @@ const List = () => {
         }));
       }
     }
-  }, [response, isError, page, toast]);
+  }, [response, isError, page.pageSize, toast]);
 
   useEffect(() => {
     if (cIsError || cResponse?.successOrNot === 'N') {
@@ -179,7 +168,7 @@ const List = () => {
         enableSort={true}
         clickable={true}
         columns={columns}
-        rows={rows}
+        rows={getPagingList(rows, page)}
         page={page}
         onClick={handleDetail}
         onChange={handlePage}
