@@ -34,14 +34,13 @@ const FormulaComponent = ({
         formulaTrgtList.map((v: FormulaTrgtListProps) => {
             targetList.push(v.targetId)
         })
-
-        setFormulaValidRslt(cloneDeep(ValidationFormula({
+        let validRtn = cloneDeep(ValidationFormula({
             formula: cloneDeep(custFeatRuleCalc.formula),
             targetList: cloneDeep(targetList),
             formulaTrgtList: cloneDeep(formulaTrgtList),
-        })))
-        
-        setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
+        }))
+        setFormulaValidRslt(validRtn)
+        setIsValidFormula && setIsValidFormula(validRtn.isValidFormula)
 
     }, [custFeatRuleCalc?.formula])
 
@@ -53,26 +52,29 @@ const FormulaComponent = ({
             targetList.push(v.targetId)
         })
 
-        if (formulaTrgtList.length === 1) {
+        let validRtn: FormulaValidRslt = cloneDeep(initFormulaValidRslt)
+        if ((!custFeatRuleCalc || custFeatRuleCalc.formula === "") && formulaTrgtList.length === 1) {
             setCustFeatRuleCalc && setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
                 let rtn = cloneDeep(state)
                 rtn.formula = "T1"
                 return rtn
             })
-            setFormulaValidRslt(cloneDeep(ValidationFormula({
+            validRtn = cloneDeep(ValidationFormula({
                 formula: "T1",
                 targetList: cloneDeep(targetList),
                 formulaTrgtList: cloneDeep(formulaTrgtList),
-            })))
+            }))
+            setFormulaValidRslt(validRtn)
         } else {
-            setFormulaValidRslt(cloneDeep(ValidationFormula({
+            validRtn = cloneDeep(ValidationFormula({
                 formula: cloneDeep(custFeatRuleCalc!.formula),
                 targetList: cloneDeep(targetList),
                 formulaTrgtList: cloneDeep(formulaTrgtList),
-            })))
+            }))
+            setFormulaValidRslt(validRtn)
         }
         
-        setIsValidFormula && setIsValidFormula(formulaValidRslt.isValidFormula)
+        setIsValidFormula && setIsValidFormula(validRtn.isValidFormula)
         
     }, [formulaTrgtList])
 
