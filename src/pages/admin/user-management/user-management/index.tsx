@@ -5,7 +5,7 @@ import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { ValidType, View } from '@/models/common/Constants';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { UserModel, UserParams } from '@/models/model/UserModel';
-import { getAddedRownum } from '@/utils/PagingUtil';
+import { getStartRownum } from '@/utils/PagingUtil';
 import { Radio, Select, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -77,11 +77,7 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        const addedRownum = getAddedRownum(response.data.page);
-        response.data.contents.forEach((item: UserModel, index: number) => {
-          item.rownum = index + addedRownum;
-          item.useYnNm = item.useYn === 'Y' ? '예' : '아니오';
-        });
+        response.data.contents.forEach((item: UserModel) => (item.useYnNm = item.useYn === 'Y' ? '예' : '아니오'));
         setRows(response.data.contents);
         setPage(response.data.page);
       }
