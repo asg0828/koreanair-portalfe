@@ -2,7 +2,7 @@ import { AddIcon, FavoriteBorderIcon, FavoriteIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useCreateInterestFeature, useDeleteInterestFeature } from '@/hooks/mutations/useUserFeatureMutations';
-import { useFeatureList, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
+import { useFeatureList, useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ModalType, ValidType, View } from '@/models/common/Constants';
@@ -15,7 +15,7 @@ import { selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const initParams: FeatureParams = {
   featureSeGrp: '',
@@ -35,7 +35,7 @@ const List = () => {
   const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
   const [createdFeatureId, setCreatedFeatureId] = useState<string>('');
   const [deletedFeatureId, setDeletedFeatureId] = useState<string>('');
-  const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
+  const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
   const [params, setParams] = useState<FeatureParams>(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
@@ -77,6 +77,7 @@ const List = () => {
   ];
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = useFeatureList(params, page);
+  const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
   const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
   const {
     data: cResponse,
@@ -213,6 +214,19 @@ const List = () => {
   }, [response, isError, toast]);
 
   useEffect(() => {
+    if (tIsError || tResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (tResponse?.data) {
+        setFeatureTypList(tResponse.data);
+      }
+    }
+  }, [tResponse, tIsError, toast]);
+
+  useEffect(() => {
     if (sIsError || sResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
@@ -270,7 +284,7 @@ const List = () => {
               onChange={(e, value) => value && handleChangeParams('featureSeGrp', value)}
               value={params.featureSeGrp}
             >
-              {featureTypList.map((item) => (
+              {featureTypList?.map((item) => (
                 <SelectOption value={item.seId}>{item.seNm}</SelectOption>
               ))}
             </Select>
@@ -346,7 +360,7 @@ const List = () => {
             </Stack>
           </TD>
           <TH colSpan={1} align="right">
-            신청부서
+            {`신청부서(팀)`}
           </TH>
           <TD colSpan={2}>
             <Stack gap="SM" className="width-100">

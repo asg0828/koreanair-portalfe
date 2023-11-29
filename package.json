@@ -25,6 +25,7 @@
     "@uiw/react-watermark": "^1.0.0",
     "axios": "^0.26.0",
     "buffer": "^6.0.3",
+    "dayjs": "^1.11.10",
     "env-cmd": "^10.1.0",
     "export-from-json": "^1.6.0",
     "fs-extra": "^11.1.1",

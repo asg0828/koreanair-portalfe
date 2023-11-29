@@ -1,12 +1,13 @@
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
+import { useAdminAuthAllList, useUserAuthAllList } from '@/hooks/queries/useAuthQueries';
 import { useUserList } from '@/hooks/queries/useUserQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { ValidType, View } from '@/models/common/Constants';
+import { AuthModel } from '@/models/model/AuthModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { UserModel, UserParams } from '@/models/model/UserModel';
-import { getStartRownum } from '@/utils/PagingUtil';
-import { Radio, Select, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,8 +17,8 @@ const columns = [
   { headerName: '성명', field: 'userNm', colSpan: 1 },
   { headerName: '사번', field: 'userId', colSpan: 1 },
   { headerName: '부서명', field: 'deptNm', colSpan: 1 },
-  { headerName: '사용자권한', field: 'apldUserAuthNm', colSpan: 1 },
-  { headerName: '관리자권한', field: 'apldMgrAuthNm', colSpan: 1 },
+  { headerName: '사용자권한', field: 'userAuthNm', colSpan: 1 },
+  { headerName: '관리자권한', field: 'mgrAuthNm', colSpan: 1 },
   { headerName: '최종접속시간', field: 'lastLogDt', colSpan: 1 },
   { headerName: '재직구분', field: 'useYnNm', colSpan: 0.5 },
 ];
@@ -34,9 +35,13 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [params, setParams] = useState<UserParams>(initParams);
+  const [userAuthList, setUserAuthList] = useState<Array<AuthModel>>();
+  const [adminAuthList, setAdminAuthList] = useState<Array<AuthModel>>();
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<UserModel>>([]);
   const { data: response, isError, refetch } = useUserList(params, page);
+  const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
+  const { data: aaResponse, isError: aaIsError, refetch: aaUreftch } = useAdminAuthAllList();
 
   const goToDetail = (row: UserModel, index: number) => {
     navigate(View.DETAIL, {
@@ -84,6 +89,47 @@ const List = () => {
     }
   }, [response, isError, toast]);
 
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.data) {
+        response.data.contents.forEach((item: UserModel) => (item.useYnNm = item.useYn === 'Y' ? '예' : '아니오'));
+        setRows(response.data.contents);
+        setPage(response.data.page);
+      }
+    }
+  }, [response, isError, toast]);
+
+  useEffect(() => {
+    if (uaIsError || uaResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '사용자 권한그룹 조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (uaResponse?.data) {
+        setUserAuthList(uaResponse.data);
+      }
+    }
+  }, [uaResponse, uaIsError, toast]);
+
+  useEffect(() => {
+    if (aaIsError || aaResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '관리자 권한그룹 조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (aaResponse?.data) {
+        setAdminAuthList(aaResponse.data);
+      }
+    }
+  }, [aaResponse, aaIsError, toast]);
+
   return (
     <>
       <SearchForm onSearch={handleSearch} onClear={handleClear}>
@@ -116,13 +162,37 @@ const List = () => {
             관리자권한
           </TH>
           <TD colSpan={2} align="left">
-            <Select appearance="Outline" placeholder="전체" className="width-100"></Select>
+            <Select
+              appearance="Outline"
+              placeholder="전체"
+              className="width-100"
+              onChange={(e, value) => value && handleChangeParams('mgrAuthId', value)}
+              value={params.mgrAuthId}
+            >
+              {adminAuthList?.map((item, index) => (
+                <SelectOption key={index} value={item.authId}>
+                  {item.authNm}
+                </SelectOption>
+              ))}
+            </Select>
           </TD>
           <TH colSpan={1} align="right">
             사용자권한
           </TH>
           <TD colSpan={2} align="left">
-            <Select appearance="Outline" placeholder="전체" className="width-100"></Select>
+            <Select
+              appearance="Outline"
+              placeholder="전체"
+              className="width-100"
+              onChange={(e, value) => value && handleChangeParams('userAuthId', value)}
+              value={params.userAuthId}
+            >
+              {userAuthList?.map((item, index) => (
+                <SelectOption key={index} value={item.authId}>
+                  {item.authNm}
+                </SelectOption>
+              ))}
+            </Select>
           </TD>
         </TR>
         <TR>

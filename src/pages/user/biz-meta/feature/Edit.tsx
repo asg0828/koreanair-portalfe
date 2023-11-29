@@ -2,7 +2,7 @@ import '@/assets/styles/Board.scss';
 import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useUpdateFeature } from '@/hooks/mutations/useFeatureMutations';
-import { useFeatureById, useFeatureSeList } from '@/hooks/queries/useFeatureQueries';
+import { useFeatureById, useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FeatureSeparatesModel, UpdatedFeatureModel } from '@/models/model/FeatureModel';
@@ -13,7 +13,7 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useLocation, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Reg = () => {
   const dispatch = useAppDispatch();
@@ -49,10 +49,11 @@ const Reg = () => {
   const values = getValues();
   const featureId: string = location?.state?.featureId || '';
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE));
-  const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
+  const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFeature(featureId, values);
+  const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
 
   const goToList = () => {
@@ -116,6 +117,19 @@ const Reg = () => {
       sRefetch();
     }
   }, [watch().featureSeGrp, sRefetch]);
+
+  useEffect(() => {
+    if (tIsError || tResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (tResponse?.data) {
+        setFeatureTypList(tResponse.data);
+      }
+    }
+  }, [tResponse, tIsError, toast]);
 
   useEffect(() => {
     if (sIsError || sResponse?.successOrNot === 'N') {
@@ -199,7 +213,7 @@ const Reg = () => {
                         status={errors?.featureSeGrp?.message ? 'error' : undefined}
                         value={field.value}
                       >
-                        {featureTypList.map((item) => (
+                        {featureTypList?.map((item) => (
                           <SelectOption value={item.seId}>{item.seNm}</SelectOption>
                         ))}
                       </Select>
