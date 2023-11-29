@@ -116,7 +116,7 @@ export default function OneIdErrorHistory() {
               에러코드
             </TH>
 
-            <TD colSpan={3}>
+            <TD colSpan={2}>
               <TextField
                 className="width-100"
                 placeholder="검색어를 입력하세요."
@@ -128,7 +128,7 @@ export default function OneIdErrorHistory() {
             <TH colSpan={1} align="right">
               상세에러코드
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={5}>
               <TextField
                 id="detailErrorNm"
                 className="width-100"
@@ -140,10 +140,10 @@ export default function OneIdErrorHistory() {
           </TR>
 
           <TR>
-            <TH colSpan={1.15} align="right">
-              OneID등록Channel코드
+            <TH colSpan={1.01} align="right">
+              OneIDChannel
             </TH>
-            <TD colSpan={2}>
+            <TD colSpan={2.01} className="width-100">
               <Radio
                 id="oneidRegisChnlCd"
                 name="oneidRegisChnlCd"
@@ -168,7 +168,7 @@ export default function OneIdErrorHistory() {
                 value="skypass"
               />
             </TD>
-            <TH colSpan={1} align="right">
+            <TH colSpan={1.01} align="right">
               PNR번호
             </TH>
             <TD colSpan={1}>
@@ -180,8 +180,10 @@ export default function OneIdErrorHistory() {
                 disabled={searchInfo.oneidRegisChnlCd === 'ods' ? false : true}
               />
             </TD>
-            <TH align="right">UCIID</TH>
-            <TD>
+            <TH colSpan={1} align="right">
+              UCIID
+            </TH>
+            <TD colSpan={1}>
               <TextField
                 id="uciId"
                 placeholder="검색어를 입력하세요."
@@ -190,8 +192,10 @@ export default function OneIdErrorHistory() {
                 disabled={searchInfo.oneidRegisChnlCd === 'ods' ? false : true}
               />
             </TD>
-            <TH align="right">Skypass회원번호</TH>
-            <TD>
+            <TH colSpan={1} align="right">
+              Skypass회원번호
+            </TH>
+            <TD colSpan={1}>
               <TextField
                 id="oneidFinalChgRelateNo"
                 placeholder="검색어를 입력하세요."
@@ -207,7 +211,7 @@ export default function OneIdErrorHistory() {
               최초 생성일
             </TH>
 
-            <TD colSpan={4}>
+            <TD colSpan={8}>
               <DatePicker
                 value={searchInfo.creationStartDate}
                 appearance="Outline"

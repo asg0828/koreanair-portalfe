@@ -9,7 +9,7 @@ import { RowsInfo } from '@/models/components/Table';
 export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
   props: any;
-  list: Array<RowsInfo>;
+  list: RowsInfo;
 }
 
 const DataGridMeta: React.FC<DatagridProps> = ({
