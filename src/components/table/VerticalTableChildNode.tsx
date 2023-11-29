@@ -101,11 +101,12 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
             <TH
               className="verticalTableTH"
               colSpan={column.colSpan ? column.colSpan : undefined}
-              style={{ borderLeft: '1px solid #DADADA', height: '100%' }}
+              style={{ borderRight: '1px solid #DADADA', height: '100%' }}
               enableSort={enableSort}
               onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
             >
               {column.headerName}
+              --{column.colSpan}
             </TH>
           ) : (
             <Stack direction="Vertical">
@@ -114,7 +115,7 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
                 colSpan={column.colSpan ? column.colSpan : undefined}
                 style={{ borderBottom: '1px solid #DADADA' }}
               >
-                {column.headerName}
+                {column.headerName}--{column.colSpan}
               </TH>
               <Stack direction="Horizontal">
                 <ChildColumnGird columns={column.childName} />
@@ -134,11 +135,14 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
             <TD
               className="verticalTableTD"
               key={`child-column-${index}-${index2}`}
-              colSpan={column.colSpan ? column.colSpan : undefined}
+              colSpan={column.colSpan ? column.colSpan : 1}
               align={column.align ? column.align : AlignCode.CENTER}
               onClick={() => handleClick(row, index)}
             >
-              <Typography variant="body2">{row[column.field]}</Typography>
+              <Typography variant="body2">
+                {/* {row[column.field]} */}
+                {column.colSpan}/{[...columns].length}
+              </Typography>
             </TD>
           ) : (
             <ChildRowGird columns={column.childName} row={row} index={index} />

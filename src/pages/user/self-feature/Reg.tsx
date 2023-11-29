@@ -459,11 +459,11 @@ const SelfFeatureReg = () => {
 		let inputValue = cloneDeep(value)
 		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+숫자만 / 영문 - 영문+숫자만)
 		if (id === "featureKoNm") {
-			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|\s]/g, "")
+			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|\s|_]/g, "")
 			setFeatureKoNmInput(inputValue)
 		}
 		if (id === "featureEnNm") {
-			inputValue = value.replace(/[^a-z|A-Z|0-9|\s]/g, "")
+			inputValue = value.replace(/[^a-z|A-Z|0-9|\s|_]/g, "")
 			setFeatureEnNmInput(inputValue)
 		}
 
