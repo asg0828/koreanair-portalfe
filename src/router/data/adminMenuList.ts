@@ -143,7 +143,7 @@ const adminMenulist = [
         children: [],
       },
       {
-        name: '메뉴권한 관리',
+        name: '메뉴 권한 관리(사용자)',
         path: '/admin/user-portal-management/menu-auth-management',
         children: [],
       },
@@ -224,7 +224,7 @@ const adminMenulist = [
         children: [],
       },
       {
-        name: '관리자권한 관리',
+        name: '메뉴 권한 관리(관리자)',
         path: '/admin/admin-portal-management/admin-auth-management',
         children: [],
       },
