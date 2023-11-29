@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
-  { headerName: '제목', field: 'sj', colSpan: 6 },
+  { headerName: '제목', field: 'sj', colSpan: 7 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
 ];
@@ -107,7 +107,7 @@ const List = () => {
           <TH colSpan={1} align="right">
             검색
           </TH>
-          <TD colSpan={5}>
+          <TD colSpan={5} align="left">
             <Stack gap="SM" className="width-100">
               <Select
                 appearance="Outline"

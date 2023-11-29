@@ -379,11 +379,11 @@ const Detail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>
+            <TH colSpan={1} align="right">
               다음
               <ExpandLessIcon fontSize="small" />
             </TH>
-            <TD colSpan={3} className="nextContent">
+            <TD colSpan={5} align="left" className="nextContent">
               {nextQnaModel?.sj && (
                 <Link linkType="Page" onClick={() => handleMoveDetail(nextQnaModel?.qnaId)}>
                   {nextQnaModel?.sj}
@@ -392,11 +392,11 @@ const Detail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1}>
+            <TH colSpan={1} align="right">
               이전
               <ExpandLessIcon fontSize="small" />
             </TH>
-            <TD colSpan={3} className="nextContent">
+            <TD colSpan={5} align="left" className="nextContent">
               {prevQnaModel?.sj && (
                 <Link linkType="Page" onClick={() => handleMoveDetail(prevQnaModel?.qnaId)}>
                   {prevQnaModel?.sj}

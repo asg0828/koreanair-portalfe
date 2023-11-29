@@ -114,7 +114,7 @@ const List = () => {
           <TH colSpan={1} align="right">
             검색
           </TH>
-          <TD colSpan={5}>
+          <TD colSpan={5} align="left">
             <Stack gap="SM" className="width-100">
               <Select
                 appearance="Outline"
