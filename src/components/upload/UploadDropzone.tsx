@@ -3,6 +3,7 @@ import FileUploadFallback from '@/components/fallback/FileUploadFallback';
 import { useDeleteFile, useUploadFile } from '@/hooks/mutations/useFileMutations';
 import { ValidType } from '@/models/common/Constants';
 import { FileCl } from '@/models/model/FileModel';
+import { getFileSize } from '@/utils/FileUtil';
 import { Stack, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -52,12 +53,6 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
         oFile.lastModified.toString() &&
         file.lastModified.toString()
     );
-  };
-
-  const getFileSize = (filesize: number) => {
-    var text = ['bytes', 'kB', 'MB', 'GB', 'TB', 'PB'];
-    var e = Math.floor(Math.log(filesize) / Math.log(1024));
-    return (filesize / Math.pow(1024, e)).toFixed(2) + ' ' + text[e];
   };
 
   function handleDropRejected(rejectedFiles: Array<any>) {
@@ -122,7 +117,8 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
                 reader.onload = () => {
                   file.fileId = response.data[index];
                   file.fileNm = file.name;
-                  file.fileSize = getFileSize(file.size);
+                  file.fileSize = file.size;
+                  file.fileSizeNm = getFileSize(file.size);
                   resolve(file);
                 };
               });
@@ -196,7 +192,7 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
                       {file.fileNm}
                     </Typography>
                     <Typography variant="body2" className="file-name">
-                      {file.fileSize}
+                      {file.fileSizeNm}
                     </Typography>
                   </Stack>
                 </Stack>

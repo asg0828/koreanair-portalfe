@@ -16,7 +16,8 @@ export interface FileModel extends CommonModel {
   fileCl: string;
   fileNm: string;
   fileExtsn: string;
-  fileSize: string;
+  fileSize: number;
+  fileSizeNm: string;
   fileUrl: string;
   refId: string;
   refVer: string;
