@@ -25,10 +25,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns = [
-  { headerName: '물리명', field: 'mtsEnNm', colSpan: 1 },
-  { headerName: '논리명', field: 'mtsKoNm', colSpan: 1 },
-  { headerName: '정의명', field: 'mtsDef', colSpan: 1 },
-  { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 1 },
+  { headerName: '테이블 한글명', field: 'mtsEnNm', colSpan: 2 },
+  { headerName: '테이블 영문명', field: 'mtsKoNm', colSpan: 2 },
+  { headerName: '테이블 정의', field: 'mtsDef', colSpan: 2 },
+  { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 2 },
   { headerName: 'DB명', field: 'srcDbCd', colSpan: 2 },
 ];
 
@@ -154,11 +154,6 @@ const List = () => {
               onCheckedChange={(checked) => handleChangeDataSetConditions('srcTbNm', checked)}
               checked={params.dataSetConditions.includes('srcTbNm')}
             />
-          </TD>
-        </TR>
-        <TR>
-          <TH colSpan={1} align="right"></TH>
-          <TD colSpan={5} align="left">
             <Stack gap="LG" className="width-100">
               <Typography variant="body1">DB명</Typography>
               <Select
