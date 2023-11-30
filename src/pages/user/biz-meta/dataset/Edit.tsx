@@ -348,7 +348,7 @@ const Edit = () => {
               </TH>
               <TD colSpan={5} className="height-300 overflow-auto">
                 <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
-                  <VerticalTable columns={columns} rows={fields} />
+                  <VerticalTable columns={columns} rows={fields} className="tableTdScrollFix" />
                   <Stack className="width-100" justifyContent="Center">
                     <Stack onClick={handleAdd}>
                       <AddCircleOutlineOutlinedIcon fontSize="large" color="primary" />

@@ -8,8 +8,10 @@ import { useFaqById } from '@/hooks/queries/useFaqQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { UpdatedFaqModel } from '@/models/model/FaqModel';
+import { FileModel } from '@/models/model/FileModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -78,6 +80,7 @@ const Reg = () => {
 
   useEffect(() => {
     if (isSuccess && response.data) {
+      response.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setValue('faqId', response.data.faqId);
       setValue('clCode', response.data.clCode);
       setValue('qstn', response.data.qstn);

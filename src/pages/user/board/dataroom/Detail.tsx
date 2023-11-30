@@ -11,6 +11,7 @@ import { DataroomModel } from '@/models/model/DataroomModel';
 import { FileModel } from '@/models/model/FileModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
@@ -93,6 +94,7 @@ const Detail = () => {
         content: '조회 중 에러가 발생했습니다.',
       });
     } else if (isSuccess) {
+      response.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setDataroomModel(response.data);
     }
   }, [response, isSuccess, isError, toast]);
@@ -148,7 +150,7 @@ const Detail = () => {
                     <Link onClick={() => handleFileDownload(file.fileId, file.fileNm)}>
                       <Stack>
                         <AttachFileIcon />
-                        {file.fileNm}
+                        {`${file.fileNm} (${file.fileSizeNm})`}
                       </Stack>
                     </Link>
                   </li>

@@ -8,7 +8,9 @@ import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { UpdatedDataroomModel } from '@/models/model/DataroomModel';
+import { FileModel } from '@/models/model/FileModel';
 import { openModal } from '@/reducers/modalSlice';
+import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -80,6 +82,7 @@ const Edit = () => {
 
   useEffect(() => {
     if (isSuccess && response.data) {
+      response.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setValue('sj', response.data.sj);
       setValue('cn', response.data.cn);
       setValue('useYn', response.data.useYn);

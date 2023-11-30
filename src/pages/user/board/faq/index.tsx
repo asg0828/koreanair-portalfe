@@ -7,10 +7,12 @@ import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, GroupCodeType, ModalType, ValidType, View } from '@/models/common/Constants';
 import { FaqModel, FaqParams } from '@/models/model/FaqModel';
+import { FileModel } from '@/models/model/FileModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { getFileSize } from '@/utils/FileUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -132,6 +134,7 @@ const List = () => {
       });
     } else if (gIsSuccess) {
       if (gResponse?.data) {
+        gResponse.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
         const data = gResponse.data;
         const newRows = [...rows];
         const index = newRows.findIndex((item) => item.faqId === data.faqId);

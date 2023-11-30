@@ -299,9 +299,7 @@ const Reg = () => {
               </TH>
               <TD colSpan={5} className="height-300">
                 <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
-                  <div className="tableTdScrollFix width-100">
-                    <VerticalTable columns={columns} rows={fields} />
-                  </div>
+                  <VerticalTable columns={columns} rows={fields} className="tableTdScrollFix" />
                   <Stack className="width-100" justifyContent="Center">
                     <Stack onClick={handleAdd}>
                       <AddCircleOutlineOutlinedIcon fontSize="large" color="primary" />

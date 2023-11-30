@@ -7,9 +7,11 @@ import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { FileModel } from '@/models/model/FileModel';
 import { UpdatedQnaModel } from '@/models/model/QnaModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect } from 'react';
@@ -80,6 +82,7 @@ const Edit = () => {
 
   useEffect(() => {
     if (isSuccess && response.data) {
+      response.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setValue('clCode', response.data.clCode);
       setValue('qnaStat', response.data.qnaStat);
       setValue('sj', response.data.sj);

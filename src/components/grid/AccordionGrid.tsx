@@ -125,7 +125,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                         <Link onClick={() => handleFileDownload(file.fileId, file.fileNm)}>
                           <Stack>
                             <AttachFileIcon />
-                            {file.fileNm}
+                            {`${file.fileNm} (${file.fileSizeNm})`}
                           </Stack>
                         </Link>
                       </li>

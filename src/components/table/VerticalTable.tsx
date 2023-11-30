@@ -6,6 +6,7 @@ import { Checkbox, TBody, TD, TH, THead, TR, Table, Typography } from '@componen
 import { ReactNode, useEffect, useState } from 'react';
 
 export interface VerticalTableProps {
+  className?: string;
   columns: Array<ColumnsInfo>;
   rows: Array<RowsInfo>;
   showHeader?: boolean;
@@ -18,6 +19,7 @@ export interface VerticalTableProps {
 }
 
 const VerticalTable: React.FC<VerticalTableProps> = ({
+  className = '',
   columns = [],
   rows = [],
   showHeader = true,
@@ -96,7 +98,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   }, [rows]);
 
   return (
-    <Table variant="vertical" size="normal" align="center" className="verticalTable">
+    <Table variant="vertical" size="normal" align="center" className={`verticalTable ${className}`}>
       <div className="verticalTableDiv">
         {showHeader && columns?.length > 0 && (
           <THead>
