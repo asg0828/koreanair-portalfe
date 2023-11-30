@@ -11,6 +11,8 @@ import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
 import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
+import {ReportParams} from "@models/model/ReportModel";
+import {category} from "./data";
 import { dummyData } from "./testData";
 
 const initParams: FeatureParams = {

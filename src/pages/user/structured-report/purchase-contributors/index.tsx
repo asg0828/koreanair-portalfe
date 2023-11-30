@@ -27,7 +27,6 @@ const List = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
-    const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
     const [selectedPeriod, setSelectedPeriod] = useState('1');
     const [dateRange, setDateRange] = useState('');
     const [params, setParams] = useState<FeatureParams>(initParams);
@@ -149,7 +148,6 @@ const List = () => {
                 rows={rows}
                 enableSort={true}
                 clickable={true}
-                page={page}
                 showPageSizeSelect={false}
                 showPagination={false}
                 page={page}
