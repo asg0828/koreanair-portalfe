@@ -97,11 +97,6 @@ const OperatorOperand = ({
     }, [cmmCodeFrmtRes])
 
     useEffect(() => {
-        console.log(slctDateType)
-        console.log(item)
-    }, [item])
-
-    useEffect(() => {
         if (!item) return
         setOprd2DpValue(item.operand2)
     }, [item?.operand2])
