@@ -29,6 +29,7 @@ export interface ColumnChild {
   headerName: string;
   field: string;
   colSpan?: number;
+  rowSpan?: number;
   align?: Align;
   length?: string | number | undefined;
   childName?: ColumnChild[];

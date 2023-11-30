@@ -101,21 +101,26 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
             <TH
               className="verticalTableTH"
               colSpan={column.colSpan ? column.colSpan : undefined}
-              style={{ borderRight: '1px solid #DADADA', height: '100%' }}
+              style={{
+                borderRight: '1px solid #DADADA',
+                maxWidth: '80%',
+                height: '100%',
+              }}
               enableSort={enableSort}
               onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
             >
               {column.headerName}
-              --{column.colSpan}
             </TH>
           ) : (
             <Stack direction="Vertical">
               <TH
-                className="verticalTableTH"
                 colSpan={column.colSpan ? column.colSpan : undefined}
-                style={{ borderBottom: '1px solid #DADADA' }}
+                style={{
+                  borderBottom: '1px solid #DADADA',
+                  height: '100%',
+                }}
               >
-                {column.headerName}--{column.colSpan}
+                {column.headerName}
               </TH>
               <Stack direction="Horizontal">
                 <ChildColumnGird columns={column.childName} />
@@ -135,13 +140,13 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
             <TD
               className="verticalTableTD"
               key={`child-column-${index}-${index2}`}
-              colSpan={column.colSpan ? column.colSpan : 1}
+              colSpan={column.colSpan ? column.colSpan : undefined}
               align={column.align ? column.align : AlignCode.CENTER}
               onClick={() => handleClick(row, index)}
             >
               <Typography variant="body2">
                 {/* {row[column.field]} */}
-                {column.colSpan}/{[...columns].length}
+                {column.colSpan}
               </Typography>
             </TD>
           ) : (
