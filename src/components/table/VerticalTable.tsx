@@ -35,6 +35,10 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
 
+    function formatNumber(value:number) {
+        return new Intl.NumberFormat('ko-KR').format(value);
+    }
+  
   const handleCheckedChange = (isAll: boolean, checked: CheckedState, index: number): void => {
     checked = checked ? true : false;
     let newCheckedIndexList: Array<number> = [];
@@ -71,21 +75,24 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     isCheckbox && rowSelection(newCheckedIndexList, newCheckedList);
   };
 
-  const handleChangeSortDirection = (order: SortDirection, index: number) => {
-    const oValue = order === SortDirectionCode.ASC ? 1 : order === SortDirectionCode.DESC ? -1 : 0;
+    const handleChangeSortDirection = (order: SortDirection, index: number) => {
+        const field = columns[index].field;
+        const oValue = order === SortDirectionCode.ASC ? 1 : -1;
 
-    const sortRows = rows.sort((a, b) => {
-      if (a[index] === b[index]) {
-        return 0;
-      } else if (a[index] < b[index]) {
-        return oValue;
-      } else {
-        return -oValue;
-      }
-    });
+        const sortRows = [...rows].sort((a, b) => {
+            let valueA = a[field] || "";
+            let valueB = b[field] || "";
 
-    setSortRows(sortRows);
-  };
+            if (typeof valueA === 'string' && valueA.startsWith('S')) {
+                valueA = parseFloat(valueA.substring(1));
+                valueB = parseFloat(valueB.substring(1));
+            } else if (typeof valueA === 'string') {
+                return valueA.localeCompare(valueB) * oValue;
+            }
+            return (valueA - valueB) * oValue;
+        });
+        setSortRows(sortRows);
+    };
 
   const handleClick = (row: RowsInfo, index: number) => {
     onClick && onClick(row, index);
@@ -147,17 +154,14 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                     onClick={() => handleClick(row, rowIndex)}
                     className="verticalTableTD"
                   >
-                    {(() => {
-                      if (columns[columnIndex].render) {
-                        return columns[columnIndex].render?.(
-                          rowIndex,
-                          columns[columnIndex].field,
-                          columns[columnIndex].maxLength
-                        );
-                      } else {
-                        return <Typography variant="body2">{row[columns[columnIndex].field]}</Typography>;
-                      }
-                    })()}
+                      {(() => {
+                          const columnData = columns[columnIndex];
+                          const data = row[columnData.field];
+                          if (typeof data === 'number' && columnData.field !== 'memberNumber') {
+                              return <Typography variant="body2">{formatNumber(data)}</Typography>;
+                          }
+                          return <Typography variant="body2">{data}</Typography>;
+                      })()}
                   </TD>
                 ))}
               </TR>

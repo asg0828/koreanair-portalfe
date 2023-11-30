@@ -1,14 +1,13 @@
 export interface ReportParams {
-    searchConditions: Array<string>;
     oneId: string;
-    skyPassMembershipNumber:number;
+    memberNumber:number;
     name:string;
-    vip:string;
+    vipYn:string;
     purchaseAmount:number;
     purchaseCount:number;
     purchaseContribution:number;
     domesticPurchaseAmount:number;
-    internationalPurchaseAmount:number;
-    FRCount:number;
-    PRCount:number;
+    internationalAmount:number;
+    FrCount:number;
+    PrCount:number;
 }
