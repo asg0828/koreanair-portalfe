@@ -37,13 +37,14 @@ const ReadSqlPop = ({
     const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
     const [ readSql, setReadSql ] = useState<ReadSql>(cloneDeep(initReadSql))
 
-    const { data: response, isError, refetch } = useReadSql(custFeatRuleId)
+    const { data: readSqlRes, isError: readSqlErr, refetch: readSqlRefetch } = useReadSql(custFeatRuleId)
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            refetch()
+            // 쿼리확인 조회 API 호출
+            readSqlRefetch()
         }
     }, [isOpen])
 
@@ -57,27 +58,25 @@ const ReadSqlPop = ({
         },
         [onClose]
     )
-
     const handleConfirm = () => {
         handleClose(false)
     }
-    
+    // 쿼리확인 조회 API callback
     useEffect(() => {
-        if (isError || response?.successOrNot === 'N') {
+        if (readSqlErr || readSqlRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
                 content: '조회 중 에러가 발생했습니다.',
             });
         } else {
-            if (response) {
-                //setReadSql()
+            if (readSqlRes) {
                 setReadSql((state: ReadSql) => { 
-                    state.sql = response.result
+                    state.sql = readSqlRes.result
                     return cloneDeep(state)
                 })
             }
         }
-    }, [response, isError, toast])
+    }, [readSqlRes, readSqlErr, toast])
 
     return (
         <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>

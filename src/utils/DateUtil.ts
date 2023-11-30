@@ -1,5 +1,17 @@
 import dayjs from 'dayjs'
 
+export enum DateUnitType {
+  DAY = 'day',
+  WEEK = 'week',
+  QUARTER = 'quarter',
+  MONTH = 'month',
+  YEAR = 'year',
+  HOUR = 'hour',
+  MINUTE = 'minute',
+  SECOND = 'second',
+  MILLISECOND = 'millisecond',
+}
+
 export const getDateString = (timestamp: number | string, separator: string = '') => {
   const date = new Date(timestamp);
   const year = date.getFullYear();
@@ -8,15 +20,15 @@ export const getDateString = (timestamp: number | string, separator: string = ''
 
   return `${year}${separator}${month}${separator}${day}`;
 };
-// <ex> 2022-12-01T10:30:25+09:00
-export const getDateFormatType1 = (time: string) => {
-  return dayjs(time).format().toString()
+
+export const getDateFormat = (time: string, format?: string) => {
+  if (!format || format === "") return dayjs(time).format().toString()
+  else return dayjs(time).format(format).toString()
 }
-// <ex> 2022-12-01
-export const getDateFormatType2 = (time: string) => {
-  return dayjs(time).format("YYYY-MM-DD").toString()
-}
-// <ex> 2022-12-01 10:30:25
-export const getDateFormatType3 = (time: string) => {
-  return dayjs(time).format("YYYY-MM-DD HH:mm:ss").toString()
+
+export const getDateDiff = (stTime: string, edTime: string, units?: DateUnitType) => {
+  const st = dayjs(stTime)
+  const ed = dayjs(edTime)
+  if (!units) return ed.diff(st).toString()
+  else return ed.diff(st, units).toString()
 }

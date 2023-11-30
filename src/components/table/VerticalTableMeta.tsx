@@ -1,5 +1,5 @@
 import NoResult from '@/components/emptyState/NoData';
-import { useUpdateMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations';
+import { useUpdateMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, View } from '@/models/common/Constants';
 import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';

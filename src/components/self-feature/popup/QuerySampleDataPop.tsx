@@ -1,31 +1,26 @@
-import { 
-    useState, 
-    useEffect, 
-    useCallback 
+import {
+    useState,
+    useEffect,
+    useCallback
 } from 'react'
 import { cloneDeep } from 'lodash'
 
-import VerticalTable from '../../table/VerticalTable';
-import { 
-    Modal, 
-    Button, 
-    Stack, 
-    TR, 
-    TH, 
-    TD, 
-    Pagination, 
-    SelectOption, 
-    Select, 
-    Label,
-    useToast, 
+import {
+    Modal,
+    Button,
+    useToast,
 } from '@components/ui';
+import '@/assets/styles/SelfFeature.scss'
 
 import { FeatSampleData } from '@/models/selfFeature/FeatureModel';
-import { 
-    querySampleDataListColumns as columns, 
+import {
+    querySampleDataListColumns as columns,
 } from '@/pages/user/self-feature/data';
 import { useSampleData } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { ValidType } from '@/models/common/Constants';
+import { PageModel, initPage } from '@/models/model/PageModel';
+import { PagingUtil, setPageList } from '@/utils/self-feature/PagingUtil';
+import DataGrid from '@/components/grid/DataGrid';
 
 export interface Props {
     isOpen?: boolean
@@ -33,24 +28,28 @@ export interface Props {
     custFeatRuleId: string
 }
 
-const QuerySampleDataPop = ({ 
-    isOpen = false, 
+const QuerySampleDataPop = ({
+    isOpen = false,
     onClose,
     custFeatRuleId,
 }: Props) => {
 
     const { toast } = useToast()
-    
-    const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
-    const [ querySampleDataList, setQuerySampleDatadList ] = useState<Array<FeatSampleData>>([])
 
-    const { data: response, isError, refetch } = useSampleData(custFeatRuleId)
+    const [isOpenPopUp, setIsOpenPopUp] = useState<boolean>(false)
+
+    // 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
+    const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
+    const [rows, setRows] = useState<Array<FeatSampleData>>([])
+    const [querySampleDataList, setQuerySampleDatadList] = useState<Array<FeatSampleData>>([])
+
+    const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch } = useSampleData(custFeatRuleId)
 
     useEffect(() => {
         setIsOpenPopUp(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            refetch()
+            sampleDataRefetch()
         }
     }, [isOpen])
 
@@ -68,49 +67,60 @@ const QuerySampleDataPop = ({
     const handleConfirm = () => {
         handleClose(false)
     }
-    
+
     useEffect(() => {
-        if (isError || response?.successOrNot === 'N') {
+        if (sampleDataErr || sampleDataRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
                 content: '조회 중 에러가 발생했습니다.',
             });
         } else {
-            if (response) {
-                console.log(response)
-                setQuerySampleDatadList(response.result)
+            if (sampleDataRes) {
+                let rtn = cloneDeep(sampleDataRes.result)
+                rtn = rtn.map((sampleData: FeatSampleData) => {
+                    // batchExecuteLog.execTme  = getDateDiff(batchExecuteLog.startTme, batchExecuteLog.endTme, DateUnitType.MILLISECOND)
+                    // batchExecuteLog.startTme = getDateFormat(batchExecuteLog.startTme, "YYYY-MM-DD HH:mm:ss")
+                    // batchExecuteLog.endTme   = getDateFormat(batchExecuteLog.endTme, "YYYY-MM-DD HH:mm:ss")
+                    return sampleData
+                })
+                setQuerySampleDatadList(rtn)
+				PagingUtil(rtn, page)
             }
         }
-    }, [response, isError, toast])
+    }, [sampleDataRes, sampleDataErr, toast])
+    // 페이지당 목록 수, 페이지 번호 바뀔 경우 page setting
+    const handlePage = (page: PageModel) => {
+        setPage(PagingUtil(querySampleDataList, page))
+    }
+    // 변경된 page에 따른 list setting
+    useEffect(() => {
+        setPageList(page, querySampleDataList, setRows)
+    }, [page.page, page.pageSize, querySampleDataList])
 
     return (
         <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>
             <Modal.Header>실행 내역</Modal.Header>
             <Modal.Body>
-                <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
-                    <Label>총 {querySampleDataList.length} 건</Label>
-                    <VerticalTable
-                        columns={columns}
-                        rows={querySampleDataList}
-                        enableSort={false}
-                        clickable={false}
-                    />
-                    <Stack className="pagination-layout">
-                        <Select appearance="Outline" size="LG" defaultValue={10} className="select-page">
-                            <SelectOption value={10}>10</SelectOption>
-                            <SelectOption value={30}>30</SelectOption>
-                            <SelectOption value={50}>50</SelectOption>
-                        </Select>
-            
-                        <Pagination size="LG" className="pagination" />
-                    </Stack>
-                </Stack>
+                {/* 목록 영역 */}
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                    //enableSort={true}
+                    //clickable={true}
+                    page={page}
+                    onChange={handlePage}
+                    //onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
+                    //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
+                    buttonChildren={
+                        <>
+                            <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
+                                닫기
+                            </Button>
+                        </>
+                    }
+                />
+                {/* 목록 영역 */}
             </Modal.Body>
-            <Modal.Footer>
-                <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
-                닫기
-                </Button>
-            </Modal.Footer>
         </Modal>
     )
 }

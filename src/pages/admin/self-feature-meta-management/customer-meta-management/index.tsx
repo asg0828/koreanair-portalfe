@@ -15,7 +15,7 @@ import { useYn } from '@/models/selfFeature/FeatureCommon';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { openModal } from '@/reducers/modalSlice';
-import { useDeleteMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations';
+import { useDeleteMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
 
 const CustomerMetaManagement = () => {
   const navigate = useNavigate();
