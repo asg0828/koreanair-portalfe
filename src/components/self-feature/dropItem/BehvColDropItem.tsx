@@ -76,7 +76,7 @@ const BehvColDropItem = ({
         let keyNm = String(id)
         let v = String(value)
         let isClrDlmt = false // 구분자를 필요로 하지 않는 연산자 선택의 경우 초기화를 위한 flag
-
+        if (v === "null") return
         // 구분자 select box show를 위한 state 설정
         let oprtVal = trgtFilterItem.operator // 수정시 연산자 종류 판단
         if (// 구분자 선택시
@@ -101,41 +101,41 @@ const BehvColDropItem = ({
         let isOprtSlct = false
         // 날짜 타입 select box show를 위한 state 설정
         if (keyNm === "operator" && (v === "before" || v === "after" || v === "between")) {
-            isOprtSlct = true
+            //isOprtSlct = true
             setSlctDateType(v)
         }
         // 날짜(between)의 경우 날짜/조건식 중 날짜 선택시 operand 초기화
         let isOprdDate1 = false
         let isOprdDate2 = false
-        if ((keyNm === "operand1") && (v === "date" || v === "now")) isOprdDate1 = true
-        else isOprdDate1 = false
+        // if ((keyNm === "operand1") && (v === "date" || v === "now")) isOprdDate1 = true
+        // else isOprdDate1 = false
         
-        if ((keyNm === "operand4") && (v === "date" || v === "now")) isOprdDate2 = true
-        else isOprdDate2 = false
+        // if ((keyNm === "operand4") && (v === "date" || v === "now")) isOprdDate2 = true
+        // else isOprdDate2 = false
 
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
             let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
             updtTrgtFilterList[itemIdx][keyNm] = v
-            if (!isClrDlmt) {
-                updtTrgtFilterList[itemIdx]["delimiter"] = ''
-            }
-            if (isOprtSlct) {
-                updtTrgtFilterList[itemIdx]["operand1"] = ''
-                updtTrgtFilterList[itemIdx]["operand2"] = ''
-                updtTrgtFilterList[itemIdx]["operand3"] = ''
-                updtTrgtFilterList[itemIdx]["operand4"] = ''
-                updtTrgtFilterList[itemIdx]["operand5"] = ''
-                updtTrgtFilterList[itemIdx]["operand6"] = ''
-            }
-            if (isOprdDate1) {
-                updtTrgtFilterList[itemIdx]["operand2"] = ''
-                updtTrgtFilterList[itemIdx]["operand3"] = ''
-            }
-            if (isOprdDate2) {
-                updtTrgtFilterList[itemIdx]["operand5"] = ''
-                updtTrgtFilterList[itemIdx]["operand6"] = ''
-            }
+            // if (!isClrDlmt) {
+            //     updtTrgtFilterList[itemIdx]["delimiter"] = ''
+            // }
+            // if (isOprtSlct) {
+            //     updtTrgtFilterList[itemIdx]["operand1"] = ''
+            //     updtTrgtFilterList[itemIdx]["operand2"] = ''
+            //     updtTrgtFilterList[itemIdx]["operand3"] = ''
+            //     updtTrgtFilterList[itemIdx]["operand4"] = ''
+            //     updtTrgtFilterList[itemIdx]["operand5"] = ''
+            //     updtTrgtFilterList[itemIdx]["operand6"] = ''
+            // }
+            // if (isOprdDate1) {
+            //     updtTrgtFilterList[itemIdx]["operand2"] = ''
+            //     updtTrgtFilterList[itemIdx]["operand3"] = ''
+            // }
+            // if (isOprdDate2) {
+            //     updtTrgtFilterList[itemIdx]["operand5"] = ''
+            //     updtTrgtFilterList[itemIdx]["operand6"] = ''
+            // }
             tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtFilterItem.targetId)
             tl = [...tl, ...updtTrgtFilterList]
             return tl
@@ -162,11 +162,11 @@ const BehvColDropItem = ({
                     gap="SM"
                     style={{
                         flex: "0 1 8%",
-                        maxWidth: "8%",
+                        maxWidth: "8%"
                     }}
                 >
                     <Typography variant="h6" style={{color:"inherit"}}>{trgtFilterTit[itemIdx]}</Typography>
-                    <Typography variant="body2" style={{color:"inherit"}}>{trgtFilterItem.columnLogiName}</Typography>
+                    <Typography variant="body2" style={{color:"inherit", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap"}}>{trgtFilterItem.columnLogiName}</Typography>
                 </Stack>
                 <Stack
                     gap="SM"

@@ -22,7 +22,6 @@ import RelationshipHistoryTable from '@pages/admin/admin-report/one-id-main/rela
 import Ctivoc from '@pages/admin/admin-report/one-id-report/ctivoc';
 import Daily from '@pages/admin/admin-report/one-id-report/daily';
 import SamePnrUcild from '@pages/admin/admin-report/one-id-report/same-pnr-ucild';
-import StructuredReportManagement from '@pages/admin/structured-report-management';
 import DepartmentGroupManagement from '@pages/admin/user-management/department-group-management';
 import UserExceptionManagement from '@pages/admin/user-management/user-exception-management';
 import UserManagement from '@pages/admin/user-management/user-management';
@@ -48,6 +47,8 @@ import Qna from '@pages/user/board/qna';
 import QnaDetail from '@pages/user/board/qna/Detail';
 import QnaEdit from '@pages/user/board/qna/Edit';
 import QnaReg from '@pages/user/board/qna/Reg';
+import InterestFeature from '@pages/user/feature/interest';
+import PopularFeature from '@pages/user/feature/popular';
 
 const adminRouter = [
   {
@@ -81,9 +82,12 @@ const adminRouter = [
         ],
       },
       {
-        path: 'structured-report-management',
-        element: <StructuredReportManagement />,
-        children: [],
+        path: 'feature',
+        children: [
+          { index: true, element: <InterestFeature /> },
+          { path: 'interest', element: <InterestFeature /> },
+          { path: 'popular', element: <PopularFeature /> },
+        ],
       },
       {
         path: 'admin-report',

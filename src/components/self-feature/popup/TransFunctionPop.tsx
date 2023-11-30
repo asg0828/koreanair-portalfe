@@ -5,6 +5,8 @@ import {
 } from 'react'
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect';
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import {
     Modal,
@@ -17,7 +19,7 @@ import {
     TH,
     TD,
     Checkbox,
-    DatePicker,
+    //DatePicker,
 } from '@components/ui';
 import HorizontalTable from '@/components/table/HorizontalTable';
 
@@ -30,8 +32,8 @@ import {
 import { transFuncCalcStr } from '@/utils/self-feature/FormulaValidUtil';
 import { ColDataType, CommonCode, CommonCodeInfo, ModalType, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
-import { useAppDispatch } from '@/hooks/useRedux';
 import ConfirmModal from '@/components/modal/ConfirmModal';
+import dayjs from 'dayjs';
 
 const TransFunctionPop = ({
     isOpen = false,
@@ -792,14 +794,9 @@ const TransFunctionPop = ({
                                             {strtDtChecked &&
                                                 <DatePicker
                                                     value={variable2Val}
-                                                    appearance="Outline"
-                                                    calendarViewMode="days"
-                                                    mode="single"
-                                                    shape="Square"
-                                                    size="MD"
                                                     //onChange={(e) => {e.target.value = ""}}
-                                                    onValueChange={(nextVal) => {
-                                                        setVariable2Val(nextVal)
+                                                    onChange={(date) => {
+                                                        setVariable2Val(dayjs(date).format("YYYY-MM-DD").toString())
                                                     }}
                                                 />
                                             }
@@ -841,14 +838,17 @@ const TransFunctionPop = ({
                                             {endDtChecked &&
                                                 <DatePicker
                                                     value={variable3Val}
-                                                    appearance="Outline"
-                                                    calendarViewMode="days"
-                                                    mode="single"
-                                                    shape="Square"
-                                                    size="MD"
+                                                    //appearance="Outline"
+                                                    //calendarViewMode="days"
+                                                    //mode="single"
+                                                    //shape="Square"
+                                                    //size="MD"
                                                     //onChange={(e) => {e.target.value = ""}}
-                                                    onValueChange={(nextVal) => {
-                                                        setVariable3Val(nextVal)
+                                                    // onValueChange={(nextVal) => {
+                                                    //     setVariable3Val(nextVal)
+                                                    // }}
+                                                    onChange={(date) => {
+                                                        setVariable3Val(dayjs(date).format("YYYY-MM-DD").toString())
                                                     }}
                                                 />
                                             }

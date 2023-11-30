@@ -3,17 +3,20 @@ import { SelectValue } from '@mui/base/useSelect'
 import { cloneDeep, isEmpty } from 'lodash'
 
 import {
-    DatePicker,
+    //DatePicker,
     Select,
     SelectOption,
     Stack,
     TextField,
     Typography,
 } from '@/components/ui'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 import { OperatorOperandProps, TbRsCustFeatRuleCase, TbRsCustFeatRuleTrgtFilter } from "@/models/selfFeature/FeatureModel"
 import { ColDataType, CommonCode, CommonCodeInfo, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
+import dayjs from 'dayjs'
 
 const OperatorOperand = ({
     isPossibleEdit,
@@ -276,24 +279,30 @@ const OperatorOperand = ({
                             }}
                         >
                             <DatePicker
+                                // value={oprd2DpValue}
+                                // appearance="Outline"
+                                // calendarViewMode="days"
+                                // mode="single"
+                                // shape="Square"
+                                // size="SM"
+                                // onChange={(e) => { e.target.value = "" }}
+                                // onValueChange={(nextVal) => {
+                                //     //operand2
+                                //     setOprd2DpValue(nextVal)
+                                //     onChangeDatePickerHandler("operand2", nextVal)
+                                //     /*
+                                //     setSearch((prevState: SearchProps) => {
+                                //         let rtn = cloneDeep(prevState)
+                                //         rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                //         return rtn
+                                //     });
+                                //     */
+                                // }}
                                 value={oprd2DpValue}
-                                appearance="Outline"
-                                calendarViewMode="days"
-                                mode="single"
-                                shape="Square"
-                                size="SM"
-                                onChange={(e) => { e.target.value = "" }}
-                                onValueChange={(nextVal) => {
-                                    //operand2
-                                    setOprd2DpValue(nextVal)
-                                    onChangeDatePickerHandler("operand2", nextVal)
-                                    /*
-                                    setSearch((prevState: SearchProps) => {
-                                        let rtn = cloneDeep(prevState)
-                                        rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                        return rtn
-                                    });
-                                    */
+                                onChange={(date) => {
+                                    let d = dayjs(date).format("YYYY-MM-DD").toString()
+                                    setOprd2DpValue(d)
+                                    onChangeDatePickerHandler("operand2", d)
                                 }}
                             />
                         </Stack>
@@ -401,27 +410,33 @@ const OperatorOperand = ({
                                     flex: "0 1 40%",
                                     maxWidth: "40%",
                                 }}
-                            >
+                            >   
                                 <DatePicker
+                                    // value={oprd2DpValue}
+                                    // appearance="Outline"
+                                    // calendarViewMode="days"
+                                    // mode="single"
+                                    // shape="Square"
+                                    // size="SM"
+                                    // onChange={(e) => { e.target.value = "" }}
+                                    // onValueChange={(nextVal) => {
+                                    //     //operand2
+                                    //     setOprd2DpValue(nextVal)
+                                    //     onChangeDatePickerHandler("operand2", nextVal)
+                                    //     /*
+                                    //     setRequestDateFrom(nextVal)
+                                    //     setSearch((prevState: SearchProps) => {
+                                    //         let rtn = cloneDeep(prevState)
+                                    //         rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                    //         return rtn
+                                    //     });
+                                    //     */
+                                    // }}
                                     value={oprd2DpValue}
-                                    appearance="Outline"
-                                    calendarViewMode="days"
-                                    mode="single"
-                                    shape="Square"
-                                    size="SM"
-                                    onChange={(e) => { e.target.value = "" }}
-                                    onValueChange={(nextVal) => {
-                                        //operand2
-                                        setOprd2DpValue(nextVal)
-                                        onChangeDatePickerHandler("operand2", nextVal)
-                                        /*
-                                        setRequestDateFrom(nextVal)
-                                        setSearch((prevState: SearchProps) => {
-                                            let rtn = cloneDeep(prevState)
-                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                            return rtn
-                                        });
-                                        */
+                                    onChange={(date) => {
+                                        let d = dayjs(date).format("YYYY-MM-DD").toString()
+                                        setOprd2DpValue(d)
+                                        onChangeDatePickerHandler("operand2", d)
                                     }}
                                 />
                             </Stack>
@@ -517,25 +532,31 @@ const OperatorOperand = ({
                                 }}
                             >
                                 <DatePicker
+                                    // value={oprd5DpValue}
+                                    // appearance="Outline"
+                                    // calendarViewMode="days"
+                                    // mode="single"
+                                    // shape="Square"
+                                    // size="SM"
+                                    // onChange={(e) => { e.target.value = "" }}
+                                    // onValueChange={(nextVal) => {
+                                    //     //operand5
+                                    //     setOprd5DpValue(nextVal)
+                                    //     onChangeDatePickerHandler("operand5", nextVal)
+                                    //     /*
+                                    //     setRequestDateFrom(nextVal)
+                                    //     setSearch((prevState: SearchProps) => {
+                                    //         let rtn = cloneDeep(prevState)
+                                    //         rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                    //         return rtn
+                                    //     });
+                                    //     */
+                                    // }}
                                     value={oprd5DpValue}
-                                    appearance="Outline"
-                                    calendarViewMode="days"
-                                    mode="single"
-                                    shape="Square"
-                                    size="SM"
-                                    onChange={(e) => { e.target.value = "" }}
-                                    onValueChange={(nextVal) => {
-                                        //operand5
-                                        setOprd5DpValue(nextVal)
-                                        onChangeDatePickerHandler("operand5", nextVal)
-                                        /*
-                                        setRequestDateFrom(nextVal)
-                                        setSearch((prevState: SearchProps) => {
-                                            let rtn = cloneDeep(prevState)
-                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                            return rtn
-                                        });
-                                        */
+                                    onChange={(date) => {
+                                        let d = dayjs(date).format("YYYY-MM-DD").toString()
+                                        setOprd5DpValue(d)
+                                        onChangeDatePickerHandler("operand5", d)
                                     }}
                                 />
                             </Stack>

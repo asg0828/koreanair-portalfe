@@ -37,18 +37,36 @@ const List = () => {
         ...initPage,
         totalCount: 100
     });
+
+    const createPeriodButton = (period:any, text:string, handlePeriodSelect:any) => (
+        <Button priority="Primary" appearance="Contained" size="LG" style ={{height:'50px'}} onClick={() => handlePeriodSelect(period)}>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <span style={{ fontWeight: 'bold' ,marginBottom: '-5px' }}>{text}</span>
+                <span style={{ fontSize: 'smaller' }}>({calculateDateRange(period)})</span>
+            </div>
+        </Button>
+    );
+
+    const periods = [
+        { period: '1', text: '올해' },
+        { period: '2', text: '최근 1년' },
+        { period: '3', text: '최근 2년' },
+        { period: '4', text: '최근 3년' },
+        { period: '5', text: '최근 4년' },
+    ];
+
     const columns: Array<ColumnsInfo> = [
         { headerName: 'Rank', field: 'Rank', colSpan: 1. },
         { headerName: 'One ID', field: 'oneId', colSpan: 1.3 },
         { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
         { headerName: '이름', field: 'name', colSpan: 2 },
         { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-        { headerName: '구매금액', field: 'purchaseAmount', colSpan: 1 },
-        { headerName: '구매횟수', field: 'purchaseCount', colSpan: 1 },
-        { headerName: '국내선 구매금액', field: 'domesticAmount', colSpan: 1 },
-        { headerName: '국제선 구매금액', field: 'internationalAmount', colSpan: 1 },
-        { headerName: 'FR 구매횟수', field: 'FrCount', colSpan: 1 },
-        { headerName: 'PR 구매횟수', field: 'PrCount', colSpan: 1 },
+        { headerName: '총 적립\n' +'마일리지\n', field: 'purchaseAmount', colSpan: 1 },
+        { headerName: '총 적립 마일리지\n' +'(항공 탑승)\n', field: 'purchaseCount', colSpan: 1 },
+        { headerName: '총 적립 마일리지\n' +'(항공 이외)\n', field: 'domesticAmount', colSpan: 1 },
+        { headerName: '잔여 마일리지', field: 'internationalAmount', colSpan: 1 },
+        { headerName: '잔여 마일리지\n' +'(가족합산)\n', field: 'FrCount', colSpan: 1 },
+        { headerName: '마일리지\n' +'제휴카드\n' +'(PLCC)\n' +'보유여부\n', field: 'PrCount', colSpan: 1 },
     ];
     // const [rows, setRows] = useState<Array<FeatureModel>>([]); // Feature -> 정형보고서 데이터로 수정
     const [rows, setRows] = useState(dummyData.data.contents);
@@ -58,6 +76,7 @@ const List = () => {
 
     const calculateDateRange = (period: string) => {
         const endDate = new Date();
+        endDate.setDate(endDate.getDate() - 1);
         let startDate = new Date();
 
         if (period === '선택') {
@@ -123,6 +142,11 @@ const List = () => {
         }
     };
 
+    const handlePeriodSelect = (period: string) => {
+        setSelectedPeriod(period);
+        setDateRange(calculateDateRange(period));
+    };
+
     useEffect(() => {
         if (params.featureSeGrp) {
             sRefetch();
@@ -150,22 +174,13 @@ const List = () => {
         <>
             <SearchForm onSearch={handleSearch} onClear={handleClear} showClearButton={false} showSearchButton={false}>
                 <TR>
-                    <TH colSpan={1} align="left">
+                    <TH colSpan={1} align="center">
                         조회기준
                     </TH>
-                    <TD colSpan={2} align="left">
-                        <Select
-                            appearance="Outline"
-                            placeholder="1년"
-                            className="width-25"
-                            onChange={(e, value) => value && handleChangeParams('featureSeGrp', value)}
-                            value={params.featureSeGrp}
-                        >
-                            {category.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-                            ))}
-                        </Select>
-                        {dateRange}
+                    <TD colSpan={5} align="left">
+                        <Stack direction="Horizontal" gap="SM">
+                            {periods.map(({ period, text }) => createPeriodButton(period, text, handlePeriodSelect))}
+                        </Stack>
                     </TD>
                 </TR>
             </SearchForm>

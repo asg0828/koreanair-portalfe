@@ -12,7 +12,14 @@
 }
 
 .verticalTableTH {
-  overflow: hidden;
+  > div {
+    white-space: initial;
+    min-height: 43px !important;
+  }
+  overflow-x: hidden;
+  text-align: center;
+  word-break: keep-all;
+  width: 100px !important;
 }
 
 .verticalTableDiv {

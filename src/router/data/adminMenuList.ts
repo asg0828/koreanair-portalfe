@@ -24,9 +24,12 @@ const adminMenulist = [
     ],
   },
   {
-    name: '정형보고서 관리',
-    path: '/admin/structured-report-management',
-    children: [],
+    name: 'Feature 현황',
+    path: '/admin/feature',
+    children: [
+      { name: '관심 Feature', path: '/admin/feature/interest', children: [] },
+      { name: '인기 Feature', path: '/admin/feature/popular', children: [] },
+    ],
   },
   {
     name: '관리자 보고서',
