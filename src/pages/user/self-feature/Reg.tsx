@@ -636,24 +636,26 @@ const SelfFeatureReg = () => {
 						<TD colSpan={2}>
 							<Stack gap="SM" className='width-100'>
 								<TextField
+									placeholder="한글, 숫자, _ 만 입력 가능합니다."
 									className="width-100"
 									id="featureKoNm"
 									value={featureKoNmInput}
 									onChange={onchangeInputHandler}
 								/>
-								<Button>중복확인</Button>
+								{/* <Button>중복확인</Button> */}
 							</Stack>
 						</TD>
 						<TH colSpan={1} align="right" required>영문명</TH>
 						<TD colSpan={2}>
 							<Stack gap="SM" className='width-100'>
 								<TextField 
+									placeholder="영문, 숫자, _ 만 입력 가능합니다."
 									className="width-100" 
 									id="featureEnNm" 
 									value={featureEnNmInput}
 									onChange={onchangeInputHandler} 
 								/>
-								<Button>중복확인</Button>
+								{/* <Button>중복확인</Button> */}
 							</Stack>
 						</TD>
 					</TR>

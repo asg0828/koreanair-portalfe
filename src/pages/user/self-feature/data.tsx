@@ -92,9 +92,9 @@ export const querySampleDataListColumns = [
 ]
 // 배치 실행 이력 팝업 table header
 export const batchExecuteLogListColumns = [
-    { headerName: '실행 일시', field: 'startTime', colSpan: 3 },
-    { headerName: '종료 일시', field: 'endTime', colSpan: 3 },
-    { headerName: '수행 시간', field: 'execTime', colSpan: 3 },
+    { headerName: '실행 일시', field: 'startTme', colSpan: 3 },
+    { headerName: '종료 일시', field: 'endTme', colSpan: 3 },
+    { headerName: '수행 시간(millisecond)', field: 'execTme', colSpan: 3 },
     { headerName: '생성 건수', field: 'rsltCnt', colSpan: 3 },
     { headerName: '수행 결과', field: 'batchResultStatus', colSpan: 3 },
 ]
@@ -375,9 +375,9 @@ export const initBatchExecuteLog: BatchExecuteLog = {
     batType: '',
     ruleId: '',
     ruleNm: '',
-    startTime: '',
-    endTime: '',
-    execTime: '',
+    startTme: '',
+    endTme: '',
+    execTme: '',
     rsltCnt: '',
     pgmNm: '',
     execVersion: '',

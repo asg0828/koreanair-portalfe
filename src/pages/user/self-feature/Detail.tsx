@@ -76,7 +76,7 @@ import { CodeModel } from '@/models/model/CodeModel';
 import { getFeatureSeList } from '@/api/FeatureAPI';
 import { selectSessionInfo } from '@/reducers/authSlice';
 import { useCancelRequestSubmission, useDeleteCustFeatRule, useInsertSubmissionRequest } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations';
-import { getDateFormatType3 } from '@/utils/DateUtil';
+import { getDateFormat } from '@/utils/DateUtil';
 
 const SelfFeatureDetail = () => {
 
@@ -485,7 +485,7 @@ const SelfFeatureDetail = () => {
 						let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
 						if (rtn && rtn[i]) subAprv = cloneDeep(rtn[i])
 						subAprv.approvalSequence = i + 1
-						if (subAprv.approvedDate) subAprv.approvedDate = getDateFormatType3(subAprv.approvedDate)
+						if (subAprv.approvedDate) subAprv.approvedDate = getDateFormat(subAprv.approvedDate, "YYYY-MM-DD HH:mm:ss")
 						if (subAprv.approvalSequence === 1) {
 							let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
 							subAprv.approvalSequenceNm = aprvSeqNm.FIRST
@@ -793,7 +793,7 @@ const SelfFeatureDetail = () => {
 							요청 일시
 						</TH>
 						<TD colSpan={5} align="left">
-							{sfSubmissionRequestData.requestDate && getDateFormatType3(sfSubmissionRequestData.requestDate)}
+							{sfSubmissionRequestData.requestDate && getDateFormat(sfSubmissionRequestData.requestDate, "YYYY-MM-DD HH:mm:ss")}
 						</TD>
 					</TR>
 					{/* <TR>

@@ -40,13 +40,19 @@ import {
 
 import { useSubmissionRequests } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries"
 import { ValidType } from "@/models/common/Constants"
-import { getDateFormatType3 } from "@/utils/DateUtil"
+import { getDateFormat } from "@/utils/DateUtil"
+import { PageModel, initPage } from "@/models/model/PageModel"
+import { PagingUtil, setPageList } from "@/utils/self-feature/PagingUtil"
+import DataGrid from "@/components/grid/DataGrid"
 
 const SfSubmissionRequest = () => {
 
 	const navigate = useNavigate()
 	const { toast } = useToast()
     const sessionInfo = useAppSelector(selectSessionInfo())
+	// 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
+	const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
+	const [rows, setRows] = useState<Array<SfSubmissionRequestInfo>>([])
 
     const [ requestDateFrom, setRequestDateFrom ] = useState<string>('')
     const [ requestDateTo, setRequestDateTo ] = useState<string>('')
@@ -87,38 +93,44 @@ const SfSubmissionRequest = () => {
 			})
 		} else {
 			if (subReqListRes) {
-                setSfSubmissionList((state: Array<SfSubmissionRequestInfo>) => {
-                    let rtn = cloneDeep(state)
-                    rtn = subReqListRes.result.map((subReq: SfSubmission) => {
-                        if (subReq.submission.requestDate) subReq.submission.requestDate = getDateFormatType3(subReq.submission.requestDate)
-						// 진행 상태 check
-						if (
-							!subReq.submission.status
-							|| subReq.submission.status === ""
-							|| subReq.submission.status === subFeatStatus.SAVE
-						) {
-							subReq.submission.statusNm = subFeatStatusNm.SAVE
-						} else if (
-							subReq.submission.status === subFeatStatus.REQ
-							|| subReq.submission.status === subFeatStatus.IN_APRV
-						) {
-							subReq.submission.statusNm = subFeatStatusNm.IN_APRV
-						} else if (subReq.submission.status === subFeatStatus.APRV) {
-							subReq.submission.statusNm = subFeatStatusNm.APRV
-						} else if (subReq.submission.status === subFeatStatus.REJT) {
-							subReq.submission.statusNm = subFeatStatusNm.REJT
-						} else if (subReq.submission.status === subFeatStatus.CNCL) {
-							subReq.submission.statusNm = subFeatStatusNm.CNCL
-						} else if (subReq.submission.status === subFeatStatus.DLET) {
-							subReq.submission.statusNm = subFeatStatusNm.DLET
-						}
-                        return subReq.submission
-                    })
-                    return rtn
+                let rtn = subReqListRes.result.map((subReq: SfSubmission) => {
+                    if (subReq.submission.requestDate) subReq.submission.requestDate = getDateFormat(subReq.submission.requestDate, "YYYY-MM-DD HH:mm:ss")
+                    // 진행 상태 check
+                    if (
+                        !subReq.submission.status
+                        || subReq.submission.status === ""
+                        || subReq.submission.status === subFeatStatus.SAVE
+                    ) {
+                        subReq.submission.statusNm = subFeatStatusNm.SAVE
+                    } else if (
+                        subReq.submission.status === subFeatStatus.REQ
+                        || subReq.submission.status === subFeatStatus.IN_APRV
+                    ) {
+                        subReq.submission.statusNm = subFeatStatusNm.IN_APRV
+                    } else if (subReq.submission.status === subFeatStatus.APRV) {
+                        subReq.submission.statusNm = subFeatStatusNm.APRV
+                    } else if (subReq.submission.status === subFeatStatus.REJT) {
+                        subReq.submission.statusNm = subFeatStatusNm.REJT
+                    } else if (subReq.submission.status === subFeatStatus.CNCL) {
+                        subReq.submission.statusNm = subFeatStatusNm.CNCL
+                    } else if (subReq.submission.status === subFeatStatus.DLET) {
+                        subReq.submission.statusNm = subFeatStatusNm.DLET
+                    }
+                    return subReq.submission
                 })
+                setSfSubmissionList(rtn)
+				PagingUtil(rtn, page)
 			}
 		}
 	}, [subReqListRes, subReqListErr, subReqListRefetch, toast])
+	// 페이지당 목록 수, 페이지 번호 바뀔 경우 page setting
+	const handlePage = (page: PageModel) => {
+		setPage(PagingUtil(sfSubmissionList, page))
+	}
+	// 변경된 page에 따른 list setting
+	useEffect(() => {
+		setPageList(page, sfSubmissionList, setRows)
+	}, [page.page, page.pageSize, sfSubmissionList])
     // 검색 input 입력시
     const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target
@@ -242,32 +254,22 @@ const SfSubmissionRequest = () => {
             </Stack>
             {/* 검색 영역 */}
 
-            <Stack direction="Vertical" gap="LG" justifyContent="End" className="height-100">
-                <Stack justifyContent="Between">
-                    <Label>총 <span className="total">{sfSubmissionList.length}</span> 건</Label>
-                    <Select 
-                        appearance="Outline" 
-                        size="LG" 
-                        defaultValue={10} 
-                        className="select-page"
-                    >
-                        <SelectOption value={10}>10</SelectOption>
-                        <SelectOption value={30}>30</SelectOption>
-                        <SelectOption value={50}>50</SelectOption>
-                    </Select>
-                </Stack>
-                {/* 목록 영역 */}
-                <VerticalTable
-                    columns={columns}
-                    rows={sfSubmissionList}
-                    enableSort={true}
-                    clickable={true}
-                    //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
-                    onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
-                />
-                <Pagination size="MD" />
-                {/* 목록 영역 */}
-            </Stack>
+			{/* 목록 영역 */}
+			<DataGrid
+				columns={columns}
+				rows={rows}
+				//enableSort={true}
+				clickable={true}
+				page={page}
+				onChange={handlePage}
+				onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
+				//rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
+				buttonChildren={
+					<>
+					</>
+				}
+			/>
+			{/* 목록 영역 */}
         </Stack>
     )
 }
