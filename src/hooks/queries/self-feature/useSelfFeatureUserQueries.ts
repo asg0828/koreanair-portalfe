@@ -21,7 +21,7 @@ export const useCustFeatRules = (qParams: FeatListSrchProps) => {
 }
 // Self-feature 속성,행동,FEAT 데이터 조회
 export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
-    return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId(), { enabled: false })
+    return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId())
 }
 // Self-feature 상세정보 조회
 export const useCustFeatRuleInfos = (custFeatRuleId: string) => {

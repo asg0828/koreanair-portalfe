@@ -6,12 +6,11 @@ export interface FeatListSrchProps {
     [key: string]: string
     mstrSgmtRuleId: string
     custFeatRuleName: string
-    custFeatRuleKoName: string
-    custFeatRuleENName: string
+    custFeatRuleNameEng: string
     // category: string
-    // useYn: string
+    useYn: string
     submissionStatus: string
-    teamCd: string
+    team: string
 }
 
 export interface TargetDropListProps {
@@ -306,6 +305,7 @@ export interface TbRsCustFeatRule extends RowsInfo {
     //example: Customer Feature 이름
     name: string,
     //example: Customer Feature 설명
+    featureEnNm: string,
     description: string,
     //example: Resolution Rule ID
     rslnRuleId: string,
@@ -335,6 +335,7 @@ export interface TbRsCustFeatRule extends RowsInfo {
     metaTblId: string,
     lastUpdLginId: string,
     submissionStatusNm: string,
+    userTeamNm: string
 }
 
 export interface TbRsCustFeatRuleSql {

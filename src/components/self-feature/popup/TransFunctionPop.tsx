@@ -493,7 +493,9 @@ const TransFunctionPop = ({
         id?: string,
     ) => {
         let keyNm = String(id)
-        let v = (String(value) && String(value) !== "null" && String(value) !== "undefined") ? String(value) : ''
+        let v = String(value)
+
+        if (v === "null" || v === "undefined") return
 
         if (keyNm === "functionVal") {
             setTempTrgtItem(v, '', '', '')
@@ -783,7 +785,12 @@ const TransFunctionPop = ({
                                         시작 일자
                                     </TH>
                                     <TD colSpan={2}>
-                                        <Stack gap="MD" className="width-100">
+                                        <Stack 
+                                            alignItems="Center"
+                                            direction="Horizontal" 
+                                            gap="MD" 
+                                            className="width-100"
+                                        >
                                             <Checkbox
                                                 label="달력"
                                                 checked={strtDtChecked}
@@ -793,6 +800,7 @@ const TransFunctionPop = ({
                                             />
                                             {strtDtChecked &&
                                                 <DatePicker
+                                                    placeholderText='날짜 선택'
                                                     value={variable2Val}
                                                     //onChange={(e) => {e.target.value = ""}}
                                                     onChange={(date) => {
@@ -827,7 +835,12 @@ const TransFunctionPop = ({
                                         종료 일자
                                     </TH>
                                     <TD colSpan={2}>
-                                        <Stack gap="MD" className="width-100">
+                                        <Stack 
+                                            alignItems="Center"
+                                            direction="Horizontal" 
+                                            gap="MD" 
+                                            className="width-100"
+                                        >
                                             <Checkbox
                                                 label="달력"
                                                 checked={endDtChecked}
@@ -837,6 +850,7 @@ const TransFunctionPop = ({
                                             />
                                             {endDtChecked &&
                                                 <DatePicker
+                                                    placeholderText='날짜 선택'
                                                     value={variable3Val}
                                                     //appearance="Outline"
                                                     //calendarViewMode="days"

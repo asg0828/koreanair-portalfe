@@ -4,10 +4,8 @@ import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep } from "lodash";
 
 import { RowsInfo } from "@/models/components/Table";
-import VerticalTable from '@components/table/VerticalTable';
 import HorizontalTable from '@components/table/HorizontalTable';
 import {
-	Pagination,
 	TR,
 	TH,
 	TD,
@@ -16,7 +14,6 @@ import {
 	TextField,
 	Select,
 	SelectOption,
-	Label,
 	useToast,
 } from '@components/ui';
 import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
@@ -25,7 +22,6 @@ import DataGrid from "@/components/grid/DataGrid";
 
 import { FeatListSrchProps, TbRsCustFeatRule } from '@/models/selfFeature/FeatureModel'
 import {
-	teamNm,
 	featListColumns as columns,
 	initFeatListSrchProps,
 	submissionStatus,
@@ -37,20 +33,45 @@ import { useCustFeatRules } from "@/hooks/queries/self-feature/useSelfFeatureUse
 import { ValidType } from "@/models/common/Constants";
 import { PageModel, initPage } from "@/models/model/PageModel";
 import { PagingUtil, setPageList } from "@/utils/self-feature/PagingUtil";
+import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
+import { selectSessionInfo } from "@/reducers/authSlice";
+import { useAppSelector } from "@/hooks/useRedux";
 
 const SelfFeature = () => {
 
 	const navigate = useNavigate()
 	const { toast } = useToast()
+	const sessionInfo = useAppSelector(selectSessionInfo())
 	// 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
 	const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
 	const [rows, setRows] = useState<Array<TbRsCustFeatRule>>([])
+	// 부서 조회
+	const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
+	const [deptOption, setDeptOption] = useState<Array<any>>([])
 	//Feature명칭(한글), Feature명(영문명), 진행상태, 부서
 	const [searchInfo, setSearchInfo] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
 	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(searchInfo)
 	const [selfFeatureList, setSelfFeatureList] = useState<Array<TbRsCustFeatRule>>([])
 	// 선후행 관계 팝업
 	const [isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop] = useState<boolean>(false)
+	useEffect(() => {
+		//console.log(sessionInfo)
+	}, [sessionInfo])
+	// 부서 목록 setting
+	useEffect(() => {
+		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '부서 목록 조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (deptAllListRes?.data) {
+				setDeptOption(() => {
+					return [...[{ deptCode: "", deptNm: "선택" }], ...deptAllListRes.data.contents]
+				})
+			}
+		}
+	}, [deptAllListRes, deptAllListErr, toast])
 	// customer feature 목록 API callback
 	useEffect(() => {
 		if (featureListErr || featureListRes?.successOrNot === 'N') {
@@ -123,7 +144,9 @@ const SelfFeature = () => {
 		value: SelectValue<{}, false>,
 		id?: String
 	) => {
-		setSearchInfo({ ...searchInfo, [`${id}`]: String(value), })
+		let v = String(value)
+		if (v === "null" || v === "undefined") return
+		setSearchInfo({ ...searchInfo, [`${id}`]: v, })
 	}
 	// 검색 버튼 클릭시
 	const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -152,7 +175,7 @@ const SelfFeature = () => {
 							</TD>
 							<TH colSpan={1} align="right">Feature 명(영문)</TH>
 							<TD colSpan={3}>
-								<TextField className="width-100" id="custFeatRuleEnName" onChange={onchangeInputHandler} />
+								<TextField className="width-100" id="custFeatRuleNameEng" onChange={onchangeInputHandler} />
 							</TD>
 						</TR>
 						<TR>
@@ -185,11 +208,11 @@ const SelfFeature = () => {
 										e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
 										value: SelectValue<{}, false>
 									) => {
-										onchangeSelectHandler(e, value, "teamCd")
+										onchangeSelectHandler(e, value, "team")
 									}}
 								>
-									{teamNm.map((item, index) => (
-										<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+									{deptOption.map((item, index) => (
+										<SelectOption key={index} value={item.deptCode}>{item.deptNm}</SelectOption>
 									))}
 								</Select>
 							</TD>
