@@ -149,6 +149,7 @@ const List = () => {
                 rows={rows}
                 enableSort={true}
                 clickable={true}
+                page={page}
                 showPageSizeSelect={false}
                 showPagination={false}
                 page={page}

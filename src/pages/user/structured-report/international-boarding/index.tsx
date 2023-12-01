@@ -152,19 +152,6 @@ const List = () => {
         handleSearch();
     }, [page.page, page.pageSize, handleSearch]);
 
-    // useEffect(() => {
-    //     if (isError || response?.successOrNot === 'N') {
-    //         toast({
-    //             type: ValidType.ERROR,
-    //             content: '조회 중 에러가 발생했습니다.',
-    //         });
-    //     } else {
-    //         if (response?.data) {
-    //             setRows(response.data.contents);
-    //         }
-    //     }
-    // }, [response, isError, toast]);
-
     return (
         <>
             <SearchForm onSearch={handleSearch} onClear={handleClear} showClearButton={false} showSearchButton={false}>
