@@ -61,7 +61,7 @@ const List = () => {
         { headerName: '국제선 수입금액', field: 'IntlIncomeAmount', colSpan: 1 },
         { headerName: '국제선 보너스 \n' +'항공권 탑승 횟수', field: 'IntlBonusBoardingCount', colSpan: 1},
         { headerName: '국제선 FR 탑승횟수', field: 'IntlFrCount', colSpan: 1 },
-        { headerName: '국제선 PR 탑승횟수', field: 'IntllPrCount', colSpan: 1 },
+        { headerName: '국제선 PR 탑승횟수', field: 'IntlPrCount', colSpan: 1 },
         { headerName: '국제선 평균 탑승 주기', field: 'avgBoardingIntervalForIntl', colSpan: 1 },
         { headerName: '국제선 최다 탑승 O&D', field: 'MostFrequentedO&DForIntl', colSpan: 1 },
     ];
