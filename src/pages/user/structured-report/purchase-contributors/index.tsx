@@ -151,7 +151,6 @@ const List = () => {
                 page={page}
                 showPageSizeSelect={false}
                 showPagination={false}
-                page={page}
                 // onClick={goToDetail}
                 onChange={handlePage}
             />
