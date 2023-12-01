@@ -144,8 +144,8 @@ const SelfFeatureDetail = () => {
 	// component mount
 	useEffect(() => {
 		initCustFeatRule()
-		if (location.state.sqlDirectInputYn !== "Y")
-			mstrSgmtTbandColRefetch()
+		// if (location.state.sqlDirectInputYn !== "Y")
+		// 	mstrSgmtTbandColRefetch()
 	}, [])
 	// 속성 및 행동 데이터 정보 호출 callback
 	useEffect(() => {
@@ -311,15 +311,13 @@ const SelfFeatureDetail = () => {
 					columnLogiName항목에 추가				
 				*/
 				let trgtIdArr: Array<TbRsCustFeatRuleTrgt> = []
-				trgtIdArr = targetList.filter((target: TbRsCustFeatRuleTrgt) => targetId === target.targetId)
-
+				trgtIdArr = featureInfo.tbRsCustFeatRuleTrgtList.filter((target: TbRsCustFeatRuleTrgt) => targetId === target.targetId)
 				if (trgtIdArr.length > 0) metaTblId = trgtIdArr[0].tableName
 
 				let clmnBehv: Array<Behavior> = []
 				clmnBehv = mstrSgmtTableandColMetaInfo.behaviors.filter((behavior: Behavior) => {
 					return metaTblId === behavior.metaTblId
 				})
-
 				if (clmnBehv.length > 0) {
 					let clmnInfo: Array<TbCoMetaTblClmnInfo> = []
 					clmnInfo = clmnBehv[0].tbCoMetaTblClmnInfoList.filter((clnmInfo: TbCoMetaTblClmnInfo) => colNm === clnmInfo.metaTblClmnPhysNm)

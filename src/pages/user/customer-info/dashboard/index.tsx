@@ -1,37 +1,34 @@
 import { useCustomerInfo } from '@/hooks/queries/useCustomerInfoQueires';
 import { Profile } from '@/models/customer-info/CustomerInfo';
 import { htmlTagReg } from '@/utils/RegularExpression';
-import { Button, Modal, Stack, TextField, Typography, useToast } from '@components/ui';
+import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { analysisResultData, contributeData, homepageData } from './data';
+import { SelectValue } from '@mui/base/useSelect';
 
 export default function List() {
   useEffect(() => {
     console.log('컴포넌트가 마운트되었습니다.');
-
     return () => {
       console.log('컴포넌트가 언마운트되었습니다.');
     };
   }, []);
-  // const [page, setPage] = useState<PageModel>(initPage);
-  // 이런식으로 받아올 컴포넌트별로 state필요
+
   const today = new Date();
-  const batchDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+  const yesterday = new Date(today.setDate(today.getDate() - 1));
+  const batchDate = `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`;
+
   const [profile, setProfile] = useState<Profile>();
   const [rows, setRows] = useState<Array<any>>([]);
-  const [searchInfo, setSearchInfo] = useState<any>({
-    skypassNum: '',
-    oneId: '',
-  });
+  const [searchInfo, setSearchInfo] = useState<any>({ skypassNum: '', oneId: '' });
+  const [skypassList, setSkypassList] = useState<Array<any>>([]);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { refetch, data: response, isError } = useCustomerInfo(searchInfo);
   const { toast } = useToast();
 
   const validation = () => {
-    // 유효성검사 성공 여부 flag => 실패 시 api 요청 x
     let searchError = false;
-    // 검색 조건 미입력 시 modal open
     if (
       searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
       searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
@@ -47,13 +44,10 @@ export default function List() {
     setOpenFamilyInfo(true);
   };
 
-  // refetch
   const handleSearch = useCallback(() => {
     // 유효성 검사 실패 시 종료
     const validation = () => {
-      // 유효성검사 성공 여부 flag => 실패 시 api 요청 x
       let searchError = false;
-      // 검색 조건 미입력 시 modal open
       if (
         searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
         searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
@@ -72,7 +66,6 @@ export default function List() {
       clearInterval(intervalId.current);
     }
 
-    // Set a new interval ID
     intervalId.current = setInterval(() => {
       refetch();
     }, 5000);
@@ -88,24 +81,12 @@ export default function List() {
       };
     }
   }, []);
-  // style > 배경색 변경
-
-  // 홈페이지 데이터(삭제 예정)
-  const hmpData = useSelector((state) => homepageData);
-  // contribute 데이터(삭제 예정)
-  const ctrbuteData = useSelector((state) => contributeData);
-  // analysisResult 데이터(삭제 예정)
-  const analResultData = useSelector((state) => analysisResultData);
 
   //검색 조건 모달 state
   const [isOpen, setOpen] = useState(false);
 
   // 등록가족 상세 버튼 모달 state
   const [isOpenFamilyInfo, setOpenFamilyInfo] = useState(false);
-
-  const skypassNumId = useRef<any>(null);
-  const oneIdId = useRef<any>(null);
-  // const passengerNmId = useRef<any>(null);
 
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
@@ -119,16 +100,26 @@ export default function List() {
 
   // 클릭 더보기 리스트 교체 함수
   const listClickChange = (flag: string) => {
-    // flag에 따라서 setIsList를 비우고 넣고 하면 되는데
-    //지금은 무조건 그냥 반대로 들어가게 되어있는데
-    //
+    // 눌렀을때 -> LIST에 값이 들어감                                                       -> STATE변화 (열어줘야됨)
+    // LIST에 값이 있는 상태로 누르면(다시 누르면) -> LIST가 비워짐      -> STATE변화(닫아줘야됨)
+    // LIST에 값이 있는 상태로 다른걸 누르면 -> LIST가 다른걸로 채워짐  -> STATE변화(다른걸 열어줘야됨/ 열어주되 LIST를 갈아끼워줘야됨 )
+    // LIST를 STATE로 관리하고 값을 넣었다 뺐다 하면서 USEeFFECT로 열고 닫고 해주면 될거같은데 -> 값이 변화하면 무조건 LIST가 열리게 값 변화가 없으면 닫기
+  };
+
+  /* select 입력 함수 */
+  const onchangeSelectHandler = (
+    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: SelectValue<{}, false>,
+    id?: String
+  ) => {
+    //setSearchInfo({ ...searchInfo, [`${id}`]: value });
   };
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: 'Error',
-        content: '조회 중 에러가 발생했습니다.',
+        content: '조회 중 에러가 발생했습1니다.',
       });
     } else {
       if (response?.data) {
@@ -138,6 +129,7 @@ export default function List() {
       }
     }
   }, [response, isError, toast]);
+
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       {/* searchBar 영역 */}
@@ -151,7 +143,6 @@ export default function List() {
             size="LG"
             textAlign="left"
             onChange={onchangeInputHandler}
-            ref={skypassNumId}
             autoFocus
           />
         </div>
@@ -164,22 +155,9 @@ export default function List() {
             size="LG"
             textAlign="left"
             onChange={onchangeInputHandler}
-            ref={oneIdId}
           />
         </div>
-        {/* <div className="componentWrapper" style={{ width: '100%' }}>
-          <TextField
-            value={passengerNm}
-            id="passengerNm"
-            appearance="Outline"
-            placeholder="Passenger Name"
-            size="LG"
-            textAlign="left"
-            validation="Default"
-            onChange={onchangeInputHandler}
-            ref={passengerNmId}
-          />
-        </div> */}
+
         <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSearch}>
           검색
         </Button>
@@ -243,16 +221,32 @@ export default function List() {
                   <div className="key">이메일</div>
                   <div className="value">exemail.exe</div>
                 </div>
-                <div className="item">
-                  <div className="key">홈페이지ID</div>
-                  <div className="value">gildong123</div>
-                </div>
               </div>
             </div>
             <div className="dashBoardBox n2">
-              <div className="top">
+              <div className="top" style={{ position: 'relative' }}>
                 SKYPASS
-                <div className="kr">스카이패스 </div>
+                <div className="kr">스카이패스</div>
+                {isListView1 && (
+                  <Select
+                    appearance="Outline"
+                    placeholder="스카이패스선택"
+                    style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}
+                    value={searchInfo.oneidChgRsnCd}
+                    onChange={(
+                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                      value: SelectValue<{}, false>
+                    ) => {
+                      onchangeSelectHandler(e, value, 'skypassSelect');
+                    }}
+                  >
+                    {/* {skypassList.map((item, index) => (
+                    <SelectOption key={index} value={item.value} style={{ maxHeight: '70%', fontSize: '70%'}}>
+                      {item.text}
+                    </SelectOption> 
+                  ))} */}
+                  </Select>
+                )}
               </div>
               <div className="item">
                 <div className="key">회원번호</div>

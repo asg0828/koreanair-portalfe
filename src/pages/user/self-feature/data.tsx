@@ -108,17 +108,17 @@ export const divisionTypes = {
 export const initFeatListSrchProps: FeatListSrchProps = {
     mstrSgmtRuleId: RuleId.MASTERPROF,
     custFeatRuleName: '',
-    custFeatRuleKoName: '',
-    custFeatRuleENName: '',
+    custFeatRuleNameEng: '',
     // category: '',
-    // useYn: '',
+    useYn: 'Y',
     submissionStatus: '',
-    teamCd: '',
+    team: '',
 }
 
 export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     id: '',
     name: '',
+    featureEnNm: '',
     description: '',
     rslnRuleId: RuleId.RESOLUTION,
     mstrSgmtRuleId: RuleId.MASTERPROF,
@@ -138,6 +138,7 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     metaTblId: '',
     lastUpdLginId: '',
     submissionStatusNm: '',
+    userTeamNm: 'test',
 }
 
 export const initTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {

@@ -157,7 +157,7 @@ export default function RelationshipHistoryTable() {
         columns={relationColumn}
         //row   = {row}
         rows={relationData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}

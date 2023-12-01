@@ -26,8 +26,15 @@ const BehvColDropItem = ({
     const [ delimiterSelected, setDelimiterSelected ] = useState<Boolean>(false)
     const [ slctDateType, setSlctDateType ] = useState<string>("")
 
+    const [hasItem, setHasItem] = useState<Boolean>(false)
+    // component mount
     useEffect(() => {
+        // 저장된 값이 있으면 select 선택시 값 초기화 로직 제외
+        if (!trgtFilterItem.id) setHasItem(false)
+        else setHasItem(true)
+    }, [])
 
+    useEffect(() => {
         if (
             trgtFilterItem.operator === "in_str" 
             || trgtFilterItem.operator === "not_in_str" 
@@ -75,8 +82,9 @@ const BehvColDropItem = ({
     ) => {
         let keyNm = String(id)
         let v = String(value)
+        if (v === "null" || v === "undefined") return
+
         let isClrDlmt = false // 구분자를 필요로 하지 않는 연산자 선택의 경우 초기화를 위한 flag
-        if (v === "null") return
         // 구분자 select box show를 위한 state 설정
         let oprtVal = trgtFilterItem.operator // 수정시 연산자 종류 판단
         if (// 구분자 선택시
@@ -97,49 +105,52 @@ const BehvColDropItem = ({
             setDelimiterSelected(false)
             isClrDlmt = false
         }
-        // 날짜 타입 select box 선택시 operand 초기화
+        // 연산자 select box 선택시 operand 초기화
         let isOprtSlct = false
+        if (keyNm === "operator") isOprtSlct = true
         // 날짜 타입 select box show를 위한 state 설정
-        if (keyNm === "operator" && (v === "before" || v === "after" || v === "between")) {
-            //isOprtSlct = true
+        if (keyNm === "operator" && (v === "" || v === "before" || v === "after" || v === "between")) {
             setSlctDateType(v)
         }
         // 날짜(between)의 경우 날짜/조건식 중 날짜 선택시 operand 초기화
         let isOprdDate1 = false
         let isOprdDate2 = false
-        // if ((keyNm === "operand1") && (v === "date" || v === "now")) isOprdDate1 = true
-        // else isOprdDate1 = false
+        if ((keyNm === "operand1") && (v === "date" || v === "now")) isOprdDate1 = true
+        else isOprdDate1 = false
         
-        // if ((keyNm === "operand4") && (v === "date" || v === "now")) isOprdDate2 = true
-        // else isOprdDate2 = false
+        if ((keyNm === "operand4") && (v === "date" || v === "now")) isOprdDate2 = true
+        else isOprdDate2 = false
 
         setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
             let tl = cloneDeep(state)
             let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === trgtFilterItem.targetId)
             updtTrgtFilterList[itemIdx][keyNm] = v
-            // if (!isClrDlmt) {
-            //     updtTrgtFilterList[itemIdx]["delimiter"] = ''
-            // }
-            // if (isOprtSlct) {
-            //     updtTrgtFilterList[itemIdx]["operand1"] = ''
-            //     updtTrgtFilterList[itemIdx]["operand2"] = ''
-            //     updtTrgtFilterList[itemIdx]["operand3"] = ''
-            //     updtTrgtFilterList[itemIdx]["operand4"] = ''
-            //     updtTrgtFilterList[itemIdx]["operand5"] = ''
-            //     updtTrgtFilterList[itemIdx]["operand6"] = ''
-            // }
-            // if (isOprdDate1) {
-            //     updtTrgtFilterList[itemIdx]["operand2"] = ''
-            //     updtTrgtFilterList[itemIdx]["operand3"] = ''
-            // }
-            // if (isOprdDate2) {
-            //     updtTrgtFilterList[itemIdx]["operand5"] = ''
-            //     updtTrgtFilterList[itemIdx]["operand6"] = ''
-            // }
+            if (!hasItem) {
+                if (!isClrDlmt) {
+                    updtTrgtFilterList[itemIdx]["delimiter"] = ''
+                }
+                if (isOprtSlct) {
+                    updtTrgtFilterList[itemIdx]["operand1"] = ''
+                    updtTrgtFilterList[itemIdx]["operand2"] = ''
+                    updtTrgtFilterList[itemIdx]["operand3"] = ''
+                    updtTrgtFilterList[itemIdx]["operand4"] = ''
+                    updtTrgtFilterList[itemIdx]["operand5"] = ''
+                    updtTrgtFilterList[itemIdx]["operand6"] = ''
+                }
+                if (isOprdDate1) {
+                    updtTrgtFilterList[itemIdx]["operand2"] = ''
+                    updtTrgtFilterList[itemIdx]["operand3"] = ''
+                }
+                if (isOprdDate2) {
+                    updtTrgtFilterList[itemIdx]["operand5"] = ''
+                    updtTrgtFilterList[itemIdx]["operand6"] = ''
+                }
+            }
             tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== trgtFilterItem.targetId)
             tl = [...tl, ...updtTrgtFilterList]
             return tl
         })
+        if (trgtFilterItem.id && hasItem) setHasItem(false)
        
     }
 

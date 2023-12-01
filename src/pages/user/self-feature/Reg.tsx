@@ -154,7 +154,7 @@ const SelfFeatureReg = () => {
 	// mount 시 수행
 	useEffect(() => {
 		initCustFeatRule()
-		if (regType === selfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
+		// if (regType === selfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
 	}, [])
 	// 속성,행동데이터 response callback
 	useEffect(() => {
@@ -518,6 +518,8 @@ const SelfFeatureReg = () => {
 	) => {
 		let keyNm = String(id)
 		let v = String(value)
+        if (v === "null" || v === "undefined") return
+
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {

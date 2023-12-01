@@ -142,7 +142,9 @@ const SfSubmissionRequest = () => {
         value: SelectValue<{}, false>,
         id?: String
     ) => {
-        setSearch({...search, [`${id}`]: String(value),})
+        let v = String(value)
+        if (v === "null" || v === "undefined") return
+        setSearch({...search, [`${id}`]: v,})
     }
     // 검색 버튼 클릭시
     const onClickSearch = () => {

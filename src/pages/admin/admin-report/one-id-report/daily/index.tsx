@@ -170,7 +170,7 @@ export default function Daily() {
         columns={oneIdDailyColumn}
         // rows={row}
         rows={oneIdDailyData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}

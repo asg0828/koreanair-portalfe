@@ -135,32 +135,6 @@ const BehvDropItem = ({
         })
 
     }, [trgtFilterList?.length])
-
-    
-    // useEffect(() => {
-    //     columnList.map((col: AggregateCol) => {
-    //         if (col.value === targetItem.columnName) {
-    //             // 집계함수 list 변경
-    //             if (cmmCodeAggrRes) {
-    //                 setAggregateOption((prevState: Array<CommonCodeInfo>) => {
-    //                     let rtn = cloneDeep(prevState)
-    //                     rtn = cmmCodeAggrRes.result.filter((v: CommonCodeInfo) => {
-    //                         if (v.attr4 === "N") {
-    //                             return false
-    //                         } else {
-    //                             if ((col.dataType === ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return true
-    //                             else if ((col.dataType !== ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return false
-    //                             else return true
-    //                         }
-    //                     })
-    //                     return [...cloneDeep([initCommonCodeInfo]), ...rtn]
-    //                 })
-    //             }
-    //         }
-    //         return col
-    //     })
-    // }, [targetItem.columnName])
-
     // 수정시 집계함수가 top인 경우
     useEffect(() => {
         if (targetItem.operator === "top") {
@@ -307,8 +281,9 @@ const BehvDropItem = ({
     ) => {
         let keyNm = String(id)
         let v = String(value)
-        let t = false
+        if (v === "null" || v === "undefined") return
 
+        let t = false
         if (keyNm === "columnName" || keyNm === "filterLogiOption") {
             t = true
             if (keyNm === "columnName") {
