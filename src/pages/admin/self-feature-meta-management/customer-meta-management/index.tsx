@@ -199,7 +199,7 @@ const CustomerMetaManagement = () => {
       <DataGrid
         columns={metaTableColumn}
         rows={rows}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}

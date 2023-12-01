@@ -6,7 +6,21 @@ import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/mod
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { openModal } from '@/reducers/modalSlice';
 import '@components/table/VerticalTable.scss';
-import { Button, Modal, Checkbox, Radio, TBody, TD, TH, THead, TR, Table, TextField, Typography } from '@components/ui';
+import {
+  Button,
+  Modal,
+  Checkbox,
+  Radio,
+  TBody,
+  TD,
+  TH,
+  THead,
+  TR,
+  Table,
+  TextField,
+  Typography,
+  Stack,
+} from '@components/ui';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -165,6 +179,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
             <TR>
               {columns.map((column, index) => (
                 <TH
+                  className="verticalTableTH"
                   key={`header-${index}`}
                   required={column.require}
                   colSpan={column.colSpan ? column.colSpan : undefined}
@@ -185,7 +200,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                   // 체크박스
                   if (columns[columnIndex].field.includes('Yn') && columns[columnIndex].field !== 'baseTimeYn') {
                     return (
-                      <TD>
+                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
                         <Checkbox
                           key={`column-${columnIndex}`}
                           defaultChecked={row[columns[columnIndex].field] === 'Y'}
@@ -197,7 +212,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                   // 라디오 버튼
                   else if (columns[columnIndex].field === 'baseTimeYn') {
                     return (
-                      <TD>
+                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
                         <Radio
                           key={`column-${columnIndex}`}
                           name="metaCustomerRadio"
@@ -215,6 +230,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                   ) {
                     return (
                       <TD
+                        className="verticalTableTD"
                         key={`column-${columnIndex}`}
                         colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
                         align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
@@ -240,16 +256,21 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                       </TD>
                     );
                   } else if (columns[columnIndex].field === 'no') {
-                    return <TD>{rowIndex + 1}</TD>;
+                    return (
+                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                        {rowIndex + 1}
+                      </TD>
+                    );
                   }
 
                   // 그냥row
                   else {
                     return (
                       <TD
+                        className="verticalTableTD"
                         key={`column-${columnIndex}`}
-                        // colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-                        // align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                        align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
                         onClick={() => handleClick(row, rowIndex)}
                       >
                         {(() => {
@@ -260,7 +281,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                               columns[columnIndex].maxLength
                             );
                           } else {
-                            return <Typography>{row[columns[columnIndex].field]} </Typography>;
+                            return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
                           }
                         })()}
                       </TD>
@@ -276,26 +297,21 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
           </TBody>
         )}
       </Table>
-      <Button
-        onClick={editCustomerDetailInfo}
-        style={{ width: 50 }}
-        type="submit"
-        priority="Primary"
-        appearance="Contained"
-        size="LG"
-      >
-        수정
-      </Button>
-      <Button
-        onClick={goToList}
-        style={{ width: 50 }}
-        type="submit"
-        priority="Primary"
-        appearance="Contained"
-        size="LG"
-      >
-        목록
-      </Button>
+      <Stack gap="SM" justifyContent="End">
+        <Button
+          onClick={editCustomerDetailInfo}
+          style={{ width: 50 }}
+          type="submit"
+          priority="Primary"
+          appearance="Contained"
+          size="LG"
+        >
+          수정
+        </Button>
+        <Button onClick={goToList} style={{ width: 50 }} type="submit" priority="Normal" appearance="Outline" size="LG">
+          목록
+        </Button>
+      </Stack>
       <Modal open={isOpen} onClose={() => setOpen(false)}>
         <Modal.Header>오류</Modal.Header>
         <Modal.Body>작성중인 Data가 있습니다. 작성을 취소하고 이동하시겠습니까? </Modal.Body>
