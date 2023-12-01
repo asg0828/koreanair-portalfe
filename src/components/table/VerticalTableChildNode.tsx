@@ -144,10 +144,7 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
               align={column.align ? column.align : AlignCode.CENTER}
               onClick={() => handleClick(row, index)}
             >
-              <Typography variant="body2">
-                {/* {row[column.field]} */}
-                {column.colSpan}
-              </Typography>
+              <Typography variant="body2">{row[column.field]}</Typography>
             </TD>
           ) : (
             <ChildRowGird columns={column.childName} row={row} index={index} />

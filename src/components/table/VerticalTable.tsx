@@ -35,10 +35,10 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
 
-    function formatNumber(value:number) {
-        return new Intl.NumberFormat('ko-KR').format(value);
-    }
-  
+  function formatNumber(value: number) {
+    return new Intl.NumberFormat('ko-KR').format(value);
+  }
+
   const handleCheckedChange = (isAll: boolean, checked: CheckedState, index: number): void => {
     checked = checked ? true : false;
     let newCheckedIndexList: Array<number> = [];
@@ -75,24 +75,24 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     isCheckbox && rowSelection(newCheckedIndexList, newCheckedList);
   };
 
-    const handleChangeSortDirection = (order: SortDirection, index: number) => {
-        const field = columns[index].field;
-        const oValue = order === SortDirectionCode.ASC ? 1 : -1;
+  const handleChangeSortDirection = (order: SortDirection, index: number) => {
+    const field = columns[index].field;
+    const oValue = order === SortDirectionCode.ASC ? 1 : -1;
 
-        const sortRows = [...rows].sort((a, b) => {
-            let valueA = a[field] || "";
-            let valueB = b[field] || "";
+    const sortRows = [...rows].sort((a, b) => {
+      let valueA = a[field] || '';
+      let valueB = b[field] || '';
 
-            if (typeof valueA === 'string' && valueA.startsWith('S')) {
-                valueA = parseFloat(valueA.substring(1));
-                valueB = parseFloat(valueB.substring(1));
-            } else if (typeof valueA === 'string') {
-                return valueA.localeCompare(valueB) * oValue;
-            }
-            return (valueA - valueB) * oValue;
-        });
-        setSortRows(sortRows);
-    };
+      if (typeof valueA === 'string' && valueA.startsWith('S')) {
+        valueA = parseFloat(valueA.substring(1));
+        valueB = parseFloat(valueB.substring(1));
+      } else if (typeof valueA === 'string') {
+        return valueA.localeCompare(valueB) * oValue;
+      }
+      return (valueA - valueB) * oValue;
+    });
+    setSortRows(sortRows);
+  };
 
   const handleClick = (row: RowsInfo, index: number) => {
     onClick && onClick(row, index);
@@ -124,7 +124,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                   key={`header-${index}`}
                   required={column.require}
                   colSpan={column.colSpan ? column.colSpan : undefined}
-                  // enableSort={column.field.length > 0 && enableSort}
+                  enableSort={column.field.length > 0 && enableSort}
                   onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
                 >
                   {column.headerName}
@@ -154,14 +154,14 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                     onClick={() => handleClick(row, rowIndex)}
                     className="verticalTableTD"
                   >
-                      {(() => {
-                          const columnData = columns[columnIndex];
-                          const data = row[columnData.field];
-                          if (typeof data === 'number' && columnData.field !== 'memberNumber') {
-                              return <Typography variant="body2">{formatNumber(data)}</Typography>;
-                          }
-                          return <Typography variant="body2">{data}</Typography>;
-                      })()}
+                    {(() => {
+                      const columnData = columns[columnIndex];
+                      const data = row[columnData.field];
+                      if (typeof data === 'number' && columnData.field !== 'memberNumber') {
+                        return <Typography variant="body2">{formatNumber(data)}</Typography>;
+                      }
+                      return <Typography variant="body2">{data}</Typography>;
+                    })()}
                   </TD>
                 ))}
               </TR>

@@ -51,7 +51,7 @@ export default function SamePnrUcild() {
         columns={oneIdSameColumn}
         // rows ={row}
         rows={oneIdSameData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}

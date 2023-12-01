@@ -258,7 +258,7 @@ export default function OneIdErrorHistory() {
         columns={errLogColumn}
         //rows = {row}
         rows={errLogData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}

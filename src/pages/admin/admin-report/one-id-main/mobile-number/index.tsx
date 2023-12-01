@@ -141,7 +141,7 @@ export default function MobileNumber() {
       <DataGrid
         columns={mobileColumn}
         rows={mobileData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}
@@ -151,7 +151,7 @@ export default function MobileNumber() {
         columns={mobMasterColumn}
         //rows = {row}
         rows={mobMasterData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}

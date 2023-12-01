@@ -1,8 +1,7 @@
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { useConversionCleansingHash, useConversionMetaphone } from '@/hooks/queries/useOneIdQueries';
 import { ConversionCleansingHashSearch, ConversionMetaphoneSearch } from '@/models/oneId/OneIdInfo';
-import { useToast, Button, Stack, TD, TH, TR, Typography } from '@ke-design/components';
-import { TextField } from '@mui/material';
+import { useToast, Button, Stack, TD, TH, TR, Typography, Modal, TextField } from '@ke-design/components';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function DataConversion() {
@@ -13,7 +12,7 @@ export default function DataConversion() {
   const [searchInfo2, setSearchInfo2] = useState<ConversionMetaphoneSearch>({
     bfConvertDoubleMetaphone: '',
   });
-
+  const [isOpen, setOpen] = useState(false);
   /* 변환된 값 */
   const [phoneNumCR, setPhoneNumCR] = useState('');
   const [eMailCR, setEmailCR] = useState('');
@@ -26,22 +25,22 @@ export default function DataConversion() {
   const { toast } = useToast();
 
   // refetch1
-  const handleSearch1 = useCallback(() => {
+  const handleSearch1 = () => {
     if (Object.values({ ...searchInfo }).every((value) => value === '')) {
-      alert('값을 입력하세요');
+      setOpen(true);
     } else {
       refetch1();
     }
-  }, [refetch1]);
+  };
 
   // refetch2
-  const handleSearch2 = useCallback(() => {
+  const handleSearch2 = () => {
     if (Object.values({ ...searchInfo2 }).every((value) => value === '')) {
-      alert('값을 입력하세요');
+      setOpen(true);
     } else {
       refetch2();
     }
-  }, [refetch2]);
+  };
 
   /* input state관리1 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -86,7 +85,7 @@ export default function DataConversion() {
         <HorizontalTable>
           <TR>
             <Stack direction="Vertical" style={{ borderRight: '1px solid #DADADA' }}>
-              <TH style={{ borderBottom: '1px solid #DADADA', height: '50%' }}>
+              <TH style={{ height: '50%' }}>
                 <TR style={{ border: 'none' }}>
                   <Stack direction="Vertical">
                     <TH style={{ border: 'none' }}>휴대전화번호</TH>
@@ -94,31 +93,31 @@ export default function DataConversion() {
                   </Stack>
                 </TR>
               </TH>
-              <TD style={{ height: '25%', border: 'none' }}></TD>
-              <TD style={{ height: '25%', border: 'none' }}></TD>
             </Stack>
 
-            <Stack direction="Vertical" style={{ borderLeft: '1px solid #DADADA' }}>
-              <TD style={{ borderBottom: '1px solid #DADADA', height: '50%', borderRight: 'none' }}>
+            <Stack direction="Vertical">
+              <TD style={{ height: '50%', borderRight: 'none' }}>
                 <TR style={{ border: 'none' }}>
-                  <Stack direction="Vertical" style={{ border: 'none' }}>
-                    <TextField
-                      placeholder="검색어를 입력하세요."
-                      onChange={onSearchChangeHandler}
-                      size="small"
-                      style={{ border: 'none' }}
-                    />
-                    <TextField
-                      placeholder="검색어를 입력하세요."
-                      onChange={onSearchChangeHandler}
-                      size="small"
-                      style={{ border: 'none' }}
-                    />
+                  <Stack direction="Vertical" style={{ minHeight: '50%', border: 'none' }}>
+                    <div className="componentWrapper" style={{ width: '100%' }}>
+                      <TextField
+                        id="inptPhone"
+                        placeholder="검색어를 입력하세요."
+                        onChange={onSearchChangeHandler}
+                        size="LG"
+                        style={{ marginBottom: '2px' }}
+                      />
+
+                      <TextField
+                        id="inptEmail"
+                        placeholder="검색어를 입력하세요."
+                        onChange={onSearchChangeHandler}
+                        size="LG"
+                      />
+                    </div>
                   </Stack>
                 </TR>
               </TD>
-              <TD style={{ height: '25%', border: 'none' }}></TD>
-              <TD style={{ height: '25%', border: 'none' }}></TD>
             </Stack>
 
             <TD style={{ borderLeft: '1px solid #DADADA' }}>
@@ -182,13 +181,16 @@ export default function DataConversion() {
           <TR>
             <TH>영문 이름 + 성</TH>
             <TD>
-              <TextField
-                name="bfConvertDoubleMetaphone"
-                id="bfConvertDoubleMetaphone"
-                placeholder="검색어를 입력하세요."
-                value={searchInfo2.bfConvertDoubleMetaphone}
-                onChange={onSearchChangeHandler}
-              />
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  name="bfConvertDoubleMetaphone"
+                  id="bfConvertDoubleMetaphone"
+                  placeholder="검색어를 입력하세요."
+                  value={searchInfo2.bfConvertDoubleMetaphone}
+                  onChange={onSearchChangeHandler}
+                  size="LG"
+                />
+              </div>
             </TD>
             <TD>
               <Button appearance="Outline" priority="Normal" shape="Square" size="LG" onClick={handleSearch2}>
@@ -199,6 +201,21 @@ export default function DataConversion() {
             <TD>{afConvertDoubleMetaphone}</TD>
           </TR>
         </HorizontalTable>
+        <Modal open={isOpen} onClose={() => setOpen(false)}>
+          <Modal.Header>오류</Modal.Header>
+          <Modal.Body>값을 입력하세요.</Modal.Body>
+          <Modal.Footer>
+            <Button
+              priority="Primary"
+              appearance="Contained"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              확인
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </Stack>
     </Stack>
   );

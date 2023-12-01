@@ -361,7 +361,7 @@ export default function OneIdMasterHistory() {
       <DataGrid
         columns={masterColumn}
         rows={onIdPaxData}
-        enableSort={true}
+        enableSort={false}
         page={page}
         onChange={(flag: 'master') => handlePage(page, flag)}
       />
@@ -370,7 +370,7 @@ export default function OneIdMasterHistory() {
       <DataGrid
         columns={historyColumn}
         rows={onIdPaxData}
-        enableSort={true}
+        enableSort={false}
         page={page}
         onChange={(flag: 'history') => handlePage(page2, flag)}
       />

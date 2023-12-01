@@ -189,7 +189,7 @@ export default function PaxMapping() {
         columns={oneIdPaxColumn}
         // rows = {row}
         rows={onIdPaxData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}

@@ -171,7 +171,7 @@ export default function Ctivoc() {
         columns={ctiVocColumn}
         //row   = {row}
         rows={ctiVocData}
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         onChange={handlePage}
       />
