@@ -1,214 +1,215 @@
-export const dummyData = {
-    "status":"success",
-    "data":{
-        "contents":[
-            {
-                "Rank":1,
-                "oneId":"S199901095780332",
-                "memberNumber":713527586362.0,
-                "name":"홍길동",
-                "vipYn":"HV, SS",
-                "purchaseAmount":468274800.0,
-                "purchaseCount":59,
-                "domesticAmount":null,
-                "internationalAmount":468274800.0,
-                "FrCount":14.0,
-                "PrCount":59
-            },
-            {
-                "Rank":2,
-                "oneId":"S199305276753490",
-                "memberNumber":112616251595.0,
-                "name":"김철수",
-                "vipYn":null,
-                "purchaseAmount":452559200.0,
-                "purchaseCount":31,
-                "domesticAmount":null,
-                "internationalAmount":452559200.0,
-                "FrCount":null,
-                "PrCount":31
-            },
-            {
-                "Rank":3,
-                "oneId":"S199505059871937",
-                "memberNumber":112926332744.0,
-                "name":"노홍철",
-                "vipYn":null,
-                "purchaseAmount":326794800.0,
-                "purchaseCount":35,
-                "domesticAmount":1155000.0,
-                "internationalAmount":325639800.0,
-                "FrCount":null,
-                "PrCount":35
-            },
-            {
-                "Rank":4,
-                "oneId":"S199509238031236",
-                "memberNumber":112925641627.0,
-                "name":"유재석",
-                "vipYn":null,
-                "purchaseAmount":235922000.0,
-                "purchaseCount":25,
-                "domesticAmount":null,
-                "internationalAmount":235922000.0,
-                "FrCount":1.0,
-                "PrCount":25
-            },
-            {
-                "Rank":5,
-                "oneId":"S199310143700299",
-                "memberNumber":112516996734.0,
-                "name":"윤석열",
-                "vipYn":"HV, SS",
-                "purchaseAmount":197749200.0,
-                "purchaseCount":181,
-                "domesticAmount":17172000.0,
-                "internationalAmount":180577200.0,
-                "FrCount":22.0,
-                "PrCount":181
-            },
-            {
-                "Rank":6,
-                "oneId":"S199310192553705",
-                "memberNumber":112615787971.0,
-                "name":"길동3266/홍(GILDONG3266/HONG)",
-                "vipYn":"HV",
-                "purchaseAmount":196810300.0,
-                "purchaseCount":195,
-                "domesticAmount":16468800.0,
-                "internationalAmount":180341500.0,
-                "FrCount":26.0,
-                "PrCount":195
-            },
-            {
-                "Rank":7,
-                "oneId":"S201611219367815",
-                "memberNumber":120618250243.0,
-                "name":"길동7186/홍(GILDONG786/HONG)",
-                "vipYn":"HV",
-                "purchaseAmount":172339100.0,
-                "purchaseCount":110,
-                "domesticAmount":2414000.0,
-                "internationalAmount":169925100.0,
-                "FrCount":null,
-                "PrCount":110
-            },
-            {
-                "Rank":8,
-                "oneId":"S199801010404017",
-                "memberNumber":112817870998.0,
-                "name":"길동2801/홍(GILDONG2801/HONG)",
-                "vipYn":"HV",
-                "purchaseAmount":167698635.0,
-                "purchaseCount":162,
-                "domesticAmount":10585400.0,
-                "internationalAmount":157113235.0,
-                "FrCount":4.0,
-                "PrCount":162
-            },
-            {
-                "Rank":9,
-                "oneId":"S199602238991439",
-                "memberNumber":112418214884.0,
-                "name":"길동3029/홍(GILDONG3029/HONG)",
-                "vipYn":"HV",
-                "purchaseAmount":166453800.0,
-                "purchaseCount":112,
-                "domesticAmount":3887000.0,
-                "internationalAmount":162566800.0,
-                "FrCount":1.0,
-                "PrCount":112
-            },
-            {
-                "Rank":10,
-                "oneId":"S199701172200921",
-                "memberNumber":113227436778.0,
-                "name":"길동2900/홍(GILDONG2900/HONG)",
-                "vipYn":"HV",
-                "purchaseAmount":154222164.0,
-                "purchaseCount":50,
-                "domesticAmount":500000.0,
-                "internationalAmount":153722164.0,
-                "FrCount":1.0,
-                "PrCount":50
-            },
-            {
-                "Rank":11,
-                "oneId":"S199608117270507",
-                "memberNumber":112319263263.0,
-                "name":"길동2975/홍(GILDONG2975/HONG)",
-                "vipYn":"HV",
-                "purchaseAmount":145823942.0,
-                "purchaseCount":17,
-                "domesticAmount":null,
-                "internationalAmount":145823942.0,
-                "FrCount":8.0,
-                "PrCount":17
-            },
-            {
-                "Rank":12,
-                "oneId":"S199801011916155",
-                "memberNumber":114317009554.0,
-                "name":"길동2800/홍(GILDONG2800/HONG)",
-                "vipYn":null,
-                "purchaseAmount":136744000.0,
-                "purchaseCount":18,
-                "domesticAmount":null,
-                "internationalAmount":136744000.0,
-                "FrCount":null,
-                "PrCount":18
-            },
-            {
-                "Rank":13,
-                "oneId":"S199709152951127",
-                "memberNumber":113617382119.0,
-                "name":"길동2833/홍(GILDONG2833/HONG)",
-                "vipYn":"HV",
-                "purchaseAmount":129738000.0,
-                "purchaseCount":33,
-                "domesticAmount":730000.0,
-                "internationalAmount":129008000.0,
-                "FrCount":null,
-                "PrCount":33
-            },
-            {
-                "Rank":14,
-                "oneId":"S200307141047726",
-                "memberNumber":113818060811.0,
-                "name":"길동2220/홍(GILDONG2220/HONG)",
-                "vipYn":null,
-                "purchaseAmount":129360450.0,
-                "purchaseCount":17,
-                "domesticAmount":null,
-                "internationalAmount":129360450.0,
-                "FrCount":null,
-                "PrCount":17
-            },
-            {
-                "Rank":15,
-                "oneId":"S199708202883975",
-                "memberNumber":114027150649.0,
-                "name":"길동2836/홍(GILDONG2836/HONG)",
-                "vipYn":null,
-                "purchaseAmount":122379544.0,
-                "purchaseCount":23,
-                "domesticAmount":186000.0,
-                "internationalAmount":122193544.0,
-                "FrCount":1.0,
-                "PrCount":23
-            },
+export const dummyData =
+{
+    "status": "success",
+    "data": {
+    "contents": [
+        {
+            "Rank": 1,
+            "oneId": "S199901095780332",
+            "memberNumber": 713527586362.0,
+            "name": "길동7186/홍(GILDONG786/HONG)",
+            "vipYn": "HV, SS",
+            "income": 468274800.0,
+            "boardingCount": 59,
+            "purchaseAmount": null,
+            "bonusBoardingCount": 123,
+            "PrCount": 14.0,
+            "avgBoardingCycle": 59
+        },
+        {
+            "Rank": 2,
+            "oneId": "S199305276753490",
+            "memberNumber": 112616251595.0,
+            "name": "길동7186/홍(GILDONG786/HONG)",
+            "vipYn": null,
+            "income": 452559200.0,
+            "boardingCount": 31,
+            "purchaseAmount": null,
+            "bonusBoardingCount": 456,
+            "PrCount": 21,
+            "avgBoardingCycle": 31
+        },
+        {
+            "Rank": 3,
+            "oneId": "S199505059871937",
+            "memberNumber": 112926332744.0,
+            "name": "길동7186/홍(GILDONG786/HONG)",
+            "vipYn": null,
+            "income": 326794800.0,
+            "boardingCount": 35,
+            "purchaseAmount": 1155000.0,
+            "bonusBoardingCount": 325,
+            "PrCount": 24,
+            "avgBoardingCycle": 35
+        },
+        {
+            "Rank": 4,
+            "oneId": "S199509238031236",
+            "memberNumber": 112925641627.0,
+            "name": "길동7186/홍(GILDONG786/HONG)",
+            "vipYn": null,
+            "income": 235922000.0,
+            "boardingCount": 25,
+            "purchaseAmount": null,
+            "bonusBoardingCount": 236,
+            "PrCount": 1.0,
+            "avgBoardingCycle": 25
+        },
+        {
+            "Rank": 5,
+            "oneId": "S199310143700299",
+            "memberNumber": 112516996734.0,
+            "name": "길동7186/홍(GILDONG786/HONG)",
+            "vipYn": "HV, SS",
+            "income": 197749200.0,
+            "boardingCount": 181,
+            "purchaseAmount": 17172000.0,
+            "bonusBoardingCount": 180,
+            "PrCount": 22.0,
+            "avgBoardingCycle": 181
+        },
+        {
+            "Rank": 6,
+            "oneId": "S199310192553705",
+            "memberNumber": 112615787971.0,
+            "name": "길동3266/홍(GILDONG3266/HONG)",
+            "vipYn": "HV",
+            "income": 196810300.0,
+            "boardingCount": 195,
+            "purchaseAmount": 16468800.0,
+            "bonusBoardingCount": 180,
+            "PrCount": 26.0,
+            "avgBoardingCycle": 195
+        },
+        {
+            "Rank": 7,
+            "oneId": "S201611219367815",
+            "memberNumber": 120618250243.0,
+            "name": "길동7186/홍(GILDONG786/HONG)",
+            "vipYn": "HV",
+            "income": 172339100.0,
+            "boardingCount": 110,
+            "purchaseAmount": 2414000.0,
+            "bonusBoardingCount": 169,
+            "PrCount": null,
+            "avgBoardingCycle": 110
+        },
+        {
+            "Rank": 8,
+            "oneId": "S199801010404017",
+            "memberNumber": 112817870998.0,
+            "name": "길동2801/홍(GILDONG2801/HONG)",
+            "vipYn": "HV",
+            "income": 167698635.0,
+            "boardingCount": 162,
+            "purchaseAmount": 10585400.0,
+            "bonusBoardingCount": 157,
+            "PrCount": 4.0,
+            "avgBoardingCycle": 162
+        },
+        {
+            "Rank": 9,
+            "oneId": "S199602238991439",
+            "memberNumber": 112418214884.0,
+            "name": "길동3029/홍(GILDONG3029/HONG)",
+            "vipYn": "HV",
+            "income": 166453800.0,
+            "boardingCount": 112,
+            "purchaseAmount": 3887000.0,
+            "bonusBoardingCount": 162,
+            "PrCount": 1.0,
+            "avgBoardingCycle": 112
+        },
+        {
+            "Rank": 10,
+            "oneId": "S199701172200921",
+            "memberNumber": 113227436778.0,
+            "name": "길동2900/홍(GILDONG2900/HONG)",
+            "vipYn": "HV",
+            "income": 154222164.0,
+            "boardingCount": 50,
+            "purchaseAmount": 500000.0,
+            "bonusBoardingCount": 153,
+            "PrCount": 1.0,
+            "avgBoardingCycle": 50
+        },
+        {
+            "Rank": 11,
+            "oneId": "S199608117270507",
+            "memberNumber": 112319263263.0,
+            "name": "길동2975/홍(GILDONG2975/HONG)",
+            "vipYn": "HV",
+            "income": 145823942.0,
+            "boardingCount": 17,
+            "purchaseAmount": null,
+            "bonusBoardingCount": 145,
+            "PrCount": 8.0,
+            "avgBoardingCycle": 17
+        },
+        {
+            "Rank": 12,
+            "oneId": "S199801011916155",
+            "memberNumber": 114317009554.0,
+            "name": "길동2800/홍(GILDONG2800/HONG)",
+            "vipYn": null,
+            "income": 136744000.0,
+            "boardingCount": 18,
+            "purchaseAmount": null,
+            "bonusBoardingCount": 136,
+            "PrCount": null,
+            "avgBoardingCycle": 18
+        },
+        {
+            "Rank": 13,
+            "oneId": "S199709152951127",
+            "memberNumber": 113617382119.0,
+            "name": "길동2833/홍(GILDONG2833/HONG)",
+            "vipYn": "HV",
+            "income": 129738000.0,
+            "boardingCount": 33,
+            "purchaseAmount": 730000.0,
+            "bonusBoardingCount": 129,
+            "PrCount": null,
+            "avgBoardingCycle": 33
+        },
+        {
+            "Rank": 14,
+            "oneId": "S200307141047726",
+            "memberNumber": 113818060811.0,
+            "name": "길동2220/홍(GILDONG2220/HONG)",
+            "vipYn": null,
+            "income": 129360450.0,
+            "boardingCount": 17,
+            "purchaseAmount": null,
+            "bonusBoardingCount": 129,
+            "PrCount": null,
+            "avgBoardingCycle": 17
+        },
+        {
+            "Rank": 15,
+            "oneId": "S199708202883975",
+            "memberNumber": 114027150649.0,
+            "name": "길동2836/홍(GILDONG2836/HONG)",
+            "vipYn": null,
+            "income": 122379544.0,
+            "boardingCount": 23,
+            "purchaseAmount": 186000.0,
+            "bonusBoardingCount": 122,
+            "PrCount": 1.0,
+            "avgBoardingCycle": 23
+        },
             {
                 "Rank":16,
                 "oneId":"S199910178216266",
                 "memberNumber":114116604989.0,
                 "name":"길동2629/홍(GILDONG2629/HONG)",
                 "vipYn":null,
-                "purchaseAmount":108380600.0,
-                "purchaseCount":69,
-                "domesticAmount":249000.0,
-                "internationalAmount":108131600.0,
-                "FrCount":null,
-                "PrCount":69
+                "income":108380600.0,
+                "boardingCount":69,
+                "purchaseAmount":249000.0,
+                "bonusBoardingCount":108131600.0,
+                "PrCount":null,
+                "avgBoardingCycle":69
             },
             {
                 "Rank":17,
@@ -216,12 +217,12 @@ export const dummyData = {
                 "memberNumber":114116604989.0,
                 "name":"길동3721/홍(GILDONG3721/HONG)",
                 "vipYn":null,
-                "purchaseAmount":105499000.0,
-                "purchaseCount":2,
-                "domesticAmount":null,
-                "internationalAmount":105499000.0,
-                "FrCount":null,
-                "PrCount":2
+                "income":105499000.0,
+                "boardingCount":2,
+                "purchaseAmount":null,
+                "bonusBoardingCount":105499000.0,
+                "PrCount":null,
+                "avgBoardingCycle":2
             },
             {
                 "Rank":18,
@@ -229,12 +230,12 @@ export const dummyData = {
                 "memberNumber":112415871213.0,
                 "name":"길동3383/홍(GILDONG3383/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":99815031.0,
-                "purchaseCount":43,
-                "domesticAmount":1673500.0,
-                "internationalAmount":98141531.0,
-                "FrCount":2.0,
-                "PrCount":43
+                "income":99815031.0,
+                "boardingCount":43,
+                "purchaseAmount":1673500.0,
+                "bonusBoardingCount":98141531.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":43
             },
             {
                 "Rank":19,
@@ -242,12 +243,12 @@ export const dummyData = {
                 "memberNumber":114317374668.0,
                 "name":"길동2595/홍(GILDONG2595/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":97568800.0,
-                "purchaseCount":32,
-                "domesticAmount":941000.0,
-                "internationalAmount":96627800.0,
-                "FrCount":null,
-                "PrCount":33
+                "income":97568800.0,
+                "boardingCount":32,
+                "purchaseAmount":941000.0,
+                "bonusBoardingCount":96627800.0,
+                "PrCount":null,
+                "avgBoardingCycle":33
             },
             {
                 "Rank":20,
@@ -255,12 +256,12 @@ export const dummyData = {
                 "memberNumber":112421264064.0,
                 "name":"길동1081/홍(GILDONG1081/HONG)",
                 "vipYn":null,
-                "purchaseAmount":87593400.0,
-                "purchaseCount":343,
-                "domesticAmount":29057700.0,
-                "internationalAmount":58535700.0,
-                "FrCount":2.0,
-                "PrCount":343
+                "income":87593400.0,
+                "boardingCount":343,
+                "purchaseAmount":29057700.0,
+                "bonusBoardingCount":58535700.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":343
             },
             {
                 "Rank":21,
@@ -268,12 +269,12 @@ export const dummyData = {
                 "memberNumber":112418043178.0,
                 "name":"길동3055/홍(GILDONG3055/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":84787270.0,
-                "purchaseCount":80,
-                "domesticAmount":1541700.0,
-                "internationalAmount":83245570.0,
-                "FrCount":2.0,
-                "PrCount":80
+                "income":84787270.0,
+                "boardingCount":80,
+                "purchaseAmount":1541700.0,
+                "bonusBoardingCount":83245570.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":80
             },
             {
                 "Rank":22,
@@ -281,12 +282,12 @@ export const dummyData = {
                 "memberNumber":112729310113.0,
                 "name":"길동2463/홍(GILDONG2463/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":83780400.0,
-                "purchaseCount":24,
-                "domesticAmount":234000.0,
-                "internationalAmount":83546400.0,
-                "FrCount":null,
-                "PrCount":24
+                "income":83780400.0,
+                "boardingCount":24,
+                "purchaseAmount":234000.0,
+                "bonusBoardingCount":83546400.0,
+                "PrCount":null,
+                "avgBoardingCycle":24
             },
             {
                 "Rank":23,
@@ -294,12 +295,12 @@ export const dummyData = {
                 "memberNumber":115017856912.0,
                 "name":"길동1872/홍(GILDONG1872/HONG)",
                 "vipYn":null,
-                "purchaseAmount":81156100.0,
-                "purchaseCount":40,
-                "domesticAmount":null,
-                "internationalAmount":81156100.0,
-                "FrCount":1.0,
-                "PrCount":40
+                "income":81156100.0,
+                "boardingCount":40,
+                "purchaseAmount":null,
+                "bonusBoardingCount":81156100.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":40
             },
             {
                 "Rank":24,
@@ -307,12 +308,12 @@ export const dummyData = {
                 "memberNumber":113527442158.0,
                 "name":"길동2810/홍(GILDONG2810/HONG)",
                 "vipYn":null,
-                "purchaseAmount":75986400.0,
-                "purchaseCount":40,
-                "domesticAmount":1370000.0,
-                "internationalAmount":74616400.0,
-                "FrCount":null,
-                "PrCount":40
+                "income":75986400.0,
+                "boardingCount":40,
+                "purchaseAmount":1370000.0,
+                "bonusBoardingCount":74616400.0,
+                "PrCount":null,
+                "avgBoardingCycle":40
             },
             {
                 "Rank":25,
@@ -320,12 +321,12 @@ export const dummyData = {
                 "memberNumber":112517336341.0,
                 "name":"길동3228/홍(GILDONG3228/HONG)",
                 "vipYn":null,
-                "purchaseAmount":75968400.0,
-                "purchaseCount":426,
-                "domesticAmount":53307900.0,
-                "internationalAmount":22660500.0,
-                "FrCount":null,
-                "PrCount":426
+                "income":75968400.0,
+                "boardingCount":426,
+                "purchaseAmount":53307900.0,
+                "bonusBoardingCount":22660500.0,
+                "PrCount":null,
+                "avgBoardingCycle":426
             },
             {
                 "Rank":26,
@@ -333,12 +334,12 @@ export const dummyData = {
                 "memberNumber":114617181852.0,
                 "name":"길동2643/홍(GILDONG2643/HONG)",
                 "vipYn":null,
-                "purchaseAmount":75953100.0,
-                "purchaseCount":53,
-                "domesticAmount":4287000.0,
-                "internationalAmount":71666100.0,
-                "FrCount":2.0,
-                "PrCount":53
+                "income":75953100.0,
+                "boardingCount":53,
+                "purchaseAmount":4287000.0,
+                "bonusBoardingCount":71666100.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":53
             },
             {
                 "Rank":27,
@@ -346,12 +347,12 @@ export const dummyData = {
                 "memberNumber":113517201706.0,
                 "name":"길동2943/홍(GILDONG2943/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":74786601.0,
-                "purchaseCount":58,
-                "domesticAmount":2139000.0,
-                "internationalAmount":72647601.0,
-                "FrCount":4.0,
-                "PrCount":58
+                "income":74786601.0,
+                "boardingCount":58,
+                "purchaseAmount":2139000.0,
+                "bonusBoardingCount":72647601.0,
+                "PrCount":4.0,
+                "avgBoardingCycle":58
             },
             {
                 "Rank":28,
@@ -359,12 +360,12 @@ export const dummyData = {
                 "memberNumber":112516289977.0,
                 "name":"길동3328/홍(GILDONG3328/HONG)",
                 "vipYn":"HV, SS",
-                "purchaseAmount":74727100.0,
-                "purchaseCount":294,
-                "domesticAmount":17537700.0,
-                "internationalAmount":57189400.0,
-                "FrCount":null,
-                "PrCount":294
+                "income":74727100.0,
+                "boardingCount":294,
+                "purchaseAmount":17537700.0,
+                "bonusBoardingCount":57189400.0,
+                "PrCount":null,
+                "avgBoardingCycle":294
             },
             {
                 "Rank":29,
@@ -372,12 +373,12 @@ export const dummyData = {
                 "memberNumber":114918333653.0,
                 "name":"길동1495/홍(GILDONG1495/HONG)",
                 "vipYn":null,
-                "purchaseAmount":74205361.0,
-                "purchaseCount":97,
-                "domesticAmount":5525061.0,
-                "internationalAmount":68680300.0,
-                "FrCount":6.0,
-                "PrCount":97
+                "income":74205361.0,
+                "boardingCount":97,
+                "purchaseAmount":5525061.0,
+                "bonusBoardingCount":68680300.0,
+                "PrCount":6.0,
+                "avgBoardingCycle":97
             },
             {
                 "Rank":30,
@@ -385,12 +386,12 @@ export const dummyData = {
                 "memberNumber":112415924543.0,
                 "name":"길동3412/홍(GILDONG3412/HONG)",
                 "vipYn":null,
-                "purchaseAmount":72477900.0,
-                "purchaseCount":74,
-                "domesticAmount":7279000.0,
-                "internationalAmount":65198900.0,
-                "FrCount":2.0,
-                "PrCount":74
+                "income":72477900.0,
+                "boardingCount":74,
+                "purchaseAmount":7279000.0,
+                "bonusBoardingCount":65198900.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":74
             },
             {
                 "Rank":31,
@@ -398,12 +399,12 @@ export const dummyData = {
                 "memberNumber":113927543724.0,
                 "name":"길동2579/홍(GILDONG2579/HONG)",
                 "vipYn":null,
-                "purchaseAmount":71818600.0,
-                "purchaseCount":34,
-                "domesticAmount":531000.0,
-                "internationalAmount":71287600.0,
-                "FrCount":1.0,
-                "PrCount":34
+                "income":71818600.0,
+                "boardingCount":34,
+                "purchaseAmount":531000.0,
+                "bonusBoardingCount":71287600.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":34
             },
             {
                 "Rank":32,
@@ -411,12 +412,12 @@ export const dummyData = {
                 "memberNumber":115317484605.0,
                 "name":"길동2192/홍(GILDONG2192/HONG)",
                 "vipYn":null,
-                "purchaseAmount":71482400.0,
-                "purchaseCount":24,
-                "domesticAmount":0.0,
-                "internationalAmount":71482400.0,
-                "FrCount":1.0,
-                "PrCount":24
+                "income":71482400.0,
+                "boardingCount":24,
+                "purchaseAmount":0.0,
+                "bonusBoardingCount":71482400.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":24
             },
             {
                 "Rank":33,
@@ -424,12 +425,12 @@ export const dummyData = {
                 "memberNumber":214615915229.0,
                 "name":"길동2162/홍(GILDONG2162/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":69796695.0,
-                "purchaseCount":79,
-                "domesticAmount":423000.0,
-                "internationalAmount":69373695.0,
-                "FrCount":8.0,
-                "PrCount":79
+                "income":69796695.0,
+                "boardingCount":79,
+                "purchaseAmount":423000.0,
+                "bonusBoardingCount":69373695.0,
+                "PrCount":8.0,
+                "avgBoardingCycle":79
             },
             {
                 "Rank":34,
@@ -437,12 +438,12 @@ export const dummyData = {
                 "memberNumber":114018275404.0,
                 "name":"길동1936/홍(GILDONG1936/HONG)",
                 "vipYn":null,
-                "purchaseAmount":69073100.0,
-                "purchaseCount":71,
-                "domesticAmount":1406000.0,
-                "internationalAmount":67667100.0,
-                "FrCount":1.0,
-                "PrCount":71
+                "income":69073100.0,
+                "boardingCount":71,
+                "purchaseAmount":1406000.0,
+                "bonusBoardingCount":67667100.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":71
             },
             {
                 "Rank":35,
@@ -450,12 +451,12 @@ export const dummyData = {
                 "memberNumber":112717152064.0,
                 "name":"길동3167/홍(GILDONG3167/HONG)",
                 "vipYn":null,
-                "purchaseAmount":69044300.0,
-                "purchaseCount":85,
-                "domesticAmount":3310800.0,
-                "internationalAmount":65733500.0,
-                "FrCount":4.0,
-                "PrCount":85
+                "income":69044300.0,
+                "boardingCount":85,
+                "purchaseAmount":3310800.0,
+                "bonusBoardingCount":65733500.0,
+                "PrCount":4.0,
+                "avgBoardingCycle":85
             },
             {
                 "Rank":36,
@@ -463,12 +464,12 @@ export const dummyData = {
                 "memberNumber":120429208489.0,
                 "name":"길동8718/홍(GILDONG878/HONG)",
                 "vipYn":null,
-                "purchaseAmount":68878243.0,
-                "purchaseCount":12,
-                "domesticAmount":673000.0,
-                "internationalAmount":68205243.0,
-                "FrCount":null,
-                "PrCount":12
+                "income":68878243.0,
+                "boardingCount":12,
+                "purchaseAmount":673000.0,
+                "bonusBoardingCount":68205243.0,
+                "PrCount":null,
+                "avgBoardingCycle":12
             },
             {
                 "Rank":37,
@@ -476,12 +477,12 @@ export const dummyData = {
                 "memberNumber":114317097476.0,
                 "name":"길동2746/홍(GILDONG2746/HONG)",
                 "vipYn":null,
-                "purchaseAmount":68293602.0,
-                "purchaseCount":29,
-                "domesticAmount":560000.0,
-                "internationalAmount":67733602.0,
-                "FrCount":2.0,
-                "PrCount":29
+                "income":68293602.0,
+                "boardingCount":29,
+                "purchaseAmount":560000.0,
+                "bonusBoardingCount":67733602.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":29
             },
             {
                 "Rank":38,
@@ -489,12 +490,12 @@ export const dummyData = {
                 "memberNumber":113217133772.0,
                 "name":"길동3037/홍(GILDONG3037/HONG)",
                 "vipYn":null,
-                "purchaseAmount":67806800.0,
-                "purchaseCount":189,
-                "domesticAmount":8985000.0,
-                "internationalAmount":58729800.0,
-                "FrCount":null,
-                "PrCount":189
+                "income":67806800.0,
+                "boardingCount":189,
+                "purchaseAmount":8985000.0,
+                "bonusBoardingCount":58729800.0,
+                "PrCount":null,
+                "avgBoardingCycle":189
             },
             {
                 "Rank":39,
@@ -502,12 +503,12 @@ export const dummyData = {
                 "memberNumber":112917198973.0,
                 "name":"길동3119/홍(GILDONG3119/HONG)",
                 "vipYn":null,
-                "purchaseAmount":64657200.0,
-                "purchaseCount":153,
-                "domesticAmount":20693000.0,
-                "internationalAmount":43964200.0,
-                "FrCount":1.0,
-                "PrCount":153
+                "income":64657200.0,
+                "boardingCount":153,
+                "purchaseAmount":20693000.0,
+                "bonusBoardingCount":43964200.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":153
             },
             {
                 "Rank":40,
@@ -515,12 +516,12 @@ export const dummyData = {
                 "memberNumber":114616285271.0,
                 "name":"길동2248/홍(GILDONG2248/HONG)",
                 "vipYn":"SS",
-                "purchaseAmount":64432700.0,
-                "purchaseCount":865,
-                "domesticAmount":56082000.0,
-                "internationalAmount":8350700.0,
-                "FrCount":null,
-                "PrCount":865
+                "income":64432700.0,
+                "boardingCount":865,
+                "purchaseAmount":56082000.0,
+                "bonusBoardingCount":8350700.0,
+                "PrCount":null,
+                "avgBoardingCycle":865
             },
             {
                 "Rank":41,
@@ -528,12 +529,12 @@ export const dummyData = {
                 "memberNumber":112415243173.0,
                 "name":"길동3400/홍(GILDONG3400/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":64260600.0,
-                "purchaseCount":36,
-                "domesticAmount":430900.0,
-                "internationalAmount":63829700.0,
-                "FrCount":3.0,
-                "PrCount":36
+                "income":64260600.0,
+                "boardingCount":36,
+                "purchaseAmount":430900.0,
+                "bonusBoardingCount":63829700.0,
+                "PrCount":3.0,
+                "avgBoardingCycle":36
             },
             {
                 "Rank":42,
@@ -541,12 +542,12 @@ export const dummyData = {
                 "memberNumber":113118153124.0,
                 "name":"길동2421/홍(GILDONG2421/HONG)",
                 "vipYn":null,
-                "purchaseAmount":64055234.0,
-                "purchaseCount":14,
-                "domesticAmount":410000.0,
-                "internationalAmount":63645234.0,
-                "FrCount":null,
-                "PrCount":14
+                "income":64055234.0,
+                "boardingCount":14,
+                "purchaseAmount":410000.0,
+                "bonusBoardingCount":63645234.0,
+                "PrCount":null,
+                "avgBoardingCycle":14
             },
             {
                 "Rank":43,
@@ -554,12 +555,12 @@ export const dummyData = {
                 "memberNumber":113028375945.0,
                 "name":"길동2271/홍(GILDONG2271/HONG)",
                 "vipYn":null,
-                "purchaseAmount":62677300.0,
-                "purchaseCount":16,
-                "domesticAmount":105300.0,
-                "internationalAmount":62572000.0,
-                "FrCount":null,
-                "PrCount":16
+                "income":62677300.0,
+                "boardingCount":16,
+                "purchaseAmount":105300.0,
+                "bonusBoardingCount":62572000.0,
+                "PrCount":null,
+                "avgBoardingCycle":16
             },
             {
                 "Rank":44,
@@ -567,12 +568,12 @@ export const dummyData = {
                 "memberNumber":115217721501.0,
                 "name":"길동213/홍(GILDONG213/HONG)",
                 "vipYn":"OT",
-                "purchaseAmount":62219440.0,
-                "purchaseCount":145,
-                "domesticAmount":4372800.0,
-                "internationalAmount":57846640.0,
-                "FrCount":null,
-                "PrCount":151
+                "income":62219440.0,
+                "boardingCount":145,
+                "purchaseAmount":4372800.0,
+                "bonusBoardingCount":57846640.0,
+                "PrCount":null,
+                "avgBoardingCycle":151
             },
             {
                 "Rank":45,
@@ -580,12 +581,12 @@ export const dummyData = {
                 "memberNumber":112315790789.0,
                 "name":"길동3424/홍(GILDONG3424/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":59655225.78,
-                "purchaseCount":97,
-                "domesticAmount":1757500.0,
-                "internationalAmount":57897725.78,
-                "FrCount":1.0,
-                "PrCount":97
+                "income":59655225.78,
+                "boardingCount":97,
+                "purchaseAmount":1757500.0,
+                "bonusBoardingCount":57897725.78,
+                "PrCount":1.0,
+                "avgBoardingCycle":97
             },
             {
                 "Rank":46,
@@ -593,12 +594,12 @@ export const dummyData = {
                 "memberNumber":712328287046.0,
                 "name":"길동3138/홍(GILDONG3138/HONG)",
                 "vipYn":null,
-                "purchaseAmount":57399700.0,
-                "purchaseCount":37,
-                "domesticAmount":null,
-                "internationalAmount":57399700.0,
-                "FrCount":1.0,
-                "PrCount":37
+                "income":57399700.0,
+                "boardingCount":37,
+                "purchaseAmount":null,
+                "bonusBoardingCount":57399700.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":37
             },
             {
                 "Rank":47,
@@ -606,12 +607,12 @@ export const dummyData = {
                 "memberNumber":112426396018.0,
                 "name":"길동3362/홍(GILDONG3362/HONG)",
                 "vipYn":null,
-                "purchaseAmount":54971900.0,
-                "purchaseCount":469,
-                "domesticAmount":27063900.0,
-                "internationalAmount":27846000.0,
-                "FrCount":2.0,
-                "PrCount":469
+                "income":54971900.0,
+                "boardingCount":469,
+                "purchaseAmount":27063900.0,
+                "bonusBoardingCount":27846000.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":469
             },
             {
                 "Rank":48,
@@ -619,12 +620,12 @@ export const dummyData = {
                 "memberNumber":112317498511.0,
                 "name":"길동3300/홍(GILDONG3300/HONG)",
                 "vipYn":null,
-                "purchaseAmount":53954600.0,
-                "purchaseCount":30,
-                "domesticAmount":385000.0,
-                "internationalAmount":53569600.0,
-                "FrCount":null,
-                "PrCount":30
+                "income":53954600.0,
+                "boardingCount":30,
+                "purchaseAmount":385000.0,
+                "bonusBoardingCount":53569600.0,
+                "PrCount":null,
+                "avgBoardingCycle":30
             },
             {
                 "Rank":49,
@@ -632,12 +633,12 @@ export const dummyData = {
                 "memberNumber":115428505665.0,
                 "name":"길동1125/홍(GILDONG1125/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":53675520.0,
-                "purchaseCount":22,
-                "domesticAmount":651000.0,
-                "internationalAmount":53024520.0,
-                "FrCount":7.0,
-                "PrCount":22
+                "income":53675520.0,
+                "boardingCount":22,
+                "purchaseAmount":651000.0,
+                "bonusBoardingCount":53024520.0,
+                "PrCount":7.0,
+                "avgBoardingCycle":22
             },
             {
                 "Rank":50,
@@ -645,12 +646,12 @@ export const dummyData = {
                 "memberNumber":112317972511.0,
                 "name":"길동3261/홍(GILDONG3261/HONG)",
                 "vipYn":null,
-                "purchaseAmount":53206894.0,
-                "purchaseCount":144,
-                "domesticAmount":12938000.0,
-                "internationalAmount":40268894.0,
-                "FrCount":null,
-                "PrCount":144
+                "income":53206894.0,
+                "boardingCount":144,
+                "purchaseAmount":12938000.0,
+                "bonusBoardingCount":40268894.0,
+                "PrCount":null,
+                "avgBoardingCycle":144
             },
             {
                 "Rank":51,
@@ -658,12 +659,12 @@ export const dummyData = {
                 "memberNumber":115327329421.0,
                 "name":"길동2299/홍(GILDONG2299/HONG)",
                 "vipYn":null,
-                "purchaseAmount":51704900.0,
-                "purchaseCount":15,
-                "domesticAmount":null,
-                "internationalAmount":51704900.0,
-                "FrCount":null,
-                "PrCount":15
+                "income":51704900.0,
+                "boardingCount":15,
+                "purchaseAmount":null,
+                "bonusBoardingCount":51704900.0,
+                "PrCount":null,
+                "avgBoardingCycle":15
             },
             {
                 "Rank":52,
@@ -671,12 +672,12 @@ export const dummyData = {
                 "memberNumber":112616104271.0,
                 "name":"길동3319/홍(GILDONG3319/HONG)",
                 "vipYn":null,
-                "purchaseAmount":51343900.0,
-                "purchaseCount":71,
-                "domesticAmount":7232000.0,
-                "internationalAmount":44111900.0,
-                "FrCount":1.0,
-                "PrCount":71
+                "income":51343900.0,
+                "boardingCount":71,
+                "purchaseAmount":7232000.0,
+                "bonusBoardingCount":44111900.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":71
             },
             {
                 "Rank":53,
@@ -684,12 +685,12 @@ export const dummyData = {
                 "memberNumber":113717624766.0,
                 "name":"길동2564/홍(GILDONG2564/HONG)",
                 "vipYn":null,
-                "purchaseAmount":51008165.0,
-                "purchaseCount":19,
-                "domesticAmount":0.0,
-                "internationalAmount":51008165.0,
-                "FrCount":null,
-                "PrCount":19
+                "income":51008165.0,
+                "boardingCount":19,
+                "purchaseAmount":0.0,
+                "bonusBoardingCount":51008165.0,
+                "PrCount":null,
+                "avgBoardingCycle":19
             },
             {
                 "Rank":54,
@@ -697,12 +698,12 @@ export const dummyData = {
                 "memberNumber":114327625106.0,
                 "name":"길동2355/홍(GILDONG2355/HONG)",
                 "vipYn":null,
-                "purchaseAmount":48900800.0,
-                "purchaseCount":46,
-                "domesticAmount":1221000.0,
-                "internationalAmount":47679800.0,
-                "FrCount":6.0,
-                "PrCount":46
+                "income":48900800.0,
+                "boardingCount":46,
+                "purchaseAmount":1221000.0,
+                "bonusBoardingCount":47679800.0,
+                "PrCount":6.0,
+                "avgBoardingCycle":46
             },
             {
                 "Rank":55,
@@ -710,12 +711,12 @@ export const dummyData = {
                 "memberNumber":114916575427.0,
                 "name":"길동2113/홍(GILDONG2113/HONG)",
                 "vipYn":null,
-                "purchaseAmount":48769500.0,
-                "purchaseCount":41,
-                "domesticAmount":257000.0,
-                "internationalAmount":48512500.0,
-                "FrCount":3.0,
-                "PrCount":41
+                "income":48769500.0,
+                "boardingCount":41,
+                "purchaseAmount":257000.0,
+                "bonusBoardingCount":48512500.0,
+                "PrCount":3.0,
+                "avgBoardingCycle":41
             },
             {
                 "Rank":56,
@@ -723,12 +724,12 @@ export const dummyData = {
                 "memberNumber":113318098976.0,
                 "name":"길동2409/홍(GILDONG2409/HONG)",
                 "vipYn":null,
-                "purchaseAmount":48357400.0,
-                "purchaseCount":63,
-                "domesticAmount":172000.0,
-                "internationalAmount":48185400.0,
-                "FrCount":null,
-                "PrCount":65
+                "income":48357400.0,
+                "boardingCount":63,
+                "purchaseAmount":172000.0,
+                "bonusBoardingCount":48185400.0,
+                "PrCount":null,
+                "avgBoardingCycle":65
             },
             {
                 "Rank":57,
@@ -736,12 +737,12 @@ export const dummyData = {
                 "memberNumber":115118279693.0,
                 "name":"길동1572/홍(GILDONG1572/HONG)",
                 "vipYn":null,
-                "purchaseAmount":48321392.0,
-                "purchaseCount":100,
-                "domesticAmount":2601243.0,
-                "internationalAmount":45720149.0,
-                "FrCount":null,
-                "PrCount":100
+                "income":48321392.0,
+                "boardingCount":100,
+                "purchaseAmount":2601243.0,
+                "bonusBoardingCount":45720149.0,
+                "PrCount":null,
+                "avgBoardingCycle":100
             },
             {
                 "Rank":58,
@@ -749,12 +750,12 @@ export const dummyData = {
                 "memberNumber":113617850962.0,
                 "name":"길동2411/홍(GILDONG2411/HONG)",
                 "vipYn":null,
-                "purchaseAmount":48317500.0,
-                "purchaseCount":82,
-                "domesticAmount":2192700.0,
-                "internationalAmount":46124800.0,
-                "FrCount":null,
-                "PrCount":82
+                "income":48317500.0,
+                "boardingCount":82,
+                "purchaseAmount":2192700.0,
+                "bonusBoardingCount":46124800.0,
+                "PrCount":null,
+                "avgBoardingCycle":82
             },
             {
                 "Rank":59,
@@ -762,12 +763,12 @@ export const dummyData = {
                 "memberNumber":null,
                 "name":"길동4640/홍(GILDONG4640/HONG)",
                 "vipYn":null,
-                "purchaseAmount":48308000.0,
-                "purchaseCount":1,
-                "domesticAmount":null,
-                "internationalAmount":48308000.0,
-                "FrCount":null,
-                "PrCount":1
+                "income":48308000.0,
+                "boardingCount":1,
+                "purchaseAmount":null,
+                "bonusBoardingCount":48308000.0,
+                "PrCount":null,
+                "avgBoardingCycle":1
             },
             {
                 "Rank":60,
@@ -775,12 +776,12 @@ export const dummyData = {
                 "memberNumber":null,
                 "name":"길동3911/홍(GILDONG3911/HONG)",
                 "vipYn":null,
-                "purchaseAmount":47426000.0,
-                "purchaseCount":1,
-                "domesticAmount":null,
-                "internationalAmount":47426000.0,
-                "FrCount":null,
-                "PrCount":1
+                "income":47426000.0,
+                "boardingCount":1,
+                "purchaseAmount":null,
+                "bonusBoardingCount":47426000.0,
+                "PrCount":null,
+                "avgBoardingCycle":1
             },
             {
                 "Rank":61,
@@ -788,12 +789,12 @@ export const dummyData = {
                 "memberNumber":112727927320.0,
                 "name":"길동2804/홍(GILDONG2804/HONG)",
                 "vipYn":null,
-                "purchaseAmount":47124700.0,
-                "purchaseCount":280,
-                "domesticAmount":17869100.0,
-                "internationalAmount":29255600.0,
-                "FrCount":null,
-                "PrCount":280
+                "income":47124700.0,
+                "boardingCount":280,
+                "purchaseAmount":17869100.0,
+                "bonusBoardingCount":29255600.0,
+                "PrCount":null,
+                "avgBoardingCycle":280
             },
             {
                 "Rank":62,
@@ -801,12 +802,12 @@ export const dummyData = {
                 "memberNumber":113717184902.0,
                 "name":"길동2896/홍(GILDONG2896/HONG)",
                 "vipYn":null,
-                "purchaseAmount":46885500.0,
-                "purchaseCount":54,
-                "domesticAmount":1952000.0,
-                "internationalAmount":44933500.0,
-                "FrCount":null,
-                "PrCount":54
+                "income":46885500.0,
+                "boardingCount":54,
+                "purchaseAmount":1952000.0,
+                "bonusBoardingCount":44933500.0,
+                "PrCount":null,
+                "avgBoardingCycle":54
             },
             {
                 "Rank":63,
@@ -814,12 +815,12 @@ export const dummyData = {
                 "memberNumber":112411181076.0,
                 "name":"길동1155/홍(GILDONG1155/HONG)",
                 "vipYn":null,
-                "purchaseAmount":46493600.0,
-                "purchaseCount":130,
-                "domesticAmount":21152400.0,
-                "internationalAmount":25341200.0,
-                "FrCount":1.0,
-                "PrCount":130
+                "income":46493600.0,
+                "boardingCount":130,
+                "purchaseAmount":21152400.0,
+                "bonusBoardingCount":25341200.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":130
             },
             {
                 "Rank":64,
@@ -827,12 +828,12 @@ export const dummyData = {
                 "memberNumber":112517641394.0,
                 "name":"길동3126/홍(GILDONG3126/HONG)",
                 "vipYn":null,
-                "purchaseAmount":45830400.0,
-                "purchaseCount":72,
-                "domesticAmount":1279000.0,
-                "internationalAmount":44551400.0,
-                "FrCount":1.0,
-                "PrCount":72
+                "income":45830400.0,
+                "boardingCount":72,
+                "purchaseAmount":1279000.0,
+                "bonusBoardingCount":44551400.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":72
             },
             {
                 "Rank":65,
@@ -840,12 +841,12 @@ export const dummyData = {
                 "memberNumber":null,
                 "name":"길동4535/홍(GILDONG4535/HONG)",
                 "vipYn":null,
-                "purchaseAmount":45719000.0,
-                "purchaseCount":1,
-                "domesticAmount":null,
-                "internationalAmount":45719000.0,
-                "FrCount":null,
-                "PrCount":1
+                "income":45719000.0,
+                "boardingCount":1,
+                "purchaseAmount":null,
+                "bonusBoardingCount":45719000.0,
+                "PrCount":null,
+                "avgBoardingCycle":1
             },
             {
                 "Rank":66,
@@ -853,12 +854,12 @@ export const dummyData = {
                 "memberNumber":113018483906.0,
                 "name":"길동2104/홍(GILDONG2104/HONG)",
                 "vipYn":null,
-                "purchaseAmount":45637590.0,
-                "purchaseCount":67,
-                "domesticAmount":910000.0,
-                "internationalAmount":44727590.0,
-                "FrCount":null,
-                "PrCount":68
+                "income":45637590.0,
+                "boardingCount":67,
+                "purchaseAmount":910000.0,
+                "bonusBoardingCount":44727590.0,
+                "PrCount":null,
+                "avgBoardingCycle":68
             },
             {
                 "Rank":67,
@@ -866,12 +867,12 @@ export const dummyData = {
                 "memberNumber":112517607948.0,
                 "name":"길동3143/홍(GILDONG3143/HONG)",
                 "vipYn":null,
-                "purchaseAmount":45441506.0,
-                "purchaseCount":113,
-                "domesticAmount":7531000.0,
-                "internationalAmount":37910506.0,
-                "FrCount":null,
-                "PrCount":113
+                "income":45441506.0,
+                "boardingCount":113,
+                "purchaseAmount":7531000.0,
+                "bonusBoardingCount":37910506.0,
+                "PrCount":null,
+                "avgBoardingCycle":113
             },
             {
                 "Rank":68,
@@ -879,12 +880,12 @@ export const dummyData = {
                 "memberNumber":112417092530.0,
                 "name":"길동3305/홍(GILDONG3305/HONG)",
                 "vipYn":null,
-                "purchaseAmount":45325180.0,
-                "purchaseCount":650,
-                "domesticAmount":29614000.0,
-                "internationalAmount":15688600.0,
-                "FrCount":null,
-                "PrCount":650
+                "income":45325180.0,
+                "boardingCount":650,
+                "purchaseAmount":29614000.0,
+                "bonusBoardingCount":15688600.0,
+                "PrCount":null,
+                "avgBoardingCycle":650
             },
             {
                 "Rank":69,
@@ -892,12 +893,12 @@ export const dummyData = {
                 "memberNumber":113715889794.0,
                 "name":"길동2706/홍(GILDONG2706/HONG)",
                 "vipYn":null,
-                "purchaseAmount":45316500.0,
-                "purchaseCount":17,
-                "domesticAmount":378000.0,
-                "internationalAmount":44938500.0,
-                "FrCount":null,
-                "PrCount":17
+                "income":45316500.0,
+                "boardingCount":17,
+                "purchaseAmount":378000.0,
+                "bonusBoardingCount":44938500.0,
+                "PrCount":null,
+                "avgBoardingCycle":17
             },
             {
                 "Rank":70,
@@ -905,12 +906,12 @@ export const dummyData = {
                 "memberNumber":115127651494.0,
                 "name":"길동2052/홍(GILDONG2052/HONG)",
                 "vipYn":null,
-                "purchaseAmount":45230500.0,
-                "purchaseCount":35,
-                "domesticAmount":374000.0,
-                "internationalAmount":44856500.0,
-                "FrCount":null,
-                "PrCount":35
+                "income":45230500.0,
+                "boardingCount":35,
+                "purchaseAmount":374000.0,
+                "bonusBoardingCount":44856500.0,
+                "PrCount":null,
+                "avgBoardingCycle":35
             },
             {
                 "Rank":71,
@@ -918,12 +919,12 @@ export const dummyData = {
                 "memberNumber":114828740770.0,
                 "name":"길동1115/홍(GILDONG1115/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":44951875.0,
-                "purchaseCount":89,
-                "domesticAmount":975000.0,
-                "internationalAmount":43923565.0,
-                "FrCount":null,
-                "PrCount":89
+                "income":44951875.0,
+                "boardingCount":89,
+                "purchaseAmount":975000.0,
+                "bonusBoardingCount":43923565.0,
+                "PrCount":null,
+                "avgBoardingCycle":89
             },
             {
                 "Rank":72,
@@ -931,12 +932,12 @@ export const dummyData = {
                 "memberNumber":121729494035.0,
                 "name":"길동4011/홍(GILDONG401/HONG)",
                 "vipYn":null,
-                "purchaseAmount":44707800.0,
-                "purchaseCount":40,
-                "domesticAmount":1465000.0,
-                "internationalAmount":43242800.0,
-                "FrCount":null,
-                "PrCount":40
+                "income":44707800.0,
+                "boardingCount":40,
+                "purchaseAmount":1465000.0,
+                "bonusBoardingCount":43242800.0,
+                "PrCount":null,
+                "avgBoardingCycle":40
             },
             {
                 "Rank":73,
@@ -944,12 +945,12 @@ export const dummyData = {
                 "memberNumber":113110357047.0,
                 "name":"길동1277/홍(GILDONG1277/HONG)",
                 "vipYn":null,
-                "purchaseAmount":43956200.0,
-                "purchaseCount":15,
-                "domesticAmount":null,
-                "internationalAmount":43956200.0,
-                "FrCount":null,
-                "PrCount":15
+                "income":43956200.0,
+                "boardingCount":15,
+                "purchaseAmount":null,
+                "bonusBoardingCount":43956200.0,
+                "PrCount":null,
+                "avgBoardingCycle":15
             },
             {
                 "Rank":74,
@@ -957,12 +958,12 @@ export const dummyData = {
                 "memberNumber":113317557006.0,
                 "name":"길동2795/홍(GILDONG2795/HONG)",
                 "vipYn":null,
-                "purchaseAmount":43907200.0,
-                "purchaseCount":46,
-                "domesticAmount":1637900.0,
-                "internationalAmount":42269300.0,
-                "FrCount":null,
-                "PrCount":46
+                "income":43907200.0,
+                "boardingCount":46,
+                "purchaseAmount":1637900.0,
+                "bonusBoardingCount":42269300.0,
+                "PrCount":null,
+                "avgBoardingCycle":46
             },
             {
                 "Rank":75,
@@ -970,12 +971,12 @@ export const dummyData = {
                 "memberNumber":112517906730.0,
                 "name":"길동3000/홍(GILDONG3000/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":43738779.7,
-                "purchaseCount":32,
-                "domesticAmount":890000.0,
-                "internationalAmount":42848779.7,
-                "FrCount":1.0,
-                "PrCount":32
+                "income":43738779.7,
+                "boardingCount":32,
+                "purchaseAmount":890000.0,
+                "bonusBoardingCount":42848779.7,
+                "PrCount":1.0,
+                "avgBoardingCycle":32
             },
             {
                 "Rank":76,
@@ -983,12 +984,12 @@ export const dummyData = {
                 "memberNumber":112627314699.0,
                 "name":"길동3165/홍(GILDONG3165/HONG)",
                 "vipYn":null,
-                "purchaseAmount":43628900.0,
-                "purchaseCount":194,
-                "domesticAmount":10627000.0,
-                "internationalAmount":33001900.0,
-                "FrCount":2.0,
-                "PrCount":194
+                "income":43628900.0,
+                "boardingCount":194,
+                "purchaseAmount":10627000.0,
+                "bonusBoardingCount":33001900.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":194
             },
             {
                 "Rank":77,
@@ -996,12 +997,12 @@ export const dummyData = {
                 "memberNumber":112615751669.0,
                 "name":"길동3292/홍(GILDONG3292/HONG)",
                 "vipYn":null,
-                "purchaseAmount":43225000.0,
-                "purchaseCount":220,
-                "domesticAmount":10483800.0,
-                "internationalAmount":32741200.0,
-                "FrCount":null,
-                "PrCount":220
+                "income":43225000.0,
+                "boardingCount":220,
+                "purchaseAmount":10483800.0,
+                "bonusBoardingCount":32741200.0,
+                "PrCount":null,
+                "avgBoardingCycle":220
             },
             {
                 "Rank":78,
@@ -1009,12 +1010,12 @@ export const dummyData = {
                 "memberNumber":114128846074.0,
                 "name":"길동1284/홍(GILDONG1284/HONG)",
                 "vipYn":"HV",
-                "purchaseAmount":42970300.0,
-                "purchaseCount":18,
-                "domesticAmount":35000.0,
-                "internationalAmount":42935300.0,
-                "FrCount":null,
-                "PrCount":18
+                "income":42970300.0,
+                "boardingCount":18,
+                "purchaseAmount":35000.0,
+                "bonusBoardingCount":42935300.0,
+                "PrCount":null,
+                "avgBoardingCycle":18
             },
             {
                 "Rank":79,
@@ -1022,12 +1023,12 @@ export const dummyData = {
                 "memberNumber":113317185360.0,
                 "name":"길동3012/홍(GILDONG3012/HONG)",
                 "vipYn":null,
-                "purchaseAmount":42486000.0,
-                "purchaseCount":45,
-                "domesticAmount":null,
-                "internationalAmount":42480600.0,
-                "FrCount":1.0,
-                "PrCount":45
+                "income":42486000.0,
+                "boardingCount":45,
+                "purchaseAmount":null,
+                "bonusBoardingCount":42480600.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":45
             },
             {
                 "Rank":80,
@@ -1035,12 +1036,12 @@ export const dummyData = {
                 "memberNumber":113018076246.0,
                 "name":"길동2545/홍(GILDONG2545/HONG)",
                 "vipYn":null,
-                "purchaseAmount":42109500.0,
-                "purchaseCount":66,
-                "domesticAmount":2900000.0,
-                "internationalAmount":39209500.0,
-                "FrCount":null,
-                "PrCount":67
+                "income":42109500.0,
+                "boardingCount":66,
+                "purchaseAmount":2900000.0,
+                "bonusBoardingCount":39209500.0,
+                "PrCount":null,
+                "avgBoardingCycle":67
             },
             {
                 "Rank":81,
@@ -1048,12 +1049,12 @@ export const dummyData = {
                 "memberNumber":113328129684.0,
                 "name":"길동2347/홍(GILDONG2347/HONG)",
                 "vipYn":null,
-                "purchaseAmount":41122400.0,
-                "purchaseCount":36,
-                "domesticAmount":285000.0,
-                "internationalAmount":40837400.0,
-                "FrCount":null,
-                "PrCount":36
+                "income":41122400.0,
+                "boardingCount":36,
+                "purchaseAmount":285000.0,
+                "bonusBoardingCount":40837400.0,
+                "PrCount":null,
+                "avgBoardingCycle":36
             },
             {
                 "Rank":82,
@@ -1061,12 +1062,12 @@ export const dummyData = {
                 "memberNumber":113225506864.0,
                 "name":"길동2972/홍(GILDONG2972/HONG)",
                 "vipYn":null,
-                "purchaseAmount":40969724.0,
-                "purchaseCount":30,
-                "domesticAmount":null,
-                "internationalAmount":40969724.0,
-                "FrCount":null,
-                "PrCount":30
+                "income":40969724.0,
+                "boardingCount":30,
+                "purchaseAmount":null,
+                "bonusBoardingCount":40969724.0,
+                "PrCount":null,
+                "avgBoardingCycle":30
             },
             {
                 "Rank":83,
@@ -1074,12 +1075,12 @@ export const dummyData = {
                 "memberNumber":112410102328.0,
                 "name":"길동2215/홍(GILDONG2215/HONG)",
                 "vipYn":null,
-                "purchaseAmount":39657000.0,
-                "purchaseCount":57,
-                "domesticAmount":1859000.0,
-                "internationalAmount":37798000.0,
-                "FrCount":null,
-                "PrCount":57
+                "income":39657000.0,
+                "boardingCount":57,
+                "purchaseAmount":1859000.0,
+                "bonusBoardingCount":37798000.0,
+                "PrCount":null,
+                "avgBoardingCycle":57
             },
             {
                 "Rank":84,
@@ -1087,12 +1088,12 @@ export const dummyData = {
                 "memberNumber":113717015270.0,
                 "name":"길동2958/홍(GILDONG2958/HONG)",
                 "vipYn":null,
-                "purchaseAmount":39543000.0,
-                "purchaseCount":19,
-                "domesticAmount":393000.0,
-                "internationalAmount":39150000.0,
-                "FrCount":null,
-                "PrCount":19
+                "income":39543000.0,
+                "boardingCount":19,
+                "purchaseAmount":393000.0,
+                "bonusBoardingCount":39150000.0,
+                "PrCount":null,
+                "avgBoardingCycle":19
             },
             {
                 "Rank":85,
@@ -1100,12 +1101,12 @@ export const dummyData = {
                 "memberNumber":112416748675.0,
                 "name":"길동3356/홍(GILDONG3356/HONG)",
                 "vipYn":null,
-                "purchaseAmount":38695400.0,
-                "purchaseCount":19,
-                "domesticAmount":1404000.0,
-                "internationalAmount":37291400.0,
-                "FrCount":2.0,
-                "PrCount":19
+                "income":38695400.0,
+                "boardingCount":19,
+                "purchaseAmount":1404000.0,
+                "bonusBoardingCount":37291400.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":19
             },
             {
                 "Rank":86,
@@ -1113,12 +1114,12 @@ export const dummyData = {
                 "memberNumber":115226519391.0,
                 "name":"길동1952/홍(GILDONG1952/HONG)",
                 "vipYn":null,
-                "purchaseAmount":38273500.0,
-                "purchaseCount":37,
-                "domesticAmount":3478000.0,
-                "internationalAmount":34795500.0,
-                "FrCount":1.0,
-                "PrCount":37
+                "income":38273500.0,
+                "boardingCount":37,
+                "purchaseAmount":3478000.0,
+                "bonusBoardingCount":34795500.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":37
             },
             {
                 "Rank":87,
@@ -1126,12 +1127,12 @@ export const dummyData = {
                 "memberNumber":114029495063.0,
                 "name":"길동1022/홍(GILDONG1022/HONG)",
                 "vipYn":null,
-                "purchaseAmount":38232640.0,
-                "purchaseCount":85,
-                "domesticAmount":2088000.0,
-                "internationalAmount":36143000.0,
-                "FrCount":null,
-                "PrCount":85
+                "income":38232640.0,
+                "boardingCount":85,
+                "purchaseAmount":2088000.0,
+                "bonusBoardingCount":36143000.0,
+                "PrCount":null,
+                "avgBoardingCycle":85
             },
             {
                 "Rank":88,
@@ -1139,12 +1140,12 @@ export const dummyData = {
                 "memberNumber":112626530200.0,
                 "name":"길동3291/홍(GILDONG3291/HONG)",
                 "vipYn":null,
-                "purchaseAmount":37857500.0,
-                "purchaseCount":40,
-                "domesticAmount":1277000.0,
-                "internationalAmount":36580500.0,
-                "FrCount":null,
-                "PrCount":40
+                "income":37857500.0,
+                "boardingCount":40,
+                "purchaseAmount":1277000.0,
+                "bonusBoardingCount":36580500.0,
+                "PrCount":null,
+                "avgBoardingCycle":40
             },
             {
                 "Rank":89,
@@ -1152,12 +1153,12 @@ export const dummyData = {
                 "memberNumber":112917770472.0,
                 "name":"길동2818/홍(GILDONG2818/HONG)",
                 "vipYn":null,
-                "purchaseAmount":37174800.0,
-                "purchaseCount":24,
-                "domesticAmount":null,
-                "internationalAmount":37174800.0,
-                "FrCount":null,
-                "PrCount":24
+                "income":37174800.0,
+                "boardingCount":24,
+                "purchaseAmount":null,
+                "bonusBoardingCount":37174800.0,
+                "PrCount":null,
+                "avgBoardingCycle":24
             },
             {
                 "Rank":90,
@@ -1165,12 +1166,12 @@ export const dummyData = {
                 "memberNumber":713917404120.0,
                 "name":"길동2674/홍(GILDONG2674/HONG)",
                 "vipYn":null,
-                "purchaseAmount":37051500.0,
-                "purchaseCount":33,
-                "domesticAmount":83000.0,
-                "internationalAmount":36968500.0,
-                "FrCount":null,
-                "PrCount":33
+                "income":37051500.0,
+                "boardingCount":33,
+                "purchaseAmount":83000.0,
+                "bonusBoardingCount":36968500.0,
+                "PrCount":null,
+                "avgBoardingCycle":33
             },
             {
                 "Rank":91,
@@ -1178,12 +1179,12 @@ export const dummyData = {
                 "memberNumber":112416699777.0,
                 "name":"길동3339/홍(GILDONG3339/HONG)",
                 "vipYn":null,
-                "purchaseAmount":35037100.0,
-                "purchaseCount":56,
-                "domesticAmount":null,
-                "internationalAmount":35037100.0,
-                "FrCount":null,
-                "PrCount":56
+                "income":35037100.0,
+                "boardingCount":56,
+                "purchaseAmount":null,
+                "bonusBoardingCount":35037100.0,
+                "PrCount":null,
+                "avgBoardingCycle":56
             },
             {
                 "Rank":92,
@@ -1191,12 +1192,12 @@ export const dummyData = {
                 "memberNumber":113328415506.0,
                 "name":"길동1998/홍(GILDONG1998/HONG)",
                 "vipYn":null,
-                "purchaseAmount":34882300.0,
-                "purchaseCount":51,
-                "domesticAmount":1486000.0,
-                "internationalAmount":33396300.0,
-                "FrCount":1.0,
-                "PrCount":51
+                "income":34882300.0,
+                "boardingCount":51,
+                "purchaseAmount":1486000.0,
+                "bonusBoardingCount":33396300.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":51
             },
             {
                 "Rank":93,
@@ -1204,12 +1205,12 @@ export const dummyData = {
                 "memberNumber":113428307679.0,
                 "name":"길동2075/홍(GILDONG2075/HONG)",
                 "vipYn":null,
-                "purchaseAmount":34754100.0,
-                "purchaseCount":28,
-                "domesticAmount":1790000.0,
-                "internationalAmount":32964100.0,
-                "FrCount":2.0,
-                "PrCount":30
+                "income":34754100.0,
+                "boardingCount":28,
+                "purchaseAmount":1790000.0,
+                "bonusBoardingCount":32964100.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":30
             },
             {
                 "Rank":94,
@@ -1217,12 +1218,12 @@ export const dummyData = {
                 "memberNumber":112316185533.0,
                 "name":"길동3421/홍(GILDONG3421/HONG)",
                 "vipYn":null,
-                "purchaseAmount":34660500.0,
-                "purchaseCount":54,
-                "domesticAmount":3467000.0,
-                "internationalAmount":31193500.0,
-                "FrCount":null,
-                "PrCount":54
+                "income":34660500.0,
+                "boardingCount":54,
+                "purchaseAmount":3467000.0,
+                "bonusBoardingCount":31193500.0,
+                "PrCount":null,
+                "avgBoardingCycle":54
             },
             {
                 "Rank":95,
@@ -1230,12 +1231,12 @@ export const dummyData = {
                 "memberNumber":120027606102.0,
                 "name":"길동1000/홍(GILDONG1000/HONG)",
                 "vipYn":null,
-                "purchaseAmount":34154100.0,
-                "purchaseCount":66,
-                "domesticAmount":504000.0,
-                "internationalAmount":33650100.0,
-                "FrCount":null,
-                "PrCount":66
+                "income":34154100.0,
+                "boardingCount":66,
+                "purchaseAmount":504000.0,
+                "bonusBoardingCount":33650100.0,
+                "PrCount":null,
+                "avgBoardingCycle":66
             },
             {
                 "Rank":96,
@@ -1243,12 +1244,12 @@ export const dummyData = {
                 "memberNumber":112524837320.0,
                 "name":"길동3295/홍(GILDONG3295/HONG)",
                 "vipYn":null,
-                "purchaseAmount":33728300.0,
-                "purchaseCount":198,
-                "domesticAmount":13763200.0,
-                "internationalAmount":19965100.0,
-                "FrCount":null,
-                "PrCount":198
+                "income":33728300.0,
+                "boardingCount":198,
+                "purchaseAmount":13763200.0,
+                "bonusBoardingCount":19965100.0,
+                "PrCount":null,
+                "avgBoardingCycle":198
             },
             {
                 "Rank":97,
@@ -1256,12 +1257,12 @@ export const dummyData = {
                 "memberNumber":112918468600.0,
                 "name":"길동2200/홍(GILDONG2200/HONG)",
                 "vipYn":null,
-                "purchaseAmount":33641500.0,
-                "purchaseCount":50,
-                "domesticAmount":2953000.0,
-                "internationalAmount":30688500.0,
-                "FrCount":1.0,
-                "PrCount":56
+                "income":33641500.0,
+                "boardingCount":50,
+                "purchaseAmount":2953000.0,
+                "bonusBoardingCount":30688500.0,
+                "PrCount":1.0,
+                "avgBoardingCycle":56
             },
             {
                 "Rank":98,
@@ -1269,12 +1270,12 @@ export const dummyData = {
                 "memberNumber":116127428243.0,
                 "name":"길동1857/홍(GILDONG1857/HONG)",
                 "vipYn":null,
-                "purchaseAmount":33476200.0,
-                "purchaseCount":283,
-                "domesticAmount":25380700.0,
-                "internationalAmount":8095500.0,
-                "FrCount":2.0,
-                "PrCount":283
+                "income":33476200.0,
+                "boardingCount":283,
+                "purchaseAmount":25380700.0,
+                "bonusBoardingCount":8095500.0,
+                "PrCount":2.0,
+                "avgBoardingCycle":283
             },
             {
                 "Rank":99,
@@ -1282,12 +1283,12 @@ export const dummyData = {
                 "memberNumber":112425391146.0,
                 "name":"길동3358/홍(GILDONG3358/HONG)",
                 "vipYn":null,
-                "purchaseAmount":33400100.0,
-                "purchaseCount":75,
-                "domesticAmount":1337200.0,
-                "internationalAmount":32062900.0,
-                "FrCount":null,
-                "PrCount":75
+                "income":33400100.0,
+                "boardingCount":75,
+                "purchaseAmount":1337200.0,
+                "bonusBoardingCount":32062900.0,
+                "PrCount":11,
+                "avgBoardingCycle":75
             },
             {
                 "Rank":100,
@@ -1295,12 +1296,12 @@ export const dummyData = {
                 "memberNumber":113229772952.0,
                 "name":"길동1595/홍(GILDONG1595/HONG)",
                 "vipYn":null,
-                "purchaseAmount":32636705.0,
-                "purchaseCount":23,
-                "domesticAmount":54000.0,
-                "internationalAmount":32582705.0,
-                "FrCount":null,
-                "PrCount":23
+                "income":32636705.0,
+                "boardingCount":23,
+                "purchaseAmount":54000.0,
+                "bonusBoardingCount":32582705.0,
+                "PrCount":22,
+                "avgBoardingCycle":23
             }
         ]
     }

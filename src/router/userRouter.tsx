@@ -33,11 +33,12 @@ import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Deta
 import CustomerInfo from '@pages/user/customer-info/dashboard';
 import Tableau from '@pages/user/tableau';
 import { useFaqLoader, useQnaLoader, useFeatureLoader, useDatasetLoader } from '@/hooks/useLoader';
-import PurchaseContributors from '@pages/user/structured-report/purchase-contributors';
-import InternationalBoarding from '@pages/user/structured-report/international-boarding';
-import DomesticBoarding from '@pages/user/structured-report/domestic-boarding';
-import VipCustomerFlightStatus from '@pages/user/structured-report/vip-customer-flight-status';
-import SavedMileage from '@pages/user/structured-report/saved-mileage';
+import PurchaseContributors from "@pages/user/structured-report/purchase-contributors";
+import InternationalBoarding from "@pages/user/structured-report/international-boarding";
+import DomesticBoarding from "@pages/user/structured-report/domestic-boarding";
+import VipCustomerFlightStatus from "@pages/user/structured-report/vip-customer-flight-status";
+import SavedMileage from "@pages/user/structured-report/saved-mileage";
+import {Navigate} from "react-router-dom";
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -45,6 +46,7 @@ const userRouter = [
     path: 'biz-meta',
     children: [
       {
+        id: '/biz-meta/feature',
         path: 'feature',
         loader: useFeatureLoader,
         children: [
@@ -76,6 +78,7 @@ const userRouter = [
   {
     path: 'structured-report',
     children: [
+      { index: true, element: <Navigate to="/structured-report/purchase-contributors" /> },
       { path: 'purchase-contributors', element: <PurchaseContributors /> },
       { path: 'international-boarding', element: <InternationalBoarding /> },
       { path: 'domestic-boarding', element: <DomesticBoarding /> },

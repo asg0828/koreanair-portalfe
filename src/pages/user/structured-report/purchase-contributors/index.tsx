@@ -9,6 +9,19 @@ import {View} from "@models/common/Constants";
 import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
 import { dummyData } from "./testData";
+import useDidMountEffect from "@/hooks/useDidMountEffect";
+import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
+import {FeatureParams} from "@models/model/FeatureModel";
+
+const initParams: FeatureParams = {
+    featureSeGrp: '',
+    featureSe: '',
+    searchFeature: '',
+    enrUserId: '',
+    enrDeptCode: '',
+    searchConditions: [],
+};
+
 
 const List = () => {
     const navigate = useNavigate();
@@ -16,6 +29,8 @@ const List = () => {
     const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
     const [selectedPeriod, setSelectedPeriod] = useState('1');
     const [dateRange, setDateRange] = useState('');
+    const [params, setParams] = useState<FeatureParams>(initParams);
+
     const [page, setPage] = useState<PageModel>({
         ...initPage,
         totalCount: 100
@@ -38,21 +53,23 @@ const List = () => {
         { period: '5', text: '최근 4년' },
     ];
 
-        const columns: Array<ColumnsInfo> = [
-            {headerName: 'Rank', field: 'Rank', colSpan: 0.7},
-            {headerName: 'One ID', field: 'oneId', colSpan: 1.3},
-            {headerName: '회원번호', field: 'memberNumber', colSpan: 1},
-            {headerName: '이름', field: 'name', colSpan: 2},
-            {headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1},
-            {headerName: '구매금액', field: 'purchaseAmount', colSpan: 1},
-            {headerName: '구매횟수', field: 'purchaseCount', colSpan: 1},
-            {headerName: '국내선 구매금액', field: 'domesticAmount', colSpan: 1},
-            {headerName: '국제선 구매금액', field: 'internationalAmount', colSpan: 1},
-            {headerName: 'FR 구매횟수', field: 'FrCount', colSpan: 1},
-            {headerName: 'PR 구매횟수', field: 'PrCount', colSpan: 1}
-        ];
+    const columns: Array<ColumnsInfo> = [
+        {headerName: 'Rank', field: 'Rank', colSpan: 0.7},
+        {headerName: 'One ID', field: 'oneId', colSpan: 1.3},
+        {headerName: '회원번호', field: 'memberNumber', colSpan: 1},
+        {headerName: '이름', field: 'name', colSpan: 2},
+        {headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1},
+        {headerName: '구매금액', field: 'purchaseAmount', colSpan: 1},
+        {headerName: '구매횟수', field: 'purchaseCount', colSpan: 1},
+        {headerName: '국내선 구매금액', field: 'domesticAmount', colSpan: 1},
+        {headerName: '국제선 구매금액', field: 'internationalAmount', colSpan: 1},
+        {headerName: 'FR 구매횟수', field: 'FrCount', colSpan: 1},
+        {headerName: 'PR 구매횟수', field: 'PrCount', colSpan: 1}
+    ];
 
     const [rows, setRows] = useState(dummyData.data.contents);
+    const { data: response, isError, refetch } = useFeatureList(params, page);
+    const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
 
     const calculateDateRange = (period: string) => {
         const endDate = new Date();
@@ -92,9 +109,28 @@ const List = () => {
         setDateRange(calculateDateRange(period));
     };
 
+    const handlePage = (page: PageModel) => {
+        setPage(page);
+    };
+
+    const handleSearch = useCallback(() => {
+        refetch();
+    }, [refetch]);
+
+    useEffect(() => {
+        if (params.featureSeGrp) {
+            sRefetch();
+        }
+    }, [params.featureSeGrp, sRefetch]);
+
+
+    useDidMountEffect(() => {
+        handleSearch();
+    }, [page.page, page.pageSize, handleSearch]);
+
     return (
         <>
-            <SearchForm showClearButton={false} showSearchButton={false}>
+            <SearchForm onSearch={handleSearch} showClearButton={false} showSearchButton={false}>
                 <TR>
                     <TH colSpan={1} align="center">
                         조회기준

@@ -61,12 +61,12 @@ const List = () => {
         { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
         { headerName: '이름', field: 'name', colSpan: 2 },
         { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-        { headerName: '국내선\n' + '수익금액\n', field: 'purchaseAmount', colSpan: 1 },
-        { headerName: '국내선\n' + '탑승횟수\n', field: 'purchaseCount', colSpan: 1 },
-        { headerName: '국내선\n' + '구매금액', field: 'domesticAmount', colSpan: 1 },
-        { headerName: '국내선 보너스\n' +'항공권 탑승횟수', field: 'internationalAmount', colSpan: 1 },
-        { headerName: '국내선 PR 탑승횟수', field: 'FrCount', colSpan: 1 },
-        { headerName: '국내선 평균 탑승주기', field: 'PrCount', colSpan: 1 },
+        { headerName: '국내선\n' + '수익금액\n', field: 'income', colSpan: 1 },
+        { headerName: '국내선\n' + '탑승횟수\n', field: 'boardingCount', colSpan: 1 },
+        { headerName: '국내선\n' + '구매금액', field: 'purchaseAmount', colSpan: 1 },
+        { headerName: '국내선 보너스\n' +'항공권 탑승횟수', field: 'bonusBoardingCount', colSpan: 1 },
+        { headerName: '국내선 PR 탑승횟수', field: 'PrCount', colSpan: 1 },
+        { headerName: '국내선 평균 탑승주기', field: 'avgBoardingCycle', colSpan: 1 },
     ];
 
     const [rows, setRows] = useState(dummyData.data.contents);
