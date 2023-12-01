@@ -73,10 +73,10 @@ export const whenYn = [
 ]
 // Feature 메인 리스트 table header
 export const featListColumns = [
-    { headerName: 'Feature 명(한글)', field: 'name', colSpan: 8 },
-    { headerName: 'Feature 명(영문)', field: 'name', colSpan: 8 },
-    { headerName: '진행 상태', field: 'submissionStatusNm', colSpan: 4 },
-    { headerName: '부서', field: '', colSpan: 2 },
+    { headerName: 'Feature 명(한글)', field: 'name', colSpan: 7 },
+    { headerName: 'Feature 명(영문)', field: 'featureEnNm', colSpan: 7 },
+    { headerName: '진행 상태', field: 'submissionStatusNm', colSpan: 3 },
+    { headerName: '부서', field: 'deptNm', colSpan: 4 },
 ]
 // Feature 선후행 관계 table header
 export const featPrntClidListColumns = [
@@ -139,6 +139,7 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     lastUpdLginId: '',
     submissionStatusNm: '',
     userTeamNm: 'test',
+    deptNm: '',
 }
 
 export const initTbRsCustFeatRuleCalc: TbRsCustFeatRuleCalc = {

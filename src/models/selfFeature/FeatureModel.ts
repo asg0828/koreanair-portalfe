@@ -335,7 +335,8 @@ export interface TbRsCustFeatRule extends RowsInfo {
     metaTblId: string,
     lastUpdLginId: string,
     submissionStatusNm: string,
-    userTeamNm: string
+    userTeamNm: string // 부서코드
+    deptNm: string // 부서명
 }
 
 export interface TbRsCustFeatRuleSql {
