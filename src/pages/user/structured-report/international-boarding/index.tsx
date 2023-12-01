@@ -58,12 +58,12 @@ const List = () => {
         { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
         { headerName: '이름', field: 'name', colSpan: 2 },
         { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-        { headerName: '구매금액', field: 'purchaseAmount', colSpan: 1 },
-        { headerName: '구매횟수', field: 'purchaseCount', colSpan: 1 },
-        { headerName: '국내선 구매금액', field: 'domesticAmount', colSpan: 1 },
-        { headerName: '국제선 구매금액', field: 'internationalAmount', colSpan: 1 },
-        { headerName: 'FR 구매횟수', field: 'FrCount', colSpan: 1 },
-        { headerName: 'PR 구매횟수', field: 'PrCount', colSpan: 1 },
+        { headerName: '국제선 수입금액', field: 'IntlIncomeAmount', colSpan: 1 },
+        { headerName: '국제선 보너스 \n' +'항공권 탑승 횟수', field: 'IntlBonusBoardingCount', colSpan: 1},
+        { headerName: '국제선 FR 탑승횟수', field: 'IntlFrCount', colSpan: 1 },
+        { headerName: '국제선 PR 탑승횟수', field: 'IntlPrCount', colSpan: 1 },
+        { headerName: '국제선 평균 탑승 주기', field: 'avgBoardingIntervalForIntl', colSpan: 1 },
+        { headerName: '국제선 최다 탑승 O&D', field: 'MostFrequentedO&DForIntl', colSpan: 1 },
     ];
     const [rows, setRows] = useState(dummyData.data.contents);
     const { data: response, isError, refetch } = useFeatureList(params, page);
@@ -151,19 +151,6 @@ const List = () => {
     useDidMountEffect(() => {
         handleSearch();
     }, [page.page, page.pageSize, handleSearch]);
-
-    // useEffect(() => {
-    //     if (isError || response?.successOrNot === 'N') {
-    //         toast({
-    //             type: ValidType.ERROR,
-    //             content: '조회 중 에러가 발생했습니다.',
-    //         });
-    //     } else {
-    //         if (response?.data) {
-    //             setRows(response.data.contents);
-    //         }
-    //     }
-    // }, [response, isError, toast]);
 
     return (
         <>
