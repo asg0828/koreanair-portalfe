@@ -34,6 +34,8 @@ const TransFunction = ({
     useEffect(() => {
         if (trgtItem.function !== "") {
             setTransFuncChecked(true)
+        } else {
+            setTransFuncChecked(false)
         }
         transFuncCalcStr({
             colNm: trgtItem.columnName,
