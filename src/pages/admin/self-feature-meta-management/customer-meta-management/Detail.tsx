@@ -56,10 +56,10 @@ const CustomerMetaManagementDetail = () => {
       <SearchForm>
         <HorizontalTable>
           <TR>
-            <TH colSpan={1} align="right">
+            <TH colSpan={0.11} align="right">
               데이터베이스명
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={0.22}>
               <TextField
                 disabled
                 className="width-100"
@@ -69,10 +69,10 @@ const CustomerMetaManagementDetail = () => {
                 id="dbNm"
               />
             </TD>
-            <TH colSpan={1} align="right">
+            <TH colSpan={0.11} align="right">
               테이블 물리명
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={0.22}>
               <TextField
                 disabled
                 className="width-100"
@@ -82,10 +82,10 @@ const CustomerMetaManagementDetail = () => {
                 id="metaTblPhysNm"
               />
             </TD>
-            <TH colSpan={1} align="right">
+            <TH colSpan={0.11} align="right">
               테이블 논리명
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={0.23}>
               <TextField
                 className="width-100"
                 onChange={onSearchChangeHandler}
@@ -94,10 +94,12 @@ const CustomerMetaManagementDetail = () => {
                 id="metaTblLogiNm"
               />
             </TD>
-            <TH colSpan={1} align="right">
+          </TR>
+          <TR>
+            <TH colSpan={0.123} align="right">
               테이블설명
             </TH>
-            <TD colSpan={3}>
+            <TD>
               <TextField
                 className="width-100"
                 onChange={onSearchChangeHandler}
@@ -107,12 +109,11 @@ const CustomerMetaManagementDetail = () => {
               />
             </TD>
           </TR>
-
           <TR>
-            <TH colSpan={1} align="right">
-              메타테이블 구분
+            <TH colSpan={0.11} align="right">
+              메타테이블구분
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={0.22}>
               <Select
                 id="metaTblDvCd"
                 appearance="Outline"
@@ -130,10 +131,10 @@ const CustomerMetaManagementDetail = () => {
                 <SelectOption value={'BEHV'}>행동</SelectOption>
               </Select>
             </TD>
-            <TH colSpan={1} align="right">
+            <TH colSpan={0.11} align="right">
               사용여부
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={0.22}>
               <Select
                 id="metaTblUseYn"
                 appearance="Outline"
@@ -151,11 +152,12 @@ const CustomerMetaManagementDetail = () => {
                 <SelectOption value={'N'}>미사용</SelectOption>
               </Select>
             </TD>{' '}
-            <TH colSpan={1} align="right">
+            <TH colSpan={0.11} align="right">
               실시간여부
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={0.23}>
               <Select
+                style={{ width: '100%' }}
                 id="rtmTblYn"
                 appearance="Outline"
                 placeholder="전체"

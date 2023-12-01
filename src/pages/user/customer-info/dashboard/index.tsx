@@ -288,7 +288,7 @@ export default function List() {
                 <Button
                   priority="Normal"
                   appearance="Contained"
-                  style={{ position: 'absolute', right: 0 }}
+                  style={{ position: 'absolute', right: 0, maxHeight: '80%', fontSize: '80%', bottom: 2 }}
                   onClick={retrieveFamilyInfo}
                 >
                   등록가족 상세
