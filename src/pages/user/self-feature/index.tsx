@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SelectValue } from '@mui/base/useSelect';
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEmpty } from "lodash";
 
 import { RowsInfo } from "@/models/components/Table";
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -106,6 +106,9 @@ const SelfFeature = () => {
 					} else if (t.submissionStatus === subFeatStatus.DLET) {
 						t.submissionStatusNm = subFeatStatusNm.DLET
 					}
+					// 부서명 setting
+					let deptItem = deptOption.find((deptItem) => deptItem.deptCode === t.userTeamNm)
+					if (!isEmpty(deptItem)) t.deptNm = deptItem.deptNm
 					return t
 				})
 				setSelfFeatureList(rtn)
