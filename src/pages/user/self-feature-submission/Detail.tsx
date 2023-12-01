@@ -148,8 +148,8 @@ const SfSubmissionRequestDetail = () => {
     // component mount
     useEffect(() => {
         initCustFeatRule()
-        if (location.state.sqlDirectInputYn !== "Y")
-            mstrSgmtTbandColRefetch()
+        // if (location.state.sqlDirectInputYn !== "Y")
+        //     mstrSgmtTbandColRefetch()
     }, [])
     // feature 정보 초기화
     const initCustFeatRule = () => {
@@ -308,7 +308,7 @@ const SfSubmissionRequestDetail = () => {
                     columnLogiName항목에 추가				
                 */
                 let trgtIdArr: Array<TbRsCustFeatRuleTrgt> = []
-                trgtIdArr = targetList.filter((target: TbRsCustFeatRuleTrgt) => targetId === target.targetId)
+                trgtIdArr = featureInfo.tbRsCustFeatRuleTrgtList.filter((target: TbRsCustFeatRuleTrgt) => targetId === target.targetId)
 
                 if (trgtIdArr.length > 0) metaTblId = trgtIdArr[0].tableName
 

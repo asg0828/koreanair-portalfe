@@ -298,6 +298,7 @@ const OperatorOperand = ({
                                 //     });
                                 //     */
                                 // }}
+                                placeholderText='날짜 선택'
                                 value={oprd2DpValue}
                                 onChange={(date) => {
                                     let d = dayjs(date).format("YYYY-MM-DD").toString()
@@ -432,6 +433,7 @@ const OperatorOperand = ({
                                     //     });
                                     //     */
                                     // }}
+                                    placeholderText='날짜 선택'
                                     value={oprd2DpValue}
                                     onChange={(date) => {
                                         let d = dayjs(date).format("YYYY-MM-DD").toString()
@@ -552,6 +554,7 @@ const OperatorOperand = ({
                                     //     });
                                     //     */
                                     // }}
+                                    placeholderText='날짜 선택'
                                     value={oprd5DpValue}
                                     onChange={(date) => {
                                         let d = dayjs(date).format("YYYY-MM-DD").toString()

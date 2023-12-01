@@ -192,6 +192,7 @@ const CaseComponent = ({
     ) => {
         let keyNm = String(id)
         let v = String(value)
+        if (v === "null" || v === "undefined") return
         let isClrDlmt = false // select 변경시 delimiter 초기화를 위한 flag
         let isSlctElse = false // else 구문 선택시 결과값 제외 다른 값 초기화를 위한 flag
         if (

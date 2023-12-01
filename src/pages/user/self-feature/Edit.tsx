@@ -173,8 +173,8 @@ const SelfFeatureEdit = () => {
 	}
 	// component mount
 	useEffect(() => {
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
-			mstrSgmtTbandColRefetch()
+		// if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
+		// 	mstrSgmtTbandColRefetch()
 	}, [])
 	// 속성,행동데이터 response callback
 	useEffect(() => {
@@ -519,6 +519,8 @@ const SelfFeatureEdit = () => {
 	) => {
 		let keyNm = String(id)
 		let v = String(value)
+        if (v === "null" || v === "undefined") return
+
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
 			Object.keys(rtn).map((key) => {
