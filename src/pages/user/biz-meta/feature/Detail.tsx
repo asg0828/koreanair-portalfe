@@ -2,9 +2,10 @@ import '@/assets/styles/Board.scss';
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteFeature } from '@/hooks/mutations/useFeatureMutations';
 import { useFeatureById } from '@/hooks/queries/useFeatureQueries';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalType, ValidType } from '@/models/common/Constants';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { FeatureModel } from '@/models/model/FeatureModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
@@ -14,8 +15,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const location = useLocation();
   const { toast } = useToast();
+  const location = useLocation();
+  const contextPath = useAppSelector(selectContextPath());
   const [featureModel, setFeatureModel] = useState<FeatureModel>();
   const featureId: string = location?.state?.featureId || '';
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
@@ -192,12 +194,16 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-          수정
-        </Button>
-        <Button priority="Normal" appearance="Outline" size="LG" onClick={handleDelete}>
-          삭제
-        </Button>
+        {contextPath === ContextPath.ADMIN && (
+          <>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+              수정
+            </Button>
+            <Button priority="Normal" size="LG" onClick={handleDelete}>
+              삭제
+            </Button>
+          </>
+        )}
         <Button appearance="Outline" size="LG" onClick={goToList}>
           목록
         </Button>

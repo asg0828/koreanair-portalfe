@@ -4,9 +4,10 @@ import DataGrid from '@/components/grid/DataGrid';
 import { useDatasetList } from '@/hooks/queries/useDatasetQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ValidType, View } from '@/models/common/Constants';
+import { ContextPath, GroupCodeType, ValidType, View } from '@/models/common/Constants';
 import { DatasetModel, DatasetParams } from '@/models/model/DatasetModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { selectCodeList } from '@/reducers/codeSlice';
 import {
   Button,
@@ -41,6 +42,7 @@ const initParams: DatasetParams = {
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const codeList = useAppSelector(selectCodeList(GroupCodeType.DBMS));
   const [params, setParams] = useState<DatasetParams>(initParams);
   const [page, setPage] = useState<PageModel>(initPage);
@@ -180,10 +182,12 @@ const List = () => {
         onClick={goToDetail}
         onChange={handlePage}
         buttonChildren={
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-            <AddIcon />
-            등록
-          </Button>
+          contextPath === ContextPath.ADMIN && (
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
+              등록
+            </Button>
+          )
         }
       />
     </>
