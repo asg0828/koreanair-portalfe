@@ -14,21 +14,19 @@ import {
 import {
     ModalTitCont,
     ModalType,
-    initApiRequest,
-    initCommonResponse,
-    initConfig
 } from '@/models/selfFeature/FeatureCommon';
-import { Method, callApi } from '@/utils/ApiUtil';
 import { useRunScheduleByManually } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations';
 import { ValidType } from '@/models/common/Constants';
 
 export interface Props {
-    [key: string]: string
+    [key: string]: string | number
     custFeatRuleId: string
+    batManualExecTestCnt: number
 }
 
 const FeatQueryRsltButton = ({
     custFeatRuleId,
+    batManualExecTestCnt,
 }: Props) => {
 
     const { toast } = useToast()
@@ -54,6 +52,13 @@ const FeatQueryRsltButton = ({
     // 수동실행 API 호출
     const runScheduleByManually = () => {
         if (custFeatRuleId && custFeatRuleId !== "") {
+            if (batManualExecTestCnt > 5) {
+                toast({
+                    type: ValidType.ERROR,
+                    content: '수동 가능한 횟수는 5회 입니다.',
+                })
+                return
+            }
             runScheduleByManuallyMutate()
         } else {
             toast({

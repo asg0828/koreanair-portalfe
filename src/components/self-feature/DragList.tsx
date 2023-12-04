@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { cloneDeep } from "lodash";
 import { TrgtDragAttrType } from "@/pages/user/self-feature/data";
+import BehvAccordionDrag from "./dragItem/BehvAccordionDrag";
 
 export interface Props {
     attributes: Array<Attribute>
@@ -27,6 +28,14 @@ const DragList = ({
     const [ attrType1List, setAttrType1List ] = useState<Array<Attribute>>([])
     const [ attrType2List, setAttrType2List ] = useState<Array<Attribute>>([])
     const [ attrType3List, setAttrType3List ] = useState<Array<Attribute>>([])
+    // 속성정보 아코디언
+    const [ defaultAttr, setDefaultAttr ] = useState<Array<string>>([])
+    // 행동정보 아코디언
+    const [ defaultBehv, setDefaultBehv ] = useState<Array<string>>([])
+    // 속성테이블 아코디언
+    const [ defaultType1, setDefaultType1 ] = useState<Array<string>>([])
+    const [ defaultType2, setDefaultType2 ] = useState<Array<string>>([])
+    const [ defaultType3, setDefaultType3 ] = useState<Array<string>>([])
 
     useEffect(() => {
         if (attributes.length < 1) return
@@ -36,6 +45,10 @@ const DragList = ({
         setAttrType2List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE2 === attribute.metaTblLogiNm))
         setAttrType3List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE3 === attribute.metaTblLogiNm))
         setSrchAttrRsltList(attrList)
+    
+        if (attributes.length > 0) setDefaultAttr(["Fact 정보"])
+        else setDefaultAttr([])
+
     }, [attributes])
 
     useEffect(() => {
@@ -43,13 +56,33 @@ const DragList = ({
         
         let behvList: Array<Behavior> = cloneDeep(behaviors)
         setSrchBehvRsltList(behvList)
+    
+        if (behvList.length > 0) setDefaultBehv(["BaseFact 정보"])
+        else setDefaultBehv([])
+
     }, [behaviors])
 
     useEffect(() => {
+        let oriAttrList: Array<Attribute> = cloneDeep(attributes)
         let attrList: Array<Attribute> = cloneDeep(srchAttrRsltList)
-        setAttrType1List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE1 === attribute.metaTblLogiNm))
-        setAttrType2List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE2 === attribute.metaTblLogiNm))
-        setAttrType3List(attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE3 === attribute.metaTblLogiNm))
+
+        let oriType1Arr = oriAttrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE1 === attribute.metaTblLogiNm)
+        let type1Arr = attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE1 === attribute.metaTblLogiNm)
+        setAttrType1List(type1Arr)
+        if ((oriType1Arr.length > type1Arr.length) && type1Arr.length > 0) setDefaultType1([TrgtDragAttrType.TYPE1])
+        else setDefaultType1([])
+        
+        let oriType2Arr = oriAttrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE2 === attribute.metaTblLogiNm)
+        let type2Arr = attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE2 === attribute.metaTblLogiNm)
+        setAttrType2List(type2Arr)
+        if ((oriType2Arr.length > type2Arr.length) && type2Arr.length > 0) setDefaultType2([TrgtDragAttrType.TYPE2])
+        else setDefaultType2([])
+        
+        let oriType3Arr = oriAttrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE3 === attribute.metaTblLogiNm)
+        let type3Arr = attrList.filter((attribute: Attribute) => TrgtDragAttrType.TYPE3 === attribute.metaTblLogiNm)
+        setAttrType3List(type3Arr)
+        if ((oriType3Arr.length > type3Arr.length) && type3Arr.length > 0) setDefaultType3([TrgtDragAttrType.TYPE3])
+        else setDefaultType3([])
     }, [srchAttrRsltList])
 
     useEffect(() => {
@@ -118,12 +151,28 @@ const DragList = ({
                 size="MD"
                 type="multiple"
                 style={{marginTop:"10px"}}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setDefaultAttr((prevState: Array<string>) => {
+                        if (prevState.length > 0) return []
+                        else return ["Fact 정보"]
+                    })
+                }}
+                value={defaultAttr}
             >
                 <AccordionItem
                     title='Fact 정보'
                     value='Fact 정보'
                 >
                     <Accordion
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setDefaultType1((prevState: Array<string>) => {
+                                if (prevState.length > 0) return []
+                                else return [TrgtDragAttrType.TYPE1]
+                            })
+                        }}
+                        value={defaultType1}
                         align="Right"
                         size="MD"
                         type="multiple"
@@ -149,6 +198,14 @@ const DragList = ({
                         align="Right"
                         size="MD"
                         type="multiple"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setDefaultType2((prevState: Array<string>) => {
+                                if (prevState.length > 0) return []
+                                else return [TrgtDragAttrType.TYPE2]
+                            })
+                        }}
+                        value={defaultType2}
                     >
                         <AccordionItem
                             title={TrgtDragAttrType.TYPE2}
@@ -171,6 +228,14 @@ const DragList = ({
                         align="Right"
                         size="MD"
                         type="multiple"
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setDefaultType3((prevState: Array<string>) => {
+                                if (prevState.length > 0) return []
+                                else return [TrgtDragAttrType.TYPE3]
+                            })
+                        }}
+                        value={defaultType3}
                     >
                         <AccordionItem
                             title={TrgtDragAttrType.TYPE3}
@@ -208,42 +273,57 @@ const DragList = ({
 
             })}
             */}
-            {srchBehvRsltList.length > 0 &&
             <Accordion
                 align="Right"
                 size="MD"
                 type="multiple"
+                style={{marginTop:"10px"}}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setDefaultBehv((prevState: Array<string>) => {
+                        if (prevState.length > 0) return []
+                        else return ["BaseFact 정보"]
+                    })
+                }}
+                value={defaultBehv}
             >
                 <AccordionItem
                     title='BaseFact 정보'
                     value='BaseFact 정보'
                 >
                 {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
-                    <Accordion
+                    // <Accordion
+                    //     key={behvIdx}
+                    //     align="Right"
+                    //     size="MD"
+                    //     type="multiple"
+                    //     onClick={(e) => {
+                    //         e.stopPropagation()
+                    //     }}
+                    // >
+                    //     <AccordionItem
+                    //         title={behavior.metaTblLogiNm}
+                    //         value={behavior.metaTblLogiNm}
+                    //     >
+                    //     <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                    //     {behavior.tbCoMetaTblClmnInfoList.map((tbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo, clmnIdx: number) => (
+                    //         <BehvDragItem
+                    //             key={clmnIdx}
+                    //             metaTblLogiNm={behavior.metaTblLogiNm}
+                    //             behvTblClmnInfo={tbCoMetaTblClmnInfo}
+                    //         />
+                    //     ))}
+                    //     </Stack>
+                    //     </AccordionItem>
+                    // </Accordion>
+                    <BehvAccordionDrag 
                         key={behvIdx}
-                        align="Right"
-                        size="MD"
-                        type="multiple"
-                    >
-                        <AccordionItem
-                            title={behavior.metaTblLogiNm}
-                            value={behavior.metaTblLogiNm}
-                        >
-                        <Stack direction="Vertical" justifyContent="Center" gap="SM" >
-                        {behavior.tbCoMetaTblClmnInfoList.map((tbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo, clmnIdx: number) => (
-                            <BehvDragItem
-                                key={clmnIdx}
-                                metaTblLogiNm={behavior.metaTblLogiNm}
-                                behvTblClmnInfo={tbCoMetaTblClmnInfo}
-                            />
-                        ))}
-                        </Stack>
-                        </AccordionItem>
-                    </Accordion>
+                        oriBehavior={behaviors[behvIdx]}
+                        behavior={behavior}
+                    />
                 ))}
                 </AccordionItem>
             </Accordion>
-            }
         </Page>
     )
 }

@@ -589,6 +589,7 @@ const SelfFeatureEdit = () => {
 				{/* 상단 버튼 영역 */}
 				<FeatQueryRsltButton
 					custFeatRuleId={location.state.featureInfo.tbRsCustFeatRule.id}
+                    batManualExecTestCnt={location.state.featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
 				/>
 
 				{/* 기본 정보 */}
