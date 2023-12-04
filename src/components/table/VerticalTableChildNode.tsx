@@ -16,6 +16,7 @@ export interface VerticalTableChildProps {
   onClick?: Function;
   children?: ReactNode;
   index?: number;
+  totals?: Array<any>;
 }
 
 export interface ChildColumnProps {
@@ -26,11 +27,13 @@ export interface ChildRowProps {
   columns: ColumnChild[];
   row: RowsInfo;
   index: number;
+  totals: any;
 }
 
 const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
   columns = [],
   rows = [],
+  totals = [],
   showHeader = true,
   enableSort = false,
   clickable = false,
@@ -88,11 +91,10 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
 
     setSortRows(sortRows);
   };
-
+  console.log(totals);
   const handleClick = (row: RowsInfo, index: number) => {
     onClick && onClick(row, index);
   };
-
   const ChildColumnGird = ({ columns }: ChildColumnProps) => {
     return (
       <>
@@ -132,7 +134,7 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
     );
   };
 
-  const ChildRowGird = ({ columns, row, index }: ChildRowProps) => {
+  const ChildRowGird = ({ columns, row, index, totals }: ChildRowProps) => {
     return (
       <>
         {columns.map((column: ColumnChild, index2) =>
@@ -147,7 +149,7 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
               <Typography variant="body2">{row[column.field]}</Typography>
             </TD>
           ) : (
-            <ChildRowGird columns={column.childName} row={row} index={index} />
+            <ChildRowGird columns={column.childName} row={row} index={index} totals={totals} />
           )
         )}
       </>
@@ -181,9 +183,21 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
                     />
                   </TD>
                 )}
-                <ChildRowGird columns={columns} row={row} index={index} />
+                <ChildRowGird columns={columns} row={row} index={index} totals={totals} />
               </TR>
             ))}
+            {totals?.length > 0 ? (
+              <THead>
+                <TR>
+                  <TH colSpan={totals.length > 20 ? 2.01 : 1}>total</TH> {/*dilay일때 2 ctiVoc일때 1 */}
+                  {totals.map((total, index) => (
+                    <TH>{total.value}</TH>
+                  ))}
+                </TR>
+              </THead>
+            ) : (
+              <></>
+            )}
           </TBody>
         ) : (
           <TBody className="no-data-wrap">

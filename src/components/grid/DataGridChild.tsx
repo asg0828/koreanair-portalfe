@@ -4,9 +4,11 @@ import { Label, Pagination, Select, SelectOption, Stack } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
 import './DataGrid.scss';
 import VerticalTableChildNode from '../table/VerticalTableChildNode';
+import { RowsInfo } from '@/models/components/Table';
 
 export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
+  totals?: any;
 }
 
 const DataGridChild: React.FC<DatagridProps> = ({
@@ -19,6 +21,7 @@ const DataGridChild: React.FC<DatagridProps> = ({
   buttonChildren,
   page,
   rowSelection,
+  totals,
 }) => {
   const [pages, setPages] = useState<PageModel>(initPage);
 
@@ -39,7 +42,6 @@ const DataGridChild: React.FC<DatagridProps> = ({
       return state;
     });
   };
-
   return (
     <Stack className="dataGridWrap" direction="Vertical" gap="MD">
       <Stack className="total-layout">
@@ -64,6 +66,7 @@ const DataGridChild: React.FC<DatagridProps> = ({
         enableSort={enableSort}
         clickable={clickable}
         onClick={onClick}
+        totals={totals}
         rowSelection={rowSelection}
       />
       <Stack className="pagination-layout">
