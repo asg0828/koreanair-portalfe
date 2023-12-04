@@ -29,6 +29,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   rowSelection,
   onClick,
 }) => {
+  console.log(enableSort)
   const isCheckbox = typeof rowSelection === 'function';
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);
@@ -155,12 +156,20 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                     className="verticalTableTD"
                   >
                     {(() => {
-                      const columnData = columns[columnIndex];
-                      const data = row[columnData.field];
-                      if (typeof data === 'number' && columnData.field !== 'memberNumber') {
-                        return <Typography variant="body2">{formatNumber(data)}</Typography>;
+                      if (columns[columnIndex].render) {
+                        return columns[columnIndex].render?.(
+                          rowIndex,
+                          columns[columnIndex].field,
+                          columns[columnIndex].maxLength
+                        );
+                      } else {
+                        const columnData = columns[columnIndex];
+                        const data = row[columnData.field];
+                        if (typeof data === 'number' && columnData.field !== 'memberNumber') {
+                          return <Typography variant="body2">{formatNumber(data)}</Typography>;
+                        }
+                        return <Typography variant="body2">{data}</Typography>;
                       }
-                      return <Typography variant="body2">{data}</Typography>;
                     })()}
                   </TD>
                 ))}

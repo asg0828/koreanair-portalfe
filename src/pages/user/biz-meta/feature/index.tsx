@@ -325,14 +325,14 @@ const List = () => {
           </TH>
           <TD colSpan={5} align="left">
             <Checkbox
-              label="Feature 한글명"
-              onCheckedChange={(checked) => handleChangeSearchConditions('featureKoNm', checked)}
-              checked={params.searchConditions.includes('featureKoNm')}
-            />
-            <Checkbox
               label="Feature 영문명"
               onCheckedChange={(checked) => handleChangeSearchConditions('featureEnNm', checked)}
               checked={params.searchConditions.includes('featureEnNm')}
+            />
+            <Checkbox
+              label="Feature 한글명"
+              onCheckedChange={(checked) => handleChangeSearchConditions('featureKoNm', checked)}
+              checked={params.searchConditions.includes('featureKoNm')}
             />
             <Checkbox
               label="정의"
@@ -382,7 +382,6 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
-        enableSort={true}
         clickable={true}
         page={page}
         onClick={goToDetail}
