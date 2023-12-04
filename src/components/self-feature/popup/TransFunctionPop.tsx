@@ -791,7 +791,7 @@ const TransFunctionPop = ({
                                             alignItems="Center"
                                             direction="Horizontal" 
                                             gap="MD" 
-                                            className="width-100 Non-Scroll-Select"
+                                            className="width-100"
                                         >
                                             <Checkbox
                                                 label="달력"
@@ -841,7 +841,7 @@ const TransFunctionPop = ({
                                             alignItems="Center"
                                             direction="Horizontal" 
                                             gap="MD" 
-                                            className="width-100 Non-Scroll-Select"
+                                            className="width-100"
                                         >
                                             <Checkbox
                                                 label="달력"
