@@ -15,8 +15,8 @@ import { useNavigate } from 'react-router-dom';
 const columns = [
   { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
   { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
-  { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
   { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1 },
+  { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
   { headerName: '정의', field: 'featureDef', colSpan: 2 },
   { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
   { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
@@ -102,7 +102,6 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
-        enableSort={true}
         clickable={true}
         page={page}
         onChange={handlePage}

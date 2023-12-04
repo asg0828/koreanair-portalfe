@@ -141,7 +141,6 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
-        enableSort={true}
         clickable={true}
         page={page}
         onClick={goToDetail}
