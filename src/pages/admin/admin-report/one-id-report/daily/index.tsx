@@ -1,6 +1,6 @@
 import { Button, Radio, DatePicker, TD, TH, TR, useToast, Stack } from '@ke-design/components';
 import { useCallback, useEffect, useState } from 'react';
-import { oneIdDailyColumn, oneIdDailyData } from '../../one-id-main/data';
+import { dailyTotal, oneIdDailyColumn, oneIdDailyData } from '../../one-id-main/data';
 import { DailyReportData, dailySearch } from '@/models/oneId/OneIdInfo';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useDaily } from '@/hooks/queries/useOneIdQueries';
@@ -170,6 +170,7 @@ export default function Daily() {
         columns={oneIdDailyColumn}
         // rows={row}
         rows={oneIdDailyData}
+        totals={dailyTotal}
         enableSort={false}
         clickable={true}
         page={page}

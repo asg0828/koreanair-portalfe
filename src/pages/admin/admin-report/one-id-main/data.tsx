@@ -1,3 +1,4 @@
+import { RowsInfo } from '@/models/components/Table';
 import { Column, ColumnChild } from '@/models/customer-info/CustomerInfo';
 import {
   CtiVocData,
@@ -507,6 +508,24 @@ const ctiVocData: CtiVocData[] = [
     oneidHitNonSkypassRate: 71,
   },
 ];
+const ctiVocTotal: any = [
+  { total: 'totalCntLastUpd', value: 1 },
+  { total: 'totalCntCaseClose', value: 2 },
+  { total: 'oneidConnectSkypassCnt', value: 3 },
+  { total: 'oneidConnectNonSkypassCnt', value: 4 },
+  { total: 'oneidConnectTotalCnt', value: 5 },
+  { total: 'oneidConnectRate', value: 6 },
+  { total: 'oneidCtiSearchTotalRate', value: 7 },
+  { total: 'oneidCtiConnectReturnRate', value: 8 },
+  { total: 'oneidSearchSkypassCnt', value: 9 },
+  { total: 'oneidSearchNonSkypassCnt', value: 10 },
+  { total: 'oneidSearchTotalCnt', value: 11 },
+  { total: 'oneidHitTotalRate', value: 12 },
+  { total: 'oneidHitNonSkypassRate', value: 13 },
+  { total: 'oneidNonHitCnt', value: 14 },
+  { total: 'oneidMultiHitCnt', value: 15 },
+  { total: 'oneidOverHitCnt', value: 16 },
+];
 const errLogData: ErrLogData[] = [
   {
     no: '1',
@@ -540,7 +559,7 @@ const oneIdDailyColumn: ColumnChild[] = [
         colSpan: 6,
         childName: [
           { headerName: '총 UCI ID 수', field: 'pnrUci', colSpan: 1 },
-          { headerName: '신규 OneID', field: 'newOneidTodayPnr', colSpan: 1 },
+          { headerName: '신규 OneID', field: 'pnrNewOneid', colSpan: 1 },
           { headerName: 'SKYPASS OneID 재사용', field: 'pnrReuseSkypass', colSpan: 1 },
           { headerName: '기존 비회원 OneID 재사용', field: 'pnrReuseNonSkypass', colSpan: 1 },
           { headerName: '신규 Potentail OneID', field: 'pnrNewPotentialid', colSpan: 1 },
@@ -615,7 +634,7 @@ const oneIdDailyData: DailyReportData[] = [
     newOneidSkypass: '7',
     newOneidTodayPnr: '8',
     newOneidTotal: '8',
-    no: 'No',
+    no: 'No', // 총 OneID 개수
     oneidAlone: '011',
     oneidSource: '133',
     oneidTarget: '12',
@@ -655,6 +674,29 @@ const oneIdDailyData: DailyReportData[] = [
   },
 ];
 
+const dailyTotal: any = [
+  { total: 'pnrTotal', value: 1 },
+  { total: 'pnrUci', value: 2 },
+  { total: 'pnrNewOneid', value: 3 },
+  { total: 'pnrReuseSkypass', value: 4 },
+  { total: 'pnrReuseNonSkypass', value: 5 },
+  { total: 'pnrNewPotentialid', value: 6 },
+  { total: 'pnrSkipped', value: 7 },
+  { total: 'newOneidTodayPnr', value: 8 },
+  { total: 'newOneidPastPnr', value: 9 },
+  { total: 'newOneidPotentialConv', value: 10 },
+  { total: 'newOneidSkypass', value: 11 },
+  { total: 'newOneidTotal', value: 12 },
+  { total: 'oneidTotal', value: 13 },
+  { total: 'no', value: '??' },
+  { total: 'oneidAlone', value: 14 },
+  { total: 'oneidTarget', value: 15 },
+  { total: 'oneidSource', value: 16 },
+  { total: 'mergedSkypassToSkypass', value: 17 },
+  { total: 'mergedNonSkypassToSkypass', value: 18 },
+  { total: 'mergedNonSkypassToNonSkypass', value: 19 },
+  { total: 'mergedSkypassRequest', value: 20 },
+];
 const oneIdSameData: OneIdSameData[] = [
   {
     no: '61',
@@ -769,4 +811,6 @@ export {
   masterColumn,
   ctiVocData,
   ctiVocColumn,
+  dailyTotal,
+  ctiVocTotal,
 };

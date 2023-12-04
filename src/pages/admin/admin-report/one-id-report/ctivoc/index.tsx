@@ -1,6 +1,6 @@
 import { Button, DatePicker, Radio, Stack, TD, TH, TR, useToast } from '@ke-design/components';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { ctiVocColumn, ctiVocData } from '../../one-id-main/data';
+import { ctiVocColumn, ctiVocData, ctiVocTotal } from '../../one-id-main/data';
 import { CtiVocData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useCtiVoc } from '@/hooks/queries/useOneIdQueries';
@@ -171,6 +171,7 @@ export default function Ctivoc() {
         columns={ctiVocColumn}
         //row   = {row}
         rows={ctiVocData}
+        totals={ctiVocTotal}
         enableSort={false}
         clickable={true}
         onChange={handlePage}
