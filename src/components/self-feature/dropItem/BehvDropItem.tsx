@@ -161,7 +161,6 @@ const BehvDropItem = ({
 
     useEffect(() => {
         //columnList
-        console.log("dsadas")
         let baseTimeColInfo: TbCoMetaTblClmnInfo = cloneDeep(initTbCoMetaTblClmnInfo)
         let colList: Array<AggregateCol> = []
         aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
