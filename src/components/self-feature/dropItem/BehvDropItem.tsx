@@ -161,6 +161,7 @@ const BehvDropItem = ({
 
     useEffect(() => {
         //columnList
+        console.log("dsadas")
         let baseTimeColInfo: TbCoMetaTblClmnInfo = cloneDeep(initTbCoMetaTblClmnInfo)
         let colList: Array<AggregateCol> = []
         aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
@@ -190,7 +191,7 @@ const BehvDropItem = ({
                                 else if ((col.dataType !== ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return false
                                 // 수집기준일이 적재일시(load_timestamp인 경우 First, Last 함수 제외)
                                 // 임시 데이터로 빈값(테이블에 수집기준일이 없는 경우) 또한 제외
-                                else if ((v.cdv === "first" || v.cdv === "last") && (baseTimeCol.metaTblClmnPhysNm === "" || baseTimeCol.metaTblClmnPhysNm === "load_timestamp")) return false
+                                else if ((v.cdv === "first" || v.cdv === "last") && (baseTimeColInfo.metaTblClmnPhysNm === "" || baseTimeColInfo.metaTblClmnPhysNm === "load_timestamp")) return false
                                 else return true
                             }
                         })
