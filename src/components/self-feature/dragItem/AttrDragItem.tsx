@@ -41,6 +41,7 @@ const AttrDragItem = ({
                     fontSize: "smaller", 
                 }}
                 variant="body2"
+                onClick={(e)=>e.stopPropagation()}
             >
                 {attrTblClmnInfo.metaTblClmnLogiNm} / {attrTblClmnInfo.dataTypeCategory.slice(0, 1).toUpperCase()}
             </Typography>

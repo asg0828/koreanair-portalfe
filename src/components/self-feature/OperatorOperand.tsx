@@ -126,8 +126,8 @@ const OperatorOperand = ({
         <>
             <Stack
                 style={{
-                    flex: "0 1 20%",
-                    maxWidth: "20%",
+                    flex: "0 1 23%",
+                    maxWidth: "23%",
                 }}
             >
                 {(isPossibleEdit) &&
@@ -149,10 +149,10 @@ const OperatorOperand = ({
                         }}
                     >
                         {operatorOption.map((item, index) => (
-                            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                            <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                         ))}
                         {operatorOption.length < 1 &&
-                            <SelectOption value="">연산자 선택</SelectOption>
+                            <SelectOption style={{ fontSize: "smaller" }} value="">연산자 선택</SelectOption>
                         }
                     </Select>
                 }
@@ -194,10 +194,10 @@ const OperatorOperand = ({
                         }}
                     >
                         {delimiterOption.map((item, index) => (
-                            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                            <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                         ))}
                         {delimiterOption.length < 1 &&
-                            <SelectOption value="">구분자 선택</SelectOption>
+                            <SelectOption style={{ fontSize: "smaller" }} value="">구분자 선택</SelectOption>
                         }
                     </Select>
                 </Stack>
@@ -267,8 +267,8 @@ const OperatorOperand = ({
                                     onchangeSelectHandler(e, value, "operand1")
                                 }}
                             >
-                                <SelectOption value="date">날짜</SelectOption>
-                                <SelectOption value="now">조건식</SelectOption>
+                                <SelectOption style={{ fontSize: "smaller" }} value="date">날짜</SelectOption>
+                                <SelectOption style={{ fontSize: "smaller" }} value="now">조건식</SelectOption>
                             </Select>
                         </Stack>
                         {item?.operand1 === "date" &&
@@ -348,10 +348,10 @@ const OperatorOperand = ({
                                 }}
                             >
                                 {tsDateFormatOption.map((item, index) => (
-                                    <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                    <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                                 ))}
                                 {tsDateFormatOption.length < 1 &&
-                                    <SelectOption value="">선택</SelectOption>
+                                    <SelectOption style={{ fontSize: "smaller" }} value="">선택</SelectOption>
                                 }
                             </Select>
                         </Stack>
@@ -401,8 +401,8 @@ const OperatorOperand = ({
                                         onchangeSelectHandler(e, value, "operand1")
                                     }}
                                 >
-                                    <SelectOption value="date">날짜</SelectOption>
-                                    <SelectOption value="now">조건식</SelectOption>
+                                    <SelectOption style={{ fontSize: "smaller" }} value="date">날짜</SelectOption>
+                                    <SelectOption style={{ fontSize: "smaller" }} value="now">조건식</SelectOption>
                                 </Select>
                             </Stack>
                             {item?.operand1 === "date" &&
@@ -483,10 +483,10 @@ const OperatorOperand = ({
                                         }}
                                     >
                                         {tsDateFormatOption.map((item, index) => (
-                                            <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                            <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                                         ))}
                                         {tsDateFormatOption.length < 1 &&
-                                            <SelectOption value="">선택</SelectOption>
+                                            <SelectOption style={{ fontSize: "smaller" }} value="">선택</SelectOption>
                                         }
                                     </Select>
                                 </Stack>
@@ -522,8 +522,8 @@ const OperatorOperand = ({
                                         onchangeSelectHandler(e, value, "operand4")
                                     }}
                                 >
-                                    <SelectOption value="date">날짜</SelectOption>
-                                    <SelectOption value="now">조건식</SelectOption>
+                                    <SelectOption style={{ fontSize: "smaller" }} value="date">날짜</SelectOption>
+                                    <SelectOption style={{ fontSize: "smaller" }} value="now">조건식</SelectOption>
                                 </Select>
                             </Stack>
                             {item?.operand4 === "date" &&
@@ -604,10 +604,10 @@ const OperatorOperand = ({
                                     }}
                                 >
                                     {tsDateFormatOption.map((item, index) => (
-                                        <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                        <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                                     ))}
                                     {tsDateFormatOption.length < 1 &&
-                                        <SelectOption value="">선택</SelectOption>
+                                        <SelectOption style={{ fontSize: "smaller" }} value="">선택</SelectOption>
                                     }
                                 </Select>
                             </Stack>

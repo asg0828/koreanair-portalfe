@@ -42,6 +42,7 @@ const BehvDragItem = ({
                         fontSize: "smaller", 
                     }}
                     variant="body2"
+                    onClick={(e)=>e.stopPropagation()}
                 >
                     {behvTblClmnInfo.metaTblClmnLogiNm} / {behvTblClmnInfo.dataTypeCategory.slice(0, 1).toUpperCase()}
                 </Typography>
