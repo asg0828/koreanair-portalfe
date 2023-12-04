@@ -1,8 +1,8 @@
 // 계산식 validation 공통
 import { cloneDeep } from "lodash"
 
-import { CustFeatureFormData, FormulaTrgtListProps, FormulaValidRslt } from "@/models/selfFeature/FeatureModel"
-import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
+import { CustFeatureFormData, FormulaTrgtListProps, FormulaValidRslt, TbRsCustFeatRuleTrgt } from "@/models/selfFeature/FeatureModel"
+import { divisionTypes, initFormulaValidRslt } from "@/pages/user/self-feature/data"
 import { ColDataType } from "@/models/selfFeature/FeatureCommon"
 import { SfSubmissionApproval } from "@/models/selfFeature/FeatureSubmissionModel"
 
@@ -273,6 +273,16 @@ export const validationCustReatRule = (formData: CustFeatureFormData) => {
     }
 
     if (validInfo.valid) {
+        formData.customerFeature.tbRsCustFeatRuleTrgtList.map((target: TbRsCustFeatRuleTrgt) => {
+            if (target.divisionCode === divisionTypes.BEHV) {
+                if (!target.columnName || target.columnName === "" || target.columnName === "null" || target.columnName === "undefined") {
+                    validInfo.text = `BaseFact 정보 '${target.targetId}'의 집계할 컬럼을 확인 해주세요.`
+                    validInfo.valid = false
+                }
+            }
+            return target
+        })
+        
         formData.submissionInfo.approvals.map((approval: SfSubmissionApproval) => {
             if (!approval.approver || approval.approver === "") {
                 validInfo.text = "결재선을 확인 해주세요."

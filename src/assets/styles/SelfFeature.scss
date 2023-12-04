@@ -1,3 +1,7 @@
 .dataGridWrap{
     width: 100%
 }
+.Non-Scroll-Select .MuiSelect-popper.MuiPopper-root {
+  height: unset;
+  overflow: unset;
+}

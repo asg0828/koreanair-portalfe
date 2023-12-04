@@ -34,6 +34,7 @@ import { ColDataType, CommonCode, CommonCodeInfo, ModalType, initCommonCodeInfo 
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import dayjs from 'dayjs';
+import '@/assets/styles/SelfFeature.scss'
 
 const TransFunctionPop = ({
     isOpen = false,
@@ -90,6 +91,7 @@ const TransFunctionPop = ({
             setTempTrgtItem(trgtItem.function, trgtItem.variable1, trgtItem.variable2, trgtItem.variable3)
         }
     }, [isOpen])
+
     // modal 확인/취소 이벤트
     const onConfirm = () => {
         if (modalType === ModalType.CONFIRM) {
@@ -789,7 +791,7 @@ const TransFunctionPop = ({
                                             alignItems="Center"
                                             direction="Horizontal" 
                                             gap="MD" 
-                                            className="width-100"
+                                            className="width-100 Non-Scroll-Select"
                                         >
                                             <Checkbox
                                                 label="달력"
@@ -839,7 +841,7 @@ const TransFunctionPop = ({
                                             alignItems="Center"
                                             direction="Horizontal" 
                                             gap="MD" 
-                                            className="width-100"
+                                            className="width-100 Non-Scroll-Select"
                                         >
                                             <Checkbox
                                                 label="달력"
