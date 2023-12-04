@@ -143,6 +143,7 @@ const SfSubmissionRequestDetail = () => {
     // feature 승인 API
     const [userEmail, setUserEmail] = useState<string>("")
     const [approvalId, setApprovalId] = useState<number>(0)
+    // 승인의 경우 승인합니다 로 고정
     const [aprvSubComment, setAprvSubComment] = useState<AprvSubCommentProps>(initAprvSubCommentProps)
     const { data: aprvSubAprvalRes, isSuccess: aprvSubAprvalSucc, isError: aprvSubAprvalErr, mutate: aprvSubAprvalMutate } = useApproveSubmissionApproval(userEmail, approvalId, aprvSubComment)
     // component mount
@@ -559,6 +560,7 @@ const SfSubmissionRequestDetail = () => {
                 {/* 상단 버튼 영역 */}
                 <FeatQueryRsltButton
                     custFeatRuleId={location.state.referenceNo}
+                    batManualExecTestCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
                 />
                 {/* 정보 영역 */}
                 <Typography variant="h4">승인 정보</Typography>

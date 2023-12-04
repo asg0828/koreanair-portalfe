@@ -728,6 +728,7 @@ const SelfFeatureDetail = () => {
 			{/* 상단 버튼 영역 */}
 			<FeatQueryRsltButton
 				custFeatRuleId={location.state.id}
+				batManualExecTestCnt={location.state.batManualExecTestCnt}
 			/>
 
 			{/* 정보 영역 */}
