@@ -5,13 +5,13 @@ import { useCreateInterestFeature, useDeleteInterestFeature } from '@/hooks/muta
 import { useFeatureList, useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ModalType, ValidType, View } from '@/models/common/Constants';
+import { ContextPath, ModalType, ValidType, View } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DeptModel } from '@/models/model/DeptModel';
 import { FeatureModel, FeatureParams, FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { UserModel } from '@/models/model/UserModel';
-import { selectSessionInfo } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -32,6 +32,7 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useAppDispatch();
+  const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
   const [createdFeatureId, setCreatedFeatureId] = useState<string>('');
   const [deletedFeatureId, setDeletedFeatureId] = useState<string>('');
@@ -387,10 +388,12 @@ const List = () => {
         onClick={goToDetail}
         onChange={handlePage}
         buttonChildren={
-          <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-            <AddIcon />
-            등록
-          </Button>
+          contextPath === ContextPath.ADMIN && (
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+              <AddIcon />
+              등록
+            </Button>
+          )
         }
       />
     </>

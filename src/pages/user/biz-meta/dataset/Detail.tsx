@@ -3,11 +3,12 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import VerticalTable from '@/components/table/VerticalTable';
 import { useDeleteDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useDatasetById } from '@/hooks/queries/useDatasetQueries';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalType, ValidType } from '@/models/common/Constants';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetModel } from '@/models/model/DatasetModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
+import { selectContextPath } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
@@ -19,6 +20,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
+  const contextPath = useAppSelector(selectContextPath());
   const mtsId: string = location?.state?.mtsId || '';
   const [datasetModel, setDatasetModel] = useState<DatasetModel>();
   const columns: Array<ColumnsInfo> = [
@@ -216,12 +218,16 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-          수정
-        </Button>
-        <Button priority="Normal" size="LG" onClick={handleDelete}>
-          삭제
-        </Button>
+        {contextPath === ContextPath.ADMIN && (
+          <>
+            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+              수정
+            </Button>
+            <Button priority="Normal" size="LG" onClick={handleDelete}>
+              삭제
+            </Button>
+          </>
+        )}
         <Button size="LG" onClick={goToList}>
           목록
         </Button>
