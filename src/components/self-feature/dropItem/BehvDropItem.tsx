@@ -51,7 +51,8 @@ const BehvDropItem = ({
     const [aggregateTopSelect, setAggregateTopSelect] = useState<Boolean>(false)
     const [aggregateOption, setAggregateOption] = useState<Array<CommonCodeInfo>>([])
     //const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
-
+    // 수집기준일 컬럼 정보
+    const [baseTimeCol, setBaseTimeCol] = useState<TbCoMetaTblClmnInfo>(cloneDeep(initTbCoMetaTblClmnInfo))
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [modalType, setModalType] = useState<string>("")
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
@@ -160,6 +161,7 @@ const BehvDropItem = ({
 
     useEffect(() => {
         //columnList
+        let baseTimeColInfo: TbCoMetaTblClmnInfo = cloneDeep(initTbCoMetaTblClmnInfo)
         let colList: Array<AggregateCol> = []
         aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
             let col = { value: "", text: "", dataType: "" }
@@ -167,8 +169,11 @@ const BehvDropItem = ({
             col.text = colInfo.metaTblClmnLogiNm
             col.dataType = colInfo.dataTypeCategory
             colList.push(col)
+            // 수집기준일 check
+            if (colInfo.baseTimeYn === "Y") baseTimeColInfo = colInfo
             return colInfo
         })
+        setBaseTimeCol(baseTimeColInfo)
         setColumnList([...[{ value: "", text: "선택", dataType: "" }], ...colList])
         // 집계할 컬럼 변경시 dataType setting
         colList.map((col: AggregateCol) => {
@@ -183,6 +188,9 @@ const BehvDropItem = ({
                             } else {
                                 if ((col.dataType === ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return true
                                 else if ((col.dataType !== ColDataType.NUM) && v.attr4.includes("ONLY_NUM")) return false
+                                // 수집기준일이 적재일시(load_timestamp인 경우 First, Last 함수 제외)
+                                // 임시 데이터로 빈값(테이블에 수집기준일이 없는 경우) 또한 제외
+                                else if ((v.cdv === "first" || v.cdv === "last") && (baseTimeCol.metaTblClmnPhysNm === "" || baseTimeCol.metaTblClmnPhysNm === "load_timestamp")) return false
                                 else return true
                             }
                         })
@@ -419,7 +427,7 @@ const BehvDropItem = ({
                             size="SM"
                             status="default"
                             style={{
-                                width: '16rem'
+                                width: '15rem',
                             }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -430,7 +438,7 @@ const BehvDropItem = ({
                             }}
                         >
                             {columnList.map((item, index) => (
-                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                <SelectOption style={{fontSize: 'smaller'}} key={index} value={item.value}>{item.text}</SelectOption>
                             ))}
                         </Select>
                         <Select
@@ -442,7 +450,7 @@ const BehvDropItem = ({
                             size="SM"
                             status="default"
                             style={{
-                                width: '16rem'
+                                width: '11rem'
                             }}
                             onChange={(
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
@@ -455,6 +463,9 @@ const BehvDropItem = ({
                                 <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                             ))}
                         </Select>
+                        {(targetItem.operator === "first" || targetItem.operator === "last") && 
+                            <Typography variant="caption">수집기준일 : {baseTimeCol.metaTblClmnLogiNm}</Typography>
+                        }
                         {aggregateTopSelect &&
                             <>
                                 <Select
