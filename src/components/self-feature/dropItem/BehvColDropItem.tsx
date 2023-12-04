@@ -61,16 +61,15 @@ const BehvColDropItem = ({
 
     // 변환식 선택함수에 따른 연산자 목록 설정을 위한 dataType 설정
     useEffect(() => {
-        if (!trgtFilterItem.function || trgtFilterItem.function === "" || trgtFilterItem.function === "null") return
     
         setOprtDataType(trgtFilterItem.columnDataTypeCode)
 
         if (trgtFilterItem.function === "TO_NUMBER") setOprtDataType("number")
-        if (trgtFilterItem.function === "LENGTH") setOprtDataType("number")
-        if (trgtFilterItem.function === "TO_CHAR") setOprtDataType("string")
-        if (trgtFilterItem.function === "DATEDIFF") setOprtDataType("number")
-        
-    }, [trgtFilterItem.function])
+        else if (trgtFilterItem.function === "LENGTH") setOprtDataType("number")
+        else if (trgtFilterItem.function === "TO_CHAR") setOprtDataType("string")
+        else if (trgtFilterItem.function === "DATEDIFF") setOprtDataType("number")
+
+    }, [trgtFilterItem.function, trgtFilterItem.columnDataTypeCode, trgtFilterItem.operator])
 
     const onClickTrgtFilterDeleteHandler = () => {
         deleteTrgtFilterInfo(itemIdx)

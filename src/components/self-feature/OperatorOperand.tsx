@@ -44,6 +44,7 @@ const OperatorOperand = ({
     const [oprd5DpValue, setOprd5DpValue] = useState<string>("")
 
     useEffect(() => {
+        console.log(dataType)
         if (cmmCodeOprtRes) {
             setOperatorOption((prevState: Array<CommonCodeInfo>) => {
                 let rtn = cloneDeep(prevState)
