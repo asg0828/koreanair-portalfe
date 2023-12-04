@@ -69,7 +69,7 @@ const BehvColDropItem = ({
         else if (trgtFilterItem.function === "TO_CHAR") setOprtDataType("string")
         else if (trgtFilterItem.function === "DATEDIFF") setOprtDataType("number")
 
-    }, [trgtFilterItem.function, trgtFilterItem.columnDataTypeCode, trgtFilterItem.operator])
+    }, [trgtFilterItem.function, trgtFilterItem.columnDataTypeCode])
 
     const onClickTrgtFilterDeleteHandler = () => {
         deleteTrgtFilterInfo(itemIdx)
