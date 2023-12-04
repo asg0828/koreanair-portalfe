@@ -54,7 +54,12 @@ const BehvAccordionDrag = ({
                 title={behavior.metaTblLogiNm}
                 value={behavior.metaTblLogiNm}
             >
-                <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                <Stack 
+                    direction="Vertical" 
+                    justifyContent="Center" 
+                    gap="SM" 
+                    onClick={(e)=>e.stopPropagation()} 
+                >
                     {behavior.tbCoMetaTblClmnInfoList.map((tbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo, clmnIdx: number) => (
                         <BehvDragItem
                             key={clmnIdx}

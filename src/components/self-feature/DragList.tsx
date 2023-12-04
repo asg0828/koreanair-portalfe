@@ -134,6 +134,7 @@ const DragList = ({
                 borderRadius: '5px',
                 padding:"1rem"
             }}
+            onClick={(e)=>e.stopPropagation()}
         >
             <Stack direction="Horizontal" gap="SM" justifyContent="Between">
                 <TextField 
@@ -181,7 +182,12 @@ const DragList = ({
                             title={TrgtDragAttrType.TYPE1}
                             value={TrgtDragAttrType.TYPE1}
                         >
-                            <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                            <Stack 
+                                direction="Vertical" 
+                                justifyContent="Center" 
+                                gap="SM" 
+                                onClick={(e)=>e.stopPropagation()} 
+                            >
                             {attrType1List.map((attribute: Attribute, index: number) => {
                                 return (
                                     <AttrDragItem
@@ -211,7 +217,12 @@ const DragList = ({
                             title={TrgtDragAttrType.TYPE2}
                             value={TrgtDragAttrType.TYPE2}
                         >
-                            <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                            <Stack 
+                                direction="Vertical" 
+                                justifyContent="Center" 
+                                gap="SM" 
+                                onClick={(e)=>e.stopPropagation()} 
+                            >
                             {attrType2List.map((attribute: Attribute, index: number) => {
                                 return (
                                     <AttrDragItem
@@ -241,7 +252,12 @@ const DragList = ({
                             title={TrgtDragAttrType.TYPE3}
                             value={TrgtDragAttrType.TYPE3}
                         >
-                            <Stack direction="Vertical" justifyContent="Center" gap="SM" >
+                            <Stack 
+                                direction="Vertical" 
+                                justifyContent="Center" 
+                                gap="SM" 
+                                onClick={(e)=>e.stopPropagation()} 
+                            >
                             {attrType3List.map((attribute: Attribute, index: number) => {
                                 return (
                                     <AttrDragItem
@@ -292,30 +308,6 @@ const DragList = ({
                     value='BaseFact 정보'
                 >
                 {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
-                    // <Accordion
-                    //     key={behvIdx}
-                    //     align="Right"
-                    //     size="MD"
-                    //     type="multiple"
-                    //     onClick={(e) => {
-                    //         e.stopPropagation()
-                    //     }}
-                    // >
-                    //     <AccordionItem
-                    //         title={behavior.metaTblLogiNm}
-                    //         value={behavior.metaTblLogiNm}
-                    //     >
-                    //     <Stack direction="Vertical" justifyContent="Center" gap="SM" >
-                    //     {behavior.tbCoMetaTblClmnInfoList.map((tbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo, clmnIdx: number) => (
-                    //         <BehvDragItem
-                    //             key={clmnIdx}
-                    //             metaTblLogiNm={behavior.metaTblLogiNm}
-                    //             behvTblClmnInfo={tbCoMetaTblClmnInfo}
-                    //         />
-                    //     ))}
-                    //     </Stack>
-                    //     </AccordionItem>
-                    // </Accordion>
                     <BehvAccordionDrag 
                         key={behvIdx}
                         oriBehavior={behaviors[behvIdx]}

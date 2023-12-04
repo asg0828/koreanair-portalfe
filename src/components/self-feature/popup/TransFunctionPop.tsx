@@ -5,8 +5,8 @@ import {
 } from 'react'
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect';
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+//import DatePicker from 'react-datepicker'
+//import 'react-datepicker/dist/react-datepicker.css'
 
 import {
     Modal,
@@ -19,7 +19,7 @@ import {
     TH,
     TD,
     Checkbox,
-    //DatePicker,
+    DatePicker,
 } from '@components/ui';
 import HorizontalTable from '@/components/table/HorizontalTable';
 
@@ -802,12 +802,23 @@ const TransFunctionPop = ({
                                             />
                                             {strtDtChecked &&
                                                 <DatePicker
-                                                    placeholderText='날짜 선택'
                                                     value={variable2Val}
-                                                    //onChange={(e) => {e.target.value = ""}}
-                                                    onChange={(date) => {
-                                                        setVariable2Val(dayjs(date).format("YYYY-MM-DD").toString())
+                                                    appearance="Outline"
+                                                    calendarViewMode="days"
+                                                    mode="single"
+                                                    shape="Square"
+                                                    size="MD"
+                                                    popupOptionWhenPopup="fixed"
+                                                    onChange={(e) => {e.target.value = ""}}
+                                                    onValueChange={(nextVal) => {
+                                                        setVariable2Val(nextVal)
                                                     }}
+                                                    // placeholderText='날짜 선택'
+                                                    // value={variable2Val}
+                                                    // //onChange={(e) => {e.target.value = ""}}
+                                                    // onChange={(date) => {
+                                                    //     setVariable2Val(dayjs(date).format("YYYY-MM-DD").toString())
+                                                    // }}
                                                 />
                                             }
                                             {!strtDtChecked &&
@@ -852,20 +863,21 @@ const TransFunctionPop = ({
                                             />
                                             {endDtChecked &&
                                                 <DatePicker
-                                                    placeholderText='날짜 선택'
+                                                    //placeholderText='날짜 선택'
                                                     value={variable3Val}
-                                                    //appearance="Outline"
-                                                    //calendarViewMode="days"
-                                                    //mode="single"
-                                                    //shape="Square"
-                                                    //size="MD"
-                                                    //onChange={(e) => {e.target.value = ""}}
-                                                    // onValueChange={(nextVal) => {
-                                                    //     setVariable3Val(nextVal)
-                                                    // }}
-                                                    onChange={(date) => {
-                                                        setVariable3Val(dayjs(date).format("YYYY-MM-DD").toString())
+                                                    appearance="Outline"
+                                                    calendarViewMode="days"
+                                                    mode="single"
+                                                    shape="Square"
+                                                    size="MD"
+                                                    onChange={(e) => {e.target.value = ""}}
+                                                    popupOptionWhenPopup="fixed"
+                                                    onValueChange={(nextVal) => {
+                                                        setVariable3Val(nextVal)
                                                     }}
+                                                    //onChange={(date) => {
+                                                    //    setVariable3Val(dayjs(date).format("YYYY-MM-DD").toString())
+                                                    //}}
                                                 />
                                             }
                                             {!endDtChecked &&
