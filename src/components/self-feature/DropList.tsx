@@ -14,18 +14,18 @@ import {
     Attribute,
     TargetDropListProps,
     Behavior,
-    AggregateCol, 
+    AggregateCol,
+    DivisionTypes, 
 } from '@/models/selfFeature/FeatureModel'
 import { 
     initAttribute, 
     initTbCoMetaTblClmnInfo, 
     initTbRsCustFeatRuleTrgt, 
     initTbRsCustFeatRuleTrgtFilter,
-    divisionTypes, 
 } from '@/pages/user/self-feature/data'
 import {
-    subFeatStatus, 
-    selfFeatPgPpNm,
+    SubFeatStatus, 
+    SelfFeatPgPpNm,
 } from '@/models/selfFeature/FeatureCommon';
 
 const DropList = ({
@@ -47,9 +47,10 @@ const DropList = ({
     useEffect(() => {
         // 등록, 품의저장인 상태이면서 상세페이지가 아닌 경우 수정가능
         if (
-            (featStatus === subFeatStatus.REG 
-            || featStatus === subFeatStatus.SUBREG )
-            && featStatus !== selfFeatPgPpNm.DETL
+            // (featStatus === SubFeatStatus.REG 
+            // || featStatus === SubFeatStatus.SUBREG )
+            // && 
+            featStatus !== SelfFeatPgPpNm.DETL
         ) {
             setIsPossibleEdit(true)
         } else {
@@ -73,16 +74,16 @@ const DropList = ({
     }, [attributes])
 
     const [, drop] = useDrop(() => ({
-        accept: Object.values(divisionTypes),
+        accept: Object.values(DivisionTypes),
         drop(item, monitor) {
             const didDrop = monitor.didDrop()
             const targetType = monitor.getItemType()
 
             if (!didDrop) {
                 let targetObj: TbCoMetaTblClmnInfo | Attribute
-                if (targetType === divisionTypes.ATTR) {
+                if (targetType === DivisionTypes.ATTR) {
                     targetObj = Object.assign(cloneDeep(initAttribute), item)
-                } else if (targetType === divisionTypes.BEHV) {
+                } else if (targetType === DivisionTypes.BEHV) {
                     targetObj = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
                 } else {
                     targetObj = initAttribute
@@ -97,7 +98,7 @@ const DropList = ({
                     target.tableName = String(targetObj.metaTblId)
                     target.tableLogiName = String(targetObj.tableLogiName)
                     target.targetId  = `T${t+1}`
-                    if (targetType === divisionTypes.ATTR) {
+                    if (targetType === DivisionTypes.ATTR) {
                         target.columnName = String(targetObj.metaTblClmnPhysNm)
                         target.columnLogiName = String(targetObj.metaTblClmnLogiNm)
                     }
@@ -107,7 +108,7 @@ const DropList = ({
                     return tl
                 })
                 // 행동 데이터의 경우에만
-                if (targetType === divisionTypes.BEHV) {
+                if (targetType === DivisionTypes.BEHV) {
                     setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                         // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                         let tl = cloneDeep(state)
@@ -184,7 +185,7 @@ const DropList = ({
                             tfList.push(cloneDeep(trgtFilter))
                         }
                     })
-                    if (targetItem.divisionCode === divisionTypes.ATTR) {
+                    if (targetItem.divisionCode === DivisionTypes.ATTR) {
                         return <AttrDropItem 
                             key={`dropItem-${index}`}
                             itemIdx={index}
@@ -194,7 +195,7 @@ const DropList = ({
                             delTargetInfo={deleteInfo}
                             columnList={columnList}
                         />
-                    } else if (targetItem.divisionCode === divisionTypes.FEAT) {
+                    } else if (targetItem.divisionCode === DivisionTypes.FEAT) {
                         return <FeatDropItem
                             key={`dropItem-${index}`}
                             itemIdx={index}
@@ -202,7 +203,7 @@ const DropList = ({
                             targetItem={targetItem}
                             delTargetInfo={deleteInfo}
                         />
-                    } else if (targetItem.divisionCode === divisionTypes.BEHV) {
+                    } else if (targetItem.divisionCode === DivisionTypes.BEHV) {
                         let bs = behaviors.filter((behavior: Behavior) => (behavior.metaTblId === targetItem.tableName))
                         return <BehvDropItem 
                             key={`dropItem-${index}`}

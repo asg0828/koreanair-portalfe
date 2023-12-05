@@ -17,12 +17,12 @@ import {
 import HorizontalTable from '@/components/table/HorizontalTable'
 import VerticalTable from '@/components/table/VerticalTable'
 import {
-    aprvSeqNm,
     initSfSubmissionAppendApproval,
     initSfSubmissionApproval,
     sfSubmissionAppendApprovalListColumns,
 } from '@/pages/user/self-feature-submission/data'
 import {
+    AprvSeqNm,
     SfSubmissionAppendApproval,
     SfSubmissionApproval
 } from '@/models/selfFeature/FeatureSubmissionModel'
@@ -148,21 +148,21 @@ const SubAppdAprvPop = ({
 
                 subAprv.approvalSequence = i + 1
 
-                if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-                else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-                else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+                if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = AprvSeqNm.FIRST
+                else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = AprvSeqNm.SECOND
+                else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = AprvSeqNm.LAST
 
                 t.push(subAprv)
             }
 
             //index에 따른 결재자 지정
-            if (aprvCategory === aprvSeqNm.FIRST) {
+            if (aprvCategory === AprvSeqNm.FIRST) {
                 t[0].approver = appendApprovalList[0].userEmail
                 t[0].approverNm = appendApprovalList[0].userNm
-            } else if (aprvCategory === aprvSeqNm.SECOND) {
+            } else if (aprvCategory === AprvSeqNm.SECOND) {
                 t[1].approver = appendApprovalList[0].userEmail
                 t[1].approverNm = appendApprovalList[0].userNm
-            } else if (aprvCategory === aprvSeqNm.LAST) {
+            } else if (aprvCategory === AprvSeqNm.LAST) {
                 t[2].approver = appendApprovalList[0].userEmail
                 t[2].approverNm = appendApprovalList[0].userNm
             }

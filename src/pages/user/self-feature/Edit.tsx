@@ -55,8 +55,8 @@ import {
 } from './data'
 import { Method } from "@/utils/ApiUtil";
 import {
-	subFeatStatus,
-	selfFeatPgPpNm,
+	SubFeatStatus,
+	SelfFeatPgPpNm,
 	initConfig,
 	initApiRequest,
 	initCommonResponse,
@@ -81,7 +81,7 @@ import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
 import { getFeatureSeList } from "@/api/FeatureAPI";
 //import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
-import { useUpdateCustFeatRule } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
+import { useUpdateCustFeatRule, useUpdateCustFeatSQL } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 
 const calcUnit = [
 	{ value: '횟수', text: '횟수' },
@@ -147,8 +147,9 @@ const SelfFeatureEdit = () => {
 	const [confirmModalTit, setConfirmModalTit] = useState<string>('')
 	const [confirmModalCont, setConfirmModalCont] = useState<string>('')
 	const [modalType, setModalType] = useState<string>('')
-	// 수정 API(Rule-Design)
+	// 수정 API(Rule-Design / SQL)
 	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
+	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
@@ -388,7 +389,7 @@ const SelfFeatureEdit = () => {
 		}
 
 	}, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc?.formula])
-	// 수정 API 호출
+	// 수정 API 호출(Rule-Design)
 	const updateCustFeatRule = () => {
 		if (!isValidFormula) {
 			toast({
@@ -412,6 +413,7 @@ const SelfFeatureEdit = () => {
 		setCustFeatureFormData(param)
 		updtRuleDesignMutate()
 	}
+	// 수정 API 호출 Callback (Rule-Design)
 	useEffect(() => {
 		if (updtRuleDesignErr || updtRuleDesignRes?.successOrNot === 'N') {
 			toast({
@@ -425,35 +427,45 @@ const SelfFeatureEdit = () => {
 			})
 			//navigate(-1)
 			// 상세로 redirect
-			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = subFeatStatus.SAVE
-			navigate(`../${selfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
+			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
+			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
 		}
 	}, [updtRuleDesignRes, updtRuleDesignSucc, updtRuleDesignErr, toast])
-
-	const updateCustFeatSQL = async () => {
-		/*
-		  Method      :: PUT
-		  Url         :: /api/v1/korean-air/customerfeatures/${custFeatRuleId}
-		  path param  :: custFeatRuleId
-		  query param :: 
-		  body param  :: updtFeatureInfo
-		*/
-		let custFeatRuleId = updtFeatureInfo.tbRsCustFeatRule.id
-		let config = cloneDeep(initConfig)
-		config.isLoarding = true
-		let request = cloneDeep(initApiRequest)
-		request.method = Method.PUT
-		request.url = `/api/v1/korean-air/customerfeatures/${custFeatRuleId}`
-		request.params!.bodyParams = Object.assign(updtFeatureInfo, { sfSubmissionRequestData: sfSubmissionRequestData })
-		request.params!.bodyParams = Object.assign(request.params!.bodyParams, { sfSubmissionApprovalList: sfSubmissionApprovalList })
-		console.log("[updateCustFeatSQL] Request  :: ", request)
-
-		let response = cloneDeep(initCommonResponse)
-		//response = await callApi(request)
-		console.log("[updateCustFeatSQL] Response :: ", response)
-
-		// API 정상 응답시 페이지 redirect
+	// 수정 API 호출(SQL)
+	const updateCustFeatSQL = () => {
+		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
+		param.customerFeature = updtFeatureInfo
+		param.submissionInfo.submission = sfSubmissionRequestData
+		param.submissionInfo.approvals = sfSubmissionApprovalList
+		let validRslt = validationCustReatRule(param)
+		if (!validRslt.valid) {
+			toast({
+				type: ValidType.ERROR,
+				content: validRslt.text,
+			})
+			return
+		}
+		setCustFeatureFormData(param)
+		updtSQLMutate()
 	}
+	// 수정 API 호출 Callback (SQL)
+	useEffect(() => {
+		if (updtSQLErr || updtSQLRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '수정 중 에러가 발생했습니다.',
+			})
+		} else if (updtSQLSucc) {
+			toast({
+				type: ValidType.CONFIRM,
+				content: '수정되었습니다.',
+			})
+			//navigate(-1)
+			// 상세로 redirect
+			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
+			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
+		}
+	}, [updtSQLRes, updtSQLSucc, updtSQLErr, toast])
 	// input 입력값 변경시
 	const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target
@@ -560,7 +572,7 @@ const SelfFeatureEdit = () => {
 	}
 	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string) => {
-		if (pageNm === selfFeatPgPpNm.LIST)
+		if (pageNm === SelfFeatPgPpNm.LIST)
 			//navigate('..')
 			navigate(-1)
 		else
@@ -785,7 +797,7 @@ const SelfFeatureEdit = () => {
 								<DndProvider backend={HTML5Backend}>
 									{/* drop 영역 */}
 									<DropList
-										featStatus={subFeatStatus.REG}
+										featStatus={SelfFeatPgPpNm.EDIT}
 										setIsSelectAggregateTop={setIsSelectAggregateTop}
 										targetList={targetList}
 										trgtFilterList={trgtFilterList}
@@ -841,7 +853,7 @@ const SelfFeatureEdit = () => {
 						|| custFeatRule.sqlDirectInputYn === "N"
 					) && formulaTrgtList.length > 0) &&
 						<CalcValid
-							featStatus={subFeatStatus.REG}
+							featStatus={SelfFeatPgPpNm.REG}
 							isSelectAggregateTop={isSelectAggregateTop}
 							setIsValidFormula={setIsValidFormula}
 							formulaTrgtList={formulaTrgtList}
@@ -870,7 +882,7 @@ const SelfFeatureEdit = () => {
 					<Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitUpdateHandler}>
 						수정
 					</Button>
-					<Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+					<Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						취소
 					</Button>
 				</Stack>

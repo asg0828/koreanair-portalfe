@@ -3,10 +3,7 @@ import { cloneDeep } from "lodash"
 
 import { Typography } from "@components/ui"
 
-import { 
-    divisionTypes,
-} from '@/pages/user/self-feature/data'
-import { TargetDragProps } from "@/models/selfFeature/FeatureModel"
+import { DivisionTypes, TargetDragProps } from "@/models/selfFeature/FeatureModel"
 
 const AttrDragItem = ({
     metaTblLogiNm,
@@ -14,8 +11,8 @@ const AttrDragItem = ({
 }: TargetDragProps) => {
 
     const [{ isAttrDragging }, attrDragItem] = useDrag(() => ({
-        type: divisionTypes.ATTR,
-        item: Object.assign({ divisionCode: divisionTypes.ATTR, tableLogiName: metaTblLogiNm }, cloneDeep(attrTblClmnInfo)),
+        type: DivisionTypes.ATTR,
+        item: Object.assign({ divisionCode: DivisionTypes.ATTR, tableLogiName: metaTblLogiNm }, cloneDeep(attrTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 

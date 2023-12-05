@@ -11,19 +11,17 @@ import {
     TR,
     Table,
     Typography,
-    useToast, 
 } from '@components/ui'
 
 import { 
+    AprvSeqNm,
     ApporvalListComponentProps,
     SfSubmissionAppendApproval,
-    SfSubmissionApproval,
 } from "@/models/selfFeature/FeatureSubmissionModel"
 import {
-    aprvSeqNm,
     sfSubmissionApprovalListColumns as columns,
 } from '@pages/user/self-feature-submission/data'
-import { subFeatStatus } from "@/models/selfFeature/FeatureCommon"
+import { SubFeatStatus } from "@/models/selfFeature/FeatureCommon"
 import SubAppdAprvPop from "../self-feature-submission/popup/SubAppdAprvPop"
 
 const ApprovalList = ({
@@ -45,14 +43,14 @@ const ApprovalList = ({
     
     const appendAprvHanbler = (index: number) => {
         if (index === 0) {
-            setAprvType1(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.FIRST))
-            setAprvCategory(aprvSeqNm.FIRST)
+            setAprvType1(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.FIRST))
+            setAprvCategory(AprvSeqNm.FIRST)
         } else if (index === 1) {
-            setAprvType2(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.SECOND))
-            setAprvCategory(aprvSeqNm.SECOND)
+            setAprvType2(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.SECOND))
+            setAprvCategory(AprvSeqNm.SECOND)
         } else if (index === 2) {
-            setAprvType3(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.LAST))
-            setAprvCategory(aprvSeqNm.LAST)
+            setAprvType3(aprvList.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.LAST))
+            setAprvCategory(AprvSeqNm.LAST)
         }
 
         setIsOpenSubAppdAprvPop((prevState) => !prevState)
@@ -60,9 +58,9 @@ const ApprovalList = ({
 
     useEffect(() => {
         if (!aprvList || aprvList.length < 1) return
-        let type1 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.FIRST) && aprroval.isPriority)
-        let type2 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.SECOND) && aprroval.isPriority)
-        let type3 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === aprvSeqNm.LAST) && aprroval.isPriority)
+        let type1 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === AprvSeqNm.FIRST) && aprroval.isPriority)
+        let type2 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === AprvSeqNm.SECOND) && aprroval.isPriority)
+        let type3 = aprvList.find((aprroval: SfSubmissionAppendApproval) => (aprroval.groupNm === AprvSeqNm.LAST) && aprroval.isPriority)
         setAprvType1Priority(type1 ? type1.userNm : "")
         setAprvType2Priority(type2 ? type2.userNm : "")
         setAprvType3Priority(type3 ? type3.userNm : "")
@@ -130,7 +128,7 @@ const ApprovalList = ({
                                     !sfSubmissionRequestData
                                     || (
                                         sfSubmissionRequestData 
-                                        && (sfSubmissionRequestData.status === "" || sfSubmissionRequestData.status === subFeatStatus.SAVE)
+                                        && (sfSubmissionRequestData.status === "" || sfSubmissionRequestData.status === SubFeatStatus.SAVE)
                                     )
                                 ) &&
                                 <Button 
@@ -158,7 +156,7 @@ const ApprovalList = ({
             </TBody>
         </Table>
         {/* 팝업 */}
-        {aprvCategory === aprvSeqNm.FIRST &&
+        {aprvCategory === AprvSeqNm.FIRST &&
         <SubAppdAprvPop 
             isOpen={isOpenSubAppdAprvPop} 
             onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
@@ -167,7 +165,7 @@ const ApprovalList = ({
             setSfSubmissionApprovalList={setSfSubmissionApprovalList}
         />
         }
-        {aprvCategory === aprvSeqNm.SECOND &&
+        {aprvCategory === AprvSeqNm.SECOND &&
         <SubAppdAprvPop 
             isOpen={isOpenSubAppdAprvPop} 
             onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
@@ -176,7 +174,7 @@ const ApprovalList = ({
             setSfSubmissionApprovalList={setSfSubmissionApprovalList}
         />
         }
-        {aprvCategory === aprvSeqNm.LAST &&
+        {aprvCategory === AprvSeqNm.LAST &&
         <SubAppdAprvPop 
             isOpen={isOpenSubAppdAprvPop} 
             onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}

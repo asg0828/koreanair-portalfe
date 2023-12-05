@@ -27,7 +27,7 @@ import {
 	submissionStatus,
 } from "./data";
 import {
-	selfFeatPgPpNm, subFeatStatus, subFeatStatusNm,
+	SelfFeatPgPpNm, SubFeatStatus, SubFeatStatusNm,
 } from '@/models/selfFeature/FeatureCommon';
 import { useCustFeatRules } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { ValidType } from "@/models/common/Constants";
@@ -82,29 +82,29 @@ const SelfFeature = () => {
 		} else {
 			if (featureListRes) {
 				let rtn = cloneDeep(featureListRes.result)
-				rtn = rtn.filter((sf: TbRsCustFeatRule) => sf.submissionStatus !== subFeatStatus.DLET)
+				rtn = rtn.filter((sf: TbRsCustFeatRule) => sf.submissionStatus !== SubFeatStatus.DLET)
 				rtn = rtn.map((sf: TbRsCustFeatRule) => {
 					let t = cloneDeep(sf)
 					// 진행 상태 check
 					if (
 						!t.submissionStatus
 						|| t.submissionStatus === ""
-						|| t.submissionStatus === subFeatStatus.SAVE
+						|| t.submissionStatus === SubFeatStatus.SAVE
 					) {
-						t.submissionStatusNm = subFeatStatusNm.SAVE
+						t.submissionStatusNm = SubFeatStatusNm.SAVE
 					} else if (
-						t.submissionStatus === subFeatStatus.REQ
-						|| t.submissionStatus === subFeatStatus.IN_APRV
+						t.submissionStatus === SubFeatStatus.REQ
+						|| t.submissionStatus === SubFeatStatus.IN_APRV
 					) {
-						t.submissionStatusNm = subFeatStatusNm.IN_APRV
-					} else if (t.submissionStatus === subFeatStatus.APRV) {
-						t.submissionStatusNm = subFeatStatusNm.APRV
-					} else if (t.submissionStatus === subFeatStatus.REJT) {
-						t.submissionStatusNm = subFeatStatusNm.REJT
-					} else if (t.submissionStatus === subFeatStatus.CNCL) {
-						t.submissionStatusNm = subFeatStatusNm.CNCL
-					} else if (t.submissionStatus === subFeatStatus.DLET) {
-						t.submissionStatusNm = subFeatStatusNm.DLET
+						t.submissionStatusNm = SubFeatStatusNm.IN_APRV
+					} else if (t.submissionStatus === SubFeatStatus.APRV) {
+						t.submissionStatusNm = SubFeatStatusNm.APRV
+					} else if (t.submissionStatus === SubFeatStatus.REJT) {
+						t.submissionStatusNm = SubFeatStatusNm.REJT
+					} else if (t.submissionStatus === SubFeatStatus.CNCL) {
+						t.submissionStatusNm = SubFeatStatusNm.CNCL
+					} else if (t.submissionStatus === SubFeatStatus.DLET) {
+						t.submissionStatusNm = SubFeatStatusNm.DLET
 					}
 					// 부서명 setting
 					let deptItem = deptOption.find((deptItem) => deptItem.deptCode === t.userTeamNm)
@@ -126,12 +126,12 @@ const SelfFeature = () => {
 	}, [page.page, page.pageSize, selfFeatureList])
 	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
-		if (pageNm === selfFeatPgPpNm.DETL) {
+		if (pageNm === SelfFeatPgPpNm.DETL) {
 			navigate(pageNm, { state: rows })
-		} else if (pageNm === selfFeatPgPpNm.PRNTCHLD) {
+		} else if (pageNm === SelfFeatPgPpNm.PRNTCHLD) {
 			setIsOpenFeatPrntChldPop((prevState) => !prevState)
-		} else if (pageNm === selfFeatPgPpNm.RULE_REG || pageNm === selfFeatPgPpNm.SQL_REG) {
-			navigate(selfFeatPgPpNm.REG, { state: { regType: pageNm } })
+		} else if (pageNm === SelfFeatPgPpNm.RULE_REG || pageNm === SelfFeatPgPpNm.SQL_REG) {
+			navigate(SelfFeatPgPpNm.REG, { state: { regType: pageNm } })
 		} else {
 			navigate(pageNm)
 		}
@@ -162,7 +162,7 @@ const SelfFeature = () => {
 			{/* 관리자(1차)인 경우만 노출 */}
 			{/* 
 				<Stack direction="Horizontal" gap="MD" justifyContent="End">
-					<Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.PRNTCHLD)}>
+					<Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.PRNTCHLD)}>
 					Feature 연결 관계
 					</Button>
 				</Stack> 
@@ -260,16 +260,16 @@ const SelfFeature = () => {
 				clickable={true}
 				page={page}
 				onChange={handlePage}
-				onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
+				onClick={(rows: RowsInfo) => onClickPageMovHandler(SelfFeatPgPpNm.DETL, rows)}
 				//rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
 				buttonChildren={
 					<>
-						<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.RULE_REG)}>
+						<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.RULE_REG)}>
 							<AddIcon />
 							신규 등록
 						</Button>
 						{/* 관리자(1차)인 경우만 노출 */}
-						{/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.SQL_REG)}>
+						{/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
 						<AddIcon />
 						SQL 신규 등록
 						</Button> */}

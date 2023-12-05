@@ -14,12 +14,12 @@ import {
     TargetDropProps,
     AggregateCol,
     FormulaTrgtListProps,
+    DivisionTypes,
 } from '@/models/selfFeature/FeatureModel'
 import {
     initTbCoMetaTblClmnInfo,
     initTbRsCustFeatRuleTrgtFilter,
     trgtFilterTit,
-    divisionTypes,
     filterOption,
 } from "@/pages/user/self-feature/data"
 import {
@@ -204,7 +204,7 @@ const BehvDropItem = ({
     }, [aggregateColList, targetItem.columnName])
 
     const [, behvDrop] = useDrop(() => ({
-        accept: divisionTypes.BEHV,
+        accept: DivisionTypes.BEHV,
         drop(item, monitor) {
             const didDrop = monitor.didDrop()
 

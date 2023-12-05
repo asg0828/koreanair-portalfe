@@ -2,6 +2,23 @@ import { RowsInfo } from "@/models/components/Table"
 import { SelectValue } from '@mui/base/useSelect'
 import { SfSubmissionApproval, SfSubmissionRequestInfo } from "./FeatureSubmissionModel"
 
+// 대상선택 drag 리스트 구분(속성데이터)
+export enum TrgtDragAttrType {
+    TYPE1 = "고객 Fact지수",
+    TYPE2 = "여객 Fact지수",
+    TYPE3 = "고객행동 Fact지수",
+}
+// 속성, 행동, feature 데이터 타입
+export enum DivisionTypes {
+    ATTR = 'ATTR',
+    FEAT = 'FEAT',
+    BEHV = 'BEHV',
+}
+// Feature 등록/수정시 Feature Type
+export enum FeatureBaseType {
+    FEAT_TYPE = 'FACT_INDEX'
+}
+
 export interface FeatListSrchProps {
     [key: string]: string
     mstrSgmtRuleId: string

@@ -86,9 +86,9 @@ export const useYn = [
     { value: 'N', text: '미사용' },
 ]
 
-// Feature type
-export const FeatureType = {
-    CUST: 'CustomerFeature',
+// Feature type(TagManagerContainer / TagManagerDeployment / CustomerFeature)
+export enum FeatureType {
+    CUST = 'CustomerFeature',
 }
 
 // 모달 타입
@@ -116,47 +116,47 @@ export const ModalTitCont = {
     SUBMISSION_REJECT: { title: "요청 정보 반려", context: "요청된 승인 정보를 반려 하시겠습니까?"},
 }
 // 페이지명(path) setting
-export const selfFeatPgPpNm = {
-    LIST: 'list', // 목록
-    DETL: 'detail',  // 상세
-    REG:  'reg',  // 등록
-    RULE_REG:  'rule_reg',  // Rule 등록
-    SQL_REG:  'sql_reg',  // Sql 등록
-    EDIT: 'edit',  // 수정
-    DELETE: 'delete', // 삭제
-    SUBMCFRM: 'subConfirm', // 승인 요청 팝업
-    SUBINFO:  'subInfo',  // 승인 확인 팝업
-    SUB_ISRT_REQ: 'subInsertReq', // 승인 요청
-    SUB_CANCEL: 'subCancel', // 요청 취소
-    SUB_APRV: 'subApproval', // 승인 처리
-    SUB_REJT: 'subReject', // 반려 처리
-    PRNTCHLD: 'parentChildList'
+export enum SelfFeatPgPpNm {
+    LIST = 'list', // 목록
+    DETL = 'detail',  // 상세
+    REG = 'reg',  // 등록
+    RULE_REG = 'rule_reg',  // Rule 등록
+    SQL_REG = 'sql_reg',  // Sql 등록
+    EDIT = 'edit',  // 수정
+    DELETE = 'delete', // 삭제
+    SUBMCFRM = 'subConfirm', // 승인 요청 팝업
+    SUBINFO = 'subInfo',  // 승인 확인 팝업
+    SUB_ISRT_REQ = 'subInsertReq', // 승인 요청
+    SUB_CANCEL = 'subCancel', // 요청 취소
+    SUB_APRV = 'subApproval', // 승인 처리
+    SUB_REJT = 'subReject', // 반려 처리
+    PRNTCHLD = 'parentChildList'
 }
 // feat 상태
-export const subFeatStatus = {
-    REG: 'reg', // 등록
-    SUBREG: 'sub_reg', // 품의 저장
-    SAVE: 'saved', // 등록, 품의 저장
-    REQ: 'requested', // 승인요청
-    IN_APRV: 'inApproval', // 결재진행중
-    APRV: 'approved', // 승인완료
-    REJT: 'rejected', // 반려
-    DLET: 'deleted', // 삭제
-    CNCL: 'canceled', // 요청취소
+export enum SubFeatStatus {
+    REG = 'reg', // 등록
+    SUBREG = 'sub_reg', // 품의 저장
+    SAVE = 'saved', // 등록, 품의 저장
+    REQ = 'requested', // 승인요청
+    IN_APRV = 'inApproval', // 결재진행중
+    APRV = 'approved', // 승인완료
+    REJT = 'rejected', // 반려
+    DLET = 'deleted', // 삭제
+    CNCL = 'canceled', // 요청취소
 }
 // feat 상태명
-export const subFeatStatusNm = {
-    SAVE: '등록', // 등록, 품의 저장
-    REQ: '승인요청', // 승인요청
-    IN_APRV: '결재진행중', // 결재진행중
-    APRV: '승인완료', // 승인완료
-    REJT: '반려', // 반려
-    DLET: '삭제', // 삭제
-    CNCL: '요청취소', // 요청취소
+export enum SubFeatStatusNm {
+    SAVE = '등록', // 등록, 품의 저장
+    REQ = '승인요청', // 승인요청
+    IN_APRV = '결재진행중', // 결재진행중
+    APRV = '승인완료', // 승인완료
+    REJT = '반려', // 반려
+    DLET = '삭제', // 삭제
+    CNCL = '요청취소', // 요청취소
 }
 // 컬럼 데이터타입
-export const ColDataType = {
-    NUM: 'number',
-    STR: 'string',
-    TIME:  'timestamp',
+export enum ColDataType {
+    NUM = 'number',
+    STR = 'string',
+    TIME = 'timestamp',
 }

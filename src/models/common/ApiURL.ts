@@ -26,6 +26,7 @@ export enum SelfFeatureUserApiURL {
   FEAT_BASE = '/api/v1/customerfeatures',
   FEAT_SUB_BASE = '/api/v1/submissions',
   FEAT_WITH_SUB_BASE = '/api/v1/customerfeatures-with-submission',
+  FEAT_WITH_SUB_SQL_BASE = '/api/v1/korean-air/customerfeatures',
   FACT_BASEFACT = '/api/v1/mastersegment/table-columns-meta-info',
   READ_SQL = '/api/v1/customerfeatures/read-sql',
   RUN_SCDL = '/api/v1/airflow/runSchedule',

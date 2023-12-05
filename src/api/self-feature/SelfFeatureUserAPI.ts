@@ -38,6 +38,14 @@ export const retrieveCustFeatRuleInfos = (id: string) => {
         method: Method.GET,
     })
 }
+// Self-feature 상세정보 조회
+export const retrieveCustFeatSQLInfos = (id: string) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_SQL_BASE}/${id}`,
+        method: Method.GET,
+    })
+}
 // Self-feature 승인정보 리스트 조회(승인정보 ID 조회를 위해)
 export const retrieveSubmissionList = (qParams: QueryParams) => {
     return callApi({
@@ -115,7 +123,7 @@ export const retrieveApproverCandidate = () => {
     })
 }
 // mutations
-// Self-feature 등록
+// Self-feature 등록(Rule-Design)
 export const createCustFeatRule = (bodyParams: Object) => {
     return callApi({
         service: Service.KAL_SF_BE,
@@ -126,11 +134,33 @@ export const createCustFeatRule = (bodyParams: Object) => {
         }
     })
 }
-// Self-feature 수정
+// Self-feature 수정(Rule-Design)
 export const updateCustFeatRule = (custFeatRuleId: string, bodyParams: Object) => {
     return callApi({
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_BASE}/${custFeatRuleId}`,
+        method: Method.PUT,
+        params: {
+            bodyParams: bodyParams
+        }
+    })
+}
+// Self-feature 등록(SQL)
+export const createCustFeatSQL = (bodyParams: Object) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_SQL_BASE}`,
+        method: Method.POST,
+        params: {
+            bodyParams: bodyParams
+        }
+    })
+}
+// Self-feature 수정(SQL)
+export const updateCustFeatSQL = (custFeatRuleId: string, bodyParams: Object) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_SQL_BASE}/${custFeatRuleId}`,
         method: Method.PUT,
         params: {
             bodyParams: bodyParams

@@ -14,8 +14,8 @@ import {
     initTbRsCustFeatRuleCase, 
 } from '@/pages/user/self-feature/data';
 import {
-    selfFeatPgPpNm, 
-    subFeatStatus 
+    SelfFeatPgPpNm, 
+    SubFeatStatus 
 } from '@/models/selfFeature/FeatureCommon';
 
 const ClacValid = ({
@@ -37,9 +37,10 @@ const ClacValid = ({
     useEffect(() => {
         // 등록, 품의저장인 상태이면서 상세페이지가 아닌 경우 수정가능
         if (
-            (featStatus === subFeatStatus.REG 
-            || featStatus === subFeatStatus.SUBREG )
-            && featStatus !== selfFeatPgPpNm.DETL
+            // (featStatus === SubFeatStatus.REG 
+            // || featStatus === SubFeatStatus.SUBREG )
+            // && 
+            featStatus !== SelfFeatPgPpNm.DETL
         ) {
             setIsPossibleEdit(true)
         } else {
