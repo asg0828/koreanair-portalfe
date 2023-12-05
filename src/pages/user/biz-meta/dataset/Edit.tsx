@@ -63,8 +63,8 @@ const Edit = () => {
   const codeList = useAppSelector(selectCodeList(GroupCodeType.DBMS));
   const columns: Array<ColumnsInfo> = [
     {
-      headerName: '영문명',
-      field: 'mcsEnNm',
+      headerName: '한글명',
+      field: 'mcsKoNm',
       colSpan: 1.5,
       maxLength: 100,
       require: true,
@@ -72,8 +72,8 @@ const Edit = () => {
         EditableColumnItem(rowIndex, fieldName, maxLength),
     },
     {
-      headerName: '한글명',
-      field: 'mcsKoNm',
+      headerName: '영문명',
+      field: 'mcsEnNm',
       colSpan: 1.5,
       maxLength: 100,
       require: true,
@@ -287,6 +287,23 @@ const Edit = () => {
           <HorizontalTable>
             <TR>
               <TH required colSpan={1} align="right">
+                테이블 한글명
+              </TH>
+              <TD colSpan={2}>
+                <Stack gap="SM" className="width-100" direction="Vertical">
+                  <TextField
+                    className="width-100"
+                    {...register('mtsKoNm', {
+                      required: { value: true, message: 'mtsKoNm is required.' },
+                      maxLength: { value: 100, message: 'max length exceeded' },
+                    })}
+                    validation={errors?.mtsKoNm?.message ? 'Error' : undefined}
+                    autoFocus
+                  />
+                  <ErrorLabel message={errors?.mtsKoNm?.message} />
+                </Stack>
+              </TD>
+              <TH required colSpan={1} align="right">
                 테이블 영문명
               </TH>
               <TD colSpan={2}>
@@ -302,23 +319,6 @@ const Edit = () => {
                     autoFocus
                   />
                   <ErrorLabel message={errors?.mtsEnNm?.message} />
-                </Stack>
-              </TD>
-              <TH required colSpan={1} align="right">
-                테이블 한글명
-              </TH>
-              <TD colSpan={2}>
-                <Stack gap="SM" className="width-100" direction="Vertical">
-                  <TextField
-                    className="width-100"
-                    {...register('mtsKoNm', {
-                      required: { value: true, message: 'mtsKoNm is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
-                    })}
-                    validation={errors?.mtsKoNm?.message ? 'Error' : undefined}
-                    autoFocus
-                  />
-                  <ErrorLabel message={errors?.mtsKoNm?.message} />
                 </Stack>
               </TD>
             </TR>

@@ -73,7 +73,7 @@ const SfSubmissionRequest = () => {
         }
     }, [userEmail])
     const retrieveSubmissions = () => {
-		if (!sessionInfo.email) {
+		if (!sessionInfo.userEmail) {
 			console.log("no session info email")
 			toast({
 				type: ValidType.ERROR,
@@ -81,7 +81,7 @@ const SfSubmissionRequest = () => {
 			})
 			return
 		}
-        setUserEmail(sessionInfo.email)
+        setUserEmail(sessionInfo.userEmail)
     }
     // 결재 목록 API callback
 	useEffect(() => {

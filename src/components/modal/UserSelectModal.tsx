@@ -68,13 +68,6 @@ const UserSelectModal = ({
   const handleClickFile = (deptItem: any) => {
     const prevUsers = userData.filter((item: UserModel) => item.deptCode === deptItem.deptCode);
     setPrevRows(prevUsers);
-
-    if (prevUsers.length === 0) {
-      toast({
-        type: ValidType.INFO,
-        content: '조회된 사용자가 없습니다.',
-      });
-    }
   };
 
   const handleConfirm = () => {

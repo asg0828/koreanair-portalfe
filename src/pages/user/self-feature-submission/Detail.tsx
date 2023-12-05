@@ -439,7 +439,7 @@ const SfSubmissionRequestDetail = () => {
                     // 승인,반려버튼 show 여부 판단
                     setIsAprvRjctBtnShow((isShow: Boolean) => {
                         let rtn = cloneDeep(isShow)
-                        let approval = submissionInfoRes.result.approvals.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && item.status === SubFeatStatus.REQ)
+                        let approval = submissionInfoRes.result.approvals.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && item.status === SubFeatStatus.REQ)
                         if (isEmpty(approval)) rtn = false
                         else rtn = true
                         return rtn
@@ -517,7 +517,7 @@ const SfSubmissionRequestDetail = () => {
     }
     // 승인 API 호출
     const approveSubmissionApproval = () => {
-        if (!sessionInfo.email) {
+        if (!sessionInfo.userEmail) {
             console.log("no session info email")
             toast({
                 type: ValidType.ERROR,
@@ -525,8 +525,8 @@ const SfSubmissionRequestDetail = () => {
             })
             return
         }
-        setUserEmail(sessionInfo.email)
-        let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && item.status === SubFeatStatus.REQ)
+        setUserEmail(sessionInfo.userEmail)
+        let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && item.status === SubFeatStatus.REQ)
         if (isEmpty(approval)) {
             console.log("no approval Id")
             toast({

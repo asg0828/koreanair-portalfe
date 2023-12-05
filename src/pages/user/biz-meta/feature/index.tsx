@@ -21,7 +21,7 @@ const initParams: FeatureParams = {
   featureSeGrp: '',
   featureSe: '',
   searchFeature: '',
-  searchConditions: [],
+  searchConditions: ['featureKoNm', 'featureEnNm', 'featureDef'],
   enrUserId: '',
   enrUserNm: '',
   enrDeptCode: '',
@@ -70,8 +70,8 @@ const List = () => {
     },
     { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
     { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
-    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1 },
     { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
+    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1 },
     { headerName: '정의', field: 'featureDef', colSpan: 2 },
     { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
     { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
@@ -326,14 +326,14 @@ const List = () => {
           </TH>
           <TD colSpan={5} align="left">
             <Checkbox
-              label="Feature 영문명"
-              onCheckedChange={(checked) => handleChangeSearchConditions('featureEnNm', checked)}
-              checked={params.searchConditions.includes('featureEnNm')}
-            />
-            <Checkbox
               label="Feature 한글명"
               onCheckedChange={(checked) => handleChangeSearchConditions('featureKoNm', checked)}
               checked={params.searchConditions.includes('featureKoNm')}
+            />
+            <Checkbox
+              label="Feature 영문명"
+              onCheckedChange={(checked) => handleChangeSearchConditions('featureEnNm', checked)}
+              checked={params.searchConditions.includes('featureEnNm')}
             />
             <Checkbox
               label="정의"
