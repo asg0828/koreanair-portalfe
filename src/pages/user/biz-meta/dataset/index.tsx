@@ -35,7 +35,7 @@ const columns = [
 
 const initParams: DatasetParams = {
   searchTable: '',
-  dataSetConditions: [],
+  dataSetConditions: ['mtsEnNm', 'mtsKoNm', 'mtsDef', 'srcTbNm'],
   srcDbCd: '',
 };
 

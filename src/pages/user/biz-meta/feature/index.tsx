@@ -21,7 +21,7 @@ const initParams: FeatureParams = {
   featureSeGrp: '',
   featureSe: '',
   searchFeature: '',
-  searchConditions: [],
+  searchConditions: ['featureEnNm', 'featureKoNm', 'featureDef'],
   enrUserId: '',
   enrUserNm: '',
   enrDeptCode: '',
