@@ -27,6 +27,10 @@ const Header = () => {
     navigate(contextPath);
   };
 
+  const goToMyPage = () => {
+    navigate(`${contextPath}/mypage`);
+  };
+
   const handleTrigger = (index: number) => {
     if (!isDropMenu) {
       setActiveIndex(index);
@@ -159,7 +163,7 @@ const Header = () => {
 
           <Stack justifyContent="End" gap="XL" className="user-info-wrap">
             <MenuOutlinedIcon color="action" onClick={handleDropMenu} />
-            <Avatar status="02" />
+            <Avatar status="02" onClick={goToMyPage} />
             <LogoutOutlinedIcon color="action" onClick={handleLogout} />
           </Stack>
         </Stack>

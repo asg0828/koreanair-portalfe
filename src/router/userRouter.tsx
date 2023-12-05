@@ -33,12 +33,13 @@ import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Deta
 import CustomerInfo from '@pages/user/customer-info/dashboard';
 import Tableau from '@pages/user/tableau';
 import { useFaqLoader, useQnaLoader, useFeatureLoader, useDatasetLoader } from '@/hooks/useLoader';
-import PurchaseContributors from "@pages/user/structured-report/purchase-contributors";
-import InternationalBoarding from "@pages/user/structured-report/international-boarding";
-import DomesticBoarding from "@pages/user/structured-report/domestic-boarding";
-import VipCustomerFlightStatus from "@pages/user/structured-report/vip-customer-flight-status";
-import SavedMileage from "@pages/user/structured-report/saved-mileage";
-import {Navigate} from "react-router-dom";
+import PurchaseContributors from '@pages/user/structured-report/purchase-contributors';
+import InternationalBoarding from '@pages/user/structured-report/international-boarding';
+import DomesticBoarding from '@pages/user/structured-report/domestic-boarding';
+import VipCustomerFlightStatus from '@pages/user/structured-report/vip-customer-flight-status';
+import SavedMileage from '@pages/user/structured-report/saved-mileage';
+import { Navigate } from 'react-router-dom';
+import MyPage from '@/pages/MyPage';
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -166,6 +167,10 @@ const userRouter = [
   {
     path: 'popup',
     children: [{ path: 'tableau', element: <Tableau /> }],
+  },
+  {
+    path: 'mypage',
+    children: [{ index: true, element: <MyPage /> }],
   },
 ];
 
