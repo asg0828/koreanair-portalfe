@@ -3,8 +3,40 @@ import { htmlTagReg } from '@/utils/RegularExpression';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { profileData, skypassData, familyMemberData, walletData, preferenceData, cntData } from './data';
-import { FamilyMember, Profile, Skypass, Wallet, Preference, Cnt } from '@/models/model/CustomerInfoModel';
+import {
+  profileData,
+  skypassData,
+  familyMemberData,
+  walletData,
+  preferenceData,
+  cntData,
+  pnrData,
+  eTktData,
+  boardingListData,
+  vocData,
+  callData,
+  internetData,
+  smsData,
+  emailData,
+  snsData,
+} from './data';
+import {
+  FamilyMember,
+  Profile,
+  Skypass,
+  Wallet,
+  Preference,
+  Cnt,
+  Pnr,
+  Etkt,
+  BoardingList,
+  Voc,
+  Internet,
+  Call,
+  Sms,
+  Sns,
+  Email,
+} from '@/models/model/CustomerInfoModel';
 
 export default function List() {
   const today = new Date();
@@ -16,6 +48,15 @@ export default function List() {
   const [wallet, setWallet] = useState<Wallet>();
   const [preference, setPreference] = useState<Preference>();
   const [cnt, setCnt] = useState<Cnt>();
+  const [pnr, setPnr] = useState<Array<Pnr>>([]);
+  const [etkt, setEtkt] = useState<Array<Etkt>>([]);
+  const [boardingLists, setBoardingLists] = useState<Array<BoardingList>>([]);
+  const [calls, setCalls] = useState<Array<Call>>([]);
+  const [vocs, setVocs] = useState<Array<Voc>>([]);
+  const [internets, setInternets] = useState<Array<Internet>>([]);
+  const [smss, setSmss] = useState<Array<Sms>>([]);
+  const [snss, setSnss] = useState<Array<Sns>>([]);
+  const [emails, setEmails] = useState<Array<Email>>([]);
   const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({ skypassNum: '', oneId: '' });
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
@@ -65,6 +106,15 @@ export default function List() {
     setWallet(walletData);
     setPreference(preferenceData);
     setCnt(cntData);
+    setPnr(pnrData);
+    setEtkt(eTktData);
+    setBoardingLists(boardingListData);
+    setVocs(vocData);
+    setInternets(internetData);
+    setCalls(callData);
+    setSmss(smsData);
+    setEmails(emailData);
+    setSnss(snsData);
     // refetch();
   }, [refetch, searchInfo, validation]);
 
@@ -91,9 +141,9 @@ export default function List() {
     setSearchInfo({ ...searchInfo, [id]: value });
   };
 
-  const [isListView1, setIsListView1] = useState(false);
+  const [isListView1, setIsListView1] = useState({ open: false, contents: '' });
   const [isListView2, setIsListView2] = useState(false);
-  const [isListView3, setIsListView3] = useState(false);
+  const [isListView3, setIsListView3] = useState({ open: false, contents: '' });
 
   // 클릭 더보기 리스트 교체 함수
   const listClickChange = (flag: string) => {
@@ -369,7 +419,7 @@ export default function List() {
                     <div className="key">
                       <button
                         onClick={() => {
-                          setIsListView1(true);
+                          setIsListView1({ open: true, contents: 'pnr' });
                         }}
                       >
                         PNR
@@ -385,7 +435,7 @@ export default function List() {
                     <div className="key">
                       <button
                         onClick={() => {
-                          setIsListView1(true);
+                          setIsListView1({ open: true, contents: 'etkt' });
                         }}
                       >
                         E-TKT
@@ -397,7 +447,7 @@ export default function List() {
                   </Stack>
                 </div>
               </div>
-              {isListView1 && (
+              {isListView1.open && isListView1.contents === 'pnr' && (
                 <div className="hideContents">
                   <table>
                     <colgroup>
@@ -413,26 +463,26 @@ export default function List() {
                         <td>
                           <Stack justifyContent="Between" alignItems={'Start'}>
                             {/* left */}
-                            <Stack gap="MD">
-                              <div>64G000</div>
-                              <div>Gil-Dong Hong</div>
+                            <Stack direction="Vertical">
+                              {pnr.map((item, index) => (
+                                <Stack gap="MD">
+                                  <div>{item?.reservationNum}</div>
+                                  <div>{item?.engName}</div>
+                                </Stack>
+                              ))}
                             </Stack>
                             {/* left end */}
 
                             {/* right */}
                             <div>
-                              <Stack gap="MD">
-                                <div>KE0092</div>
-                                <div>A</div>
-                                <div>125412</div>
-                                <div>hhl1</div>
-                              </Stack>
-                              <Stack gap="MD">
-                                <div>KE0092</div>
-                                <div>A</div>
-                                <div>125412</div>
-                                <div>hhl1</div>
-                              </Stack>
+                              {pnr.map((item, indx) => (
+                                <Stack gap="MD">
+                                  <div>{item.arrival}</div>
+                                  <div>{item.class}</div>
+                                  <div>{item.date}</div>
+                                  <div>{item.status}</div>
+                                </Stack>
+                              ))}
                             </div>
                             {/* right end */}
                           </Stack>
@@ -442,15 +492,52 @@ export default function List() {
                   </table>
                 </div>
               )}
-
+              {isListView1.open && isListView1.contents === 'etkt' && (
+                <div className="hideContents">
+                  <table>
+                    <colgroup>
+                      <col width="auto" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>E-TKT</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <Stack justifyContent="Between" alignItems={'Start'}>
+                            {/* left */}
+                            <Stack direction="Vertical">
+                              {etkt.map((item, index) => (
+                                <Stack gap="MD">
+                                  <div>{item?.ticketNum}</div>
+                                  <div>{item?.date}</div>
+                                  <div>{item?.arrival}</div>
+                                  <div>{item?.status}</div>
+                                </Stack>
+                              ))}
+                            </Stack>
+                            {/* left end */}
+                          </Stack>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              )}
               <button
                 type="button"
-                className={'viewMore ' + (isListView1 ? 'true' : 'false')}
-                onClick={() => {
-                  setIsListView1(!isListView1);
+                className={'viewMore ' + (isListView1.open ? 'true' : 'false')}
+                onClick={(event) => {
+                  if (isListView1.contents === '') {
+                    setIsListView1({ open: !isListView1.open, contents: 'pnr' });
+                  } else {
+                    setIsListView1({ open: !isListView1.open, contents: '' });
+                  }
                 }}
               >
-                {isListView1 ? '숨기기' : '더보기'}
+                {isListView1.open ? '숨기기' : '더보기'}
               </button>
             </div>
             <Stack className="width-50" gap="LG">
@@ -544,7 +631,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.pet}</span>개
+                      <span className="num">{cnt?.pet}</span>회
                     </div>
                   </Stack>
                 </div>
@@ -563,47 +650,28 @@ export default function List() {
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>
-                          <Stack justifyContent="Between" alignItems={'Start'}>
-                            <Stack gap="MD">
-                              <div>64G000</div>
-                              <div>Y</div>
-                              <div>64G000</div>
-                              <div>64G000</div>
-                              <div>Gil-Dong Hong</div>
+                      {boardingLists.map((item, index) => (
+                        <tr>
+                          <td>
+                            <Stack justifyContent="Between" alignItems={'Start'}>
+                              <Stack gap="MD">
+                                <div>{item?.itinerary1}</div>
+                                <div>{item?.itinerary2}</div>
+                                <div>{item?.itinerary3}</div>
+                                <div>{item?.itinerary4}</div>
+                                <div>{item?.itinerary5}</div>
+                              </Stack>
                             </Stack>
-                          </Stack>
-                        </td>
-                        <td>
-                          <Stack justifyContent="Between" alignItems={'Start'}>
-                            <Stack gap="MD">
-                              <div>1802414158807</div>
+                          </td>
+                          <td>
+                            <Stack justifyContent="Between" alignItems={'Start'}>
+                              <Stack gap="MD">
+                                <div>{item?.ticketNo}</div>
+                              </Stack>
                             </Stack>
-                          </Stack>
-                        </td>
-                      </tr>
-
-                      <tr>
-                        <td>
-                          <Stack justifyContent="Between" alignItems={'Start'}>
-                            <Stack gap="MD">
-                              <div>64G000</div>
-                              <div>Y</div>
-                              <div>64G000</div>
-                              <div>64G000</div>
-                              <div>Gil-Dong Hong</div>
-                            </Stack>
-                          </Stack>
-                        </td>
-                        <td>
-                          <Stack justifyContent="Between" alignItems={'Start'}>
-                            <Stack gap="MD">
-                              <div>1802414158807</div>
-                            </Stack>
-                          </Stack>
-                        </td>
-                      </tr>
+                          </td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -620,12 +688,7 @@ export default function List() {
               </button>
             </div>
             <div className="dashBoardBox under width-50">
-              <div className="top">
-                communication records
-                {/* <div className="kr">
-                  여행
-                </div> */}
-              </div>
+              <div className="top">communication records</div>
               <div className="itemWrap">
                 <Stack justifyContent="Between" gap="LG">
                   <div className="item middle" style={{ flex: '1' }}>
@@ -633,7 +696,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3(true);
+                            setIsListView3({ open: true, contents: 'call' });
                           }}
                         >
                           통화
@@ -649,7 +712,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3(true);
+                            setIsListView3({ open: true, contents: 'internet' });
                           }}
                         >
                           인터넷
@@ -665,7 +728,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3(true);
+                            setIsListView3({ open: true, contents: 'voc' });
                           }}
                         >
                           VOC
@@ -683,7 +746,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3(true);
+                            setIsListView3({ open: true, contents: 'sms' });
                           }}
                         >
                           SMS
@@ -699,7 +762,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3(true);
+                            setIsListView3({ open: true, contents: 'email' });
                           }}
                         >
                           E-mail
@@ -715,7 +778,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3(true);
+                            setIsListView3({ open: true, contents: 'sns' });
                           }}
                         >
                           SNS
@@ -728,7 +791,7 @@ export default function List() {
                   </div>
                 </Stack>
               </div>
-              {isListView3 && (
+              {isListView3.open && isListView3.contents === 'call' && (
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
@@ -742,43 +805,191 @@ export default function List() {
                         <th>발송일</th>
                         <th>휴대폰번호</th>
                         <th>발송상태</th>
+                        <th>상태</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {calls.map((item, index) => (
+                        <tr>
+                          <td>{item?.date}</td>
+                          <td>{item?.phoneNumber}</td>
+                          <td>{item?.counselor}</td>
+                          <td>{item?.status}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {isListView3.open && isListView3.contents === 'internet' && (
+                <div className="hideContents">
+                  <table className="centerTable">
+                    <colgroup>
+                      <col width="25%" />
+                      <col width="25%" />
+                      <col width="25%" />
+                      <col width="25%" />
+                    </colgroup>
+                    <thead>
+                      <tr className="width-100">
+                        <th>날짜</th>
+                        <th>채널</th>
+                        <th>티켓번호</th>
+                        <th>도착지</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {internets.map((item, index) => (
+                        <tr>
+                          <td>{item?.date}</td>
+                          <td>{item?.channel}</td>
+                          <td>{item?.ticketNum}</td>
+                          <td>{item?.arrival}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {isListView3.open && isListView3.contents === 'voc' && (
+                <div className="hideContents">
+                  <table className="centerTable">
+                    <colgroup>
+                      <col width="20%" />
+                      <col width="20%" />
+                      <col width="20%" />
+                      <col width="20%" />
+                      <col width="20%" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>횟수</th>
+                        <th>날짜</th>
+                        <th>채널</th>
+                        <th>타입</th>
                         <th>내용</th>
                       </tr>
                     </thead>
                     <tbody>
+                      {vocs.map((item, index) => (
+                        <tr>
+                          <td>{item?.cnt}</td>
+                          <td>{item?.date}</td>
+                          <td>{item?.channel}</td>
+                          <td>{item?.type}</td>
+                          <td>{item?.content}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {isListView3.open && isListView3.contents === 'sms' && (
+                <div className="hideContents">
+                  <table className="centerTable">
+                    <colgroup>
+                      <col width="20%" />
+                      <col width="20%" />
+                      <col width="20%" />
+                      <col width="20%" />
+                      <col width="20%" />
+                    </colgroup>
+                    <thead>
                       <tr>
-                        <td>Jan 12, 2023</td>
-                        <td>010-0000-0000</td>
-                        <td>OOOO</td>
-                        <td>
-                          {/* <a href="" className="link"> */}
-                          보기
-                          {/* </a> */}
-                        </td>
+                        <th>횟수</th>
+                        <th>날짜</th>
+                        <th>휴대폰번호</th>
+                        <th>타입</th>
+                        <th>내용</th>
                       </tr>
+                    </thead>
+                    <tbody>
+                      {smss.map((item, index) => (
+                        <tr>
+                          <td>{item?.sendCnt}</td>
+                          <td>{item?.date}</td>
+                          <td>{item?.phoneNum}</td>
+                          <td>{item?.status}</td>
+                          <td>{item?.content}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {isListView3.open && isListView3.contents === 'email' && (
+                <div className="hideContents">
+                  <table className="centerTable">
+                    <colgroup>
+                      <col width="25%" />
+                      <col width="25%" />
+                      <col width="25%" />
+                      <col width="25%" />
+                    </colgroup>
+                    <thead>
                       <tr>
-                        <td>Jan 12, 2023</td>
-                        <td>010-0000-0000</td>
-                        <td>OOOO</td>
-                        <td>
-                          {/* <a href="" className="link"> */}
-                          보기
-                          {/* </a> */}
-                        </td>
+                        <th>날짜</th>
+                        <th>횟수</th>
+                        <th>상담자</th>
+                        <th>내용</th>
                       </tr>
+                    </thead>
+                    <tbody>
+                      {emails.map((item, index) => (
+                        <tr>
+                          <td>{item?.date}</td>
+                          <td>{item?.useCnt}</td>
+                          <td>{item?.counselor}</td>
+                          <td>{item?.content}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
               )}
 
+              {isListView3.open && isListView3.contents === 'sns' && (
+                <div className="hideContents">
+                  <table className="centerTable">
+                    <colgroup>
+                      <col width="25%" />
+                      <col width="25%" />
+                      <col width="25%" />
+                      <col width="25%" />
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>날짜</th>
+                        <th>횟수</th>
+                        <th>상담자</th>
+                        <th>채널</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {snss.map((item, index) => (
+                        <tr>
+                          <td>{item?.date}</td>
+                          <td>{item?.useCnt}</td>
+                          <td>{item?.counselor}</td>
+                          <td>{item?.channel}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
               <button
                 type="button"
-                className={'viewMore ' + (isListView3 ? 'true' : 'false')}
-                onClick={() => {
-                  setIsListView3(!isListView3);
+                className={'viewMore ' + (isListView3.open ? 'true' : 'false')}
+                onClick={(event) => {
+                  if (isListView3.contents === '') {
+                    setIsListView3({ open: !isListView3.open, contents: 'call' });
+                  } else {
+                    setIsListView3({ open: !isListView3.open, contents: '' });
+                  }
                 }}
               >
-                {isListView3 ? '숨기기' : '더보기'}
+                {isListView3.open ? '숨기기' : '더보기'}
               </button>
             </div>
           </Stack>

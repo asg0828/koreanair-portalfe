@@ -1,19 +1,14 @@
-export interface Hierarchy {
-  id: string;
-  parentId: string;
-  children: Array<Hierarchy>;
-  [key: string | number]: any;
-}
+import { HierarchyInfo } from '@/models/common/CommonInfo';
 
-export const convertToHierarchy = (flatArray: Array<Hierarchy>): Array<any> => {
+export const convertToHierarchyInfo = (flatArray: Array<HierarchyInfo>): Array<any> => {
   const map = new Map();
-  const hierarchy: Array<Hierarchy> = [];
+  const hierarchy: Array<HierarchyInfo> = [];
 
-  flatArray.forEach((item: Hierarchy) => {
+  flatArray.forEach((item: HierarchyInfo) => {
     map.set(item.id, { ...item, children: [] });
   });
 
-  flatArray.forEach((item: Hierarchy) => {
+  flatArray.forEach((item: HierarchyInfo) => {
     const parent = map.get(item.parentId);
     if (parent) {
       parent.children.push(map.get(item.id));

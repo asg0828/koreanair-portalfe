@@ -1,17 +1,26 @@
 import {
   AnalysisIndexList,
   AnalysisResultData,
+  BoardingList,
+  Call,
   CartData,
   Cnt,
   Column,
   ContributeData,
+  Email,
+  Etkt,
   FamilyMember,
   Ffp,
   HomepageData,
+  Internet,
+  Pnr,
   PnrData,
   Preference,
   Profile,
   Skypass,
+  Sms,
+  Sns,
+  Voc,
   VocData,
   Wallet,
 } from '@/models/model/CustomerInfoModel';
@@ -51,37 +60,6 @@ const pnrTickerColumn: Column[] = [
   { headerName: 'Route', field: 'route' },
   { headerName: 'Baggage Cnt', field: 'baggageCnt' },
   { headerName: 'Baggage Wgt', field: 'baggageWgt' },
-];
-
-const pnrData: PnrData[] = [
-  {
-    pnrNumber: '5HQWPJ',
-    travelDate: 'Jan 14, 2023',
-    route: 'FUK-ICN',
-    baggageCnt: '1',
-    baggageWgt: '10',
-  },
-  {
-    pnrNumber: '5HQWPJ',
-    travelDate: 'Jan 14, 2023',
-    route: 'FUK-ICN',
-    baggageCnt: '1',
-    baggageWgt: '10',
-  },
-  {
-    pnrNumber: '5HQWPJ',
-    travelDate: 'Jan 14, 2023',
-    route: 'FUK-ICN',
-    baggageCnt: '1',
-    baggageWgt: '10',
-  },
-  {
-    pnrNumber: '5HQWPJ',
-    travelDate: 'Jan 14, 2023',
-    route: 'FUK-ICN',
-    baggageCnt: '1',
-    baggageWgt: '10',
-  },
 ];
 
 const profileData: Profile = {
@@ -185,7 +163,7 @@ const familyMemberData: FamilyMember = {
 const walletData: Wallet = {
   coupon: 5,
   promotion: 3,
-  complimentary: 4,
+  complimentary: 2,
 };
 const preferenceData: Preference = {
   seat: 'Window',
@@ -205,72 +183,102 @@ const cntData: Cnt = {
   sns: 2,
 };
 
-const ffp: Ffp = {
-  totalTrip: '19',
-  registeredFamily: '2',
-  discountCode: '',
-  vipGroup: '',
-  vipType: '',
-  vipStatus: 'Deactivate',
-};
+const pnrData: Pnr[] = [
+  { arrival: 'BOSICN', class: 'HL1', date: '27AUG23', engName: 'Gil-Dong Hong', reservationNum: '64G000', status: 'O' },
+  { arrival: 'BOSICN', class: 'HL1', date: '27AUG23', engName: 'Gil-Dong Hong', reservationNum: '64G000', status: 'O' },
+  { arrival: 'BOSICN', class: 'HL1', date: '27AUG23', engName: 'Gil-Dong Hong', reservationNum: '64G000', status: 'O' },
+];
+const eTktData: Etkt[] = [
+  { ticketNum: 'KE0092', arrival: 'BOSICN ', date: '27AUG23', status: 'O' },
+  { ticketNum: 'KE0092', arrival: 'BOSICN ', date: '27AUG23', status: 'O' },
+  { ticketNum: 'KE0092', arrival: 'BOSICN ', date: '27AUG23', status: 'O' },
+];
 
-const contributeData: ContributeData = {
-  totalurchase: '38.3M',
-  lastYearcontrb: '',
-  domestic: 1,
-  international: 3,
-};
-
-const homepageData: HomepageData = {
-  userId: 'gildong1004',
-  lastLoginDt: 'MAY 23, 2023',
-  status: 'A',
-};
-
-const vocData: VocData[] = [
+const boardingListData: BoardingList[] = [
   {
-    vocNo: 'C20190930027',
-    status: 'Closed',
-    lastUpdDate: 'Oct 2,2019',
-    replRqst: 'N',
+    itinerary1: '64G000',
+    itinerary2: 'Y',
+    itinerary3: 'Gil-Dong Hong',
+    itinerary4: 'KE0092',
+    itinerary5: '27AUG23',
+    ticketNo: '1802414158807',
   },
   {
-    vocNo: 'C20190930027',
-    status: 'Closed',
-    lastUpdDate: 'Oct 2,2019',
-    replRqst: 'N',
+    itinerary1: '64G000',
+    itinerary2: 'Y',
+    itinerary3: 'Gil-Dong Hong',
+    itinerary4: 'KE0092',
+    itinerary5: '27AUG23',
+    ticketNo: '1802414158807',
   },
 ];
 
-const cartData: CartData[] = [
+const callData: Call[] = [
   {
-    route: 'FUK-ICN',
-    flightNo: 'TF49W5',
-    onewayTrip: 'Y',
-    travelDate: 'Oct 2,2019',
+    date: '27AUG23',
+    counselor: '이순신',
+    phoneNumber: '010-1234-1234',
+    status: '조치완료',
   },
   {
-    route: 'FUK-ICN',
-    flightNo: 'TF49W5',
-    onewayTrip: 'Y',
-    travelDate: 'Oct 2,2019',
+    date: '21AUG23',
+    counselor: '이순신',
+    phoneNumber: '010-1234-1234',
+    status: '조치예정',
   },
 ];
 
+const internetData: Internet[] = [
+  {
+    date: '21AUG23',
+    channel: '대한항공 홈페이지',
+    ticketNum: '1802414158807',
+    arrival: '푸꾸옥',
+  },
+  {
+    date: '20AUG13',
+    channel: '네이버 항공권',
+    ticketNum: '1802414158807',
+    arrival: '다낭',
+  },
+];
+
+const vocData: Voc[] = [
+  { cnt: 3, date: '21AUG23', channel: '유입채널', type: '타입', content: '' },
+  { cnt: 3, date: '21AUG23', channel: '유입채널', type: '타입', content: '' },
+];
+
+const smsData: Sms[] = [
+  { date: '21AUG23', sendCnt: 2, phoneNum: '010-1234-1234', status: '답변대기', content: '' },
+  { date: '21AUG23', sendCnt: 2, phoneNum: '010-1234-1234', status: '답변대기', content: '' },
+];
+
+const snsData: Sns[] = [
+  { date: '21AUG23', useCnt: 4, counselor: '유관순', channel: '대한항공' },
+  { date: '21AUG23', useCnt: 4, counselor: '유관순', channel: 'skyScanner' },
+];
+
+const emailData: Email[] = [
+  { date: '21AUG23', useCnt: 6, counselor: '안중근', content: '' },
+  { date: '21AUG23', useCnt: 6, counselor: '안중근', content: '' },
+];
 export {
   analysisIndexList,
   analysisResultData,
   pnrTickerColumn,
-  pnrData,
   profileData,
   skypassData,
-  ffp,
-  contributeData,
-  homepageData,
-  vocData,
-  cartData,
   familyMemberData,
   walletData,
   preferenceData,
   cntData,
+  pnrData,
+  snsData,
+  eTktData,
+  emailData,
+  boardingListData,
+  callData,
+  internetData,
+  vocData,
+  smsData,
 };
