@@ -1,4 +1,4 @@
-import { FeatureType, RuleId } from "@/models/selfFeature/FeatureCommon";
+import { RuleId } from "@/models/selfFeature/FeatureCommon";
 import {
     FeatureInfo,
     TbRsCustFeatRuleCalc,
@@ -20,6 +20,7 @@ import {
     TbRsCustFeatRuleSql,
     CustFeatureFormData,
     FeatListSrchProps,
+    FeatureBaseType,
 } from "@/models/selfFeature/FeatureModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 
@@ -33,10 +34,7 @@ export const category = [
     { value: 'COUNT', text: '건수' },
     { value: 'AVG', text: '평균' },
 ]
-export const teamNm = [
-    { value: '', text: '선택' },
-]
-
+// feature 승인 상태
 export const submissionStatus = [
     { value: '', text: '전체' },
     { value: 'saved', text: '등록' },
@@ -47,13 +45,6 @@ export const submissionStatus = [
 
 // 대상선택(행동 데이터) 순번 setting(A,B,C ...)
 export const trgtFilterTit = Array.from({ length: 26 }, (v, i) => String.fromCharCode(i + 65))
-
-// 대상선택 drag 리스트 구분(속성데이터)
-export const TrgtDragAttrType = {
-    TYPE1: "고객 Fact지수",
-    TYPE2: "여객 Fact지수",
-    TYPE3: "고객행동 Fact지수",
-}
 
 // 계산식 validation 결과값
 export const initFormulaValidRslt: FormulaValidRslt = {
@@ -98,12 +89,6 @@ export const batchExecuteLogListColumns = [
     { headerName: '생성 건수', field: 'rsltCnt', colSpan: 3 },
     { headerName: '수행 결과', field: 'batchResultStatus', colSpan: 3 },
 ]
-// 속성, 행동, feature 데이터 타입
-export const divisionTypes = {
-    ATTR: 'ATTR',
-    FEAT: 'FEAT',
-    BEHV: 'BEHV',
-}
 // customer feature 검색 조건 초기화
 export const initFeatListSrchProps: FeatListSrchProps = {
     mstrSgmtRuleId: RuleId.MASTERPROF,
@@ -228,7 +213,7 @@ export const initTbRsCustFeatRuleCase: TbRsCustFeatRuleCase = {
 
 export const initFeatureTemp: FeatureTemp = {
     featureId: '',
-    featureTyp: 'FACT_INDEX',
+    featureTyp: FeatureBaseType.FEAT_TYPE,
     featureSeGrp: '',
     featureSe: '',
     featureKoNm: '',

@@ -3,16 +3,13 @@ import { cloneDeep } from "lodash"
 
 import { Typography } from "@components/ui"
 
-import { 
-    divisionTypes,
-} from '@/pages/user/self-feature/data'
-
+import { DivisionTypes } from "@/models/selfFeature/FeatureModel"
 
 const FeatDragItem = (props: any) => {
 
     const [{ isFeatDragging }, featDragItem] = useDrag(() => ({
-        type: divisionTypes.FEAT,
-        item: Object.assign({ divisionCode: divisionTypes.FEAT }, cloneDeep(props.featTblClmnInfo)),
+        type: DivisionTypes.FEAT,
+        item: Object.assign({ divisionCode: DivisionTypes.FEAT }, cloneDeep(props.featTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 

@@ -1,16 +1,16 @@
+import { useEffect, useState } from "react";
+import { cloneDeep } from "lodash";
+
 import AttrDragItem from "./dragItem/AttrDragItem"
-import BehvDragItem from "./dragItem/BehvDragItem"
+import BehvAccordionDrag from "./dragItem/BehvAccordionDrag";
 import { Accordion, AccordionItem, Button, Page, Stack, TextField } from "@components/ui"
 
 import { 
   Behavior,
   TbCoMetaTblClmnInfo,
-  Attribute
+  Attribute,
+  TrgtDragAttrType,
 } from '@/models/selfFeature/FeatureModel';
-import { useEffect, useState } from "react";
-import { cloneDeep } from "lodash";
-import { TrgtDragAttrType } from "@/pages/user/self-feature/data";
-import BehvAccordionDrag from "./dragItem/BehvAccordionDrag";
 
 export interface Props {
     attributes: Array<Attribute>

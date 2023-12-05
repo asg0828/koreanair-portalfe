@@ -1,13 +1,9 @@
-import { useEffect } from 'react'
 import { useDrag } from "react-dnd"
 import { cloneDeep } from "lodash"
 
 import { Typography } from "@components/ui"
 
-import { 
-    divisionTypes,
-} from '@/pages/user/self-feature/data'
-import { TargetDragProps } from "@/models/selfFeature/FeatureModel"
+import { DivisionTypes, TargetDragProps } from "@/models/selfFeature/FeatureModel"
 
 const BehvDragItem = ({
     metaTblLogiNm,
@@ -15,8 +11,8 @@ const BehvDragItem = ({
 }: TargetDragProps) => {
 
     const [{ isBehvDragging }, behvDragItem] = useDrag(() => ({
-        type: divisionTypes.BEHV,
-        item: Object.assign({ divisionCode: divisionTypes.BEHV, tableLogiName: metaTblLogiNm }, cloneDeep(behvTblClmnInfo)),
+        type: DivisionTypes.BEHV,
+        item: Object.assign({ divisionCode: DivisionTypes.BEHV, tableLogiName: metaTblLogiNm }, cloneDeep(behvTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
 

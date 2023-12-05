@@ -17,7 +17,7 @@ import {
 import {
     ModalTitCont,
     ModalType,
-    subFeatStatus,
+    SubFeatStatus,
 } from '@/models/selfFeature/FeatureCommon'
 import ConfirmModal from '@/components/modal/ConfirmModal'
 import { RjctSubAprvalBodyParamsProps, SfSubmissionApproval, SubRejectPopProps } from '@/models/selfFeature/FeatureSubmissionModel'
@@ -60,7 +60,7 @@ const SubRejectPop = ({
             }
             setUserEmail(sessionInfo.email)
             // 승인 요청 case만 check
-            let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && (item.status === subFeatStatus.REQ))
+            let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && (item.status === SubFeatStatus.REQ))
             if (isEmpty(approval)) {
                 console.log("no approval Id")
                 return

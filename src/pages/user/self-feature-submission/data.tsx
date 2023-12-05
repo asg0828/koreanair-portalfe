@@ -40,12 +40,6 @@ export const sfSubmissionStatusOption = [
     { value: 'deleted', text: '삭제' },
 ]
 
-export const aprvSeqNm = {
-    FIRST: "Self-Feature 1차승인(운영)",
-    SECOND: "Self-Feature 2차승인(품질-메타)",
-    LAST: "Self-Feature 3차승인(최종생성승인)",
-}
-
 export const submissionGroupCode: SubmissionGroupCode = {
     sf_aprv_egroup1: "Self-Feature 1차승인(운영)",
     sf_aprv_egroup2: "Self-Feature 2차승인(품질-메타)",

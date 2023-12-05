@@ -2,11 +2,13 @@ import {
   approveSubmissionApproval,
   cancelRequestSubmission,
   createCustFeatRule,
+  createCustFeatSQL,
   deleteCustFeatRule,
   insertSubmissionRequest,
   rejectSubmissionApproval,
   runScheduleByManually,
   updateCustFeatRule,
+  updateCustFeatSQL,
 } from '@/api/self-feature/SelfFeatureUserAPI'
 import { QueryParams } from '@/utils/ApiUtil'
 import { useMutation } from '@tanstack/react-query'
@@ -18,6 +20,14 @@ export const useCreateCustFeatRule = (bodyParams: Object) => {
 // customer feature 수정 (Rule-Design)
 export const useUpdateCustFeatRule = (custFeatRuleId: string, bodyParams: Object) => {
   return useMutation(() => updateCustFeatRule(custFeatRuleId, bodyParams))
+}
+// customer feature 등록 (SQL)
+export const useCreateCustFeatSQL = (bodyParams: Object) => {
+  return useMutation(() => createCustFeatSQL(bodyParams))
+}
+// customer feature 수정 (SQL)
+export const useUpdateCustFeatSQL = (custFeatRuleId: string, bodyParams: Object) => {
+  return useMutation(() => updateCustFeatSQL(custFeatRuleId, bodyParams))
 }
 // customer feature 삭제
 export const useDeleteCustFeatRule = (qParams: QueryParams) => {

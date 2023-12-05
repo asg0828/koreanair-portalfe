@@ -37,15 +37,15 @@ import {
 	initCustFeatureFormData,
 } from './data'
 import {
-	subFeatStatus,
-	selfFeatPgPpNm,
+	SubFeatStatus,
+	SelfFeatPgPpNm,
 	ModalType,
 	ModalTitCont,
 	CommonCode,
 	CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon'
-import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel'
-import { aprvSeqNm, initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data'
+import { AprvSeqNm, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel'
+import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data'
 import { 
 	//GroupCodeType, 
 	ValidType, 
@@ -56,7 +56,7 @@ import { FeatureSeparatesModel } from '@/models/model/FeatureModel'
 import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 import { useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries'
-import { useCreateCustFeatRule } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
+import { useCreateCustFeatRule, useCreateCustFeatSQL } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
 import { validationCustReatRule } from '@/utils/self-feature/FormulaValidUtil'
 
 const calcUnit = [
@@ -86,9 +86,9 @@ const SelfFeatureReg = () => {
 	// 픽처타입
 	//const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
 	// 속성, 행동정보
-	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	// 등록 구분(RuleDesign / SQL)
-	const [regType, setRegType] = useState<string>(location.state ? location.state.regType : selfFeatPgPpNm.RULE_REG)
+	const [regType, setRegType] = useState<string>(location.state ? location.state.regType : SelfFeatPgPpNm.RULE_REG)
 	// 한글 및 영문 입력시 입력값
 	const [featureKoNmInput, setFeatureKoNmInput] = useState<string>("")
 	const [featureEnNmInput, setFeatureEnNmInput] = useState<string>("")
@@ -129,15 +129,25 @@ const SelfFeatureReg = () => {
 	const [confirmModalTit, setConfirmModalTit] = useState<string>('')
 	const [confirmModalCont, setConfirmModalCont] = useState<string>('')
 	const [modalType, setModalType] = useState<string>('')
-	// 등록 API(Rule-Design)
+	// 등록 API(Rule-Design / SQL)
 	const { data: createRuleDesignRes, isSuccess: createRuleDesignSucc, isError: createRuleDesignErr, mutate: createRuleDesignMutate } = useCreateCustFeatRule(custFeatureFormData)
+	const { data: createSQLRes, isSuccess: createSQLSucc, isError: createSQLErr, mutate: createSQLMutate } = useCreateCustFeatSQL(custFeatureFormData)
+
+	// location값으로 Rule Design / SQL 구분(default :: Rule Design)
+	useEffect(() => {
+		if (!location.state || !location.state.regType || location.state.regType === "") {
+			setRegType(SelfFeatPgPpNm.RULE_REG)
+		} else {
+			setRegType(location.state.regType)
+		}
+	}, [location.state.regType])
 
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
-			if (regType === selfFeatPgPpNm.RULE_REG) {
+			if (regType === SelfFeatPgPpNm.RULE_REG) {
 				createCustFeatRule()
-			} else if (regType === selfFeatPgPpNm.SQL_REG) {
+			} else if (regType === SelfFeatPgPpNm.SQL_REG) {
 				createCustFeatSQL()
 			}
 			// 대상선택 초기화
@@ -154,7 +164,7 @@ const SelfFeatureReg = () => {
 	// mount 시 수행
 	useEffect(() => {
 		initCustFeatRule()
-		// if (regType === selfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
+		// if (regType === SelfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
 	}, [])
 	// 속성,행동데이터 response callback
 	useEffect(() => {
@@ -178,9 +188,9 @@ const SelfFeatureReg = () => {
 			});
 		} else {
 			if (approverCandidateRes) {
-				setAprvType1(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.FIRST))
-				setAprvType2(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.SECOND))
-				setAprvType3(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === aprvSeqNm.LAST))
+				setAprvType1(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.FIRST))
+				setAprvType2(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.SECOND))
+				setAprvType3(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.LAST))
 				setAprvList(approverCandidateRes.result)
 			}
 		}
@@ -252,9 +262,9 @@ const SelfFeatureReg = () => {
 			for (let i = 0; i < 3; i++) {
 				let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
 				subAprv.approvalSequence = i + 1
-				if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = aprvSeqNm.FIRST
-				else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = aprvSeqNm.SECOND
-				else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = aprvSeqNm.LAST
+				if (subAprv.approvalSequence === 1) subAprv.approvalSequenceNm = AprvSeqNm.FIRST
+				else if (subAprv.approvalSequence === 2) subAprv.approvalSequenceNm = AprvSeqNm.SECOND
+				else if (subAprv.approvalSequence === 3) subAprv.approvalSequenceNm = AprvSeqNm.LAST
 				t.push(subAprv)
 			}
 			return t
@@ -384,7 +394,7 @@ const SelfFeatureReg = () => {
 			}
 		}
 	}, [seGroupRes, seGroupErr, toast])
-	// 등록 API 호출
+	// 등록 API 호출(Rule-Design)
 	const createCustFeatRule = () => {
 		if (!isValidFormula) {
 			toast({
@@ -409,6 +419,7 @@ const SelfFeatureReg = () => {
 		setCustFeatureFormData(param)
 		createRuleDesignMutate()
 	}
+	// 등록 API 호출 Call back(Rule-Design)
 	useEffect(() => {
 		if (createRuleDesignErr || createRuleDesignRes?.successOrNot === 'N') {
 			toast({
@@ -421,38 +432,58 @@ const SelfFeatureReg = () => {
 				content: '등록되었습니다.',
 			})
 			featureInfo.tbRsCustFeatRule.id = createRuleDesignRes.result.customerFeatureId
-			featureInfo.tbRsCustFeatRule.submissionStatus = subFeatStatus.SAVE
+			featureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
 			featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
 			// 상세로 redirect
-			navigate(`../${selfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
+			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
 		}
-	}, [createRuleDesignRes, createRuleDesignSucc, createRuleDesignErr, toast]);
-	const createCustFeatSQL = async () => {
-		/*
-		  Method      :: POST
-		  Url         :: /api/v1/korean-air/customerfeatures
-		  path param  :: 
-		  query param :: 
-		  body param  :: featureInfo
-		*/
-		/*
-		let config = cloneDeep(initConfig)
-		config.isLoarding = true
-		let request = cloneDeep(initApiRequest)
-		request.method = Method.POST
-		request.url = "/api/v1/korean-air/customerfeatures"
+	}, [createRuleDesignRes, createRuleDesignSucc, createRuleDesignErr, toast])
+
+	// 등록 API 호출(SQL)
+	const createCustFeatSQL = () => {
+		if (!isValidFormula) {
+			toast({
+				type: ValidType.ERROR,
+				content: ModalTitCont.REG_VALID.context,
+			})
+			return
+		}
 		featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
-		request.params!.bodyParams = Object.assign(featureInfo, { sfSubmissionRequestData: sfSubmissionRequestData })
-		request.params!.bodyParams = Object.assign(request.params!.bodyParams, { sfSubmissionApprovalList: sfSubmissionApprovalList })
-		console.log("[createCustFeatSQL] Request  :: ", request)
-
-		let response = cloneDeep(initCommonResponse)
-		//response = await callApi(request)
-		console.log("[createCustFeatSQL] Response :: ", response)
-		*/
-		// API 정상 응답시 페이지 redirect
-
+		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
+		param.customerFeature = featureInfo
+		param.submissionInfo.submission = sfSubmissionRequestData
+		param.submissionInfo.approvals = sfSubmissionApprovalList
+		let validRslt = validationCustReatRule(param)
+		if (!validRslt.valid) {
+			toast({
+				type: ValidType.ERROR,
+				content: validRslt.text,
+			})
+			return
+		}
+		setCustFeatureFormData(param)
+		createSQLMutate()
 	}
+	// 등록 API 호출 Call back(SQL)
+	useEffect(() => {
+		if (createSQLErr || createSQLRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '등록 중 에러가 발생했습니다.',
+			})
+		} else if (createSQLSucc) {
+			toast({
+				type: ValidType.CONFIRM,
+				content: '등록되었습니다.',
+			})
+			featureInfo.tbRsCustFeatRule.id = createSQLRes.result.customerFeatureId
+			featureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
+			featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
+			// 상세로 redirect
+			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
+		}
+	}, [createSQLRes, createSQLSucc, createSQLErr, toast])
+
 	// input 입력 변경시
 	const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target
@@ -559,7 +590,7 @@ const SelfFeatureReg = () => {
 	}
 	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string) => {
-		if (pageNm === selfFeatPgPpNm.LIST)
+		if (pageNm === SelfFeatPgPpNm.LIST)
 			navigate('..')
 		else
 			navigate(`../${pageNm}`)
@@ -748,7 +779,7 @@ const SelfFeatureReg = () => {
 						borderRadius: '5px',
 					}}
 				>
-					{(regType && (regType === selfFeatPgPpNm.RULE_REG)) &&
+					{(regType && (regType === SelfFeatPgPpNm.RULE_REG)) &&
 						<Stack
 							direction="Vertical"
 							gap="SM"
@@ -774,7 +805,7 @@ const SelfFeatureReg = () => {
 								<DndProvider backend={HTML5Backend}>
 									{/* drop 영역 */}
 									<DropList
-										featStatus={subFeatStatus.REG}
+										featStatus={SelfFeatPgPpNm.REG}
 										setIsSelectAggregateTop={setIsSelectAggregateTop}
 										targetList={targetList}
 										trgtFilterList={trgtFilterList}
@@ -799,7 +830,7 @@ const SelfFeatureReg = () => {
 					}
 					{/* 대상 선택 */}
 					{/* SQL 입력 */}
-					{(regType && (regType === selfFeatPgPpNm.SQL_REG)) &&
+					{(regType && (regType === SelfFeatPgPpNm.SQL_REG)) &&
 						<Stack
 							direction="Vertical"
 							style={{
@@ -821,9 +852,9 @@ const SelfFeatureReg = () => {
 					}
 					{/* SQL 입력 */}
 					{/* 계산식 */}
-					{(regType && (regType === selfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
+					{(regType && (regType === SelfFeatPgPpNm.RULE_REG) && (formulaTrgtList.length > 0)) &&
 						<CalcValid
-							featStatus={subFeatStatus.REG}
+							featStatus={SelfFeatPgPpNm.REG}
 							isSelectAggregateTop={isSelectAggregateTop}
 							setIsValidFormula={setIsValidFormula}
 							formulaTrgtList={formulaTrgtList}
@@ -857,7 +888,7 @@ const SelfFeatureReg = () => {
 						</svg>
 						저장
 					</Button>
-					<Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(selfFeatPgPpNm.LIST)}>
+					<Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						취소
 					</Button>
 				</Stack>

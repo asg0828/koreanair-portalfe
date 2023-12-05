@@ -1,5 +1,11 @@
 import { RowsInfo } from "@/models/components/Table";
 
+export enum AprvSeqNm {
+    FIRST = "Self-Feature 1차승인(운영)",
+    SECOND = "Self-Feature 2차승인(품질-메타)",
+    LAST = "Self-Feature 3차승인(최종생성승인)",
+}
+
 export interface SfSubmission {
     [key: string]: SfSubmissionRequestInfo | Array<SfSubmissionApproval>
     submission: SfSubmissionRequestInfo

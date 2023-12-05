@@ -35,7 +35,7 @@ import {
     SfSubmissionRequestInfo,
 } from "@/models/selfFeature/FeatureSubmissionModel"
 import {
-    selfFeatPgPpNm, subFeatStatus, subFeatStatusNm,
+    SelfFeatPgPpNm, SubFeatStatus, SubFeatStatusNm,
 } from '@/models/selfFeature/FeatureCommon';
 
 import { useSubmissionRequests } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries"
@@ -99,22 +99,22 @@ const SfSubmissionRequest = () => {
                     if (
                         !subReq.submission.status
                         || subReq.submission.status === ""
-                        || subReq.submission.status === subFeatStatus.SAVE
+                        || subReq.submission.status === SubFeatStatus.SAVE
                     ) {
-                        subReq.submission.statusNm = subFeatStatusNm.SAVE
+                        subReq.submission.statusNm = SubFeatStatusNm.SAVE
                     } else if (
-                        subReq.submission.status === subFeatStatus.REQ
-                        || subReq.submission.status === subFeatStatus.IN_APRV
+                        subReq.submission.status === SubFeatStatus.REQ
+                        || subReq.submission.status === SubFeatStatus.IN_APRV
                     ) {
-                        subReq.submission.statusNm = subFeatStatusNm.IN_APRV
-                    } else if (subReq.submission.status === subFeatStatus.APRV) {
-                        subReq.submission.statusNm = subFeatStatusNm.APRV
-                    } else if (subReq.submission.status === subFeatStatus.REJT) {
-                        subReq.submission.statusNm = subFeatStatusNm.REJT
-                    } else if (subReq.submission.status === subFeatStatus.CNCL) {
-                        subReq.submission.statusNm = subFeatStatusNm.CNCL
-                    } else if (subReq.submission.status === subFeatStatus.DLET) {
-                        subReq.submission.statusNm = subFeatStatusNm.DLET
+                        subReq.submission.statusNm = SubFeatStatusNm.IN_APRV
+                    } else if (subReq.submission.status === SubFeatStatus.APRV) {
+                        subReq.submission.statusNm = SubFeatStatusNm.APRV
+                    } else if (subReq.submission.status === SubFeatStatus.REJT) {
+                        subReq.submission.statusNm = SubFeatStatusNm.REJT
+                    } else if (subReq.submission.status === SubFeatStatus.CNCL) {
+                        subReq.submission.statusNm = SubFeatStatusNm.CNCL
+                    } else if (subReq.submission.status === SubFeatStatus.DLET) {
+                        subReq.submission.statusNm = SubFeatStatusNm.DLET
                     }
                     return subReq.submission
                 })
@@ -152,7 +152,7 @@ const SfSubmissionRequest = () => {
     }
     // 페이지 이동
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
-        if (pageNm === selfFeatPgPpNm.DETL) {
+        if (pageNm === SelfFeatPgPpNm.DETL) {
             navigate(pageNm, { state: rows })
         } else {
             navigate(pageNm)
@@ -264,7 +264,7 @@ const SfSubmissionRequest = () => {
 				clickable={true}
 				page={page}
 				onChange={handlePage}
-				onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
+				onClick={(rows: RowsInfo) => onClickPageMovHandler(SelfFeatPgPpNm.DETL, rows)}
 				//rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
 				buttonChildren={
 					<>

@@ -1,8 +1,8 @@
 // 계산식 validation 공통
 import { cloneDeep } from "lodash"
 
-import { CustFeatureFormData, FormulaTrgtListProps, FormulaValidRslt, TbRsCustFeatRuleTrgt } from "@/models/selfFeature/FeatureModel"
-import { divisionTypes, initFormulaValidRslt } from "@/pages/user/self-feature/data"
+import { CustFeatureFormData, DivisionTypes, FormulaTrgtListProps, FormulaValidRslt, TbRsCustFeatRuleTrgt } from "@/models/selfFeature/FeatureModel"
+import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
 import { ColDataType } from "@/models/selfFeature/FeatureCommon"
 import { SfSubmissionApproval } from "@/models/selfFeature/FeatureSubmissionModel"
 
@@ -45,9 +45,9 @@ export const ValidationFormula = ({
             validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
             return false
         }
-        
+
         for (let i = 0; i < inputTrgtIdList.length; i++) {
-            
+
             if (inputTrgtIdList[i] === "") continue
 
             let chkTrgt = `T${inputTrgtIdList[i]}`
@@ -67,12 +67,12 @@ export const ValidationFormula = ({
         let str = cloneDeep(formula).replace(/[^()]/g, '')
         let cum = 0
         for (let paren of str) {
-            cum += paren === '('? 1: -1
-            if(cum < 0) {
+            cum += paren === '(' ? 1 : -1
+            if (cum < 0) {
                 return false
             }
         }
-        return cum === 0? true: false;
+        return cum === 0 ? true : false;
     }
     /*
         사칙연산 dataType 체크
@@ -81,16 +81,16 @@ export const ValidationFormula = ({
 
         let inptTrgtList = formula.replace(/[^0-9T]/g, "").split("T")
         inptTrgtList.splice(0, 1)
-        inptTrgtList = inptTrgtList.map((v) => "T"+v)
+        inptTrgtList = inptTrgtList.map((v) => "T" + v)
 
         if (inptTrgtList.length === 1) return true
 
         let notNumDtpTrgtList = formulaTrgtList.filter((ft: FormulaTrgtListProps) => ft.dataType !== ColDataType.NUM)
-        
+
         let inptTrgtNotNumList = notNumDtpTrgtList.filter((ft: FormulaTrgtListProps) => {
             return inptTrgtList.some(target => ft.targetId === target)
         })
-        
+
         return inptTrgtNotNumList.length > 0 ? false : true
     }
 
@@ -106,7 +106,7 @@ export const ValidationFormula = ({
         if (validRslt.text === '') {
             validRslt.text = `사칙연산 or Target ID를 확인해 주세요.`
         }
-        
+
     } else if (!targetIdExistCheck()) {
         /*
             입력한 target ID 존재 여부 체크
@@ -163,7 +163,7 @@ export const transFuncCalcStr = ({
 
         if (var2 === "") rtnStr += ', [길이])'
         else rtnStr += `, ${var2})`
-        
+
     } else if (funcType === "LENGTH") {
         rtnStr += ')'
     } else if (funcType === "CONCAT") {
@@ -273,16 +273,26 @@ export const validationCustReatRule = (formData: CustFeatureFormData) => {
     }
 
     if (validInfo.valid) {
-        formData.customerFeature.tbRsCustFeatRuleTrgtList.map((target: TbRsCustFeatRuleTrgt) => {
-            if (target.divisionCode === divisionTypes.BEHV) {
-                if (!target.columnName || target.columnName === "" || target.columnName === "null" || target.columnName === "undefined") {
-                    validInfo.text = `BaseFact 정보 '${target.targetId}'의 집계할 컬럼을 확인 해주세요.`
-                    validInfo.valid = false
+        // Rule-Design
+        if (formData.customerFeature.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+            formData.customerFeature.tbRsCustFeatRuleTrgtList.map((target: TbRsCustFeatRuleTrgt) => {
+                if (target.divisionCode === DivisionTypes.BEHV) {
+                    if (!target.columnName || target.columnName === "" || target.columnName === "null" || target.columnName === "undefined") {
+                        validInfo.text = `BaseFact 정보 '${target.targetId}'의 집계할 컬럼을 확인 해주세요.`
+                        validInfo.valid = false
+                    }
                 }
-            }
-            return target
-        })
-        
+                return target
+            })
+        }
+        // SQL
+        if (formData.customerFeature.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
+            if (!formData.customerFeature.tbRsCustFeatRuleSql.sqlQuery || formData.customerFeature.tbRsCustFeatRuleSql.sqlQuery === "") {
+                validInfo.text = "Feature 생성 Query를 확인 해주세요."
+                validInfo.valid = false
+            } 
+        }
+
         formData.submissionInfo.approvals.map((approval: SfSubmissionApproval) => {
             if (!approval.approver || approval.approver === "") {
                 validInfo.text = "결재선을 확인 해주세요."

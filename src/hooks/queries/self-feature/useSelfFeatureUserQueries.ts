@@ -6,6 +6,7 @@ import {
     retrieveCustFeatParentChildList, 
     retrieveCustFeatRuleInfos, 
     retrieveCustFeatRules, 
+    retrieveCustFeatSQLInfos, 
     retrieveReadSql, 
     retrieveSampleData,
     retrieveSubmissionInfo,
@@ -23,9 +24,13 @@ export const useCustFeatRules = (qParams: FeatListSrchProps) => {
 export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
     return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId())
 }
-// Self-feature 상세정보 조회
+// Self-feature 상세정보 조회(Rule-Design)
 export const useCustFeatRuleInfos = (custFeatRuleId: string) => {
-    return useQuery(['/cust-feat-rule-infos', custFeatRuleId], () => retrieveCustFeatRuleInfos(custFeatRuleId))
+    return useQuery(['/cust-feat-rule-infos', custFeatRuleId], () => retrieveCustFeatRuleInfos(custFeatRuleId), { enabled: false })
+}
+// Self-feature 상세정보 조회(SQL)
+export const useCustFeatSQLInfos = (custFeatRuleId: string) => {
+    return useQuery(['/cust-feat-sql-infos', custFeatRuleId], () => retrieveCustFeatSQLInfos(custFeatRuleId), { enabled: false })
 }
 // Self-feature 승인정보 리스트 조회(승인정보 ID 조회를 위해)
 export const useSubmissionList = (qParams: QueryParams) => {
