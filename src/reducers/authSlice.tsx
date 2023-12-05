@@ -17,6 +17,29 @@ const initialState: AuthState = {
     languageCode: '',
     roleType: '',
     memberStateCode: '',
+    apldMgrAuthId: '', // string
+    apldMgrAuthNm: '', // string
+    apldUserAuthId: '', // string
+    apldUserAuthNm: '', // string
+    deptCode: '', // string
+    deptNm: '', // string
+    menuByAuthMgr: {
+      menus: [],
+      search: {
+        authId: '',
+        authNm: '',
+      },
+    }, // MenuByAuthMgrUser
+    menuByAuthUser: {
+      menus: [],
+      search: {
+        authId: '',
+        authNm: '',
+      },
+    }, // MenuByAuthMgrUser
+    userEmail: '', // string
+    userId: '', // string
+    userNm: '', // string
   },
   contextPath: '',
 };

@@ -54,13 +54,13 @@ const SubRejectModal = ({
         setIsOpenSubRejectModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
-            if (!sessionInfo.email) {
+            if (!sessionInfo.userEmail) {
                 console.log("no session info email")
                 return
             }
-            setUserEmail(sessionInfo.email)
+            setUserEmail(sessionInfo.userEmail)
             // 승인 요청 case만 check
-            let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.email) && (item.status === SubFeatStatus.REQ))
+            let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && (item.status === SubFeatStatus.REQ))
             if (isEmpty(approval)) {
                 console.log("no approval Id")
                 return

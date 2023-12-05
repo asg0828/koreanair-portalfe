@@ -573,7 +573,7 @@ const SelfFeatureDetail = () => {
 	// }, [aprvType1, aprvType2, aprvType3])
 	// 승인요청 API 호출
 	const insertSubmissionRequest = () => {
-		if (!sessionInfo.email) {
+		if (!sessionInfo.userEmail) {
 			console.log("no session info email")
 			toast({
 				type: ValidType.ERROR,
@@ -581,7 +581,7 @@ const SelfFeatureDetail = () => {
 			})
 			return
 		}
-		setUserEmail(sessionInfo.email)
+		setUserEmail(sessionInfo.userEmail)
 		insrtSubReqMutate()
 	}
 	// 승인요청 API Callback
@@ -604,7 +604,7 @@ const SelfFeatureDetail = () => {
 	}, [insrtSubReqRes, insrtSubReqSucc, insrtSubReqErr])
 	// 승인요청 취소 API 호출
 	const cancelRequestSubmission = () => {
-		if (!sessionInfo.email) {
+		if (!sessionInfo.userEmail) {
 			console.log("no session info email")
 			toast({
 				type: ValidType.ERROR,
@@ -612,7 +612,7 @@ const SelfFeatureDetail = () => {
 			})
 			return
 		}
-		setUserEmail(sessionInfo.email)
+		setUserEmail(sessionInfo.userEmail)
 		cnclReqSubMutate()
 	}
 	// 승인요청 취소 API Callback

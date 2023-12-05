@@ -7,6 +7,27 @@ export interface SessionInfo {
   roleType?: string;
   memberStateCode?: string;
   employeeNumber?: string;
+  apldMgrAuthId?: string
+  apldMgrAuthNm?: string
+  apldUserAuthId?: string
+  apldUserAuthNm?: string
+  deptCode?: string
+  deptNm?: string
+  menuByAuthMgr?: MenuByAuthMgrUser
+  menuByAuthUser?: MenuByAuthMgrUser
+  userEmail?: string
+  userId?: string
+  userNm?: string
+}
+
+export interface MenuByAuthMgrUser {
+  menus: []
+  search: MenuByAuthMgrUserSearch
+}
+
+export interface MenuByAuthMgrUserSearch {
+  authId: string
+  authNm: string
 }
 
 export interface AccessTokenRefreshTokenInfo {
