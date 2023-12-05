@@ -26,8 +26,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns = [
-  { headerName: '테이블 영문명', field: 'mtsKoNm', colSpan: 2 },
-  { headerName: '테이블 한글명', field: 'mtsEnNm', colSpan: 2 },
+  { headerName: '테이블 한글명', field: 'mtsKoNm', colSpan: 2 },
+  { headerName: '테이블 영문명', field: 'mtsEnNm', colSpan: 2 },
   { headerName: '테이블 정의', field: 'mtsDef', colSpan: 2 },
   { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 2 },
   { headerName: 'DB명', field: 'srcDbCd', colSpan: 2 },
@@ -35,7 +35,7 @@ const columns = [
 
 const initParams: DatasetParams = {
   searchTable: '',
-  dataSetConditions: ['mtsEnNm', 'mtsKoNm', 'mtsDef', 'srcTbNm'],
+  dataSetConditions: ['mtsKoNm', 'mtsEnNm', 'mtsDef', 'srcTbNm'],
   srcDbCd: '',
 };
 
@@ -137,14 +137,14 @@ const List = () => {
           </TH>
           <TD colSpan={5} align="left">
             <Checkbox
-              label="테이블 영문명"
-              onCheckedChange={(checked) => handleChangeDataSetConditions('mtsEnNm', checked)}
-              checked={params.dataSetConditions.includes('mtsEnNm')}
-            />
-            <Checkbox
               label="테이블 한글명"
               onCheckedChange={(checked) => handleChangeDataSetConditions('mtsKoNm', checked)}
               checked={params.dataSetConditions.includes('mtsKoNm')}
+            />
+            <Checkbox
+              label="테이블 영문명"
+              onCheckedChange={(checked) => handleChangeDataSetConditions('mtsEnNm', checked)}
+              checked={params.dataSetConditions.includes('mtsEnNm')}
             />
             <Checkbox
               label="테이블정의"

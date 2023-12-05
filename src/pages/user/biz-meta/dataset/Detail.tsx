@@ -25,16 +25,16 @@ const Detail = () => {
   const [datasetModel, setDatasetModel] = useState<DatasetModel>();
   const columns: Array<ColumnsInfo> = [
     {
-      headerName: '영문명',
-      field: 'mcsEnNm',
-      colSpan: 1.5,
-      require: true,
-    },
-    {
       headerName: '한글명',
       field: 'mcsKoNm',
       colSpan: 1.5,
       maxLength: 100,
+      require: true,
+    },
+    {
+      headerName: '영문명',
+      field: 'mcsEnNm',
+      colSpan: 1.5,
       require: true,
     },
     {
@@ -152,16 +152,16 @@ const Detail = () => {
         <HorizontalTable>
           <TR>
             <TH required colSpan={1} align="right">
-              테이블 영문명
-            </TH>
-            <TD colSpan={2} align="left">
-              {datasetModel?.mtsEnNm}
-            </TD>
-            <TH required colSpan={1} align="right">
               테이블 한글명
             </TH>
             <TD colSpan={2} align="left">
               {datasetModel?.mtsKoNm}
+            </TD>
+            <TH required colSpan={1} align="right">
+              테이블 영문명
+            </TH>
+            <TD colSpan={2} align="left">
+              {datasetModel?.mtsEnNm}
             </TD>
           </TR>
           <TR>
