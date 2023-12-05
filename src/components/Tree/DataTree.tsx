@@ -39,7 +39,7 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
   const handleMove: MoveHandler<any> = (args) => {
     const { parentNode } = args;
 
-    if (!parentNode?.data.willReceiveDrop && args.index !== 0) {
+    if (!parentNode?.data.willReceiveDrop && args.index === 0) {
       args.parentId = parentNode?.parent?.data.id;
       args.index = parentNode?.data.ordSeq + 1;
     }
@@ -117,19 +117,19 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
     // 드랍 시 대상 여부
     node.data.willReceiveDrop = node.willReceiveDrop;
 
-    if (node.level === 0 && node.rowIndex === 0) {
-      const hasSelected = checkHasSelected(tree.root);
+    // if (node.level === 0 && node.rowIndex === 0) {
+    //   const hasSelected = checkHasSelected(tree.root);
 
-      if (!hasSelected) {
-        handleClick(node, tree);
-      }
-    }
+    //   if (!hasSelected) {
+    //     handleClick(node, tree);
+    //   }
+    // }
 
     if (node.children?.length === 0) {
       content.push(
         <>
           {enableChecked && <Checkbox checked={isChecked} onCheckedChange={(checked) => handleCheck(node, checked)} />}
-          <Stack className="width-100 hover">
+          <Stack className="width-100 hover" onClick={() => handleClick(node, tree)}>
             <DescriptionOutlinedIcon sx={fileSx} />
             <Typography variant="body1">{node.data.name}</Typography>
           </Stack>
@@ -143,7 +143,7 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
             {enableChecked && (
               <Checkbox checked={isChecked} onCheckedChange={(checked) => handleCheck(node, checked)} />
             )}
-            <Stack className="width-100 hover">
+            <Stack className="width-100 hover" onClick={() => handleClick(node, tree)}>
               <FolderOpenTwoToneIcon sx={folderSx} />
               <Typography variant="body1">{node.data.name}</Typography>
             </Stack>
@@ -156,7 +156,7 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
             {enableChecked && (
               <Checkbox checked={isChecked} onCheckedChange={(checked) => handleCheck(node, checked)} />
             )}
-            <Stack className="width-100 hover">
+            <Stack className="width-100 hover" onClick={() => handleClick(node, tree)}>
               <FolderRoundedIcon sx={folderSx} />
               <Typography variant="body1">{node.data.name}</Typography>
             </Stack>
@@ -170,7 +170,6 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
         id={node.data.id}
         className={`tree-item width-100 ${isSelected ? 'primary-200' : ''} ${isChanged ? 'error-200' : ''}`}
         ref={dragHandle}
-        onClick={() => handleClick(node, tree)}
       >
         <Stack className="width-100" style={style}>
           {content}

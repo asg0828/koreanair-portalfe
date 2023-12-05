@@ -83,7 +83,10 @@ const List = () => {
       return;
     }
 
-    const { dragIds, parentId, index } = args;
+    let { dragIds, parentId, index } = args;
+    if (parentId === '__REACT_ARBORIST_INTERNAL_ROOT__') {
+      parentId = null;
+    }
 
     setData((prevState) => {
       const toChildren = prevState.filter((item) => item.upMenuId === parentId).sort((a, b) => a.ordSeq - b.ordSeq);
