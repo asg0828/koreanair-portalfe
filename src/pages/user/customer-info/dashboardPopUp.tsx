@@ -1,106 +1,24 @@
-import { useCustomerInfo } from '@/hooks/queries/useCustomerInfoQueires';
-import { htmlTagReg } from '@/utils/RegularExpression';
-import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Skypass } from '@/models/model/CustomerInfoModel';
+import { Stack, Typography, SelectOption, Select, Button, Modal } from '@ke-design/components';
+import { useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { profileData, skypassData, familyMemberData, walletData, preferenceData, cntData } from './data';
-import { FamilyMember, Profile, Skypass, Wallet, Preference, Cnt } from '@/models/model/CustomerInfoModel';
 
-export default function List() {
+export default function DashBoardPopUp() {
+  const [isListView1, setIsListView1] = useState(false);
+  const [isListView2, setIsListView2] = useState(false);
+  const [isListView3, setIsListView3] = useState(false);
+  const [skypass, setSkypass] = useState<Array<Skypass>>();
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
   const batchDate = `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`;
-  const [profile, setProfile] = useState<Profile>();
-  const [skypass, setSkypass] = useState<Array<Skypass>>();
-  const [family, setFamily] = useState<FamilyMember>();
-  const [wallet, setWallet] = useState<Wallet>();
-  const [preference, setPreference] = useState<Preference>();
-  const [cnt, setCnt] = useState<Cnt>();
-  const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({ skypassNum: '', oneId: '' });
-  const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
-  // const [skypassList, setSkypassList] = useState<Array<any>>([]);
-  const intervalId = useRef<number | NodeJS.Timer | null>(null);
-  const { refetch, data: response, isError } = useCustomerInfo(searchInfo);
-  const { toast } = useToast();
-
-  const validation = () => {
-    // 검색 조건 자체는 두개다 들어가도 가능
-    // 회원당 skypass는 일대다 관계이므로 oneId로 검색할 경우 skypass list를
-    let searchError = false;
-    if (
-      searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-      searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
-    ) {
-      setOpen(true);
-      searchError = true;
-    }
-    return searchError;
-  };
-
-  // 등록가족 상세 모달 오픈 버튼
-  const retrieveFamilyInfo = () => {
-    setOpenFamilyInfo(true);
-  };
-
-  const handleSearch = useCallback(() => {
-    // 유효성 검사 실패 시 종료
-    const validation = () => {
-      let searchError = false;
-      if (
-        searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
-      ) {
-        setOpen(true);
-        searchError = true;
-      }
-      return searchError;
-    };
-
-    if (validation()) return;
-    setProfile(profileData);
-    setSkypass(skypassData);
-    setFamily(familyMemberData);
-    setSelectedSkypass(skypassData[0]);
-    setWallet(walletData);
-    setPreference(preferenceData);
-    setCnt(cntData);
-    // refetch();
-  }, [refetch, searchInfo, validation]);
-
-  // style > 배경색 변경
-  useEffect(() => {
-    const bodyElement: HTMLElement | null = document.getElementById('body');
-    if (bodyElement) {
-      bodyElement.style.backgroundColor = '#f8f9fc';
-      return () => {
-        bodyElement.style.backgroundColor = '';
-      };
-    }
-  }, []);
-
-  //검색 조건 모달 state
-  const [isOpen, setOpen] = useState(false);
 
   // 등록가족 상세 버튼 모달 state
   const [isOpenFamilyInfo, setOpenFamilyInfo] = useState(false);
 
-  const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    clearInterval(intervalId.current as number);
-    const { id, value } = e.target;
-    setSearchInfo({ ...searchInfo, [id]: value });
-  };
-
-  const [isListView1, setIsListView1] = useState(false);
-  const [isListView2, setIsListView2] = useState(false);
-  const [isListView3, setIsListView3] = useState(false);
-
-  // 클릭 더보기 리스트 교체 함수
-  const listClickChange = (flag: string) => {
-    // 눌렀을때 -> LIST에 값이 들어감                                                       -> STATE변화 (열어줘야됨)
-    // LIST에 값이 있는 상태로 누르면(다시 누르면) -> LIST가 비워짐      -> STATE변화(닫아줘야됨)
-    // LIST에 값이 있는 상태로 다른걸 누르면 -> LIST가 다른걸로 채워짐  -> STATE변화(다른걸 열어줘야됨/ 열어주되 LIST를 갈아끼워줘야됨 )
-    // LIST를 STATE로 관리하고 값을 넣었다 뺐다 하면서 USEeFFECT로 열고 닫고 해주면 될거같은데 -> 값이 변화하면 무조건 LIST가 열리게 값 변화가 없으면 닫기
+  // 등록가족 상세 모달 오픈 버튼
+  const retrieveFamilyInfo = () => {
+    setOpenFamilyInfo(true);
   };
 
   /* select 입력 함수 */
@@ -112,74 +30,8 @@ export default function List() {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
   };
 
-  useEffect(() => {
-    console.log(skypass?.filter((item) => item.skypassNum === searchInfo.skypassSelect));
-    setSelectedSkypass(skypass?.find((item) => item.skypassNum === searchInfo.skypassSelect));
-    console.log(selectedSkypass);
-  }, [searchInfo.skypassSelect]);
-
-  useEffect(() => {
-    if (isError || response?.successOrNot === 'N') {
-      toast({
-        type: 'Error',
-        content: '조회 중 에러가 발생했습1니다.',
-      });
-    } else {
-      if (response?.data) {
-        // response.data.contents.forEach(() => {});
-        // setRows(response.data.contents);
-      }
-    }
-  }, [response, isError, toast]);
-
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
-      {/* searchBar 영역 */}
-      <Stack>
-        <div className="componentWrapper" style={{ width: '100%' }}>
-          <TextField
-            id="skypassNum"
-            value={searchInfo.skypassNum}
-            appearance="Outline"
-            placeholder="Skypass Number"
-            size="LG"
-            textAlign="left"
-            onChange={onchangeInputHandler}
-            autoFocus
-          />
-        </div>
-        <div className="componentWrapper" style={{ width: '100%' }}>
-          <TextField
-            value={searchInfo.oneId}
-            id="oneId"
-            appearance="Outline"
-            placeholder="One ID NO."
-            size="LG"
-            textAlign="left"
-            onChange={onchangeInputHandler}
-          />
-        </div>
-
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSearch}>
-          검색
-        </Button>
-        <Modal open={isOpen} onClose={() => setOpen(false)}>
-          <Modal.Header>오류</Modal.Header>
-          <Modal.Body>검색 조건을 입력해주세요</Modal.Body>
-          <Modal.Footer>
-            <Button
-              priority="Primary"
-              appearance="Contained"
-              onClick={() => {
-                setOpen(false);
-              }}
-            >
-              확인
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </Stack>
-      {/* searchBar 영역 */}
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
           <Stack style={{ position: 'relative' }}>
@@ -191,12 +43,7 @@ export default function List() {
           <div className="topCard">
             <div className="dashBoardBox n1">
               <div className="name">
-                {profile?.name}
-                <span className="en">
-                  {profile?.engLname}
-                  &nbsp;
-                  {profile?.engFname}
-                </span>
+                <span className="en"></span>
               </div>
               <div className="profile">
                 <div className="top">
@@ -205,27 +52,27 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">생년월일</div>
-                  <div className="value">{profile?.birth}</div>
+                  <div className="value"></div>
                 </div>
                 <div className="item">
                   <div className="key">만나이</div>
-                  <div className="value">{profile?.age}</div>
+                  <div className="value"></div>
                 </div>
                 <div className="item">
                   <div className="key">성별</div>
-                  <div className="value">{profile?.gender}</div>
+                  <div className="value"></div>
                 </div>
                 <div className="item">
                   <div className="key">자택번호</div>
-                  <div className="value">{profile?.homePhoneNumberInfo}</div>
+                  <div className="value"></div>
                 </div>
                 <div className="item">
                   <div className="key">휴대폰번호</div>
-                  <div className="value">{profile?.mobilePhoneNumberInfone}</div>
+                  <div className="value"></div>
                 </div>
                 <div className="item">
                   <div className="key">이메일</div>
-                  <div className="value">{profile?.emailAddress}</div>
+                  <div className="value"></div>
                 </div>
               </div>
             </div>
@@ -258,35 +105,35 @@ export default function List() {
               </div>
               <div className="item">
                 <div className="key">회원번호</div>
-                <div className="value">{selectedSkypass?.skypassNum}</div>
+                <div className="value"></div>
               </div>
               <div className="item">
                 <div className="key">회원등급</div>
-                <div className="value">{selectedSkypass?.skypassGrade}</div>
+                <div className="value"></div>
               </div>
               <div className="item">
                 <div className="key">휴면여부</div>
-                <div className="value">{selectedSkypass?.useYn}</div>
+                <div className="value"></div>
               </div>
               <div className="item">
                 <div className="key">현등급최초시작일</div>
-                <div className="value">{selectedSkypass?.gradeStartDate}</div>
+                <div className="value"></div>
               </div>
               <div className="item">
                 <div className="key">잔여 마일리지</div>
-                <div className="value">{selectedSkypass?.mileage}</div>
+                <div className="value"></div>
               </div>
               <div className="item">
                 <div className="key">소멸예정 마일리지</div>
-                <div className="value">{selectedSkypass?.expireMileage}</div>
+                <div className="value"></div>
               </div>
               <div className="item">
                 <div className="key">등급유지조건(마일리지+횟수+기간)</div>
-                <div className="value">{selectedSkypass?.gradeCondtion}</div>
+                <div className="value"></div>
               </div>
               <div className="item">
                 <div className="key">승급조건(마일리지+횟수)</div>
-                <div className="value">{selectedSkypass?.upgradeCondition}</div>
+                <div className="value"></div>
               </div>
             </div>
             <div className="dashBoardBox n3">
@@ -320,11 +167,11 @@ export default function List() {
               <div className="middle">
                 <div className="left">
                   등록가족
-                  <span className="num">{family?.familyCnt}</span>명
+                  <span className="num"></span>명
                 </div>
                 <div className="right">
                   합산가능마일리지
-                  <span className="num">{family?.mergeMileage}</span>
+                  <span className="num"></span>
                 </div>
               </div>
               <div className="list">
@@ -339,17 +186,7 @@ export default function List() {
                     <th>Code</th>
                     <th>Name</th>
                   </thead>
-                  <tbody>
-                    {family &&
-                      family.familyList.length > 0 &&
-                      family.familyList.map((list, index) => (
-                        <tr>
-                          <td>{list.relationship}</td>
-                          <td>{list.code}</td>
-                          <td>{list.name}</td>
-                        </tr>
-                      ))}
-                  </tbody>
+                  <tbody></tbody>
                 </table>
               </div>
             </div>
@@ -376,7 +213,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.pnr}</span>개
+                      <span className="num"></span>개
                     </div>
                   </Stack>
                 </div>
@@ -392,7 +229,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.eTkt}</span>개
+                      <span className="num"></span>개
                     </div>
                   </Stack>
                 </div>
@@ -464,7 +301,7 @@ export default function List() {
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">보유쿠폰</div>
                       <div className="value">
-                        <span className="num">{wallet?.coupon}</span>개
+                        <span className="num"></span>개
                       </div>
                     </Stack>
                   </div>
@@ -473,7 +310,7 @@ export default function List() {
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">유효프로모션쿠폰</div>
                     <div className="value">
-                      <span className="num">{wallet?.promotion}</span>개
+                      <span className="num"></span>개
                     </div>
                   </Stack>
                 </div>
@@ -481,7 +318,7 @@ export default function List() {
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">전자우대할인권</div>
                     <div className="value">
-                      <span className="num">{wallet?.complimentary}</span>개
+                      <span className="num"></span>개
                     </div>
                   </Stack>
                 </div>
@@ -494,13 +331,13 @@ export default function List() {
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">최다 탑승 좌석</div>
-                    <div className="value">{preference?.seat}</div>
+                    <div className="value"></div>
                   </Stack>
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">선호 기내식</div>
-                    <div className="value">{preference?.meal}</div>
+                    <div className="value"></div>
                   </Stack>
                 </div>
               </div>
@@ -528,7 +365,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.boarding}</span>회
+                      <span className="num"></span>회
                     </div>
                   </Stack>
                 </div>
@@ -544,7 +381,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.pet}</span>개
+                      <span className="num"></span>개
                     </div>
                   </Stack>
                 </div>
@@ -623,8 +460,8 @@ export default function List() {
               <div className="top">
                 communication records
                 {/* <div className="kr">
-                  여행
-                </div> */}
+              여행
+            </div> */}
               </div>
               <div className="itemWrap">
                 <Stack justifyContent="Between" gap="LG">
@@ -640,7 +477,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.call}</span>
+                        <span className="num"></span>
                       </div>
                     </Stack>
                   </div>
@@ -656,7 +493,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.internet}</span>
+                        <span className="num"></span>
                       </div>
                     </Stack>
                   </div>
@@ -672,7 +509,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.voc}</span>
+                        <span className="num"></span>
                       </div>
                     </Stack>
                   </div>
@@ -690,7 +527,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.sms}</span>
+                        <span className="num"></span>
                       </div>
                     </Stack>
                   </div>
@@ -706,7 +543,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.email}</span>
+                        <span className="num"></span>
                       </div>
                     </Stack>
                   </div>
@@ -722,7 +559,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.sns}</span>
+                        <span className="num"></span>
                       </div>
                     </Stack>
                   </div>

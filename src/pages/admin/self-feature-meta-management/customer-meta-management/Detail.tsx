@@ -96,7 +96,7 @@ const CustomerMetaManagementDetail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={0.123} align="right">
+            <TH colSpan={tbCoMetaTbInfo.rtmTblYn === 'Y' ? 0.199 : 0.123} align="right">
               테이블설명
             </TH>
             <TD>
@@ -108,6 +108,31 @@ const CustomerMetaManagementDetail = () => {
                 id="metaTblDesc"
               />
             </TD>
+            {tbCoMetaTbInfo.rtmTblYn === 'Y' ? (
+              <>
+                <TH colSpan={0.2005}>Topic</TH>
+                <TD colSpan={0.416}>
+                  <Select
+                    id="metaTblDvCd"
+                    appearance="Outline"
+                    placeholder="전체"
+                    className="width-100"
+                    value={tbCoMetaTbInfo.metaTblDvCd}
+                    onChange={(
+                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                      value: SelectValue<{}, false>
+                    ) => {
+                      onchangeSelectHandler(e, value, 'metaTblDvCd');
+                    }}
+                  >
+                    <SelectOption value={'ATTR'}>??</SelectOption>
+                    <SelectOption value={'BEHV'}>???</SelectOption>
+                  </Select>
+                </TD>
+              </>
+            ) : (
+              <></>
+            )}
           </TR>
           <TR>
             <TH colSpan={0.11} align="right">
@@ -151,7 +176,7 @@ const CustomerMetaManagementDetail = () => {
                 <SelectOption value={'Y'}>사용</SelectOption>
                 <SelectOption value={'N'}>미사용</SelectOption>
               </Select>
-            </TD>{' '}
+            </TD>
             <TH colSpan={0.11} align="right">
               실시간여부
             </TH>
@@ -171,7 +196,7 @@ const CustomerMetaManagementDetail = () => {
                 }}
               >
                 <SelectOption value={'N'}>NO</SelectOption>
-                <SelectOption value={'Y'}>Yes</SelectOption>
+                <SelectOption value={'Y'}>YES</SelectOption>
               </Select>
             </TD>
           </TR>

@@ -2,15 +2,19 @@ import {
   AnalysisIndexList,
   AnalysisResultData,
   CartData,
+  Cnt,
   Column,
   ContributeData,
+  FamilyMember,
   Ffp,
   HomepageData,
-  Mileage,
   PnrData,
+  Preference,
   Profile,
+  Skypass,
   VocData,
-} from '@/models/customer-info/CustomerInfo';
+  Wallet,
+} from '@/models/model/CustomerInfoModel';
 
 const analysisIndexList: AnalysisIndexList[] = [
   {
@@ -80,13 +84,125 @@ const pnrData: PnrData[] = [
   },
 ];
 
-const profile: Profile = {
-  gender: 'M',
-  nationality: 'KOR',
-  dob: '1990-01-01',
-  age: '33',
-  skypassNo: '113317438600',
-  oneIdNo: 'S199704290885152',
+const profileData: Profile = {
+  name: '홍길동',
+  engFname: 'hong',
+  engLname: 'gildong',
+  birth: '1920-01-01',
+  age: '35',
+  gender: '남',
+  homePhoneNumberInfo: '02-123-4124',
+  mobilePhoneNumberInfone: '010-0101-0101',
+  emailAddress: 'exemail@kalmate.net',
+};
+// {
+//   name: '이순신',
+//   engFname: 'lee',
+//   engLname: 'soonshin',
+//   birth: '1945-04-28',
+//   age: '53',
+//   gender: '남',
+//   homePhoneNumberInfo: '061-2452-1143',
+//   mobilePhoneNumberInfone: '010-2589-1255',
+//   emailAddress: 'rjqnrtjs@kalmate.net',
+// },
+// {
+//   name: '유관순',
+//   engFname: 'yu',
+//   engLname: 'gwansun',
+//   birth: '2002-12-06',
+//   age: '20',
+//   gender: '여',
+//   homePhoneNumberInfo: '02-1919-0301',
+//   mobilePhoneNumberInfone: '010-2345-8888',
+//   emailAddress: 'ehrflqakstp@kalmate.net',
+// },
+const skypassList: any[] = [];
+
+const skypassData: Skypass[] = [
+  {
+    skypassNum: '1235213421532',
+    skypassGrade: 'GOLD',
+    useYn: 'None',
+    gradeStartDate: '2000-00-00',
+    mileage: '5,555',
+    expireMileage: '1,222',
+    gradeCondtion: '0',
+    upgradeCondition: '000',
+  },
+  {
+    skypassNum: '113416601710',
+    skypassGrade: 'SILVER',
+    useYn: 'None',
+    gradeStartDate: '2000-00-00',
+    mileage: '67,321',
+    expireMileage: '3,642',
+    gradeCondtion: '0',
+    upgradeCondition: '000',
+  },
+  {
+    skypassNum: '113327129495',
+    skypassGrade: 'BRONZE',
+    useYn: 'None',
+    gradeStartDate: '2000-00-00',
+    mileage: '15,132',
+    expireMileage: '800',
+    gradeCondtion: '0',
+    upgradeCondition: '000',
+  },
+];
+const familyMemberData: FamilyMember = {
+  familyCnt: 4,
+  mergeMileage: 50000,
+  familyList: [
+    {
+      relationship: 'path1',
+      code: '024',
+      name: 'SunSin LEE',
+    },
+    {
+      relationship: 'path1',
+      code: '024',
+      name: 'SunSin LEE',
+    },
+    {
+      relationship: 'path1',
+      code: '024',
+      name: 'SunSin LEE',
+    },
+    {
+      relationship: 'path1',
+      code: '024',
+      name: 'SunSin LEE',
+    },
+    {
+      relationship: 'path1',
+      code: '024',
+      name: 'SunSin LEE',
+    },
+  ],
+};
+const walletData: Wallet = {
+  coupon: 5,
+  promotion: 3,
+  complimentary: 4,
+};
+const preferenceData: Preference = {
+  seat: 'Window',
+  meal: '한식',
+};
+
+const cntData: Cnt = {
+  pnr: 2,
+  eTkt: 2,
+  boarding: 2,
+  pet: 2,
+  call: 2,
+  internet: 2,
+  voc: 2,
+  sms: 2,
+  email: 2,
+  sns: 2,
 };
 
 const ffp: Ffp = {
@@ -96,12 +212,6 @@ const ffp: Ffp = {
   vipGroup: '',
   vipType: '',
   vipStatus: 'Deactivate',
-};
-
-const mileage: Mileage = {
-  accural: '242653',
-  use: '222222',
-  available: '13300',
 };
 
 const contributeData: ContributeData = {
@@ -152,11 +262,15 @@ export {
   analysisResultData,
   pnrTickerColumn,
   pnrData,
-  profile,
+  profileData,
+  skypassData,
   ffp,
-  mileage,
   contributeData,
   homepageData,
   vocData,
   cartData,
+  familyMemberData,
+  walletData,
+  preferenceData,
+  cntData,
 };

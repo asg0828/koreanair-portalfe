@@ -1,4 +1,4 @@
-import { Column } from '@/models/customer-info/CustomerInfo';
+import { Column } from '@/models/model/CustomerInfoModel';
 import { CustMetaSrchItem, CustMetaListSrchInfo, TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
 
 // Customer Meta List 테이블 헤더
@@ -38,6 +38,18 @@ export const customerMetaInfoColumn: Column[] = [
   { headerName: '변경 데이터형식', field: 'dataFormat', colSpan: 1 },
 ];
 
+export const customerMetaTableColumn: Column[] = [
+  { headerName: 'Key 여부', field: 'pkYn', colSpan: 0.5 },
+  { headerName: '사용 여부', field: 'clmnUseYn', colSpan: 0.5 },
+  { headerName: '수집기준 시간', field: 'baseTimeYn', colSpan: 0.5 },
+  { headerName: '컬럼명', field: 'metaTblClmnPhysNm', colSpan: 2 },
+  { headerName: '컬럼 논리명', field: 'metaTblClmnLogiNm', colSpan: 2 },
+  { headerName: '컬럼 설명', field: 'metaTblClmnDesc', colSpan: 2 },
+  { headerName: '데이터타입', field: 'dtpCd', colSpan: 1.3 },
+  { headerName: '변경여부', field: 'no2', colSpan: 1 }, // 수정 요망
+  { headerName: '변경 데이터타입', field: 'chgDtpCd', colSpan: 1.1 },
+  { headerName: '변경 데이터형식', field: 'dataFormat', colSpan: 1.1 },
+];
 export const initTbCoMetaTblInfo: TbCoMetaTbInfo = {
   dataClaCd: '',
   dataSrcDvCd: '',

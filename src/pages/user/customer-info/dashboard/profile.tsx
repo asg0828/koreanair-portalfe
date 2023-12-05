@@ -1,5 +1,5 @@
 import { Avatar, Stack, Typography } from '@components/ui';
-import { profile, mileage, ffp } from './data';
+import { profileData, ffp } from './data';
 
 export default function ProfileComp() {
   return (
@@ -23,11 +23,11 @@ export default function ProfileComp() {
                 <Avatar imageSrc="" size="LG" />
               </div>
             </Stack>
-            {Object.keys(profile).map((key, index) => (
-              <Typography variant="body2" key={index}>
-                {key} : {profile[key]}
-              </Typography>
-            ))}
+            {/* {Object.keys(profile).map((key, index) => (
+              // <Typography variant="body2" key={index}>
+              //   {key} : {profile[key]}
+              // </Typography>
+            ))} */}
           </Stack>
         </div>
         <div style={{ marginTop: 20 }}>
@@ -47,11 +47,11 @@ export default function ProfileComp() {
             <Stack>
               <h3>Mileage</h3>
             </Stack>
-            {Object.keys(mileage).map((key, index) => (
+            {/* {Object.keys(mileage).map((key, index) => (
               <Typography variant="body2" key={index}>
                 {key} : {mileage[key]}
               </Typography>
-            ))}
+            ))} */}
           </Stack>
         </div>
       </div>

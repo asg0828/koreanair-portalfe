@@ -34,11 +34,9 @@ export interface VerticalTableProps {
   onClick?: Function;
   children?: ReactNode;
   onChange?: Function;
-  props?: any;
-  list: RowsInfo;
 }
 
-const VerticalTableMeta: React.FC<VerticalTableProps> = ({
+const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   columns = [],
   rows = [],
   showHeader = true,
@@ -47,20 +45,11 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
   rowSelection,
   onChange,
   onClick,
-  props,
-  list,
 }) => {
-  const { metaTblId, metaTblLogiNm, rtmTblYn } = props;
-  const tbCoMetaTbInfo = list;
   const isCheckbox = typeof rowSelection === 'function';
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
   const [tbCoMetaTblClmnInfoList, setTbCoMetaTblClmnInfoList] = useState<Array<RowsInfo>>(Array.from(rows));
-  const {
-    data: uResponse,
-    isSuccess: uIsSuccess,
-    isError: uIsError,
-    mutate,
-  } = useUpdateMetaTable(metaTblId, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList, rtmTblYn);
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   // 수정중 페이지 이탈 모달
@@ -144,17 +133,17 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     });
   }
 
-  // 수정 버튼
-  const editCustomerDetailInfo = (data: any) => {
-    dispatch(
-      openModal({
-        type: ModalType.CONFIRM,
-        title: '저장',
-        content: '수정하시겠습니까?',
-        onConfirm: mutate,
-      })
-    );
-  };
+  // // 수정 버튼
+  // const editCustomerDetailInfo = (data: any) => {
+  //   dispatch(
+  //     openModal({
+  //       type: ModalType.CONFIRM,
+  //       title: '저장',
+  //       content: '수정하시겠습니까?',
+  //       onConfirm: mutate,
+  //     })
+  //   );
+  // };
 
   // 목록 버튼
   const goToList = () => {
@@ -209,7 +198,6 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                       </TD>
                     );
                   }
-
                   // 라디오 버튼
                   else if (columns[columnIndex].field === 'baseTimeYn') {
                     return (
@@ -300,7 +288,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       </Table>
       <Stack gap="SM" justifyContent="End">
         <Button
-          onClick={editCustomerDetailInfo}
+          // onClick={editCustomerDetailInfo}
           style={{ width: 50 }}
           type="submit"
           priority="Primary"
@@ -341,4 +329,4 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
   );
 };
 
-export default VerticalTableMeta;
+export default VerticalTblColumn;

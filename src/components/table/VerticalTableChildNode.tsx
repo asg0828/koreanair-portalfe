@@ -4,7 +4,7 @@ import { CheckedState, SortDirection, SortDirectionCode, AlignCode } from '@/mod
 import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD, Stack } from '@components/ui';
 import NoResult from '@/components/emptyState/NoData';
 import '@components/table/VerticalTable.scss';
-import { ColumnChild } from '@/models/customer-info/CustomerInfo';
+import { ColumnChild } from '@/models/model/CustomerInfoModel';
 
 export interface VerticalTableChildProps {
   columns: Array<ColumnChild>;
