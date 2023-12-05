@@ -65,19 +65,19 @@ export const initCommonCodeInfo: CommonCodeInfo = {
 }
 
 // 공통 코드 명
-export const CommonCode = {
-    OPERATOR: "OPERATOR", 
-    SGMT_DELIMITER: "SGMT_DELIMITER",
-    STAC_CALC_TYPE: "STAC_CALC_TYPE",
-    FUNCTION: "FUNCTION", 
-    DATA_TYPE_CONV_CD: "DATA_TYPE_CONV_CD", 
-    FORMAT: "FORMAT"
+export enum CommonCode {
+    OPERATOR = "OPERATOR", 
+    SGMT_DELIMITER = "SGMT_DELIMITER",
+    STAC_CALC_TYPE = "STAC_CALC_TYPE",
+    FUNCTION = "FUNCTION", 
+    DATA_TYPE_CONV_CD = "DATA_TYPE_CONV_CD", 
+    FORMAT = "FORMAT"
 }
 
 // Rule ID
-export const RuleId = {
-    RESOLUTION: 'RS_0020',
-    MASTERPROF: 'MS_0033',
+export enum RuleId {
+    RESOLUTION = 'RS_0020',
+    MASTERPROF = 'MS_0033',
 }
 
 export const useYn = [

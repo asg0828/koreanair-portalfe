@@ -30,7 +30,7 @@ export const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
         method: Method.GET,
     })
 }
-// Self-feature 상세정보 조회
+// Self-feature 상세정보 조회(Rule-Design)
 export const retrieveCustFeatRuleInfos = (id: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
@@ -38,7 +38,7 @@ export const retrieveCustFeatRuleInfos = (id: string) => {
         method: Method.GET,
     })
 }
-// Self-feature 상세정보 조회
+// Self-feature 상세정보 조회(SQL)
 export const retrieveCustFeatSQLInfos = (id: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
