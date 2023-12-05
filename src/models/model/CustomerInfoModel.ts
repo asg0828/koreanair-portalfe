@@ -92,6 +92,74 @@ export interface Cnt {
   email: number;
   sns: number;
 }
+export interface Pnr {
+  reservationNum: string;
+  engName: string;
+  class: string;
+  arrival: string;
+  date: string;
+  status: string;
+}
+
+export interface Etkt {
+  ticketNum: string;
+  arrival: string;
+  date: string;
+  status: string;
+}
+
+export interface BoardingList {
+  itinerary1: string;
+  itinerary2: string;
+  itinerary3: string;
+  itinerary4: string;
+  itinerary5: string;
+  ticketNo: string;
+}
+
+export interface Call {
+  date: string;
+  counselor: string;
+  phoneNumber: string;
+  status: string;
+}
+
+export interface Internet {
+  date: string;
+  channel: string;
+  ticketNum: string;
+  arrival: string;
+}
+
+export interface Voc {
+  cnt: number;
+  date: string;
+  channel: string;
+  type: string;
+  content: string;
+}
+
+export interface Sms {
+  date: string;
+  sendCnt: number;
+  phoneNum: string;
+  status: string;
+  content: string;
+}
+
+export interface Sns {
+  date: string;
+  useCnt: number;
+  counselor: string;
+  channel: string;
+}
+
+export interface Email {
+  date: string;
+  useCnt: number;
+  counselor: string;
+  content: string;
+}
 
 export interface Ffp {
   [totalTrip: string]: string;
