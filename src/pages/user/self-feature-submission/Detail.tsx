@@ -68,7 +68,7 @@ import {
 import { QueryParams } from "@/utils/ApiUtil";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
-import SubRejectPop from "@/components/self-feature-submission/popup/SubRejectPop";
+import SubRejectModal from "@/components/self-feature-submission/modal/SubRejectModal";
 import { useApproverCandidate, useCustFeatRuleInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { GroupCodeType, ValidType } from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
@@ -100,7 +100,7 @@ const SfSubmissionRequestDetail = () => {
     // 승인 / 반려 버튼 타입 구분
     const [btnClickType, setBtnClickType] = useState<string>('')
     // 모달
-    const [isOpenSubRejectPop, setIsOpenSubRejectPop] = useState<boolean>(false)
+    const [isOpenSubRejectModal, setIsOpenSubRejectModal] = useState<boolean>(false)
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
@@ -512,7 +512,7 @@ const SfSubmissionRequestDetail = () => {
             setIsOpenConfirmModal(true)
         } else if (pageNm === SelfFeatPgPpNm.SUB_REJT) {
             // 반려 팝업
-            setIsOpenSubRejectPop((prevState) => !prevState)
+            setIsOpenSubRejectModal((prevState) => !prevState)
         }
     }
     // 승인 API 호출
@@ -862,9 +862,9 @@ const SfSubmissionRequestDetail = () => {
             />
             {/* Confirm 모달 */}
             {/* 반려 팝업 */}
-            <SubRejectPop
-                isOpen={isOpenSubRejectPop}
-                onClose={(isOpen) => setIsOpenSubRejectPop(isOpen)}
+            <SubRejectModal
+                isOpen={isOpenSubRejectModal}
+                onClose={(isOpen) => setIsOpenSubRejectModal(isOpen)}
                 sfSubmissionApprovalList={sfSubmissionApprovalList}
             />
             {/* 반려 팝업 */}

@@ -22,7 +22,7 @@ import {
     sfSubmissionApprovalListColumns as columns,
 } from '@pages/user/self-feature-submission/data'
 import { SubFeatStatus } from "@/models/selfFeature/FeatureCommon"
-import SubAppdAprvPop from "../self-feature-submission/popup/SubAppdAprvPop"
+import SubAppdAprvModal from "../self-feature-submission/modal/SubAppdAprvModal"
 
 const ApprovalList = ({
     sfSubmissionRequestData,
@@ -38,7 +38,7 @@ const ApprovalList = ({
     const [ aprvType2Priority, setAprvType2Priority ] = useState<string>("")
     const [ aprvType3Priority, setAprvType3Priority ] = useState<string>("")
     // 결재선 선택 팝업
-    const [ isOpenSubAppdAprvPop, setIsOpenSubAppdAprvPop ] = useState<boolean>(false)
+    const [ isOpenSubAppdAprvModal, setIsOpenSubAppdAprvModal ] = useState<boolean>(false)
     const [ aprvCategory, setAprvCategory ] = useState<string>("")
     
     const appendAprvHanbler = (index: number) => {
@@ -53,7 +53,7 @@ const ApprovalList = ({
             setAprvCategory(AprvSeqNm.LAST)
         }
 
-        setIsOpenSubAppdAprvPop((prevState) => !prevState)
+        setIsOpenSubAppdAprvModal((prevState) => !prevState)
     }
 
     useEffect(() => {
@@ -157,27 +157,27 @@ const ApprovalList = ({
         </Table>
         {/* 팝업 */}
         {aprvCategory === AprvSeqNm.FIRST &&
-        <SubAppdAprvPop 
-            isOpen={isOpenSubAppdAprvPop} 
-            onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
+        <SubAppdAprvModal 
+            isOpen={isOpenSubAppdAprvModal} 
+            onClose={(isOpen) => setIsOpenSubAppdAprvModal(isOpen)}
             aprvList={aprvType1}
             aprvCategory={aprvCategory}
             setSfSubmissionApprovalList={setSfSubmissionApprovalList}
         />
         }
         {aprvCategory === AprvSeqNm.SECOND &&
-        <SubAppdAprvPop 
-            isOpen={isOpenSubAppdAprvPop} 
-            onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
+        <SubAppdAprvModal 
+            isOpen={isOpenSubAppdAprvModal} 
+            onClose={(isOpen) => setIsOpenSubAppdAprvModal(isOpen)}
             aprvList={aprvType2}
             aprvCategory={aprvCategory}
             setSfSubmissionApprovalList={setSfSubmissionApprovalList}
         />
         }
         {aprvCategory === AprvSeqNm.LAST &&
-        <SubAppdAprvPop 
-            isOpen={isOpenSubAppdAprvPop} 
-            onClose={(isOpen) => setIsOpenSubAppdAprvPop(isOpen)}
+        <SubAppdAprvModal 
+            isOpen={isOpenSubAppdAprvModal} 
+            onClose={(isOpen) => setIsOpenSubAppdAprvModal(isOpen)}
             aprvList={aprvType3}
             aprvCategory={aprvCategory}
             setSfSubmissionApprovalList={setSfSubmissionApprovalList}

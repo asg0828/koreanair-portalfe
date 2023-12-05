@@ -36,7 +36,7 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import dayjs from 'dayjs';
 import '@/assets/styles/SelfFeature.scss'
 
-const TransFunctionPop = ({
+const TransFunctionModal = ({
     isOpen = false,
     onClose,
     itemIdx,
@@ -50,7 +50,7 @@ const TransFunctionPop = ({
     const { data: cmmCodeFuncRes } = useCommCodes(CommonCode.FUNCTION)
     const { data: cmmCodeFrmtRes } = useCommCodes(CommonCode.FORMAT)
 
-    const [isOpenPopUp, setIsOpenPopUp] = useState<boolean>(false)
+    const [isOpenTransFuncModal, setIsOpenTransFuncModal] = useState<boolean>(false)
 
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
@@ -77,7 +77,7 @@ const TransFunctionPop = ({
     const [endDtChecked, setEndDtChecked] = useState(false)
 
     useEffect(() => {
-        setIsOpenPopUp(isOpen)
+        setIsOpenTransFuncModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
             transFuncCalcStr({
@@ -290,12 +290,12 @@ const TransFunctionPop = ({
     }, [columnList])
     // 변환식 팝업 close
     const handleClose = useCallback(
-        (isOpenPopUp: boolean) => {
+        (isOpenTransFuncModal: boolean) => {
             if (onClose) {
                 if (trgtItem.function === "") setTransFuncChecked && setTransFuncChecked(false)
-                onClose(isOpenPopUp)
+                onClose(isOpenTransFuncModal)
             } else {
-                setIsOpenPopUp(isOpenPopUp)
+                setIsOpenTransFuncModal(isOpenTransFuncModal)
             }
         },
         [onClose]
@@ -557,7 +557,7 @@ const TransFunctionPop = ({
 
     return (
         <Modal
-            open={isOpenPopUp}
+            open={isOpenTransFuncModal}
             onClose={handleClose}
             size='MD'
             closeOnOutsideClick={false}
@@ -934,4 +934,4 @@ const TransFunctionPop = ({
     )
 }
 
-export default TransFunctionPop
+export default TransFunctionModal

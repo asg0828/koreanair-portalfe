@@ -20,24 +20,24 @@ import {
     SubFeatStatus,
 } from '@/models/selfFeature/FeatureCommon'
 import ConfirmModal from '@/components/modal/ConfirmModal'
-import { RjctSubAprvalBodyParamsProps, SfSubmissionApproval, SubRejectPopProps } from '@/models/selfFeature/FeatureSubmissionModel'
+import { RjctSubAprvalBodyParamsProps, SfSubmissionApproval, SubRejectModalProps } from '@/models/selfFeature/FeatureSubmissionModel'
 import { useRejectSubmissionApproval } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
 import { ValidType } from '@/models/common/Constants'
 import { useAppSelector } from '@/hooks/useRedux'
 import { selectSessionInfo } from '@/reducers/authSlice'
 import { initRjctSubAprvalBodyParamsProps } from '@/pages/user/self-feature-submission/data'
 
-const SubRejectPop = ({
+const SubRejectModal = ({
     isOpen = false,
     onClose,
     sfSubmissionApprovalList,
-}: SubRejectPopProps) => {
+}: SubRejectModalProps) => {
 
     const { toast } = useToast()
     const navigate = useNavigate()
     const sessionInfo = useAppSelector(selectSessionInfo())
 
-    const [isOpenSubRejectPop, setIsOpenSubRejectPop] = useState<boolean>(false)
+    const [isOpenSubRejectModal, setIsOpenSubRejectModal] = useState<boolean>(false)
 
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
@@ -51,7 +51,7 @@ const SubRejectPop = ({
     const { data: rjctSubAprvalRes, isSuccess: rjctSubAprvalSucc, isError: rjctSubAprvalErr, mutate: rjctSubAprvalMutate } = useRejectSubmissionApproval(userEmail, approvalId, rjctSubAprvalBodyParams)
 
     useEffect(() => {
-        setIsOpenSubRejectPop(isOpen)
+        setIsOpenSubRejectModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
             if (!sessionInfo.email) {
@@ -69,14 +69,14 @@ const SubRejectPop = ({
         }
     }, [isOpen])
     const handleClose = useCallback(
-        (isOpenSubRejectPop: boolean) => {
+        (isOpenSubRejectModal: boolean) => {
             if (onClose) {
                 // 초기화
                 //setRjctSubAprvalBodyParams(cloneDeep(initRjctSubAprvalBodyParamsProps))
                 setComment("")
-                onClose(isOpenSubRejectPop)
+                onClose(isOpenSubRejectModal)
             } else {
-                setIsOpenSubRejectPop(isOpenSubRejectPop)
+                setIsOpenSubRejectModal(isOpenSubRejectModal)
             }
         },
         [onClose]
@@ -103,7 +103,7 @@ const SubRejectPop = ({
     const onClickCancelSubRejectPop = () => {
         //setRjctSubAprvalBodyParams(cloneDeep(initRjctSubAprvalBodyParamsProps))
         setComment("")
-        setIsOpenSubRejectPop(false)
+        setIsOpenSubRejectModal(false)
         onClose(false)
     }
     // 반려 API 호출
@@ -158,7 +158,7 @@ const SubRejectPop = ({
     return (
         <>
             <Modal
-                open={isOpenSubRejectPop}
+                open={isOpenSubRejectModal}
                 onClose={handleClose}
                 size="MD"
                 closeOnOutsideClick={false}
@@ -221,4 +221,4 @@ const SubRejectPop = ({
     )
 }
 
-export default SubRejectPop
+export default SubRejectModal

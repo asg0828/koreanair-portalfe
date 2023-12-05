@@ -28,7 +28,7 @@ export interface Props {
     custFeatRuleId: string
 }
 
-const QuerySampleDataPop = ({
+const QuerySampleDataModal = ({
     isOpen = false,
     onClose,
     custFeatRuleId,
@@ -36,7 +36,7 @@ const QuerySampleDataPop = ({
 
     const { toast } = useToast()
 
-    const [isOpenPopUp, setIsOpenPopUp] = useState<boolean>(false)
+    const [isOpenQuerySampleDataModal, setIsOpenQuerySampleDataModal] = useState<boolean>(false)
 
     // 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
     const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
@@ -46,7 +46,7 @@ const QuerySampleDataPop = ({
     const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch } = useSampleData(custFeatRuleId)
 
     useEffect(() => {
-        setIsOpenPopUp(isOpen)
+        setIsOpenQuerySampleDataModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
             sampleDataRefetch()
@@ -54,11 +54,11 @@ const QuerySampleDataPop = ({
     }, [isOpen])
 
     const handleClose = useCallback(
-        (isOpenPopUp: boolean) => {
+        (isOpenQuerySampleDataModal: boolean) => {
             if (onClose) {
-                onClose(isOpenPopUp)
+                onClose(isOpenQuerySampleDataModal)
             } else {
-                setIsOpenPopUp(isOpenPopUp)
+                setIsOpenQuerySampleDataModal(isOpenQuerySampleDataModal)
             }
         },
         [onClose]
@@ -98,7 +98,7 @@ const QuerySampleDataPop = ({
     }, [page.page, page.pageSize, querySampleDataList])
 
     return (
-        <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>
+        <Modal open={isOpenQuerySampleDataModal} onClose={handleClose} size='LG'>
             <Modal.Header>실행 내역</Modal.Header>
             <Modal.Body>
                 {/* 목록 영역 */}
@@ -125,4 +125,4 @@ const QuerySampleDataPop = ({
     )
 }
 
-export default QuerySampleDataPop
+export default QuerySampleDataModal
