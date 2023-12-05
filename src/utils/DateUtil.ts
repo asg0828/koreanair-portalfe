@@ -22,6 +22,7 @@ export const getDateString = (timestamp: number | string, separator: string = ''
 };
 
 export const getDateFormat = (time: string, format?: string) => {
+  if (time === "") return ""
   if (!format || format === "") return dayjs(time).format().toString()
   else return dayjs(time).format(format).toString()
 }

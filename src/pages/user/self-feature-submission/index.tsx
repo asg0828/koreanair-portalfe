@@ -67,6 +67,11 @@ const SfSubmissionRequest = () => {
         retrieveSubmissions()
     }, [])
     // 결재 목록 API 호출
+    useEffect(() => {
+        if (userEmail && userEmail !== "") {
+            subReqListRefetch()
+        }
+    }, [userEmail])
     const retrieveSubmissions = () => {
 		if (!sessionInfo.email) {
 			console.log("no session info email")
@@ -76,14 +81,8 @@ const SfSubmissionRequest = () => {
 			})
 			return
 		}
-		setUserEmail(sessionInfo.email)
+        setUserEmail(sessionInfo.email)
     }
-    // 결재 목록 API refetch
-    useEffect(() => {
-        if (userEmail && userEmail !== "") {
-            subReqListRefetch()
-        }
-    }, [userEmail])
     // 결재 목록 API callback
 	useEffect(() => {
 		if (subReqListErr || subReqListRes?.successOrNot === 'N') {
@@ -148,7 +147,7 @@ const SfSubmissionRequest = () => {
     }
     // 검색 버튼 클릭시
     const onClickSearch = () => {
-        retrieveSubmissions()
+        subReqListRefetch()
     }
     // 페이지 이동
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
@@ -178,7 +177,7 @@ const SfSubmissionRequest = () => {
                                     setRequestDateFrom(nextVal)
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
-                                        rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                        rtn.requestDateFrom = getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
                                         return rtn
                                     });
                                 }}
@@ -195,7 +194,7 @@ const SfSubmissionRequest = () => {
                                     setRequestDateTo(nextVal)
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
-                                        rtn.requestDateTo = `${nextVal}T19:20:30+01:00`
+                                        rtn.requestDateTo = getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
                                         return rtn
                                     });
                                 }}
