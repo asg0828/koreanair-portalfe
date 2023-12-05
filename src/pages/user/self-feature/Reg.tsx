@@ -441,13 +441,6 @@ const SelfFeatureReg = () => {
 
 	// 등록 API 호출(SQL)
 	const createCustFeatSQL = () => {
-		if (!isValidFormula) {
-			toast({
-				type: ValidType.ERROR,
-				content: ModalTitCont.REG_VALID.context,
-			})
-			return
-		}
 		featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
 		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
 		param.customerFeature = featureInfo
