@@ -1,4 +1,5 @@
 import { useDatasetLoader, useFaqLoader, useFeatureLoader, useQnaLoader } from '@/hooks/useLoader';
+import MyPage from '@/pages/MyPage';
 import AdminHome from '@/pages/admin/AdminHome';
 import CustomerMetaManagement from '@/pages/admin/self-feature-meta-management/customer-meta-management';
 import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-management/customer-meta-management/Detail';
@@ -206,6 +207,10 @@ const adminRouter = [
             ],
           },
         ],
+      },
+      {
+        path: 'mypage',
+        children: [{ index: true, element: <MyPage /> }],
       },
     ],
   },

@@ -1,12 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { Stack, Typography, Tag } from '@components/ui';
 import '@/assets/styles/Home.scss';
+import { Stack, Tag, Typography } from '@components/ui';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-  const navigate = useNavigate();
-
   return (
-    <Stack id="home" direction="Vertical" gap="LG" justifyContent="Between">
+    <Stack id="home" direction="Vertical" gap="LG" justifyContent="Between" className="single-page">
       <Stack direction="Horizontal" gap="LG" className="width-100" alignItems="Start">
         <Stack direction="Vertical" className="box1 shadowBox1">
           <div>

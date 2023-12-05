@@ -1,8 +1,10 @@
+import MyPage from '@/pages/MyPage';
 import AdminHome from '@/pages/admin/AdminHome';
 import Home from '@/pages/user/Home';
 import Main from '@components/layout/Main';
 import QuickMenu from '@components/layout/QuickMenu';
 import { Page, Stack } from '@components/ui';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import './Body.scss';
 
@@ -13,6 +15,20 @@ export interface Props {
 const Body = ({ onClick }: Props) => {
   const location = useLocation();
   const isHome = location.pathname === '/' || location.pathname === '/admin';
+  const [content, setContent] = useState<any>();
+
+  useEffect(() => {
+    let content = <Main />;
+    if (location.pathname === '/') {
+      content = <Home />;
+    } else if (location.pathname === '/admin') {
+      content = <AdminHome />;
+    } else if (location.pathname === '/mypage' || location.pathname === '/admin/mypage') {
+      content = <MyPage />;
+    }
+
+    setContent(content);
+  }, [location.pathname]);
 
   return (
     <Stack
@@ -26,7 +42,7 @@ const Body = ({ onClick }: Props) => {
         <Stack alignItems="Start" style={{ position: 'relative' }}>
           <QuickMenu />
 
-          {location.pathname === '/' ? <Home /> : location.pathname === '/admin' ? <AdminHome /> : <Main />}
+          {content}
         </Stack>
       </Page>
     </Stack>

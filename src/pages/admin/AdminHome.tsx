@@ -3,10 +3,8 @@ import { Stack, Typography, Tag } from '@components/ui';
 import '@/assets/styles/Home.scss';
 
 const AdminHome = () => {
-  const navigate = useNavigate();
-
   return (
-    <Stack id="home" direction="Vertical" gap="LG" justifyContent="Between">
+    <Stack id="home" direction="Vertical" gap="LG" justifyContent="Between" className="single-page">
       <Stack direction="Horizontal" gap="LG" className="width-100" alignItems="Start">
       <Stack direction={'Vertical'} className="box2 none">
         <Stack direction="Vertical" className="box2-1 shadowBox1">
@@ -59,7 +57,7 @@ const AdminHome = () => {
             Customer Data Portal
           </Typography>
           <Stack gap="MD" alignItems="Start">
-            <Link to="/biz-meta/feature" className="box5">
+            <Link to="/admin/biz-meta-management/feature" className="box5">
               <Typography variant="h3">Feature</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_01"></div>
@@ -70,7 +68,7 @@ const AdminHome = () => {
               </Stack>
             </Link>
 
-            <Link to="/biz-meta/dataset" className="box5">
+            <Link to="/admin/biz-meta-management/dataset" className="box5">
               <Typography variant="h3">테이블정의</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_02"></div>
@@ -98,7 +96,7 @@ const AdminHome = () => {
         <div className="box3 shadowBox1 noticeBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
             <Typography variant="h5">공지사항</Typography>
-            <Link to="/board/notice" className="seeMore">
+            <Link to="/admin/user-portal-management/board-management/notice" className="seeMore">
               more
             </Link>
           </Stack>
@@ -138,7 +136,7 @@ const AdminHome = () => {
         <div className="box3 shadowBox1 faqBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
             <Typography variant="h5">FAQ</Typography>
-            <Link to="/board/faq" className="seeMore">
+            <Link to="/admin/user-portal-management/board-management/faq" className="seeMore">
               more
             </Link>
           </Stack>
@@ -172,7 +170,7 @@ const AdminHome = () => {
         <div className="box3 shadowBox1 qnaBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
             <Typography variant="h5">Q&A</Typography>
-            <Link to="/board/qna" className="seeMore">
+            <Link to="/admin/user-portal-management/board-management/qna" className="seeMore">
               more
             </Link>
           </Stack>
@@ -243,7 +241,7 @@ const AdminHome = () => {
             <Typography variant="h5" className="recentFeatureTypo">
               최근 Feature
             </Typography>
-            <Link to="/biz-meta/feature" className="seeMore">
+            <Link to="/admin/biz-meta-management/feature" className="seeMore">
               more
             </Link>
           </Stack>
@@ -299,7 +297,7 @@ const AdminHome = () => {
             <Typography variant="h5" className="popFeatureTypo">
               인기 Feature
             </Typography>
-            <Link to="/feature/popular" className="seeMore">
+            <Link to="/admin/feature/popular" className="seeMore">
               more
             </Link>
           </Stack>
