@@ -36,12 +36,61 @@ export interface ColumnChild {
 }
 
 export interface Profile {
-  gender: string;
-  nationality: string;
-  dob: string;
+  name: string;
+  engFname: string;
+  engLname: string;
+  birth: string;
   age: string;
-  [skypassNo: string]: string;
-  oneIdNo: string;
+  gender: string;
+  homePhoneNumberInfo: string;
+  mobilePhoneNumberInfone: string;
+  emailAddress: string;
+}
+
+export interface Skypass {
+  [skypassNum: string]: string;
+  skypassGrade: string;
+  useYn: string;
+  gradeStartDate: string;
+  mileage: string;
+  expireMileage: string;
+  gradeCondtion: string;
+  upgradeCondition: string;
+}
+
+export interface FamilyMember {
+  familyCnt: number;
+  mergeMileage: number;
+  familyList: FamilyList[];
+}
+export interface FamilyList {
+  relationship: string;
+  code: string;
+  name: string;
+}
+
+export interface Wallet {
+  coupon: number;
+  promotion: number;
+  complimentary: number;
+}
+
+export interface Preference {
+  seat: string;
+  meal: string;
+}
+
+export interface Cnt {
+  pnr: number;
+  eTkt: number;
+  boarding: number;
+  pet: number;
+  call: number;
+  internet: number;
+  voc: number;
+  sms: number;
+  email: number;
+  sns: number;
 }
 
 export interface Ffp {
@@ -51,12 +100,6 @@ export interface Ffp {
   vipGroup: string;
   vipType: string;
   vipStatus: string;
-}
-
-export interface Mileage {
-  [accural: string]: string;
-  use: string;
-  available: string;
 }
 
 export interface ContributeData extends RowsInfo {

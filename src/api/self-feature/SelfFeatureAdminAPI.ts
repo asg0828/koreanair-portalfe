@@ -23,14 +23,11 @@ export const retrieveMetaTableLists = (params: CustMetaListSrchInfo) => {
   });
 };
 
-export const retrieveSchemaList = (schemaName: string, ifUpdate: string) => {
+export const retrieveSchemaList = () => {
   return callApi({
     service: Service.KAL_SF_BE,
-    url: `${SelfFeatureAdmApiURL.SCHEMA}/${schemaName}`,
+    url: `${SelfFeatureAdmApiURL.SCHEMA}`,
     method: Method.GET,
-    params: {
-      queryParams: { ifUpdate },
-    },
   });
 };
 
@@ -84,5 +81,24 @@ export const createMetaTableInfo = () => {
     url: `${SelfFeatureAdmApiURL.META_TABLE}`,
     method: Method.POST,
     params: {},
+  });
+};
+
+export const retrieveTableInfo = (schemaName: string, ifUpdate: string) => {
+  return callApi({
+    service: Service.KAL_SF_BE,
+    url: `${SelfFeatureAdmApiURL.TABLE_INFO}/${schemaName}`,
+    method: Method.GET,
+    params: {
+      queryParams: { ifUpdate },
+    },
+  });
+};
+
+export const retrieveTableColumns = (schemaName: string, tableName: string) => {
+  return callApi({
+    service: Service.KAL_SF_BE,
+    url: `${SelfFeatureAdmApiURL.TABLE_INFO}/${schemaName}/${tableName}`,
+    method: Method.GET,
   });
 };
