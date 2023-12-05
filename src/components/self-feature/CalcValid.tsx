@@ -15,7 +15,6 @@ import {
 } from '@/pages/user/self-feature/data';
 import {
     SelfFeatPgPpNm, 
-    SubFeatStatus 
 } from '@/models/selfFeature/FeatureCommon';
 
 const ClacValid = ({

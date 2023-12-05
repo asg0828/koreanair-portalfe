@@ -99,7 +99,7 @@ export interface RjctSubAprvalBodyParamsProps {
     comment: string
 }
 // 반려 팝업 Props
-export interface SubRejectPopProps {
+export interface SubRejectModalProps {
     isOpen?: boolean
     onClose: (isOpen: boolean) => void
     sfSubmissionApprovalList: Array<SfSubmissionApproval>
