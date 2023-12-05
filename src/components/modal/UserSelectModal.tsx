@@ -1,13 +1,14 @@
+import DataTree from '@/components/Tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useUserAllList } from '@/hooks/queries/useUserQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
+import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { ValidType } from '@/models/common/Constants';
 import { ModalInfo } from '@/models/components/Modal';
 import { DeptModel } from '@/models/model/DeptModel';
 import { UserModel } from '@/models/model/UserModel';
 import { closeModal } from '@/reducers/modalSlice';
-import { convertToHierarchy } from '@/utils/ArrayUtil';
-import DeptTree from '@components/Tree/DeptTree';
+import { convertToHierarchyInfo } from '@/utils/ArrayUtil';
 import VerticalTable from '@components/table/VerticalTable';
 import { Button, Modal, Stack, TextField, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
@@ -99,14 +100,14 @@ const UserSelectModal = ({
           name: item.deptNm,
           parentId: item.upDeptCode || 'root',
         }));
-        const hierarchyList = convertToHierarchy(list);
-        const root = {
+        const hierarchyList: Array<HierarchyInfo> = [];
+        hierarchyList.push({
           id: 'root',
+          parentId: '',
           name: '대한항공',
-          isChecked: false,
-          children: hierarchyList,
-        };
-        setDeptTreeData([root]);
+          children: convertToHierarchyInfo(list),
+        });
+        setDeptTreeData(hierarchyList);
       }
     }
   }, [response, isError, toast]);
@@ -130,7 +131,7 @@ const UserSelectModal = ({
       <Modal.Body>
         <Stack className="width-100" alignItems="Start">
           <Stack className="tree-wrap width-100">
-            <DeptTree data={deptTreeData} onClickFile={handleClickFile} />
+            <DataTree treeData={deptTreeData} onClick={handleClickFile} />
           </Stack>
           <Stack direction="Vertical" justifyContent="Start" className="user-seleted">
             <Stack direction="Vertical" className="user-search">

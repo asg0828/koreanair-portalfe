@@ -7,7 +7,13 @@ export interface SearchCommonFormProps extends CommonFormProps {
   showClearButton?: boolean;
 }
 
-const SearchForm: React.FC<SearchCommonFormProps> = ({ onSearch, onClear, children,  showSearchButton = true, showClearButton=true }) => {
+const SearchForm: React.FC<SearchCommonFormProps> = ({
+  onSearch,
+  onClear,
+  children,
+  showSearchButton = true,
+  showClearButton = true,
+}) => {
   const handleSearch = (e: any) => {
     e.preventDefault();
     onSearch && onSearch();
@@ -24,15 +30,15 @@ const SearchForm: React.FC<SearchCommonFormProps> = ({ onSearch, onClear, childr
 
         <Stack gap="SM" justifyContent="Center">
           {showSearchButton && (
-          <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-            <span className="searchIcon"></span>
-            검색
-          </Button>
+            <Button priority="Primary" appearance="Contained" size="LG" type="submit">
+              <span className="searchIcon"></span>
+              검색
+            </Button>
           )}
           {showClearButton && (
-          <Button size="LG" onClick={handleClear}>
-            초기화
-          </Button>
+            <Button size="LG" onClick={handleClear}>
+              초기화
+            </Button>
           )}
         </Stack>
       </Stack>
