@@ -16,7 +16,7 @@ import {
 	SelectOption,
 	useToast,
 } from '@components/ui';
-import CustFeatParentChildListPop from "@/components/self-feature/popup/CustFeatParentChildListPop";
+import CustFeatParentChildListModal from "@/components/self-feature/modal/CustFeatParentChildListModal";
 import { AddIcon } from '@/assets/icons';
 import DataGrid from "@/components/grid/DataGrid";
 
@@ -53,7 +53,7 @@ const SelfFeature = () => {
 	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(searchInfo)
 	const [selfFeatureList, setSelfFeatureList] = useState<Array<TbRsCustFeatRule>>([])
 	// 선후행 관계 팝업
-	const [isOpenFeatPrntChldPop, setIsOpenFeatPrntChldPop] = useState<boolean>(false)
+	const [isOpenFeatPrntChldModal, setIsOpenFeatPrntChldModal] = useState<boolean>(false)
 	useEffect(() => {
 		//console.log(sessionInfo)
 	}, [sessionInfo])
@@ -129,7 +129,7 @@ const SelfFeature = () => {
 		if (pageNm === SelfFeatPgPpNm.DETL) {
 			navigate(pageNm, { state: rows })
 		} else if (pageNm === SelfFeatPgPpNm.PRNTCHLD) {
-			setIsOpenFeatPrntChldPop((prevState) => !prevState)
+			setIsOpenFeatPrntChldModal((prevState) => !prevState)
 		} else if (pageNm === SelfFeatPgPpNm.RULE_REG || pageNm === SelfFeatPgPpNm.SQL_REG) {
 			navigate(SelfFeatPgPpNm.REG, { state: { regType: pageNm } })
 		} else {
@@ -278,9 +278,9 @@ const SelfFeature = () => {
 			/>
 			{/* 목록 영역 */}
 			{/* 팝업 */}
-			<CustFeatParentChildListPop
-				isOpen={isOpenFeatPrntChldPop}
-				onClose={(isOpen) => setIsOpenFeatPrntChldPop(isOpen)}
+			<CustFeatParentChildListModal
+				isOpen={isOpenFeatPrntChldModal}
+				onClose={(isOpen) => setIsOpenFeatPrntChldModal(isOpen)}
 			/>
 
 		</Stack>

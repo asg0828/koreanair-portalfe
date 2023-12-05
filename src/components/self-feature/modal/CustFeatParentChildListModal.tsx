@@ -41,11 +41,11 @@ export interface SearchProps {
     custFeatRuleName: string
 }
 
-const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
+const CustFeatParentChildListModal = ({ isOpen = false, onClose }: Props) => {
 
     const { toast } = useToast()
 
-    const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
+    const [ isOpenParentChildListModal, setIsOpenParentChildListModal ] = useState<boolean>(false)
     const [ srchInfo, setSrchInfo ] = useState<SearchProps>({
         mstrSgmtRuleId: RuleId.MASTERPROF,
         custFeatRuleName: '',
@@ -55,7 +55,7 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
     const [ custFeatParentChildList, setCustFeatParentChildList ] = useState<Array<FeatPrntCild>>([])
 
     useEffect(() => {
-        setIsOpenPopUp(isOpen)
+        setIsOpenParentChildListModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
             //refetch()
@@ -63,11 +63,11 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
     }, [isOpen])
 
     const handleClose = useCallback(
-        (isOpenPopUp: boolean) => {
+        (isOpenParentChildListModal: boolean) => {
             if (onClose) {
-                onClose(isOpenPopUp)
+                onClose(isOpenParentChildListModal)
             } else {
-                setIsOpenPopUp(isOpenPopUp)
+                setIsOpenParentChildListModal(isOpenParentChildListModal)
             }
         },
         [onClose]
@@ -101,7 +101,7 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
     }
 
     return (
-        <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>
+        <Modal open={isOpenParentChildListModal} onClose={handleClose} size='LG'>
             <Modal.Header>Feature 선후행 관계</Modal.Header>
             <Modal.Body>
                 
@@ -157,4 +157,4 @@ const CustFeatParentChildListPop = ({ isOpen = false, onClose }: Props) => {
     )
 }
 
-export default CustFeatParentChildListPop
+export default CustFeatParentChildListModal

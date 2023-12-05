@@ -27,20 +27,20 @@ export interface Props {
     custFeatRuleId: string
 }
 
-const ReadSqlPop = ({ 
+const ReadSqlModal = ({ 
     isOpen = false, 
     onClose,
     custFeatRuleId,
 }: Props) => {
 
     const { toast } = useToast()
-    const [ isOpenPopUp, setIsOpenPopUp ] = useState<boolean>(false)
+    const [ isOpenReadSqlModal, setIsOpenReadSqlModal ] = useState<boolean>(false)
     const [ readSql, setReadSql ] = useState<ReadSql>(cloneDeep(initReadSql))
 
     const { data: readSqlRes, isError: readSqlErr, refetch: readSqlRefetch } = useReadSql(custFeatRuleId)
 
     useEffect(() => {
-        setIsOpenPopUp(isOpen)
+        setIsOpenReadSqlModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
             // 쿼리확인 조회 API 호출
@@ -49,11 +49,11 @@ const ReadSqlPop = ({
     }, [isOpen])
 
     const handleClose = useCallback(
-        (isOpenPopUp: boolean) => {
+        (isOpenReadSqlModal: boolean) => {
             if (onClose) {
-                onClose(isOpenPopUp)
+                onClose(isOpenReadSqlModal)
             } else {
-                setIsOpenPopUp(isOpenPopUp)
+                setIsOpenReadSqlModal(isOpenReadSqlModal)
             }
         },
         [onClose]
@@ -79,7 +79,7 @@ const ReadSqlPop = ({
     }, [readSqlRes, readSqlErr, toast])
 
     return (
-        <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>
+        <Modal open={isOpenReadSqlModal} onClose={handleClose} size='LG'>
             <Modal.Header>쿼리 확인</Modal.Header>
             <Modal.Body>
                 <Stack direction="Vertical" gap="MD" justifyContent="End" className="height-100">
@@ -101,4 +101,4 @@ const ReadSqlPop = ({
     )
 }
 
-export default ReadSqlPop
+export default ReadSqlModal

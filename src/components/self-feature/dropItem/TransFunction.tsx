@@ -9,7 +9,7 @@ import {
     Checkbox, 
     Tooltip 
 } from "@components/ui"
-import TransFunctionPop from "../popup/TransFunctionPop"
+import TransFunctionModal from "../modal/TransFunctionModal"
 import { 
     TbRsCustFeatRuleTrgt,
     TbRsCustFeatRuleTrgtFilter,
@@ -29,7 +29,7 @@ const TransFunction = ({
 
     const [ funcStr, setFuncStr ] = useState<string>('')
     const [ transFuncChecked, setTransFuncChecked ] = useState(false)
-    const [ isOpenTransFunctionPop, setIsOpenTransFunctionPop ] = useState<boolean>(false)
+    const [ isOpenTransFunctionModal, setIsOpenTransFunctionModal ] = useState<boolean>(false)
 
     useEffect(() => {
         if (trgtItem.function !== "") {
@@ -71,13 +71,13 @@ const TransFunction = ({
 
         if (!transFuncChecked) {
             // 팝업 오픈
-            setIsOpenTransFunctionPop((prevState) => !prevState)
+            setIsOpenTransFunctionModal((prevState) => !prevState)
         }
         
     }
 
     const onClickTransFuncHandler = () => {
-        setIsOpenTransFunctionPop((prevState) => !prevState)
+        setIsOpenTransFunctionModal((prevState) => !prevState)
     }
 
     return (
@@ -120,9 +120,9 @@ const TransFunction = ({
         )}
 
         {/* 팝업 */}
-        <TransFunctionPop
-            isOpen={isOpenTransFunctionPop}
-            onClose={(isOpen) => setIsOpenTransFunctionPop(isOpen)}
+        <TransFunctionModal
+            isOpen={isOpenTransFunctionModal}
+            onClose={(isOpen) => setIsOpenTransFunctionModal(isOpen)}
             itemIdx={itemIdx}
             dataType={dataType}
             trgtItem={trgtItem}

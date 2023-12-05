@@ -29,14 +29,14 @@ export interface Props {
     custFeatRuleId: string
 }
 
-const BatchExecuteLogsPop = ({
+const BatchExecuteLogsModal = ({
     isOpen = false,
     onClose,
     custFeatRuleId,
 }: Props) => {
 
     const { toast } = useToast()
-    const [isOpenPopUp, setIsOpenPopUp] = useState<boolean>(false)
+    const [isOpenBatchExecuteLogsModal, setIsOpenBatchExecuteLogsModal] = useState<boolean>(false)
 
     // 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
     const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
@@ -46,7 +46,7 @@ const BatchExecuteLogsPop = ({
     const { data: batchExecuteLogsRes, isError: batchExecuteLogsErr, refetch: batchExecuteLogsRefetch } = useBatchExecuteLogs(custFeatRuleId)
 
     useEffect(() => {
-        setIsOpenPopUp(isOpen)
+        setIsOpenBatchExecuteLogsModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
             batchExecuteLogsRefetch()
@@ -54,11 +54,11 @@ const BatchExecuteLogsPop = ({
     }, [isOpen])
 
     const handleClose = useCallback(
-        (isOpenPopUp: boolean) => {
+        (isOpenBatchExecuteLogsModal: boolean) => {
             if (onClose) {
-                onClose(isOpenPopUp)
+                onClose(isOpenBatchExecuteLogsModal)
             } else {
-                setIsOpenPopUp(isOpenPopUp)
+                setIsOpenBatchExecuteLogsModal(isOpenBatchExecuteLogsModal)
             }
         },
         [onClose]
@@ -97,7 +97,7 @@ const BatchExecuteLogsPop = ({
     }, [page.page, page.pageSize, batchExecuteLogList])
 
     return (
-        <Modal open={isOpenPopUp} onClose={handleClose} size='LG'>
+        <Modal open={isOpenBatchExecuteLogsModal} onClose={handleClose} size='LG'>
             <Modal.Header>실행 내역</Modal.Header>
             <Modal.Body>
                 {/* 목록 영역 */}
@@ -124,4 +124,4 @@ const BatchExecuteLogsPop = ({
     )
 }
 
-export default BatchExecuteLogsPop
+export default BatchExecuteLogsModal

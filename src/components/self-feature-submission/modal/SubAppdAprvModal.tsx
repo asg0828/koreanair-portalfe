@@ -37,7 +37,7 @@ export interface Props {
     setSfSubmissionApprovalList: React.Dispatch<React.SetStateAction<Array<SfSubmissionApproval>>>
 }
 
-const SubAppdAprvPop = ({
+const SubAppdAprvModal = ({
     isOpen = false,
     onClose,
     aprvList,
@@ -45,7 +45,7 @@ const SubAppdAprvPop = ({
     setSfSubmissionApprovalList
 }: Props) => {
 
-    const [isOpenSubAppedAprvPop, setIsOpenSubAppedAprvPop] = useState<boolean>(false);
+    const [isOpenSubAppedAprvModal, setIsOpenSubAppedAprvModal] = useState<boolean>(false);
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
@@ -58,7 +58,7 @@ const SubAppdAprvPop = ({
     const [appendApprovalList, setAppendApprovalList] = useState<Array<SfSubmissionAppendApproval>>([])
 
     useEffect(() => {
-        setIsOpenSubAppedAprvPop(isOpen)
+        setIsOpenSubAppedAprvModal(isOpen)
         // 팝업 오픈시
         if (isOpen) {
 
@@ -66,14 +66,14 @@ const SubAppdAprvPop = ({
     }, [isOpen])
 
     const handleClose = useCallback(
-        (isOpenSubAppedAprvPop: boolean) => {
+        (isOpenSubAppedAprvModal: boolean) => {
             if (onClose) {
                 // 초기화
                 setAppendApprovalList([])
                 setApprovalSrch(cloneDeep(initSfSubmissionAppendApproval))
-                onClose(isOpenSubAppedAprvPop)
+                onClose(isOpenSubAppedAprvModal)
             } else {
-                setIsOpenSubAppedAprvPop(isOpenSubAppedAprvPop)
+                setIsOpenSubAppedAprvModal(isOpenSubAppedAprvModal)
             }
         },
         [onClose]
@@ -100,7 +100,7 @@ const SubAppdAprvPop = ({
     const onClickCancelSubAppdAprv = () => {
         setAppendApprovalList([])
         setApprovalSrch(cloneDeep(initSfSubmissionAppendApproval))
-        setIsOpenSubAppedAprvPop(false)
+        setIsOpenSubAppedAprvModal(false)
         onClose(false)
     }
 
@@ -219,7 +219,7 @@ const SubAppdAprvPop = ({
     return (
         <>
             <Modal
-                open={isOpenSubAppedAprvPop}
+                open={isOpenSubAppedAprvModal}
                 onClose={handleClose}
                 size="MD"
                 closeOnOutsideClick={false}
@@ -331,4 +331,4 @@ const SubAppdAprvPop = ({
     )
 }
 
-export default SubAppdAprvPop
+export default SubAppdAprvModal

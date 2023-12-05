@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { cloneDeep } from 'lodash'
 
-import QuerySampleDataPop from "@/components/self-feature/popup/QuerySampleDataPop";
-import BatchExecuteLogsPop from "@/components/self-feature/popup/BatchExecuteLogsPop";
-import ReadSqlPop from "@/components/self-feature/popup/ReadSqlPop";
+import QuerySampleDataModal from "@/components/self-feature/modal/QuerySampleDataModal";
+import BatchExecuteLogsModal from "@/components/self-feature/modal/BatchExecuteLogsModal";
+import ReadSqlModal from "@/components/self-feature/modal/ReadSqlModal";
 import ConfirmModal from '../modal/ConfirmModal';
 
 import {
@@ -31,9 +31,9 @@ const FeatQueryRsltButton = ({
 
     const { toast } = useToast()
     // 팝업
-    const [isOpenQuerySampleDataPop, setIsOpenQuerySampleDataPop] = useState<boolean>(false)
-    const [isOpenBatchExecuteLogsPop, setIsOpenBatchExecuteLogsPop] = useState<boolean>(false)
-    const [isOpenReadSqlPop, setIsOpenReadSqlPop] = useState<boolean>(false)
+    const [isOpenQuerySampleDataModal, setIsOpenQuerySampleDataModal] = useState<boolean>(false)
+    const [isOpenBatchExecuteLogsModal, setIsOpenBatchExecuteLogsModal] = useState<boolean>(false)
+    const [isOpenReadSqlModal, setIsOpenReadSqlModal] = useState<boolean>(false)
     // 모달
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
@@ -89,11 +89,11 @@ const FeatQueryRsltButton = ({
             setConfirmModalCont(ModalTitCont.BETCH.context)
             setIsOpenConfirmModal(true)
         } else if (type === 2) {
-            setIsOpenQuerySampleDataPop((prevState) => !prevState)
+            setIsOpenQuerySampleDataModal((prevState) => !prevState)
         } else if (type === 3) {
-            setIsOpenBatchExecuteLogsPop((prevState) => !prevState)
+            setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
         } else if (type === 4) {
-            setIsOpenReadSqlPop((prevState) => !prevState)
+            setIsOpenReadSqlModal((prevState) => !prevState)
         }
     }
 
@@ -117,19 +117,19 @@ const FeatQueryRsltButton = ({
             {/* 버튼 */}
 
             {/* 팝업 component */}
-            <QuerySampleDataPop
-                isOpen={isOpenQuerySampleDataPop}
-                onClose={(isOpen) => setIsOpenQuerySampleDataPop(isOpen)}
+            <QuerySampleDataModal
+                isOpen={isOpenQuerySampleDataModal}
+                onClose={(isOpen) => setIsOpenQuerySampleDataModal(isOpen)}
                 custFeatRuleId={custFeatRuleId}
             />
-            <BatchExecuteLogsPop
-                isOpen={isOpenBatchExecuteLogsPop}
-                onClose={(isOpen) => setIsOpenBatchExecuteLogsPop(isOpen)}
+            <BatchExecuteLogsModal
+                isOpen={isOpenBatchExecuteLogsModal}
+                onClose={(isOpen) => setIsOpenBatchExecuteLogsModal(isOpen)}
                 custFeatRuleId={custFeatRuleId}
             />
-            <ReadSqlPop
-                isOpen={isOpenReadSqlPop}
-                onClose={(isOpen) => setIsOpenReadSqlPop(isOpen)}
+            <ReadSqlModal
+                isOpen={isOpenReadSqlModal}
+                onClose={(isOpen) => setIsOpenReadSqlModal(isOpen)}
                 custFeatRuleId={custFeatRuleId}
             />
 
