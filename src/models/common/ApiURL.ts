@@ -46,4 +46,6 @@ export enum SelfFeatureAdmApiURL {
   META_TABLE = '/api/v1/metas/tables',
   COL_AND_CMMT = '/api/v1/metas/columnsAndComments/tb_co_meta_tbl_info',
   TABLE_INFO = '/api/v1/batchdb/tables',
+  MSTR_SGMT_BASE = '/api/v1/mastersegment/rules',
+  META_TABLE_RULE_TABLE_BASE = '/api/v1/metas/ruletable',
 }
