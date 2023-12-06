@@ -35,11 +35,15 @@ const List = () => {
             justifyContent="Center"
             onClick={(e) => {
               e.stopPropagation();
+              const interestFeatureParams = {
+                userId: userId,
+                featureId: featureId,
+              };
 
               if (isUserFeature) {
-                handleRemoveInterestFeature(featureId);
+                dMutate(interestFeatureParams);
               } else {
-                handleAddInterestFeature(featureId);
+                cMutate(interestFeatureParams);
               }
             }}
           >
@@ -58,34 +62,8 @@ const List = () => {
   ];
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = usePopularFeatureList();
-  const {
-    data: cResponse,
-    isSuccess: cIsSuccess,
-    isError: cIsError,
-    mutate: cMutate,
-  } = useCreateInterestFeature(userId, createdFeatureId);
-  const {
-    data: dResponse,
-    isSuccess: dIsSuccess,
-    isError: dIsError,
-    mutate: dMutate,
-  } = useDeleteInterestFeature(userId, deletedFeatureId);
-
-  const handleAddInterestFeature = (featureId: string) => {
-    setCreatedFeatureId(featureId);
-  };
-
-  const handleRemoveInterestFeature = (featureId: string) => {
-    setDeletedFeatureId(featureId);
-  };
-
-  useEffect(() => {
-    createdFeatureId && cMutate();
-  }, [createdFeatureId, cMutate]);
-
-  useEffect(() => {
-    deletedFeatureId && dMutate();
-  }, [deletedFeatureId, dMutate]);
+  const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateInterestFeature();
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
