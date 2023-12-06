@@ -26,7 +26,7 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useAppDispatch();
-  const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
+  const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [featureIds, setFeatureIds] = useState<Array<string>>([]);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<FeatureModel>>([]);

@@ -27,7 +27,7 @@ const initParams: FeatureParams = {
 const List = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
-    const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
+    const userId = useAppSelector(selectSessionInfo()).userId || '';
     const [selectedPeriod, setSelectedPeriod] = useState('1');
     const [dateRange, setDateRange] = useState('');
 

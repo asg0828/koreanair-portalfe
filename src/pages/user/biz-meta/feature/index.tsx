@@ -33,7 +33,7 @@ const List = () => {
   const { toast } = useToast();
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
-  const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
+  const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [createdFeatureId, setCreatedFeatureId] = useState<string>('');
   const [deletedFeatureId, setDeletedFeatureId] = useState<string>('');
   const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
@@ -43,10 +43,10 @@ const List = () => {
   const columns: Array<ColumnsInfo> = [
     {
       headerName: '',
-      field: 'isInterestFeature',
+      field: 'isUserFeature',
       colSpan: 0.5,
       render: (rowIndex: number) => {
-        const isInterestFeature = rows[rowIndex]?.isInterestFeature;
+        const isUserFeature = rows[rowIndex]?.isUserFeature;
         const featureId = rows[rowIndex]?.featureId;
 
         return (
@@ -56,14 +56,14 @@ const List = () => {
             onClick={(e) => {
               e.stopPropagation();
 
-              if (isInterestFeature) {
+              if (isUserFeature) {
                 handleRemoveInterestFeature(featureId);
               } else {
                 handleAddInterestFeature(featureId);
               }
             }}
           >
-            {isInterestFeature ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon color="action" />}
+            {isUserFeature ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon color="action" />}
           </Stack>
         );
       },

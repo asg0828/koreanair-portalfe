@@ -16,7 +16,7 @@ export interface FeatureModel extends CreatedFeatureModel, CommonModel {
   featureTypNm: string;
   featureSeGrpNm: string;
   featureSeNm: string;
-  isInterestFeature: boolean;
+  isUserFeature: boolean;
 }
 
 export interface FeatureSeparatesModel {

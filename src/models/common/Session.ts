@@ -1,12 +1,5 @@
 export interface SessionInfo {
   sessionId?: string;
-  memberId?: number | null;
-  memberName?: string;
-  email?: string;
-  languageCode?: string;
-  roleType?: string;
-  memberStateCode?: string;
-  employeeNumber?: string;
   apldMgrAuthId?: string
   apldMgrAuthNm?: string
   apldUserAuthId?: string
