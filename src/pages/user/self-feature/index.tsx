@@ -54,9 +54,14 @@ const SelfFeature = () => {
 	const [selfFeatureList, setSelfFeatureList] = useState<Array<TbRsCustFeatRule>>([])
 	// 선후행 관계 팝업
 	const [isOpenFeatPrntChldModal, setIsOpenFeatPrntChldModal] = useState<boolean>(false)
+	// session 값 setting
 	useEffect(() => {
-		//console.log(sessionInfo)
+		if (!sessionInfo.deptCode) return
+		setSearchInfo({ ...searchInfo, ["team"]: sessionInfo.deptCode, })
 	}, [sessionInfo])
+	useEffect(() => {
+		featureListRefetch()
+	}, [searchInfo.team])
 	// 부서 목록 setting
 	useEffect(() => {
 		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
@@ -204,6 +209,7 @@ const SelfFeature = () => {
 							<TH colSpan={1} align="right">부서</TH>
 							<TD colSpan={3}>
 								<Select
+									value={searchInfo.team}
 									appearance="Outline"
 									placeholder="선택"
 									className="width-100"

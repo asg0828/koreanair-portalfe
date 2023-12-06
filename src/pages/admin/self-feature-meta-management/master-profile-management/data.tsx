@@ -80,7 +80,7 @@ export const initMasterProfileInfo: MasterProfileInfo = {
 	tbRsMstrSgmtRuleList: [{...initTbRsMstrSgmtRule}],
 }
 export const initMstrProfSearchInfoProps: MstrProfSearchInfoProps = {
-    useYn: 'Y',
+    useYn: '',
     rtmYn: '',
 }
 export const initMetaInfoSearchProps: MetaInfoSearchProps = {

@@ -55,11 +55,15 @@ const List = () => {
             justifyContent="Center"
             onClick={(e) => {
               e.stopPropagation();
+              const interestFeatureParams = {
+                userId: userId,
+                featureId: featureId,
+              };
 
               if (isUserFeature) {
-                handleRemoveInterestFeature(featureId);
+                dMutate(interestFeatureParams);
               } else {
-                handleAddInterestFeature(featureId);
+                cMutate(interestFeatureParams);
               }
             }}
           >
@@ -80,18 +84,8 @@ const List = () => {
   const { data: response, isError, refetch } = useFeatureList(params, page);
   const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
   const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
-  const {
-    data: cResponse,
-    isSuccess: cIsSuccess,
-    isError: cIsError,
-    mutate: cMutate,
-  } = useCreateInterestFeature(userId, createdFeatureId);
-  const {
-    data: dResponse,
-    isSuccess: dIsSuccess,
-    isError: dIsError,
-    mutate: dMutate,
-  } = useDeleteInterestFeature(userId, deletedFeatureId);
+  const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateInterestFeature();
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
 
   const goToReg = () => {
     navigate(View.REG);
@@ -103,14 +97,6 @@ const List = () => {
         featureId: row.featureId,
       },
     });
-  };
-
-  const handleAddInterestFeature = (featureId: string) => {
-    setCreatedFeatureId(featureId);
-  };
-
-  const handleRemoveInterestFeature = (featureId: string) => {
-    setDeletedFeatureId(featureId);
   };
 
   const handleSearch = useCallback(() => {
@@ -181,14 +167,6 @@ const List = () => {
       })
     );
   };
-
-  useEffect(() => {
-    createdFeatureId && cMutate();
-  }, [createdFeatureId, cMutate]);
-
-  useEffect(() => {
-    deletedFeatureId && dMutate();
-  }, [deletedFeatureId, dMutate]);
 
   useEffect(() => {
     if (params.featureSeGrp) {

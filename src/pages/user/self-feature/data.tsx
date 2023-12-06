@@ -123,7 +123,7 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     metaTblId: '',
     lastUpdLginId: '',
     submissionStatusNm: '',
-    userTeamNm: 'test',
+    userTeamNm: '',
     deptNm: '',
 }
 

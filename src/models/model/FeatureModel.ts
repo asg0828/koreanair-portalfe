@@ -11,6 +11,11 @@ export interface FeatureParams {
   enrDeptNm?: string;
 }
 
+export interface InterestFeatureParams {
+  userId: string;
+  featureId: string;
+}
+
 export interface FeatureModel extends CreatedFeatureModel, CommonModel {
   featureId: string;
   featureTypNm: string;
