@@ -52,7 +52,12 @@ const Header = () => {
       sessionUtil.setLocalStorageInfo(sessionUtil.getAccessTokenRefreshTokenInfo());
       sessionUtil.setLocalStorageInfo(sessionUtil.getSessionRequestInfo());
       sessionUtil.setLocalStorageInfo(sessionUtil.getSessionInfo());
-      window.open(`/popup${menu.path}`, '_blank', 'noopener, noreferrer');
+
+      if (menu.path === '/tableau') {
+        window.open(`https://ssbiprdap.koreanair.com/#/projects/180`, '_blank', 'noopener, noreferrer');
+      } else {
+        window.open(`/popup${menu.path}`, '_blank', 'noopener, noreferrer');
+      }
     }
   };
 
