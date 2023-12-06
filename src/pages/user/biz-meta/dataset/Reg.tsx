@@ -212,10 +212,6 @@ const Reg = () => {
   };
 
   useEffect(() => {
-    setValue('columnSpecs', fields);
-  }, [fields, setValue]);
-
-  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
@@ -299,7 +295,7 @@ const Reg = () => {
               </TH>
               <TD colSpan={5} className="height-300">
                 <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
-                  <VerticalTable columns={columns} rows={fields} className="tableTdScrollFix" />
+                  <VerticalTable className="tableTdScrollFix" columns={columns} rows={fields} clickable={false} />
                   <Stack className="width-100" justifyContent="Center">
                     <Stack onClick={handleAdd}>
                       <AddCircleOutlineOutlinedIcon fontSize="large" color="primary" />
