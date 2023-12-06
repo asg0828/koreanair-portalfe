@@ -80,7 +80,7 @@ const Reg = () => {
 
   useEffect(() => {
     if (isSuccess && response.data) {
-      response.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setValue('faqId', response.data.faqId);
       setValue('clCode', response.data.clCode);
       setValue('qstn', response.data.qstn);
