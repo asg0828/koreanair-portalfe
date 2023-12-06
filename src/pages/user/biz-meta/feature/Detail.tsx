@@ -143,7 +143,7 @@ const Detail = () => {
               산출단위
             </TH>
             <TD colSpan={5} align="left">
-              {featureModel?.featureFm}
+              {featureModel?.calcUnt}
             </TD>
           </TR>
           <TR>
@@ -151,7 +151,7 @@ const Detail = () => {
               산출로직
             </TH>
             <TD colSpan={5} align="left">
-              <TextField multiline disabled className="width-100 height-200" value={featureModel?.calcUnt} />
+              <TextField multiline disabled className="width-100 height-200" value={featureModel?.featureFm} />
             </TD>
           </TR>
           <TR>
