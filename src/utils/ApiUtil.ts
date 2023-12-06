@@ -160,6 +160,8 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
               JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
             }`;
             return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
+              sessionUtil.setRefreshToken(retryResponse.data.refresh_token);
+              sessionUtil.setAccessToken(retryResponse.data.access_token);
               return retryResponse.data as CommonResponse;
             });
           });

@@ -8,7 +8,7 @@ import { FeatureModel } from '@/models/model/FeatureModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
+import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -151,7 +151,7 @@ const Detail = () => {
               산출로직
             </TH>
             <TD colSpan={5} align="left">
-              {featureModel?.calcUnt}
+              <TextField multiline disabled className="width-100 height-200" value={featureModel?.calcUnt} />
             </TD>
           </TR>
           <TR>
