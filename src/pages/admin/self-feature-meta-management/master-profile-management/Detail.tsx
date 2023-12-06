@@ -33,6 +33,7 @@ import {
 } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
 import { ValidType } from '@/models/common/Constants'
 import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
+import { retreiveMetaColumnIsResolutionInfo } from '@/api/self-feature/SelfFeatureAdminAPI'
 
 const MasterProfileManagementDetail = () => {
 
@@ -73,12 +74,33 @@ const MasterProfileManagementDetail = () => {
     }, [masterProfileInfo])
     useEffect(() => {
         console.log("After set attrMetaTbInfo :: ", attrMetaTbInfo)
-        if (attrMetaTbInfo[0].metaTblId && attrMetaTbInfo[0].metaTblId !== "") {
-            setMetaTblId(attrMetaTbInfo[0].metaTblId)
-        }
+        attrMetaTbInfo.map((info: TbCoMetaTbInfo) => {
+            if (info.metaTblId && info.metaTblId !== "") {
+                let response = retreiveMetaColumnIsResolutionInfo(info.metaTblId, metaTblSrchInfo)
+                
+                response.then((response) => {
+                    console.log(response)
+                }).catch ((err) => {
+                    console.log(err)
+                })
+            }
+            return info
+        })
     }, [attrMetaTbInfo])
     useEffect(() => {
         console.log("After set behvMetaTbInfo :: ", behvMetaTbInfo)
+        behvMetaTbInfo.map((info: TbCoMetaTbInfo) => {
+            if (info.metaTblId && info.metaTblId !== "") {
+                let response = retreiveMetaColumnIsResolutionInfo(info.metaTblId, metaTblSrchInfo)
+                
+                response.then((response) => {
+                    console.log(response)
+                }).catch ((err) => {
+                    console.log(err)
+                })
+            }
+            return info
+        })
     }, [behvMetaTbInfo])
     // component mount
     useEffect(() => {
