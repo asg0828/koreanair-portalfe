@@ -39,6 +39,11 @@ const userMenuList = [
     path: '/structured-report',
     children: [
       {
+        name: 'VIP고객 국제선 예약현황',
+        path: '/structured-report/vip-intl-flight-reservation-status',
+        children: [],
+      },
+      {
         name: '구매기여도 Top100',
         path: '/structured-report/purchase-contributors',
         children: [],
@@ -51,11 +56,6 @@ const userMenuList = [
       {
         name: '국내선 탑승횟수 Top100',
         path: '/structured-report/domestic-boarding',
-        children: [],
-      },
-      {
-        name: 'VIP (3S) 고객의 항공현황',
-        path: '/structured-report/vip-customer-flight-status',
         children: [],
       },
       {
@@ -117,7 +117,7 @@ const userMenuList = [
         ],
       },
       {
-        name: 'Q&A',  
+        name: 'Q&A',
         path: '/board/qna',
         children: [
           { name: 'Q&A 등록', path: '/board/qna/reg', children: [] },
