@@ -6,18 +6,10 @@ import {
   KeyboardArrowRightOutlinedIcon,
 } from '@/assets/icons';
 import { HierarchyInfo } from '@/models/common/CommonInfo';
+import { fileSx, folderSx } from '@/models/common/Constants';
 import { CheckedState } from '@/models/common/Design';
 import { Checkbox, Stack, Typography } from '@components/ui';
 import { MoveHandler, NodeApi, NodeRendererProps, Tree } from 'react-arborist';
-
-const folderSx = {
-  width: 30,
-  color: 'rgb(250 200 1);',
-};
-
-const fileSx = {
-  color: '#777777',
-};
 
 export interface DataTreeProps {
   enableChecked?: boolean;

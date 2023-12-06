@@ -27,32 +27,32 @@ const Detail = () => {
     {
       headerName: '한글명',
       field: 'mcsKoNm',
-      colSpan: 1.5,
+      colSpan: 3,
       maxLength: 100,
       require: true,
     },
     {
       headerName: '영문명',
       field: 'mcsEnNm',
-      colSpan: 1.5,
+      colSpan: 3,
       require: true,
     },
     {
       headerName: '원천 컬럼명',
       field: 'srcClNm',
-      colSpan: 1.5,
+      colSpan: 2,
       require: true,
     },
     {
       headerName: '정의',
       field: 'mcsDef',
-      colSpan: 3.9,
+      colSpan: 3.2,
       require: true,
     },
     {
       headerName: '산출로직',
       field: 'clFm',
-      colSpan: 1.1,
+      colSpan: 0.8,
       require: true,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
         return (
@@ -154,13 +154,13 @@ const Detail = () => {
             <TH required colSpan={1} align="right">
               테이블 한글명
             </TH>
-            <TD colSpan={2} align="left">
+            <TD colSpan={3} align="left">
               {datasetModel?.mtsKoNm}
             </TD>
             <TH required colSpan={1} align="right">
               테이블 영문명
             </TH>
-            <TD colSpan={2} align="left">
+            <TD colSpan={3} align="left">
               {datasetModel?.mtsEnNm}
             </TD>
           </TR>
@@ -168,7 +168,7 @@ const Detail = () => {
             <TH required colSpan={1} align="right">
               테이블 정의
             </TH>
-            <TD colSpan={5} align="left">
+            <TD colSpan={7} align="left">
               {datasetModel?.mtsDef}
             </TD>
           </TR>
@@ -176,9 +176,15 @@ const Detail = () => {
             <TH colSpan={1} required align="right">
               컬럼 정의
             </TH>
-            <TD colSpan={5} align="left" className="height-300 overflow-auto">
+            <TD colSpan={7} align="left" className="height-300 overflow-auto">
               <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
-                <VerticalTable columns={columns} rows={rows} className="tableTdScrollFix" />
+                <VerticalTable
+                  className="tableTdScrollFix"
+                  columns={columns}
+                  rows={rows}
+                  isMultiSelected={false}
+                  clickable={false}
+                />
               </Stack>
             </TD>
           </TR>
@@ -186,7 +192,7 @@ const Detail = () => {
             <TH colSpan={1} align="right">
               원천시스템
             </TH>
-            <TD colSpan={5} align="left">
+            <TD colSpan={7} align="left">
               {datasetModel?.srcSys}
             </TD>
           </TR>
@@ -194,7 +200,7 @@ const Detail = () => {
             <TH colSpan={1} align="right">
               원천테이블명
             </TH>
-            <TD colSpan={5} align="left">
+            <TD colSpan={7} align="left">
               {datasetModel?.srcTbNm}
             </TD>
           </TR>
@@ -202,7 +208,7 @@ const Detail = () => {
             <TH colSpan={1} align="right">
               DB명
             </TH>
-            <TD colSpan={5} align="left">
+            <TD colSpan={7} align="left">
               {datasetModel?.srcDbCd}
             </TD>
           </TR>
@@ -210,7 +216,7 @@ const Detail = () => {
             <TH colSpan={1} align="right">
               비고
             </TH>
-            <TD colSpan={5} align="left">
+            <TD colSpan={7} align="left">
               {datasetModel?.mtsDsc}
             </TD>
           </TR>

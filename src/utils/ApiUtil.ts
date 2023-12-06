@@ -154,8 +154,22 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
         // eslint-disable-next-line
         if (error.response.status.toString() === '403') {
-          sessionUtil.deleteSessionInfo();
-          window.location.reload();
+          // APIGEE ACCESS TOKEN 만료
+          if (error.response?.data?.errorCode?.toString() === '301') {
+            return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
+              const originalRequest = error.config;
+              originalRequest.headers['authorization'] = `Bearer ${
+                JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
+              }`;
+              return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
+                return retryResponse.data as CommonResponse;
+              });
+            });
+          } else {
+            // PORTAL SESSION 만료
+            sessionUtil.deleteSessionInfo();
+            window.location.reload();
+          }
         }
       }
       return unknownError;

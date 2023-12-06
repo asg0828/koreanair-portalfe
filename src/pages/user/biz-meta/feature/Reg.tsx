@@ -350,10 +350,11 @@ const Reg = () => {
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
-                    className="width-100"
+                    multiline
+                    autoFocus
+                    className="width-100 height-200"
                     {...register('featureRelTb', {})}
                     validation={errors?.featureRelTb?.message ? 'Error' : undefined}
-                    autoFocus
                   />
                   <ErrorLabel message={errors?.featureRelTb?.message} />
                 </Stack>

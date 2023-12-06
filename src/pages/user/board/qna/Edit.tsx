@@ -82,7 +82,7 @@ const Edit = () => {
 
   useEffect(() => {
     if (isSuccess && response.data) {
-      response.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setValue('clCode', response.data.clCode);
       setValue('qnaStat', response.data.qnaStat);
       setValue('sj', response.data.sj);

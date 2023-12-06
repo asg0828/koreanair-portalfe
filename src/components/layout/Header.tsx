@@ -66,7 +66,7 @@ const Header = () => {
       openModal({
         type: ModalType.CONFIRM,
         title: '확인',
-        content: '로그아웃 하시겠습니까??',
+        content: '로그아웃 하시겠습니까?',
         onConfirm: async () => {
           await sessionApis.logoutSession();
           await sessionApis.revokeToken();

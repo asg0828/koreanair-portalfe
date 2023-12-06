@@ -123,6 +123,7 @@ const UserSelectModal = ({
               </Stack>
               <VerticalTable
                 isMultiSelected={false}
+                clickable={true}
                 columns={columns}
                 rows={prevRows}
                 rowSelection={handlePrevRowSelection}

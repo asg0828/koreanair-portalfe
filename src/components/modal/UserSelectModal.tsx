@@ -62,6 +62,7 @@ const UserSelectModal = ({
   };
 
   const handlePrevRowSelection = (prevCheckedIndexList: Array<number>, prevCheckedList: Array<any>) => {
+    console.log('prevCheckedIndexList: ', prevCheckedIndexList);
     setPrevCheckedList(prevCheckedList);
   };
 
@@ -140,6 +141,7 @@ const UserSelectModal = ({
               </Stack>
               <VerticalTable
                 isMultiSelected={false}
+                clickable={true}
                 columns={columns}
                 rows={prevRows}
                 rowSelection={handlePrevRowSelection}
