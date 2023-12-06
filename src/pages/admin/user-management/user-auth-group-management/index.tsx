@@ -5,6 +5,7 @@ import { useCreateUserAuth, useDeleteUserAuth, useUpdateUserAuth } from '@/hooks
 import { useUserAuthAllList } from '@/hooks/queries/useAuthQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
+import { ColumnsInfo } from '@/models/components/Table';
 import { AuthModel, UpdatedAuthModel } from '@/models/model/AuthModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
@@ -13,11 +14,11 @@ import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@com
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-const columns = [
+const columns: Array<ColumnsInfo> = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
-  { headerName: '권한그룹ID', field: 'authId', colSpan: 2 },
-  { headerName: '권한그룹명', field: 'authNm', colSpan: 2 },
-  { headerName: '비고', field: 'authDsc', colSpan: 5 },
+  { headerName: '권한그룹ID', field: 'authId', colSpan: 2, align: 'left' },
+  { headerName: '권한그룹명', field: 'authNm', colSpan: 2, align: 'left' },
+  { headerName: '비고', field: 'authDsc', colSpan: 5, align: 'left' },
 ];
 
 const List = () => {

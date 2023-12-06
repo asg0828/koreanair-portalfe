@@ -5,6 +5,7 @@ import { useDatasetList } from '@/hooks/queries/useDatasetQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, GroupCodeType, ValidType, View } from '@/models/common/Constants';
+import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetModel, DatasetParams } from '@/models/model/DatasetModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectContextPath } from '@/reducers/authSlice';
@@ -25,12 +26,12 @@ import {
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const columns = [
-  { headerName: '테이블 한글명', field: 'mtsKoNm', colSpan: 2 },
-  { headerName: '테이블 영문명', field: 'mtsEnNm', colSpan: 2 },
-  { headerName: '테이블 정의', field: 'mtsDef', colSpan: 2 },
-  { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 2 },
-  { headerName: 'DB명', field: 'srcDbCd', colSpan: 2 },
+const columns: Array<ColumnsInfo> = [
+  { headerName: '테이블 한글명', field: 'mtsKoNm', colSpan: 2, align: 'left' },
+  { headerName: '테이블 영문명', field: 'mtsEnNm', colSpan: 2, align: 'left' },
+  { headerName: '테이블 정의', field: 'mtsDef', colSpan: 2, align: 'left' },
+  { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 2, align: 'left' },
+  { headerName: 'DB명', field: 'srcDbCd', colSpan: 2, align: 'left' },
 ];
 
 const initParams: DatasetParams = {

@@ -1,24 +1,24 @@
+import { AddIcon } from '@/assets/icons';
 import SearchForm from '@/components/form/SearchForm';
 import DataGrid from '@/components/grid/DataGrid';
 import { useQnaList } from '@/hooks/queries/useQnaQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
+import { useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, GroupCodeType, ValidType, View } from '@/models/common/Constants';
-import { RowsInfo } from '@/models/components/Table';
+import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { QnaModel, QnaParams } from '@/models/model/QnaModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { AddIcon } from '@/assets/icons';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { selectContextPath } from '@/reducers/authSlice';
-import { useAppSelector } from '@/hooks/useRedux';
 
-const columns = [
+const columns: Array<ColumnsInfo> = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
   { headerName: '분류', field: 'clCode', colSpan: 1 },
-  { headerName: '제목', field: 'sj', colSpan: 3 },
+  { headerName: '제목', field: 'sj', colSpan: 3, align: 'left' },
   { headerName: '상태', field: 'qnaStat', colSpan: 1 },
   { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },

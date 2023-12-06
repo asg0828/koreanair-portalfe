@@ -5,6 +5,7 @@ import { useDataroomList } from '@/hooks/queries/useDataroomQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ValidType, View } from '@/models/common/Constants';
+import { ColumnsInfo } from '@/models/components/Table';
 import { DataroomModel, DataroomParams } from '@/models/model/DataroomModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectContextPath } from '@/reducers/authSlice';
@@ -14,9 +15,9 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const columns = [
+const columns: Array<ColumnsInfo> = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
-  { headerName: '제목', field: 'sj', colSpan: 5 },
+  { headerName: '제목', field: 'sj', colSpan: 5, align: 'left' },
   { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
