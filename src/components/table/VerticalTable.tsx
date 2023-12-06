@@ -29,7 +29,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   rowSelection,
   onClick,
 }) => {
-  console.log(enableSort)
   const isCheckbox = typeof rowSelection === 'function';
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);

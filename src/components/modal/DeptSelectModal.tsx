@@ -7,7 +7,7 @@ import { ModalInfo } from '@/models/components/Modal';
 import { DeptModel } from '@/models/model/DeptModel';
 import { UserModel } from '@/models/model/UserModel';
 import { closeModal } from '@/reducers/modalSlice';
-import { convertToHierarchyInfo } from '@/utils/ArrayUtil';
+import { convertToHierarchyInfo, getNodeChildrenDeptCodeRecursive } from '@/utils/ArrayUtil';
 import VerticalTable from '@components/table/VerticalTable';
 import { Button, Modal, Stack, TextField, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
@@ -61,9 +61,9 @@ const UserSelectModal = ({
   };
 
   const handleClickFile = (deptItem: any) => {
-    const prevDepts = deptData.filter((item: UserModel) => item.deptCode === deptItem.deptCode);
+    const deptItemList = Array.from(getNodeChildrenDeptCodeRecursive(deptItem));
+    const prevDepts = deptData.filter((item: UserModel) => deptItemList.includes(item.deptCode));
     setPrevRows(prevDepts);
-    console.log('prevDepts: ', prevDepts);
   };
 
   const handleConfirm = () => {
