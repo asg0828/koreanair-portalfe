@@ -13,7 +13,7 @@ export interface VerticalTableProps {
   enableSort?: boolean;
   clickable?: boolean;
   isMultiSelected?: boolean;
-  initialSortedColumn ?: string;
+  initialSortedColumn?: string;
   rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
   onClick?: Function;
   children?: ReactNode;
@@ -127,8 +127,8 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     initialSort();
   }, [rows, initialSortedColumn]);
 
-  const handleClick = (row: RowsInfo, index: number) => {
-    onClick && onClick(row, index);
+  const handleClick = (row: RowsInfo, index: number, selected: boolean) => {
+    onClick && onClick(row, index, selected);
   };
 
   useEffect(() => {
@@ -168,45 +168,52 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
         )}
         {sortRows?.length > 0 ? (
           <TBody clickable={clickable}>
-            {sortRows.map((row, rowIndex) => (
-              <TR key={`row-${rowIndex}`} selected={checkedIndexList.includes(rowIndex)}>
-                {isCheckbox && (
-                  <TD colSpan={0.5}>
-                    <Checkbox
-                      checked={checkedIndexList.includes(rowIndex)}
-                      onCheckedChange={(checked) => handleCheckedChange(false, checked, rowIndex)}
-                    />
-                  </TD>
-                )}
+            {sortRows.map((row, rowIndex) => {
+              const selected = checkedIndexList.includes(rowIndex);
 
-                {Object.keys(columns).map((column, columnIndex) => (
-                  <TD
-                    key={`column-${columnIndex}`}
-                    colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-                    align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
-                    onClick={() => handleClick(row, rowIndex)}
-                    className="verticalTableTD"
-                  >
-                    {(() => {
-                      if (columns[columnIndex].render) {
-                        return columns[columnIndex].render?.(
-                          rowIndex,
-                          columns[columnIndex].field,
-                          columns[columnIndex].maxLength
-                        );
-                      } else {
-                        const columnData = columns[columnIndex];
-                        const data = row[columnData.field];
-                        if (typeof data === 'number' && columnData.field !== 'memberNumber') {
-                          return <Typography variant="body2">{formatNumber(data)}</Typography>;
+              return (
+                <TR
+                  key={`row-${rowIndex}`}
+                  selected={selected}
+                  onClick={() => {
+                    handleCheckedChange(false, !selected, rowIndex);
+                    handleClick(row, rowIndex, !selected);
+                  }}
+                >
+                  {isCheckbox && (
+                    <TD colSpan={0.5}>
+                      <Checkbox checked={selected} />
+                    </TD>
+                  )}
+
+                  {Object.keys(columns).map((column, columnIndex) => (
+                    <TD
+                      key={`column-${columnIndex}`}
+                      colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                      className="verticalTableTD"
+                    >
+                      {(() => {
+                        if (columns[columnIndex].render) {
+                          return columns[columnIndex].render?.(
+                            rowIndex,
+                            columns[columnIndex].field,
+                            columns[columnIndex].maxLength
+                          );
+                        } else {
+                          const columnData = columns[columnIndex];
+                          const data = row[columnData.field];
+                          if (typeof data === 'number' && columnData.field !== 'memberNumber') {
+                            return <Typography variant="body2">{formatNumber(data)}</Typography>;
+                          }
+                          return <Typography variant="body2">{data}</Typography>;
                         }
-                        return <Typography variant="body2">{data}</Typography>;
-                      }
-                    })()}
-                  </TD>
-                ))}
-              </TR>
-            ))}
+                      })()}
+                    </TD>
+                  ))}
+                </TR>
+              );
+            })}
           </TBody>
         ) : (
           <TBody className="no-data-wrap">

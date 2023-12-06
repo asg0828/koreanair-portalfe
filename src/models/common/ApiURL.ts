@@ -7,6 +7,8 @@ export enum PortalApiURL {
   ADMIN_AUTH_MGMT = '/auth-mgmt/v1/mgr-auths',
   USER_MENU_MGMT = '/menu-mgmt/v1/user-menus',
   ADMIN_MENU_MGMT = '/menu-mgmt/v1/mgr-menus',
+  USER_AUTH_MENU  = '/menu-auth-mgmt/v1/user-menu',
+  ADMIN_AUTH_MENU = '/menu-auth-mgmt/v1/mgr-menu',
   FILE = '/file',
   CODE = '/system/v1/code-groups',
   NOTICE = '/board/v1/notice',

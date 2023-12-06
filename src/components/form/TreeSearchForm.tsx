@@ -1,17 +1,15 @@
 import { CreateNewFolderOutlinedIcon, DeleteOutlineOutlinedIcon } from '@/assets/icons';
 import DataTree from '@/components/Tree/DataTree';
 import { HierarchyInfo } from '@/models/common/CommonInfo';
+import { menuIconSx } from '@/models/common/Constants';
 import { Button, Stack, TextField, Typography } from '@components/ui';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { useEffect, useState } from 'react';
 import { MoveHandler } from 'react-arborist';
 
-const menuIconSx = {
-  width: 30,
-};
-
 export interface TreeSearchFormProps {
   treeData?: Array<HierarchyInfo>;
+  enableIcon?: boolean;
   initItem?: any;
   onSearch?: Function;
   onCreate?: Function;
@@ -23,6 +21,7 @@ export interface TreeSearchFormProps {
 
 const TreeSearchForm = ({
   treeData = [],
+  enableIcon = false,
   initItem,
   onSearch,
   onCreate,
@@ -33,14 +32,6 @@ const TreeSearchForm = ({
   const [keyword, setKeyword] = useState<string>('');
   const [term, setTerm] = useState<string>('');
   const [newTreeData, setNewTreeData] = useState<Array<HierarchyInfo>>(treeData);
-
-  const handleClick = (item: any, parentItem: any) => {
-    onClick && onClick(item, parentItem);
-  };
-
-  const handleMove: MoveHandler<any> = (args) => {
-    onMove && onMove(args);
-  };
 
   const handleSearch = () => {
     setTerm(keyword);
@@ -74,14 +65,17 @@ const TreeSearchForm = ({
         <Stack justifyContent="Center" className="width-100">
           <Typography variant="h3">메뉴</Typography>
         </Stack>
-        <Stack justifyContent="End">
-          <Stack onClick={handleDelete}>
-            <DeleteOutlineOutlinedIcon sx={menuIconSx} />
+
+        {enableIcon && (
+          <Stack justifyContent="End">
+            <Stack onClick={handleDelete}>
+              <DeleteOutlineOutlinedIcon sx={menuIconSx} />
+            </Stack>
+            <Stack onClick={handleCreate}>
+              <CreateNewFolderOutlinedIcon sx={menuIconSx} />
+            </Stack>
           </Stack>
-          <Stack onClick={handleCreate}>
-            <CreateNewFolderOutlinedIcon sx={menuIconSx} />
-          </Stack>
-        </Stack>
+        )}
       </Stack>
       <Stack gap="XS" className="padding-10">
         <TextField className="width-100" onChange={handleChangeKeyword} onKeyDown={handleKeyDown} />
@@ -89,7 +83,7 @@ const TreeSearchForm = ({
           검색
         </Button>
       </Stack>
-      <DataTree enableChecked={true} treeData={newTreeData} term={term} onClick={handleClick} onMove={handleMove} />
+      <DataTree enableChecked={true} treeData={newTreeData} term={term} onClick={onClick} onMove={onMove} />
     </Stack>
   );
 };

@@ -22,3 +22,8 @@ export interface UpdatedMenuModel extends CreatedMenuModel {
 export interface DeletedMenuModel {
   menuId: string;
 }
+
+export interface AuthMenuModel {
+  authId: string;
+  menuIds: Array<string>;
+}

@@ -35,3 +35,16 @@ export enum ContextPath {
   POPUP = '/popup',
   ADMIN_POPUP = '/admin/popup',
 }
+
+export const menuIconSx = {
+  width: 30,
+};
+
+export const folderSx = {
+  width: 30,
+  color: 'rgb(250 200 1);',
+};
+
+export const fileSx = {
+  color: '#777777',
+};

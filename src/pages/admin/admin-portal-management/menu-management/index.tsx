@@ -280,6 +280,7 @@ const List = () => {
   return (
     <Stack alignItems="Start">
       <TreeSearchForm
+        enableIcon={true}
         treeData={treeData}
         initItem={initItem}
         onClick={handleClick}
