@@ -10,7 +10,9 @@ export default function DashBoardPopUp() {
   const [skypass, setSkypass] = useState<Array<Skypass>>();
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
-  const batchDate = `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`;
+  const batchDate = `${yesterday.getFullYear()}-${(`0` + yesterday.getMonth() + 2).slice(-2)}-${(
+    `0` + yesterday.getDate()
+  ).slice(-2)}`;
   const [searchInfo, setSearchInfo] = useState<any>({ skypassNum: '', oneId: '' });
 
   // 등록가족 상세 버튼 모달 state
