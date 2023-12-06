@@ -195,8 +195,9 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                       align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
                       className="verticalTableTD"
                       onClick={() => {
-                        changeChecked(false, !selected, rowIndex);
+                        const resultList = changeChecked(false, !selected, rowIndex);
                         handleClick(row, rowIndex, !selected);
+                        isCheckbox && rowSelection(resultList[0], resultList[1]);
                       }}
                     >
                       {(() => {
