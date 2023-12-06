@@ -77,7 +77,7 @@ const App = () => {
     <ErrorBoundary fallback={<ErrorAppBoundary />}>
       <Suspense fallback={<Fallback />}>
         {sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router ? (
-          <Watermark content={sessionInfo.email} className="width-100 height-100">
+          <Watermark content={sessionInfo.userEmail} className="width-100 height-100">
             <RouterProvider router={router} />
           </Watermark>
         ) : (

@@ -3,43 +3,36 @@ import { RootState } from '@/store';
 import { createSelector, createSlice } from '@reduxjs/toolkit';
 
 export interface AuthState {
-  sessionInfo: SessionInfo;
   contextPath: string;
+  sessionInfo: SessionInfo;
 }
 
 const initialState: AuthState = {
   sessionInfo: {
     sessionId: '',
-    memberId: null,
-    employeeNumber: '',
-    memberName: '',
-    email: '',
-    languageCode: '',
-    roleType: '',
-    memberStateCode: '',
-    apldMgrAuthId: '', // string
-    apldMgrAuthNm: '', // string
-    apldUserAuthId: '', // string
-    apldUserAuthNm: '', // string
-    deptCode: '', // string
-    deptNm: '', // string
+    apldMgrAuthId: '',
+    apldMgrAuthNm: '',
+    apldUserAuthId: '',
+    apldUserAuthNm: '',
+    deptCode: '',
+    deptNm: '',
     menuByAuthMgr: {
       menus: [],
       search: {
         authId: '',
         authNm: '',
       },
-    }, // MenuByAuthMgrUser
+    },
     menuByAuthUser: {
       menus: [],
       search: {
         authId: '',
         authNm: '',
       },
-    }, // MenuByAuthMgrUser
-    userEmail: '', // string
-    userId: '', // string
-    userNm: '', // string
+    },
+    userEmail: '',
+    userId: '',
+    userNm: '',
   },
   contextPath: '',
 };

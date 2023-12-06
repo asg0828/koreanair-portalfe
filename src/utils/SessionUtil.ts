@@ -13,13 +13,15 @@ export default class SessionUtil {
 
     sessionInfo = {
       sessionId: this.getSessionStorageValue(Session.SESSION_ID),
-      memberId: this.getSessionStorageValue('memberId') !== '' ? Number(this.getSessionStorageValue('memberId')) : null,
-      memberName: this.getSessionStorageValue('memberName'),
-      email: this.getSessionStorageValue('email'),
-      languageCode: this.getSessionStorageValue('languageCode'),
-      roleType: this.getSessionStorageValue('roleType'),
-      memberStateCode: this.getSessionStorageValue('memberStateCode'),
-      employeeNumber: this.getSessionStorageValue('employeeNumber'),
+      apldMgrAuthId: this.getSessionStorageValue('apldMgrAuthId'),
+      apldMgrAuthNm: this.getSessionStorageValue('apldMgrAuthNm'),
+      apldUserAuthId: this.getSessionStorageValue('apldUserAuthId'),
+      apldUserAuthNm: this.getSessionStorageValue('apldUserAuthNm'),
+      deptCode: this.getSessionStorageValue('deptCode'),
+      deptNm: this.getSessionStorageValue('deptNm'),
+      userEmail: this.getSessionStorageValue('userEmail'),
+      userId: this.getSessionStorageValue('userId'),
+      userNm: this.getSessionStorageValue('userNm'),
     };
 
     return sessionInfo;
@@ -161,14 +163,16 @@ export default class SessionUtil {
     let sessionInfo: SessionInfo = {} as SessionInfo;
 
     sessionInfo = {
-      sessionId: this.getLocalStorageValue(Session.SESSION_ID),
-      memberId: this.getLocalStorageValue('memberId') !== '' ? Number(this.getLocalStorageValue('memberId')) : null,
-      memberName: this.getLocalStorageValue('memberName'),
-      email: this.getLocalStorageValue('email'),
-      languageCode: this.getLocalStorageValue('languageCode'),
-      roleType: this.getLocalStorageValue('roleType'),
-      memberStateCode: this.getLocalStorageValue('memberStateCode'),
-      employeeNumber: this.getSessionStorageValue('employeeNumber'),
+      sessionId: this.getSessionStorageValue(Session.SESSION_ID),
+      apldMgrAuthId: this.getSessionStorageValue('apldMgrAuthId'),
+      apldMgrAuthNm: this.getSessionStorageValue('apldMgrAuthNm'),
+      apldUserAuthId: this.getSessionStorageValue('apldUserAuthId'),
+      apldUserAuthNm: this.getSessionStorageValue('apldUserAuthNm'),
+      deptCode: this.getSessionStorageValue('deptCode'),
+      deptNm: this.getSessionStorageValue('deptNm'),
+      userEmail: this.getSessionStorageValue('userEmail'),
+      userId: this.getSessionStorageValue('userId'),
+      userNm: this.getSessionStorageValue('userNm'),
     };
 
     return sessionInfo;
