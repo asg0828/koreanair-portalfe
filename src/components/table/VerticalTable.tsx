@@ -26,7 +26,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   showHeader = true,
   enableSort = false,
   clickable = false,
-  initialSortedColumn='',
+  initialSortedColumn = '',
   isMultiSelected = true,
   rowSelection,
   onClick,
@@ -36,13 +36,13 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);
   const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
-
   const [sortedColumn, setSortedColumn] = useState('');
+
   function formatNumber(value: number) {
     return new Intl.NumberFormat('ko-KR').format(value);
   }
 
-  const handleCheckedChange = (isAll: boolean, checked: CheckedState, index: number): void => {
+  const changeChecked = (isAll: boolean, checked: CheckedState, index: number): Array<any> => {
     checked = checked ? true : false;
     let newCheckedIndexList: Array<number> = [];
     let newCheckedList: Array<RowsInfo> = [];
@@ -75,7 +75,13 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
 
     setCheckedIndexList(newCheckedIndexList);
     setCheckedList(newCheckedList);
-    isCheckbox && rowSelection(newCheckedIndexList, newCheckedList);
+
+    return [newCheckedIndexList, newCheckedList];
+  };
+
+  const handleCheckedChange = (isAll: boolean, checked: CheckedState, index: number): void => {
+    const resultList = changeChecked(isAll, checked, index);
+    isCheckbox && rowSelection(resultList[0], resultList[1]);
   };
 
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
@@ -99,8 +105,8 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     setSortRows(sortRows);
   };
 
-  const sortData = (columnField:any) => {
-    const columnIndex = columns.findIndex(column => column.field === columnField);
+  const sortData = (columnField: any) => {
+    const columnIndex = columns.findIndex((column) => column.field === columnField);
     if (columnIndex === -1) return; // 유효한 컬럼이 아니면 종료
 
     const order = SortDirectionCode.DESC; // 기본 정렬 방향 설정
@@ -117,7 +123,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const initialSort = () => {
     if (!initialSortedColumn || columns.length === 0) return;
 
-    const columnIndex = columns.findIndex(column => column.field === initialSortedColumn);
+    const columnIndex = columns.findIndex((column) => column.field === initialSortedColumn);
     if (columnIndex === -1) return; // 유효한 컬럼이 아니면 종료
 
     handleChangeSortDirection(SortDirectionCode.ASC, columnIndex);
@@ -153,7 +159,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               )}
               {columns.map((column, index) => (
                 <TH
-                  className={`verticalTableTH ${column.field === sortedColumn ? 'sortedColumn': ''}`}
+                  className={`verticalTableTH ${column.field === sortedColumn ? 'sortedColumn' : ''}`}
                   key={`header-${index}`}
                   required={column.require}
                   colSpan={column.colSpan ? column.colSpan : undefined}
@@ -172,17 +178,13 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               const selected = checkedIndexList.includes(rowIndex);
 
               return (
-                <TR
-                  key={`row-${rowIndex}`}
-                  selected={selected}
-                  onClick={() => {
-                    handleCheckedChange(false, !selected, rowIndex);
-                    handleClick(row, rowIndex, !selected);
-                  }}
-                >
+                <TR key={`row-${rowIndex}`} selected={selected}>
                   {isCheckbox && (
                     <TD colSpan={0.5}>
-                      <Checkbox checked={selected} />
+                      <Checkbox
+                        checked={selected}
+                        onCheckedChange={(checked) => handleCheckedChange(false, checked, rowIndex)}
+                      />
                     </TD>
                   )}
 
@@ -192,6 +194,10 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                       colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
                       align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
                       className="verticalTableTD"
+                      onClick={() => {
+                        changeChecked(false, !selected, rowIndex);
+                        handleClick(row, rowIndex, !selected);
+                      }}
                     >
                       {(() => {
                         if (columns[columnIndex].render) {
