@@ -117,8 +117,8 @@ const SelfFeatureEdit = () => {
 	// 대상선택 초기화시 flag
 	const [targetClear, setTargetClear] = useState<string>("")//location.state.TargetClear
 	// 한글 및 영문 입력시 입력값
-	const [ featureKoNmInput, setFeatureKoNmInput ] = useState<string>(cloneDeep(location.state.featureInfo.featureTemp?.featureKoNm))
-	const [ featureEnNmInput, setFeatureEnNmInput ] = useState<string>(cloneDeep(location.state.featureInfo.featureTemp?.featureEnNm))
+	const [ featureKoNmInput, setFeatureKoNmInput ] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureKoNm))
+	const [ featureEnNmInput, setFeatureEnNmInput ] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureEnNm))
 	// 기본정보
 	const [featureTempInfo, setFeatureTempInfo] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
 	const [custFeatRule, setCustFeatRule] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
@@ -205,6 +205,7 @@ const SelfFeatureEdit = () => {
     }, [approverCandidateRes, approverCandidateErr, toast])
 
 	useEffect(() => {
+		if (!location.state) return
 		setFeatureTempInfo(cloneDeep(location.state.featureInfo.featureTemp))
 		setCustFeatRule(cloneDeep(location.state.featureInfo.tbRsCustFeatRule))
 		setTargetList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtList))
@@ -286,7 +287,7 @@ const SelfFeatureEdit = () => {
 		if (!featureSeAllList || featureSeAllList.length < 1) return
 
 		let seId = featureSeGrpList.find((grpItem: FeatureSeparatesModel) => {
-			return grpItem.seId === featureSeAllList.find((item: FeatureSeparatesModel) => item.seId === location.state.featureInfo.featureTemp.featureSe)?.seGrpId
+			return grpItem.seId === featureSeAllList.find((item: FeatureSeparatesModel) => location.state && (item.seId === location.state.featureInfo.featureTemp.featureSe))?.seGrpId
 		})?.seId
 
 		if (seId) {
@@ -378,7 +379,8 @@ const SelfFeatureEdit = () => {
 		if (formulaTrgtList.length > 0) return
 
 		if (
-			location.state.featureInfo.tbRsCustFeatRuleCalc
+			location.state
+			&& location.state.featureInfo.tbRsCustFeatRuleCalc
 			&& location.state.featureInfo.tbRsCustFeatRuleCalc.formula === ""
 		) {
 			setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
@@ -388,7 +390,7 @@ const SelfFeatureEdit = () => {
 			})
 		}
 
-	}, [formulaTrgtList, location.state.featureInfo.tbRsCustFeatRuleCalc?.formula])
+	}, [formulaTrgtList, location.state?.featureInfo.tbRsCustFeatRuleCalc?.formula])
 	// 수정 API 호출(Rule-Design)
 	const updateCustFeatRule = () => {
 		if (!isValidFormula) {
@@ -600,8 +602,8 @@ const SelfFeatureEdit = () => {
 			<Stack direction="Vertical" gap="MD" >
 				{/* 상단 버튼 영역 */}
 				<FeatQueryRsltButton
-					custFeatRuleId={location.state.featureInfo.tbRsCustFeatRule.id}
-                    batManualExecTestCnt={location.state.featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
+					custFeatRuleId={location.state?.featureInfo.tbRsCustFeatRule.id}
+                    batManualExecTestCnt={location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
 				/>
 
 				{/* 기본 정보 */}
@@ -630,7 +632,7 @@ const SelfFeatureEdit = () => {
 						<TH colSpan={1} align="center">중구분</TH>
 						<TD colSpan={3}>
 							<Select
-								defaultValue={location.state.featureInfo.featureTemp.featureSe}
+								defaultValue={location.state?.featureInfo.featureTemp.featureSe}
 								appearance="Outline"
 								placeholder="중구분"
 								className="width-100"
@@ -654,14 +656,14 @@ const SelfFeatureEdit = () => {
 								readOnly
 								className="width-100"
 								id="featureId"
-								defaultValue={location.state.featureInfo.featureTemp?.featureId}
+								defaultValue={location.state?.featureInfo.featureTemp?.featureId}
 							//onChange={onchangeInputHandler}
 							/>
 						</TD>
 						<TH colSpan={1} align="center">Feature 타입</TH>
 						<TD colSpan={3}>
 							<Select
-								defaultValue={codeList.find((featureType: CodeModel) => featureType.codeId === location.state.featureInfo.featureTemp.featureTyp)?.codeId}
+								defaultValue={codeList.find((featureType: CodeModel) => featureType.codeId === location.state?.featureInfo.featureTemp.featureTyp)?.codeId}
 								appearance="Outline"
 								placeholder="Feature 타입"
 								className="width-100"
@@ -684,7 +686,7 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="featureKoNm"
-								//defaultValue={location.state.featureInfo.featureTemp?.featureKoNm}
+								//defaultValue={location.state?.featureInfo.featureTemp?.featureKoNm}
 								value={featureKoNmInput}
 								onChange={onchangeInputHandler}
 							/>
@@ -694,7 +696,7 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="featureEnNm"
-								//defaultValue={location.state.featureInfo.featureTemp?.featureEnNm}
+								//defaultValue={location.state?.featureInfo.featureTemp?.featureEnNm}
 								value={featureEnNmInput}
 								onChange={onchangeInputHandler}
 							/>
@@ -715,8 +717,14 @@ const SelfFeatureEdit = () => {
 					<TR>
 						<TH colSpan={1} align="center">산출 단위</TH>
 						<TD colSpan={3}>
-							<Select
-								defaultValue={location.state.featureInfo.featureTemp?.calcUnt}
+							<TextField 
+								className="width-100" 
+								id="calcUnt" 
+								defaultValue={location.state?.featureInfo.featureTemp?.calcUnt}
+								onChange={onchangeInputHandler} 
+							/>
+							{/* <Select
+								defaultValue={location.state?.featureInfo.featureTemp?.calcUnt}
 								appearance="Outline"
 								placeholder="산출 단위"
 								className="width-100"
@@ -730,7 +738,7 @@ const SelfFeatureEdit = () => {
 								{calcUnit.map((item, index) => (
 									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
 								))}
-							</Select>
+							</Select> */}
 						</TD>
 						<TD colSpan={4}>
 						</TD>
@@ -752,7 +760,12 @@ const SelfFeatureEdit = () => {
 					<TR>
 						<TH colSpan={1} align="center">비고</TH>
 						<TD colSpan={7}>
-							<TextField className="width-100" id="featureDsc" onChange={onchangeInputHandler} />
+							<TextField 
+								className="width-100" 
+								id="featureDsc" 
+								defaultValue={location.state?.featureInfo.featureTemp?.featureDsc}
+								onChange={onchangeInputHandler} 
+							/>
 						</TD>
 					</TR>
 				</HorizontalTable>

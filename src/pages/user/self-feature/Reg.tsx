@@ -61,12 +61,6 @@ import { validationCustReatRule } from '@/utils/self-feature/FormulaValidUtil'
 import { selectSessionInfo } from '@/reducers/authSlice'
 import { useAppSelector } from '@/hooks/useRedux'
 
-const calcUnit = [
-	{ value: '', text: '선택' },
-	{ value: '1', text: '원' },
-	{ value: '2', text: '명' },
-]
-
 const SelfFeatureReg = () => {
 
 	const navigate = useNavigate()
@@ -154,7 +148,7 @@ const SelfFeatureReg = () => {
 		} else {
 			setRegType(location.state.regType)
 		}
-	}, [location.state.regType])
+	}, [location.state])
 
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
@@ -422,6 +416,8 @@ const SelfFeatureReg = () => {
 		param.customerFeature = featureInfo
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
+		console.log(param)
+		return 
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({
@@ -729,7 +725,8 @@ const SelfFeatureReg = () => {
 					<TR>
 						<TH colSpan={1} align="right">산출 단위</TH>
 						<TD colSpan={2}>
-							<Select
+							<TextField className="width-100" id="calcUnt" onChange={onchangeInputHandler} />
+							{/* <Select
 								appearance="Outline"
 								placeholder="선택"
 								className="width-100"
@@ -743,7 +740,7 @@ const SelfFeatureReg = () => {
 								{calcUnit.map((item, index) => (
 									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
 								))}
-							</Select>
+							</Select> */}
 						</TD>
 						{/* 관리자가 승인 단계시 노출 */}
 						<TD colSpan={3}></TD>

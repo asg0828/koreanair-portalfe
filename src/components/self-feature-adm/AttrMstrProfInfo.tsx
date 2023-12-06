@@ -1,7 +1,7 @@
 
 const AttrMstrProfInfo = () => {
     return (
-        <></>
+        <>a</>
     )
 }
 
