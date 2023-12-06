@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 const MyPage = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const userId = useAppSelector(selectSessionInfo()).employeeNumber || '';
+  const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [userModel, setUserModel] = useState<UserModel>();
   const { data: response, isSuccess, isError } = useUserById(userId);
 
