@@ -65,17 +65,25 @@ const MasterProfileManagement = () => {
     const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(searchInfo)
     const [mstrProfDelList, setMstrProfDelList] = useState<MstrProfDelProps>(cloneDeep(initMstrProfDelProps))
     const { data: delMstrProfRes, isSuccess: delMstrProfSucc, isError: delMstrProfErr, mutate: delMstrProfMutate } = useDeleteMstrProfInfo(mstrProfDelList)
-    // 모달 버튼 클릭 종류
+    // 모달, 버튼 클릭 종류
     const [btnClickType, setBtnClickType] = useState<string>('')
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
-
     // modal 확인/취소 이벤트
     const onConfirm = () => {
         if (modalType === ModalType.CONFIRM) {
-            if (btnClickType === "delete") delMstrProfMutate()
+            if (btnClickType === "delete") {
+                if (mstrProfDelList.mstrSgmtRuleIds.length < 1) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("Master Profile 삭제")
+                    setConfirmModalCont(ModalTitCont.DEL_VALID.context)
+                    setIsOpenConfirmModal(true)
+                    return
+                }
+                delMstrProfMutate()
+            }
         }
         setIsOpenConfirmModal(false)
     }
@@ -107,16 +115,13 @@ const MasterProfileManagement = () => {
             }
         }
     }, [mstrProfListRes, mstrProfListErr, toast])
-
     useEffect(() => {
         setPageList(page, oriList, setRows)
     }, [page.page, page.pageSize, oriList])
-
-    const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { id, value } = e.target;
-        setSearchInfo({ ...searchInfo, [id]: value })
-    }
-
+    // const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const { id, value } = e.target;
+    //     setSearchInfo({ ...searchInfo, [id]: value })
+    // }
     const onchangeSelectHandler = (
         e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
         value: SelectValue<{}, false>,
@@ -143,7 +148,6 @@ const MasterProfileManagement = () => {
     const goToReg = () => {
         navigate(View.REG)
     }
-
     // 메타테이블컬럼 삭제 버튼
     const deleteMetaTableColumn = () => {
         // 삭제 처리

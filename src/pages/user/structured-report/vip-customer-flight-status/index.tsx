@@ -14,7 +14,7 @@ import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQuerie
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { dummyData } from "./testData";
 import DashboardPopup from "./dashboardPopUp";
-import Modal from "react-modal";
+import {Modal} from '@components/ui';
 
 const initParams: FeatureParams = {
     featureSeGrp: '',
@@ -112,14 +112,9 @@ const List = () => {
                 onChange={handlePage}
             />
             <Modal
-                isOpen={showPopup}
-                onRequestClose={toggleModal}
-                style={{
-                    content: {
-                        width: '1200px',
-                        margin: 'auto' // 모달을 화면 중앙에 배치
-                    }
-                }}
+                open={showPopup}
+                onClose={toggleModal}
+                size="FullScreen"
             >
                 <DashboardPopup />
             </Modal>

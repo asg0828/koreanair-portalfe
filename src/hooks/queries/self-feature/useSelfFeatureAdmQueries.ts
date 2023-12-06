@@ -59,19 +59,19 @@ export const useMstrProfList = (searchInfo: MstrProfSearchInfoProps) => {
 };
 // Master Profile 상세 조회
 export const useMstrProfInfo = (mstrSgmtRuleId: string) => {
-  return useQuery(['/master-profile/info', mstrSgmtRuleId], () => retrieveMstrProfInfo(mstrSgmtRuleId));
+  return useQuery(['/master-profile/info', mstrSgmtRuleId], () => retrieveMstrProfInfo(mstrSgmtRuleId), { enabled:false });
 };
 // Master Profile 메타테이블 전체조회 테이블 선택 콤보박스 조회
 export const useMetaInfo = (searchInfo: MetaInfoSearchProps) => {
-  return useQuery(['/meta/info'], () => retrieveMetaInfo(searchInfo));
+  return useQuery(['/meta/info'], () => retrieveMetaInfo(searchInfo), {enabled:false});
 };
 // Master Profile 선택한 Resolution 룰에 따른 마스터 join key 후보 조회
 export const useResolutionKeyList = (rslnRuleId: string) => {
-  return useQuery(['/resolution-key/list'], () => retrieveResolutionKeyList(rslnRuleId));
+  return useQuery(['/resolution-key/list'], () => retrieveResolutionKeyList(rslnRuleId), {enabled:false});
 };
 // Master Profile 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회
 export const useMetaColumnIsResolutionInfo = (metaTblId: string, searchInfo: MetaColumnIsResolutionInfoSearchProps) => {
   return useQuery(['/meta-column-is-resolution/info', metaTblId], () =>
-    retreiveMetaColumnIsResolutionInfo(metaTblId, searchInfo)
+    retreiveMetaColumnIsResolutionInfo(metaTblId, searchInfo), { enabled:false }
   );
 };
