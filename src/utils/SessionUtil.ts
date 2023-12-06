@@ -111,9 +111,9 @@ export default class SessionUtil {
     this.setSessionStorageValue(Session.SESSION_ID, sessionId);
   };
 
-  // public setRefreshToken = (refreshToken: string): void => {
-  //   this.setSessionStorageValue(AccessTokenRefrehTokenEnum.REFRESH_TOKEN, refreshToken);
-  // };
+  public setRefreshToken = (refreshToken: string): void => {
+    this.setSessionStorageValue(AccessTokenRefrehTokenEnum.REFRESH_TOKEN, refreshToken);
+  };
 
   public setAccessToken = (accessToken: string): void => {
     this.setSessionStorageValue(AccessTokenRefrehTokenEnum.ACCESS_TOKEN, accessToken);
