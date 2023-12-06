@@ -19,3 +19,16 @@ export const convertToHierarchyInfo = (flatArray: Array<HierarchyInfo>): Array<a
 
   return hierarchy;
 };
+
+export const getNodeChildrenDeptCodeRecursive = (node: any, deptCodeList: any = new Set()) => {
+  deptCodeList.add(node.deptCode);
+
+  if (node.children) {
+    node.children.forEach((n: any) => {
+      deptCodeList.add(n.deptCode);
+      getNodeChildrenDeptCodeRecursive(n, deptCodeList);
+    });
+  }
+
+  return deptCodeList;
+};

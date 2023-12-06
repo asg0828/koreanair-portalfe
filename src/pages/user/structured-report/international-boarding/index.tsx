@@ -38,7 +38,7 @@ const List = () => {
     });
 
     const createPeriodButton = (period:any, text:string, handlePeriodSelect:any) => (
-        <Button priority="Primary" appearance="Contained" size="LG" style ={{height:'50px'}} onClick={() => handlePeriodSelect(period)}>
+        <Button priority="Primary" appearance="Contained" size="LG" style ={{color:'#FFFFFF', backgroundColor:'#407DBA',height:'50px'}} onClick={() => handlePeriodSelect(period)}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <span style={{ fontWeight: 'bold' ,marginBottom: '-5px' }}>{text}</span>
                 <span style={{ fontSize: 'smaller' }}>({calculateDateRange(period)})</span>
@@ -177,6 +177,7 @@ const List = () => {
                 showPageSizeSelect={false}
                 showPagination={false}
                 page={page}
+                initialSortedColumn="IntlFrCount"
                 // onClick={goToDetail}
                 onChange={handlePage}
             />
