@@ -18,7 +18,7 @@ import { QueryParams } from "@/utils/ApiUtil"
 
 // Self-feature 목록 조회
 export const useCustFeatRules = (qParams: FeatListSrchProps) => {
-    return useQuery(['/cust-feat-rules'], () => retrieveCustFeatRules(qParams))
+    return useQuery(['/cust-feat-rules'], () => retrieveCustFeatRules(qParams), { enabled: false })
 }
 // Self-feature 속성,행동,FEAT 데이터 조회
 export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
