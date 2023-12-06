@@ -114,7 +114,14 @@ const List = () => {
 
   return (
     <>
-      <DataGrid columns={columns} rows={rows} page={page} clickable={true} showPagination={false} />
+      <DataGrid
+        columns={columns}
+        rows={rows}
+        page={page}
+        isMultiSelected={false}
+        clickable={false}
+        showPagination={false}
+      />
     </>
   );
 };

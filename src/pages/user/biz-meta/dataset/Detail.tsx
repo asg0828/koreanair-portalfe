@@ -178,7 +178,13 @@ const Detail = () => {
             </TH>
             <TD colSpan={5} align="left" className="height-300 overflow-auto">
               <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
-                <VerticalTable columns={columns} rows={rows} className="tableTdScrollFix" />
+                <VerticalTable
+                  className="tableTdScrollFix"
+                  columns={columns}
+                  rows={rows}
+                  isMultiSelected={false}
+                  clickable={false}
+                />
               </Stack>
             </TD>
           </TR>
