@@ -14,7 +14,8 @@ import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQuerie
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { dummyData } from "./testData";
 import DashboardPopup from "./dashboardPopUp";
-import {Modal} from '@components/ui';
+// import {Modal} from '@components/ui';
+import Modal from 'react-modal';
 
 const initParams: FeatureParams = {
     featureSeGrp: '',
@@ -112,11 +113,17 @@ const List = () => {
                 onChange={handlePage}
             />
             <Modal
-                open={showPopup}
-                onClose={toggleModal}
-                size="FullScreen"
+                isOpen={showPopup}
+                onRequestClose={toggleModal}
+                style={{
+                    content: {
+                        width: '1200px',
+                        height: '800px',
+                        margin: 'auto'
+                    }
+                }}
             >
-                <DashboardPopup />
+                <DashboardPopup closeModal={toggleModal}/>
             </Modal>
         </>
     );

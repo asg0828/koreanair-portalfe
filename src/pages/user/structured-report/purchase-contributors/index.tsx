@@ -13,7 +13,8 @@ import useDidMountEffect from "@/hooks/useDidMountEffect";
 import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
 import {FeatureModel, FeatureParams} from "@models/model/FeatureModel";
 import DashboardPopup from "./dashboardPopUp";
-import {Modal} from '@components/ui';
+import Modal from 'react-modal';
+// import {Modal} from "@components/ui";
 
 const initParams: FeatureParams = {
     featureSeGrp: '',
@@ -75,9 +76,6 @@ const List = () => {
     const { data: response, isError, refetch } = useFeatureList(params, page);
     const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
 
-    const goToDetail = (index:any) => {
-        setShowPopup(true);
-    };
     const toggleModal = () => {
         setShowPopup(!showPopup);
     };
@@ -139,6 +137,7 @@ const List = () => {
         handleSearch();
     }, [page.page, page.pageSize, handleSearch]);
 
+    // @ts-ignore
     return (
         <>
             <SearchForm onSearch={handleSearch} showClearButton={false} showSearchButton={false}>
@@ -167,11 +166,17 @@ const List = () => {
                 onChange={handlePage}
             />
             <Modal
-                open={showPopup}
-                onClose={toggleModal}
-                size="FullScreen"
+                isOpen={showPopup}
+                onRequestClose={toggleModal}
+                style={{
+                    content: {
+                        width: '1200px',
+                        height:'800px',
+                        margin: 'auto'
+                    }
+                }}
             >
-                <DashboardPopup />
+                <DashboardPopup closeModal={toggleModal}/>
             </Modal>
         </>
     );
