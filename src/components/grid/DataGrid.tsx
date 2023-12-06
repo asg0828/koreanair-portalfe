@@ -8,6 +8,7 @@ export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
   showPageSizeSelect?: boolean;
   showPagination?: boolean;
+  initialSortedColumn?: string;
 }
 
 const DataGrid: React.FC<DatagridProps> = ({
