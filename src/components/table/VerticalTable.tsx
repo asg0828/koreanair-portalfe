@@ -159,7 +159,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               )}
               {columns.map((column, index) => (
                 <TH
-                  className={`verticalTableTH ${column.field === sortedColumn ? 'sortedColumn' : ''}`}
+                  className={`verticalTableTH ${sortedColumn && column.field === sortedColumn ? 'sortedColumn' : ''}`}
                   key={`header-${index}`}
                   required={column.require}
                   colSpan={column.colSpan ? column.colSpan : undefined}
@@ -178,7 +178,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               const selected = checkedIndexList.includes(rowIndex);
 
               return (
-                <TR key={`row-${rowIndex}`} selected={selected}>
+                <TR key={`row-${rowIndex}`} selected={clickable && selected}>
                   {isCheckbox && (
                     <TD colSpan={0.5}>
                       <Checkbox
