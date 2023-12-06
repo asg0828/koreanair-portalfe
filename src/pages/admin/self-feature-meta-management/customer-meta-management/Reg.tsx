@@ -92,7 +92,7 @@ const CustomerMetaManagementReg = () => {
     }
   }, [responseSchema, isErrorSchema, toast]);
 
-  //테이블 컬럼 리스트
+  // 테이블 컬럼 리스트
   useEffect(() => {
     if (isErrorTblColumn || responseTblColumn?.successOrNot === 'N') {
       toast({

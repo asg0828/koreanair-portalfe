@@ -1,4 +1,4 @@
-import { PageModel, PageProps, initPage } from '@/models/model/PageModel';
+import { PageProps } from '@/models/model/PageModel';
 import { VerticalTableProps } from '@components/table/VerticalTable';
 import { Label, Stack } from '@components/ui';
 import { ReactNode } from 'react';
@@ -9,7 +9,7 @@ export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
 }
 
-const DataGridMeta: React.FC<DatagridProps> = ({
+const DataGridTblColumn: React.FC<DatagridProps> = ({
   columns,
   rows,
   enableSort,
@@ -37,4 +37,4 @@ const DataGridMeta: React.FC<DatagridProps> = ({
     </Stack>
   );
 };
-export default DataGridMeta;
+export default DataGridTblColumn;

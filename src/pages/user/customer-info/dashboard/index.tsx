@@ -41,7 +41,9 @@ import {
 export default function List() {
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
-  const batchDate = `${yesterday.getFullYear()}-${yesterday.getMonth() + 1}-${yesterday.getDate()}`;
+  const batchDate = `${yesterday.getFullYear()}-${(`0` + yesterday.getMonth() + 2).slice(-2)}-${(
+    `0` + yesterday.getDate()
+  ).slice(-2)}`;
   const [profile, setProfile] = useState<Profile>();
   const [skypass, setSkypass] = useState<Array<Skypass>>();
   const [family, setFamily] = useState<FamilyMember>();

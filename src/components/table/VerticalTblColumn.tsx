@@ -20,6 +20,7 @@ import {
   TextField,
   Typography,
   Stack,
+  Select,
 } from '@components/ui';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -52,6 +53,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
   // 수정중 페이지 이탈 모달
   const [isOpen, setOpen] = useState(false);
 
@@ -82,11 +84,14 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   const timeStampChg = (rowIndex: number) => {
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
       const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+        if (index === rowIndex) {
+        }
         return {
           ...row,
           baseTimeYn: index === rowIndex ? 'Y' : 'N',
           chgDtpCd: index === rowIndex ? 'timestamp' : '',
           dataFormat: index === rowIndex ? 'yyyy-MM-dd HH:mm:ss' : '',
+          changeYn: index === rowIndex ? 'Y' : 'N', // checked, unchecked disalbed로
         };
       });
       return updatedRows;
@@ -112,6 +117,11 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
       });
       return updatedRows;
     });
+  };
+
+  /* 데이터 타입 변경 여부 체크박스 */
+  const changeYnHandler = () => {
+    // 체크 여부에 따라서
   };
 
   /* input state관리 */
@@ -186,20 +196,8 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
             {tbCoMetaTblClmnInfoList.map((row, rowIndex) => (
               <TR key={`row-${rowIndex}`}>
                 {Object.keys(columns).map((column, columnIndex) => {
-                  // 체크박스
-                  if (columns[columnIndex].field.includes('Yn') && columns[columnIndex].field !== 'baseTimeYn') {
-                    return (
-                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
-                        <Checkbox
-                          key={`column-${columnIndex}`}
-                          defaultChecked={row[columns[columnIndex].field] === 'Y'}
-                          onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
-                        />
-                      </TD>
-                    );
-                  }
                   // 라디오 버튼
-                  else if (columns[columnIndex].field === 'baseTimeYn') {
+                  if (columns[columnIndex].field === 'baseTimeYn') {
                     return (
                       <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
                         <Radio
@@ -207,6 +205,33 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                           name="metaCustomerRadio"
                           onChange={(e) => timeStampChg(rowIndex)}
                           defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                        />
+                      </TD>
+                    );
+                  }
+
+                  // 체크박스
+                  else if (columns[columnIndex].field === 'changeYn') {
+                    return (
+                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                        <Checkbox
+                          // checked={row.changeYn === 'Y'}
+                          disabled={row.baseTimeYn === 'Y'}
+                          key={`checkbox-${columnIndex}`}
+                          onClick={changeYnHandler}
+                        />
+                      </TD>
+                    );
+                  }
+
+                  // 체크박스
+                  else if (columns[columnIndex].field.includes('Yn')) {
+                    return (
+                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                        <Checkbox
+                          key={`column-${columnIndex}`}
+                          defaultChecked={columns[columnIndex].field === 'clmnUseYn'}
+                          onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
                         />
                       </TD>
                     );
@@ -248,6 +273,32 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                     return (
                       <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
                         {rowIndex + 1}
+                      </TD>
+                    );
+                  } else if (columns[columnIndex].field === 'chgDtpCd') {
+                    return (
+                      <TD
+                        className="verticalTableTD"
+                        key={`column-${columnIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                        align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
+                        onClick={() => handleClick(row, rowIndex)}
+                      >
+                        {(() => {
+                          if (columns[columnIndex].render) {
+                            return columns[columnIndex].render?.(
+                              rowIndex,
+                              columns[columnIndex].field,
+                              columns[columnIndex].maxLength
+                            );
+                          } else {
+                            if (row.changeYn === 'Y' && row.baseTimeYn === 'Y') {
+                              return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
+                            } else if (row.changeYn === 'Y') {
+                              return <Select></Select>;
+                            }
+                          }
+                        })()}
                       </TD>
                     );
                   }
