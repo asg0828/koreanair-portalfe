@@ -40,7 +40,6 @@ const useOAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis) => {
       if (authorizationCode) {
         getAccessTokenInfo();
       } else {
-        localStorage.setItem('accessPathname', window.location.pathname);
         sessionApis.oauthLogin();
       }
     }

@@ -23,7 +23,12 @@ const App = () => {
   const { toast } = useToast();
   const sessionUtil = new SessionUtil();
   const sessionApis = new SessionApis();
+  const searchParameters = new URLSearchParams(window.location.search);
+  const authorizationCode: any = searchParameters.get('code');
   const pathname = window.location.pathname;
+  if (!authorizationCode) {
+    localStorage.setItem('accessPathname', pathname);
+  }
 
   if (pathname.startsWith(ContextPath.ADMIN)) {
     dispatch(setContextPath(ContextPath.ADMIN));
