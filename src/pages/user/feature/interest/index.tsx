@@ -4,6 +4,7 @@ import { useInterestFeatureList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
+import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectSessionInfo } from '@/reducers/authSlice';
@@ -12,12 +13,12 @@ import { Button, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const columns = [
+const columns: Array<ColumnsInfo> = [
   { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
   { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
-  { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1 },
-  { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1 },
-  { headerName: '정의', field: 'featureDef', colSpan: 2 },
+  { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1, align: 'left' },
+  { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1, align: 'left' },
+  { headerName: '정의', field: 'featureDef', colSpan: 2, align: 'left' },
   { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
   { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
 ];

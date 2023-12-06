@@ -5,7 +5,7 @@ import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ValidType, View } from '@/models/common/Constants';
-import { RowsInfo } from '@/models/components/Table';
+import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { NoticeModel, NoticeParams } from '@/models/model/NoticeModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectContextPath } from '@/reducers/authSlice';
@@ -14,9 +14,9 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const columns = [
+const columns: Array<ColumnsInfo> = [
   { headerName: 'No', field: 'rownum', colSpan: 1 },
-  { headerName: '제목', field: 'sj', colSpan: 7 },
+  { headerName: '제목', field: 'sj', colSpan: 7, align: 'left' },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
 ];
