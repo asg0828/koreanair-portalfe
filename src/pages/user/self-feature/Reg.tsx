@@ -58,6 +58,8 @@ import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQuer
 import { useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries'
 import { useCreateCustFeatRule, useCreateCustFeatSQL } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
 import { validationCustReatRule } from '@/utils/self-feature/FormulaValidUtil'
+import { selectSessionInfo } from '@/reducers/authSlice'
+import { useAppSelector } from '@/hooks/useRedux'
 
 const calcUnit = [
 	{ value: '', text: '선택' },
@@ -70,6 +72,7 @@ const SelfFeatureReg = () => {
 	const navigate = useNavigate()
 	const location = useLocation()
 	const { toast } = useToast()
+	const sessionInfo = useAppSelector(selectSessionInfo())
 
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { } = useCommCodes(CommonCode.FUNCTION)
@@ -133,6 +136,17 @@ const SelfFeatureReg = () => {
 	const { data: createRuleDesignRes, isSuccess: createRuleDesignSucc, isError: createRuleDesignErr, mutate: createRuleDesignMutate } = useCreateCustFeatRule(custFeatureFormData)
 	const { data: createSQLRes, isSuccess: createSQLSucc, isError: createSQLErr, mutate: createSQLMutate } = useCreateCustFeatSQL(custFeatureFormData)
 
+	// session 값 setting
+	useEffect(() => {
+		if (!sessionInfo.deptCode) return
+		setCustFeatRule((state: TbRsCustFeatRule) => {
+			let rtn = cloneDeep(state)
+			if (sessionInfo.deptCode) {
+				rtn.userTeamNm = sessionInfo.deptCode
+			}
+			return rtn
+		})
+	}, [sessionInfo])
 	// location값으로 Rule Design / SQL 구분(default :: Rule Design)
 	useEffect(() => {
 		if (!location.state || !location.state.regType || location.state.regType === "") {
