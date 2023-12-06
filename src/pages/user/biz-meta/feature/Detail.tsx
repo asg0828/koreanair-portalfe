@@ -159,7 +159,7 @@ const Detail = () => {
               연관테이블
             </TH>
             <TD colSpan={5} align="left">
-              {featureModel?.featureRelTb}
+              <TextField multiline disabled className="width-100 height-200" value={featureModel?.featureRelTb} />
             </TD>
           </TR>
           <TR>
