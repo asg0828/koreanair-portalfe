@@ -13,6 +13,7 @@ export interface VerticalTableProps {
   enableSort?: boolean;
   clickable?: boolean;
   isMultiSelected?: boolean;
+  initialSortedColumn ?: string;
   rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
   onClick?: Function;
   children?: ReactNode;
