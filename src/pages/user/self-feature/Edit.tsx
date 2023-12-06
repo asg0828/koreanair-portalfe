@@ -684,7 +684,6 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="featureKoNm"
-								readOnly
 								//defaultValue={location.state.featureInfo.featureTemp?.featureKoNm}
 								value={featureKoNmInput}
 								onChange={onchangeInputHandler}
@@ -695,7 +694,6 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="featureEnNm"
-								readOnly
 								//defaultValue={location.state.featureInfo.featureTemp?.featureEnNm}
 								value={featureEnNmInput}
 								onChange={onchangeInputHandler}
