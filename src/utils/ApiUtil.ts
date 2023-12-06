@@ -3,9 +3,9 @@ import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
 import SessionUtil from '@utils/SessionUtil';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
+import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service, ServiceContextPath } from '@models/common/Service';
 import { v4 as uuidv4 } from 'uuid';
-import { PortalApiURL } from '@/models/common/ApiURL';
 
 export enum Method {
   GET = 'GET',
@@ -154,20 +154,8 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
         // eslint-disable-next-line
         if (error.response.status.toString() === '403') {
-          return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
-            const originalRequest = error.config;
-            originalRequest.headers['authorization'] = `Bearer ${
-              JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
-            }`;
-            return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
-              sessionUtil.setRefreshToken(retryResponse.data.refresh_token);
-              sessionUtil.setAccessToken(retryResponse.data.access_token);
-              return retryResponse.data as CommonResponse;
-            });
-          });
-        } else {
-          // sessionUtil.deleteSessionInfo();
-          // sessionApis.oauthLogin();
+          sessionUtil.deleteSessionInfo();
+          window.location.reload();
         }
       }
       return unknownError;
