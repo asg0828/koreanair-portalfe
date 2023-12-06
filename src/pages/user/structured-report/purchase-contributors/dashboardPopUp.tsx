@@ -2,8 +2,10 @@ import { Skypass } from '@/models/model/CustomerInfoModel';
 import { Stack, Typography, SelectOption, Select, Button, Modal } from '@ke-design/components';
 import { useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from "@mui/icons-material/Close";
 
-export default function DashBoardPopUp() {
+export default function DashBoardPopUp({closeModal}:any) {
   const [isListView1, setIsListView1] = useState(false);
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState(false);
@@ -35,6 +37,8 @@ export default function DashBoardPopUp() {
         <div className="dashBoardWrap">
           <Stack direction="Vertical">
             <Stack style={{ position: 'relative' }}>
+              <CloseIcon
+                  onClick={closeModal} style={{position:'absolute',right:'10px', top:'-2px'}}>CloseIcon</CloseIcon>
               <Typography variant="h3" className="dashboardTitle">
                 Customer Info.
               </Typography>
@@ -620,6 +624,14 @@ export default function DashBoardPopUp() {
                 </button>
               </div>
             </Stack>
+            <Button
+                priority="Primary"
+                appearance="Contained"
+                style={{width:'100px', height:'40px', left:'520px', marginTop:'50px'}}
+                onClick={closeModal}
+            >
+              닫기
+            </Button>
           </Stack>
         </div>
       </Stack>

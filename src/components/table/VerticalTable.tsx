@@ -153,7 +153,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               )}
               {columns.map((column, index) => (
                 <TH
-                  className={`verticalTableTH ${column.field === sortedColumn ? 'sortedColumn' : ''}`}
+                  className={`verticalTableTH ${column.field === sortedColumn ? 'sortedColumn': ''}`}
                   key={`header-${index}`}
                   required={column.require}
                   colSpan={column.colSpan ? column.colSpan : undefined}
