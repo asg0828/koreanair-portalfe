@@ -23,17 +23,20 @@ const CustomerMetaManagement = () => {
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<CustMetaTableData>>([]);
   const { toast } = useToast();
+  const tableName = 'tb_co_meta_tbl_info';
   const [searchInfo, setSearchInfo] = useState<CustMetaListSrchInfo>(cloneDeep(initCustMetaListSrchInfo));
   const { data: metaTableRes, isError: metaTableErr, refetch: metaTableRefetch } = useMetaTableList(searchInfo);
-  const { data: colCmmtRes, isError: colCmmtErr, refetch: colCmmtRefetch } = useColAndCmmtList();
+  const { data: colCmmtRes, isError: colCmmtErr, refetch: colCmmtRefetch } = useColAndCmmtList(tableName);
   const [oriList, setOriList] = useState<Array<CustMetaTableData>>([]);
   const [srchItemListOption, setSrchItemListOption] = useState<Array<CustMetaSrchItem>>([]);
   const [metaTblIds, setMetaTblsId] = useState<Array<string>>([]);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteMetaTable(metaTblIds);
+
   // 검색 버튼 클릭시 목록 refetch
   const handleSearch = () => {
     metaTableRefetch();
   };
+
   // 페이지당 목록 수, 페이지 번호 바뀔 경우
   const handlePage = (page: PageModel) => {
     setPage(PagingUtil(oriList, page));
@@ -73,6 +76,7 @@ const CustomerMetaManagement = () => {
       }
     }
   }, [colCmmtRes, colCmmtErr, toast]);
+
   // 검색어 기준 변경시 검색어 입력값 초기화
   useEffect(() => {
     setSearchInfo((prevState: CustMetaListSrchInfo) => {
@@ -138,6 +142,29 @@ const CustomerMetaManagement = () => {
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
+              메타구분
+            </TH>
+            <TD colSpan={3}>
+              <Select
+                appearance="Outline"
+                placeholder="전체"
+                className="width-100"
+                value={searchInfo.item}
+                onChange={(
+                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                  value: SelectValue<{}, false>
+                ) => {
+                  onchangeSelectHandler(e, value, 'item');
+                }}
+              >
+                {srchItemListOption.map((item, index) => (
+                  <SelectOption key={index} value={item.columnName}>
+                    {item.columnComment}
+                  </SelectOption>
+                ))}
+              </Select>
+            </TD>
+            <TH colSpan={1} align="right">
               사용여부
             </TH>
             <TD colSpan={3}>
@@ -163,26 +190,6 @@ const CustomerMetaManagement = () => {
             <TH colSpan={1} align="right">
               검색어 기준
             </TH>
-            <TD colSpan={3}>
-              <Select
-                appearance="Outline"
-                placeholder="전체"
-                className="width-100"
-                value={searchInfo.item}
-                onChange={(
-                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                  value: SelectValue<{}, false>
-                ) => {
-                  onchangeSelectHandler(e, value, 'item');
-                }}
-              >
-                {srchItemListOption.map((item, index) => (
-                  <SelectOption key={index} value={item.columnName}>
-                    {item.columnComment}
-                  </SelectOption>
-                ))}
-              </Select>
-            </TD>
             <TD colSpan={4}>
               <TextField
                 className="width-100"
