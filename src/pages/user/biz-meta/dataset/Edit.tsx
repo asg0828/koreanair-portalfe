@@ -231,7 +231,7 @@ const Edit = () => {
       setValue('srcDbCd', response.data.srcDbCd);
       setValue('mtsDsc', response.data.mtsDsc);
 
-      response.data?.columnSpecs.forEach((item: DatasetColumnModel, index: number) => {
+      response.data?.columnSpecs?.forEach((item: DatasetColumnModel, index: number) => {
         append({
           index: index,
           mcsEnNm: item.mcsEnNm,
