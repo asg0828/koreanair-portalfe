@@ -153,7 +153,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
         // eslint-disable-next-line
-        if (error.response.status.toString() === '403' && error.response.data.errorCode.toString() === '301') {
+        if (error.response.status.toString() === '403') {
           return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
             const originalRequest = error.config;
             originalRequest.headers['authorization'] = `Bearer ${

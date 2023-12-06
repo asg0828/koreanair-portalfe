@@ -31,7 +31,6 @@ const useMenu = (sessionRequestInfo: SessionRequest, sessionInfo: SessionInfo) =
         const resultMenuList = await import(`@router/data/${menuFileName}`).then((module) => module.default);
         const resultRouterList = await import(`@router/${routerFileName}`).then((module) => module.default);
         setRouterList(resultRouterList);
-        dispatch(login(sessionInfo));
         dispatch(setMenuList(resultMenuList));
       })();
     }
