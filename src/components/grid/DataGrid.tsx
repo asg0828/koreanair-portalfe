@@ -11,18 +11,19 @@ export interface DatagridProps extends VerticalTableProps, PageProps {
 }
 
 const DataGrid: React.FC<DatagridProps> = ({
-  columns,
-  rows,
-  enableSort,
-  clickable,
-  onClick,
-  onChange,
-  buttonChildren,
-  page,
-  rowSelection,
-  showPagination = true,
-  showPageSizeSelect= true
-}) => {
+                                             columns,
+                                             rows,
+                                             enableSort,
+                                             clickable,
+                                             onClick,
+                                             onChange,
+                                             buttonChildren,
+                                             page,
+                                             initialSortedColumn,
+                                             rowSelection,
+                                             showPagination = true,
+                                             showPageSizeSelect= true
+                                           }) => {
   const [pages, setPages] = useState<PageModel>(initPage);
 
   useEffect(() => {
@@ -44,48 +45,49 @@ const DataGrid: React.FC<DatagridProps> = ({
   };
 
   return (
-    <Stack className="dataGridWrap" direction="Vertical" gap="MD">
-      <Stack className="total-layout">
-        <Label>
-          총 <span className="total">{pages.totalCount}</span> 건
-        </Label>
-        {showPageSizeSelect && (
-        <Select
-          appearance="Outline"
-          size="LG"
-          className="select-page"
-          value={pages.pageSize}
-          onChange={(e, value) => value && handleChange('pageSize', value)}
-        >
-          {pageSizeList.map((pageSize, index) => (
-            <SelectOption key={index} value={pageSize}>{`${pageSize} 건`}</SelectOption>
-          ))}
-        </Select>
-            )}
-      </Stack>
-      <VerticalTable
-        columns={columns}
-        rows={rows}
-        enableSort={enableSort}
-        clickable={clickable}
-        onClick={onClick}
-        rowSelection={rowSelection}
-      />
-      <Stack className="pagination-layout">
-        {showPagination &&(
-        <Pagination
-          size="LG"
-          className="pagination"
-          page={pages.page}
-          totalPages={pages.totalPage}
-          onChangePage={(value) => handleChange('page', value)}
+      <Stack className="dataGridWrap" direction="Vertical" gap="MD">
+        <Stack className="total-layout">
+          <Label>
+            총 <span className="total">{pages.totalCount}</span> 건
+          </Label>
+          {showPageSizeSelect && (
+              <Select
+                  appearance="Outline"
+                  size="LG"
+                  className="select-page"
+                  value={pages.pageSize}
+                  onChange={(e, value) => value && handleChange('pageSize', value)}
+              >
+                {pageSizeList.map((pageSize, index) => (
+                    <SelectOption key={index} value={pageSize}>{`${pageSize} 건`}</SelectOption>
+                ))}
+              </Select>
+          )}
+        </Stack>
+        <VerticalTable
+            columns={columns}
+            rows={rows}
+            enableSort={enableSort}
+            initialSortedColumn={initialSortedColumn}
+            clickable={clickable}
+            onClick={onClick}
+            rowSelection={rowSelection}
         />
-        )}
-        <Stack justifyContent="End" gap="SM" className="width-100">
-          {buttonChildren}
+        <Stack className="pagination-layout">
+          {showPagination &&(
+              <Pagination
+                  size="LG"
+                  className="pagination"
+                  page={pages.page}
+                  totalPages={pages.totalPage}
+                  onChangePage={(value) => handleChange('page', value)}
+              />
+          )}
+          <Stack justifyContent="End" gap="SM" className="width-100">
+            {buttonChildren}
+          </Stack>
         </Stack>
       </Stack>
-    </Stack>
   );
 };
 export default DataGrid;

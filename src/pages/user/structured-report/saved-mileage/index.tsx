@@ -39,7 +39,7 @@ const List = () => {
     });
 
     const createPeriodButton = (period:any, text:string, handlePeriodSelect:any) => (
-        <Button priority="Primary" appearance="Contained" size="LG" style ={{height:'50px'}} onClick={() => handlePeriodSelect(period)}>
+        <Button priority="Primary" appearance="Contained" size="LG" style ={{color:'#FFFFFF', backgroundColor:'#80BADF', height:'50px'}} onClick={() => handlePeriodSelect(period)}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <span style={{ fontWeight: 'bold' ,marginBottom: '-5px' }}>{text}</span>
                 <span style={{ fontSize: 'smaller' }}>({calculateDateRange(period)})</span>
@@ -61,18 +61,17 @@ const List = () => {
         { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
         { headerName: '이름', field: 'name', colSpan: 2 },
         { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-        { headerName: '총 적립\n' +'마일리지\n', field: 'purchaseAmount', colSpan: 1 },
-        { headerName: '총 적립 마일리지\n' +'(항공 탑승)\n', field: 'purchaseCount', colSpan: 1 },
-        { headerName: '총 적립 마일리지\n' +'(항공 이외)\n', field: 'domesticAmount', colSpan: 1 },
-        { headerName: '잔여 마일리지', field: 'internationalAmount', colSpan: 1 },
-        { headerName: '잔여 마일리지\n' +'(가족합산)\n', field: 'FrCount', colSpan: 1 },
-        { headerName: '마일리지\n' +'제휴카드\n' +'(PLCC)\n' +'보유여부\n', field: 'PrCount', colSpan: 1 },
+        { headerName: '총 적립\n' +'마일리지\n', field: 'totalMileage', colSpan: 1 },
+        { headerName: '총 적립 마일리지\n' +'(항공 탑승)\n', field: 'totalFlightMileage', colSpan: 1 },
+        { headerName: '총 적립 마일리지\n' +'(항공 이외)\n', field: 'totalEtcMileage', colSpan: 1 },
+        { headerName: '잔여 마일리지', field: 'availableMileage', colSpan: 1 },
+        { headerName: '잔여 마일리지\n' +'(가족합산)\n', field: 'familyAvailableMileage', colSpan: 1 },
+        { headerName: '마일리지\n' +'제휴카드\n' +'(PLCC)\n' +'보유여부\n', field: 'mileagePartnerCardYn', colSpan: 1 },
     ];
     // const [rows, setRows] = useState<Array<FeatureModel>>([]); // Feature -> 정형보고서 데이터로 수정
     const [rows, setRows] = useState(dummyData.data.contents);
     const { data: response, isError, refetch } = useFeatureList(params, page);
     const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
-    console.debug('rows', rows)
 
     const calculateDateRange = (period: string) => {
         const endDate = new Date();
@@ -193,6 +192,7 @@ const List = () => {
                 showPageSizeSelect={false}
                 showPagination={false}
                 page={page}
+                initialSortedColumn="totalMileage"
                 // onClick={goToDetail}
                 onChange={handlePage}
             />

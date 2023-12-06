@@ -11,7 +11,9 @@ import DataGrid from "@components/grid/DataGrid";
 import { dummyData } from "./testData";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
-import {FeatureParams} from "@models/model/FeatureModel";
+import {FeatureModel, FeatureParams} from "@models/model/FeatureModel";
+import DashboardPopup from "./dashboardPopUp";
+import Modal from "react-modal";
 
 const initParams: FeatureParams = {
     featureSeGrp: '',
@@ -30,6 +32,8 @@ const List = () => {
     const [selectedPeriod, setSelectedPeriod] = useState('1');
     const [dateRange, setDateRange] = useState('');
     const [params, setParams] = useState<FeatureParams>(initParams);
+
+    const [showPopup, setShowPopup] = useState(false);
 
     const [page, setPage] = useState<PageModel>({
         ...initPage,
@@ -70,6 +74,13 @@ const List = () => {
     const [rows, setRows] = useState(dummyData.data.contents);
     const { data: response, isError, refetch } = useFeatureList(params, page);
     const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
+
+    const goToDetail = (index:any) => {
+        setShowPopup(true);
+    };
+    const toggleModal = () => {
+        setShowPopup(!showPopup);
+    };
 
     const calculateDateRange = (period: string) => {
         const endDate = new Date();
@@ -149,11 +160,24 @@ const List = () => {
                 enableSort={true}
                 clickable={true}
                 page={page}
+                initialSortedColumn="purchaseAmount"
                 showPageSizeSelect={false}
                 showPagination={false}
-                // onClick={goToDetail}
+                onClick={toggleModal}
                 onChange={handlePage}
             />
+            <Modal
+                isOpen={showPopup}
+                onRequestClose={toggleModal}
+                style={{
+                    content: {
+                        width: '1200px',
+                        margin: 'auto' // 모달을 화면 중앙에 배치
+                    }
+                }}
+            >
+                <DashboardPopup />
+            </Modal>
         </>
     );
 };

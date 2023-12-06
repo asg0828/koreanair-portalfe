@@ -11,6 +11,7 @@ export interface VerticalTableProps {
   rows: Array<RowsInfo>;
   showHeader?: boolean;
   enableSort?: boolean;
+  initialSortedColumn?: String;
   clickable?: boolean;
   isMultiSelected?: boolean;
   rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
@@ -25,6 +26,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   showHeader = true,
   enableSort = false,
   clickable = false,
+  initialSortedColumn='',
   isMultiSelected = true,
   rowSelection,
   onClick,
@@ -36,6 +38,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
 
+  const [sortedColumn, setSortedColumn] = useState('');
   function formatNumber(value: number) {
     return new Intl.NumberFormat('ko-KR').format(value);
   }
@@ -80,6 +83,8 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     const field = columns[index].field;
     const oValue = order === SortDirectionCode.ASC ? 1 : -1;
 
+    setSortedColumn(field);
+
     const sortRows = [...rows].sort((a, b) => {
       let valueA = a[field] || '';
       let valueB = b[field] || '';
@@ -94,6 +99,34 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     });
     setSortRows(sortRows);
   };
+
+  const sortData = (columnField:any) => {
+    const columnIndex = columns.findIndex(column => column.field === columnField);
+    if (columnIndex === -1) return; // 유효한 컬럼이 아니면 종료
+
+    const order = SortDirectionCode.DESC; // 기본 정렬 방향 설정
+    handleChangeSortDirection(order, columnIndex);
+  };
+
+  //컴포넌트 마운트 시 초기 정렬 실행
+  useEffect(() => {
+    if (initialSortedColumn) {
+      sortData(initialSortedColumn);
+    }
+  }, [initialSortedColumn, columns]);
+
+  const initialSort = () => {
+    if (!initialSortedColumn || columns.length === 0) return;
+
+    const columnIndex = columns.findIndex(column => column.field === initialSortedColumn);
+    if (columnIndex === -1) return; // 유효한 컬럼이 아니면 종료
+
+    handleChangeSortDirection(SortDirectionCode.ASC, columnIndex);
+  };
+
+  useEffect(() => {
+    initialSort();
+  }, [rows, initialSortedColumn]);
 
   const handleClick = (row: RowsInfo, index: number) => {
     onClick && onClick(row, index);
@@ -121,7 +154,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
               )}
               {columns.map((column, index) => (
                 <TH
-                  className="verticalTableTH"
+                  className={`verticalTableTH ${column.field === sortedColumn ? 'sortedColumn' : ''}`}
                   key={`header-${index}`}
                   required={column.require}
                   colSpan={column.colSpan ? column.colSpan : undefined}
