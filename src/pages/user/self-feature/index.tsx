@@ -48,7 +48,10 @@ const SelfFeature = () => {
 	// 부서 조회
 	const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
 	const [deptOption, setDeptOption] = useState<Array<any>>([])
-	//Feature명칭(한글), Feature명(영문명), 진행상태, 부서
+	// 목록 조회
+	// 최초 목록 호출 flag
+	const [initFeatListCall, setInitFeatListCall] = useState<Boolean>(false)
+	// Feature명칭(한글), Feature명(영문명), 진행상태, 부서
 	const [searchInfo, setSearchInfo] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
 	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(searchInfo)
 	const [selfFeatureList, setSelfFeatureList] = useState<Array<TbRsCustFeatRule>>([])
@@ -58,10 +61,12 @@ const SelfFeature = () => {
 	useEffect(() => {
 		if (!sessionInfo.deptCode) return
 		setSearchInfo({ ...searchInfo, ["team"]: sessionInfo.deptCode, })
+		setInitFeatListCall(true)
 	}, [sessionInfo])
 	useEffect(() => {
+		if (!initFeatListCall) return
 		featureListRefetch()
-	}, [searchInfo.team])
+	}, [initFeatListCall])
 	// 부서 목록 setting
 	useEffect(() => {
 		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
@@ -120,7 +125,7 @@ const SelfFeature = () => {
 				PagingUtil(rtn, page)
 			}
 		}
-	}, [featureListRes, featureListErr, featureListRefetch, toast])
+	}, [featureListRes, featureListErr, featureListRefetch, deptOption])
 	// 페이지당 목록 수, 페이지 번호 바뀔 경우 page setting
 	const handlePage = (page: PageModel) => {
 		setPage(PagingUtil(selfFeatureList, page))

@@ -52,22 +52,22 @@ export interface CustMetaDetailInfo extends RowsInfo {
 }
 
 export interface TbCoMetaTbInfo extends RowsInfo {
-	dataClaCd: string;
-	dataSrcDvCd: string;
-	dbNm: string;
-	frstRegDttm: string;
-	frstRegUserId: string;
-	keepCylcCd: string;
-	lastUpdDttm: string;
-	lastUpdUserId: string;
-	metaTblDesc: string;
-	metaTblDvCd: string;
-	metaTblId: string;
-	metaTblLogiNm: string;
-	metaTblPhysNm: string;
-	metaTblUseYn: string;
-	rtmTblYn: string;
-	topicId: string;
+	dataClaCd: string
+	dataSrcDvCd: string
+	dbNm: string
+	frstRegDttm: string
+	frstRegUserId: string
+	keepCylcCd: string
+	lastUpdDttm: string
+	lastUpdUserId: string
+	metaTblDesc: string
+	metaTblDvCd: string
+	metaTblId: string
+	metaTblLogiNm: string
+	metaTblPhysNm: string
+	metaTblUseYn: string
+	rtmTblYn: string
+	topicId: string
 }
 // Master Profile 검색 조건 Props
 export interface MstrProfSearchInfoProps {
@@ -155,4 +155,10 @@ export interface MasterProfileInfo {
 export interface MstrProfDelProps {
 	[key: string]: Array<string>
 	mstrSgmtRuleIds: Array<string>
+}
+export interface TbRsRslnRuleKeyPrty {
+	[key: string]: string | number
+	rslnRuleId: string
+	rslnRuleKeyClmnNm: string
+	rslnRuleKeyPrty: number
 }

@@ -2,15 +2,15 @@ import {
     MasterProfileInfo,
     MetaColumnIsResolutionInfoSearchProps,
     MetaInfoSearchProps,
-    MetaType,
     MstrProfDelProps,
     MstrProfSearchInfoProps,
+    TbCoMetaTbInfo,
     TbRsMstrSgmtRule, 
     TbRsMstrSgmtRuleAttrClmn,
     TbRsMstrSgmtRuleAttrTbl,
+    TbRsRslnRuleKeyPrty,
     TbRsRslnRuleRel, 
 } from "@/models/selfFeature/FeatureAdmModel";
-import { RuleId } from "@/models/selfFeature/FeatureCommon";
 
 // Master Profile table header
 export const mstrProfListColumns = [
@@ -21,6 +21,25 @@ export const mstrProfListColumns = [
     { headerName: '등록자', field: 'frstRegUserId', colSpan: 3 },
     { headerName: '사용여부', field: 'mstrSgmtRuleUseYn', colSpan: 2 },
 ]
+
+export const initTbCoMetaTbInfo: TbCoMetaTbInfo = {
+	dataClaCd: '',
+	dataSrcDvCd: '',
+	dbNm: '',
+	frstRegDttm: '',
+	frstRegUserId: '',
+	keepCylcCd: '',
+	lastUpdDttm: '',
+	lastUpdUserId: '',
+	metaTblDesc: '',
+	metaTblDvCd: '',
+	metaTblId: '',
+	metaTblLogiNm: '',
+	metaTblPhysNm: '',
+	metaTblUseYn: '',
+	rtmTblYn: '',
+	topicId: '',
+}
 
 export const initTbRsMstrSgmtRule: TbRsMstrSgmtRule = {
 	rslnRuleId: '',
@@ -84,13 +103,18 @@ export const initMstrProfSearchInfoProps: MstrProfSearchInfoProps = {
     rtmYn: '',
 }
 export const initMetaInfoSearchProps: MetaInfoSearchProps = {
-    type: MetaType.MSTR_SGMT,
-    rslnRuleId: RuleId.RESOLUTION,
+    type: '',
+    rslnRuleId: '',
 }
 export const initMetaColumnIsResolutionInfoSearchProps: MetaColumnIsResolutionInfoSearchProps = {
 	isResolution: '',
 	joinKeyYn: '',
 }
 export const initMstrProfDelProps: MstrProfDelProps = {
-    mstrSgmtRuleIds: [""],
+    mstrSgmtRuleIds: [],
+}
+export const initTbRsRslnRuleKeyPrty: TbRsRslnRuleKeyPrty = {
+	rslnRuleId: '',
+	rslnRuleKeyClmnNm: '',
+	rslnRuleKeyPrty: 0,
 }

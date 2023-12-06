@@ -495,9 +495,9 @@ const SelfFeatureReg = () => {
 	const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target
 		let inputValue = cloneDeep(value)
-		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+숫자만 / 영문 - 영문+숫자만)
+		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+영문+숫자만 / 영문 - 영문+숫자만)
 		if (id === "featureKoNm") {
-			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|\s|_]/g, "")
+			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|\s|_]/g, "")
 			setFeatureKoNmInput(inputValue)
 		}
 		if (id === "featureEnNm") {
