@@ -184,14 +184,20 @@ const Reg = () => {
   };
 
   const handleAdd = () => {
-    append({
-      ...initRows,
-      index: fields.length,
-    });
+    setValue('columnSpecs', [
+      ...fields,
+      {
+        ...initRows,
+        index: fields.length,
+      },
+    ]);
   };
 
   const handleRemove = (rowIndex: number) => {
-    remove(rowIndex);
+    setValue(
+      'columnSpecs',
+      fields.filter((item, index) => index !== rowIndex)
+    );
   };
 
   const handleChangeRows = (rowIndex: number, field: string, value: string) => {
