@@ -1048,3 +1048,12 @@ svg {
 .innerDataGridWidth100 .verticalTable{
     width: 100%;
 }
+.tree-wrap p{
+  white-space: nowrap;
+  padding-right: 8px;
+  height: 24px;
+  line-height: 24px;
+}
+.tree-wrap section .primary-200 p{
+  background: #c5e7f4;
+}
