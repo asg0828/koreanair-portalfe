@@ -173,7 +173,7 @@ const familyMemberData: FamilyMember[] = [
         name: '홍길동5',
       },
       {
-        relationship: 'Daughter / Son-in-Law',
+        relationship: 'Daughter',
         code: '',
         name: '홍길동6',
       },
@@ -201,9 +201,9 @@ const familyMemberData: FamilyMember[] = [
       },
 
       {
-        relationship: 'Daughter / Son-in-Law',
+        relationship: 'Daughter',
         code: '',
-        name: '홍길동6',
+        name: '홍길동5',
       },
     ],
   },
@@ -242,6 +242,53 @@ const familyMemberData: FamilyMember[] = [
         relationship: 'Child',
         code: '',
         name: '이순신3',
+      },
+    ],
+  },
+  {
+    familyCnt: 2,
+    mergeMileage: 11230,
+    familyList: [
+      {
+        relationship: 'Spouse',
+        code: '',
+        name: '이순신1',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '이순신2',
+      },
+    ],
+  },
+  {
+    familyCnt: 5,
+    mergeMileage: 245020,
+    familyList: [
+      {
+        relationship: 'Spouse',
+        code: '',
+        name: '이순신1',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '이순신2',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '이순신3',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '이순신4',
+      },
+      {
+        relationship: 'Grandchild',
+        code: '',
+        name: '이순신5',
       },
     ],
   },
