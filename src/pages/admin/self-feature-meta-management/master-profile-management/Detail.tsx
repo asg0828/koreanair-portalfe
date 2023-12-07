@@ -73,18 +73,6 @@ const MasterProfileManagementDetail = () => {
 			navigate(`../${pageNm}`)
 		}
 	}
-    useEffect(() => {
-        //console.log("After set rslnRuleKeyPrty :: ", rslnRuleKeyPrtyList)
-    }, [rslnRuleKeyPrtyList])
-    useEffect(() => {
-        //console.log("After set masterProfileInfo :: ", masterProfileInfo)
-    }, [masterProfileInfo])
-    useEffect(() => {
-        //console.log("After set attrMetaTbList :: ", attrMetaTbList)
-    }, [attrMetaTbList])
-    useEffect(() => {
-        //console.log("After set behvMetaTbList :: ", behvMetaTbList)
-    }, [behvMetaTbList])
     // component mount
     useEffect(() => {
         setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
@@ -196,15 +184,17 @@ const MasterProfileManagementDetail = () => {
                 {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
                     masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((attrTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
                         if (attrTblInfo.sgmtDvCd === DivisionTypes.ATTR) {
+                            //저장된 메타테이블 컬럼 항목
                             let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((attrTblColInfo: TbRsMstrSgmtRuleAttrClmn) => attrTblColInfo.mstrSgmtRuleTblId === attrTblInfo.mstrSgmtRuleTblId)
+
                             return (
                                 <MstrProfInfo 
                                     key={index}
                                     editMode={false}
-                                    rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}
-                                    metaTblInfo={attrTblInfo}
-                                    metaTblColList={metaTblColList}
-                                    metaTblAllList={attrMetaTbList}
+                                    rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
+                                    metaTblInfo={attrTblInfo}                   //저장된 메타테이블 정보
+                                    metaTblAllList={attrMetaTbList}             //모든 속성정보 메타테이블 정보(선택된 resolution id에 해당되는)
+                                    metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
                                 />
                             )
                         } else {
@@ -237,15 +227,16 @@ const MasterProfileManagementDetail = () => {
                 {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
                     masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((behvTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
                         if (behvTblInfo.sgmtDvCd === DivisionTypes.BEHV) {
+                            //저장된 메타테이블 컬럼 항목
                             let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((behvTblColInfo: TbRsMstrSgmtRuleAttrClmn) => behvTblColInfo.mstrSgmtRuleTblId === behvTblInfo.mstrSgmtRuleTblId)
                             return (
                                 <MstrProfInfo 
                                     key={index}
                                     editMode={false}
-                                    rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}
-                                    metaTblInfo={behvTblInfo}
-                                    metaTblColList={metaTblColList}
-                                    metaTblAllList={behvMetaTbList}
+                                    rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
+                                    metaTblInfo={behvTblInfo}                   //저장된 메타테이블 정보
+                                    metaTblAllList={behvMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
+                                    metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
                                 />
                             )
                         } else {

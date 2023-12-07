@@ -13,6 +13,7 @@ import {
     MetaColumnIsResolutionInfoSearchProps,
     TbCoMetaTbInfo,
     TbCoMetaTblClmnInfo,
+    TbRsMstrSgmtRuleAttrClmn,
 } from '@/models/selfFeature/FeatureAdmModel'
 import {
     initMetaColumnIsResolutionInfoSearchJoinkeyProps,
@@ -25,24 +26,25 @@ import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
 
 const MstrProfInfo = ({
     editMode,
-    rslnRuleKeyPrtyList,
-    metaTblInfo,
-    metaTblColList,
-    metaTblAllList,
+    rslnRuleKeyPrtyList,    //선택된 resolution id에 해당되는 마스터 조인키 리스트
+    metaTblInfo,            //저장된 메타테이블 정보
+    metaTblAllList,         //모든 속성/행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
+    metaTblColList,         //저장된 메타테이블 컬럼 항목
 }: AttrBehvMstrProfInfoProps) => {
 
     const { toast } = useToast()
     // 정보타입
-    const [infoType, setInfoType] = useState<string>("")
+    const [divisionType, setDivisionType] = useState<string>("")
+    // 각 메타 테이블 및 컬럼 정보(화면 노출을 위해 필요)
+    const [metaTableInfo, setMetaTableInfo] = useState<TbCoMetaTbInfo>()
+    const [metaTblClmnList, setMetaTblClmnList] = useState<Array<TbCoMetaTblClmnInfo>>([])
     // 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API
     const [metaTblId, setMetaTblId] = useState<string>("")
     const [metaTblSrchInfo, setMetaTblSrchInfo] = useState<MetaColumnIsResolutionInfoSearchProps>(cloneDeep(initMetaColumnIsResolutionInfoSearchProps))
     // 선택한 테이블에 해당되는 컬럼 리스트
-    const [metaTblClmnList, setMetaTblClmnList] = useState<Array<TbCoMetaTblClmnInfo>>([])
+    const [metaTblClmnAllList, setMetaTblClmnAllList] = useState<Array<TbCoMetaTblClmnInfo>>([])
     const { data: metaColIsRslnInfoRes, isError: metaColIsRslnInfoErr, refetch: metaColIsRslnInfoRefetch } = useMetaColumnIsResolutionInfo(metaTblId, metaTblSrchInfo)
-    // 각 메타 테이블 정보
-    const [metaTableInfo, setMetaTableInfo] = useState<TbCoMetaTbInfo>()
-    // 각 테이블 속성 key 정보
+    // 각 테이블 속성 key 정보(화면노출을 위한 info state)
     const [metaTblClmnJoinkeyInfo, setMetaTblClmnJoinkeyInfo] = useState<TbCoMetaTblClmnInfo>()
     const [metaTblClmnJoinkeyList, setMetaTblClmnJoinkeyList] = useState<Array<TbCoMetaTblClmnInfo>>()
     // 속성 조인키 조회 API
@@ -56,7 +58,7 @@ const MstrProfInfo = ({
     useEffect(() => {
         if (!metaTblInfo || metaTblInfo.mstrSgmtRuleTblId === "") return
         setMetaTblId(metaTblInfo.mstrSgmtRuleTblId)
-        setInfoType(metaTblInfo.sgmtDvCd)
+        setDivisionType(metaTblInfo.sgmtDvCd)
     }, [metaTblInfo])
     // 선택된 메타테이블의 논리명 및 등록 수정시 테이블 select를 위한 metaTblAllList
     useEffect(() => {
@@ -67,14 +69,19 @@ const MstrProfInfo = ({
     }, [metaTblAllList])
 
     useEffect(() => {
-        //console.log(rslnRuleKeyPrtyList)
-        // 마스터 조인키를 위해
+        // 마스터 join key
     }, [rslnRuleKeyPrtyList])
+    // 화면 노출을 위한 저장된 컬럼 setting
     useEffect(() => {
         // 선택한 테이블에 해당되는 컬럼 리스트
-    }, [metaTblClmnList])
-
-    // 선택한 테이블의 속성 Joinkey 논리명을 위해
+        if (metaTblColList.length < 1 || metaTblClmnAllList.length < 1) return
+        let colList: Array<TbCoMetaTblClmnInfo> = []
+        colList = metaTblClmnAllList.filter((colInfo: TbCoMetaTblClmnInfo) => {
+            return metaTblColList.some((saveColInfo: TbRsMstrSgmtRuleAttrClmn) => saveColInfo.mstrSgmtRuleClmnId === colInfo.metaTblClmnId)
+        })
+        setMetaTblClmnList(colList)
+    }, [metaTblColList, metaTblClmnAllList])
+    // 선택한 테이블의 속성 Joinkey 화면 노출을 위한 setting
     useEffect(() => {
         if (!metaTblClmnJoinkeyList) return
         setMetaTblClmnJoinkeyInfo(metaTblClmnJoinkeyList.find((metaTblClmnJoinkey: TbCoMetaTblClmnInfo) => metaTblClmnJoinkey.metaTblClmnPhysNm === metaTblInfo.attrJoinKeyClmnNm))
@@ -94,7 +101,7 @@ const MstrProfInfo = ({
             });
         } else {
             if (metaColIsRslnInfoRes) {
-                setMetaTblClmnList(metaColIsRslnInfoRes.result)
+                setMetaTblClmnAllList(metaColIsRslnInfoRes.result)
             }
         }
     }, [metaColIsRslnInfoRes, metaColIsRslnInfoErr])
@@ -120,8 +127,8 @@ const MstrProfInfo = ({
             style={{
                 border: '1px solid rgb(218, 218, 218)',
                 borderRadius: '5px',
-                background: (infoType === DivisionTypes.ATTR) ? '#eff9f0' : '#e6f9ff',
-                color: (infoType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
+                background: (divisionType === DivisionTypes.ATTR) ? '#eff9f0' : '#e6f9ff',
+                color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                 padding: "1rem"
             }}
         >
@@ -181,12 +188,15 @@ const MstrProfInfo = ({
                 </>
             }
             {/* 등록 및 수정 */}
+            {/* 항목 리스트 */}
             <MstrProfMetaTblColumnList
                 editMode={editMode}
-                infoType={infoType}
-                metaTblInfo={metaTblInfo}
-                metaTblClmnList={metaTblClmnList}
+                divisionType={divisionType}             // 속성, 행동정보 구분
+                metaTblInfo={metaTblInfo}               // 저장된 메타테이블 정보
+                metaTblClmnList={metaTblClmnList}       // 저장된 메타테이블 컬럼정보
+                metaTblClmnAllList={metaTblClmnAllList} // 저장된 메타테이블 전체 컬럼 항목
             />
+            {/* 항목 리스트 */}
         </Stack>
     )
 }
