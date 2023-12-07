@@ -42,10 +42,10 @@ const List = () => {
     });
 
     const columns: Array<ColumnsInfo> = [
-        {headerName: 'Rank', field: 'rank', colSpan: 1.},
-        {headerName: 'One ID', field: 'oneId', colSpan: 1.3},
+        {headerName: 'Rank', field: 'rank', colSpan: 0.5},
+        {headerName: 'One ID', field: 'oneId', colSpan: 1},
         {headerName: '회원번호', field: 'skypassNm', colSpan: 1},
-        {headerName: '이름', field: 'userNm', colSpan: 1},
+        {headerName: '이름', field: 'userNm', colSpan: 0.7},
         {headerName: 'VIP 회원 분류', field: 'vipType', colSpan: 0.7},
         {headerName: '확약된 PNR수', field: 'confirmedPnrCount', colSpan: 0.7},
         {headerName: '국제선 탑승 예정일', field: 'scheduledIntlFlightDate', colSpan: 0.7},
@@ -105,7 +105,7 @@ const List = () => {
                 clickable={true}
                 showPageSizeSelect={false}
                 showPagination={false}
-                initialSortedColumn="scheduledIntlFlightDate"
+                initialSortedColumn="rank"
                 page={page}
                 onClick={toggleModal}
                 onChange={handlePage}

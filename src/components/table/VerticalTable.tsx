@@ -82,12 +82,15 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     const field = columns[index].field;
     const oValue = order === SortDirectionCode.DESC ? 1 : -1;
 
-    setSortedColumn(field);
+    // initialSortedColumn이 'rank'일 때, 색상을 입히기 위한 컬럼을 'scheduledIntlFlightDate'로 설정
+    const colorColumn = initialSortedColumn === 'rank' ? 'scheduledIntlFlightDate' : field;
+    setSortedColumn(colorColumn);
 
     const sortRows = [...rows].sort((a, b) => {
       let valueA = a[field] || '';
       let valueB = b[field] || '';
 
+      // 정렬 로직은 그대로 유지
       if (typeof valueA === 'string' && valueA.startsWith('S')) {
         valueA = parseFloat(valueA.substring(1));
         valueB = parseFloat(valueB.substring(1));
