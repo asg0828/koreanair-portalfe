@@ -60,7 +60,7 @@ const Reg = () => {
     {
       headerName: '한글명',
       field: 'mcsKoNm',
-      colSpan: 1.5,
+      colSpan: 2,
       maxLength: 100,
       require: true,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
@@ -69,7 +69,7 @@ const Reg = () => {
     {
       headerName: '영문명',
       field: 'mcsEnNm',
-      colSpan: 1.5,
+      colSpan: 2,
       maxLength: 100,
       require: true,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
@@ -78,7 +78,7 @@ const Reg = () => {
     {
       headerName: '원천 컬럼명',
       field: 'srcClNm',
-      colSpan: 1.5,
+      colSpan: 2,
       maxLength: 300,
       require: true,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
@@ -87,7 +87,7 @@ const Reg = () => {
     {
       headerName: '정의',
       field: 'mcsDef',
-      colSpan: 3.9,
+      colSpan: 2.9,
       require: true,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
         EditableColumnItem(rowIndex, fieldName, maxLength),

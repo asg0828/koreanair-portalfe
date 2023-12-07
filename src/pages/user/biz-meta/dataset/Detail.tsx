@@ -27,7 +27,7 @@ const Detail = () => {
     {
       headerName: '한글명',
       field: 'mcsKoNm',
-      colSpan: 1.5,
+      colSpan: 2,
       maxLength: 100,
       require: true,
       align: 'left',
@@ -35,21 +35,21 @@ const Detail = () => {
     {
       headerName: '영문명',
       field: 'mcsEnNm',
-      colSpan: 1.5,
+      colSpan: 2,
       require: true,
       align: 'left',
     },
     {
       headerName: '원천 컬럼명',
       field: 'srcClNm',
-      colSpan: 1.5,
+      colSpan: 2,
       require: true,
       align: 'left',
     },
     {
       headerName: '정의',
       field: 'mcsDef',
-      colSpan: 3.9,
+      colSpan: 2.9,
       require: true,
       align: 'left',
     },
