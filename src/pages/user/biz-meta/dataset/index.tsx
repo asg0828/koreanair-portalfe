@@ -174,23 +174,24 @@ const List = () => {
           </TD>
         </TR>
       </SearchForm>
-
-      <DataGrid
-        columns={columns}
-        rows={rows}
-        clickable={true}
-        page={page}
-        onClick={goToDetail}
-        onChange={handlePage}
-        buttonChildren={
-          contextPath === ContextPath.ADMIN && (
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-              <AddIcon />
-              등록
-            </Button>
-          )
-        }
-      />
+      <div className='innerDataGridWidth100'>
+        <DataGrid
+          columns={columns}
+          rows={rows}
+          clickable={true}
+          page={page}
+          onClick={goToDetail}
+          onChange={handlePage}
+          buttonChildren={
+            contextPath === ContextPath.ADMIN && (
+              <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+                <AddIcon />
+                등록
+              </Button>
+            )
+          }
+        />
+      </div>
     </>
   );
 };

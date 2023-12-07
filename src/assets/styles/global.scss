@@ -23,6 +23,12 @@
   font-weight: 600;
   src: url('/assets/fonts/roboto/Roboto-Bold.ttf');
 }
+@font-face {
+  font-family: 'Roboto';
+  font-weight: 900;
+  src: url('/assets/fonts/roboto/Roboto-Black.ttf');
+}
+
 body,
 body * {
   font-family: 'Roboto', 'Noto Sans KR', sans-serif;
@@ -1038,4 +1044,7 @@ svg {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.innerDataGridWidth100 .verticalTable{
+    width: 100%;
 }
