@@ -27,11 +27,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: '테이블 한글명', field: 'mtsKoNm', colSpan: 2, align: 'left' },
-  { headerName: '테이블 영문명', field: 'mtsEnNm', colSpan: 2, align: 'left' },
-  { headerName: '테이블 정의', field: 'mtsDef', colSpan: 2, align: 'left' },
-  { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 2, align: 'left' },
-  { headerName: 'DB명', field: 'srcDbCd', colSpan: 2, align: 'left' },
+  { headerName: '테이블 한글명', field: 'mtsKoNm', colSpan: 2.5, align: 'left' },
+  { headerName: '테이블 영문명', field: 'mtsEnNm', colSpan: 2.5, align: 'left' },
+  { headerName: '테이블 정의', field: 'mtsDef', colSpan: 2.5, align: 'left' },
+  { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 2.5, align: 'left' },
 ];
 
 const initParams: DatasetParams = {
@@ -174,7 +173,7 @@ const List = () => {
           </TD>
         </TR>
       </SearchForm>
-      <div className='innerDataGridWidth100'>
+      <div className="innerDataGridWidth100">
         <DataGrid
           columns={columns}
           rows={rows}
