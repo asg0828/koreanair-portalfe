@@ -3,40 +3,39 @@ import {Button, Select, SelectOption, Stack, TD, TH, TR, useToast} from "@compon
 import {useAppSelector} from "@/hooks/useRedux";
 import {selectSessionInfo} from "@reducers/authSlice";
 import React, {useCallback, useEffect, useState} from "react";
-import {FeatureModel, FeatureParams, FeatureSeparatesModel} from "@models/model/FeatureModel";
-import {AnalysisIndexList, AnalysisResultData, CartData, Cnt, Column, ContributeData, FamilyMember, Ffp, HomepageData, PnrData, Preference, Profile, Skypass, VocData, Wallet,} from '@/models/model/CustomerInfoModel';
 import {initPage, PageModel} from "@models/model/PageModel";
 import {ColumnsInfo} from "@models/components/Table";
-import {ValidType, View} from "@models/common/Constants";
-import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
-import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { dummyData } from "./testData";
 import DashboardPopup from "./dashboardPopUp";
-// import {Modal} from '@components/ui';
 import Modal from 'react-modal';
+import {useVipList} from "@/hooks/queries/useReportQueries";
+import {ReportParams} from "@models/model/ReportModel";
+import {ValidType} from "@models/common/Constants";
 
-const initParams: FeatureParams = {
-    featureSeGrp: '',
-    featureSe: '',
-    searchFeature: '',
-    enrUserId: '',
-    enrDeptCode: '',
-    searchConditions: [],
+const initParams: ReportParams = {
+    oneId: '',
+    memberNumber:0,
+    name:'',
+    vipYn:'',
+    purchaseAmount:0,
+    purchaseCount:0,
+    purchaseContribution:0,
+    domesticPurchaseAmount:0,
+    internationalAmount:0,
+    FrCount:0,
+    PrCount:0
 };
 
 const List = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const userId = useAppSelector(selectSessionInfo()).userId || '';
-    const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
-    const [selectedPeriod, setSelectedPeriod] = useState('1');
-    const [dateRange, setDateRange] = useState('');
 
     const [showPopup, setShowPopup] = useState(false);
 
-    const [params, setParams] = useState<FeatureParams>(initParams);
+    const [params, setParams] = useState<ReportParams>(initParams);
     const [page, setPage] = useState<PageModel>({
         ...initPage,
         totalCount: 110
@@ -53,13 +52,10 @@ const List = () => {
         {headerName: '국제선 \n' +'최근 탑승일\n', field: 'lastIntlFlightDate', colSpan: 1},
     ];
 
-    const [rows, setRows] = useState(dummyData.data.contents);
-    const { data: response, isError, refetch } = useFeatureList(params, page);
-    const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
+    // const [rows, setRows] = useState(dummyData.data.contents);
+    const [rows, setRows] = useState<any>([]);
+    const { data: response, isError, refetch } = useVipList(params);
 
-    const goToDetail = (index:any) => {
-        setShowPopup(true);
-    };
     const toggleModal = () => {
         setShowPopup(!showPopup);
     };
@@ -67,7 +63,6 @@ const List = () => {
     const handlePage = (page: PageModel) => {
         setPage(page);
     };
-
 
     const handleSearch = useCallback(() => {
         refetch();
@@ -83,20 +78,24 @@ const List = () => {
             ...prevState,
             [name]: value,
         }));
-        if (name === 'featureSeGrp') {
-            setSelectedPeriod(value);
-        }
     };
-
-    useEffect(() => {
-        if (params.featureSeGrp) {
-            sRefetch();
-        }
-    }, [params.featureSeGrp, sRefetch]);
 
     useDidMountEffect(() => {
         handleSearch();
     }, [page.page, page.pageSize, handleSearch]);
+
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response?.data) {
+                setRows(response.data.contents);
+            }
+        }
+    }, [response, isError, toast]);
 
     return (
         <>
