@@ -97,8 +97,18 @@ const adminMenulist = [
         path: '/admin/self-feature-meta-management/master-profile-management',
         children: [
           {
-            name: 'Master Profile 관리 상세',
+            name: 'Master Profile 상세',
             path: '/admin/self-feature-meta-management/master-profile-management/detail',
+            children: [],
+          },
+          {
+            name: 'Master Profile 등록',
+            path: '/admin/self-feature-meta-management/master-profile-management/reg',
+            children: [],
+          },
+          {
+            name: 'Master Profile 등록',
+            path: '/admin/self-feature-meta-management/master-profile-management/edit',
             children: [],
           },
         ],
