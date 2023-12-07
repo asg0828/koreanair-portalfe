@@ -356,7 +356,7 @@ const Reg = () => {
                     name="srcDbCd"
                     control={control}
                     rules={{
-                      maxLength: { value: 16, message: 'max length exceeded' },
+                      maxLength: { value: 32, message: 'max length exceeded' },
                       required: 'srcDbCd is required.',
                     }}
                     render={({ field }) => (
