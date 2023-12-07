@@ -101,7 +101,7 @@ export default function List() {
     };
 
     if (validation()) return;
-    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypass === '112423935550') {
+    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setProfile(profileData[0]);
       setSkypass(skypassData);
       setFamily(familyMemberData[0]);
@@ -118,7 +118,7 @@ export default function List() {
       setSmss(smsData);
       setEmails(emailData);
       setSnss(snsData);
-    } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypass === '112917446366') {
+    } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
       setProfile(profileData[1]);
       // setSkypass(skypassData);
       setFamily(familyMemberData[1]);

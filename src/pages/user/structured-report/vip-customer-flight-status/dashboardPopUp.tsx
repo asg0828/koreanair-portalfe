@@ -180,7 +180,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                   <span className="num">930338</span>
                 </div>
               </div>
-              <div className="list" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+              <div className="list" style={{ maxHeight: '200px', overflowY: 'scroll' }}>
                 <table>
                   <colgroup>
                     <col width="30%" />
@@ -295,12 +295,6 @@ export default function DashBoardPopUp({ closeModal }: any) {
 
                             {/* right */}
                             <div>
-                              <Stack gap="MD">
-                                <div>KE0092</div>
-                                <div>A</div>
-                                <div>125412</div>
-                                <div>hhl1</div>
-                              </Stack>
                               <Stack gap="MD">
                                 <div>KE0092</div>
                                 <div>A</div>

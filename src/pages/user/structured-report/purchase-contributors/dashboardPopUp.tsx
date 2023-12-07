@@ -273,31 +273,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                     <tbody>
                       <tr>
                         <td>
-                          <Stack justifyContent="Between" alignItems={'Start'}>
-                            {/* left */}
-                            <Stack gap="MD">
-                              <div>64G000</div>
-                              <div>Gil-Dong Hong</div>
-                            </Stack>
-                            {/* left end */}
-
-                            {/* right */}
-                            <div>
-                              <Stack gap="MD">
-                                <div>KE0092</div>
-                                <div>A</div>
-                                <div>125412</div>
-                                <div>hhl1</div>
-                              </Stack>
-                              <Stack gap="MD">
-                                <div>KE0092</div>
-                                <div>A</div>
-                                <div>125412</div>
-                                <div>hhl1</div>
-                              </Stack>
-                            </div>
-                            {/* right end */}
-                          </Stack>
+                          <Stack justifyContent="Between" alignItems={'Start'}></Stack>
                         </td>
                       </tr>
                     </tbody>
@@ -606,7 +582,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         <td>OOOO</td>
                         <td>
                           {/* <a href="" className="link"> */}
-                          보기
+
                           {/* </a> */}
                         </td>
                       </tr>
@@ -616,7 +592,17 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         <td>OOOO</td>
                         <td>
                           {/* <a href="" className="link"> */}
-                          보기
+
+                          {/* </a> */}
+                        </td>
+                      </tr>{' '}
+                      <tr>
+                        <td>Jan 12, 2023</td>
+                        <td>010-0000-0000</td>
+                        <td>OOOO</td>
+                        <td>
+                          {/* <a href="" className="link"> */}
+
                           {/* </a> */}
                         </td>
                       </tr>
