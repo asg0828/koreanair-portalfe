@@ -80,7 +80,7 @@ const Detail = () => {
               사용여부
             </TH>
             <TD colSpan={2} align="left">
-              {userModel?.useYn === 'Y' ? '예' : '아니오'}
+              {userModel?.useYn}
             </TD>
             <TH colSpan={1} align="right">
               사용자예외그룹
