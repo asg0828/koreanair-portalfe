@@ -113,12 +113,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     handleChangeSortDirection(order, columnIndex);
   };
 
-  useEffect(() => {
-    if (initialSortedColumn) {
-      sortData(initialSortedColumn);
-    }
-  }, [initialSortedColumn, columns]);
-
   const initialSort = () => {
     if (!initialSortedColumn || columns.length === 0) return;
 
