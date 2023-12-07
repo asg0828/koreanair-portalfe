@@ -78,8 +78,8 @@ const profileData: Profile[] = [
     name: '이순신',
     engFname: 'lee',
     engLname: 'soonshin',
-    birth: '1974-01-08',
-    age: '49',
+    birth: '1958-03-05',
+    age: '65',
     gender: '남',
     homePhoneNumberInfo: '02-123-4124',
     mobilePhoneNumberInfone: '010-0101-0101',
@@ -115,8 +115,8 @@ const skypassData1: Skypass[] = [
     skypassNum: '112423935550',
     skypassGrade: 'MM',
     useYn: 'N',
-    gradeStartDate: '2012-08-03',
-    mileage: '56,531',
+    gradeStartDate: '2019-06-22',
+    mileage: '3944,415',
     expireMileage: '0',
     gradeCondtion: '',
     upgradeCondition: '',
@@ -145,11 +145,11 @@ const skypassData1: Skypass[] = [
 
 const skypassData2: Skypass[] = [
   {
-    skypassNum: '112917446366',
-    skypassGrade: 'MP',
+    skypassNum: '112315856573',
+    skypassGrade: 'MM',
     useYn: 'N',
-    gradeStartDate: '2016-07-28',
-    mileage: '142,560',
+    gradeStartDate: '1958-03-05',
+    mileage: '3,944,415',
     expireMileage: '0',
     gradeCondtion: '',
     upgradeCondition: '',
@@ -259,7 +259,7 @@ const familyMemberData: FamilyMember[] = [
   },
   {
     familyCnt: 3,
-    mergeMileage: 183109,
+    mergeMileage: 4059329,
     familyList: [
       {
         relationship: 'Spouse',
@@ -328,8 +328,7 @@ const familyMemberData: FamilyMember[] = [
 ];
 const walletData: Wallet = {
   coupon: 5,
-  promotion: 3,
-  complimentary: 2,
+  promotion: 'Y',
 };
 const preferenceData: Preference[] = [
   {
@@ -338,34 +337,34 @@ const preferenceData: Preference[] = [
   },
   {
     seat: 'Aisle',
-    meal: '한식',
+    meal: '한식외메뉴',
   },
 ];
 
 const cntData: Cnt[] = [
   {
-    pnr: 0,
-    eTkt: 1,
-    boarding: 34,
-    pet: 0,
-    call: 1,
-    internet: 0,
-    voc: 0,
-    sms: 0,
-    email: 1,
-    sns: 0,
+    pnr: 3,
+    eTkt: 3,
+    boarding: 2,
+    pet: 1,
+    call: 2,
+    internet: 2,
+    voc: 1,
+    sms: 1,
+    email: 2,
+    sns: 2,
   },
   {
-    pnr: 0,
-    eTkt: 0,
-    boarding: 18,
-    pet: 0,
-    call: 0,
-    internet: 0,
-    voc: 0,
-    sms: 3,
-    email: 18,
-    sns: 8,
+    pnr: 3,
+    eTkt: 3,
+    boarding: 2,
+    pet: 2,
+    call: 2,
+    internet: 1,
+    voc: 1,
+    sms: 2,
+    email: 2,
+    sns: 2,
   },
 ];
 
@@ -429,15 +428,9 @@ const internetData: Internet[] = [
   },
 ];
 
-const vocData: Voc[] = [
-  { cnt: 3, date: '21AUG23', channel: '유입채널', type: '타입', content: '' },
-  { cnt: 3, date: '21AUG23', channel: '유입채널', type: '타입', content: '' },
-];
+const vocData: Voc[] = [{ cnt: 3, date: '21AUG23', channel: '유입채널', type: '타입', content: '' }];
 
-const smsData: Sms[] = [
-  { date: '21AUG23', sendCnt: 2, phoneNum: '010-1234-1234', status: '답변대기', content: '' },
-  { date: '21AUG23', sendCnt: 2, phoneNum: '010-1234-1234', status: '답변대기', content: '' },
-];
+const smsData: Sms[] = [{ date: '21AUG23', sendCnt: 2, phoneNum: '010-1234-1234', status: '답변대기', content: '' }];
 
 const snsData: Sns[] = [
   { date: '21AUG23', useCnt: 4, counselor: '유관순', channel: '대한항공' },

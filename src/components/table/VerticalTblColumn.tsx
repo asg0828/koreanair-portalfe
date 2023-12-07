@@ -22,6 +22,7 @@ import {
   Stack,
   Select,
   SelectOption,
+  useToast,
 } from '@components/ui';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -53,6 +54,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   props,
   list,
 }) => {
+  const { toast } = useToast();
   const { dbNm, metaTblLogiNm } = props;
   const tbCoMetaTbInfo = list;
   const isCheckbox = typeof rowSelection === 'function';
@@ -71,9 +73,9 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   ]);
   const [tbCoMetaTblClmnInfoList, setTbCoMetaTblClmnInfoList] = useState<Array<RowsInfo>>(Array.from(rows));
   const {
-    data: uResponse,
-    isSuccess: uIsSuccess,
-    isError: uIsError,
+    data: response,
+    isSuccess: isSuccess,
+    isError: isError,
     mutate,
   } = useCreateMetaTableInfo(props, tbCoMetaTblClmnInfoListPost);
   const dispatch = useAppDispatch();
@@ -196,19 +198,24 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
 
   // 저장 버튼
   const regCustomerDetailInfo = (data: any) => {
+    console.log(props);
     setTbCoMetaTblClmnInfoListPost(() => {
-      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+      const updatedRows = tbCoMetaTblClmnInfoList.map((row) => {
+        const { isNullable, remarks, dataType, ...rest } = row;
+
         return {
-          ...row,
-          baseTimeYn: row.baseTimeYn,
-          clmnUseYn: row.columnUseYn,
-          dtpCd: row.dataType,
-          metaTblClmnLogiNm: row.metaTblClmnLogiNm,
-          metaTblClmnPhysNm: row.columnName,
-          pkYn: row.baseTimeYn,
-          metaTblClmnDesc: row.metaTblClmnDesc,
+          baseTimeYn: rest.baseTimeYn === undefined ? 'N' : rest.baseTimeYn,
+          clmnUseYn: rest.columnUseYn === undefined ? 'N' : rest.columnUseYn,
+          dtpCd: dataType,
+          metaTblClmnLogiNm: rest.metaTblClmnLogiNm,
+          metaTblClmnPhysNm: rest.columnName,
+          pkYn: rest.pkYn === undefined ? 'N' : rest.pkYn,
+          metaTblClmnDesc: rest.metaTblClmnDesc,
+          chgDptCd: rest.chgDptCd,
+          dataFormat: rest.dataFormat,
         };
       });
+      console.log(updatedRows);
       return updatedRows;
     });
     dispatch(
@@ -229,6 +236,19 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
       navigate('..');
     }
   };
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      console.log(response?.result);
+      toast({
+        type: 'Error',
+        content: response?.result,
+      });
+    } else {
+      if (response?.result) {
+        // setTablePhyList(response?.result);
+      }
+    }
+  }, [response, isError, toast]);
 
   return (
     <>
@@ -361,9 +381,10 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                               return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
                             } else if (row.changeYn === 'Y') {
                               return (
-                                <Select>
+                                <Select value={row.chgDtpCd}>
+                                  <SelectOption value={'timestamp'}>timestamp</SelectOption>
                                   <SelectOption value={'int'}>int</SelectOption>
-                                  <SelectOption value={'s'}>timestamp</SelectOption>
+                                  <SelectOption value={'double'}>double</SelectOption>
                                 </Select>
                               );
                             }

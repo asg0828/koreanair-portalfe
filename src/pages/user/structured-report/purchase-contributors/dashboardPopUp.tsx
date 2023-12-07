@@ -35,7 +35,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
     id?: String
   ) => {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
-    if (value === '112917446366') {
+    if (value === '112315856573') {
       setFamily(familyMemberData[3]);
       setSelectedSkypass(skypass[0]);
     } else if (value === '112557098776') {
@@ -248,7 +248,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">0</span>개
+                      <span className="num">1</span>개
                     </div>
                   </Stack>
                 </div>
@@ -264,7 +264,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">0</span>개
+                      <span className="num">1</span>개
                     </div>
                   </Stack>
                 </div>
@@ -284,6 +284,29 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       <tr>
                         <td>
                           <Stack justifyContent="Between" alignItems={'Start'}></Stack>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <Stack justifyContent="Between" alignItems={'Start'}>
+                            {/* left */}
+                            <Stack gap="MD">
+                              <div>64G000</div>
+                              <div>Gil-Dong Hong</div>
+                            </Stack>
+                            {/* left end */}
+
+                            {/* right */}
+                            <div>
+                              <Stack gap="MD">
+                                <div>KE0092</div>
+                                <div>A</div>
+                                <div>125412</div>
+                                <div>hhl1</div>
+                              </Stack>
+                            </div>
+                            {/* right end */}
+                          </Stack>
                         </td>
                       </tr>
                     </tbody>
@@ -312,7 +335,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">보유쿠폰</div>
                       <div className="value">
-                        <span className="num">0</span>개
+                        <span className="num">4</span>개
                       </div>
                     </Stack>
                   </div>
@@ -321,7 +344,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">항공권할인쿠폰보유여부</div>
                     <div className="value">
-                      <span className="num">N</span>
+                      <span className="num">Y</span>
                     </div>
                   </Stack>
                 </div>
@@ -340,7 +363,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">선호 기내식</div>
-                    <div className="value">한식</div>
+                    <div className="value">한식외메뉴</div>
                   </Stack>
                 </div>
               </div>
@@ -368,7 +391,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">18</span>회
+                      <span className="num">3</span>회
                     </div>
                   </Stack>
                 </div>
@@ -384,7 +407,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">0</span>회
+                      <span className="num">2</span>회
                     </div>
                   </Stack>
                 </div>
@@ -423,7 +446,26 @@ export default function DashBoardPopUp({ closeModal }: any) {
                           </Stack>
                         </td>
                       </tr>
-
+                      <tr>
+                        <td>
+                          <Stack justifyContent="Between" alignItems={'Start'}>
+                            <Stack gap="MD">
+                              <div>64G000</div>
+                              <div>Y</div>
+                              <div>64G000</div>
+                              <div>64G000</div>
+                              <div>Gil-Dong Hong</div>
+                            </Stack>
+                          </Stack>
+                        </td>
+                        <td>
+                          <Stack justifyContent="Between" alignItems={'Start'}>
+                            <Stack gap="MD">
+                              <div>1802414158807</div>
+                            </Stack>
+                          </Stack>
+                        </td>
+                      </tr>
                       <tr>
                         <td>
                           <Stack justifyContent="Between" alignItems={'Start'}>
@@ -480,7 +522,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">0</span>
+                        <span className="num">3</span>
                       </div>
                     </Stack>
                   </div>
@@ -496,7 +538,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">0</span>
+                        <span className="num">1</span>
                       </div>
                     </Stack>
                   </div>
@@ -512,7 +554,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">0</span>
+                        <span className="num">1</span>
                       </div>
                     </Stack>
                   </div>
@@ -546,7 +588,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">18</span>
+                        <span className="num">5</span>
                       </div>
                     </Stack>
                   </div>
@@ -589,7 +631,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       <tr>
                         <td>Jan 12, 2023</td>
                         <td>010-0000-0000</td>
-                        <td>OOOO</td>
+                        <td>발송완료</td>
                         <td>
                           {/* <a href="" className="link"> */}
 
@@ -599,7 +641,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       <tr>
                         <td>Jan 12, 2023</td>
                         <td>010-0000-0000</td>
-                        <td>OOOO</td>
+                        <td>발송완료</td>
                         <td>
                           {/* <a href="" className="link"> */}
 
@@ -609,7 +651,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       <tr>
                         <td>Jan 12, 2023</td>
                         <td>010-0000-0000</td>
-                        <td>OOOO</td>
+                        <td>발송완료</td>
                         <td>
                           {/* <a href="" className="link"> */}
 

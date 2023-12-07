@@ -22,6 +22,9 @@ const CustomerMetaManagementReg = () => {
     dbNm: '',
     metaTblDesc: '',
     metaTblLogiNm: '',
+    metaTblDvCd: 'ATTR',
+    metaTblUseYn: 'Y',
+    rtmTblYn: 'N',
   });
   const { toast } = useToast();
   const [rows, setRows] = useState<any>([]);
@@ -43,12 +46,16 @@ const CustomerMetaManagementReg = () => {
 
   // 초기화 버튼
   const onClear = () => {
-    // setSearchInfo(cloneDeep(initCustMetaListSrchInfo));
-  };
-
-  // 검색 버튼 클릭시 목록 refetch
-  const handleSearch = () => {
-    // metaTableRefetch();
+    setSearchInfo({
+      ...searchInfo,
+      metaTblPhysNm: '',
+      dbNm: '',
+      metaTblDesc: '',
+      metaTblLogiNm: '',
+      metaTblDvCd: 'ATTR',
+      metaTblUseYn: 'Y',
+      rtmTblYn: 'N',
+    });
   };
 
   // select state 관리
@@ -130,7 +137,7 @@ const CustomerMetaManagementReg = () => {
 
   return (
     <Stack direction="Vertical">
-      <SearchForm onSearch={searchTblColumns}>
+      <SearchForm onSearch={searchTblColumns} onClear={onClear}>
         <HorizontalTable>
           <TR>
             <TH colSpan={0.11} align="right">
@@ -211,7 +218,6 @@ const CustomerMetaManagementReg = () => {
                   <Select
                     id="metaTblDvCd"
                     appearance="Outline"
-                    placeholder="전체"
                     className="width-100"
                     value={searchInfo.metaTblDvCd}
                     onChange={(
@@ -238,7 +244,6 @@ const CustomerMetaManagementReg = () => {
               <Select
                 id="metaTblDvCd"
                 appearance="Outline"
-                placeholder="전체"
                 className="width-100"
                 value={searchInfo.metaTblDvCd}
                 onChange={(
@@ -259,7 +264,6 @@ const CustomerMetaManagementReg = () => {
               <Select
                 id="metaTblUseYn"
                 appearance="Outline"
-                placeholder="전체"
                 className="width-100"
                 value={searchInfo.metaTblUseYn}
                 onChange={(
@@ -281,7 +285,6 @@ const CustomerMetaManagementReg = () => {
                 style={{ width: '100%' }}
                 id="rtmTblYn"
                 appearance="Outline"
-                placeholder="전체"
                 className="width-100"
                 value={searchInfo.rtmTblYn}
                 onChange={(
@@ -291,7 +294,9 @@ const CustomerMetaManagementReg = () => {
                   onchangeSelectHandler(e, value, 'rtmTblYn');
                 }}
               >
-                <SelectOption value={'N'}>NO</SelectOption>
+                <SelectOption defaultChecked value={'N'}>
+                  No
+                </SelectOption>
                 <SelectOption value={'Y'}>YES</SelectOption>
               </Select>
             </TD>
