@@ -3,11 +3,11 @@ import { useDeleteMultipleInterestFeature } from '@/hooks/mutations/useUserFeatu
 import { useInterestFeatureList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType, View } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
-import { selectSessionInfo } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -27,6 +27,7 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useAppDispatch();
+  const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [featureIds, setFeatureIds] = useState<Array<string>>([]);
   const [page, setPage] = useState<PageModel>(initPage);
@@ -38,6 +39,14 @@ const List = () => {
     isError: dmIsError,
     mutate: dmMutate,
   } = useDeleteMultipleInterestFeature(userId, featureIds);
+
+  const goToDetail = (row: FeatureModel, index: number) => {
+    navigate(`${contextPath}/biz-meta-management/feature/detail`, {
+      state: {
+        featureId: row.featureId,
+      },
+    });
+  };
 
   const handleRemoveInterestFeature = () => {
     if (featureIds.length === 0) {
@@ -101,11 +110,12 @@ const List = () => {
   return (
     <>
       <DataGrid
+        clickable={true}
         columns={columns}
         rows={rows}
-        clickable={true}
         page={page}
         onChange={handlePage}
+        onClick={goToDetail}
         rowSelection={(list: Array<number>) => {
           setFeatureIds(list.map((index) => rows[index].featureId));
         }}
