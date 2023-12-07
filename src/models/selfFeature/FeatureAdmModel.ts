@@ -7,18 +7,22 @@ export enum MetaType {
 // Master Profile 속성/행동 정보 component props
 export interface AttrBehvMstrProfInfoProps {
 	editMode: Boolean
+	targetIndex?: number
 	rslnRuleKeyPrtyList: Array<TbRsRslnRuleKeyPrty>
-	metaTblInfo: TbRsMstrSgmtRuleAttrTbl
-	metaTblColList: Array<TbRsMstrSgmtRuleAttrClmn>
+	metaTblInfo?: TbRsMstrSgmtRuleAttrTbl
 	metaTblAllList: Array<TbCoMetaTbInfo>
+	metaTblColList?: Array<TbRsMstrSgmtRuleAttrClmn>
+	setMstrSgmtRuleAttrTblList?: React.Dispatch<React.SetStateAction<Array<TbRsMstrSgmtRuleAttrTbl>>>
+	setMstrSgmtRuleAttrClmnList?: React.Dispatch<React.SetStateAction<Array<TbRsMstrSgmtRuleAttrClmn>>>
 }
 // Master Profile 속성, 행동 컬럼 정보 component props
 export interface MstrProfMetaTblColumnListProps {
 	editMode: Boolean
 	divisionType: string
-	metaTblInfo: TbRsMstrSgmtRuleAttrTbl
+	metaTblInfo?: TbRsMstrSgmtRuleAttrTbl
 	metaTblClmnList: Array<TbCoMetaTblClmnInfo>
 	metaTblClmnAllList: Array<TbCoMetaTblClmnInfo>
+	setMstrSgmtRuleAttrClmnList?: React.Dispatch<React.SetStateAction<Array<TbRsMstrSgmtRuleAttrClmn>>>
 }
 
 export interface CustMetaListSrchInfo {

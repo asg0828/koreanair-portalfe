@@ -72,12 +72,12 @@ export const useResolutionKeyList = (rslnRuleId: string) => {
 // Master Profile 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회
 export const useMetaColumnIsResolutionInfo = (metaTblId: string, searchInfo: MetaColumnIsResolutionInfoSearchProps) => {
 	return useQuery(['/meta-column-is-resolution/info', metaTblId], () =>
-		retreiveMetaColumnIsResolutionInfo(metaTblId, searchInfo), { enabled: false }
+		retreiveMetaColumnIsResolutionInfo(metaTblId, searchInfo), { enabled: false, suspense: false }
 	)
 }
 // Master Profile 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회(속성 조인키 조회)
 export const useMetaColumnIsResolutionJoinkeyInfo = (metaTblId: string, searchInfo: MetaColumnIsResolutionInfoSearchProps) => {
 	return useQuery(['/meta-column-is-resolution/info-joinkey', metaTblId], () =>
-		retreiveMetaColumnIsResolutionInfo(metaTblId, searchInfo), { enabled: false }
+		retreiveMetaColumnIsResolutionInfo(metaTblId, searchInfo), { enabled: false, suspense: false }
 	)
 }

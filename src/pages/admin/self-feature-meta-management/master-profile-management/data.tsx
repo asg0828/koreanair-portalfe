@@ -12,6 +12,7 @@ import {
     TbRsRslnRuleKeyPrty,
     TbRsRslnRuleRel, 
 } from "@/models/selfFeature/FeatureAdmModel";
+import { RuleId } from "@/models/selfFeature/FeatureCommon";
 
 // Master Profile table header
 export const mstrProfListColumns = [
@@ -43,7 +44,7 @@ export const initTbCoMetaTbInfo: TbCoMetaTbInfo = {
 }
 
 export const initTbRsMstrSgmtRule: TbRsMstrSgmtRule = {
-	rslnRuleId: '',
+	rslnRuleId: RuleId.RESOLUTION,
 	rslnRuleNm: '',
 	mstrSgmtRuleId: '',
 	mstrSgmtRuleNm: '',
@@ -95,7 +96,7 @@ export const initTbRsRslnRuleRel: TbRsRslnRuleRel = {
 export const initMasterProfileInfo: MasterProfileInfo = {
 	tbRsMstrSgmtRule: initTbRsMstrSgmtRule,
 	tbRsMstrSgmtRuleAttrTbl: [{...initTbRsMstrSgmtRuleAttrTbl}],
-	tbRsMstrSgmtRuleAttrClmn: [{...initTbRsMstrSgmtRuleAttrClmn}],
+	tbRsMstrSgmtRuleAttrClmn: [],
 	tbRsRslnRuleRel: [{...initTbRsRslnRuleRel}],
 	tbRsMstrSgmtRuleList: [{...initTbRsMstrSgmtRule}],
 }
