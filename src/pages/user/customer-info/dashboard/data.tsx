@@ -115,19 +115,19 @@ const skypassData: Skypass[] = [
     skypassNum: '112423935550',
     skypassGrade: 'MM',
     useYn: 'N',
-    gradeStartDate: '2014-01-01',
-    mileage: '5,555',
+    gradeStartDate: '2012-08-03',
+    mileage: '56,531',
     expireMileage: '0',
     gradeCondtion: '',
     upgradeCondition: '',
   },
   {
-    skypassNum: '113416601710',
+    skypassNum: '112917446366',
     skypassGrade: 'MP',
     useYn: 'N',
-    gradeStartDate: '2008-10-20',
-    mileage: '67,321',
-    expireMileage: '3,642',
+    gradeStartDate: '2016-07-28',
+    mileage: '142,560',
+    expireMileage: '0',
     gradeCondtion: '',
     upgradeCondition: '',
   },
@@ -176,6 +176,51 @@ const familyMemberData: FamilyMember[] = [
         relationship: 'Daughter / Son-in-Law',
         code: '',
         name: '홍길동6',
+      },
+    ],
+  },
+  {
+    familyCnt: 4,
+    mergeMileage: 723338,
+    familyList: [
+      {
+        relationship: 'Spouse',
+        code: '',
+        name: '홍길동1',
+      },
+
+      {
+        relationship: 'Child',
+        code: '',
+        name: '홍길동3',
+      },
+      {
+        relationship: 'Grandchild',
+        code: '',
+        name: '홍길동4',
+      },
+
+      {
+        relationship: 'Daughter / Son-in-Law',
+        code: '',
+        name: '홍길동6',
+      },
+    ],
+  },
+  {
+    familyCnt: 2,
+    mergeMileage: 24465,
+    familyList: [
+      {
+        relationship: 'Spouse',
+        code: '',
+        name: '홍길동1',
+      },
+
+      {
+        relationship: 'Child',
+        code: '',
+        name: '홍길동3',
       },
     ],
   },

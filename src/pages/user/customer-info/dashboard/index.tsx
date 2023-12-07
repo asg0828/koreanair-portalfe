@@ -87,6 +87,9 @@ export default function List() {
   };
 
   const handleSearch = useCallback(() => {
+    setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
+    setSkypass([]);
+
     // 유효성 검사 실패 시 종료
     const validation = () => {
       let searchError = false;
@@ -120,8 +123,8 @@ export default function List() {
       setSnss(snsData);
     } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
       setProfile(profileData[1]);
-      // setSkypass(skypassData);
-      setFamily(familyMemberData[1]);
+      setSkypass([]);
+      setFamily(familyMemberData[3]);
       setSelectedSkypass(skypassData[1]);
       setWallet(walletData);
       setPreference(preferenceData[1]);
@@ -181,6 +184,13 @@ export default function List() {
     id?: String
   ) => {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
+    if (value === '112423935550') {
+      setFamily(familyMemberData[0]);
+    } else if (value === '112917446366') {
+      setFamily(familyMemberData[1]);
+    } else if (value === '113327129495') {
+      setFamily(familyMemberData[2]);
+    }
   };
 
   useEffect(() => {
@@ -305,7 +315,7 @@ export default function List() {
                 {skypass && skypass.length > 0 && (
                   <Select
                     id="skypassSelect"
-                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : undefined}
+                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : ''}
                     appearance="Outline"
                     placeholder="스카이패스선택"
                     style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}

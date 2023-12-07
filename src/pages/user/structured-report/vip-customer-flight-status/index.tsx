@@ -38,7 +38,7 @@ const List = () => {
     const [params, setParams] = useState<ReportParams>(initParams);
     const [page, setPage] = useState<PageModel>({
         ...initPage,
-        totalCount: 110
+        totalCount: 100
     });
 
     const columns: Array<ColumnsInfo> = [
