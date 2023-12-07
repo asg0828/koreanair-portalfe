@@ -88,7 +88,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     const field = columns[index].field;
     const oValue = order === SortDirectionCode.DESC ? 1 : -1;
 
-    // initialSortedColumn이 'rank'일 때, 색상을 입히기 위한 컬럼을 'scheduledIntlFlightDate'로 설정
     const colorColumn = initialSortedColumn === 'rank' ? 'scheduledIntlFlightDate' : field;
     setSortedColumn(colorColumn);
 
@@ -96,15 +95,13 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
       let valueA = a[field] || '';
       let valueB = b[field] || '';
 
-      // 정렬 로직은 그대로 유지
-      if (typeof valueA === 'string' && valueA.startsWith('S')) {
-        valueA = parseFloat(valueA.substring(1));
-        valueB = parseFloat(valueB.substring(1));
-      } else if (typeof valueA === 'string') {
+      if (typeof valueA === 'string') {
         return valueA.localeCompare(valueB) * oValue;
+      } else {
+        return (valueA - valueB) * oValue;
       }
-      return (valueA - valueB) * oValue;
     });
+
     setSortRows(sortRows);
   };
 
@@ -128,7 +125,13 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     const columnIndex = columns.findIndex(column => column.field === initialSortedColumn);
     if (columnIndex === -1) return;
 
-    handleChangeSortDirection(SortDirectionCode.ASC, columnIndex);
+    const sortDirection = initialSortedColumn === 'rank' ?
+        SortDirectionCode.ASC :
+        initialSortedColumn === 'purchaseAmount' ?
+            SortDirectionCode.DESC :
+            SortDirectionCode.ASC;
+
+    handleChangeSortDirection(sortDirection, columnIndex);
   };
 
   useEffect(() => {
