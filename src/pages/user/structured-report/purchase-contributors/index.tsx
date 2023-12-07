@@ -5,26 +5,29 @@ import {selectSessionInfo} from "@reducers/authSlice";
 import React, {useCallback, useEffect, useState} from "react";
 import {initPage, PageModel} from "@models/model/PageModel";
 import {ColumnsInfo} from "@models/components/Table";
-import {View} from "@models/common/Constants";
+import {ValidType, View} from "@models/common/Constants";
 import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
 import { dummyData } from "./testData";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
-import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
-import {FeatureModel, FeatureParams} from "@models/model/FeatureModel";
 import DashboardPopup from "./dashboardPopUp";
 import Modal from 'react-modal';
-// import {Modal} from "@components/ui";
+import {ReportParams} from "@models/model/ReportModel";
+import {usePurchaseContributionList} from "@/hooks/queries/useReportQueries";
 
-const initParams: FeatureParams = {
-    featureSeGrp: '',
-    featureSe: '',
-    searchFeature: '',
-    enrUserId: '',
-    enrDeptCode: '',
-    searchConditions: [],
+const initParams: ReportParams = {
+    oneId: '',
+    memberNumber:0,
+    name:'',
+    vipYn:'',
+    purchaseAmount:0,
+    purchaseCount:0,
+    purchaseContribution:0,
+    domesticPurchaseAmount:0,
+    internationalAmount:0,
+    FrCount:0,
+    PrCount:0
 };
-
 
 const List = () => {
     const navigate = useNavigate();
@@ -32,7 +35,7 @@ const List = () => {
     const userId = useAppSelector(selectSessionInfo()).userId || '';
     const [selectedPeriod, setSelectedPeriod] = useState('1');
     const [dateRange, setDateRange] = useState('');
-    const [params, setParams] = useState<FeatureParams>(initParams);
+    const [params, setParams] = useState<ReportParams>(initParams);
 
     const [showPopup, setShowPopup] = useState(false);
 
@@ -51,30 +54,31 @@ const List = () => {
     );
 
     const periods = [
-        { period: '1', text: '올해' },
-        { period: '2', text: '최근 1년' },
-        { period: '3', text: '최근 2년' },
-        { period: '4', text: '최근 3년' },
-        { period: '5', text: '최근 4년' },
+        { period: '0 year', text: '올해' },
+        { period: '1 year', text: '최근 1년' },
+        { period: '2 year', text: '최근 2년' },
+        { period: '3 year', text: '최근 3년' },
+        { period: '4 year', text: '최근 4년' },
     ];
 
     const columns: Array<ColumnsInfo> = [
-        {headerName: 'Rank', field: 'Rank', colSpan: 0.7},
+        {headerName: 'Rank', field: 'rank', colSpan: 0.7},
         {headerName: 'One ID', field: 'oneId', colSpan: 1.3},
-        {headerName: '회원번호', field: 'memberNumber', colSpan: 1},
-        {headerName: '이름', field: 'name', colSpan: 2},
-        {headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1},
+        {headerName: '회원번호', field: 'skypassNm', colSpan: 1},
+        {headerName: '이름', field: 'userNm', colSpan: 2},
+        {headerName: 'VIP 회원 분류', field: 'vipType', colSpan: 1},
         {headerName: '구매금액', field: 'purchaseAmount', colSpan: 1},
         {headerName: '구매횟수', field: 'purchaseCount', colSpan: 1},
-        {headerName: '국내선 구매금액', field: 'domesticAmount', colSpan: 1},
-        {headerName: '국제선 구매금액', field: 'internationalAmount', colSpan: 1},
-        {headerName: 'FR 구매횟수', field: 'FrCount', colSpan: 1},
-        {headerName: 'PR 구매횟수', field: 'PrCount', colSpan: 1}
+        {headerName: '국내선 구매금액', field: 'domesticPurchaseAmount', colSpan: 1},
+        {headerName: '국제선 구매금액', field: 'intlPurchaseAmount', colSpan: 1},
+        {headerName: 'FR 구매횟수', field: 'frCount', colSpan: 1},
+        {headerName: 'PR 구매횟수', field: 'prCount', colSpan: 1}
     ];
 
-    const [rows, setRows] = useState(dummyData.data.contents);
-    const { data: response, isError, refetch } = useFeatureList(params, page);
-    const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
+    const [criteria, setCriteria] = useState('0 year');
+    const [rows, setRows] = useState<any>([]);
+    const { data: response, isError, refetch } = usePurchaseContributionList(criteria);
+
 
     const toggleModal = () => {
         setShowPopup(!showPopup);
@@ -114,6 +118,7 @@ const List = () => {
     };
 
     const handlePeriodSelect = (period: string) => {
+        setCriteria(period);
         setSelectedPeriod(period);
         setDateRange(calculateDateRange(period));
     };
@@ -126,18 +131,23 @@ const List = () => {
         refetch();
     }, [refetch]);
 
-    useEffect(() => {
-        if (params.featureSeGrp) {
-            sRefetch();
-        }
-    }, [params.featureSeGrp, sRefetch]);
-
-
     useDidMountEffect(() => {
         handleSearch();
     }, [page.page, page.pageSize, handleSearch]);
 
-    // @ts-ignore
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response?.data) {
+                setRows(response.data.contents);
+            }
+        }
+    }, [response, isError, toast]);
+
     return (
         <>
             <SearchForm onSearch={handleSearch} showClearButton={false} showSearchButton={false}>
