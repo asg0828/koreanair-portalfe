@@ -101,13 +101,12 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
 
   const sortData = (columnField:any) => {
     const columnIndex = columns.findIndex(column => column.field === columnField);
-    if (columnIndex === -1) return; // 유효한 컬럼이 아니면 종료
+    if (columnIndex === -1) return;
 
-    const order = SortDirectionCode.DESC; // 기본 정렬 방향 설정
+    const order = SortDirectionCode.DESC;
     handleChangeSortDirection(order, columnIndex);
   };
 
-  //컴포넌트 마운트 시 초기 정렬 실행
   useEffect(() => {
     if (initialSortedColumn) {
       sortData(initialSortedColumn);
@@ -118,7 +117,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     if (!initialSortedColumn || columns.length === 0) return;
 
     const columnIndex = columns.findIndex(column => column.field === initialSortedColumn);
-    if (columnIndex === -1) return; // 유효한 컬럼이 아니면 종료
+    if (columnIndex === -1) return;
 
     handleChangeSortDirection(SortDirectionCode.ASC, columnIndex);
   };
@@ -134,7 +133,10 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   useEffect(() => {
     setIsCheckedAll(false);
     setCheckedIndexList([]);
-  }, [rows]);
+    if (!initialSortedColumn) {
+      setSortRows(rows);
+    }
+  }, [rows, initialSortedColumn]);
 
   return (
     <Table variant="vertical" size="normal" align="center" className={`verticalTable ${className}`}>
