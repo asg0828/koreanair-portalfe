@@ -15,6 +15,7 @@ import FolderRoundedIcon from '@mui/icons-material/FolderRounded';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
+import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import UploadIcon from '@mui/icons-material/Upload';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -49,6 +50,7 @@ export {
   CreateNewFolderOutlinedIcon,
   DeleteOutlineOutlinedIcon,
   KeyboardArrowRightOutlinedIcon,
+  KeyboardArrowUpOutlinedIcon,
   KeyboardArrowDownOutlinedIcon,
   UploadIcon,
   HighlightOffIcon,

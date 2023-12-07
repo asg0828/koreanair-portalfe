@@ -15,10 +15,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'No', field: 'rownum', colSpan: 1 },
+  { headerName: 'No', field: 'rownum', colSpan: 0.5 },
   { headerName: '권한그룹ID', field: 'authId', colSpan: 2, align: 'left' },
   { headerName: '권한그룹명', field: 'authNm', colSpan: 2, align: 'left' },
-  { headerName: '비고', field: 'authDsc', colSpan: 5, align: 'left' },
+  { headerName: '비고', field: 'authDsc', colSpan: 5.5, align: 'left' },
 ];
 
 const List = () => {

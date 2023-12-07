@@ -101,22 +101,41 @@ export default function List() {
     };
 
     if (validation()) return;
-    setProfile(profileData);
-    setSkypass(skypassData);
-    setFamily(familyMemberData);
-    setSelectedSkypass(skypassData[0]);
-    setWallet(walletData);
-    setPreference(preferenceData);
-    setCnt(cntData);
-    setPnr(pnrData);
-    setEtkt(eTktData);
-    setBoardingLists(boardingListData);
-    setVocs(vocData);
-    setInternets(internetData);
-    setCalls(callData);
-    setSmss(smsData);
-    setEmails(emailData);
-    setSnss(snsData);
+    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypass === '112423935550') {
+      setProfile(profileData[0]);
+      setSkypass(skypassData);
+      setFamily(familyMemberData[0]);
+      setSelectedSkypass(skypassData[0]);
+      setWallet(walletData);
+      setPreference(preferenceData[0]);
+      setCnt(cntData[0]);
+      setPnr(pnrData);
+      setEtkt(eTktData);
+      setBoardingLists(boardingListData);
+      setVocs(vocData);
+      setInternets(internetData);
+      setCalls(callData);
+      setSmss(smsData);
+      setEmails(emailData);
+      setSnss(snsData);
+    } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypass === '112917446366') {
+      setProfile(profileData[1]);
+      // setSkypass(skypassData);
+      setFamily(familyMemberData[1]);
+      setSelectedSkypass(skypassData[1]);
+      setWallet(walletData);
+      setPreference(preferenceData[1]);
+      setCnt(cntData[1]);
+      setPnr(pnrData);
+      setEtkt(eTktData);
+      setBoardingLists(boardingListData);
+      setVocs(vocData);
+      setInternets(internetData);
+      setCalls(callData);
+      setSmss(smsData);
+      setEmails(emailData);
+      setSnss(snsData);
+    }
     // refetch();
   }, [refetch, searchInfo, validation]);
 
@@ -165,9 +184,7 @@ export default function List() {
   };
 
   useEffect(() => {
-    console.log(skypass?.filter((item) => item.skypassNum === searchInfo.skypassSelect));
     setSelectedSkypass(skypass?.find((item) => item.skypassNum === searchInfo.skypassSelect));
-    console.log(selectedSkypass);
   }, [searchInfo.skypassSelect]);
 
   useEffect(() => {
@@ -379,7 +396,7 @@ export default function List() {
                   <span className="num">{family?.mergeMileage}</span>
                 </div>
               </div>
-              <div className="list">
+              <div className="list" style={{ maxHeight: '200px', overflowY: 'auto' }}>
                 <table>
                   <colgroup>
                     <col width="30%" />

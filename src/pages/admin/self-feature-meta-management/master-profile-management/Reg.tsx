@@ -2,15 +2,23 @@
 import {
     Stack,
 } from '@components/ui'
-import AttrMstrProfInfo from '@/components/self-feature-adm/AttrMstrProfInfo'
-import BehvMstrProfInfo from '@/components/self-feature-adm/BehvMstrProfInfo'
+import MstrProfInfo from '@/components/self-feature-adm/MstrProfInfo'
 
 const MasterProfileManagementReg = () => {
     return (
-        <Stack>
-            <AttrMstrProfInfo />
-            <BehvMstrProfInfo />
-        </Stack>
+        <></>
+        // <Stack>
+        //     <AttrMstrProfInfo 
+        //         editMode={false}
+        //         metaTblList={[]}
+        //         rslnRuleKeyPrtyList={[]}
+        //     />
+        //     <BehvMstrProfInfo 
+        //         editMode={false}
+        //         metaTblList={[]}
+        //         rslnRuleKeyPrtyList={[]}
+        //     />
+        // </Stack>
     )
 }
 

@@ -3,13 +3,20 @@ import HorizontalTable from '@/components/table/HorizontalTable';
 import { Select, SelectOption, TD, TH, TR, TextField, useToast, Stack } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { customerMetaInfoColumn, customerMetaTableColumn } from './data';
+import { customerMetaInfoColumn, customerMetaTableColumn, initTbCoMetaTblInfo } from './data';
 import DataGrid from '@/components/grid/DataGrid';
-import { useSchemaList, useTableColumns, useTableInfo } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import {
+  useMetaTableDetail,
+  useSchemaList,
+  useTableColumns,
+  useTableInfo,
+} from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import DataGridMeta from '@/components/grid/DataGridMeta';
 import DataGridTblColumn from '@/components/grid/DataGridTblColumn';
+import { TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
 
 const CustomerMetaManagementReg = () => {
+  const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<TbCoMetaTbInfo>(initTbCoMetaTblInfo);
   const [searchInfo, setSearchInfo] = useState<any>({
     metaTblPhysNm: '',
     dbNm: '',
@@ -20,6 +27,7 @@ const CustomerMetaManagementReg = () => {
   const [rows, setRows] = useState<any>([]);
   const [dbNames, setDbNames] = useState<any>([]);
   const [tablePhyList, setTablePhyList] = useState<Array<any>>([]);
+  const { data: response, isError, refetch } = useMetaTableDetail(dbNames);
   const { data: responseSchema, isError: isErrorSchema, refetch: refetchSchema } = useSchemaList();
   const {
     data: responseTblInfo,
@@ -60,6 +68,7 @@ const CustomerMetaManagementReg = () => {
 
   const searchTblColumns = () => {
     refetchTblColumn();
+    refetch();
   };
 
   // 테이블 물리명 조회
@@ -73,12 +82,11 @@ const CustomerMetaManagementReg = () => {
     } else {
       if (responseTblInfo?.result) {
         setTablePhyList(responseTblInfo?.result);
-        console.log(responseTblInfo?.result);
       }
     }
   }, [responseTblInfo, isErrorTblInfo, toast, searchInfo.dbName]);
 
-  //데이터 베이스명
+  // 데이터 베이스명
   useEffect(() => {
     if (isErrorSchema || responseSchema?.successOrNot === 'N') {
       toast({
@@ -102,10 +110,23 @@ const CustomerMetaManagementReg = () => {
     } else {
       if (responseTblColumn?.result) {
         setTblColumns(responseTblColumn?.result);
-        console.log(responseTblColumn?.result);
       }
     }
   }, [responseTblColumn, isErrorTblColumn, toast]);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (response?.result) {
+        // setRows(response?.result.tbCoMetaTblClmnInfoList);
+        // setTbCoMetaTbInfo(response?.result.tbCoMetaTbInfo);
+      }
+    }
+  }, [response, isError, toast]);
 
   return (
     <Stack direction="Vertical">
@@ -277,7 +298,12 @@ const CustomerMetaManagementReg = () => {
           </TR>
         </HorizontalTable>
       </SearchForm>
-      <DataGridTblColumn columns={customerMetaTableColumn} rows={tblColumns}></DataGridTblColumn>
+      <DataGridTblColumn
+        props={searchInfo}
+        list={tbCoMetaTbInfo}
+        columns={customerMetaTableColumn}
+        rows={tblColumns}
+      ></DataGridTblColumn>
     </Stack>
   );
 };

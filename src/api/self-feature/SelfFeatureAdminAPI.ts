@@ -43,8 +43,7 @@ export const updateMetaTable = (
   metaTblId: string,
   metaTblLogiNm: string,
   tbCoMetaTbInfo: RowsInfo,
-  tbCoMetaTblClmnInfoList: RowsInfo,
-  rtmTblYn: string
+  tbCoMetaTblClmnInfoList: RowsInfo
 ) => {
   return callApi({
     service: Service.KAL_SF_BE,
@@ -56,7 +55,6 @@ export const updateMetaTable = (
         metaTblLogiNm,
         tbCoMetaTbInfo,
         tbCoMetaTblClmnInfoList,
-        rtmTblYn,
       },
     },
   });
@@ -75,12 +73,24 @@ export const deleteMetaTable = (metaTblIds: Array<string>) => {
   });
 };
 
-export const createMetaTableInfo = () => {
+export const createMetaTableInfo = (
+  metaTblId: string,
+  metaTblLogiNm: string,
+  tbCoMetaTbInfo: any,
+  tbCoMetaTblClmnInfoList: any
+) => {
   return callApi({
     service: Service.KAL_SF_BE,
     url: `${SelfFeatureAdmApiURL.META_TABLE}`,
     method: Method.POST,
-    params: {},
+    params: {
+      bodyParams: {
+        metaTblId,
+        metaTblLogiNm,
+        tbCoMetaTbInfo,
+        tbCoMetaTblClmnInfoList,
+      },
+    },
   });
 };
 

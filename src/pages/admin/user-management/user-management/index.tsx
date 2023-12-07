@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns = [
-  { headerName: 'No', field: 'rownum', colSpan: 1 },
+  { headerName: 'No', field: 'rownum', colSpan: 0.5 },
   { headerName: '이메일', field: 'userEmail', colSpan: 1.5 },
   { headerName: '성명', field: 'userNm', colSpan: 1 },
   { headerName: '사번', field: 'userId', colSpan: 1 },
@@ -20,7 +20,7 @@ const columns = [
   { headerName: '사용자권한', field: 'userAuthNm', colSpan: 1 },
   { headerName: '관리자권한', field: 'mgrAuthNm', colSpan: 1 },
   { headerName: '최종접속시간', field: 'lastLogDt', colSpan: 1 },
-  { headerName: '재직구분', field: 'useYnNm', colSpan: 0.5 },
+  { headerName: '재직구분', field: 'useYn', colSpan: 1 },
 ];
 
 const initParams: UserParams = {
@@ -82,7 +82,6 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        response.data.contents.forEach((item: UserModel) => (item.useYnNm = item.useYn === 'Y' ? '예' : '아니오'));
         setRows(response.data.contents);
         setPage(response.data.page);
       }
@@ -97,7 +96,6 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        response.data.contents.forEach((item: UserModel) => (item.useYnNm = item.useYn === 'Y' ? '예' : '아니오'));
         setRows(response.data.contents);
         setPage(response.data.page);
       }
@@ -208,13 +206,13 @@ const List = () => {
                 onChange={(e) => handleChangeParams('useYn', e.target.value)}
               />
               <Radio
-                label="사용"
+                label="Y"
                 checked={params.useYn === 'Y'}
                 value="Y"
                 onChange={(e) => handleChangeParams('useYn', e.target.value)}
               />
               <Radio
-                label="미사용"
+                label="N"
                 checked={params.useYn === 'N'}
                 value="N"
                 onChange={(e) => handleChangeParams('useYn', e.target.value)}

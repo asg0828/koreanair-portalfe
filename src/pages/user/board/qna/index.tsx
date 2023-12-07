@@ -16,10 +16,10 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'No', field: 'rownum', colSpan: 1 },
+  { headerName: 'No', field: 'rownum', colSpan: 0.5 },
   { headerName: '분류', field: 'clCode', colSpan: 1 },
   { headerName: '제목', field: 'sj', colSpan: 3, align: 'left' },
-  { headerName: '상태', field: 'qnaStat', colSpan: 1 },
+  { headerName: '상태', field: 'qnaStat', colSpan: 1.5 },
   { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },

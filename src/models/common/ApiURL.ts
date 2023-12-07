@@ -15,6 +15,7 @@ export enum PortalApiURL {
   FAQ = '/board/v1/faq',
   QNA = '/board/v1/qna',
   DATAROOM = '/board/v1/dataroom',
+  REPORT = '/report/v1/vip',
   ONEID = '/admin/v1/oneId',
   FEATURE = '/biz-meta/v1/features',
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',

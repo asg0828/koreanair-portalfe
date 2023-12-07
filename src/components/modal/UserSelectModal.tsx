@@ -62,7 +62,6 @@ const UserSelectModal = ({
   };
 
   const handlePrevRowSelection = (prevCheckedIndexList: Array<number>, prevCheckedList: Array<any>) => {
-    console.log('prevCheckedIndexList: ', prevCheckedIndexList);
     setPrevCheckedList(prevCheckedList);
   };
 

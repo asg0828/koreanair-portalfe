@@ -4,6 +4,22 @@ export enum MetaType {
 	MSTR_SGMT= 'mastersegment'
 }
 
+// Master Profile 속성/행동 정보 component props
+export interface AttrBehvMstrProfInfoProps {
+	editMode: Boolean
+	metaTblInfo: TbRsMstrSgmtRuleAttrTbl
+	metaTblAllList: Array<TbCoMetaTbInfo>
+	metaTblColList: Array<TbRsMstrSgmtRuleAttrClmn>
+	rslnRuleKeyPrtyList: Array<TbRsRslnRuleKeyPrty>
+}
+// Master Profile 속성, 행동 컬럼 정보 component props
+export interface MstrProfMetaTblColumnListProps {
+	editMode: Boolean
+	infoType: string
+	metaTblInfo: TbRsMstrSgmtRuleAttrTbl
+	metaTblClmnList: Array<TbCoMetaTblClmnInfo>
+}
+
 export interface CustMetaListSrchInfo {
 	[key: string]: string;
 	item: string;
@@ -161,4 +177,30 @@ export interface TbRsRslnRuleKeyPrty {
 	rslnRuleId: string
 	rslnRuleKeyClmnNm: string
 	rslnRuleKeyPrty: number
+}
+export interface TbCoMetaTblClmnInfo {
+    [key: string]: string | number
+    rtmTblYn: string,
+    metaTblId: string,
+    metaTblLogiNm: string,
+    metaTblClmnId: string,
+    metaTblClmnPhysNm: string,
+    metaTblClmnLogiNm: string,
+    metaTblClmnDesc: string,
+    dtpCd: string,
+    dtpLenVal: string,
+    pkYn: string,
+    nullYn: string,
+    defltVal: string,
+    clmnUseYn: string,
+    clmnSortOrd: number,
+    frstRegDttm: string,
+    frstRegUserId: string,
+    lastUpdDttm: string,
+    lastUpdUserId: string,
+    chgDtpCd: string,
+    dataFormat: string,
+    baseTimeYn: string,
+    maskingRuleCd: string,
+    dataTypeCategory: string,
 }
