@@ -7,7 +7,7 @@ import { ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
-import { selectSessionInfo } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { Stack, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const dispatch = useAppDispatch();
+  const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [createdFeatureId, setCreatedFeatureId] = useState<string>('');
   const [deletedFeatureId, setDeletedFeatureId] = useState<string>('');
@@ -64,6 +64,14 @@ const List = () => {
   const { data: response, isError, refetch } = usePopularFeatureList();
   const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateInterestFeature();
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
+
+  const goToDetail = (row: FeatureModel, index: number) => {
+    navigate(`${contextPath}/biz-meta-management/feature/detail`, {
+      state: {
+        featureId: row.featureId,
+      },
+    });
+  };
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -115,12 +123,13 @@ const List = () => {
   return (
     <>
       <DataGrid
+        isMultiSelected={false}
+        clickable={true}
+        showPagination={false}
         columns={columns}
         rows={rows}
         page={page}
-        isMultiSelected={false}
-        clickable={false}
-        showPagination={false}
+        onClick={goToDetail}
       />
     </>
   );
