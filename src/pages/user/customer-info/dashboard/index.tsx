@@ -87,7 +87,6 @@ export default function List() {
   };
 
   const handleSearch = useCallback(() => {
-    setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
     setSkypass([]);
 
     // 유효성 검사 실패 시 종료
@@ -121,9 +120,10 @@ export default function List() {
       setSmss(smsData);
       setEmails(emailData);
       setSnss(snsData);
+      setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
     } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
       setProfile(profileData[1]);
-      setSkypass([]);
+      setSkypass(skypassData);
       setFamily(familyMemberData[3]);
       setSelectedSkypass(skypassData[1]);
       setWallet(walletData);
@@ -138,6 +138,7 @@ export default function List() {
       setSmss(smsData);
       setEmails(emailData);
       setSnss(snsData);
+      setSearchInfo({ ...searchInfo, skypassSelect: '112917446366' });
     }
     // refetch();
   }, [refetch, searchInfo, validation]);
@@ -183,16 +184,26 @@ export default function List() {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    setSearchInfo({ ...searchInfo, [`${id}`]: value });
-    if (value === '112423935550') {
-      setFamily(familyMemberData[0]);
-    } else if (value === '112917446366') {
-      setFamily(familyMemberData[1]);
-    } else if (value === '113327129495') {
-      setFamily(familyMemberData[2]);
+    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+      setSearchInfo({ ...searchInfo, [`${id}`]: value });
+      if (value === '112423935550') {
+        setFamily(familyMemberData[0]);
+      } else if (value === '112917446366') {
+        setFamily(familyMemberData[1]);
+      } else if (value === '113327129495') {
+        setFamily(familyMemberData[2]);
+      }
+    } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
+      setSearchInfo({ ...searchInfo, [`${id}`]: value });
+      if (value === '112423935550') {
+        setFamily(familyMemberData[4]);
+      } else if (value === '112917446366') {
+        setFamily(familyMemberData[3]);
+      } else if (value === '113327129495') {
+        setFamily(familyMemberData[5]);
+      }
     }
   };
-
   useEffect(() => {
     setSelectedSkypass(skypass?.find((item) => item.skypassNum === searchInfo.skypassSelect));
   }, [searchInfo.skypassSelect]);

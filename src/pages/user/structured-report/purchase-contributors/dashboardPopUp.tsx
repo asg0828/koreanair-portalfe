@@ -1,15 +1,18 @@
-import { Skypass } from '@/models/model/CustomerInfoModel';
+import { FamilyMember, Skypass } from '@/models/model/CustomerInfoModel';
 import { Stack, Typography, SelectOption, Select, Button, Modal } from '@ke-design/components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
+import { familyMemberData, skypassData } from '../../customer-info/dashboard/data';
 
 export default function DashBoardPopUp({ closeModal }: any) {
   const [isListView1, setIsListView1] = useState(false);
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState(false);
-  const [skypass, setSkypass] = useState<Array<Skypass>>();
+  const [skypass, setSkypass] = useState<Array<Skypass>>(skypassData);
+  const [family, setFamily] = useState<FamilyMember>(familyMemberData[3]);
+  const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
   const batchDate = `${yesterday.getFullYear()}-${(`0` + yesterday.getMonth() + 2).slice(-2)}-${(
@@ -32,7 +35,21 @@ export default function DashBoardPopUp({ closeModal }: any) {
     id?: String
   ) => {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
+    if (value === '112423935550') {
+      setFamily(familyMemberData[4]);
+      setSelectedSkypass(skypass[0]);
+    } else if (value === '112917446366') {
+      setFamily(familyMemberData[3]);
+      setSelectedSkypass(skypass[1]);
+    } else if (value === '113327129495') {
+      setFamily(familyMemberData[5]);
+      setSelectedSkypass(skypass[2]);
+    }
   };
+
+  useEffect(() => {
+    setSelectedSkypass(skypass[1]);
+  }, [skypass]);
 
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
@@ -91,7 +108,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                 {skypass && skypass.length > 0 && (
                   <Select
                     id="skypassSelect"
-                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : undefined}
+                    defaultValue={skypass.length > 0 ? skypass[1].skypassNum : ''}
                     appearance="Outline"
                     placeholder="스카이패스선택"
                     style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}
@@ -113,35 +130,35 @@ export default function DashBoardPopUp({ closeModal }: any) {
               </div>
               <div className="item">
                 <div className="key">회원번호</div>
-                <div className="value">112917446366</div>
+                <div className="value">{selectedSkypass?.skypassNum}</div>
               </div>
               <div className="item">
                 <div className="key">회원등급</div>
-                <div className="value">MP</div>
+                <div className="value">{selectedSkypass?.skypassGrade}</div>
               </div>
               <div className="item">
                 <div className="key">휴면여부</div>
-                <div className="value">N</div>
+                <div className="value">{selectedSkypass?.useYn}</div>
               </div>
               <div className="item">
                 <div className="key">현등급최초시작일</div>
-                <div className="value">2016-07-28</div>
+                <div className="value">{selectedSkypass?.gradeStartDate}</div>
               </div>
               <div className="item">
                 <div className="key">잔여 마일리지</div>
-                <div className="value">142,560</div>
+                <div className="value">{selectedSkypass?.mileage}</div>
               </div>
               <div className="item">
                 <div className="key">소멸예정 마일리지</div>
-                <div className="value">0</div>
+                <div className="value">{selectedSkypass?.expireMileage}</div>
               </div>
               <div className="item">
                 <div className="key">등급유지조건(마일리지+횟수+기간)</div>
-                <div className="value"></div>
+                <div className="value">{selectedSkypass?.gradeCondtion}</div>
               </div>
               <div className="item">
                 <div className="key">승급조건(마일리지+횟수)</div>
-                <div className="value"></div>
+                <div className="value">{selectedSkypass?.upgradeCondition}</div>
               </div>
             </div>
             <div className="dashBoardBox n3">
@@ -175,11 +192,11 @@ export default function DashBoardPopUp({ closeModal }: any) {
               <div className="middle">
                 <div className="left">
                   등록가족
-                  <span className="num">3</span>명
+                  <span className="num">{family?.familyCnt}</span>명
                 </div>
                 <div className="right">
                   합산가능마일리지
-                  <span className="num">183,109</span>
+                  <span className="num">{family?.mergeMileage}</span>
                 </div>
               </div>
               <div className="list" style={{ maxHeight: '200px', overflowY: 'auto' }}>
@@ -195,22 +212,15 @@ export default function DashBoardPopUp({ closeModal }: any) {
                     <th>Name</th>
                   </thead>
                   <tbody>
-                    {' '}
-                    <tr>
-                      <td>Spouse</td>
-                      <td></td>
-                      <td>이순신1</td>
-                    </tr>{' '}
-                    <tr>
-                      <td>Child</td>
-                      <td></td>
-                      <td>이순신2</td>
-                    </tr>{' '}
-                    <tr>
-                      <td>Child</td>
-                      <td></td>
-                      <td>이순신3</td>
-                    </tr>
+                    {family &&
+                      family.familyList.length > 0 &&
+                      family.familyList.map((list, index) => (
+                        <tr>
+                          <td>{list.relationship}</td>
+                          <td>{list.code}</td>
+                          <td>{list.name}</td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
