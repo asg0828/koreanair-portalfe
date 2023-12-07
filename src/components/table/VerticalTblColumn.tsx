@@ -1,5 +1,5 @@
 import NoResult from '@/components/emptyState/NoData';
-import { useUpdateMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
+import { useCreateMetaTableInfo, useUpdateMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, View } from '@/models/common/Constants';
 import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
@@ -21,9 +21,11 @@ import {
   Typography,
   Stack,
   Select,
+  SelectOption,
 } from '@components/ui';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { SelectValue } from '@mui/base/useSelect';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -35,6 +37,8 @@ export interface VerticalTableProps {
   onClick?: Function;
   children?: ReactNode;
   onChange?: Function;
+  props?: any;
+  list: RowsInfo;
 }
 
 const VerticalTblColumn: React.FC<VerticalTableProps> = ({
@@ -46,17 +50,25 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   rowSelection,
   onChange,
   onClick,
+  props,
+  list,
 }) => {
+  const { dbNm, metaTblLogiNm } = props;
+  const tbCoMetaTbInfo = list;
   const isCheckbox = typeof rowSelection === 'function';
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
   const [tbCoMetaTblClmnInfoList, setTbCoMetaTblClmnInfoList] = useState<Array<RowsInfo>>(Array.from(rows));
-
+  const {
+    data: uResponse,
+    isSuccess: uIsSuccess,
+    isError: uIsError,
+    mutate,
+  } = useCreateMetaTableInfo(dbNm, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   // 수정중 페이지 이탈 모달
   const [isOpen, setOpen] = useState(false);
-
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
     const oValue = order === SortDirectionCode.ASC ? 1 : order === SortDirectionCode.DESC ? -1 : 0;
 
@@ -84,16 +96,30 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   const timeStampChg = (rowIndex: number) => {
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
       const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+        // 선택한 라디오 버튼이 속한 행이면 변경
         if (index === rowIndex) {
+          return {
+            ...row,
+            baseTimeYn: 'Y',
+            chgDtpCd: 'timestamp',
+            dataFormat: 'yyyy-MM-dd HH:mm:ss',
+            changeYn: 'Y',
+          };
         }
+        // 선택한 라디오 버튼이 아니면서 변경되지 않은 행들은 유지
+        if (row.baseTimeYn !== 'Y' && row.changeYn === 'Y') {
+          return row;
+        }
+        if (row.baseTimeYn === 'Y') {
+          return { ...row, baseTimeYn: 'N', changeYn: 'N', chgDtpCd: '', dataFormat: '' };
+        }
+        // 그 외의 행들은 변경하지 않음
         return {
           ...row,
-          baseTimeYn: index === rowIndex ? 'Y' : 'N',
-          chgDtpCd: index === rowIndex ? 'timestamp' : '',
-          dataFormat: index === rowIndex ? 'yyyy-MM-dd HH:mm:ss' : '',
-          changeYn: index === rowIndex ? 'Y' : 'N', // checked, unchecked disalbed로
+          changeYn: 'N',
         };
       });
+
       return updatedRows;
     });
   };
@@ -120,8 +146,21 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   };
 
   /* 데이터 타입 변경 여부 체크박스 */
-  const changeYnHandler = () => {
+  const changeYnHandler = (rowIndex: number, field: string) => {
     // 체크 여부에 따라서
+    setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
+      const updatedRows: RowsInfo[] = tbCoMetaTblClmnInfoList.map((row, index) => {
+        if (field === 'changeYn' && index === rowIndex) {
+          return {
+            ...row,
+            changeYn: tbCoMetaTblClmnInfoList[rowIndex].changeYn === 'Y' ? 'N' : 'Y',
+          };
+        } else {
+          return row;
+        }
+      });
+      return updatedRows;
+    });
   };
 
   /* input state관리 */
@@ -143,17 +182,17 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     });
   }
 
-  // // 수정 버튼
-  // const editCustomerDetailInfo = (data: any) => {
-  //   dispatch(
-  //     openModal({
-  //       type: ModalType.CONFIRM,
-  //       title: '저장',
-  //       content: '수정하시겠습니까?',
-  //       onConfirm: mutate,
-  //     })
-  //   );
-  // };
+  // 저장 버튼
+  const regCustomerDetailInfo = (data: any) => {
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '저장',
+        content: '수정하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
+  };
 
   // 목록 버튼
   const goToList = () => {
@@ -215,10 +254,11 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                     return (
                       <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
                         <Checkbox
-                          // checked={row.changeYn === 'Y'}
+                          checked={row.changeYn === 'Y'}
                           disabled={row.baseTimeYn === 'Y'}
                           key={`checkbox-${columnIndex}`}
-                          onClick={changeYnHandler}
+                          onClick={(e) => changeYnHandler(rowIndex, columns[columnIndex].field)}
+                          value={row.changeYn}
                         />
                       </TD>
                     );
@@ -269,12 +309,6 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                         })()}
                       </TD>
                     );
-                  } else if (columns[columnIndex].field === 'no') {
-                    return (
-                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
-                        {rowIndex + 1}
-                      </TD>
-                    );
                   } else if (columns[columnIndex].field === 'chgDtpCd') {
                     return (
                       <TD
@@ -295,7 +329,12 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                             if (row.changeYn === 'Y' && row.baseTimeYn === 'Y') {
                               return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
                             } else if (row.changeYn === 'Y') {
-                              return <Select></Select>;
+                              return (
+                                <Select>
+                                  <SelectOption value={'int'}>int</SelectOption>
+                                  <SelectOption value={'s'}>timestamp</SelectOption>
+                                </Select>
+                              );
                             }
                           }
                         })()}
@@ -321,7 +360,13 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                               columns[columnIndex].maxLength
                             );
                           } else {
-                            return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
+                            if (columns[columnIndex].field === 'metaTblClmnPhysNm') {
+                              return <Typography variant="h5">{row.columnName} </Typography>;
+                            } else if (columns[columnIndex].field === 'dtpCd') {
+                              return <Typography variant="h5">{row.dataType} </Typography>;
+                            } else if (columns[columnIndex].field === 'dataFormat') {
+                              return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
+                            }
                           }
                         })()}
                       </TD>
@@ -339,14 +384,14 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
       </Table>
       <Stack gap="SM" justifyContent="End">
         <Button
-          // onClick={editCustomerDetailInfo}
+          onClick={regCustomerDetailInfo}
           style={{ width: 50 }}
           type="submit"
           priority="Primary"
           appearance="Contained"
           size="LG"
         >
-          수정
+          저장
         </Button>
         <Button onClick={goToList} style={{ width: 50 }} type="submit" priority="Normal" appearance="Outline" size="LG">
           목록

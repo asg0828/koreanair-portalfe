@@ -60,7 +60,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     isSuccess: uIsSuccess,
     isError: uIsError,
     mutate,
-  } = useUpdateMetaTable(metaTblId, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList, rtmTblYn);
+  } = useUpdateMetaTable(metaTblId, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   // 수정중 페이지 이탈 모달
@@ -98,6 +98,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
           baseTimeYn: index === rowIndex ? 'Y' : 'N',
           chgDtpCd: index === rowIndex ? 'timestamp' : '',
           dataFormat: index === rowIndex ? 'yyyy-MM-dd HH:mm:ss' : '',
+          changeYn: index === rowIndex ? '' : '',
         };
       });
       return updatedRows;
