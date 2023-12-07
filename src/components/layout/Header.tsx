@@ -85,8 +85,10 @@ const Header = () => {
       <Page fixedSize={true} style={{ padding: '0 20px' }}>
         <Stack direction="Horizontal" justifyContent="Between">
           <Stack gap="XL" className="logo-wrap">
+          <MenuOutlinedIcon className='dropMenuIcon' color="action" onClick={handleDropMenu} />
             <span className="home-logo" onClick={goToHome}>
-              대한항공 Customer Data Portal
+              <div className='headerLogo'></div>
+              Customer<br/> Data Portal
             </span>
           </Stack>
 
@@ -167,7 +169,6 @@ const Header = () => {
           </Stack>
 
           <Stack justifyContent="End" gap="XL" className="user-info-wrap">
-            <MenuOutlinedIcon color="action" onClick={handleDropMenu} />
             <Avatar status="02" onClick={goToMyPage} />
             <LogoutOutlinedIcon color="action" onClick={handleLogout} />
           </Stack>
