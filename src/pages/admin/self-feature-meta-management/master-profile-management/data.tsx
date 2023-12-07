@@ -5,6 +5,7 @@ import {
     MstrProfDelProps,
     MstrProfSearchInfoProps,
     TbCoMetaTbInfo,
+    TbCoMetaTblClmnInfo,
     TbRsMstrSgmtRule, 
     TbRsMstrSgmtRuleAttrClmn,
     TbRsMstrSgmtRuleAttrTbl,
@@ -110,6 +111,10 @@ export const initMetaColumnIsResolutionInfoSearchProps: MetaColumnIsResolutionIn
 	isResolution: '',
 	joinKeyYn: '',
 }
+export const initMetaColumnIsResolutionInfoSearchJoinkeyProps: MetaColumnIsResolutionInfoSearchProps = {
+	isResolution: '',
+	joinKeyYn: 'Y',
+}
 export const initMstrProfDelProps: MstrProfDelProps = {
     mstrSgmtRuleIds: [],
 }
@@ -117,4 +122,29 @@ export const initTbRsRslnRuleKeyPrty: TbRsRslnRuleKeyPrty = {
 	rslnRuleId: '',
 	rslnRuleKeyClmnNm: '',
 	rslnRuleKeyPrty: 0,
+}
+export const initTbCoMetaTblClmnInfo: TbCoMetaTblClmnInfo = {
+    rtmTblYn: '',
+    metaTblId: '',
+    metaTblLogiNm: '',
+    metaTblClmnId: '',
+    metaTblClmnPhysNm: '',
+    metaTblClmnLogiNm: '',
+    metaTblClmnDesc: '',
+    dtpCd: '',
+    dtpLenVal: '',
+    pkYn: '',
+    nullYn: '',
+    defltVal: '',
+    clmnUseYn: '',
+    clmnSortOrd: 0,
+    frstRegDttm: '',
+    frstRegUserId: '',
+    lastUpdDttm: '',
+    lastUpdUserId: '',
+    chgDtpCd: '',
+    dataFormat: '',
+    baseTimeYn: '',
+    maskingRuleCd: '',
+    dataTypeCategory: '',
 }
