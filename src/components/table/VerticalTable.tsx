@@ -126,9 +126,9 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     if (columnIndex === -1) return;
 
     const sortDirection = initialSortedColumn === 'rank' ?
-        SortDirectionCode.ASC :
+        SortDirectionCode.DESC :
         initialSortedColumn === 'purchaseAmount' ?
-            SortDirectionCode.DESC :
+            SortDirectionCode.ASC :
             SortDirectionCode.ASC;
 
     handleChangeSortDirection(sortDirection, columnIndex);
