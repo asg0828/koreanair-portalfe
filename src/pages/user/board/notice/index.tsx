@@ -15,8 +15,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'No', field: 'rownum', colSpan: 1 },
-  { headerName: '제목', field: 'sj', colSpan: 7, align: 'left' },
+  { headerName: 'No', field: 'rownum', colSpan: 0.5 },
+  { headerName: '제목', field: 'sj', colSpan: 7.5, align: 'left' },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
 ];
