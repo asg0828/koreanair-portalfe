@@ -246,7 +246,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">0</span>개
+                      <span className="num">1</span>개
                     </div>
                   </Stack>
                 </div>
@@ -328,7 +328,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">보유쿠폰</div>
                       <div className="value">
-                        <span className="num">0</span>개
+                        <span className="num">2</span>개
                       </div>
                     </Stack>
                   </div>
@@ -337,7 +337,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">항공권할인쿠폰보유여부</div>
                     <div className="value">
-                      <span className="num">N</span>
+                      <span className="num">Y</span>
                     </div>
                   </Stack>
                 </div>
@@ -384,7 +384,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">34</span>회
+                      <span className="num">2</span>회
                     </div>
                   </Stack>
                 </div>
@@ -400,7 +400,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">0</span>회
+                      <span className="num">1</span>회
                     </div>
                   </Stack>
                 </div>
@@ -512,7 +512,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">0</span>
+                        <span className="num">2</span>
                       </div>
                     </Stack>
                   </div>
@@ -528,7 +528,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">0</span>
+                        <span className="num">3</span>
                       </div>
                     </Stack>
                   </div>
@@ -546,7 +546,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">0</span>
+                        <span className="num">5</span>
                       </div>
                     </Stack>
                   </div>
@@ -578,7 +578,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">0</span>
+                        <span className="num">6</span>
                       </div>
                     </Stack>
                   </div>
@@ -605,7 +605,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                       <tr>
                         <td>Jan 12, 2023</td>
                         <td>010-0000-0000</td>
-                        <td>OOOO</td>
+                        <td>발송완료</td>
                         <td></td>
                       </tr>
                     </tbody>

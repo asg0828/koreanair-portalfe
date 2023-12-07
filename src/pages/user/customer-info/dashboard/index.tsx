@@ -122,7 +122,7 @@ export default function List() {
       setEmails(emailData);
       setSnss(snsData);
       setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
+    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setProfile(profileData[1]);
       setSkypass(skypassData2);
       setFamily(familyMemberData[3]);
@@ -139,7 +139,7 @@ export default function List() {
       setSmss(smsData);
       setEmails(emailData);
       setSnss(snsData);
-      setSearchInfo({ ...searchInfo, skypassSelect: '112917446366' });
+      setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
     }
     // refetch();
   }, [refetch, searchInfo, validation]);
@@ -194,9 +194,9 @@ export default function List() {
       } else if (value === '112617209394') {
         setFamily(familyMemberData[2]);
       }
-    } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
+    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
-      if (value === '112917446366') {
+      if (value === '112315856573') {
         setFamily(familyMemberData[3]);
       } else if (value === '112557098776') {
         setFamily(familyMemberData[4]);
@@ -599,17 +599,9 @@ export default function List() {
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">유효프로모션쿠폰</div>
+                    <div className="key">항공권할인쿠폰보유여부</div>
                     <div className="value">
-                      <span className="num">{wallet?.promotion}</span>개
-                    </div>
-                  </Stack>
-                </div>
-                <div className="item middle">
-                  <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">전자우대할인권</div>
-                    <div className="value">
-                      <span className="num">{wallet?.complimentary}</span>개
+                      <span className="num">{wallet?.promotion}</span>
                     </div>
                   </Stack>
                 </div>

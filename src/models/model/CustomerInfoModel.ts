@@ -71,8 +71,7 @@ export interface FamilyList {
 
 export interface Wallet {
   coupon: number;
-  promotion: number;
-  complimentary: number;
+  promotion: string;
 }
 
 export interface Preference {
