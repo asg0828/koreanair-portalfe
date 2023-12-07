@@ -85,10 +85,17 @@ const Header = () => {
       <Page fixedSize={true} style={{ padding: '0 20px' }}>
         <Stack direction="Horizontal" justifyContent="Between">
           <Stack gap="XL" className="logo-wrap">
-          <MenuOutlinedIcon className='dropMenuIcon' color="action" onClick={handleDropMenu} />
+            <MenuOutlinedIcon className="dropMenuIcon" color="action" onClick={handleDropMenu} />
             <span className="home-logo" onClick={goToHome}>
-              <div className='headerLogo'></div>
-              Customer<br/> Data Portal
+              <div className="headerLogo"></div>
+              {contextPath === ContextPath.ADMIN ? (
+                `CDP ADMIN`
+              ) : (
+                <p>
+                  Customer
+                  <br /> Data Portal
+                </p>
+              )}
             </span>
           </Stack>
 
