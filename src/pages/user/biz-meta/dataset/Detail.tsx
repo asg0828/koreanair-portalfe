@@ -30,24 +30,28 @@ const Detail = () => {
       colSpan: 3,
       maxLength: 100,
       require: true,
+      align: 'left',
     },
     {
       headerName: '영문명',
       field: 'mcsEnNm',
       colSpan: 3,
       require: true,
+      align: 'left',
     },
     {
       headerName: '원천 컬럼명',
       field: 'srcClNm',
       colSpan: 2,
       require: true,
+      align: 'left',
     },
     {
       headerName: '정의',
       field: 'mcsDef',
       colSpan: 3.2,
       require: true,
+      align: 'left',
     },
     {
       headerName: '산출로직',
