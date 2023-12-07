@@ -416,8 +416,6 @@ const SelfFeatureReg = () => {
 		param.customerFeature = featureInfo
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
-		console.log(param)
-		return 
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({
