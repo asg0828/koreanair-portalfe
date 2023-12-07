@@ -86,7 +86,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
 
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
     const field = columns[index].field;
-    const oValue = order === SortDirectionCode.ASC ? 1 : -1;
+    const oValue = order === SortDirectionCode.DESC ? 1 : -1;
 
     setSortedColumn(field);
 
@@ -140,7 +140,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   useEffect(() => {
     setIsCheckedAll(false);
     setCheckedIndexList([]);
-    setSortRows(rows);
   }, [rows]);
 
   return (

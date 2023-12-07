@@ -52,7 +52,6 @@ const List = () => {
         {headerName: '국제선 최근 탑승일', field: 'lastIntlFlightDate', colSpan: 0.7},
     ];
 
-    // const [rows, setRows] = useState(dummyData.data.contents);
     const [rows, setRows] = useState<any>([]);
     const { data: response, isError, refetch } = useVipList(params);
 
