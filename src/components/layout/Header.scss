@@ -5,14 +5,24 @@
   z-index: 999;
   background:#FFF;
   border-bottom: 1px solid rgb(218, 218, 218);
+  .headerLogo{
+    width: 28px;
+    height: 28px;
+    background: url('./../../assets/images/CDP_logo.png') 50% 50%/100% auto no-repeat;
+  }
   .logo-wrap {
-    padding-left: 20px;
+    padding-left: 1rem;
     .home-logo {
-      width: 132px;
-      height: 24px;
       cursor: pointer;
-      background: url("/assets/images/logo2.png") no-repeat center;
-      text-indent: -9999em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      letter-spacing: -0.5px;
+      line-height: 0.875rem;
+      text-transform: uppercase;
+      color: #333333;
+      font-weight: 900;
     }
     .logo-title {
       width: 70px;
@@ -22,8 +32,8 @@
     height: 77px;
   }
   .user-info-wrap {
-    width: 132px;
-    padding-right: 20px;
+    margin-left: 100px;
+    padding-right: 1rem;
   }
 
   .menu-title {
@@ -143,7 +153,24 @@
   background:#001863;
   border-bottom: 1px solid #ddd;
   .home-logo {
-    background: url("/assets/images/logo1.png") no-repeat center;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    letter-spacing: -0.5px;
+    line-height:0.875rem;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: #c2c9df;
+  }
+  .headerLogo{
+    width: 28px;
+    height: 28px;
+    background: url('./../../assets/images/CDP_logo.png') 50% 50%/100% auto no-repeat;
+  }
+  .dropMenuIcon{
+    color: rgba(255, 255, 255, 0.5);
   }
   .menu-title {
     color:#b1b5c5;
@@ -155,6 +182,7 @@
     color: #fff ;
   }
   .user-info-wrap {
+    margin-left: 0;
     svg{
       color: rgba(255,255,255,0.5);
     }
