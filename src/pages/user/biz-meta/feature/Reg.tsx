@@ -216,7 +216,6 @@ const Reg = () => {
                       maxLength: { value: 32, message: 'max length exceeded' },
                     })}
                     validation={errors?.featureId?.message ? 'Error' : undefined}
-                    autoFocus
                     disabled
                   />
                   <ErrorLabel message={errors?.featureId?.message} />
@@ -284,7 +283,6 @@ const Reg = () => {
                       maxLength: { value: 100, message: 'max length exceeded' },
                     })}
                     validation={errors?.featureEnNm?.message ? 'Error' : undefined}
-                    autoFocus
                   />
                   <ErrorLabel message={errors?.featureEnNm?.message} />
                 </Stack>
@@ -302,7 +300,6 @@ const Reg = () => {
                       required: { value: true, message: 'featureDef is required.' },
                     })}
                     validation={errors?.featureDef?.message ? 'Error' : undefined}
-                    autoFocus
                   />
                   <ErrorLabel message={errors?.featureDef?.message} />
                 </Stack>
@@ -320,7 +317,6 @@ const Reg = () => {
                       maxLength: { value: 32, message: 'max length exceeded' },
                     })}
                     validation={errors?.calcUnt?.message ? 'Error' : undefined}
-                    autoFocus
                   />
                   <ErrorLabel message={errors?.calcUnt?.message} />
                 </Stack>
@@ -334,7 +330,6 @@ const Reg = () => {
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     multiline
-                    autoFocus
                     className="width-100 height-200"
                     {...register('featureFm', {})}
                     validation={errors?.featureFm?.message ? 'Error' : undefined}
@@ -350,9 +345,7 @@ const Reg = () => {
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
-                    multiline
-                    autoFocus
-                    className="width-100 height-200"
+                    className="width-100"
                     {...register('featureRelTb', {})}
                     validation={errors?.featureRelTb?.message ? 'Error' : undefined}
                   />
@@ -370,7 +363,6 @@ const Reg = () => {
                     className="width-100"
                     {...register('featureDsc', {})}
                     validation={errors?.featureDsc?.message ? 'Error' : undefined}
-                    autoFocus
                   />
                   <ErrorLabel message={errors?.featureDsc?.message} />
                 </Stack>
@@ -396,7 +388,6 @@ const Reg = () => {
                         maxLength: { value: 32, message: 'max length exceeded' },
                       })}
                       validation={errors?.enrUserNm?.message ? 'Error' : undefined}
-                      autoFocus
                     />
                     <Button
                       appearance="Contained"
@@ -422,7 +413,6 @@ const Reg = () => {
                       maxLength: { value: 16, message: 'max length exceeded' },
                     })}
                     validation={errors?.enrDeptNm?.message ? 'Error' : undefined}
-                    autoFocus
                     disabled
                   />
                   <ErrorLabel message={errors?.enrDeptNm?.message} />
