@@ -14,14 +14,16 @@ import {
 
 const MstrProfMetaTblColumnList = ({
     editMode,
-    infoType,
-    metaTblInfo,
-    metaTblClmnList,
+    divisionType,       // 속성, 행동정보 구분
+    metaTblInfo,        // 저장된 메타테이블 정보
+    metaTblClmnList,    // 저장된 메타테이블 컬럼 정보
+    metaTblClmnAllList, // 저장된 메타테이블 전체 컬럼 항목(등록 및 수정시 필요)
 }: MstrProfMetaTblColumnListProps) => {
 
     // 항목 리스트 show / hide 처리
     const [isColListShow, setIsColListShow] = useState<Boolean>(true)
 
+    // 저장된 데이터중 항목 전체선택인 경우
     useEffect(() => {
         if (!metaTblInfo || !metaTblInfo.clmnAllChocYn) return
         
@@ -101,7 +103,7 @@ const MstrProfMetaTblColumnList = ({
                                         border: '1px solid rgb(218, 218, 218)',
                                         borderRadius: '5px',
                                         background: 'white',
-                                        color: (infoType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
+                                        color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                                         padding: "1rem"
                                     }}
                                 >
@@ -109,7 +111,7 @@ const MstrProfMetaTblColumnList = ({
                                         variant="h6"
                                         style={{
                                             width: "40%",
-                                            color: (infoType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
+                                            color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                                         }}
                                     >
                                         {`${clmnInfo.metaTblClmnLogiNm} [${clmnInfo.metaTblClmnPhysNm}]`}
@@ -117,7 +119,7 @@ const MstrProfMetaTblColumnList = ({
                                     <Typography
                                         variant="body1"
                                         style={{
-                                            color: (infoType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
+                                            color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                                         }}
                                     >
                                         {clmnInfo.metaTblClmnLogiNm}
@@ -190,7 +192,7 @@ const MstrProfMetaTblColumnList = ({
                                         border: '1px solid rgb(218, 218, 218)',
                                         borderRadius: '5px',
                                         background: 'white',
-                                        color: (infoType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
+                                        color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                                         padding: "1rem"
                                     }}
                                 >
@@ -198,7 +200,7 @@ const MstrProfMetaTblColumnList = ({
                                         variant="h6"
                                         style={{
                                             width: "40%",
-                                            color: (infoType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
+                                            color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                                         }}
                                     >
                                         {`${clmnInfo.metaTblClmnLogiNm} [${clmnInfo.metaTblClmnPhysNm}]`}
@@ -206,7 +208,7 @@ const MstrProfMetaTblColumnList = ({
                                     <Typography
                                         variant="body1"
                                         style={{
-                                            color: (infoType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
+                                            color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                                         }}
                                     >
                                         {clmnInfo.metaTblClmnLogiNm}
