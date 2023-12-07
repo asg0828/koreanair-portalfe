@@ -57,13 +57,25 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   const tbCoMetaTbInfo = list;
   const isCheckbox = typeof rowSelection === 'function';
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
+  // post용 tbCoMetaTblClmnInfoList 객체
+  const [tbCoMetaTblClmnInfoListPost, setTbCoMetaTblClmnInfoListPost] = useState<Array<any>>([
+    {
+      baseTimeYn: '',
+      clmnUseYn: '',
+      dtpCd: '',
+      metaTblClmnLogiNm: '',
+      metaTblClmnPhysNm: '',
+      pkYn: '',
+      metaTblClmnDesc: '',
+    },
+  ]);
   const [tbCoMetaTblClmnInfoList, setTbCoMetaTblClmnInfoList] = useState<Array<RowsInfo>>(Array.from(rows));
   const {
     data: uResponse,
     isSuccess: uIsSuccess,
     isError: uIsError,
     mutate,
-  } = useCreateMetaTableInfo(dbNm, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList);
+  } = useCreateMetaTableInfo(props, tbCoMetaTblClmnInfoListPost);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -184,11 +196,26 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
 
   // 저장 버튼
   const regCustomerDetailInfo = (data: any) => {
+    setTbCoMetaTblClmnInfoListPost(() => {
+      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+        return {
+          ...row,
+          baseTimeYn: row.baseTimeYn,
+          clmnUseYn: row.columnUseYn,
+          dtpCd: row.dataType,
+          metaTblClmnLogiNm: row.metaTblClmnLogiNm,
+          metaTblClmnPhysNm: row.columnName,
+          pkYn: row.baseTimeYn,
+          metaTblClmnDesc: row.metaTblClmnDesc,
+        };
+      });
+      return updatedRows;
+    });
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: '저장',
-        content: '수정하시겠습니까?',
+        content: '저장하시겠습니까?',
         onConfirm: mutate,
       })
     );
@@ -244,6 +271,8 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                           name="metaCustomerRadio"
                           onChange={(e) => timeStampChg(rowIndex)}
                           defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                          defaultValue={'N'}
+                          // value={}
                         />
                       </TD>
                     );
@@ -272,6 +301,8 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                           key={`column-${columnIndex}`}
                           defaultChecked={columns[columnIndex].field === 'clmnUseYn'}
                           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
+                          value={columns[columnIndex].field === 'pkYn' ? row.pkYn : row.columnUseYn}
+                          defaultValue={columns[columnIndex].field === 'pkYn' ? 'N' : 'Y'}
                         />
                       </TD>
                     );

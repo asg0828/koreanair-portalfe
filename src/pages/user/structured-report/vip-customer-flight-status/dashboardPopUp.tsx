@@ -3,12 +3,12 @@ import { Stack, Typography, SelectOption, Select, Button, Modal } from '@ke-desi
 import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import CloseIcon from '@mui/icons-material/Close';
-import { familyMemberData, skypassData } from '../../customer-info/dashboard/data';
+import { familyMemberData, skypassData1 } from '../../customer-info/dashboard/data';
 export default function DashBoardPopUp({ closeModal }: any) {
   const [isListView1, setIsListView1] = useState(false);
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState(false);
-  const [skypass, setSkypass] = useState<Array<Skypass>>(skypassData);
+  const [skypass, setSkypass] = useState<Array<Skypass>>(skypassData1);
   const [family, setFamily] = useState<FamilyMember>(familyMemberData[0]);
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   const today = new Date();
@@ -36,10 +36,10 @@ export default function DashBoardPopUp({ closeModal }: any) {
     if (value === '112423935550') {
       setFamily(familyMemberData[0]);
       setSelectedSkypass(skypass[0]);
-    } else if (value === '112917446366') {
+    } else if (value === '112345789375') {
       setFamily(familyMemberData[1]);
       setSelectedSkypass(skypass[1]);
-    } else if (value === '113327129495') {
+    } else if (value === '112617209394') {
       setFamily(familyMemberData[2]);
       setSelectedSkypass(skypass[2]);
     }
