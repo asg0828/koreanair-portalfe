@@ -1,44 +1,45 @@
+import { useDatasetLoader, useFaqLoader, useFeatureLoader, useQnaLoader } from '@/hooks/useLoader';
+import MyPage from '@/pages/MyPage';
+import Dataroom from '@/pages/user/board/dataroom';
+import DataroomDetail from '@/pages/user/board/dataroom/Detail';
+import DataroomEdit from '@/pages/user/board/dataroom/Edit';
+import DataroomReg from '@/pages/user/board/dataroom/Reg';
+import SfSubmissionRequest from '@/pages/user/self-feature-submission';
+import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Detail';
+import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
 import Home from '@pages/user/Home';
 import DataSet from '@pages/user/biz-meta/dataset';
 import DataSetDetail from '@pages/user/biz-meta/dataset/Detail';
-import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
 import DataSetEdit from '@pages/user/biz-meta/dataset/Edit';
+import DataSetReg from '@pages/user/biz-meta/dataset/Reg';
 import Feature from '@pages/user/biz-meta/feature';
 import FeatureDetail from '@pages/user/biz-meta/feature/Detail';
-import FeatureReg from '@pages/user/biz-meta/feature/Reg';
 import FeatureEdit from '@pages/user/biz-meta/feature/Edit';
+import FeatureReg from '@pages/user/biz-meta/feature/Reg';
+import Faq from '@pages/user/board/faq';
+import FaqEdit from '@pages/user/board/faq/Edit';
+import FaqReg from '@pages/user/board/faq/Reg';
 import Notice from '@pages/user/board/notice';
 import NoticeDetail from '@pages/user/board/notice/Detail';
-import NoticeReg from '@pages/user/board/notice/Reg';
 import NoticeEdit from '@pages/user/board/notice/Edit';
-import Faq from '@pages/user/board/faq';
-import FaqReg from '@pages/user/board/faq/Reg';
-import FaqEdit from '@pages/user/board/faq/Edit';
+import NoticeReg from '@pages/user/board/notice/Reg';
 import Qna from '@pages/user/board/qna';
 import QnaDetail from '@pages/user/board/qna/Detail';
-import QnaReg from '@pages/user/board/qna/Reg';
 import QnaEdit from '@pages/user/board/qna/Edit';
-import Dataroom from '@/pages/user/board/dataroom';
-import DataroomDetail from '@/pages/user/board/dataroom/Detail';
-import DataroomReg from '@/pages/user/board/dataroom/Reg';
-import DataroomEdit from '@/pages/user/board/dataroom/Edit';
+import QnaReg from '@pages/user/board/qna/Reg';
+import CustomerInfo from '@pages/user/customer-info/dashboard';
 import InterestFeature from '@pages/user/feature/interest';
 import PopularFeature from '@pages/user/feature/popular';
 import SelfFeature from '@pages/user/self-feature';
-import SelfFeatureDetail from '@/pages/user/self-feature/Detail';
-import SelfFeatureReg from '@pages/user/self-feature/Reg';
 import SelfFeatureEdit from '@pages/user/self-feature/Edit';
-import SfSubmissionRequest from '@/pages/user/self-feature-submission';
-import SfSubmissionRequestDetail from '@/pages/user/self-feature-submission/Detail';
-import CustomerInfo from '@pages/user/customer-info/dashboard';
+import SelfFeatureReg from '@pages/user/self-feature/Reg';
+import DomesticBoarding from '@pages/user/structured-report/domestic-boarding';
+import InternationalBoarding from '@pages/user/structured-report/international-boarding';
+import PurchaseContributors from '@pages/user/structured-report/purchase-contributors';
+import SavedMileage from '@pages/user/structured-report/saved-mileage';
+import VipCustomerFlightStatus from '@pages/user/structured-report/vip-customer-flight-status';
 import Tableau from '@pages/user/tableau';
-import { useFaqLoader, useQnaLoader, useFeatureLoader, useDatasetLoader } from '@/hooks/useLoader';
-import PurchaseContributors from "@pages/user/structured-report/purchase-contributors";
-import InternationalBoarding from "@pages/user/structured-report/international-boarding";
-import DomesticBoarding from "@pages/user/structured-report/domestic-boarding";
-import VipCustomerFlightStatus from "@pages/user/structured-report/vip-customer-flight-status";
-import SavedMileage from "@pages/user/structured-report/saved-mileage";
-import {Navigate} from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -166,6 +167,10 @@ const userRouter = [
   {
     path: 'popup',
     children: [{ path: 'tableau', element: <Tableau /> }],
+  },
+  {
+    path: 'mypage',
+    children: [{ index: true, element: <MyPage /> }],
   },
 ];
 
