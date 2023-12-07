@@ -73,20 +73,13 @@ export const deleteMetaTable = (metaTblIds: Array<string>) => {
   });
 };
 
-export const createMetaTableInfo = (
-  metaTblId: string,
-  metaTblLogiNm: string,
-  tbCoMetaTbInfo: any,
-  tbCoMetaTblClmnInfoList: any
-) => {
+export const createMetaTableInfo = (tbCoMetaTbInfo: any, tbCoMetaTblClmnInfoList: any) => {
   return callApi({
     service: Service.KAL_SF_BE,
     url: `${SelfFeatureAdmApiURL.META_TABLE}`,
     method: Method.POST,
     params: {
       bodyParams: {
-        metaTblId,
-        metaTblLogiNm,
         tbCoMetaTbInfo,
         tbCoMetaTblClmnInfoList,
       },

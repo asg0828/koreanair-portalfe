@@ -11,15 +11,8 @@ import { MasterProfileInfo, MstrProfDelProps } from '@/models/selfFeature/Featur
 import { useMutation } from '@tanstack/react-query';
 
 // customer Meta 등록
-export const useCreateMetaTableInfo = (
-  metaTblId: string,
-  metaTblLogiNm: string,
-  tbCoMetaTbInfo: any,
-  tbCoMetaTblClmnInfoList: any
-) => {
-  return useMutation([`/metas/tables/create`], () =>
-    createMetaTableInfo(metaTblId, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList)
-  );
+export const useCreateMetaTableInfo = (tbCoMetaTbInfo: any, tbCoMetaTblClmnInfoList: any) => {
+  return useMutation([`/metas/tables/create`], () => createMetaTableInfo(tbCoMetaTbInfo, tbCoMetaTblClmnInfoList));
 };
 // customer Meta 수정
 export const useUpdateMetaTable = (

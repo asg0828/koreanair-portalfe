@@ -91,7 +91,6 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
 
     setSortRows(sortRows);
   };
-  console.log(totals);
   const handleClick = (row: RowsInfo, index: number) => {
     onClick && onClick(row, index);
   };

@@ -110,7 +110,7 @@ const profileData: Profile[] = [
 // },
 const skypassList: any[] = [];
 
-const skypassData: Skypass[] = [
+const skypassData1: Skypass[] = [
   {
     skypassNum: '112423935550',
     skypassGrade: 'MM',
@@ -122,6 +122,29 @@ const skypassData: Skypass[] = [
     upgradeCondition: '',
   },
   {
+    skypassNum: '112345789375',
+    skypassGrade: 'MP',
+    useYn: 'N',
+    gradeStartDate: '2016-07-28',
+    mileage: '142,560',
+    expireMileage: '0',
+    gradeCondtion: '',
+    upgradeCondition: '',
+  },
+  {
+    skypassNum: '112617209394',
+    skypassGrade: 'MP',
+    useYn: 'N',
+    gradeStartDate: '2009-12-30',
+    mileage: '15,132',
+    expireMileage: '800',
+    gradeCondtion: '',
+    upgradeCondition: '',
+  },
+];
+
+const skypassData2: Skypass[] = [
+  {
     skypassNum: '112917446366',
     skypassGrade: 'MP',
     useYn: 'N',
@@ -132,7 +155,17 @@ const skypassData: Skypass[] = [
     upgradeCondition: '',
   },
   {
-    skypassNum: '113327129495',
+    skypassNum: '112557098776',
+    skypassGrade: 'MM',
+    useYn: 'N',
+    gradeStartDate: '2012-08-03',
+    mileage: '56,531',
+    expireMileage: '0',
+    gradeCondtion: '',
+    upgradeCondition: '',
+  },
+  {
+    skypassNum: '112111687088',
     skypassGrade: 'MP',
     useYn: 'N',
     gradeStartDate: '2009-12-30',
@@ -420,7 +453,8 @@ export {
   analysisResultData,
   pnrTickerColumn,
   profileData,
-  skypassData,
+  skypassData1,
+  skypassData2,
   familyMemberData,
   walletData,
   preferenceData,

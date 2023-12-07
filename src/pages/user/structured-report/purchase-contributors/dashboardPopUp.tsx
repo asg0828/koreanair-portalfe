@@ -4,13 +4,13 @@ import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
-import { familyMemberData, skypassData } from '../../customer-info/dashboard/data';
+import { familyMemberData, skypassData2 } from '../../customer-info/dashboard/data';
 
 export default function DashBoardPopUp({ closeModal }: any) {
   const [isListView1, setIsListView1] = useState(false);
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState(false);
-  const [skypass, setSkypass] = useState<Array<Skypass>>(skypassData);
+  const [skypass, setSkypass] = useState<Array<Skypass>>(skypassData2);
   const [family, setFamily] = useState<FamilyMember>(familyMemberData[3]);
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   const today = new Date();
@@ -35,20 +35,20 @@ export default function DashBoardPopUp({ closeModal }: any) {
     id?: String
   ) => {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
-    if (value === '112423935550') {
-      setFamily(familyMemberData[4]);
-      setSelectedSkypass(skypass[0]);
-    } else if (value === '112917446366') {
+    if (value === '112917446366') {
       setFamily(familyMemberData[3]);
+      setSelectedSkypass(skypass[0]);
+    } else if (value === '112557098776') {
+      setFamily(familyMemberData[4]);
       setSelectedSkypass(skypass[1]);
-    } else if (value === '113327129495') {
+    } else if (value === '112111687088') {
       setFamily(familyMemberData[5]);
       setSelectedSkypass(skypass[2]);
     }
   };
 
   useEffect(() => {
-    setSelectedSkypass(skypass[1]);
+    setSelectedSkypass(skypass[0]);
   }, [skypass]);
 
   return (
@@ -108,7 +108,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                 {skypass && skypass.length > 0 && (
                   <Select
                     id="skypassSelect"
-                    defaultValue={skypass.length > 0 ? skypass[1].skypassNum : ''}
+                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : ''}
                     appearance="Outline"
                     placeholder="스카이패스선택"
                     style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}

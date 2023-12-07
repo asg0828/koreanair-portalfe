@@ -5,7 +5,8 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import {
   profileData,
-  skypassData,
+  skypassData1,
+  skypassData2,
   familyMemberData,
   walletData,
   preferenceData,
@@ -105,9 +106,9 @@ export default function List() {
     if (validation()) return;
     if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setProfile(profileData[0]);
-      setSkypass(skypassData);
+      setSkypass(skypassData1);
       setFamily(familyMemberData[0]);
-      setSelectedSkypass(skypassData[0]);
+      setSelectedSkypass(skypassData1[0]);
       setWallet(walletData);
       setPreference(preferenceData[0]);
       setCnt(cntData[0]);
@@ -123,9 +124,9 @@ export default function List() {
       setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
     } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
       setProfile(profileData[1]);
-      setSkypass(skypassData);
+      setSkypass(skypassData2);
       setFamily(familyMemberData[3]);
-      setSelectedSkypass(skypassData[1]);
+      setSelectedSkypass(skypassData2[0]);
       setWallet(walletData);
       setPreference(preferenceData[1]);
       setCnt(cntData[1]);
@@ -188,18 +189,18 @@ export default function List() {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112423935550') {
         setFamily(familyMemberData[0]);
-      } else if (value === '112917446366') {
+      } else if (value === '112345789375') {
         setFamily(familyMemberData[1]);
-      } else if (value === '113327129495') {
+      } else if (value === '112617209394') {
         setFamily(familyMemberData[2]);
       }
     } else if (searchInfo.oneId === 'S199604132974321' || searchInfo.skypassNum === '112917446366') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
-      if (value === '112423935550') {
-        setFamily(familyMemberData[4]);
-      } else if (value === '112917446366') {
+      if (value === '112917446366') {
         setFamily(familyMemberData[3]);
-      } else if (value === '113327129495') {
+      } else if (value === '112557098776') {
+        setFamily(familyMemberData[4]);
+      } else if (value === '112111687088') {
         setFamily(familyMemberData[5]);
       }
     }
