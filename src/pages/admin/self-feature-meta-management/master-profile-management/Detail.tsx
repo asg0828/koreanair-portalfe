@@ -186,7 +186,6 @@ const MasterProfileManagementDetail = () => {
                         if (attrTblInfo.sgmtDvCd === DivisionTypes.ATTR) {
                             //저장된 메타테이블 컬럼 항목
                             let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((attrTblColInfo: TbRsMstrSgmtRuleAttrClmn) => attrTblColInfo.mstrSgmtRuleTblId === attrTblInfo.mstrSgmtRuleTblId)
-
                             return (
                                 <MstrProfInfo 
                                     key={index}

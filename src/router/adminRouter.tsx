@@ -6,6 +6,8 @@ import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-manage
 import CustomerMetaManagementReg from '@/pages/admin/self-feature-meta-management/customer-meta-management/Reg';
 import MasterProfileManagement from '@/pages/admin/self-feature-meta-management/master-profile-management';
 import MasterProfileManagementDetail from '@/pages/admin/self-feature-meta-management/master-profile-management/Detail';
+import MasterProfileManagementReg from '@/pages/admin/self-feature-meta-management/master-profile-management/Reg';
+import MasterProfileManagementEdit from '@/pages/admin/self-feature-meta-management/master-profile-management/Edit';
 import AdminAuthGroupManagement from '@/pages/admin/user-management/admin-auth-group-management';
 import AuthGroupManagement from '@/pages/admin/user-management/user-auth-group-management';
 import Dataroom from '@/pages/user/board/dataroom';
@@ -204,6 +206,8 @@ const adminRouter = [
             children: [
               { index: true, element: <MasterProfileManagement /> },
               { path: 'detail', element: <MasterProfileManagementDetail /> },
+              { path: 'reg', element: <MasterProfileManagementReg /> },
+              { path: 'edit', element: <MasterProfileManagementEdit /> },
             ],
           },
         ],

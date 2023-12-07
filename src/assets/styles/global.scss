@@ -1027,3 +1027,15 @@ svg {
 .react-datepicker-popper {
   z-index: 999999999;
 }
+.RightScrollTable .verticalTableDiv div:nth-child(2){
+  max-height: 433px;
+  overflow: auto;
+}
+.tree-wrap #root{
+  min-width: unset;
+}
+.verticalTable p{
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

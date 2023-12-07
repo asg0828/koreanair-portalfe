@@ -16,7 +16,7 @@ const MstrProfMetaTblColumnList = ({
     editMode,
     divisionType,       // 속성, 행동정보 구분
     metaTblInfo,        // 저장된 메타테이블 정보
-    metaTblClmnList,    // 저장된 메타테이블 컬럼 정보
+    metaTblClmnList,    // 저장된 메타테이블 컬럼 정보(화면 노출용)
     metaTblClmnAllList, // 저장된 메타테이블 전체 컬럼 항목(등록 및 수정시 필요)
 }: MstrProfMetaTblColumnListProps) => {
 

@@ -190,14 +190,20 @@ const Edit = () => {
   };
 
   const handleAdd = () => {
-    append({
-      ...initRows,
-      index: fields.length,
-    });
+    setValue('columnSpecs', [
+      ...fields,
+      {
+        ...initRows,
+        index: fields.length,
+      },
+    ]);
   };
 
   const handleRemove = (rowIndex: number) => {
-    remove(rowIndex);
+    setValue(
+      'columnSpecs',
+      fields.filter((item, index) => index !== rowIndex)
+    );
   };
 
   const handleChangeRows = (rowIndex: number, field: string, value: string) => {
@@ -218,7 +224,12 @@ const Edit = () => {
   };
 
   useEffect(() => {
-    if (isSuccess && response.data) {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else if (isSuccess && response.data) {
       setValue('mtsKoNm', response.data.mtsKoNm);
       setValue('mtsEnNm', response.data.mtsEnNm);
       setValue('mtsDef', response.data.mtsDef);
@@ -238,16 +249,7 @@ const Edit = () => {
         });
       });
     }
-  }, [isSuccess, response?.data, setValue, append]);
-
-  useEffect(() => {
-    if (isError || response?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
-      });
-    }
-  }, [response, isError, toast]);
+  }, [response, isSuccess, isError, toast, append, setValue]);
 
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {

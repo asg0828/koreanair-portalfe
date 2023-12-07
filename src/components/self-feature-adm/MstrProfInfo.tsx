@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react'
 import { cloneDeep } from 'lodash'
+import { SelectValue } from '@mui/base/useSelect'
 
 import {
+    Select,
+    SelectOption,
     Stack,
     TextField,
     Typography,
@@ -165,10 +168,23 @@ const MstrProfInfo = ({
                         gap="LG"
                     >
                         <Typography style={{ width: "10%" }} variant='h6'>속성 테이블</Typography>
-                        <TextField
+                        <Select
                             style={{ width: "20%" }}
-                            defaultValue={metaTableInfo?.metaTblLogiNm}
-                        />
+                            value={metaTableInfo?.metaTblId}
+                            appearance="Outline"
+                            placeholder="선택"
+                            className="width-100"
+                            onChange={(
+                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                value: SelectValue<{}, false>
+                            ) => {
+                                //onchangeSelectHandler(e, value, "featureSeGrp")
+                            }}
+                        >
+                            {metaTblAllList.map((item, index) => (
+                                <SelectOption key={index} value={item.metaTblId}>{item.metaTblLogiNm}</SelectOption>
+                            ))}
+                        </Select>
                     </Stack>
                     <Stack
                         direction="Horizontal"
@@ -176,14 +192,41 @@ const MstrProfInfo = ({
                         gap="LG"
                     >
                         <Typography style={{ width: "10%" }} variant='h6'>마스터 Join key</Typography>
-                        <TextField
+                        <Select
                             style={{ width: "20%" }}
-                            defaultValue={metaTblInfo.mstrJoinKeyClmnNm}
-                        />
+                            value={metaTblInfo.mstrJoinKeyClmnNm}
+                            appearance="Outline"
+                            placeholder="선택"
+                            className="width-100"
+                            onChange={(
+                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                value: SelectValue<{}, false>
+                            ) => {
+                                //onchangeSelectHandler(e, value, "featureSeGrp")
+                            }}
+                        >
+                            {rslnRuleKeyPrtyList.map((item, index) => (
+                                <SelectOption key={index} value={item.rslnRuleKeyClmnNm}>{item.rslnRuleKeyClmnNm}</SelectOption>
+                            ))}
+                        </Select>
                         <Typography variant='h6'>속성 Join key</Typography>
-                        <TextField
-                            defaultValue={metaTblClmnJoinkeyInfo && `${metaTblClmnJoinkeyInfo.metaTblClmnLogiNm} [${metaTblClmnJoinkeyInfo.metaTblClmnPhysNm}]`}
-                        />
+                        <Select
+                            style={{ width: "50%" }}
+                            value={metaTblInfo.attrJoinKeyClmnNm}
+                            appearance="Outline"
+                            placeholder="선택"
+                            className="width-100"
+                            onChange={(
+                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                value: SelectValue<{}, false>
+                            ) => {
+                                //onchangeSelectHandler(e, value, "featureSeGrp")
+                            }}
+                        >
+                            {metaTblClmnAllList.map((item, index) => (
+                                <SelectOption key={index} value={item.metaTblClmnPhysNm}>{`${item.metaTblClmnLogiNm} [${item.metaTblClmnPhysNm}]`}</SelectOption>
+                            ))}
+                        </Select>
                     </Stack>
                 </>
             }

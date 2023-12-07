@@ -291,6 +291,7 @@ const List = () => {
           </TH>
           <TD colSpan={5} align="left">
             <TextField
+              autoFocus
               className="width-100"
               size="MD"
               onChange={(e) => handleChangeParams('searchFeature', e.target.value)}

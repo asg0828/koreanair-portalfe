@@ -139,6 +139,7 @@ const UserSelectModal = ({
                 <Button onClick={handleSearch}>검색</Button>
               </Stack>
               <VerticalTable
+                className='RightScrollTable'
                 isMultiSelected={false}
                 clickable={true}
                 columns={columns}
