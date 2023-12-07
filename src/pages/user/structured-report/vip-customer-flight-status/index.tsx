@@ -42,14 +42,14 @@ const List = () => {
     });
 
     const columns: Array<ColumnsInfo> = [
-        {headerName: 'Rank', field: 'Rank', colSpan: 1.},
+        {headerName: 'Rank', field: 'rank', colSpan: 1.},
         {headerName: 'One ID', field: 'oneId', colSpan: 1.3},
-        {headerName: '회원번호', field: 'memberNumber', colSpan: 1},
-        {headerName: '이름', field: 'name', colSpan: 2},
-        {headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1},
-        {headerName: '확약된 PNR수', field: 'confirmedPnrCount', colSpan: 1},
-        {headerName: '국제선 탑승\n' + '예정일\n', field: 'scheduledIntlFlightDate', colSpan: 1},
-        {headerName: '국제선 \n' +'최근 탑승일\n', field: 'lastIntlFlightDate', colSpan: 1},
+        {headerName: '회원번호', field: 'skypassNm', colSpan: 1},
+        {headerName: '이름', field: 'userNm', colSpan: 1},
+        {headerName: 'VIP 회원 분류', field: 'vipType', colSpan: 0.7},
+        {headerName: '확약된 PNR수', field: 'confirmedPnrCount', colSpan: 0.7},
+        {headerName: '국제선 탑승 예정일', field: 'scheduledIntlFlightDate', colSpan: 0.7},
+        {headerName: '국제선 최근 탑승일', field: 'lastIntlFlightDate', colSpan: 0.7},
     ];
 
     // const [rows, setRows] = useState(dummyData.data.contents);
