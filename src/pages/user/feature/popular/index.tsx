@@ -66,7 +66,8 @@ const List = () => {
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
 
   const goToDetail = (row: FeatureModel, index: number) => {
-    navigate(`${contextPath}/biz-meta-management/feature/detail`, {
+    const path = contextPath === '/admin' ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
+    navigate(`${contextPath}${path}`, {
       state: {
         featureId: row.featureId,
       },
