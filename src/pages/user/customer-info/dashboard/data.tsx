@@ -62,17 +62,30 @@ const pnrTickerColumn: Column[] = [
   { headerName: 'Baggage Wgt', field: 'baggageWgt' },
 ];
 
-const profileData: Profile = {
-  name: '홍길동',
-  engFname: 'hong',
-  engLname: 'gildong',
-  birth: '1920-01-01',
-  age: '35',
-  gender: '남',
-  homePhoneNumberInfo: '02-123-4124',
-  mobilePhoneNumberInfone: '010-0101-0101',
-  emailAddress: 'exemail@kalmate.net',
-};
+const profileData: Profile[] = [
+  {
+    name: '홍길동',
+    engFname: 'hong',
+    engLname: 'gildong',
+    birth: '1939-10-07',
+    age: '84',
+    gender: '여',
+    homePhoneNumberInfo: '02-123-4124',
+    mobilePhoneNumberInfone: '010-0101-0101',
+    emailAddress: 'exemail.exe',
+  },
+  {
+    name: '이순신',
+    engFname: 'lee',
+    engLname: 'soonshin',
+    birth: '1974-01-08',
+    age: '49',
+    gender: '남',
+    homePhoneNumberInfo: '02-123-4124',
+    mobilePhoneNumberInfone: '010-0101-0101',
+    emailAddress: 'exemail.exe',
+  },
+];
 // {
 //   name: '이순신',
 //   engFname: 'lee',
@@ -99,89 +112,137 @@ const skypassList: any[] = [];
 
 const skypassData: Skypass[] = [
   {
-    skypassNum: '1235213421532',
-    skypassGrade: 'GOLD',
-    useYn: 'None',
-    gradeStartDate: '2000-00-00',
+    skypassNum: '112423935550',
+    skypassGrade: 'MM',
+    useYn: 'N',
+    gradeStartDate: '2014-01-01',
     mileage: '5,555',
-    expireMileage: '1,222',
-    gradeCondtion: '0',
-    upgradeCondition: '000',
+    expireMileage: '0',
+    gradeCondtion: '',
+    upgradeCondition: '',
   },
   {
     skypassNum: '113416601710',
-    skypassGrade: 'SILVER',
-    useYn: 'None',
-    gradeStartDate: '2000-00-00',
+    skypassGrade: 'MP',
+    useYn: 'N',
+    gradeStartDate: '2008-10-20',
     mileage: '67,321',
     expireMileage: '3,642',
-    gradeCondtion: '0',
-    upgradeCondition: '000',
+    gradeCondtion: '',
+    upgradeCondition: '',
   },
   {
     skypassNum: '113327129495',
-    skypassGrade: 'BRONZE',
-    useYn: 'None',
-    gradeStartDate: '2000-00-00',
+    skypassGrade: 'MP',
+    useYn: 'N',
+    gradeStartDate: '2009-12-30',
     mileage: '15,132',
     expireMileage: '800',
-    gradeCondtion: '0',
-    upgradeCondition: '000',
+    gradeCondtion: '',
+    upgradeCondition: '',
   },
 ];
-const familyMemberData: FamilyMember = {
-  familyCnt: 4,
-  mergeMileage: 50000,
-  familyList: [
-    {
-      relationship: 'path1',
-      code: '024',
-      name: 'SunSin LEE',
-    },
-    {
-      relationship: 'path1',
-      code: '024',
-      name: 'SunSin LEE',
-    },
-    {
-      relationship: 'path1',
-      code: '024',
-      name: 'SunSin LEE',
-    },
-    {
-      relationship: 'path1',
-      code: '024',
-      name: 'SunSin LEE',
-    },
-    {
-      relationship: 'path1',
-      code: '024',
-      name: 'SunSin LEE',
-    },
-  ],
-};
+const familyMemberData: FamilyMember[] = [
+  {
+    familyCnt: 6,
+    mergeMileage: 930338,
+    familyList: [
+      {
+        relationship: 'Spouse',
+        code: '',
+        name: '홍길동1',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '홍길동2',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '홍길동3',
+      },
+      {
+        relationship: 'Grandchild',
+        code: '',
+        name: '홍길동4',
+      },
+      {
+        relationship: 'Grandchild',
+        code: '',
+        name: '홍길동5',
+      },
+      {
+        relationship: 'Daughter / Son-in-Law',
+        code: '',
+        name: '홍길동6',
+      },
+    ],
+  },
+  {
+    familyCnt: 3,
+    mergeMileage: 183109,
+    familyList: [
+      {
+        relationship: 'Spouse',
+        code: '',
+        name: '이순신1',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '이순신2',
+      },
+      {
+        relationship: 'Child',
+        code: '',
+        name: '이순신3',
+      },
+    ],
+  },
+];
 const walletData: Wallet = {
   coupon: 5,
   promotion: 3,
   complimentary: 2,
 };
-const preferenceData: Preference = {
-  seat: 'Window',
-  meal: '한식',
-};
+const preferenceData: Preference[] = [
+  {
+    seat: 'Window',
+    meal: '',
+  },
+  {
+    seat: 'Aisle',
+    meal: '한식',
+  },
+];
 
-const cntData: Cnt = {
-  pnr: 2,
-  eTkt: 2,
-  boarding: 2,
-  pet: 2,
-  call: 2,
-  internet: 2,
-  voc: 2,
-  sms: 2,
-  email: 2,
-  sns: 2,
-};
+const cntData: Cnt[] = [
+  {
+    pnr: 0,
+    eTkt: 1,
+    boarding: 34,
+    pet: 0,
+    call: 1,
+    internet: 0,
+    voc: 0,
+    sms: 0,
+    email: 1,
+    sns: 0,
+  },
+  {
+    pnr: 0,
+    eTkt: 0,
+    boarding: 18,
+    pet: 0,
+    call: 0,
+    internet: 0,
+    voc: 0,
+    sms: 3,
+    email: 18,
+    sns: 8,
+  },
+];
 
 const pnrData: Pnr[] = [
   { arrival: 'BOSICN', class: 'HL1', date: '27AUG23', engName: 'Gil-Dong Hong', reservationNum: '64G000', status: 'O' },
