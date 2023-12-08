@@ -170,7 +170,6 @@ const MasterProfileManagementDetail = () => {
                 className="width-100"
                 gap="MD"
             >
-                <Typography variant="h4">Fact 정보</Typography>
                 <Stack
                     direction="Vertical"
                     className="width-100"
@@ -181,6 +180,7 @@ const MasterProfileManagementDetail = () => {
                         padding:"1rem"
                     }}
                 >
+                <Typography variant="h4">Fact 정보</Typography>
                 {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
                     masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((attrTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
                         if (attrTblInfo.sgmtDvCd === DivisionTypes.ATTR) {
@@ -188,17 +188,13 @@ const MasterProfileManagementDetail = () => {
                             let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((attrTblColInfo: TbRsMstrSgmtRuleAttrClmn) => attrTblColInfo.mstrSgmtRuleTblId === attrTblInfo.mstrSgmtRuleTblId)
                             return (
                                 <MstrProfInfo 
-                                    key={index}
+                                    key={`attr-mstr-prof-detail-${index}`}
                                     editMode={false}
                                     rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
                                     metaTblInfo={attrTblInfo}                   //저장된 메타테이블 정보
                                     metaTblAllList={attrMetaTbList}             //모든 속성정보 메타테이블 정보(선택된 resolution id에 해당되는)
                                     metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
                                 />
-                            )
-                        } else {
-                            return (
-                                <></>
                             )
                         }
                     })
@@ -212,7 +208,6 @@ const MasterProfileManagementDetail = () => {
                 className="width-100"
                 gap="MD"
             >
-                <Typography variant="h4">Base Fact 정보</Typography>
                 <Stack
                     direction="Vertical"
                     className="width-100"
@@ -223,6 +218,7 @@ const MasterProfileManagementDetail = () => {
                         padding:"1rem"
                     }}
                 >
+                <Typography variant="h4">Base Fact 정보</Typography>
                 {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
                     masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((behvTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
                         if (behvTblInfo.sgmtDvCd === DivisionTypes.BEHV) {
@@ -230,17 +226,13 @@ const MasterProfileManagementDetail = () => {
                             let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((behvTblColInfo: TbRsMstrSgmtRuleAttrClmn) => behvTblColInfo.mstrSgmtRuleTblId === behvTblInfo.mstrSgmtRuleTblId)
                             return (
                                 <MstrProfInfo 
-                                    key={index}
+                                    key={`behv-mstr-prof-detail-${index}`}
                                     editMode={false}
                                     rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
                                     metaTblInfo={behvTblInfo}                   //저장된 메타테이블 정보
                                     metaTblAllList={behvMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
                                     metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
                                 />
-                            )
-                        } else {
-                            return (
-                                <></>
                             )
                         }
                     })
