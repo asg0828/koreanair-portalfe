@@ -1861,10 +1861,10 @@
   resolved "https://registry.yarnpkg.com/@juggle/resize-observer/-/resize-observer-3.4.0.tgz#08d6c5e20cf7e4cc02fd181c4b0c225cd31dbb60"
   integrity sha512-dfLbk+PwWvFzSxwk3n5ySL0hfBog779o8h68wK/7/APo/7cgyWp5jcXockbxdk5kFRkbeXWm4Fbi9FrdN381sA==
 
-"@ke-design/components@^1.3.8":
-  version "1.3.8"
-  resolved "https://itro.koreanair.com/library/repository/npm-released/@ke-design/components/-/components-1.3.8.tgz#7dbf5c96fd09d53c39169ade2294cbc6c18de842"
-  integrity sha512-mggTrsmKzmUJBDQCB1SIBVr3vno3lcHaO33JXQfdd1fwSNP4jlHAlJVvp3mfbsV70hhugNs5RR41eu3gTnvMTA==
+"@ke-design/components@^1.3.9":
+  version "1.3.9"
+  resolved "https://itro.koreanair.com/library/repository/npm-released/@ke-design/components/-/components-1.3.9.tgz#1d91eb266b3d6c9fbbe36e03e3cd08c21b1a24c3"
+  integrity sha512-pT5AgAdj9eAntbonDPKFPU2obKPriPLbmliYlpBCn1YMVfs0npJYD3Oll2UAyDMh8ebaXNff5NqOKISw5oz5mQ==
   dependencies:
     "@mui/base" "5.0.0-alpha.121"
     "@radix-ui/react-accordion" "^1.1.0"

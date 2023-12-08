@@ -35,6 +35,7 @@ import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQuer
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import dayjs from 'dayjs';
 import '@/assets/styles/SelfFeature.scss'
+import { getDateFormat } from '@/utils/DateUtil';
 
 const TransFunctionModal = ({
     isOpen = false,
@@ -809,6 +810,13 @@ const TransFunctionModal = ({
                                                     shape="Square"
                                                     size="MD"
                                                     popupOptionWhenPopup="fixed"
+                                                    onThisDayClick={[
+                                                        () => {
+                                                            let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                                            setVariable2Val(today)
+                                                        },
+                                                        true
+                                                    ]}
                                                     onChange={(e) => {e.target.value = ""}}
                                                     onValueChange={(nextVal) => {
                                                         setVariable2Val(nextVal)
@@ -872,6 +880,13 @@ const TransFunctionModal = ({
                                                     size="MD"
                                                     onChange={(e) => {e.target.value = ""}}
                                                     popupOptionWhenPopup="fixed"
+                                                    onThisDayClick={[
+                                                        () => {
+                                                            let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                                            setVariable3Val(today)
+                                                        },
+                                                        true
+                                                    ]}
                                                     onValueChange={(nextVal) => {
                                                         setVariable3Val(nextVal)
                                                     }}

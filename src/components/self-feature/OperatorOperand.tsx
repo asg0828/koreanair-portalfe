@@ -17,6 +17,7 @@ import { OperatorOperandProps, TbRsCustFeatRuleCase, TbRsCustFeatRuleTrgtFilter 
 import { ColDataType, CommonCode, CommonCodeInfo, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 import dayjs from 'dayjs'
+import { getDateFormat } from '@/utils/DateUtil'
 
 const OperatorOperand = ({
     isPossibleEdit,
@@ -286,6 +287,14 @@ const OperatorOperand = ({
                                 shape="Square"
                                 size="SM"
                                 popupOptionWhenPopup='fixed'
+                                onThisDayClick={[
+                                    () => {
+                                        let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                        setOprd2DpValue(today)
+                                        onChangeDatePickerHandler("operand2", today)
+                                    },
+                                    true
+                                ]}
                                 onChange={(e) => { e.target.value = "" }}
                                 onValueChange={(nextVal) => {
                                     //operand2
@@ -421,6 +430,14 @@ const OperatorOperand = ({
                                     shape="Square"
                                     size="SM"
                                     popupOptionWhenPopup='fixed'
+                                    onThisDayClick={[
+                                        () => {
+                                            let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                            setOprd2DpValue(today)
+                                            onChangeDatePickerHandler("operand2", today)
+                                        },
+                                        true
+                                    ]}
                                     onChange={(e) => { e.target.value = "" }}
                                     onValueChange={(nextVal) => {
                                         //operand2
@@ -543,6 +560,14 @@ const OperatorOperand = ({
                                     shape="Square"
                                     size="SM"
                                     popupOptionWhenPopup='fixed'
+                                    onThisDayClick={[
+                                        () => {
+                                            let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                            setOprd5DpValue(today)
+                                            onChangeDatePickerHandler("operand5", today)
+                                        },
+                                        true
+                                    ]}
                                     onChange={(e) => { e.target.value = "" }}
                                     onValueChange={(nextVal) => {
                                         //operand5

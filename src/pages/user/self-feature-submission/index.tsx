@@ -173,6 +173,18 @@ const SfSubmissionRequest = () => {
                                 mode="single"
                                 shape="Square"
                                 size="MD"
+                                onThisDayClick={[
+                                    () => {
+                                        let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                        setRequestDateFrom(today)
+                                        setSearch((prevState: FeatureSubmissionSearchProps) => {
+                                            let rtn = cloneDeep(prevState)
+                                            rtn.requestDateFrom = getDateFormat(today)//`${nextVal}T19:20:30+01:00`
+                                            return rtn
+                                        });
+                                    },
+                                    true
+                                ]}
                                 onValueChange={(nextVal) => {
                                     setRequestDateFrom(nextVal)
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
@@ -190,6 +202,18 @@ const SfSubmissionRequest = () => {
                                 mode="single"
                                 shape="Square"
                                 size="MD"
+                                onThisDayClick={[
+                                    () => {
+                                        let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                        setRequestDateTo(today)
+                                        setSearch((prevState: FeatureSubmissionSearchProps) => {
+                                            let rtn = cloneDeep(prevState)
+                                            rtn.requestDateTo = getDateFormat(today)//`${nextVal}T19:20:30+01:00`
+                                            return rtn
+                                        });
+                                    },
+                                    true
+                                ]}
                                 onValueChange={(nextVal) => {
                                     setRequestDateTo(nextVal)
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
