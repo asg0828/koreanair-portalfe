@@ -120,7 +120,7 @@ const List = () => {
         }));
       }
     }
-  }, [response, isError, page, toast]);
+  }, [response, isError, page.pageSize, toast]);
 
   useEffect(() => {
     if (cIsError || cResponse?.successOrNot === 'N') {
@@ -175,6 +175,7 @@ const List = () => {
       <DataGrid
         enableSort={true}
         clickable={true}
+        isMultiSelected={false}
         columns={columns}
         rows={getPagingList(rows, page)}
         page={page}
