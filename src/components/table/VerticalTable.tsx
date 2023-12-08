@@ -88,12 +88,18 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     const field = columns[index].field;
     const oValue = order === SortDirectionCode.DESC ? 1 : -1;
 
-    const colorColumn = initialSortedColumn === 'rank' ? 'scheduledIntlFlightDate' : field;
+    const colorColumn = initialSortedColumn = field;
     setSortedColumn(colorColumn);
 
     const sortRows = [...rows].sort((a, b) => {
       let valueA = a[field] || '';
       let valueB = b[field] || '';
+
+      if (valueA === valueB) {
+        return a.rank - b.rank;
+        // return a.lastIntlFlightDate - b.lastIntlFlightDate;
+      }
+
 
       if (typeof valueA === 'string') {
         return valueA.localeCompare(valueB) * oValue;
@@ -119,7 +125,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     const columnIndex = columns.findIndex(column => column.field === initialSortedColumn);
     if (columnIndex === -1) return;
 
-    const sortDirection = initialSortedColumn === 'rank' ?
+    const sortDirection = initialSortedColumn === 'scheduledIntlFlightDate' ?
         SortDirectionCode.DESC :
         initialSortedColumn === 'purchaseAmount' ?
             SortDirectionCode.ASC :
