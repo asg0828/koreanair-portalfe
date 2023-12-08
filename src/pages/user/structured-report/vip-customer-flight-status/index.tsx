@@ -105,7 +105,7 @@ const List = () => {
                 clickable={true}
                 showPageSizeSelect={false}
                 showPagination={false}
-                initialSortedColumn="rank"
+                initialSortedColumn="scheduledIntlFlightDate"
                 page={page}
                 onClick={toggleModal}
                 onChange={handlePage}
