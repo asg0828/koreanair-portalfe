@@ -175,6 +175,7 @@ const List = () => {
       <DataGrid
         enableSort={true}
         clickable={true}
+        isMultiSelected={false}
         columns={columns}
         rows={getPagingList(rows, page)}
         page={page}
