@@ -1,5 +1,5 @@
 import { MstrProfMetaTblColumnListProps, TbCoMetaTblClmnInfo, TbRsMstrSgmtRuleAttrClmn, TbRsMstrSgmtRuleAttrTbl } from "@/models/selfFeature/FeatureAdmModel"
-import React, { useState, useEffect, useCallback, useLayoutEffect } from "react"
+import React, { useState, useEffect, useCallback } from "react"
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
 
@@ -74,7 +74,7 @@ const MstrProfMetaTblColumnList = ({
         }
     }, [metaTblInfo, metaTblClmnAllList])
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         metaTableInfoResetCallback()
     }, [metaTableInfoResetCallback])
     // modal 확인/취소 이벤트
@@ -108,7 +108,7 @@ const MstrProfMetaTblColumnList = ({
         }
     }, [metaTblClmnList])
     // 등록 및 수정시 컬럼 추가할 경우 필요
-    useLayoutEffect(() => {
+    useEffect(() => {
         tmpMetaTableClmnCallback()
     }, [tmpMetaTableClmnCallback])//저장된 메타테이블 컬럼 정보
 

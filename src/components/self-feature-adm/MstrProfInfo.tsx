@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
 
@@ -106,7 +106,7 @@ const MstrProfInfo = ({
         }
         setMetaTblOptionList(() => cloneDeep(temp2))
     }, [metaTblAllList, mstrSgmtRuleAttrTblList])
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (!metaTblInfo) return
         setDivisionType(() => cloneDeep(metaTblInfo.sgmtDvCd))
         let tblId: string = ""
@@ -138,7 +138,7 @@ const MstrProfInfo = ({
         }
     }, [metaTblColList, metaTblClmnAllList])
     // 화면 노출을 위한 저장된 컬럼 setting
-    useLayoutEffect(() => {
+    useEffect(() => {
         metaTableClmnInfoCallback()
     }, [metaTableClmnInfoCallback])
 
