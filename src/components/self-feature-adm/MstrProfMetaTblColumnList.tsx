@@ -53,7 +53,6 @@ const MstrProfMetaTblColumnList = ({
             (!metaTblInfo || metaTblInfo.mstrSgmtRuleTblId === "")
             && metaTblClmnAllList.length > 0
         ) {
-            console.log("테이블 정보가 바뀌면 컬럼 항목 reset && 전체선택 해제(이전 선택된 테이블 ID를 알아야함)")
             // 전체선택 해제
             setIsCheckedAllCol(() => false)
             setIsAddIconShow(() => true)
@@ -89,14 +88,12 @@ const MstrProfMetaTblColumnList = ({
     }
     // 저장된 데이터중 항목 전체선택인 경우
     useEffect(() => {
-        console.log("저장된 데이터중 항목 전체선택인 경우")
         setIsCheckedAllCol(() => false)
         setIsColListShow(() => true)
         setIsAddIconShow(() => true)
         if (!metaTblInfo || !metaTblInfo.clmnAllChocYn) return
 
         if (metaTblInfo.clmnAllChocYn === "Y") {
-            console.log("저장된 데이터중 항목 전체선택인 경우 중 clmnAllChocYn === Y")
             setIsAddIconShow(() => false)
             setIsCheckedAllCol(() => true)
             setIsColListShow(() => false)
@@ -106,17 +103,8 @@ const MstrProfMetaTblColumnList = ({
     const tmpMetaTableClmnCallback = useCallback(() => {
         if (!metaTblClmnList || metaTblClmnList.length < 1) {
             setTmpMetaTblClmnList(() => [])
-            console.log("등록 및 수정시 컬럼 추가할 경우 필요 !metaTblClmnList || metaTblClmnList.length < 1")
-            setIsColListShow(() => false)
         } else {
             setTmpMetaTblClmnList(() => cloneDeep(metaTblClmnList))
-            if (metaTblInfo?.clmnAllChocYn === "Y") {
-                setIsColListShow(() => false)
-                console.log("등록 및 수정시 컬럼 추가할 경우 필요 metaTblInfo?.clmnAllChocYn === Y")
-            } else {
-                setIsColListShow(() => true)
-                console.log("등록 및 수정시 컬럼 추가할 경우 필요 metaTblInfo?.clmnAllChocYn !== Y")
-            }
         }
     }, [metaTblClmnList])
     // 등록 및 수정시 컬럼 추가할 경우 필요
@@ -238,7 +226,6 @@ const MstrProfMetaTblColumnList = ({
                 })
                 return [...rtn, ...updtList]
             })
-            console.log("ㅁㅁㅁㅁ")
             setIsColListShow(() => false)
         }
     }
