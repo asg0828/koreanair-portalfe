@@ -27,6 +27,10 @@ import {
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SelectValue } from '@mui/base/useSelect';
+import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
+import { useTimeColumn } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
+import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -41,7 +45,7 @@ export interface VerticalTableProps {
   props?: any;
   list: RowsInfo;
 }
-
+// customerMeta 등록용 grid
 const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   columns = [],
   rows = [],
@@ -59,11 +63,12 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   const tbCoMetaTbInfo = list;
   const isCheckbox = typeof rowSelection === 'function';
   const [checkedList, setCheckedList] = useState<Array<number>>([]);
+
   // post용 tbCoMetaTblClmnInfoList 객체
   const [tbCoMetaTblClmnInfoListPost, setTbCoMetaTblClmnInfoListPost] = useState<Array<any>>([
     {
-      baseTimeYn: '',
-      clmnUseYn: '',
+      baseTimeYn: 'N',
+      clmnUseYn: 'Y',
       dtpCd: '',
       metaTblClmnLogiNm: '',
       metaTblClmnPhysNm: '',
@@ -78,11 +83,27 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     isError: isError,
     mutate,
   } = useCreateMetaTableInfo(props, tbCoMetaTblClmnInfoListPost);
+  const { data: responseTime, isError: isErrorTime, refetch: refetchTime } = useCommCodes(CommonCode.FORMAT);
+  const [timeFormat, setTimeFormat] = useState<Array<CommonCodeInfo>>([]);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isErrorTime || responseTime?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (responseTime?.result) {
+        setTimeFormat(responseTime.result);
+      }
+    }
+  }, [responseTime, isErrorTime, toast]);
+
   // 수정중 페이지 이탈 모달
   const [isOpen, setOpen] = useState(false);
+  const [isOpenValidation, setOpenValidation] = useState(false);
   const handleChangeSortDirection = (order: SortDirection, index: number) => {
     const oValue = order === SortDirectionCode.ASC ? 1 : order === SortDirectionCode.DESC ? -1 : 0;
 
@@ -103,7 +124,13 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   };
 
   useEffect(() => {
-    setTbCoMetaTblClmnInfoList(rows);
+    setTbCoMetaTblClmnInfoList(() => {
+      const updatedRows: RowsInfo[] = rows.map((row, index) => {
+        return { ...row, clmnUseYn: 'Y', metaTblClmnLogiNm: row.remarks ? row.remarks : '', metaTblClmnDesc: '' };
+      });
+
+      return updatedRows;
+    });
   }, [rows]);
 
   // 수집기준시간 변경 함수
@@ -150,7 +177,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         } else if (field === 'clmnUseYn' && index === rowIndex) {
           return {
             ...row,
-            clmnUseYn: tbCoMetaTblClmnInfoList[rowIndex].clmnUseYn === 'Y' ? 'N' : 'Y',
+            clmnUseYn: tbCoMetaTblClmnInfoList[rowIndex].clmnUseYn === ('N' || undefined) ? 'Y' : 'N',
           };
         }
         return row;
@@ -164,10 +191,17 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     // 체크 여부에 따라서
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
       const updatedRows: RowsInfo[] = tbCoMetaTblClmnInfoList.map((row, index) => {
-        if (field === 'changeYn' && index === rowIndex) {
+        if (field === 'changeYn' && index === rowIndex && row.changeYn === 'Y') {
           return {
             ...row,
-            changeYn: tbCoMetaTblClmnInfoList[rowIndex].changeYn === 'Y' ? 'N' : 'Y',
+            changeYn: 'N',
+            dataFormat: null,
+            chgDtpCd: null,
+          };
+        } else if (field === 'changeYn' && index === rowIndex) {
+          return {
+            ...row,
+            changeYn: 'Y',
           };
         } else {
           return row;
@@ -196,26 +230,75 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     });
   }
 
+  // select state 관리
+  const onchangeSelectHandler = (
+    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: SelectValue<{}, false>,
+    id?: String,
+    rowIndex?: number
+  ) => {
+    setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
+      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+        if (index === rowIndex) {
+          if ((value === 'double' || 'int') && id === 'chgDtpCd') {
+            return {
+              ...row,
+              [`${id}`]: String(value),
+              dataFormat: null,
+            };
+          } else {
+            return {
+              ...row,
+              [`${id}`]: String(value),
+            };
+          }
+        }
+        return row;
+      });
+
+      return updatedRows;
+    });
+  };
   // 저장 버튼
-  const regCustomerDetailInfo = (data: any) => {
-    console.log(props);
+  const regCustomerDetailInfo = () => {
+    // 유효성 검사
+    const validation = () => {
+      let searchError = false;
+
+      if (
+        props.dbNm.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
+        props.metaTblDesc.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
+        props.metaTblDvCd.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
+        props.metaTblLogiNm.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
+        props.metaTblPhysNm.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
+        props.metaTblUseYn.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
+        props.rtmTblYn.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
+        tbCoMetaTblClmnInfoList.length === 0
+        // tbCoMetaTblClmnInfoList.find((e) => e.pkYn === 'Y') ||
+        // tbCoMetaTblClmnInfoList.find((e) => e.pkYn === 'Y')
+      ) {
+        setOpenValidation(true);
+        searchError = true;
+      }
+
+      return searchError;
+    };
+    // if (validation()) return;
     setTbCoMetaTblClmnInfoListPost(() => {
       const updatedRows = tbCoMetaTblClmnInfoList.map((row) => {
         const { isNullable, remarks, dataType, ...rest } = row;
-
         return {
           baseTimeYn: rest.baseTimeYn === undefined ? 'N' : rest.baseTimeYn,
-          clmnUseYn: rest.columnUseYn === undefined ? 'N' : rest.columnUseYn,
+          clmnUseYn: rest.clmnUseYn ? rest.clmnUseYn : 'Y',
           dtpCd: dataType,
           metaTblClmnLogiNm: rest.metaTblClmnLogiNm,
           metaTblClmnPhysNm: rest.columnName,
           pkYn: rest.pkYn === undefined ? 'N' : rest.pkYn,
           metaTblClmnDesc: rest.metaTblClmnDesc,
-          chgDptCd: rest.chgDptCd,
+          chgDtpCd: rest.chgDtpCd,
           dataFormat: rest.dataFormat,
         };
       });
-      console.log(updatedRows);
       return updatedRows;
     });
     dispatch(
@@ -238,14 +321,17 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   };
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
-      console.log(response?.result);
       toast({
         type: 'Error',
-        content: response?.result,
+        content: '등록 중 에러가 발생했습니다.',
       });
     } else {
       if (response?.result) {
-        // setTablePhyList(response?.result);
+        navigate('..');
+        toast({
+          type: 'Confirm',
+          content: '등록이 완료되었습니다.',
+        });
       }
     }
   }, [response, isError, toast]);
@@ -253,7 +339,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   return (
     <>
       <Table
-        style={{ overflowY: 'scroll', height: '500px' }}
+        style={{ overflowY: 'auto', height: '500px' }}
         variant="vertical"
         size="normal"
         align="center"
@@ -290,9 +376,10 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                           key={`column-${columnIndex}`}
                           name="metaCustomerRadio"
                           onChange={(e) => timeStampChg(rowIndex)}
-                          defaultChecked={row[columns[columnIndex].field] === 'Y'}
-                          defaultValue={'N'}
-                          // value={}
+                          // defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                          // defaultValue={'N'}
+                          checked={row.baseTimeYn === 'Y'}
+                          value={row.baseTimeYn}
                         />
                       </TD>
                     );
@@ -314,20 +401,32 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                   }
 
                   // 체크박스
-                  else if (columns[columnIndex].field.includes('Yn')) {
+                  else if (columns[columnIndex].field === 'clmnUseYn') {
                     return (
                       <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
                         <Checkbox
-                          key={`column-${columnIndex}`}
-                          defaultChecked={columns[columnIndex].field === 'clmnUseYn'}
                           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
-                          value={columns[columnIndex].field === 'pkYn' ? row.pkYn : row.columnUseYn}
-                          defaultValue={columns[columnIndex].field === 'pkYn' ? 'N' : 'Y'}
+                          key={`column-${columnIndex}`}
+                          checked={row.clmnUseYn === 'Y'}
+                          // defaultValue={columns[columnIndex].field === 'clmnUseYn' ? 'Y' : 'N'}
+                          value={row.clmnUseYn}
                         />
                       </TD>
                     );
                   }
-
+                  // 체크박스
+                  else if (columns[columnIndex].field === 'pkYn') {
+                    return (
+                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                        <Checkbox
+                          checked={row.pkYn === 'Y'}
+                          onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
+                          key={`column-${columnIndex}`}
+                          value={row.pkYn}
+                        />
+                      </TD>
+                    );
+                  }
                   // 텍스트필드
                   else if (
                     columns[columnIndex].field === 'metaTblClmnLogiNm' ||
@@ -353,7 +452,11 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                               <TextField
                                 id={columns[columnIndex].field}
                                 onChange={(e) => onChangeHandler(e, rowIndex)}
-                                value={row[columns[columnIndex].field]}
+                                value={
+                                  columns[columnIndex].field === 'metaTblClmnLogiNm'
+                                    ? row.metaTblClmnLogiNm
+                                    : row.metaTblClmnDesc
+                                }
                               />
                             );
                           }
@@ -381,7 +484,17 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                               return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
                             } else if (row.changeYn === 'Y') {
                               return (
-                                <Select value={row.chgDtpCd}>
+                                <Select
+                                  id="chgDtpCd"
+                                  appearance="Outline"
+                                  placeholder="전체"
+                                  className="width-100"
+                                  onChange={(
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
+                                  ) => onchangeSelectHandler(e, value, 'chgDtpCd', rowIndex)}
+                                  value={row.chgDtpCd}
+                                >
                                   <SelectOption value={'timestamp'}>timestamp</SelectOption>
                                   <SelectOption value={'int'}>int</SelectOption>
                                   <SelectOption value={'double'}>double</SelectOption>
@@ -416,8 +529,29 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                               return <Typography variant="h5">{row.columnName} </Typography>;
                             } else if (columns[columnIndex].field === 'dtpCd') {
                               return <Typography variant="h5">{row.dataType} </Typography>;
+                              // 변경 데이터 형식
                             } else if (columns[columnIndex].field === 'dataFormat') {
-                              return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
+                              if (row.changeYn === 'Y' && row.chgDtpCd === 'timestamp' && row.baseTimeYn !== 'Y') {
+                                return (
+                                  <Select
+                                    id="dataFormat"
+                                    appearance="Outline"
+                                    placeholder="전체"
+                                    className="width-100"
+                                    onChange={(
+                                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                      value: SelectValue<{}, false>
+                                    ) => onchangeSelectHandler(e, value, 'dataFormat', rowIndex)}
+                                    value={row.dataFormat}
+                                  >
+                                    {timeFormat?.map((row, index) => (
+                                      <SelectOption value={row.cdvCntn}>{row.cdvNm}</SelectOption>
+                                    ))}
+                                  </Select>
+                                );
+                              } else {
+                                return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
+                              }
                             }
                           }
                         })()}
@@ -449,6 +583,24 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
           목록
         </Button>
       </Stack>
+      <Modal open={isOpenValidation} onClose={() => setOpenValidation(false)}>
+        <Modal.Header>오류</Modal.Header>
+        <Modal.Body>입력값이 부족합니다.</Modal.Body>
+        <Modal.Footer>
+          <Button priority="Primary" appearance="Contained" onClick={() => {}}>
+            확인
+          </Button>
+          <Button
+            priority="Normal"
+            appearance="Outline"
+            onClick={() => {
+              setOpenValidation(false);
+            }}
+          >
+            취소
+          </Button>
+        </Modal.Footer>
+      </Modal>
       <Modal open={isOpen} onClose={() => setOpen(false)}>
         <Modal.Header>오류</Modal.Header>
         <Modal.Body>작성중인 Data가 있습니다. 작성을 취소하고 이동하시겠습니까? </Modal.Body>

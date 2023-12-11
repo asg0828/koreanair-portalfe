@@ -30,7 +30,11 @@ const CustomerMetaManagementReg = () => {
   const [rows, setRows] = useState<any>([]);
   const [dbNames, setDbNames] = useState<any>([]);
   const [tablePhyList, setTablePhyList] = useState<Array<any>>([]);
+
+  // 메타 테이블 컬럼 검색 조회
   const { data: response, isError, refetch } = useMetaTableDetail(dbNames);
+
+  //
   const { data: responseSchema, isError: isErrorSchema, refetch: refetchSchema } = useSchemaList();
   const {
     data: responseTblInfo,
@@ -84,21 +88,21 @@ const CustomerMetaManagementReg = () => {
     if (isErrorTblInfo || responseTblInfo?.successOrNot === 'N') {
       toast({
         type: 'Error',
-        content: '조회 중 에러가 발생했습니다.',
+        content: '조회 중 에러가 발생했습니다.2',
       });
     } else {
       if (responseTblInfo?.result) {
         setTablePhyList(responseTblInfo?.result);
       }
     }
-  }, [responseTblInfo, isErrorTblInfo, toast, searchInfo.dbName]);
+  }, [responseTblInfo, isErrorTblInfo, toast, searchInfo.dbNm]);
 
   // 데이터 베이스명
   useEffect(() => {
     if (isErrorSchema || responseSchema?.successOrNot === 'N') {
       toast({
         type: 'Error',
-        content: '조회 중 에러가 발생했습니다.',
+        content: '조회 중 에러가 발생했습니다.1',
       });
     } else {
       if (responseSchema?.result) {
@@ -213,7 +217,9 @@ const CustomerMetaManagementReg = () => {
             </TD>
             {searchInfo.rtmTblYn === 'Y' ? (
               <>
-                <TH colSpan={0.2005}>Topic</TH>
+                <TH align="right" colSpan={0.2004}>
+                  Topic
+                </TH>
                 <TD colSpan={0.416}>
                   <Select
                     id="metaTblDvCd"

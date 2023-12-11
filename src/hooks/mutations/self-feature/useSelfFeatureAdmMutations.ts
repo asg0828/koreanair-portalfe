@@ -17,12 +17,12 @@ export const useCreateMetaTableInfo = (tbCoMetaTbInfo: any, tbCoMetaTblClmnInfoL
 // customer Meta 수정
 export const useUpdateMetaTable = (
   metaTblId: string,
-  metaTblLogiNm: string,
+  // metaTblLogiNm: string,
   tbCoMetaTbInfo: RowsInfo,
   tbCoMetaTblClmnInfoList: RowsInfo
 ) => {
   return useMutation([`/metas/tables/${metaTblId}`, tbCoMetaTblClmnInfoList], () =>
-    updateMetaTable(metaTblId, metaTblLogiNm, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList)
+    updateMetaTable(metaTblId, tbCoMetaTbInfo, tbCoMetaTblClmnInfoList)
   );
 };
 // customer Meta 삭제
