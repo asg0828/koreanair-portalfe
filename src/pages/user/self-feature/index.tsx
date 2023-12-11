@@ -280,10 +280,10 @@ const SelfFeature = () => {
 							신규 등록
 						</Button>
 						{/* 관리자(1차)인 경우만 노출 */}
-						{/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
+						<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
 						<AddIcon />
 						SQL 신규 등록
-						</Button> */}
+						</Button>
 					</>
 				}
 			/>
