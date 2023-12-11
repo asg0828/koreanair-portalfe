@@ -2,7 +2,7 @@ import TableSearchForm from '@/components/form/TableSearchForm';
 import TreeSearchForm from '@/components/form/TreeSearchForm';
 import { useCreateAdminAuthMenu, useUpdateAdminMenu } from '@/hooks/mutations/useMenuMutations';
 import { useAdminAuthAllList } from '@/hooks/queries/useAuthQueries';
-import { useAdminAuthMenuList, useUserMenuList } from '@/hooks/queries/useMenuQueries';
+import { useAdminAuthMenuList, useAdminMenuList } from '@/hooks/queries/useMenuQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { ModalType, ValidType } from '@/models/common/Constants';
@@ -42,7 +42,7 @@ const List = () => {
   const [initData, setInitData] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
   const [treeData, setTreeData] = useState<Array<HierarchyInfo>>([]);
-  const { data: response, isError, refetch } = useUserMenuList();
+  const { data: response, isError, refetch } = useAdminMenuList();
   const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useAdminAuthAllList();
   const { data: uamResponse, isError: uamIsError, refetch: uamRefetch } = useAdminAuthMenuList(authId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateAdminMenu();
