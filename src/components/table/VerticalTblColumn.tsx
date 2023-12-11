@@ -545,7 +545,9 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                                     value={row.dataFormat}
                                   >
                                     {timeFormat?.map((row, index) => (
-                                      <SelectOption value={row.cdvCntn}>{row.cdvNm}</SelectOption>
+                                      <SelectOption key={`column-${columnIndex}-${index}`} value={row.cdvCntn}>
+                                        {row.cdvNm}
+                                      </SelectOption>
                                     ))}
                                   </Select>
                                 );

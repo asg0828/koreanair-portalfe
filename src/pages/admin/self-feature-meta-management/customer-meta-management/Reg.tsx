@@ -82,9 +82,15 @@ const CustomerMetaManagementReg = () => {
     refetch();
   };
 
+  // 테이블 리스트 조회
+  useEffect(() => {
+    if (searchInfo.dbNm !== (null || '')) {
+      refetchTblInfo();
+    }
+  }, [searchInfo.dbNm]);
+
   // 테이블 물리명 조회
   useEffect(() => {
-    refetchTblInfo();
     if (isErrorTblInfo || responseTblInfo?.successOrNot === 'N') {
       toast({
         type: 'Error',
@@ -95,7 +101,7 @@ const CustomerMetaManagementReg = () => {
         setTablePhyList(responseTblInfo?.result);
       }
     }
-  }, [responseTblInfo, isErrorTblInfo, toast, searchInfo.dbNm]);
+  }, [responseTblInfo, isErrorTblInfo, toast]);
 
   // 데이터 베이스명
   useEffect(() => {
@@ -150,6 +156,7 @@ const CustomerMetaManagementReg = () => {
             <TD colSpan={0.22}>
               <Select
                 id="dbNm"
+                key="dbNm"
                 appearance="Outline"
                 placeholder="전체"
                 className="width-100"
@@ -171,6 +178,7 @@ const CustomerMetaManagementReg = () => {
             </TH>
             <TD colSpan={0.22}>
               <Select
+                key="metaTblPhysNm"
                 style={{ textOverflow: 'ellipsis' }}
                 id="metaTblPhysNm"
                 appearance="Outline"
@@ -194,6 +202,7 @@ const CustomerMetaManagementReg = () => {
             </TH>
             <TD colSpan={0.23}>
               <TextField
+                key="metaTblLogiNm"
                 className="width-100"
                 onChange={onSearchChangeHandler}
                 value={searchInfo.metaTblLogiNm}
@@ -213,6 +222,7 @@ const CustomerMetaManagementReg = () => {
                 value={searchInfo.metaTblDesc}
                 placeholder="검색어를 입력하세요."
                 id="metaTblDesc"
+                key="metaTblDesc"
               />
             </TD>
             {searchInfo.rtmTblYn === 'Y' ? (
@@ -223,6 +233,7 @@ const CustomerMetaManagementReg = () => {
                 <TD colSpan={0.416}>
                   <Select
                     id="metaTblDvCd"
+                    key="metaTblDvCd"
                     appearance="Outline"
                     className="width-100"
                     value={searchInfo.metaTblDvCd}
@@ -249,6 +260,7 @@ const CustomerMetaManagementReg = () => {
             <TD colSpan={0.22}>
               <Select
                 id="metaTblDvCd"
+                key="metaTblDvCd"
                 appearance="Outline"
                 className="width-100"
                 value={searchInfo.metaTblDvCd}
@@ -269,6 +281,7 @@ const CustomerMetaManagementReg = () => {
             <TD colSpan={0.22}>
               <Select
                 id="metaTblUseYn"
+                key="metaTblUseYn"
                 appearance="Outline"
                 className="width-100"
                 value={searchInfo.metaTblUseYn}
@@ -290,6 +303,7 @@ const CustomerMetaManagementReg = () => {
               <Select
                 style={{ width: '100%' }}
                 id="rtmTblYn"
+                key="rtmTblYn"
                 appearance="Outline"
                 className="width-100"
                 value={searchInfo.rtmTblYn}

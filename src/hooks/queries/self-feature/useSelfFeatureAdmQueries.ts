@@ -37,7 +37,9 @@ export const useSchemaList = () => {
 
 // 메타 테이블 목록 조회 (retrieveMetaTableLists)
 export const useMetaTableDetail = (params: string) => {
-  return useQuery([`/meta-table/detail/${params}`], () => retrieveMetaTableDetail(params));
+  return useQuery([`/meta-table/detail/${params}`], () => retrieveMetaTableDetail(params), {
+    enabled: false,
+  });
 };
 
 // 테이블 조회 (retrieveTableInfo)
