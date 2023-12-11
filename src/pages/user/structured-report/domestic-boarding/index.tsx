@@ -3,56 +3,76 @@ import {Button, Select, SelectOption, Stack, TD, TH, TR, useToast} from "@compon
 import {useAppSelector} from "@/hooks/useRedux";
 import {selectSessionInfo} from "@reducers/authSlice";
 import React, {useCallback, useEffect, useState} from "react";
-import {FeatureModel, FeatureParams, FeatureSeparatesModel} from "@models/model/FeatureModel";
 import {initPage, PageModel} from "@models/model/PageModel";
 import {ColumnsInfo} from "@models/components/Table";
 import {ValidType, View} from "@models/common/Constants";
 import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
-import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import {ReportParams} from "@models/model/ReportModel";
-import {category} from "./data";
 import { dummyData } from "./testData";
+import {useDomesticBoardingTop100List} from "@/hooks/queries/useReportQueries";
+import DashboardPopup from "@pages/user/structured-report/purchase-contributors/dashboardPopUp";
+import Modal from "react-modal";
 
-const initParams: FeatureParams = {
-    featureSeGrp: '',
-    featureSe: '',
-    searchFeature: '',
-    enrUserId: '',
-    enrDeptCode: '',
-    searchConditions: [],
+const initParams: ReportParams = {
+    oneId: '',
+    memberNumber:0,
+    name:'',
+    vipYn:'',
+    purchaseAmount:0,
+    purchaseCount:0,
+    purchaseContribution:0,
+    domesticPurchaseAmount:0,
+    internationalAmount:0,
+    FrCount:0,
+    PrCount:0
 };
 
 const List = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const userId = useAppSelector(selectSessionInfo()).userId || '';
-    const featureTypList = useRouteLoaderData('/biz-meta/feature') as Array<FeatureSeparatesModel>;
-    const [selectedPeriod, setSelectedPeriod] = useState('1');
+    const [selectedPeriod, setSelectedPeriod] = useState('0 year');
     const [dateRange, setDateRange] = useState('');
 
-    const [params, setParams] = useState<FeatureParams>(initParams);
+    const [params, setParams] = useState<ReportParams>(initParams);
+
+    const [showPopup, setShowPopup] = useState(false);
+
     const [page, setPage] = useState<PageModel>({
         ...initPage,
         totalCount: 100
     });
 
-    const createPeriodButton = (period:any, text:string, handlePeriodSelect:any) => (
-        <Button priority="Primary" appearance="Contained" size="LG" style ={{color: '#FFFFFF',backgroundColor:'#5F9DCF',height:'50px'}} onClick={() => handlePeriodSelect(period)}>
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                <span style={{ fontWeight: 'bold' ,marginBottom: '-5px' }}>{text}</span>
-                <span style={{ fontSize: 'smaller' }}>({calculateDateRange(period)})</span>
-            </div>
-        </Button>
-    );
+    const createPeriodButton = (period:any, text:string, handlePeriodSelect:any) => {
+        const isSelected = period === selectedPeriod;
+
+        const buttonStyle = isSelected ? // 클릭할때 버튼 스타일
+            { backgroundColor: '#a2d2eb', color: '#000000', height: '50px' } :
+            { backgroundColor: '#5F9DCF', color: '#FFFFFF', height: '50px' };
+
+        return (
+            <Button
+                priority="Primary"
+                appearance="Contained"
+                size="LG"
+                style={buttonStyle}
+                onClick={() => handlePeriodSelect(period)}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                    <span style={{ fontWeight: 'bold', marginBottom: '-5px' }}>{text}</span>
+                    <span style={{ fontSize: 'smaller' }}>({calculateDateRange(period)})</span>
+                </div>
+            </Button>
+        );
+    };
 
     const periods = [
-        { period: '1', text: '올해' },
-        { period: '2', text: '최근 1년' },
-        { period: '3', text: '최근 2년' },
-        { period: '4', text: '최근 3년' },
-        { period: '5', text: '최근 4년' },
+        { period: '0 year', text: '올해' },
+        { period: '1 year', text: '최근 1년' },
+        { period: '2 year', text: '최근 2년' },
+        { period: '3 year', text: '최근 3년' },
+        { period: '4 year', text: '최근 4년' },
     ];
 
     const columns: Array<ColumnsInfo> = [
@@ -69,9 +89,13 @@ const List = () => {
         { headerName: '국내선 평균 탑승주기', field: 'avgBoardingCycle', colSpan: 1 },
     ];
 
+    const [criteria, setCriteria] = useState('0 year');
     const [rows, setRows] = useState(dummyData.data.contents);
-    const { data: response, isError, refetch } = useFeatureList(params, page);
-    const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
+    const { data: response, isError, refetch } = useDomesticBoardingTop100List(criteria);
+
+    const toggleModal = () => {
+        setShowPopup(!showPopup);
+    };
 
     const calculateDateRange = (period: string) => {
         const endDate = new Date();
@@ -106,12 +130,10 @@ const List = () => {
         return `${startDate.toISOString().split('T')[0]} ~ ${endDate.toISOString().split('T')[0]}`;
     };
 
-    const goToDetail = (row: FeatureModel, index: number) => {
-        navigate(View.DETAIL, {
-            state: {
-                featureId: row.featureId,
-            },
-        });
+    const handlePeriodSelect = (period: string) => {
+        setCriteria(period);
+        setSelectedPeriod(period);
+        setDateRange(calculateDateRange(period));
     };
 
     const handlePage = (page: PageModel) => {
@@ -131,43 +153,22 @@ const List = () => {
         setDateRange(calculateDateRange(selectedPeriod)); // 선택된 기간에 따라 날짜 범위 계산
     }, [selectedPeriod]);
 
-    const handleChangeParams = (name: string, value: any) => {
-        setParams((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-        if (name === 'featureSeGrp') {
-            setSelectedPeriod(value);
-        }
-    };
-
-    const handlePeriodSelect = (period: string) => {
-        setSelectedPeriod(period);
-        setDateRange(calculateDateRange(period));
-    };
-
-    useEffect(() => {
-        if (params.featureSeGrp) {
-            sRefetch();
-        }
-    }, [params.featureSeGrp, sRefetch]);
-
     useDidMountEffect(() => {
         handleSearch();
     }, [page.page, page.pageSize, handleSearch]);
 
-    // useEffect(() => {
-    //     if (isError || response?.successOrNot === 'N') {
-    //         toast({
-    //             type: ValidType.ERROR,
-    //             content: '조회 중 에러가 발생했습니다.',
-    //         });
-    //     } else {
-    //         if (response?.data) {
-    //             setRows(response.data.contents);
-    //         }
-    //     }
-    // }, [response, isError, toast]);
+    useEffect(() => {
+        if (isError || response?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (response?.data) {
+                setRows(response.data.contents);
+            }
+        }
+    }, [response, isError, toast]);
 
     return (
         <>
@@ -193,9 +194,22 @@ const List = () => {
                 showPagination={false}
                 page={page}
                 initialSortedColumn="boardingCount"
-                // onClick={goToDetail}
+                onClick={toggleModal}
                 onChange={handlePage}
             />
+            <Modal
+                isOpen={showPopup}
+                onRequestClose={toggleModal}
+                style={{
+                    content: {
+                        width: '1200px',
+                        height:'800px',
+                        margin: 'auto'
+                    }
+                }}
+            >
+                <DashboardPopup closeModal={toggleModal}/>
+            </Modal>
         </>
     );
 };

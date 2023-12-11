@@ -33,6 +33,9 @@ const App = () => {
   if (pathname.startsWith(ContextPath.ADMIN)) {
     dispatch(setContextPath(ContextPath.ADMIN));
     setBaseApiUrl('/bo');
+  } else if (pathname.startsWith(ContextPath.USER)) {
+    dispatch(setContextPath(ContextPath.USER));
+    setBaseApiUrl('/fo');
   } else if (pathname.startsWith(ContextPath.POPUP)) {
     dispatch(setContextPath(ContextPath.POPUP));
     transferLocalStorage();

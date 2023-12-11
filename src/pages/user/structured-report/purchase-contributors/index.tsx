@@ -33,7 +33,7 @@ const List = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const userId = useAppSelector(selectSessionInfo()).userId || '';
-    const [selectedPeriod, setSelectedPeriod] = useState('1');
+    const [selectedPeriod, setSelectedPeriod] = useState('0 year');
     const [dateRange, setDateRange] = useState('');
     const [params, setParams] = useState<ReportParams>(initParams);
 
@@ -90,7 +90,6 @@ const List = () => {
     const [criteria, setCriteria] = useState('0 year');
     const [rows, setRows] = useState<any>([]);
     const { data: response, isError, refetch } = usePurchaseContributionList(criteria);
-
 
     const toggleModal = () => {
         setShowPopup(!showPopup);
