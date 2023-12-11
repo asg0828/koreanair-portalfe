@@ -1,4 +1,4 @@
-import { MstrProfMetaTblColumnListProps, TbCoMetaTblClmnInfo, TbRsMstrSgmtRuleAttrClmn } from "@/models/selfFeature/FeatureAdmModel"
+import { MstrProfMetaTblColumnListProps, TbCoMetaTblClmnInfo, TbRsMstrSgmtRuleAttrClmn, TbRsMstrSgmtRuleAttrTbl } from "@/models/selfFeature/FeatureAdmModel"
 import { useState, useEffect } from "react"
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
@@ -24,16 +24,22 @@ import { ModalType } from "@/models/selfFeature/FeatureCommon"
 const MstrProfMetaTblColumnList = ({
     editMode,
     divisionType,                   // 속성, 행동정보 구분
+    targetIndex,
     metaTblInfo,                    // 저장된 메타테이블 정보
     metaTblClmnList,                // 저장된 메타테이블 컬럼 정보(화면 노출용)
     metaTblClmnAllList,             // 저장된 메타테이블 전체 컬럼 항목(등록 및 수정시 필요)
+    setMstrSgmtRuleAttrTblList,
     setMstrSgmtRuleAttrClmnList,
 }: MstrProfMetaTblColumnListProps) => {
 
     // 항목 리스트 show / hide 처리
     const [isColListShow, setIsColListShow] = useState<Boolean>(false)
+    // 컬럼 추가 버튼 show / hide 처리
+    const [isAddIconShow, setIsAddIconShow] = useState<Boolean>(false)
     // 보여줄 항목 list(등록 및 수정시 컬럼 추가할 경우 필요)
     const [tmpMetaTblClmnList, setTmpMetaTblClmnList] = useState<Array<TbCoMetaTblClmnInfo>>([])
+    // 컬럼 전체선택
+    const [isCheckedAllCol, setIsCheckedAllCol] = useState<boolean>(false)
     // 모달, 버튼 클릭 종류
     const [btnClickType, setBtnClickType] = useState<string>('')
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
@@ -41,10 +47,32 @@ const MstrProfMetaTblColumnList = ({
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
 
-    // component mount
     useEffect(() => {
-
-    }, [metaTblInfo])
+        // 테이블 정보가 바뀌면 컬럼 항목 reset && 전체선택 해제(이전 선택된 테이블 ID를 알아야함)
+        if (
+            (!metaTblInfo || metaTblInfo.mstrSgmtRuleTblId === "")
+            && metaTblClmnAllList.length > 0
+        ) {
+            // 전체선택 해제
+            setIsCheckedAllCol(false)
+            setIsAddIconShow(true)
+            // 화면용 list
+            setTmpMetaTblClmnList([])
+            // formData list
+            let tblId: string
+            setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+                let rtn = cloneDeep(prevState)
+                tblId = cloneDeep(rtn[targetIndex!].mstrSgmtRuleTblId)
+                rtn[targetIndex!].clmnAllChocYn = "N"
+                return rtn
+            })
+            setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+                let rtn = cloneDeep(prevState)
+                rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== tblId)
+                return rtn
+            })
+        }
+    }, [metaTblInfo, metaTblClmnAllList])
     // modal 확인/취소 이벤트
     const onConfirm = () => {
         if (modalType === ModalType.CONFIRM) {
@@ -57,23 +85,27 @@ const MstrProfMetaTblColumnList = ({
 
     // 저장된 데이터중 항목 전체선택인 경우
     useEffect(() => {
+        setIsCheckedAllCol(false)
+        setIsColListShow(true)
+        setIsAddIconShow(true)
         if (!metaTblInfo || !metaTblInfo.clmnAllChocYn) return
 
-        // if (metaTblInfo.clmnAllChocYn === "Y") setIsColListShow(false)
-        // else setIsColListShow(true)
+        if (metaTblInfo.clmnAllChocYn === "Y") {
+            setIsAddIconShow(false)
+            setIsCheckedAllCol(true)
+            setIsColListShow(false)
+        }
 
     }, [metaTblInfo?.clmnAllChocYn])
 
     // 등록 및 수정시 컬럼 추가할 경우 필요
     useEffect(() => {
-        if (!metaTblClmnList || metaTblClmnList.length < 1) return
-        setTmpMetaTblClmnList(cloneDeep(metaTblClmnList))
-    }, [metaTblClmnList])
-
-    // 테이블 정보가 바뀌면 컬럼 항목 reset
-    useEffect(() => {
-        setTmpMetaTblClmnList([])
-    }, [metaTblClmnAllList])
+        if (!metaTblClmnList || metaTblClmnList.length < 1) {
+            setTmpMetaTblClmnList([])
+        } else {
+            setTmpMetaTblClmnList(cloneDeep(metaTblClmnList))
+        }
+    }, [metaTblClmnList])//저장된 메타테이블 컬럼 정보
 
     // 새로운 항목 추가 버튼 클릭
     const onClickAddColInfo = () => {
@@ -84,14 +116,14 @@ const MstrProfMetaTblColumnList = ({
             setIsOpenConfirmModal(true)
             return
         }
-        if (metaTblClmnAllList.length < tmpMetaTblClmnList.length + 1) {
+        if (0 < metaTblClmnAllList.length && metaTblClmnAllList.length < tmpMetaTblClmnList.length + 1) {
+            setIsAddIconShow(false)
             setModalType(ModalType.ALERT)
             setConfirmModalTit("Master Profile 등록")
             setConfirmModalCont("더이상 컬럼을 추가할 수 없습니다.")
             setIsOpenConfirmModal(true)
             return
         }
-        setIsColListShow(true)
         // 화면용 list
         setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
             let rtn = cloneDeep(prevState)
@@ -104,7 +136,7 @@ const MstrProfMetaTblColumnList = ({
         setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
             let rtn = cloneDeep(prevState)
             let addItem = cloneDeep(initTbRsMstrSgmtRuleAttrClmn)
-			Object.keys(addItem).map((colKey) => {
+            Object.keys(addItem).map((colKey) => {
                 metaTblInfo && Object.keys(metaTblInfo).map((tblKey) => {
                     if (colKey === tblKey) {
                         addItem[colKey] = metaTblInfo[tblKey]
@@ -112,7 +144,7 @@ const MstrProfMetaTblColumnList = ({
                     return tblKey
                 })
                 return colKey
-			})
+            })
             rtn.push(addItem)
             return rtn
         })
@@ -120,15 +152,78 @@ const MstrProfMetaTblColumnList = ({
 
     // 항목 삭제 버튼 클릭
     const onClickRemoveColInfo = (delIdx: number) => {
-
-        if (delIdx === 0 && tmpMetaTblClmnList.length === 1) setIsColListShow(false)
-        else setIsColListShow(true)
-
+        // 전체선택 해제
+        setIsCheckedAllCol(false)
+        setIsAddIconShow(true)
+        // 화면용 list
         setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
             let rtn = cloneDeep(prevState)
             rtn = rtn.filter((delInfo: TbCoMetaTblClmnInfo, index: number) => index !== delIdx)
             return rtn
         })
+        // formData list
+        setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+            let rtn = cloneDeep(prevState)
+            let keepList = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId)
+            let updtList = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId)
+            updtList = updtList.filter((item: TbRsMstrSgmtRuleAttrClmn, index: number) => index !== delIdx)
+            return [...keepList, ...updtList]
+        })
+    }
+
+    // 컬럼 전체선택
+    const onClickCheckAll = () => {
+
+        if (metaTblInfo && metaTblInfo.mstrSgmtRuleTblId === "") {
+            setModalType(ModalType.ALERT)
+            setConfirmModalTit("Master Profile 등록")
+            setConfirmModalCont("테이블을 선택 해주세요.")
+            setIsOpenConfirmModal(true)
+            return
+        }
+        setIsCheckedAllCol(!isCheckedAllCol)
+
+        let clmnAllYn = "N"
+        if (!isCheckedAllCol) clmnAllYn = "Y"
+        // formData list
+        setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+            let rtn = cloneDeep(prevState)
+            rtn[targetIndex!].clmnAllChocYn = clmnAllYn
+            return rtn
+        })
+        if (clmnAllYn === "N") {
+            setIsAddIconShow(true)
+            // 화면용 list
+            setTmpMetaTblClmnList([])
+            // formData list
+            setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+                let rtn = cloneDeep(prevState)
+                rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId)
+                return rtn
+            })
+        } else if (clmnAllYn === "Y") {
+            setIsAddIconShow(false)
+            // 화면용 list
+            setTmpMetaTblClmnList(metaTblClmnAllList)
+            // formData list
+            setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+                let rtn = cloneDeep(prevState)
+                rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId)
+                let updtList: Array<TbRsMstrSgmtRuleAttrClmn> = []
+                metaTblClmnAllList.map((colItem: TbCoMetaTblClmnInfo) => {
+                    let updtItem: TbRsMstrSgmtRuleAttrClmn = cloneDeep(initTbRsMstrSgmtRuleAttrClmn)
+                    updtItem.mstrSgmtRuleTblId = colItem.metaTblId
+                    updtItem.mstrSgmtRuleTblNm = colItem.metaTblClmnPhysNm
+                    updtItem.mstrSgmtRuleClmnId = colItem.metaTblClmnId
+                    updtItem.mstrSgmtRuleClmnNm = colItem.metaTblClmnPhysNm
+                    updtItem.mstrSgmtRuleClmnDesc = colItem.metaTblClmnDesc
+                    updtItem.clmnDtpCd = colItem.dtpCd
+                    updtList.push(updtItem)
+                })
+                return [...rtn, ...updtList]
+            })
+            setIsColListShow(false)
+        }
     }
 
     return (
@@ -249,15 +344,18 @@ const MstrProfMetaTblColumnList = ({
                         >
                             컬럼 추가
                         </Typography>
-                        <AddIcon
-                            style={{
-                                position: "absolute",
-                                left: "6%",
-                            }}
-                            onClick={onClickAddColInfo}
-                        />
+                        {isAddIconShow &&
+                            <AddIcon
+                                style={{
+                                    position: "absolute",
+                                    left: "6%",
+                                }}
+                                onClick={onClickAddColInfo}
+                            />
+                        }
                         <Checkbox
-                            onClick={() => { console.log("체크박스체크") }}
+                            checked={isCheckedAllCol}
+                            onCheckedChange={onClickCheckAll}
                         />
                         <Label style={{
                             fontSize: "0.75rem",
@@ -325,21 +423,56 @@ const MstrProfMetaTblColumnList = ({
                                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                                 value: SelectValue<{}, false>
                                             ) => {
-                                                //onchangeSelectHandler(e, value, "featureSeGrp")
+                                                let v = String(value)
+
+                                                if (!v || v === "null" || v === "undefined") return
+
+                                                setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
+                                                    let rtn = cloneDeep(prevState)
+                                                    let item = metaTblClmnAllList.find((item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v)
+                                                    rtn[index].metaTblClmnLogiNm = item ? item.metaTblClmnLogiNm : ""
+                                                    rtn[index].metaTblClmnPhysNm = v
+                                                    return rtn
+                                                })
+                                                setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+                                                    let rtn = cloneDeep(prevState)
+                                                    let keepList = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId)
+                                                    let updtList = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId)
+                                                    let item = metaTblClmnAllList.find((item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v)
+                                                    updtList[index].mstrSgmtRuleClmnId = item ? item.metaTblClmnId : ""
+                                                    updtList[index].mstrSgmtRuleClmnNm = v
+                                                    updtList[index].mstrSgmtRuleClmnDesc = item ? item.metaTblClmnLogiNm : ""
+                                                    return [...keepList, ...updtList]
+                                                })
                                             }}
                                         >
                                             {metaTblClmnAllList.map((item, index) => (
                                                 <SelectOption key={index} value={item.metaTblClmnPhysNm}>{`${item.metaTblClmnLogiNm} [${item.metaTblClmnPhysNm}]`}</SelectOption>
                                             ))}
                                         </Select>
-                                        <TextField 
+                                        <TextField
                                             style={{
                                                 width: "40%",
                                                 color: (divisionType === DivisionTypes.ATTR) ? '#00b21e' : '#00256c',
                                             }}
+                                            value={clmnInfo.metaTblClmnLogiNm}
+                                            onChange={(e) => {
+                                                const { id, value } = e.target
+
+                                                setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
+                                                    let rtn = cloneDeep(prevState)
+                                                    rtn[index].metaTblClmnLogiNm = value
+                                                    return rtn
+                                                })
+                                                setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+                                                    let rtn = cloneDeep(prevState)
+                                                    let keepList = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId)
+                                                    let updtList = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId)
+                                                    updtList[index].mstrSgmtRuleClmnDesc = value
+                                                    return [...keepList, ...updtList]
+                                                })
+                                            }}
                                         />
-                                        {/* {`${clmnInfo.metaTblClmnLogiNm} [${clmnInfo.metaTblClmnPhysNm}]`} */}
-                                        {/* {clmnInfo.metaTblClmnLogiNm} */}
                                     </Stack>
                                 </Stack>
                             )

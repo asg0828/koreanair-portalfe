@@ -7,7 +7,6 @@ import {
     Select,
     SelectOption,
     Stack,
-    TextField,
     Typography,
     useToast,
 } from '@/components/ui'
@@ -24,6 +23,7 @@ import {
     initMetaColumnIsResolutionInfoSearchJoinkeyProps,
     initMetaColumnIsResolutionInfoSearchProps,
     initTbCoMetaTbInfo,
+    initTbCoMetaTblClmnInfo,
 } from '@/pages/admin/self-feature-meta-management/master-profile-management/data'
 import { useMetaColumnIsResolutionInfo, useMetaColumnIsResolutionJoinkeyInfo } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
 import { ValidType } from '@/models/common/Constants'
@@ -31,21 +31,26 @@ import MstrProfMetaTblColumnList from './MstrProfMetaTblColumnList'
 import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
 
 const MstrProfInfo = ({
-    editMode,
     targetIndex,                // 등록 및 수정시 수정할 item index
+    editMode,
+    hasItem,                    // 최초 수정 정보가 있는 경우 초기화 로직 제외를 위한 flag
     rslnRuleKeyPrtyList,        //선택된 resolution id에 해당되는 마스터 조인키 리스트
     metaTblInfo,                //저장된 메타테이블 정보
     metaTblAllList,             //모든 속성/행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
     metaTblColList,             //저장된 메타테이블 컬럼 항목
+    mstrSgmtRuleAttrTblList,    //선택 가능한 테이블 정보 setting을 위해
     setMstrSgmtRuleAttrTblList,
     setMstrSgmtRuleAttrClmnList,
 }: AttrBehvMstrProfInfoProps) => {
 
     const { toast } = useToast()
+    // 최초 저장 정보 확인
+    const [isEdit, setIsEdit] = useState<Boolean>(false)
     // 정보타입
     const [divisionType, setDivisionType] = useState<string>("")
+    const [metaTblOptionList, setMetaTblOptionList] = useState<Array<TbCoMetaTbInfo>>([])
     // 각 메타 테이블 및 컬럼 정보(화면 노출을 위해 필요)
-    const [metaTableInfo, setMetaTableInfo] = useState<TbCoMetaTbInfo>()
+    const [metaTableInfo, setMetaTableInfo] = useState<TbCoMetaTbInfo>(cloneDeep(initTbCoMetaTbInfo))
     const [metaTblClmnList, setMetaTblClmnList] = useState<Array<TbCoMetaTblClmnInfo>>([])
     // 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API
     const [metaTblId, setMetaTblId] = useState<string>("")
@@ -59,7 +64,11 @@ const MstrProfInfo = ({
     // 속성 조인키 조회 API
     const [metaTblSrchJoinkeyInfo, setMetaTblSrchJoinkeyInfo] = useState<MetaColumnIsResolutionInfoSearchProps>(cloneDeep(initMetaColumnIsResolutionInfoSearchJoinkeyProps))
     const { data: metaColIsRslnInfoJoinkeyRes, isError: metaColIsRslnInfoJoinkeyErr, refetch: metaColIsRslnInfoJoinkeyRefetch } = useMetaColumnIsResolutionJoinkeyInfo(metaTblId, metaTblSrchJoinkeyInfo)
-
+    // component mount
+    useEffect(() => {
+        // 최초 수정 정보가 있는 경우 초기화 로직 제외를 위한 flag
+        if (metaTblInfo && metaTblInfo.mstrSgmtRuleTblId !== "" && hasItem) setIsEdit(hasItem)
+    }, [])
     /* 
         선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API
         호출을 위한 param setting
@@ -78,20 +87,49 @@ const MstrProfInfo = ({
 
         if (!metaTblAllList) return
         let temp = metaTblAllList.find((info: TbCoMetaTbInfo) => info.metaTblId === tblId)
-        if (!temp) setMetaTableInfo(cloneDeep(initTbCoMetaTbInfo))
-        else setMetaTableInfo(cloneDeep(temp))
-    
-    }, [metaTblInfo, metaTblAllList])
+        if (temp) setMetaTableInfo(cloneDeep(temp))
+        else setMetaTableInfo(cloneDeep(initTbCoMetaTbInfo))
+        // 현재 설정된 메타테이블 정보 순회하며 등록 가능한 컬럼 setting
+        let temp2: Array<TbCoMetaTbInfo> = []
+        for (let i = 0; i < metaTblAllList.length; i++) {
+            let item = metaTblAllList[i]
+            let hasItem = false
+            if (mstrSgmtRuleAttrTblList && mstrSgmtRuleAttrTblList?.length > 0) {
+                for (let j = 0; j < mstrSgmtRuleAttrTblList.length; j++) {
+                    let item2 = mstrSgmtRuleAttrTblList[j]
+                    if (item.metaTblId === item2.mstrSgmtRuleTblId) {
+                        hasItem = true
+                        break
+                    }
+                }
+            }
+            if (item.metaTblId === tblId) hasItem = false
 
+            if (!hasItem) temp2.push(cloneDeep(item))
+        }
+        setMetaTblOptionList(temp2)
+    }, [metaTblInfo, metaTblAllList, mstrSgmtRuleAttrTblList])
     // 화면 노출을 위한 저장된 컬럼 setting
     useEffect(() => {
         // 선택한 테이블에 해당되는 컬럼 리스트
-        if (!metaTblColList || metaTblColList.length < 1 || metaTblClmnAllList.length < 1) return
-        let colList: Array<TbCoMetaTblClmnInfo> = []
-        colList = metaTblClmnAllList.filter((colInfo: TbCoMetaTblClmnInfo) => {
-            return metaTblColList.some((saveColInfo: TbRsMstrSgmtRuleAttrClmn) => saveColInfo.mstrSgmtRuleClmnId === colInfo.metaTblClmnId)
-        })
-        setMetaTblClmnList(cloneDeep(colList))
+        if (!metaTblColList || metaTblColList.length < 1 || metaTblClmnAllList.length < 1) {
+            setMetaTblClmnList([])
+        } else {
+            let colList: Array<TbCoMetaTblClmnInfo> = []
+            metaTblColList.map((saveColInfo) => {
+                let isInit: Boolean = true
+                metaTblClmnAllList.map((colInfo) => {
+                    if (saveColInfo.mstrSgmtRuleClmnId === colInfo.metaTblClmnId) {
+                        colList.push(colInfo)
+                        isInit = false
+                    }
+                    return colInfo
+                })
+                if (isInit) colList.push(cloneDeep(initTbCoMetaTblClmnInfo))
+                return saveColInfo
+            })
+            setMetaTblClmnList(cloneDeep(colList))
+        }
     }, [metaTblColList, metaTblClmnAllList])
 
     // 선택한 테이블의 속성 Joinkey 화면 노출을 위한 setting
@@ -103,7 +141,11 @@ const MstrProfInfo = ({
 
     // 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API 호출
     useEffect(() => {
-        if (!metaTblId) return
+        if (!metaTblId) {
+            setMetaTblClmnAllList([])
+            setMetaTblClmnJoinkeyList([])
+            return
+        }
         metaColIsRslnInfoRefetch()
         metaColIsRslnInfoJoinkeyRefetch()
     }, [metaTblId])
@@ -156,21 +198,18 @@ const MstrProfInfo = ({
     // 정보 삭제시
     const onClickDeleteHandler = () => {
         // 컬럼 정보 삭제를 위해
-        let mstrSgmtRuleAttrTbl: TbRsMstrSgmtRuleAttrTbl | undefined
+        let tblId: string
         // 해당 테이블 삭제
         setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((tblList: Array<TbRsMstrSgmtRuleAttrTbl>) => {
             let rtn = cloneDeep(tblList)
-            mstrSgmtRuleAttrTbl = rtn.find((tblItem: TbRsMstrSgmtRuleAttrTbl, index: number) => index === targetIndex)
+            tblId = cloneDeep(rtn[targetIndex!].mstrSgmtRuleTblId)
             rtn = rtn.filter((tblItem: TbRsMstrSgmtRuleAttrTbl, index: number) => index !== targetIndex)
             return rtn
         })
         // 삭제하는 테이블 컬럼 정보 삭제
         setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((tblColList: Array<TbRsMstrSgmtRuleAttrClmn>) => {
             let rtn = cloneDeep(tblColList)
-            rtn = rtn.filter((tblColItem: TbRsMstrSgmtRuleAttrClmn) => {
-                if (!mstrSgmtRuleAttrTbl) return true
-                else return mstrSgmtRuleAttrTbl.mstrSgmtRuleTblId !== tblColItem.mstrSgmtRuleTblId
-            })
+            rtn = rtn.filter((tblColItem: TbRsMstrSgmtRuleAttrClmn) => tblColItem.mstrSgmtRuleTblId !== tblId)
             return rtn
         })
     }
@@ -237,18 +276,33 @@ const MstrProfInfo = ({
                                 /*
                                     속성테이블 select 선택시 
                                     선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API 호출
+                                    및 이전 컬럼 항목 reset
                                 */
                                 let v = String(value)
                                 if (!v || v === "" || v === "null" || v === "undefined") return
                                 setMetaTblId(v)
-                                setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
-                                    let rtn = cloneDeep(prevState)
-                                    rtn[targetIndex!].mstrSgmtRuleTblId = v
-                                    return rtn
-                                })
+                                // 최초 수정 정보가 있는 경우 초기화 로직 제외
+                                if (!isEdit) {
+                                    setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+                                        let rtn = cloneDeep(prevState)
+                                        rtn[targetIndex!].mstrSgmtRuleTblId = v
+                                        let tblInfo = metaTblAllList.find((item: TbCoMetaTbInfo) => item.metaTblId === v)
+                                        rtn[targetIndex!].mstrSgmtRuleTblNm = tblInfo ? tblInfo.metaTblPhysNm : ""
+                                        rtn[targetIndex!].clmnAllChocYn = "N"
+                                        rtn[targetIndex!].attrJoinKeyClmnNm = ""
+                                        rtn[targetIndex!].mstrJoinKeyClmnNm = ""
+                                        return rtn
+                                    })
+                                    setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+                                        let rtn = cloneDeep(prevState)
+                                        rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblId)
+                                        return rtn
+                                    })
+                                }
+                                if (isEdit) setIsEdit(false)
                             }}
                         >
-                            {metaTblAllList.map((item, index) => (
+                            {metaTblOptionList.map((item, index) => (
                                 <SelectOption key={index} value={item.metaTblId}>{item.metaTblLogiNm}</SelectOption>
                             ))}
                         </Select>
@@ -317,10 +371,12 @@ const MstrProfInfo = ({
             {/* 항목 리스트 */}
             <MstrProfMetaTblColumnList
                 editMode={editMode}
-                divisionType={divisionType}             // 속성, 행동정보 구분
-                metaTblInfo={metaTblInfo}               // 저장된 메타테이블 정보
-                metaTblClmnList={metaTblClmnList}       // 저장된 메타테이블 컬럼정보
-                metaTblClmnAllList={metaTblClmnAllList} // 저장된 메타테이블 전체 컬럼 항목
+                divisionType={divisionType}                                 // 속성, 행동정보 구분
+                targetIndex={targetIndex}                                   // 등록 및 수정시 수정할 item index
+                metaTblInfo={metaTblInfo}                                   // 저장된 메타테이블 정보
+                metaTblClmnList={metaTblClmnList}                           // 저장된 메타테이블 컬럼정보
+                metaTblClmnAllList={metaTblClmnAllList}                     // 저장된 메타테이블 전체 컬럼 항목
+                setMstrSgmtRuleAttrTblList={setMstrSgmtRuleAttrTblList}     // 컬럼 전체 선택 체크에 필요
                 setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
             />
             {/* 항목 리스트 */}
