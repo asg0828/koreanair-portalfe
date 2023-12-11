@@ -24,7 +24,7 @@ const userMenuList = [
     ],
   },
   {
-    name: '고객통합정보조회',
+    name: '고객통합정보',
     path: '/customer-info',
     children: [
       {
@@ -35,7 +35,7 @@ const userMenuList = [
     ],
   },
   {
-    name: '정형 보고서',
+    name: '실적정보',
     path: '/structured-report',
     children: [
       {
