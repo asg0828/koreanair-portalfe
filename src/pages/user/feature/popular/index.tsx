@@ -2,7 +2,7 @@ import { FavoriteBorderIcon, FavoriteIcon } from '@/assets/icons';
 import DataGrid from '@/components/grid/DataGrid';
 import { useCreateInterestFeature, useDeleteInterestFeature } from '@/hooks/mutations/useUserFeatureMutations';
 import { usePopularFeatureList } from '@/hooks/queries/useFeatureQueries';
-import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { useAppSelector } from '@/hooks/useRedux';
 import { ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel } from '@/models/model/FeatureModel';
@@ -17,8 +17,6 @@ const List = () => {
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
-  const [createdFeatureId, setCreatedFeatureId] = useState<string>('');
-  const [deletedFeatureId, setDeletedFeatureId] = useState<string>('');
   const [page, setPage] = useState<PageModel>(initPage);
   const columns: Array<ColumnsInfo> = [
     {

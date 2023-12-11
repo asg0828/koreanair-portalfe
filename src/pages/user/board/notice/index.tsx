@@ -26,7 +26,7 @@ const searchInfoList = [
   { key: 'cn', value: '내용' },
 ];
 
-const initParams: NoticeParams = {
+export const initNoticeParams: NoticeParams = {
   searchConditions: 'all',
   searchTable: '',
 };
@@ -35,7 +35,7 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
-  const [params, setParams] = useState(initParams);
+  const [params, setParams] = useState(initNoticeParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<NoticeModel>>([]);
   const { data: response, isError, refetch } = useNoticeList(params, page);
@@ -58,7 +58,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setParams(initParams);
+    setParams(initNoticeParams);
   };
 
   const handleKeyDown = (e: any) => {

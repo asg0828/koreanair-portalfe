@@ -40,7 +40,7 @@ export const selectCode = (groupId: string, codeId: string) => {
 export const getCode = (groupId: string, codeId: string) =>
   store.getState().code.codeList.find((codeItem) => codeItem.groupId === groupId && codeItem.codeId === codeId);
 
-export const getCodeListWithOut = async (groupId: string) => {
+export const getCodeListWithOut = async (groupId: string): Promise<any> => {
   const filterCodeList = store.getState().code.codeList.filter((codeItem) => codeItem.groupId === groupId);
 
   if (filterCodeList.length === 0) {

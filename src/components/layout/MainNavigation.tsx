@@ -36,7 +36,7 @@ const MainNavigation = () => {
     }
 
     const menuObj = getMenuRecursive(menuList, path);
-    let name = menuObj ? menuObj.name : 'UnKown headerName';
+    let name = menuObj ? menuObj.name : '';
 
     return [name, path];
   };

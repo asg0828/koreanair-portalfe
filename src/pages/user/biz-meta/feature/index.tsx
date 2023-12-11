@@ -17,7 +17,7 @@ import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, u
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const initParams: FeatureParams = {
+export const initFeatureParams: FeatureParams = {
   featureSeGrp: '',
   featureSe: '',
   searchFeature: '',
@@ -34,11 +34,9 @@ const List = () => {
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
-  const [createdFeatureId, setCreatedFeatureId] = useState<string>('');
-  const [deletedFeatureId, setDeletedFeatureId] = useState<string>('');
   const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
-  const [params, setParams] = useState<FeatureParams>(initParams);
+  const [params, setParams] = useState<FeatureParams>(initFeatureParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const columns: Array<ColumnsInfo> = [
     {
@@ -104,7 +102,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setParams(initParams);
+    setParams(initFeatureParams);
     setFeatureSeList([]);
   };
 

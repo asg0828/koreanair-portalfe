@@ -28,7 +28,7 @@ const Main = () => {
   };
 
   const menuObj = getMenuRecursive(menuList);
-  const title = menuObj ? menuObj.name : 'UnKown Title';
+  const title = menuObj ? menuObj.name : '';
 
   return (
     <>

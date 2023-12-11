@@ -25,6 +25,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import './AccordionGrid.scss';
 
 export interface AccordionGridProps extends PageProps {
+  defaultValue?: string;
   buttonChildren?: ReactNode;
   rows?: Array<RowsInfo>;
   onClick?: (faqId: string) => void;
@@ -33,6 +34,7 @@ export interface AccordionGridProps extends PageProps {
 }
 
 const AccordionGrid: React.FC<AccordionGridProps> = ({
+  defaultValue,
   buttonChildren,
   rows,
   page,
@@ -98,7 +100,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
         </Select>
       </Stack>
       <Stack className="accordionWrap width-100">
-        <Accordion type="single" size="LG">
+        <Accordion type="single" size="LG" defaultValue={defaultValue}>
           {rows && rows.length > 0 ? (
             rows.map((row) => (
               <div onClick={() => onClick && onClick(row.faqId)}>
