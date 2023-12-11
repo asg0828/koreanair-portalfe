@@ -45,7 +45,7 @@ export interface ApiRequest {
   redirect?: string;
 }
 
-let baseApiUrl: BaseApiUrl = '/fo';
+let baseApiUrl: BaseApiUrl = '/bo';
 
 export type BaseApiUrl = '/fo' | '/bo';
 
