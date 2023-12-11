@@ -97,7 +97,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
 
       if (valueA === valueB) {
         return a.rank - b.rank;
-        // return a.lastIntlFlightDate - b.lastIntlFlightDate;
       }
 
 

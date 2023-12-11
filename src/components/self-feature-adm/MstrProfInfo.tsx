@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
 
@@ -74,21 +74,18 @@ const MstrProfInfo = ({
         호출을 위한 param setting
         선택된 메타테이블의 논리명 및 등록 수정시 테이블 select를 위한 metaTblAllList
     */
-    useEffect(() => {
-        if (!metaTblInfo) return
-        setDivisionType(cloneDeep(metaTblInfo.sgmtDvCd))
-
+    const metaTableInfoCallback = useCallback(() => {
         let tblId: string = ""
         // 등록인 경우에는 metaTblId로
         if (editMode && metaTblInfo.metaTblId) tblId = metaTblInfo.metaTblId
         else tblId = metaTblInfo.mstrSgmtRuleTblId
 
-        setMetaTblId(cloneDeep(tblId))
-
         if (!metaTblAllList) return
         let temp = metaTblAllList.find((info: TbCoMetaTbInfo) => info.metaTblId === tblId)
-        if (temp) setMetaTableInfo(cloneDeep(temp))
-        else setMetaTableInfo(cloneDeep(initTbCoMetaTbInfo))
+        setMetaTableInfo(() => {
+            if (temp) return cloneDeep(temp)
+            else return cloneDeep(initTbCoMetaTbInfo)
+        })
         // 현재 설정된 메타테이블 정보 순회하며 등록 가능한 컬럼 setting
         let temp2: Array<TbCoMetaTbInfo> = []
         for (let i = 0; i < metaTblAllList.length; i++) {
@@ -107,13 +104,22 @@ const MstrProfInfo = ({
 
             if (!hasItem) temp2.push(cloneDeep(item))
         }
-        setMetaTblOptionList(temp2)
-    }, [metaTblInfo, metaTblAllList, mstrSgmtRuleAttrTblList])
-    // 화면 노출을 위한 저장된 컬럼 setting
-    useEffect(() => {
+        setMetaTblOptionList(() => cloneDeep(temp2))
+    }, [metaTblAllList, mstrSgmtRuleAttrTblList])
+    useLayoutEffect(() => {
+        if (!metaTblInfo) return
+        setDivisionType(() => cloneDeep(metaTblInfo.sgmtDvCd))
+        let tblId: string = ""
+        // 등록인 경우에는 metaTblId로
+        if (editMode && metaTblInfo.metaTblId) tblId = metaTblInfo.metaTblId
+        else tblId = metaTblInfo.mstrSgmtRuleTblId
+        setMetaTblId(() => cloneDeep(tblId))
+        metaTableInfoCallback()
+    }, [metaTblInfo, metaTableInfoCallback])
+    const metaTableClmnInfoCallback = useCallback(() => {
         // 선택한 테이블에 해당되는 컬럼 리스트
         if (!metaTblColList || metaTblColList.length < 1 || metaTblClmnAllList.length < 1) {
-            setMetaTblClmnList([])
+            setMetaTblClmnList(() => [])
         } else {
             let colList: Array<TbCoMetaTblClmnInfo> = []
             metaTblColList.map((saveColInfo) => {
@@ -128,22 +134,26 @@ const MstrProfInfo = ({
                 if (isInit) colList.push(cloneDeep(initTbCoMetaTblClmnInfo))
                 return saveColInfo
             })
-            setMetaTblClmnList(cloneDeep(colList))
+            setMetaTblClmnList(() => cloneDeep(colList))
         }
     }, [metaTblColList, metaTblClmnAllList])
+    // 화면 노출을 위한 저장된 컬럼 setting
+    useLayoutEffect(() => {
+        metaTableClmnInfoCallback()
+    }, [metaTableClmnInfoCallback])
 
     // 선택한 테이블의 속성 Joinkey 화면 노출을 위한 setting
     useEffect(() => {
         if (!metaTblInfo || !metaTblClmnJoinkeyList) return
         let attrJoinkeyInfo = metaTblClmnJoinkeyList.find((metaTblClmnJoinkey: TbCoMetaTblClmnInfo) => metaTblClmnJoinkey.metaTblClmnPhysNm === metaTblInfo.attrJoinKeyClmnNm)
-        setMetaTblClmnJoinkeyInfo(cloneDeep(attrJoinkeyInfo))
+        setMetaTblClmnJoinkeyInfo(() => cloneDeep(attrJoinkeyInfo))
     }, [metaTblClmnJoinkeyList])
 
     // 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API 호출
     useEffect(() => {
         if (!metaTblId) {
-            setMetaTblClmnAllList([])
-            setMetaTblClmnJoinkeyList([])
+            setMetaTblClmnAllList(() => [])
+            setMetaTblClmnJoinkeyList(() => [])
             return
         }
         metaColIsRslnInfoRefetch()
@@ -159,7 +169,7 @@ const MstrProfInfo = ({
             });
         } else {
             if (metaColIsRslnInfoRes) {
-                setMetaTblClmnAllList(cloneDeep(metaColIsRslnInfoRes.result))
+                setMetaTblClmnAllList(() => cloneDeep(metaColIsRslnInfoRes.result))
             }
         }
     }, [metaColIsRslnInfoRes, metaColIsRslnInfoErr])
@@ -173,7 +183,7 @@ const MstrProfInfo = ({
             });
         } else {
             if (metaColIsRslnInfoJoinkeyRes) {
-                setMetaTblClmnJoinkeyList(cloneDeep(metaColIsRslnInfoJoinkeyRes.result))
+                setMetaTblClmnJoinkeyList(() => cloneDeep(metaColIsRslnInfoJoinkeyRes.result))
             }
         }
     }, [metaColIsRslnInfoJoinkeyRes, metaColIsRslnInfoJoinkeyErr])
@@ -384,4 +394,4 @@ const MstrProfInfo = ({
     )
 }
 
-export default MstrProfInfo
+export default React.memo(MstrProfInfo)
