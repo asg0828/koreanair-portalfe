@@ -1,4 +1,4 @@
-import { useDatasetLoader, useFaqLoader, useFeatureLoader, useQnaLoader } from '@/hooks/useLoader';
+import { useDatasetLoader, useFaqLoader, useFeatureLoader, useMainLoader, useQnaLoader } from '@/hooks/useLoader';
 import MyPage from '@/pages/MyPage';
 import AdminHome from '@/pages/admin/AdminHome';
 import CustomerMetaManagement from '@/pages/admin/self-feature-meta-management/customer-meta-management';
@@ -6,8 +6,8 @@ import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-manage
 import CustomerMetaManagementReg from '@/pages/admin/self-feature-meta-management/customer-meta-management/Reg';
 import MasterProfileManagement from '@/pages/admin/self-feature-meta-management/master-profile-management';
 import MasterProfileManagementDetail from '@/pages/admin/self-feature-meta-management/master-profile-management/Detail';
-import MasterProfileManagementReg from '@/pages/admin/self-feature-meta-management/master-profile-management/Reg';
 import MasterProfileManagementEdit from '@/pages/admin/self-feature-meta-management/master-profile-management/Edit';
+import MasterProfileManagementReg from '@/pages/admin/self-feature-meta-management/master-profile-management/Reg';
 import AdminAuthGroupManagement from '@/pages/admin/user-management/admin-auth-group-management';
 import AuthGroupManagement from '@/pages/admin/user-management/user-auth-group-management';
 import Dataroom from '@/pages/user/board/dataroom';

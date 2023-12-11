@@ -36,6 +36,22 @@ export enum ContextPath {
   ADMIN_POPUP = '/admin/popup',
 }
 
+export enum MainLink {
+  NOTICE = '/board/notice',
+  FAQ = '/board/faq',
+  QNA = '/board/qna',
+  FEATURE = '/biz-meta/feature',
+  POPULAR_FEATURE = '/feature/popular',
+}
+
+export enum AdminMainLink {
+  NOTICE = '/admin/user-portal-management/board-management/notice',
+  FAQ = '/admin/user-portal-management/board-management/faq',
+  QNA = '/admin/user-portal-management/board-management/qna',
+  FEATURE = '/admin/biz-meta-management/feature',
+  POPULAR_FEATURE = '/admin/feature/popular',
+}
+
 export const menuIconSx = {
   width: 30,
 };

@@ -9,6 +9,7 @@ export interface QnaParams {
 export interface QnaModel extends CreatedQnaModel, CommonModel {
   qnaId: string;
   comments: Array<QnaModel>;
+  qnaStatNm?: string;
 }
 
 export interface CreatedQnaModel extends FileInfo {

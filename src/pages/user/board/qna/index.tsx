@@ -30,7 +30,7 @@ const searchInfoList = [
   { key: 'cn', value: '내용' },
 ];
 
-const initParams: QnaParams = {
+export const initQnaParams: QnaParams = {
   searchConditions: 'all',
   searchTable: '',
 };
@@ -39,7 +39,7 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
-  const [params, setParams] = useState(initParams);
+  const [params, setParams] = useState(initQnaParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<QnaModel>>([]);
   const { data: response, isError, refetch } = useQnaList(params, page);
@@ -62,7 +62,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setParams(initParams);
+    setParams(initQnaParams);
   };
 
   const handleKeyDown = (e: any) => {

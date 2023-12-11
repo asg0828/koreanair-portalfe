@@ -15,14 +15,14 @@ import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const searchInfoList = [
   { key: 'qstn', value: '제목' },
   { key: 'answ', value: '내용' },
 ];
 
-const initParams: FaqParams = {
+export const initFaqParams: FaqParams = {
   searchConditions: 'all',
   searchTable: '',
 };
@@ -32,7 +32,8 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
-  const [params, setParams] = useState(initParams);
+  const location = useLocation();
+  const [params, setParams] = useState(initFaqParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<FaqModel>>([]);
   const [faqId, setFaqId] = useState<string>('');
@@ -50,7 +51,7 @@ const List = () => {
   }, [refetch]);
 
   const handleClear = () => {
-    setParams(initParams);
+    setParams(initFaqParams);
   };
 
   const handleKeyDown = (e: any) => {
@@ -192,6 +193,7 @@ const List = () => {
       </SearchForm>
 
       <AccordionGrid
+        defaultValue={location?.state?.faqId}
         rows={rows}
         page={page}
         onClick={handleClick}

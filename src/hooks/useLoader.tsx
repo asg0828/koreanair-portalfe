@@ -1,5 +1,9 @@
 import { getCodeListWithOut } from '@/reducers/codeSlice';
 
+export const useMainLoader = async ({ request, params }: any) => {
+  return getCodeListWithOut('QNA_STAT');
+};
+
 export const useFaqLoader = async ({ request, params }: any) => {
   getCodeListWithOut('FAQ_TYPE');
   return true;
