@@ -32,3 +32,23 @@ export const getNodeChildrenDeptCodeRecursive = (node: any, deptCodeList: any = 
 
   return deptCodeList;
 };
+
+export const getNodeCheckedListRecursive = (children: Array<any>, checkedList: Array<any> = []) => {
+  children.forEach((item: any) => {
+    if (item.isChecked) {
+      checkedList.push(item);
+    }
+    if (item.children) {
+      getNodeCheckedListRecursive(item.children, checkedList);
+    }
+  });
+
+  return checkedList;
+};
+
+export const sortChildrenRecursive = (children: Array<HierarchyInfo>) => {
+  children.sort((a: HierarchyInfo, b: HierarchyInfo) => a.ordSeq - b.ordSeq);
+  children.forEach((item: HierarchyInfo) => {
+    sortChildrenRecursive(item.children);
+  });
+};

@@ -18,9 +18,11 @@ export interface DataTreeProps {
   onClick?: (item: HierarchyInfo, parentItem?: HierarchyInfo) => void;
   onMove?: MoveHandler<any>;
   onSearch?: (keyword: string) => void;
+  treeHeight?:number | undefined;
 }
 
-const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, onMove }: DataTreeProps) => {
+const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, onMove,treeHeight }: DataTreeProps) => {
+  const height = treeHeight !== undefined ? treeHeight : 500;
   // 폴더 펼치기, 접기
   const handleToggle = (node: any) => {
     node.toggle();
@@ -41,8 +43,9 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
 
   // 노드 클릭
   const handleClick = (node: any, tree?: any) => {
+    const isSelected = node.data.isSelected;
     selectChildrenRecursive(tree.root, false);
-    node.data.isSelected = true;
+    node.data.isSelected = !isSelected;
     onClick && onClick(node.data, node.parent.data);
   };
 
@@ -174,6 +177,7 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
     <section className="padding-10 width-100">
       <Tree
         width="100%"
+        height={height}
         data={treeData}
         onMove={handleMove}
         searchTerm={term}

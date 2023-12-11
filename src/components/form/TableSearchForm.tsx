@@ -69,9 +69,9 @@ const TableSearchForm = ({
 
   return (
     <Stack direction="Vertical" className="height-100 width-50">
-      <Stack className="padding-5 primary-300">
+      <Stack className="padding-5 primary-600">
         <Stack justifyContent="Center" className="width-100">
-          <Typography variant="h3">{title}</Typography>
+          <Typography variant="h3" className="white">{title}</Typography>
         </Stack>
 
         {enableIcon && (

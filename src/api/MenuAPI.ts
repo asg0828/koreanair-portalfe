@@ -11,13 +11,13 @@ export const getUserMenuList = () => {
   });
 };
 
-export const updateUserMenu = (changedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => {
+export const updateUserMenu = (updatedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.USER_MENU_MGMT}`,
     method: Method.POST,
     params: {
-      bodyParams: changedMenuList,
+      bodyParams: updatedMenuList,
     },
   });
 };
@@ -30,13 +30,13 @@ export const getAdminMenuList = () => {
   });
 };
 
-export const updateAdminMenu = (changedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => {
+export const updateAdminMenu = (updatedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.ADMIN_MENU_MGMT}`,
     method: Method.POST,
     params: {
-      bodyParams: changedMenuList,
+      bodyParams: updatedMenuList,
     },
   });
 };

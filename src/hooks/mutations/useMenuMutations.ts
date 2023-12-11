@@ -3,11 +3,11 @@ import { AuthMenuModel, DeletedMenuModel, UpdatedMenuModel } from '@/models/mode
 import { useMutation } from '@tanstack/react-query';
 
 export const useUpdateUserMenu = () => {
-  return useMutation((changedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => updateUserMenu(changedMenuList));
+  return useMutation((updatedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => updateUserMenu(updatedMenuList));
 };
 
 export const useUpdateAdminMenu = () => {
-  return useMutation((changedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => updateAdminMenu(changedMenuList));
+  return useMutation((updatedMenuList: Array<UpdatedMenuModel | DeletedMenuModel>) => updateAdminMenu(updatedMenuList));
 };
 
 export const useCreateUserAuthMenu = () => {

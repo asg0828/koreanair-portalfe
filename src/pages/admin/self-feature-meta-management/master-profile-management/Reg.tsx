@@ -27,6 +27,9 @@ const MasterProfileManagementReg = () => {
 
     const navigate = useNavigate()
     const { toast } = useToast()
+    // 테이블 추가 버튼 show / hide 처리
+    const [isAttrAddIconShow, setIsAttrAddIconShow] = useState<Boolean>(false)
+    const [isBehvAddIconShow, setIsBehvAddIconShow] = useState<Boolean>(false)
     // 메타테이블 전체조회 테이블 선택 콤보박스 조회 API
     const [metaInfoSrchInfo, setMetaInfoSrchInfo] = useState<MetaInfoSearchProps>(cloneDeep(initMetaInfoSearchProps))
     const [attrMetaTbList, setAttrMetaTbList] = useState<Array<TbCoMetaTbInfo>>([])
@@ -125,6 +128,11 @@ const MasterProfileManagementReg = () => {
     }, [mstrSgmtRule])
     // 속성 및 행동 테이블 정보 수정시 formData setting
     useEffect(() => {
+        if (0 < attrMetaTbList.length && attrMetaTbList.length < attrMstrSgmtRuleAttrTblList.length + 1) {
+            setIsAttrAddIconShow(false)
+        } else {
+            setIsAttrAddIconShow(true)
+        }
         setMstrSgmtFormData((prevState: MasterProfileInfo) => {
             let rtn = cloneDeep(prevState)
             let behvList = rtn.tbRsMstrSgmtRuleAttrTbl.filter((item: TbRsMstrSgmtRuleAttrTbl) => item.sgmtDvCd === DivisionTypes.BEHV)
@@ -133,6 +141,11 @@ const MasterProfileManagementReg = () => {
         })
     }, [attrMstrSgmtRuleAttrTblList])
     useEffect(() => {
+        if (0 < behvMetaTbList.length && behvMetaTbList.length < behvMstrSgmtRuleAttrTblList.length + 1) {
+            setIsBehvAddIconShow(false)
+        } else {
+            setIsBehvAddIconShow(true)
+        }
         setMstrSgmtFormData((prevState: MasterProfileInfo) => {
             let rtn = cloneDeep(prevState)
             let attrList = rtn.tbRsMstrSgmtRuleAttrTbl.filter((item: TbRsMstrSgmtRuleAttrTbl) => item.sgmtDvCd === DivisionTypes.ATTR)
@@ -178,17 +191,38 @@ const MasterProfileManagementReg = () => {
             return rtn
         })
     }
-    // 속성 및 행동 테이블 정보 추가
+    // 속성 및 행동 테이블 정보 추가(default 테이블 정보 setting)
     const onClickAddTblInfo = (divType: string) => {
         if (divType === DivisionTypes.ATTR) {
+            // if (0 < attrMetaTbList.length && attrMetaTbList.length < attrMstrSgmtRuleAttrTblList.length + 1) {
+            //     setIsAttrAddIconShow(false)
+            //     setModalType(ModalType.ALERT)
+            //     setConfirmModalTit("Master Profile 등록")
+            //     setConfirmModalCont("더이상 테이블정보를 추가할 수 없습니다.")
+            //     setIsOpenConfirmModal(true)
+            //     return
+            // } else {
+            //     setIsAttrAddIconShow(true)
+            // }
             setAttrMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
                 let rtn = cloneDeep(prevState)
                 let addItem = cloneDeep(initTbRsMstrSgmtRuleAttrTbl)
                 addItem.sgmtDvCd = divType
+                addItem.clmnAllChocYn = 'N'
                 rtn.push(addItem)
                 return rtn
             })
         } else if (divType === DivisionTypes.BEHV) {
+            // if (0 < behvMetaTbList.length && behvMetaTbList.length < behvMstrSgmtRuleAttrTblList.length + 1) {
+            //     setIsBehvAddIconShow(false)
+            //     setModalType(ModalType.ALERT)
+            //     setConfirmModalTit("Master Profile 등록")
+            //     setConfirmModalCont("더이상 테이블정보를 추가할 수 없습니다.")
+            //     setIsOpenConfirmModal(true)
+            //     return
+            // } else {
+            //     setIsBehvAddIconShow(true)
+            // }
             setBehvMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
                 let rtn = cloneDeep(prevState)
                 let addItem = cloneDeep(initTbRsMstrSgmtRuleAttrTbl)
@@ -271,21 +305,27 @@ const MasterProfileManagementReg = () => {
                         gap="LG"
                     >
                         <Typography variant="h4">Fact 정보</Typography>
-                        <AddIcon
-                            onClick={() => onClickAddTblInfo(DivisionTypes.ATTR)}
-                        />
+                        {isAttrAddIconShow &&
+                            <AddIcon
+                                onClick={() => onClickAddTblInfo(DivisionTypes.ATTR)}
+                            />
+                        }
                     </Stack>
                     {
                         attrMstrSgmtRuleAttrTblList.map((attrTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
                             attrTblInfo.sgmtDvCd = DivisionTypes.ATTR
+                            let metaTblColList = mstrSgmtRuleAttrClmnList.filter((item) => item.mstrSgmtRuleTblId === attrTblInfo.mstrSgmtRuleTblId)
                             return (
                                 <MstrProfInfo
                                     key={`attr-mstr-prof-reg-${index}`}
                                     targetIndex={index}
                                     editMode={true}
+                                    hasItem={false}
                                     rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
                                     metaTblInfo={attrTblInfo}                   //저장된 메타테이블 정보
                                     metaTblAllList={attrMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
+                                    metaTblColList={metaTblColList}             //등록중인 컬럼 목록 전달
+                                    mstrSgmtRuleAttrTblList={attrMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                                     setMstrSgmtRuleAttrTblList={setAttrMstrSgmtRuleAttrTblList}
                                     setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
                                 />
@@ -317,21 +357,27 @@ const MasterProfileManagementReg = () => {
                         gap="LG"
                     >
                         <Typography variant="h4">Base Fact 정보</Typography>
-                        <AddIcon
-                            onClick={() => onClickAddTblInfo(DivisionTypes.BEHV)}
-                        />
+                        {isBehvAddIconShow &&
+                            <AddIcon
+                                onClick={() => onClickAddTblInfo(DivisionTypes.BEHV)}
+                            />
+                        }
                     </Stack>
                     {
                         behvMstrSgmtRuleAttrTblList.map((behvTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
                             behvTblInfo.sgmtDvCd = DivisionTypes.BEHV
+                            let metaTblColList = mstrSgmtRuleAttrClmnList.filter((item) => item.mstrSgmtRuleTblId === behvTblInfo.mstrSgmtRuleTblId)
                             return (
                                 <MstrProfInfo
                                     key={`behv-mstr-prof-reg-${index}`}
-                                    editMode={true}
                                     targetIndex={index}
+                                    editMode={true}
+                                    hasItem={false}
                                     rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
                                     metaTblInfo={behvTblInfo}                   //저장된 메타테이블 정보
                                     metaTblAllList={behvMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
+                                    metaTblColList={metaTblColList}             //등록중인 컬럼 목록 전달
+                                    mstrSgmtRuleAttrTblList={behvMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                                     setMstrSgmtRuleAttrTblList={setBehvMstrSgmtRuleAttrTblList}
                                     setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
                                 />
@@ -374,9 +420,3 @@ const MasterProfileManagementReg = () => {
 }
 
 export default MasterProfileManagementReg
-
-// onThisDayClick={() => {
-//     let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
-//     setOprd2DpValue(today)
-//     onChangeDatePickerHandler("operand2", today)
-// }}

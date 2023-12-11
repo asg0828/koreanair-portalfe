@@ -7,11 +7,13 @@ export enum MetaType {
 // Master Profile 속성/행동 정보 component props
 export interface AttrBehvMstrProfInfoProps {
 	editMode: Boolean
+	hasItem?: Boolean
 	targetIndex?: number
 	rslnRuleKeyPrtyList: Array<TbRsRslnRuleKeyPrty>
-	metaTblInfo?: TbRsMstrSgmtRuleAttrTbl
+	metaTblInfo: TbRsMstrSgmtRuleAttrTbl
 	metaTblAllList: Array<TbCoMetaTbInfo>
-	metaTblColList?: Array<TbRsMstrSgmtRuleAttrClmn>
+	metaTblColList: Array<TbRsMstrSgmtRuleAttrClmn>
+	mstrSgmtRuleAttrTblList?: Array<TbRsMstrSgmtRuleAttrTbl>
 	setMstrSgmtRuleAttrTblList?: React.Dispatch<React.SetStateAction<Array<TbRsMstrSgmtRuleAttrTbl>>>
 	setMstrSgmtRuleAttrClmnList?: React.Dispatch<React.SetStateAction<Array<TbRsMstrSgmtRuleAttrClmn>>>
 }
@@ -19,9 +21,11 @@ export interface AttrBehvMstrProfInfoProps {
 export interface MstrProfMetaTblColumnListProps {
 	editMode: Boolean
 	divisionType: string
+	targetIndex?: number
 	metaTblInfo?: TbRsMstrSgmtRuleAttrTbl
 	metaTblClmnList: Array<TbCoMetaTblClmnInfo>
 	metaTblClmnAllList: Array<TbCoMetaTblClmnInfo>
+	setMstrSgmtRuleAttrTblList?: React.Dispatch<React.SetStateAction<Array<TbRsMstrSgmtRuleAttrTbl>>>
 	setMstrSgmtRuleAttrClmnList?: React.Dispatch<React.SetStateAction<Array<TbRsMstrSgmtRuleAttrClmn>>>
 }
 

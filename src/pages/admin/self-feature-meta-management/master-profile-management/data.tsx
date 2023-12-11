@@ -85,7 +85,7 @@ export const initTbRsMstrSgmtRuleAttrTbl: TbRsMstrSgmtRuleAttrTbl = {
 	rtmTblYn: '',
 }
 export const initTbRsRslnRuleRel: TbRsRslnRuleRel = {
-	rslnRuleId: '',
+	rslnRuleId: RuleId.RESOLUTION,
 	mstrSgmtRuleId: '',
 	rslnRuleRelUseYn: '',
 	frstRegDttm: '',
