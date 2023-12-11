@@ -5,18 +5,20 @@ export interface MenuModel extends CreatedMenuModel {
 }
 
 export interface CreatedMenuModel {
-  upMenuId: string | null;
+  upMenuId: string;
   upMenuNm?: string;
   menuNm: string;
   menuUrl: string;
   menuDsc: string;
   useYn: string;
   ordSeq: number;
-  oprtrSe?: 'C' | 'U' | 'D';
+  oprtrSe: 'C' | 'U' | 'D';
 }
 
 export interface UpdatedMenuModel extends CreatedMenuModel {
   menuId: string;
+  children?: Array<any>;
+  rownum?: number;
 }
 
 export interface DeletedMenuModel {

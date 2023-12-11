@@ -89,15 +89,8 @@ const UserSelectModal = ({
           name: item.deptNm,
           parentId: item.upDeptCode || 'root',
         }));
-        const hierarchyList: Array<HierarchyInfo> = [];
-        hierarchyList.push({
-          id: 'root',
-          parentId: '',
-          name: '대한항공',
-          children: convertToHierarchyInfo(list),
-        });
         setDeptData(response.data.contents);
-        setDeptTreeData(hierarchyList);
+        setDeptTreeData(convertToHierarchyInfo(list));
       }
     }
   }, [response, isError, toast]);

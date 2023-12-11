@@ -4,10 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: ModalInfo = {
   type: ModalType.NORMAL,
-  isOpen: false,
-  autoClose: true,
   title: '',
   content: '',
+  isOpen: false,
+  autoClose: true,
   onConfirm: undefined,
   onCancle: undefined,
   onClose: undefined,

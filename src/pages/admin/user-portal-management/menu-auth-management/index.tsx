@@ -7,13 +7,13 @@ import { useAppDispatch } from '@/hooks/useRedux';
 import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { AuthModel } from '@/models/model/AuthModel';
-import { AuthMenuModel, MenuModel } from '@/models/model/MenuModel';
+import { UpdatedMenuModel } from '@/models/model/MenuModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
-import { convertToHierarchyInfo } from '@/utils/ArrayUtil';
+import { convertToHierarchyInfo, getNodeCheckedListRecursive, sortChildrenRecursive } from '@/utils/ArrayUtil';
 import { getTotalPage } from '@/utils/PagingUtil';
 import { Button, Stack, useToast } from '@components/ui';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MoveHandler } from 'react-arborist';
 
 const columns = [
@@ -21,12 +21,15 @@ const columns = [
   { headerName: '권한그룹명', field: 'authNm', colSpan: 5 },
 ];
 
-const initItem = {
+const initItem: UpdatedMenuModel = {
+  menuId: '',
   upMenuId: '',
+  upMenuNm: '',
   menuNm: '',
   menuUrl: '',
   menuDsc: '',
   useYn: 'Y',
+  oprtrSe: 'U',
   ordSeq: 0,
 };
 
@@ -34,14 +37,12 @@ const List = () => {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [authId, setAuthId] = useState<string>('');
-  const [authMenuData, setAuthMenuData] = useState<AuthMenuModel>();
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<AuthModel>>([]);
-  const [selectedItem, setSelectedItem] = useState<HierarchyInfo>();
-  const [initData, setInitData] = useState<Array<MenuModel>>([]);
+  const [initData, setInitData] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
   const [treeData, setTreeData] = useState<Array<HierarchyInfo>>([]);
-  const { data: response, isError, refetch } = useUserMenuList();
+  const { data: response, isError, refetch } = useUserMenuList('menu-auth-mgmt');
   const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
   const { data: uamResponse, isError: uamIsError, refetch: uamRefetch } = useUserAuthMenuList(authId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateUserMenu();
@@ -52,36 +53,25 @@ const List = () => {
     mutate: cuaMutate,
   } = useCreateUserAuthMenu();
 
-  const checkValid = () => {
-    if (data.find((item) => item.menuId === 'new-item')) {
+  const checkHasCreated = () => {
+    if (initData.length !== data.length) {
+      return true;
+    }
+    return false;
+  };
+
+  const handleMove: MoveHandler<any> = (args) => {
+    if (checkHasCreated()) {
       toast({
         type: ValidType.INFO,
         content: '저장되지 않은 메뉴가 있습니다.',
       });
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleClick = (item: any, parentItem: any) => {
-    if (item.isSelected) {
-      setSelectedItem(item);
-    } else {
-      setSelectedItem(undefined);
-    }
-
-    setTreeData([...treeData]);
-  };
-
-  const handleMove: MoveHandler<any> = (args) => {
-    if (!checkValid()) {
       return;
     }
 
     let { dragIds, parentId, index } = args;
     if (parentId === '__REACT_ARBORIST_INTERNAL_ROOT__') {
-      parentId = null;
+      parentId = '';
     }
 
     setData((prevState) => {
@@ -114,46 +104,10 @@ const List = () => {
     });
   };
 
-  const handleCreate = () => {
-    if (!checkValid()) {
-      return;
-    }
-
-    const upMenuId = selectedItem?.menuId;
-    const upNemnNm = selectedItem?.menuNm;
-    const ordSeq = selectedItem ? selectedItem.children.length : data.length;
-
-    const newItem: any = {
-      ...initItem,
-      menuId: 'new-item',
-      oprtrSe: 'C',
-      isSelected: true,
-      upMenuId: upMenuId,
-      upMenuNm: upNemnNm,
-      ordSeq: ordSeq,
-    };
-
-    setData((prevData) => prevData.concat(newItem));
-    setSelectedItem(newItem);
-  };
-
-  const checkChildrenRecursive = (children: Array<any>, checkedList: Array<any> = []) => {
-    children.forEach((item: any) => {
-      if (item.isChecked) {
-        checkedList.push(item);
-      }
-      if (item.children) {
-        checkChildrenRecursive(item.children, checkedList);
-      }
-    });
-
-    return checkedList;
-  };
-
   const handleDelete = () => {
-    const deleteList = checkChildrenRecursive(treeData);
+    const checkedList = getNodeCheckedListRecursive(treeData);
 
-    if (deleteList.length === 0) {
+    if (checkedList.length === 0) {
       toast({
         type: ValidType.INFO,
         content: '메뉴를 선택해주세요.',
@@ -165,26 +119,29 @@ const List = () => {
           title: '삭제',
           content: '삭제하시겠습니까?',
           onConfirm: () => {
-            setData((prevDate) => [...prevDate.filter((item) => item.menuId !== 'new-item')]);
-            uMutate(
-              deleteList
-                .filter((item) => item.menuId !== 'new-item')
-                .map((item) => ({ menuId: item.menuId, oprtrSe: 'D' }))
-            );
+            const hasIdList = checkedList.filter((item) => item.menuId);
+
+            if (checkedList.length !== hasIdList.length) {
+              setData((prevDate) => prevDate.filter((item) => item.menuId));
+            }
+
+            if (hasIdList.length > 0) {
+              uMutate(hasIdList.map((item) => ({ menuId: item.menuId, oprtrSe: 'D' })));
+            }
           },
         })
       );
     }
   };
 
-  const sortChildrenRecursive = useCallback((children: Array<HierarchyInfo>) => {
-    children.sort((a: HierarchyInfo, b: HierarchyInfo) => a.ordSeq - b.ordSeq);
-    children.forEach((item: HierarchyInfo) => {
-      sortChildrenRecursive(item.children);
-    });
-  }, []);
-
   const handleClickRow = (row: any, index: number, selected: boolean) => {
+    setData((prevData) =>
+      prevData.map((item) => {
+        item.isChecked = false;
+        return item;
+      })
+    );
+
     if (selected) {
       setAuthId(row.authId);
     } else {
@@ -199,7 +156,7 @@ const List = () => {
         title: '저장',
         content: '저장하시겠습니까?',
         onConfirm: () => {
-          const menuIds = checkChildrenRecursive(treeData).map((item) => item.menuId);
+          const menuIds = getNodeCheckedListRecursive(treeData).map((item) => item.menuId);
           cuaMutate({
             authId: authId,
             menuIds: menuIds,
@@ -226,7 +183,7 @@ const List = () => {
       sortChildrenRecursive(hierarchyList);
       setTreeData(hierarchyList);
     }
-  }, [data, initData, sortChildrenRecursive]);
+  }, [data]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -236,7 +193,7 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setInitData(JSON.parse(JSON.stringify(response.data.contents)));
+        setInitData(response.data.contents);
         setData(response.data.contents);
       }
     }
@@ -251,7 +208,6 @@ const List = () => {
     } else {
       if (uamResponse?.data) {
         const authMenuData = uamResponse.data;
-        setAuthMenuData(authMenuData);
         setData((prevData) => {
           prevData.forEach((item) => {
             if (authMenuData.menuIds.includes(item.menuId)) {
@@ -297,9 +253,8 @@ const List = () => {
         content: '수정되었습니다.',
       });
       refetch();
-      setSelectedItem(undefined);
     }
-  }, [uResponse, uIsSuccess, uIsError, toast, refetch, setSelectedItem]);
+  }, [uResponse, uIsSuccess, uIsError, toast, refetch]);
 
   useEffect(() => {
     if (cuaIsError || cuaResponse?.successOrNot === 'N') {
@@ -322,14 +277,7 @@ const List = () => {
         <Stack gap="SM" alignItems="Start">
           <TableSearchForm title="권한그룹 목록" columns={columns} rows={rows} onClick={handleClickRow} />
 
-          <TreeSearchForm
-            treeData={treeData}
-            initItem={initItem}
-            onClick={handleClick}
-            onCreate={handleCreate}
-            onDelete={handleDelete}
-            onMove={handleMove}
-          />
+          <TreeSearchForm treeData={treeData} initItem={initItem} onDelete={handleDelete} onMove={handleMove} />
         </Stack>
 
         <Stack gap="SM" justifyContent="End">

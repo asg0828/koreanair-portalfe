@@ -158,6 +158,10 @@ svg {
   padding-right: 200px;
 }
 
+.white {
+  color: #ffffff !important;
+}
+
 /* Grey */
 .grey-50 {
   color: #f5f5f5;
@@ -1056,4 +1060,9 @@ svg {
 }
 .tree-wrap section .primary-200 p{
   background: #c5e7f4;
+}
+.multiSelectTable .verticalTableDiv>div:nth-child(2){
+  height: 236px;
+  max-height: 236px;
+  overflow: auto;
 }

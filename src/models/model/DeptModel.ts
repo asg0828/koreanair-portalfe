@@ -1,19 +1,29 @@
-import { CommonModel } from '@/models/model/CommonModel';
-import { FileInfo } from '@/models/model/FileModel';
-
 export interface DeptParams {}
 
-export interface DeptModel extends CreatedDeptModel, CommonModel {
+export interface DeptModel extends CreatedDeptModel {
   deptCode: string;
 }
 
-export interface CreatedDeptModel extends FileInfo {
-  deptNm: string;
+export interface CreatedDeptModel {
+  deptNm?: string;
   upDeptCode: string;
-  modiSe: string;
+  upDeptNm?: string;
   companyCode: string;
+  userAuthId: string;
+  userAuthNm?: string;
+  mgrAuthId: string;
+  mgrAuthNm?: string;
+  useYn: string;
+  ordSeq: number;
+  oprtrSe?: 'C' | 'U' | 'D';
 }
 
 export interface UpdatedDeptModel extends CreatedDeptModel {
+  deptCode: string;
+  children?: Array<any>;
+  rownum?: number;
+}
+
+export interface DeletedDeptModel {
   deptCode: string;
 }

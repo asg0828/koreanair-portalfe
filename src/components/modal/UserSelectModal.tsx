@@ -1,3 +1,4 @@
+import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
 import DataTree from '@/components/Tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useUserAllList } from '@/hooks/queries/useUserQueries';
@@ -23,23 +24,32 @@ const defaultResultInfo = {
   userNm: '',
 };
 
+export interface UserSelectModalProps extends ModalInfo {
+  isMultiSelected?: boolean;
+  userIdList?: Array<string>;
+}
+
 const UserSelectModal = ({
   isOpen = false,
   autoClose = true,
-  title = '사용자 선택',
+  isMultiSelected = false,
+  userIdList = [],
+  title,
   content,
   onConfirm,
   onCancle,
   onClose,
   btnType,
-}: ModalInfo) => {
+}: UserSelectModalProps) => {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [keyword, setKeyword] = useState<string>('');
   const [deptTreeData, setDeptTreeData] = useState<Array<any>>([]);
-  const [userData, setUsetData] = useState<Array<any>>([]);
+  const [userData, setUserData] = useState<Array<any>>([]);
   const [prevRows, setPrevRows] = useState<Array<UserModel>>([]);
   const [prevCheckedList, setPrevCheckedList] = useState<Array<UserModel>>([]);
+  const [nextRows, setNextRows] = useState<Array<UserModel>>([]);
+  const [nextCheckedList, setNextCheckedList] = useState<Array<UserModel>>([]);
   const { data: response, isError, refetch } = useDeptAllList();
   const { data: uResponse, isError: uIsError, refetch: uRefetch } = useUserAllList();
 
@@ -65,14 +75,44 @@ const UserSelectModal = ({
     setPrevCheckedList(prevCheckedList);
   };
 
+  const handleNextRowSelection = (nextCheckedIndexList: Array<number>, nextCheckedList: Array<any>) => {
+    setNextCheckedList(nextCheckedList);
+  };
+
   const handleClickFile = (deptItem: any) => {
     const deptItemList = Array.from(getNodeChildrenDeptCodeRecursive(deptItem));
     const prevUsers = userData.filter((item: UserModel) => deptItemList.includes(item.deptCode));
     setPrevRows(prevUsers);
   };
 
+  const handleAddUsers = () => {
+    setNextRows((prevState) => {
+      const addList = prevCheckedList.filter(
+        (item) => !prevState.some((nextItem: UserModel) => nextItem.userId === item.userId)
+      );
+
+      return prevState.concat(addList);
+    });
+    setNextCheckedList([]);
+  };
+
+  const handleRemoveUsers = () => {
+    setNextRows((prevState) => {
+      const filterList = prevState.filter(
+        (item) => !nextCheckedList.some((nextItem: UserModel) => nextItem.userId === item.userId)
+      );
+
+      return filterList;
+    });
+    setNextCheckedList([]);
+  };
+
   const handleConfirm = () => {
-    onConfirm && onConfirm(prevCheckedList.length === 0 ? defaultResultInfo : prevCheckedList[0]);
+    if (isMultiSelected) {
+      onConfirm && onConfirm(nextRows);
+    } else {
+      onConfirm && onConfirm(prevCheckedList.length === 0 ? defaultResultInfo : prevCheckedList[0]);
+    }
     autoClose && handleClose();
   };
 
@@ -94,14 +134,7 @@ const UserSelectModal = ({
           name: item.deptNm,
           parentId: item.upDeptCode || 'root',
         }));
-        const hierarchyList: Array<HierarchyInfo> = [];
-        hierarchyList.push({
-          id: 'root',
-          parentId: '',
-          name: '대한항공',
-          children: convertToHierarchyInfo(list),
-        });
-        setDeptTreeData(hierarchyList);
+        setDeptTreeData(convertToHierarchyInfo(list));
       }
     }
   }, [response, isError, toast]);
@@ -114,7 +147,9 @@ const UserSelectModal = ({
       });
     } else {
       if (uResponse?.data) {
-        setUsetData(uResponse.data.contents);
+        const userList = uResponse.data.contents;
+        setUserData(userList);
+        setNextRows(userList.filter((item: UserModel) => userIdList.includes(item.userId)));
       }
     }
   }, [uResponse, uIsError, toast]);
@@ -125,7 +160,7 @@ const UserSelectModal = ({
       <Modal.Body>
         <Stack className="width-100" alignItems="Start">
           <Stack className="tree-wrap width-100">
-            <DataTree treeData={deptTreeData} onClick={handleClickFile} />
+            <DataTree treeHeight={630} treeData={deptTreeData} onClick={handleClickFile} />
           </Stack>
           <Stack direction="Vertical" justifyContent="Start" className="user-seleted">
             <Stack direction="Vertical" className="user-search">
@@ -138,15 +173,27 @@ const UserSelectModal = ({
                 />
                 <Button onClick={handleSearch}>검색</Button>
               </Stack>
-              <VerticalTable
-                className='RightScrollTable'
-                isMultiSelected={false}
-                clickable={true}
-                columns={columns}
-                rows={prevRows}
-                rowSelection={handlePrevRowSelection}
-              />
+              <VerticalTable className='multiSelectTable' clickable={true} columns={columns} rows={prevRows} rowSelection={handlePrevRowSelection} />
             </Stack>
+            {isMultiSelected && (
+              <>
+                <Stack alignItems="Center" direction="Horizontal" justifyContent="Center" className="updown-btns">
+                  <Button size="LG" appearance="Unfilled" iconOnly onClick={handleAddUsers}>
+                    <KeyboardDoubleArrowDownIcon />
+                  </Button>
+                  <Button size="LG" appearance="Unfilled" iconOnly onClick={handleRemoveUsers}>
+                    <KeyboardDoubleArrowUpIcon />
+                  </Button>
+                </Stack>
+                <VerticalTable
+                  className='multiSelectTable'
+                  clickable={true}
+                  columns={columns}
+                  rows={nextRows}
+                  rowSelection={handleNextRowSelection}
+                />
+              </>
+            )}
           </Stack>
         </Stack>
       </Modal.Body>
