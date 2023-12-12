@@ -10,16 +10,16 @@ import { FeatureParams } from '@/models/model/FeatureModel';
 import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
-export const useFeatureList = (params: FeatureParams, page: PageModel) => {
-  return useQuery(['/feature/list'], () => getFeatureList(params, page));
+export const useFeatureList = (params: FeatureParams, page: PageModel, options?: Object) => {
+  return useQuery(['/feature/list'], () => getFeatureList(params, page), options);
 };
 
 export const useInterestFeatureList = (userId: string, page: PageModel) => {
   return useQuery(['/interest/feature/list'], () => getInterestFeatureList(userId, page));
 };
 
-export const usePopularFeatureList = () => {
-  return useQuery(['/popular/feature/list'], () => getPopularFeatureList());
+export const usePopularFeatureList = (options?: Object) => {
+  return useQuery(['/popular/feature/list'], () => getPopularFeatureList(), options);
 };
 
 export const useFeatureById = (featureId: string) => {
