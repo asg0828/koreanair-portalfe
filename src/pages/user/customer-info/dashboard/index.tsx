@@ -306,17 +306,30 @@ export default function List() {
                   <div className="key">성별</div>
                   <div className="value">{profile?.gender}</div>
                 </div>
-                <div className="item">
-                  <div className="key">자택번호</div>
-                  <div className="value">{profile?.homePhoneNumberInfo}</div>
-                </div>
+
                 <div className="item">
                   <div className="key">휴대폰번호</div>
-                  <div className="value">{profile?.mobilePhoneNumberInfone}</div>
+                  <div className="value">
+                    {profile?.mobilePhoneNumberInfone
+                      .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+                      .split('-')
+                      .reduce((pre, cur, idx) => (idx === 1 ? pre + '-****-' : pre + cur), '')}
+                  </div>{' '}
+                  {/* 가운데 번호 마스킹(*) 필요 */}
                 </div>
                 <div className="item">
                   <div className="key">이메일</div>
-                  <div className="value">{profile?.emailAddress}</div>
+                  {profile?.emailAddress && (
+                    <div className="value">{`${'*'.repeat(profile?.emailAddress.split('@')[0].length)}@${
+                      profile?.emailAddress.split('@')[1]
+                    }`}</div>
+                  )}
+                  {/* @ 앞부분 마스킹(*) 필요 */}
+                </div>
+                <div className="item">
+                  <div className="key">특이사항</div>
+                  <div className="value">{profile?.significant}</div>
+                  {/* 특이사항 컬럼 필요 (ex. VIP) */}
                 </div>
               </div>
             </div>
@@ -370,14 +383,6 @@ export default function List() {
               <div className="item">
                 <div className="key">소멸예정 마일리지</div>
                 <div className="value">{selectedSkypass?.expireMileage}</div>
-              </div>
-              <div className="item">
-                <div className="key">등급유지조건(마일리지+횟수+기간)</div>
-                <div className="value">{selectedSkypass?.gradeCondtion}</div>
-              </div>
-              <div className="item">
-                <div className="key">승급조건(마일리지+횟수)</div>
-                <div className="value">{selectedSkypass?.upgradeCondition}</div>
               </div>
             </div>
             <div className="dashBoardBox n3">
@@ -463,7 +468,7 @@ export default function List() {
                           setIsListView1({ open: true, contents: 'pnr' });
                         }}
                       >
-                        PNR
+                        예약
                       </button>
                     </div>
                     <div className="value">
@@ -479,7 +484,7 @@ export default function List() {
                           setIsListView1({ open: true, contents: 'etkt' });
                         }}
                       >
-                        E-TKT
+                        전자항공권
                       </button>
                     </div>
                     <div className="value">
@@ -496,7 +501,7 @@ export default function List() {
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>Current PNR</th>
+                        <th>예약</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -541,7 +546,7 @@ export default function List() {
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>E-TKT</th>
+                        <th>전자항공권</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -652,22 +657,6 @@ export default function List() {
                     </div>
                   </Stack>
                 </div>
-                <div className="item middle">
-                  <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">
-                      <button
-                        onClick={() => {
-                          setIsListView2(true);
-                        }}
-                      >
-                        Pet 동반횟수
-                      </button>
-                    </div>
-                    <div className="value">
-                      <span className="num">{cnt?.pet}</span>회
-                    </div>
-                  </Stack>
-                </div>
               </div>
               {isListView2 && (
                 <div className="hideContents">
@@ -748,7 +737,7 @@ export default function List() {
                             setIsListView3({ open: true, contents: 'internet' });
                           }}
                         >
-                          인터넷
+                          채팅상담
                         </button>
                       </div>
                       <div className="value">

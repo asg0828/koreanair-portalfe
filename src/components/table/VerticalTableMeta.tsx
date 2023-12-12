@@ -425,7 +425,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                           } else {
                             return (
                               <TextField
-                                id={columns[columnIndex].field}
+                                key={`row-logiNm-${rowIndex}`}
+                                id={`${columns[columnIndex].field}-${rowIndex}`}
                                 onChange={(e) => onChangeHandler(e, rowIndex)}
                                 value={row[columns[columnIndex].field]}
                               />

@@ -72,7 +72,8 @@ const profileData: Profile[] = [
     gender: '여',
     homePhoneNumberInfo: '02-123-4124',
     mobilePhoneNumberInfone: '010-0101-0101',
-    emailAddress: 'exemail.exe',
+    emailAddress: 'exemail.exe@naver.com',
+    significant: 'VIP',
   },
   {
     name: '이순신',
@@ -83,7 +84,8 @@ const profileData: Profile[] = [
     gender: '남',
     homePhoneNumberInfo: '02-123-4124',
     mobilePhoneNumberInfone: '010-0101-0101',
-    emailAddress: 'exemail.exe',
+    emailAddress: 'exemail.exe@naver.com',
+    significant: 'VIP',
   },
 ];
 // {

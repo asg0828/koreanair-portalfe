@@ -261,29 +261,44 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   };
   // 저장 버튼
   const regCustomerDetailInfo = () => {
+    const validationTool = (check: string) => {
+      if (check.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '') return true;
+      else return false;
+    };
+    console.log(!tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.pkYn === 'Y'));
     // 유효성 검사
     const validation = () => {
+      let checkValidation = '';
       let searchError = false;
 
-      if (
-        props.dbNm.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
-        props.metaTblDesc.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
-        props.metaTblDvCd.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
-        props.metaTblLogiNm.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
-        props.metaTblPhysNm.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
-        props.metaTblUseYn.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
-        props.rtmTblYn.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '' ||
-        tbCoMetaTblClmnInfoList.length === 0
-        // tbCoMetaTblClmnInfoList.find((e) => e.pkYn === 'Y') ||
-        // tbCoMetaTblClmnInfoList.find((e) => e.pkYn === 'Y')
-      ) {
-        setOpenValidation(true);
+      if (validationTool(props.dbNm)) checkValidation = '데이터베이스명을 입력해주세요';
+      else if (validationTool(props.metaTblPhysNm)) checkValidation = '테이블 물리명을 입력해주세요';
+      else if (validationTool(props.metaTblLogiNm)) checkValidation = '테이블 논리명을 입력해주세요';
+      else if (validationTool(props.metaTblDesc)) checkValidation = '테이블설명을 입력해주세요';
+      else if (validationTool(props.metaTblDvCd)) checkValidation = '메타테이블구분을 입력해주세요';
+      else if (validationTool(props.metaTblUseYn)) checkValidation = '사용여부을 입력해주세요';
+      else if (validationTool(props.rtmTblYn)) checkValidation = '실시간여부을 입력해주세요';
+      else if (!tbCoMetaTblClmnInfoList.find((e) => e.clmnUseYn === 'Y'))
+        checkValidation = '사용여부가 1개이상 체크되어야 합니다.';
+      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.pkYn === 'Y'))
+        checkValidation = '사용여부가 Y인 것중 Key 여부를 하나 선택해주세요';
+      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.baseTimeYn === 'Y'))
+        checkValidation = '사용여부가 Y인 것중 수집 기준 시간 여부를 하나 선택해주세요';
+      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.pkYn === 'Y').find((e) => e.metaTblLogiNm === ''))
+        checkValidation = '사용여부가 Y인 경우 논리명을 입력해주세요';
+      if (checkValidation !== '') {
+        toast({
+          type: 'Error',
+          content: checkValidation,
+        });
         searchError = true;
       }
 
       return searchError;
     };
-    // if (validation()) return;
+
+    if (validation()) return;
+
     setTbCoMetaTblClmnInfoListPost(() => {
       const updatedRows = tbCoMetaTblClmnInfoList.map((row) => {
         const { isNullable, remarks, dataType, ...rest } = row;
@@ -371,7 +386,10 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                   // 라디오 버튼
                   if (columns[columnIndex].field === 'baseTimeYn') {
                     return (
-                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                      <TD
+                        key={`${column}-${columnIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      >
                         <Radio
                           key={`column-${columnIndex}`}
                           name="metaCustomerRadio"
@@ -388,7 +406,10 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                   // 체크박스
                   else if (columns[columnIndex].field === 'changeYn') {
                     return (
-                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                      <TD
+                        key={`td-changeYn-${rowIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      >
                         <Checkbox
                           checked={row.changeYn === 'Y'}
                           disabled={row.baseTimeYn === 'Y'}
@@ -403,7 +424,10 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                   // 체크박스
                   else if (columns[columnIndex].field === 'clmnUseYn') {
                     return (
-                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                      <TD
+                        key={`td-clmnUseYn-${rowIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      >
                         <Checkbox
                           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
                           key={`column-${columnIndex}`}
@@ -417,7 +441,10 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                   // 체크박스
                   else if (columns[columnIndex].field === 'pkYn') {
                     return (
-                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                      <TD
+                        key={`td-pkYn-${rowIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      >
                         <Checkbox
                           checked={row.pkYn === 'Y'}
                           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
@@ -450,7 +477,8 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                           } else {
                             return (
                               <TextField
-                                id={columns[columnIndex].field}
+                                key={`row-logiNm-${rowIndex}`}
+                                id={`${columns[columnIndex].field}-${rowIndex}`}
                                 onChange={(e) => onChangeHandler(e, rowIndex)}
                                 value={
                                   columns[columnIndex].field === 'metaTblClmnLogiNm'
