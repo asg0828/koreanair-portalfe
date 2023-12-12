@@ -17,4 +17,4 @@ export const initPage = {
   pageSize: 10,
 };
 
-export const pageSizeList = [10, 30, 50];
+export const pageSizeList = [10, 30, 50, 100];
