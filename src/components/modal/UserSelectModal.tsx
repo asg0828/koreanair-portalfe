@@ -116,11 +116,6 @@ const UserSelectModal = ({
     autoClose && handleClose();
   };
 
-  const multiHeight = () =>{
-    if(isMultiSelected == true){return 630}
-    else{return 500}
-  }
-
   const handleClose = () => {
     dispatch(closeModal());
   };
@@ -165,7 +160,7 @@ const UserSelectModal = ({
       <Modal.Body>
         <Stack className="width-100" alignItems="Start">
           <Stack className="tree-wrap width-100">
-            <DataTree treeHeight={multiHeight()} treeData={deptTreeData} onClick={handleClickFile} />
+            <DataTree treeHeight={isMultiSelected ? 630 : 500} treeData={deptTreeData} onClick={handleClickFile} />
           </Stack>
           <Stack direction="Vertical" justifyContent="Start" className="user-seleted">
             <Stack direction="Vertical" className="user-search">
@@ -178,7 +173,14 @@ const UserSelectModal = ({
                 />
                 <Button onClick={handleSearch}>검색</Button>
               </Stack>
-              <VerticalTable className='multiSelectTable' clickable={true} columns={columns} rows={prevRows} rowSelection={handlePrevRowSelection} />
+              <VerticalTable
+                className="multiSelectTable"
+                isMultiSelected={false}
+                clickable={true}
+                columns={columns}
+                rows={prevRows}
+                rowSelection={handlePrevRowSelection}
+              />
             </Stack>
             {isMultiSelected && (
               <>
@@ -191,7 +193,7 @@ const UserSelectModal = ({
                   </Button>
                 </Stack>
                 <VerticalTable
-                  className='multiSelectTable'
+                  className="multiSelectTable"
                   clickable={true}
                   columns={columns}
                   rows={nextRows}
