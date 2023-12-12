@@ -52,3 +52,20 @@ export const sortChildrenRecursive = (children: Array<HierarchyInfo>) => {
     sortChildrenRecursive(item.children);
   });
 };
+
+export const findUpdatedArray = (oldArray: Array<any>, newArray: Array<any>) => {
+  const updated: Array<any> = newArray.filter((item) => !oldArray.some((oldItem) => isEqual(oldItem, item)));
+
+  oldArray.forEach((oldItem, index) => {
+    const newItem = newArray[index];
+    if (!isEqual(oldItem, newItem)) {
+      updated.push(newItem);
+    }
+  });
+
+  return Array.from(new Set(updated));
+};
+
+export const isEqual = (itemA: Object, itemB: Object) => {
+  return JSON.stringify(itemA) === JSON.stringify(itemB);
+};

@@ -10,7 +10,12 @@ import { ModalType, ValidType } from '@/models/common/Constants';
 import { AuthModel } from '@/models/model/AuthModel';
 import { DeptModel, UpdatedDeptModel } from '@/models/model/DeptModel';
 import { openModal } from '@/reducers/modalSlice';
-import { convertToHierarchyInfo, getNodeCheckedListRecursive, sortChildrenRecursive } from '@/utils/ArrayUtil';
+import {
+  convertToHierarchyInfo,
+  findUpdatedArray,
+  getNodeCheckedListRecursive,
+  sortChildrenRecursive,
+} from '@/utils/ArrayUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { MoveHandler } from 'react-arborist';
@@ -45,34 +50,41 @@ const List = () => {
     getValues,
     setValue,
     reset,
+    watch,
     formState: { errors },
   } = useForm<UpdatedDeptModel>({
     mode: 'onChange',
     defaultValues: { ...initItem },
   });
   const values = getValues();
-  const { data: response, isError, refetch } = useDeptAllList();
+  const { data: response, isSuccess, isError, isFetching, refetch } = useDeptAllList();
   const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
   const { data: aaResponse, isError: aaIsError, refetch: aaUreftch } = useAdminAuthAllList();
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateDept();
 
-  const checkHasCreated = () => {
-    if (initData.length !== data.length) {
-      return true;
-    }
-    return false;
+  const findCreatedItem = () => {
+    return data.find((item) => item.oprtrSe === 'C');
   };
 
   const handleClick = (item: any) => {
     if (item.isSelected) {
-      reset(item);
+      const createdItem = findCreatedItem();
+      if (item.oprtrSe === 'C' || !createdItem) {
+        reset(item);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: '저장되지 않은 메뉴가 있습니다.',
+        });
+        setData([...data]);
+      }
     } else {
       reset({ ...initItem });
     }
   };
 
   const handleMove: MoveHandler<any> = (args) => {
-    if (checkHasCreated()) {
+    if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
         content: '저장되지 않은 메뉴가 있습니다.',
@@ -82,7 +94,7 @@ const List = () => {
 
     let { dragIds, parentId, index } = args;
     if (parentId === '__REACT_ARBORIST_INTERNAL_ROOT__') {
-      parentId = '';
+      parentId = null;
     }
 
     setData((prevState) => {
@@ -98,7 +110,7 @@ const List = () => {
           }
 
           const fromChildren = prevState
-            .filter((item) => item.upDeptCode === movedItem.upDeptCode)
+            .filter((item) => item.upDeptCode === movedItem.upDeptCode || !item.upDeptCode)
             .sort((a, b) => a.ordSeq - b.ordSeq);
           const fromIndex = fromChildren.findIndex((item) => item.deptCode === movedItem.deptCode);
           fromChildren.splice(fromIndex, 1);
@@ -116,7 +128,7 @@ const List = () => {
   };
 
   const handleCreate = () => {
-    if (checkHasCreated()) {
+    if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
         content: '저장되지 않은 메뉴가 있습니다.',
@@ -175,32 +187,7 @@ const List = () => {
   };
 
   const onSubmit = (formData: UpdatedDeptModel) => {
-    if (formData.rownum) {
-      if (checkHasCreated()) {
-        toast({
-          type: ValidType.INFO,
-          content: '저장되지 않은 메뉴가 있습니다.',
-        });
-        return;
-      }
-
-      dispatch(
-        openModal({
-          type: ModalType.CONFIRM,
-          title: '수정',
-          content: '수정하시겠습니까?',
-          onConfirm: () =>
-            uMutate(
-              data.map((item) => {
-                if (item.rownum === formData.rownum) {
-                  return { ...formData, oprtrSe: 'U' };
-                }
-                return { ...item, oprtrSe: 'U' };
-              })
-            ),
-        })
-      );
-    } else {
+    if (findCreatedItem()) {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
@@ -209,8 +196,41 @@ const List = () => {
           onConfirm: () => uMutate([{ ...formData, oprtrSe: 'C' }]),
         })
       );
+    } else {
+      const updatedList = findUpdatedArray(initData, data);
+
+      if (updatedList.length === 0) {
+        toast({
+          type: ValidType.INFO,
+          content: '변경된 메뉴가 없습니다.',
+        });
+      } else {
+        dispatch(
+          openModal({
+            type: ModalType.CONFIRM,
+            title: '수정',
+            content: '수정하시겠습니까?',
+            onConfirm: () => uMutate(updatedList.map((item) => ({ ...item, oprtrSe: 'U' }))),
+          })
+        );
+      }
     }
   };
+
+  useEffect(() => {
+    const newItem = watch();
+    if (newItem.deptCode) {
+      setData((prevState) => {
+        const item = prevState.find((item) => item.deptCode === newItem.deptCode);
+        if (item) {
+          item.deptNm = newItem.deptNm;
+          item.userAuthId = newItem.userAuthId;
+          item.mgrAuthId = newItem.mgrAuthId;
+        }
+        return prevState;
+      });
+    }
+  }, [watch('deptNm'), watch('userAuthId'), watch('mgrAuthId')]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -235,11 +255,11 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setInitData(response.data.contents);
-        setData(response.data.contents);
+        setInitData(JSON.parse(JSON.stringify(response.data.contents)));
+        setData([...response.data.contents]);
       }
     }
-  }, [response, isError, toast]);
+  }, [response, isError, isSuccess, isFetching, toast]);
 
   useEffect(() => {
     if (uaIsError || uaResponse?.successOrNot === 'N') {

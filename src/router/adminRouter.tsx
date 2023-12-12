@@ -14,7 +14,7 @@ import Dataroom from '@/pages/user/board/dataroom';
 import DataroomDetail from '@/pages/user/board/dataroom/Detail';
 import DataroomEdit from '@/pages/user/board/dataroom/Edit';
 import DataroomReg from '@/pages/user/board/dataroom/Reg';
-import AdminAdminAuthManagement from '@pages/admin/admin-portal-management/admin-auth-management';
+import AdminAdminAuthManagement from '@/pages/admin/admin-portal-management/menu-auth-management';
 import AdminMenuManagement from '@pages/admin/admin-portal-management/menu-management';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
