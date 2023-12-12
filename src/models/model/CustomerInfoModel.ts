@@ -45,6 +45,7 @@ export interface Profile {
   homePhoneNumberInfo: string;
   mobilePhoneNumberInfone: string;
   emailAddress: string;
+  significant: string;
 }
 
 export interface Skypass {

@@ -39,6 +39,7 @@ const CustomerMetaManagementDetail = () => {
   };
 
   useEffect(() => {
+    refetch();
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: 'Error',

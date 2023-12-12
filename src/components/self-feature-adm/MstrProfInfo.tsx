@@ -74,11 +74,15 @@ const MstrProfInfo = ({
         호출을 위한 param setting
         선택된 메타테이블의 논리명 및 등록 수정시 테이블 select를 위한 metaTblAllList
     */
-    const metaTableInfoCallback = useCallback(() => {
+    useEffect(() => {
+        if (!metaTblInfo) return
+        setDivisionType(() => cloneDeep(metaTblInfo.sgmtDvCd))
+
         let tblId: string = ""
         // 등록인 경우에는 metaTblId로
         if (editMode && metaTblInfo.metaTblId) tblId = metaTblInfo.metaTblId
         else tblId = metaTblInfo.mstrSgmtRuleTblId
+        setMetaTblId(() => cloneDeep(tblId))
 
         if (!metaTblAllList) return
         let temp = metaTblAllList.find((info: TbCoMetaTbInfo) => info.metaTblId === tblId)
@@ -86,6 +90,7 @@ const MstrProfInfo = ({
             if (temp) return cloneDeep(temp)
             else return cloneDeep(initTbCoMetaTbInfo)
         })
+
         // 현재 설정된 메타테이블 정보 순회하며 등록 가능한 컬럼 setting
         let temp2: Array<TbCoMetaTbInfo> = []
         for (let i = 0; i < metaTblAllList.length; i++) {
@@ -105,18 +110,9 @@ const MstrProfInfo = ({
             if (!hasItem) temp2.push(cloneDeep(item))
         }
         setMetaTblOptionList(() => cloneDeep(temp2))
-    }, [metaTblAllList, mstrSgmtRuleAttrTblList])
+    }, [metaTblInfo, metaTblAllList, mstrSgmtRuleAttrTblList])
+    // 화면 노출을 위한 저장된 컬럼 setting
     useEffect(() => {
-        if (!metaTblInfo) return
-        setDivisionType(() => cloneDeep(metaTblInfo.sgmtDvCd))
-        let tblId: string = ""
-        // 등록인 경우에는 metaTblId로
-        if (editMode && metaTblInfo.metaTblId) tblId = metaTblInfo.metaTblId
-        else tblId = metaTblInfo.mstrSgmtRuleTblId
-        setMetaTblId(() => cloneDeep(tblId))
-        metaTableInfoCallback()
-    }, [metaTblInfo, metaTableInfoCallback])
-    const metaTableClmnInfoCallback = useCallback(() => {
         // 선택한 테이블에 해당되는 컬럼 리스트
         if (!metaTblColList || metaTblColList.length < 1 || metaTblClmnAllList.length < 1) {
             setMetaTblClmnList(() => [])
@@ -137,10 +133,6 @@ const MstrProfInfo = ({
             setMetaTblClmnList(() => cloneDeep(colList))
         }
     }, [metaTblColList, metaTblClmnAllList])
-    // 화면 노출을 위한 저장된 컬럼 setting
-    useEffect(() => {
-        metaTableClmnInfoCallback()
-    }, [metaTableClmnInfoCallback])
 
     // 선택한 테이블의 속성 Joinkey 화면 노출을 위한 setting
     useEffect(() => {
@@ -290,7 +282,6 @@ const MstrProfInfo = ({
                                 */
                                 let v = String(value)
                                 if (!v || v === "" || v === "null" || v === "undefined") return
-                                setMetaTblId(v)
                                 // 최초 수정 정보가 있는 경우 초기화 로직 제외
                                 if (!isEdit) {
                                     setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {

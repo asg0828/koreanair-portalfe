@@ -16,8 +16,8 @@ import { ModalType, RuleId, SelfFeatPgPpNm } from '@/models/selfFeature/FeatureC
 import { useLocation, useNavigate } from 'react-router-dom'
 import ConfirmModal from '@/components/modal/ConfirmModal'
 import { MasterProfileInfo, MetaInfoSearchProps, MetaType, TbCoMetaTbInfo, TbRsMstrSgmtRule, TbRsMstrSgmtRuleAttrClmn, TbRsMstrSgmtRuleAttrTbl, TbRsRslnRuleKeyPrty } from '@/models/selfFeature/FeatureAdmModel'
-import { initMasterProfileInfo, initMetaInfoSearchProps, initTbRsMstrSgmtRule, initTbRsMstrSgmtRuleAttrClmn, initTbRsMstrSgmtRuleAttrTbl, initTbRsRslnRuleKeyPrty } from './data'
-import { useCreateMstrProfInfo } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations'
+import { initMasterProfileInfo, initMetaInfoSearchProps, initTbRsMstrSgmtRule, initTbRsMstrSgmtRuleAttrTbl, initTbRsRslnRuleKeyPrty } from './data'
+import { useUpdateMstrProfInfo } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations'
 import { ValidType } from '@/models/common/Constants'
 import { useMetaInfo, useResolutionKeyList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
 import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
@@ -40,7 +40,7 @@ const MasterProfileManagementEdit = () => {
     const [rslnRuleId, setRslnRuleId] = useState<string>("")
     const [rslnRuleKeyPrtyList, setRslnRuleKeyPrtyList] = useState<Array<TbRsRslnRuleKeyPrty>>(cloneDeep([initTbRsRslnRuleKeyPrty]))
     const { data: rslnKeyListRes, isError: rslnKeyListErr, refetch: rslnKeyListRefetch } = useResolutionKeyList(rslnRuleId)
-    // 등록 body param
+    // 수정 body param
     const [mstrSgmtFormData, setMstrSgmtFormData] = useState<MasterProfileInfo>(cloneDeep(initMasterProfileInfo))
     // 기본 정보
     const [mstrSgmtRule, setMstrSgmtRule] = useState<TbRsMstrSgmtRule>(cloneDeep(initTbRsMstrSgmtRule))
@@ -56,8 +56,8 @@ const MasterProfileManagementEdit = () => {
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
-    // 등록 API
-    const { data: createMstrProfInfoRes, isSuccess: createMstrProfInfoSucc, isError: createMstrProfInfoErr, mutate: createMstrProfInfoMutate } = useCreateMstrProfInfo(mstrSgmtFormData)
+    // 수정 API
+    const { data: updateMstrProfInfoRes, isSuccess: updateMstrProfInfoSucc, isError: updateMstrProfInfoErr, mutate: updateMstrProfInfoMutate } = useUpdateMstrProfInfo(mstrSgmtFormData.tbRsMstrSgmtRule.mstrSgmtRuleId, mstrSgmtFormData)
     // component mount
     useEffect(() => {
         if (!location || !location.state) return
@@ -113,10 +113,10 @@ const MasterProfileManagementEdit = () => {
     // modal 확인/취소 이벤트
     const onConfirm = () => {
         if (modalType === ModalType.CONFIRM) {
-            if (btnClickType === "reg") {
-                // 등록 API 호출
-                console.log("저장 data :: ", mstrSgmtFormData)
-                //createMstrProfInfoMutate()
+            if (btnClickType === "update") {
+                // 수정 API 호출
+                console.log("수정 data :: ", mstrSgmtFormData)
+                //updateMstrProfInfoMutate()
             }
         }
         setIsOpenConfirmModal(false)
@@ -172,11 +172,11 @@ const MasterProfileManagementEdit = () => {
         if (pageNm === SelfFeatPgPpNm.LIST) {
             navigate('..')
         } else if (pageNm === SelfFeatPgPpNm.REG) {
-            // 등록 확인 팝업
+            // 수정 확인 팝업
             setModalType(ModalType.CONFIRM)
-            setBtnClickType("reg")
-            setConfirmModalTit("Master Profile 등록")
-            setConfirmModalCont("설정한 정보로 등록 하시겠습니까?")
+            setBtnClickType("update")
+            setConfirmModalTit("Master Profile 수정")
+            setConfirmModalCont("설정한 정보로 수정 하시겠습니까?")
             setIsOpenConfirmModal(true)
         } else {
             navigate(`../${pageNm}`)
@@ -203,7 +203,7 @@ const MasterProfileManagementEdit = () => {
             // if (0 < attrMetaTbList.length && attrMetaTbList.length < attrMstrSgmtRuleAttrTblList.length + 1) {
             //     setIsAttrAddIconShow(false)
             //     setModalType(ModalType.ALERT)
-            //     setConfirmModalTit("Master Profile 등록")
+            //     setConfirmModalTit("Master Profile 수정")
             //     setConfirmModalCont("더이상 테이블정보를 추가할 수 없습니다.")
             //     setIsOpenConfirmModal(true)
             //     return
@@ -223,7 +223,7 @@ const MasterProfileManagementEdit = () => {
             // if (0 < behvMetaTbList.length && behvMetaTbList.length < behvMstrSgmtRuleAttrTblList.length + 1) {
             //     setIsBehvAddIconShow(false)
             //     setModalType(ModalType.ALERT)
-            //     setConfirmModalTit("Master Profile 등록")
+            //     setConfirmModalTit("Master Profile 수정")
             //     setConfirmModalCont("더이상 테이블정보를 추가할 수 없습니다.")
             //     setIsOpenConfirmModal(true)
             //     return
@@ -241,23 +241,23 @@ const MasterProfileManagementEdit = () => {
             })
         }
     }
-    // 등록 API 호출 Call back
+    // 수정 API 호출 Call back
     useEffect(() => {
-        if (createMstrProfInfoErr || createMstrProfInfoRes?.successOrNot === 'N') {
+        if (updateMstrProfInfoErr || updateMstrProfInfoRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
-                content: '등록 중 에러가 발생했습니다.',
+                content: '수정 중 에러가 발생했습니다.',
             })
-        } else if (createMstrProfInfoSucc) {
+        } else if (updateMstrProfInfoSucc) {
             toast({
                 type: ValidType.CONFIRM,
-                content: '등록되었습니다.',
+                content: '수정되었습니다.',
             })
-            console.log(createMstrProfInfoRes.result)
+            console.log(updateMstrProfInfoRes.result)
             // 상세로 redirect
             // navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
         }
-    }, [createMstrProfInfoRes, createMstrProfInfoSucc, createMstrProfInfoErr])
+    }, [updateMstrProfInfoRes, updateMstrProfInfoSucc, updateMstrProfInfoErr])
 
     return (
         <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
@@ -333,7 +333,7 @@ const MasterProfileManagementEdit = () => {
                                     rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
                                     metaTblInfo={attrTblInfo}                   //저장된 메타테이블 정보
                                     metaTblAllList={attrMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
-                                    metaTblColList={metaTblColList}             //등록중인 컬럼 목록 전달
+                                    metaTblColList={metaTblColList}             //수정중인 컬럼 목록 전달
                                     mstrSgmtRuleAttrTblList={attrMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                                     setMstrSgmtRuleAttrTblList={setAttrMstrSgmtRuleAttrTblList}
                                     setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
@@ -385,7 +385,7 @@ const MasterProfileManagementEdit = () => {
                                     rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
                                     metaTblInfo={behvTblInfo}                   //저장된 메타테이블 정보
                                     metaTblAllList={behvMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
-                                    metaTblColList={metaTblColList}             //등록중인 컬럼 목록 전달
+                                    metaTblColList={metaTblColList}             //수정중인 컬럼 목록 전달
                                     mstrSgmtRuleAttrTblList={behvMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                                     setMstrSgmtRuleAttrTblList={setBehvMstrSgmtRuleAttrTblList}
                                     setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}

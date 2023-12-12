@@ -169,7 +169,9 @@ const CustomerMetaManagementReg = () => {
                 }}
               >
                 {dbNames.map((dbName: string) => (
-                  <SelectOption value={dbName}>{dbName}</SelectOption>
+                  <SelectOption key={dbName} value={dbName}>
+                    {dbName}
+                  </SelectOption>
                 ))}
               </Select>
             </TD>
@@ -193,7 +195,9 @@ const CustomerMetaManagementReg = () => {
                 }}
               >
                 {tablePhyList?.map((tablePhy: any) => (
-                  <SelectOption value={tablePhy.tableName}>{tablePhy.tableName}</SelectOption>
+                  <SelectOption key={`option-${tablePhy.tableName}`} value={tablePhy.tableName}>
+                    {tablePhy.tableName}
+                  </SelectOption>
                 ))}
               </Select>
             </TD>
