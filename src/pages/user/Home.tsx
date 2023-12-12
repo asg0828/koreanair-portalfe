@@ -218,11 +218,7 @@ const Home = () => {
           <div className="boardListWrap">
             {noticeList.map((item) => (
               <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link
-                  className="ellipsis1"
-                  to={`${MainLink.NOTICE}/detail`}
-                  state={{ noticeId: item.noticeId, rows: noticeList }}
-                >
+                <Link className="ellipsis1" to={`${MainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
                   {item.sj}
                 </Link>
                 <span className="date">{item.rgstDt}</span>
@@ -269,7 +265,7 @@ const Home = () => {
                 >
                   {item.qnaStatNm}
                 </Tag>
-                <Link className="ellipsis1" to={`${MainLink.QNA}/detail`} state={{ qnaId: item.qnaId, rows: qnaList }}>
+                <Link className="ellipsis1" to={`${MainLink.QNA}/detail`} state={{ qnaId: item.qnaId }}>
                   {item.sj}
                 </Link>
                 <span className="date">{item.rgstDt}</span>

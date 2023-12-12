@@ -23,11 +23,8 @@ const Detail = () => {
   const { toast } = useToast();
   const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
-  const [noticeModel, setNoticeModel] = useState<NoticeModel>();
-  const [prevNoticeModel, setPrevNoticeModel] = useState<NoticeModel>();
-  const [nextNoticeModel, setNextNoticeModel] = useState<NoticeModel>();
   const noticeId: string = location?.state?.noticeId || '';
-  const rows: Array<NoticeModel> = location?.state?.rows;
+  const [noticeModel, setNoticeModel] = useState<NoticeModel>();
   const { data: response, isSuccess, isError } = useNoticeById(noticeId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteNotice(noticeId);
 
@@ -43,11 +40,10 @@ const Detail = () => {
     });
   };
 
-  const handleMoveDetail = (noticeId: string | undefined) => {
+  const handleMoveDetail = (noticeId: string) => {
     navigate('', {
       state: {
         noticeId: noticeId,
-        rows: rows,
       },
     });
   };
@@ -78,14 +74,6 @@ const Detail = () => {
       });
     }
   };
-
-  useEffect(() => {
-    if (rows?.length > 0) {
-      const index = rows.findIndex((row) => row.noticeId === noticeId);
-      setPrevNoticeModel(index === 0 ? undefined : rows[index - 1]);
-      setNextNoticeModel(index === rows.length - 1 ? undefined : rows[index + 1]);
-    }
-  }, [noticeId, rows]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -164,9 +152,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
-              {nextNoticeModel?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(nextNoticeModel?.noticeId)}>
-                  {nextNoticeModel?.sj}
+              {noticeModel?.nextSj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(noticeModel?.nextId)}>
+                  {noticeModel?.nextSj}
                 </Link>
               )}
             </TD>
@@ -177,9 +165,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
-              {prevNoticeModel?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(prevNoticeModel?.noticeId)}>
-                  {prevNoticeModel?.sj}
+              {noticeModel?.preSj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(noticeModel?.preId)}>
+                  {noticeModel?.preSj}
                 </Link>
               )}
             </TD>

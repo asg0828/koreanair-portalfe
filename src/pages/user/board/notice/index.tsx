@@ -44,11 +44,10 @@ const List = () => {
     navigate(View.REG);
   };
 
-  const goToDetail = (row: RowsInfo, index: number) => {
+  const goToDetail = (row: RowsInfo) => {
     navigate(View.DETAIL, {
       state: {
         noticeId: row.noticeId,
-        rows: rows,
       },
     });
   };

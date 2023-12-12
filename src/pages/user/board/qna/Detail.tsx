@@ -26,10 +26,8 @@ const Detail = () => {
   const { toast } = useToast();
   const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
-  const [qnaModel, setQnaModel] = useState<QnaModel>();
-  const [prevQnaModel, setPrevQnaModel] = useState<QnaModel>();
-  const [nextQnaModel, setNextQnaModel] = useState<QnaModel>();
   const qnaId: string = location?.state?.qnaId || '';
+  const [qnaModel, setQnaModel] = useState<QnaModel>();
   const [cQnaId, setCQnaId] = useState<string>('');
   const rows: Array<QnaModel> = location?.state?.rows;
   const {
@@ -207,14 +205,6 @@ const Detail = () => {
   }, [cuResponse, cuIsSuccess, cuIsError, setValue, toast, refetch, handleCommentCancel]);
 
   useEffect(() => {
-    if (rows?.length > 0) {
-      const index = rows.findIndex((row) => row.qnaId === qnaId);
-      setPrevQnaModel(index === 0 ? undefined : rows[index - 1]);
-      setNextQnaModel(index === rows.length - 1 ? undefined : rows[index + 1]);
-    }
-  }, [qnaId, rows]);
-
-  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
@@ -386,9 +376,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
-              {nextQnaModel?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(nextQnaModel?.qnaId)}>
-                  {nextQnaModel?.sj}
+              {qnaModel?.nextSj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(qnaModel?.nextId)}>
+                  {qnaModel?.nextSj}
                 </Link>
               )}
             </TD>
@@ -399,9 +389,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
-              {prevQnaModel?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(prevQnaModel?.qnaId)}>
-                  {prevQnaModel?.sj}
+              {qnaModel?.preSj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(qnaModel?.preId)}>
+                  {qnaModel?.preSj}
                 </Link>
               )}
             </TD>
