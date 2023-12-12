@@ -6,9 +6,10 @@ import {
     getPurchaseContributionTop100List,
     getReportVipList, getTotalMileageTop100List
 } from "@api/ReportAPI";
+import {PageModel} from "@models/model/PageModel";
 
-export const useVipList = (params: ReportParams) => {
-    return useQuery(['/report/vip'], () => getReportVipList(params));
+export const useVipList = (params: ReportParams, page: PageModel) => {
+    return useQuery(['/report/vip'], () => getReportVipList(params, page));
 };
 
 export const usePurchaseContributionList = (criteria: string) => {
