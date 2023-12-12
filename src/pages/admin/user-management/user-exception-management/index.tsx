@@ -8,10 +8,15 @@ import { useAppDispatch } from '@/hooks/useRedux';
 import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { AuthModel } from '@/models/model/AuthModel';
-import { EGroupUserModel, UpdatedEGroupModel } from '@/models/model/GroupModel';
+import { EGroupUserModel, UpdatedEGroupModel, UpdatedEGroupUserModel } from '@/models/model/GroupModel';
 import { UserModel } from '@/models/model/UserModel';
 import { openModal } from '@/reducers/modalSlice';
-import { convertToHierarchyInfo, getNodeCheckedListRecursive, sortChildrenRecursive } from '@/utils/ArrayUtil';
+import {
+  convertToHierarchyInfo,
+  findUpdatedArray,
+  getNodeCheckedListRecursive,
+  sortChildrenRecursive,
+} from '@/utils/ArrayUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { MoveHandler } from 'react-arborist';
@@ -32,8 +37,8 @@ const initItem: UpdatedEGroupModel = {
 const List = () => {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const [egroupUserUpdate, setEgroupUserUpdate] = useState<Array<UpdatedEGroupUserModel>>([]);
   const [eGroupUserList, setEGroupUserList] = useState<Array<EGroupUserModel>>([]);
-  const [updatedUserIdList, setUpdatedUserIdList] = useState<Array<string>>([]);
   const [userAuthList, setUserAuthList] = useState<Array<AuthModel>>([]);
   const [adminAuthList, setAdminAuthList] = useState<Array<AuthModel>>([]);
   const [initData, setInitData] = useState<Array<any>>([]);
@@ -46,35 +51,42 @@ const List = () => {
     getValues,
     setValue,
     reset,
+    watch,
     formState: { errors },
   } = useForm<UpdatedEGroupModel>({
     mode: 'onChange',
     defaultValues: { ...initItem },
   });
   const values = getValues();
-  const { data: response, isError, isFetching, refetch } = useUserEGroupAllList();
+  const { data: response, isSuccess, isError, isFetching, refetch } = useUserEGroupAllList();
   const { data: uguResponse, isError: uguIsError, refetch: uguRefetch } = useUserEGroupUserList(values.groupCode);
   const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
   const { data: aaResponse, isError: aaIsError, refetch: aaUreftch } = useAdminAuthAllList();
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateUserEGroup();
 
-  const checkHasCreated = () => {
-    if (initData.length !== data.length) {
-      return true;
-    }
-    return false;
+  const findCreatedItem = () => {
+    return data.find((item) => item.oprtrSe === 'C');
   };
 
   const handleClick = (item: any) => {
     if (item.isSelected) {
-      reset(item);
+      const createdItem = findCreatedItem();
+      if (item.oprtrSe === 'C' || !createdItem) {
+        reset(item);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: '저장되지 않은 메뉴가 있습니다.',
+        });
+        setData([...data]);
+      }
     } else {
       reset({ ...initItem });
     }
   };
 
   const handleMove: MoveHandler<any> = (args) => {
-    if (checkHasCreated()) {
+    if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
         content: '저장되지 않은 메뉴가 있습니다.',
@@ -84,7 +96,7 @@ const List = () => {
 
     let { dragIds, parentId, index } = args;
     if (parentId === '__REACT_ARBORIST_INTERNAL_ROOT__') {
-      parentId = '';
+      parentId = null;
     }
 
     setData((prevState) => {
@@ -100,7 +112,7 @@ const List = () => {
           }
 
           const fromChildren = prevState
-            .filter((item) => item.upGroupCode === movedItem.upGroupCode)
+            .filter((item) => item.upGroupCode === movedItem.upGroupCode || !item.upGroupCode)
             .sort((a, b) => a.ordSeq - b.ordSeq);
           const fromIndex = fromChildren.findIndex((item) => item.groupCode === movedItem.groupCode);
           fromChildren.splice(fromIndex, 1);
@@ -118,7 +130,7 @@ const List = () => {
   };
 
   const handleCreate = () => {
-    if (checkHasCreated()) {
+    if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
         content: '저장되지 않은 메뉴가 있습니다.',
@@ -180,38 +192,7 @@ const List = () => {
   };
 
   const onSubmit = (formData: UpdatedEGroupModel) => {
-    if (formData.groupCode) {
-      if (checkHasCreated()) {
-        toast({
-          type: ValidType.INFO,
-          content: '저장되지 않은 메뉴가 있습니다.',
-        });
-        return;
-      }
-
-      dispatch(
-        openModal({
-          type: ModalType.CONFIRM,
-          title: '수정',
-          content: '수정하시겠습니까?',
-          onConfirm: () =>
-            uMutate({
-              saveEgroup: data.map((item) => {
-                if (item.groupCode === formData.groupCode) {
-                  return { ...formData, oprtrSe: 'U' };
-                }
-                return { ...item, oprtrSe: 'U' };
-              }),
-              egroupUserUpdate: [
-                {
-                  groupCode: formData.groupCode,
-                  userIds: updatedUserIdList,
-                },
-              ],
-            }),
-        })
-      );
-    } else {
+    if (findCreatedItem()) {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
@@ -224,11 +205,35 @@ const List = () => {
             }),
         })
       );
+    } else {
+      const updatedList = findUpdatedArray(initData, data);
+
+      if (updatedList.length === 0 && egroupUserUpdate.length === 0) {
+        toast({
+          type: ValidType.INFO,
+          content: '변경된 메뉴가 없습니다.',
+        });
+      } else {
+        dispatch(
+          openModal({
+            type: ModalType.CONFIRM,
+            title: '수정',
+            content: '수정하시겠습니까?',
+            onConfirm: () =>
+              uMutate({
+                saveEgroup: updatedList.map((item) =>
+                  item.groupCode === formData.groupCode ? { ...formData, oprtrSe: 'U' } : { ...item, oprtSe: 'U' }
+                ),
+                egroupUserUpdate: egroupUserUpdate,
+              }),
+          })
+        );
+      }
     }
   };
 
   const handleClickUserModal = () => {
-    if (checkHasCreated()) {
+    if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
         content: '예외그룹 저장 후 추가해주세요.',
@@ -248,12 +253,40 @@ const List = () => {
           isMultiSelected: true,
           userIdList: userIdList,
           onConfirm: (users: Array<UserModel>) => {
-            setUpdatedUserIdList(users.map((item) => item.userId));
+            const newUserIdList = users.map((item) => item.userId);
+            const updatedList = findUpdatedArray(userIdList, newUserIdList);
+            const initList = egroupUserUpdate.filter((item) => item.groupCode !== values.groupCode);
+
+            if (updatedList.length === 0) {
+              setEgroupUserUpdate(initList);
+            } else {
+              setEgroupUserUpdate(
+                initList.concat({
+                  groupCode: values.groupCode,
+                  userIds: newUserIdList,
+                })
+              );
+            }
           },
         })
       );
     }
   };
+
+  useEffect(() => {
+    const newItem = watch();
+    if (newItem.groupCode) {
+      setData((prevState) => {
+        const item = prevState.find((item) => item.groupCode === newItem.groupCode);
+        if (item) {
+          item.groupNm = newItem.groupNm;
+          item.userAuthId = newItem.userAuthId;
+          item.mgrAuthId = newItem.mgrAuthId;
+        }
+        return prevState;
+      });
+    }
+  }, [watch('groupNm'), watch('userAuthId'), watch('mgrAuthId')]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -276,13 +309,13 @@ const List = () => {
         type: ValidType.ERROR,
         content: '예외그룹 조회 중 에러가 발생했습니다.',
       });
-    } else {
+    } else if (isSuccess) {
       if (response?.data) {
-        setInitData([...response.data.contents]);
+        setInitData(JSON.parse(JSON.stringify(response.data.contents)));
         setData([...response.data.contents]);
       }
     }
-  }, [response, isError, isFetching, toast]);
+  }, [response, isError, isSuccess, isFetching, toast]);
 
   useEffect(() => {
     if (uguIsError || uguResponse?.successOrNot === 'N') {
@@ -293,7 +326,6 @@ const List = () => {
     } else {
       if (uguResponse?.data) {
         setEGroupUserList(uguResponse.data);
-        setUpdatedUserIdList(uguResponse.data.map((item: EGroupUserModel) => item.userId));
       }
     }
   }, [uguResponse, uguIsError, toast]);

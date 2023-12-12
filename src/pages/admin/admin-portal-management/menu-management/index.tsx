@@ -1,14 +1,19 @@
 import ErrorLabel from '@/components/error/ErrorLabel';
 import TreeSearchForm from '@/components/form/TreeSearchForm';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { useUpdateAdminMenu, useUpdateUserMenu } from '@/hooks/mutations/useMenuMutations';
-import { useAdminMenuList, useUserMenuList } from '@/hooks/queries/useMenuQueries';
+import { useUpdateAdminMenu } from '@/hooks/mutations/useMenuMutations';
+import { useAdminMenuList } from '@/hooks/queries/useMenuQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { UpdatedMenuModel } from '@/models/model/MenuModel';
 import { openModal } from '@/reducers/modalSlice';
-import { convertToHierarchyInfo, getNodeCheckedListRecursive, sortChildrenRecursive } from '@/utils/ArrayUtil';
+import {
+  convertToHierarchyInfo,
+  findUpdatedArray,
+  getNodeCheckedListRecursive,
+  sortChildrenRecursive,
+} from '@/utils/ArrayUtil';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { MoveHandler } from 'react-arborist';
@@ -37,32 +42,39 @@ const List = () => {
     handleSubmit,
     getValues,
     reset,
+    watch,
     formState: { errors },
   } = useForm<UpdatedMenuModel>({
     mode: 'onChange',
     defaultValues: { ...initItem },
   });
   const values = getValues();
-  const { data: response, isError, refetch } = useAdminMenuList('menu-mgmt');
+  const { data: response, isSuccess, isFetching, isError, refetch } = useAdminMenuList('menu-mgmt');
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateAdminMenu();
 
-  const checkHasCreated = () => {
-    if (initData.length !== data.length) {
-      return true;
-    }
-    return false;
+  const findCreatedItem = () => {
+    return data.find((item) => item.oprtrSe === 'C');
   };
 
   const handleClick = (item: any) => {
     if (item.isSelected) {
-      reset(item);
+      const createdItem = findCreatedItem();
+      if (item.oprtrSe === 'C' || !createdItem) {
+        reset(item);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: '저장되지 않은 메뉴가 있습니다.',
+        });
+        setData([...data]);
+      }
     } else {
       reset({ ...initItem });
     }
   };
 
   const handleMove: MoveHandler<any> = (args) => {
-    if (checkHasCreated()) {
+    if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
         content: '저장되지 않은 메뉴가 있습니다.',
@@ -72,7 +84,7 @@ const List = () => {
 
     let { dragIds, parentId, index } = args;
     if (parentId === '__REACT_ARBORIST_INTERNAL_ROOT__') {
-      parentId = '';
+      parentId = null;
     }
 
     setData((prevState) => {
@@ -88,7 +100,7 @@ const List = () => {
           }
 
           const fromChildren = prevState
-            .filter((item) => item.upMenuId === movedItem.upMenuId)
+            .filter((item) => item.upMenuId === movedItem.upMenuId || !item.upMenuId)
             .sort((a, b) => a.ordSeq - b.ordSeq);
           const fromIndex = fromChildren.findIndex((item) => item.menuId === movedItem.menuId);
           fromChildren.splice(fromIndex, 1);
@@ -106,7 +118,7 @@ const List = () => {
   };
 
   const handleCreate = () => {
-    if (checkHasCreated()) {
+    if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
         content: '저장되지 않은 메뉴가 있습니다.',
@@ -165,32 +177,7 @@ const List = () => {
   };
 
   const onSubmit = (formData: UpdatedMenuModel) => {
-    if (formData.menuId) {
-      if (checkHasCreated()) {
-        toast({
-          type: ValidType.INFO,
-          content: '저장되지 않은 메뉴가 있습니다.',
-        });
-        return;
-      }
-
-      dispatch(
-        openModal({
-          type: ModalType.CONFIRM,
-          title: '수정',
-          content: '수정하시겠습니까?',
-          onConfirm: () =>
-            uMutate(
-              data.map((item) => {
-                if (item.menuId === formData.menuId) {
-                  return { ...formData, oprtrSe: 'U' };
-                }
-                return { ...item, oprtrSe: 'U' };
-              })
-            ),
-        })
-      );
-    } else {
+    if (findCreatedItem()) {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
@@ -199,8 +186,42 @@ const List = () => {
           onConfirm: () => uMutate([{ ...formData, oprtrSe: 'C' }]),
         })
       );
+    } else {
+      const updatedList = findUpdatedArray(initData, data);
+
+      if (updatedList.length === 0) {
+        toast({
+          type: ValidType.INFO,
+          content: '변경된 메뉴가 없습니다.',
+        });
+      } else {
+        dispatch(
+          openModal({
+            type: ModalType.CONFIRM,
+            title: '수정',
+            content: '수정하시겠습니까?',
+            onConfirm: () => uMutate(updatedList.map((item) => ({ ...item, oprtrSe: 'U' }))),
+          })
+        );
+      }
     }
   };
+
+  useEffect(() => {
+    const newItem = watch();
+    if (newItem.menuId) {
+      setData((prevState) => {
+        const item = prevState.find((item) => item.menuId === newItem.menuId);
+        if (item) {
+          item.menuNm = newItem.menuNm;
+          item.menuUrl = newItem.menuUrl;
+          item.menuDsc = newItem.menuDsc;
+          item.useYn = newItem.useYn;
+        }
+        return prevState;
+      });
+    }
+  }, [watch('menuNm'), watch('menuUrl'), watch('menuDsc'), watch('useYn')]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -223,13 +244,13 @@ const List = () => {
         type: ValidType.ERROR,
         content: '메뉴 조회 중 에러가 발생했습니다.',
       });
-    } else {
+    } else if (isSuccess) {
       if (response?.data) {
-        setInitData(response.data.contents);
-        setData(response.data.contents);
+        setInitData(JSON.parse(JSON.stringify(response.data.contents)));
+        setData([...response.data.contents]);
       }
     }
-  }, [response, isError, toast]);
+  }, [response, isError, isSuccess, isFetching, toast]);
 
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {

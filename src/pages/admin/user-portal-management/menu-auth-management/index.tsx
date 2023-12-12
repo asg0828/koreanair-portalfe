@@ -14,7 +14,6 @@ import { convertToHierarchyInfo, getNodeCheckedListRecursive, sortChildrenRecurs
 import { getTotalPage } from '@/utils/PagingUtil';
 import { Button, Stack, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
-import { MoveHandler } from 'react-arborist';
 
 const columns = [
   { headerName: '권한그룹ID', field: 'authId', colSpan: 5 },
@@ -39,7 +38,6 @@ const List = () => {
   const [authId, setAuthId] = useState<string>('');
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<AuthModel>>([]);
-  const [initData, setInitData] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
   const [treeData, setTreeData] = useState<Array<HierarchyInfo>>([]);
   const { data: response, isError, refetch } = useUserMenuList('menu-auth-mgmt');
@@ -52,87 +50,6 @@ const List = () => {
     isError: cuaIsError,
     mutate: cuaMutate,
   } = useCreateUserAuthMenu();
-
-  const checkHasCreated = () => {
-    if (initData.length !== data.length) {
-      return true;
-    }
-    return false;
-  };
-
-  const handleMove: MoveHandler<any> = (args) => {
-    if (checkHasCreated()) {
-      toast({
-        type: ValidType.INFO,
-        content: '저장되지 않은 메뉴가 있습니다.',
-      });
-      return;
-    }
-
-    let { dragIds, parentId, index } = args;
-    if (parentId === '__REACT_ARBORIST_INTERNAL_ROOT__') {
-      parentId = '';
-    }
-
-    setData((prevState) => {
-      const toChildren = prevState.filter((item) => item.upMenuId === parentId).sort((a, b) => a.ordSeq - b.ordSeq);
-      dragIds.forEach((id, i) => {
-        const movedItem = prevState.find((item) => item.menuId === id);
-        const toIndex = index + i;
-
-        if (movedItem) {
-          if (parentId === movedItem.upMenuId) {
-            const toIndex = toChildren.findIndex((item) => item.menuId === movedItem.menuId);
-            toChildren.splice(toIndex, 1);
-          }
-
-          const fromChildren = prevState
-            .filter((item) => item.upMenuId === movedItem.upMenuId)
-            .sort((a, b) => a.ordSeq - b.ordSeq);
-          const fromIndex = fromChildren.findIndex((item) => item.menuId === movedItem.menuId);
-          fromChildren.splice(fromIndex, 1);
-          fromChildren.forEach((item, index) => (item.ordSeq = index));
-
-          toChildren.splice(toIndex, 0, movedItem);
-          toChildren.forEach((item, index) => (item.ordSeq = index));
-
-          movedItem.upMenuId = parentId;
-        }
-      });
-
-      return [...prevState];
-    });
-  };
-
-  const handleDelete = () => {
-    const checkedList = getNodeCheckedListRecursive(treeData);
-
-    if (checkedList.length === 0) {
-      toast({
-        type: ValidType.INFO,
-        content: '메뉴를 선택해주세요.',
-      });
-    } else {
-      dispatch(
-        openModal({
-          type: ModalType.CONFIRM,
-          title: '삭제',
-          content: '삭제하시겠습니까?',
-          onConfirm: () => {
-            const hasIdList = checkedList.filter((item) => item.menuId);
-
-            if (checkedList.length !== hasIdList.length) {
-              setData((prevDate) => prevDate.filter((item) => item.menuId));
-            }
-
-            if (hasIdList.length > 0) {
-              uMutate(hasIdList.map((item) => ({ menuId: item.menuId, oprtrSe: 'D' })));
-            }
-          },
-        })
-      );
-    }
-  };
 
   const handleClickRow = (row: any, index: number, selected: boolean) => {
     setData((prevData) =>
@@ -193,7 +110,6 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setInitData(response.data.contents);
         setData(response.data.contents);
       }
     }
@@ -277,7 +193,7 @@ const List = () => {
         <Stack gap="SM" alignItems="Start">
           <TableSearchForm title="권한그룹 목록" columns={columns} rows={rows} onClick={handleClickRow} />
 
-          <TreeSearchForm treeData={treeData} initItem={initItem} onDelete={handleDelete} onMove={handleMove} />
+          <TreeSearchForm treeData={treeData} initItem={initItem} />
         </Stack>
 
         <Stack gap="SM" justifyContent="End">
