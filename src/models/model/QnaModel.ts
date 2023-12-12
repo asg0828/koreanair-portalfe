@@ -1,5 +1,6 @@
 import { CommonModel } from '@/models/model/CommonModel';
 import { FileInfo } from '@/models/model/FileModel';
+import { string } from 'yargs';
 
 export interface QnaParams {
   searchConditions: string;
@@ -9,6 +10,7 @@ export interface QnaParams {
 export interface QnaModel extends CreatedQnaModel, CommonModel {
   qnaId: string;
   comments: Array<QnaModel>;
+  clCodeNm?: string;
   qnaStatNm?: string;
 }
 

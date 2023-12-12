@@ -17,9 +17,9 @@ import { useNavigate } from 'react-router-dom';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'No', field: 'rownum', colSpan: 0.5 },
-  { headerName: '분류', field: 'clCode', colSpan: 1 },
+  { headerName: '분류', field: 'clCodeNm', colSpan: 1 },
   { headerName: '제목', field: 'sj', colSpan: 3, align: 'left' },
-  { headerName: '상태', field: 'qnaStat', colSpan: 1.5 },
+  { headerName: '상태', field: 'qnaStatNm', colSpan: 1.5 },
   { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
   { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
   { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
@@ -98,8 +98,8 @@ const List = () => {
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
           item.rgstDt = getDateString(item.rgstDt, '-');
           item.useYn = item.useYn === 'Y' ? '예' : '아니오';
-          item.clCode = getCode(GroupCodeType.QNA_TYPE, item.clCode)?.codeNm || '';
-          item.qnaStat = getCode(GroupCodeType.QNA_STAT, item.qnaStat)?.codeNm || '';
+          item.clCodeNm = getCode(GroupCodeType.QNA_TYPE, item.clCode)?.codeNm || '';
+          item.qnaStatNm = getCode(GroupCodeType.QNA_STAT, item.qnaStat)?.codeNm || '';
         });
         setRows(response.data.contents);
         setPage(response.data.page);
