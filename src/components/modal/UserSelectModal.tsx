@@ -174,8 +174,8 @@ const UserSelectModal = ({
                 <Button onClick={handleSearch}>검색</Button>
               </Stack>
               <VerticalTable
-                className="multiSelectTable"
-                isMultiSelected={false}
+                className={isMultiSelected ? 'multiSelectTable' : 'RightScrollTable'}
+                isMultiSelected={isMultiSelected}
                 clickable={true}
                 columns={columns}
                 rows={prevRows}
