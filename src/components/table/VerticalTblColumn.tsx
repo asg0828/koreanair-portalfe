@@ -286,6 +286,15 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         checkValidation = '사용여부가 Y인 것중 수집 기준 시간 여부를 하나 선택해주세요';
       else if (!tbCoMetaTblClmnInfoList.filter((e) => e.pkYn === 'Y').find((e) => e.metaTblLogiNm === ''))
         checkValidation = '사용여부가 Y인 경우 논리명을 입력해주세요';
+      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ''))
+        checkValidation = '변경 데이터 타입을 입력해주세요.';
+      else if (
+        !tbCoMetaTblClmnInfoList
+          .filter((e) => e.changeYn === 'Y')
+          .filter((e) => e.chgDtpCd === 'timeStamp')
+          .find((e) => e.dataFormat === '')
+      )
+        checkValidation = '변경 데이터 형식을 입력해주세요.';
       if (checkValidation !== '') {
         toast({
           type: 'Error',

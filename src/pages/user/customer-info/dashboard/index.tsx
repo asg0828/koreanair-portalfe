@@ -484,7 +484,7 @@ export default function List() {
                           setIsListView1({ open: true, contents: 'etkt' });
                         }}
                       >
-                        전자항공권
+                        E-TKT
                       </button>
                     </div>
                     <div className="value">
@@ -546,7 +546,7 @@ export default function List() {
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>전자항공권</th>
+                        <th>E-TKT</th>
                       </tr>
                     </thead>
                     <tbody>
