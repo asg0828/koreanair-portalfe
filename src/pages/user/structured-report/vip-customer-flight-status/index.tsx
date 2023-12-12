@@ -36,10 +36,7 @@ const List = () => {
     const [showPopup, setShowPopup] = useState(false);
 
     const [params, setParams] = useState<ReportParams>(initParams);
-    const [page, setPage] = useState<PageModel>({
-        ...initPage,
-        totalCount: 100
-    });
+    const [page, setPage] = useState<PageModel>(initPage);
 
     const columns: Array<ColumnsInfo> = [
         {headerName: 'Rank', field: 'rank', colSpan: 0.5},
@@ -53,7 +50,7 @@ const List = () => {
     ];
 
     const [rows, setRows] = useState<any>([]);
-    const { data: response, isError, refetch } = useVipList(params);
+    const { data: response, isError, refetch } = useVipList(params, page);
 
     const toggleModal = () => {
         setShowPopup(!showPopup);
@@ -92,6 +89,7 @@ const List = () => {
         } else {
             if (response?.data) {
                 setRows(response.data.contents);
+                setPage(response.data.page)
             }
         }
     }, [response, isError, toast]);
@@ -103,8 +101,8 @@ const List = () => {
                 rows={rows}
                 enableSort={true}
                 clickable={true}
-                showPageSizeSelect={false}
-                showPagination={false}
+                showPageSizeSelect={true}
+                showPagination={true}
                 initialSortedColumn="scheduledIntlFlightDate"
                 page={page}
                 onClick={toggleModal}

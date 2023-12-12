@@ -26,6 +26,7 @@ const CustomerMetaManagementDetail = () => {
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
     setTbCoMetaTbInfo({ ...searchInfo, [id]: value });
+    setTbCoMetaTbInfo({ ...tbCoMetaTbInfo, [`${id}`]: value });
   }
 
   /* select 입력 함수 */
@@ -110,7 +111,9 @@ const CustomerMetaManagementDetail = () => {
             </TD>
             {tbCoMetaTbInfo.rtmTblYn === 'Y' ? (
               <>
-                <TH colSpan={0.2005}>Topic</TH>
+                <TH align="right" colSpan={0.2004}>
+                  Topic
+                </TH>
                 <TD colSpan={0.416}>
                   <Select
                     id="metaTblDvCd"

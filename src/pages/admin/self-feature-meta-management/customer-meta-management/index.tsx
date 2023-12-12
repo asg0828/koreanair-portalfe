@@ -12,7 +12,7 @@ import { useColAndCmmtList, useMetaTableList } from '@/hooks/queries/self-featur
 import { CustMetaSrchItem, CustMetaTableData, CustMetaListSrchInfo } from '@/models/selfFeature/FeatureAdmModel';
 import { initCustMetaSrchItem, initCustMetaListSrchInfo, metaTableColumn } from './data';
 import { useYn } from '@/models/selfFeature/FeatureCommon';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { openModal } from '@/reducers/modalSlice';
 import { useDeleteMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
@@ -31,7 +31,7 @@ const CustomerMetaManagement = () => {
   const [srchItemListOption, setSrchItemListOption] = useState<Array<CustMetaSrchItem>>([]);
   const [metaTblIds, setMetaTblsId] = useState<Array<string>>([]);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteMetaTable(metaTblIds);
-
+  const location = useLocation();
   // 검색 버튼 클릭시 목록 refetch
   const handleSearch = () => {
     metaTableRefetch();
@@ -56,6 +56,24 @@ const CustomerMetaManagement = () => {
       }
     }
   }, [metaTableRes, metaTableErr, toast]);
+
+  // 삭제
+  useEffect(() => {
+    if (dIsError || dResponse?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '삭제 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (dIsSuccess) {
+        metaTableRefetch();
+        toast({
+          type: 'Confirm',
+          content: '삭제가 완료되었습니다.',
+        });
+      }
+    }
+  }, [dResponse, dIsError, toast]);
 
   useEffect(() => {
     setPageList(page, oriList, setRows);

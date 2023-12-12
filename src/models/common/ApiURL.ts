@@ -57,4 +57,5 @@ export enum SelfFeatureAdmApiURL {
   TABLE_INFO = '/api/v1/batchdb/tables',
   MSTR_SGMT_BASE = '/api/v1/mastersegment/rules',
   META_TABLE_RULE_TABLE_BASE = '/api/v1/metas/ruletable',
+  TIME_COLUMN = '/api/v1/metas/time-column',
 }

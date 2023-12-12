@@ -41,7 +41,7 @@ export const retrieveMetaTableDetail = (params: any) => {
 
 export const updateMetaTable = (
   metaTblId: string,
-  metaTblLogiNm: string,
+  // metaTblLogiNm: string,
   tbCoMetaTbInfo: RowsInfo,
   tbCoMetaTblClmnInfoList: RowsInfo
 ) => {
@@ -51,8 +51,8 @@ export const updateMetaTable = (
     method: Method.PUT,
     params: {
       bodyParams: {
-        metaTblId,
-        metaTblLogiNm,
+        // metaTblId,
+        // metaTblLogiNm,
         tbCoMetaTbInfo,
         tbCoMetaTblClmnInfoList,
       },
@@ -105,6 +105,16 @@ export const retrieveTableColumns = (schemaName: string, tableName: string) => {
     method: Method.GET,
   });
 };
+
+// CustomerMeta time 컬럼 데이터 타입, 포맷 조회
+export const retrieveTimeColumn = () => {
+  return callApi({
+    service: Service.KAL_SF_BE,
+    url: `${SelfFeatureAdmApiURL.TIME_COLUMN}`,
+    method: Method.GET,
+  });
+};
+
 // Master Profile 메타테이블 전체조회 테이블 선택 콤보박스 조회
 export const retrieveMetaInfo = (searchInfo: QueryParams) => {
   return callApi({

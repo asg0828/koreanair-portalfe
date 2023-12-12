@@ -2,8 +2,9 @@ import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
 import { ReportParams } from '@/models/model/ReportModel';
 import { callApi, Method } from '@utils/ApiUtil';
+import {PageModel} from "@models/model/PageModel";
 
-export const getReportVipList = (params: ReportParams) => {
+export const getReportVipList = (params: ReportParams, page: PageModel) => {
     return callApi({
         service: Service.KAL_BE,
         url: `${PortalApiURL.REPORT_VIP}`,
@@ -11,6 +12,7 @@ export const getReportVipList = (params: ReportParams) => {
         params: {
             queryParams: {
                 ...params,
+                ...page
             },
         },
     });
