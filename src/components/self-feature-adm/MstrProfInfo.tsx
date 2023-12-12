@@ -42,15 +42,15 @@ const MstrProfInfo = ({
     setMstrSgmtRuleAttrTblList,
     setMstrSgmtRuleAttrClmnList,
 }: AttrBehvMstrProfInfoProps) => {
-
+    
     const { toast } = useToast()
     // 최초 저장 정보 확인
-    const [isEdit, setIsEdit] = useState<Boolean>(false)
+    //const [isEdit, setIsEdit] = useState<Boolean>(false)
     // 정보타입
     const [divisionType, setDivisionType] = useState<string>("")
     const [metaTblOptionList, setMetaTblOptionList] = useState<Array<TbCoMetaTbInfo>>([])
     // 각 메타 테이블 및 컬럼 정보(화면 노출을 위해 필요)
-    const [metaTableInfo, setMetaTableInfo] = useState<TbCoMetaTbInfo>(cloneDeep(initTbCoMetaTbInfo))
+    const [metaTableInfo, setMetaTableInfo] = useState<TbCoMetaTbInfo>()
     const [metaTblClmnList, setMetaTblClmnList] = useState<Array<TbCoMetaTblClmnInfo>>([])
     // 선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API
     const [metaTblId, setMetaTblId] = useState<string>("")
@@ -67,7 +67,8 @@ const MstrProfInfo = ({
     // component mount
     useEffect(() => {
         // 최초 수정 정보가 있는 경우 초기화 로직 제외를 위한 flag
-        if (metaTblInfo && metaTblInfo.mstrSgmtRuleTblId !== "" && hasItem) setIsEdit(hasItem)
+        // if (!metaTblInfo.mstrSgmtRuleTblId) setIsEdit(false)
+        // else setIsEdit(true)
     }, [])
     /* 
         선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API
@@ -83,34 +84,37 @@ const MstrProfInfo = ({
         if (editMode && metaTblInfo.metaTblId) tblId = metaTblInfo.metaTblId
         else tblId = metaTblInfo.mstrSgmtRuleTblId
         setMetaTblId(() => cloneDeep(tblId))
-
-        if (!metaTblAllList) return
-        let temp = metaTblAllList.find((info: TbCoMetaTbInfo) => info.metaTblId === tblId)
+        //if (!metaTblAllList) return
+        let temp = metaTblAllList.find((info: TbCoMetaTbInfo) => info.metaTblId === metaTblInfo?.mstrSgmtRuleTblId)
         setMetaTableInfo(() => {
             if (temp) return cloneDeep(temp)
             else return cloneDeep(initTbCoMetaTbInfo)
+            //else return cloneDeep(initTbCoMetaTbInfo)
         })
-
         // 현재 설정된 메타테이블 정보 순회하며 등록 가능한 컬럼 setting
         let temp2: Array<TbCoMetaTbInfo> = []
         for (let i = 0; i < metaTblAllList.length; i++) {
             let item = metaTblAllList[i]
-            let hasItem = false
+            let hasItemFlag = false
             if (mstrSgmtRuleAttrTblList && mstrSgmtRuleAttrTblList?.length > 0) {
                 for (let j = 0; j < mstrSgmtRuleAttrTblList.length; j++) {
                     let item2 = mstrSgmtRuleAttrTblList[j]
                     if (item.metaTblId === item2.mstrSgmtRuleTblId) {
-                        hasItem = true
+                        hasItemFlag = true
                         break
                     }
                 }
             }
-            if (item.metaTblId === tblId) hasItem = false
+            if (item.metaTblId === metaTblInfo?.mstrSgmtRuleTblId) hasItemFlag = false
 
-            if (!hasItem) temp2.push(cloneDeep(item))
+            if (!hasItemFlag) temp2.push(cloneDeep(item))
         }
         setMetaTblOptionList(() => cloneDeep(temp2))
-    }, [metaTblInfo, metaTblAllList, mstrSgmtRuleAttrTblList])
+    }, [metaTblInfo])
+    // useEffect(() => {
+    // }, [metaTblInfo?.mstrSgmtRuleTblId])
+    // useEffect(() => {
+    // }, [metaTblAllList, mstrSgmtRuleAttrTblList])
     // 화면 노출을 위한 저장된 컬럼 setting
     useEffect(() => {
         // 선택한 테이블에 해당되는 컬럼 리스트
@@ -283,24 +287,24 @@ const MstrProfInfo = ({
                                 let v = String(value)
                                 if (!v || v === "" || v === "null" || v === "undefined") return
                                 // 최초 수정 정보가 있는 경우 초기화 로직 제외
-                                if (!isEdit) {
-                                    setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
-                                        let rtn = cloneDeep(prevState)
-                                        rtn[targetIndex!].mstrSgmtRuleTblId = v
-                                        let tblInfo = metaTblAllList.find((item: TbCoMetaTbInfo) => item.metaTblId === v)
-                                        rtn[targetIndex!].mstrSgmtRuleTblNm = tblInfo ? tblInfo.metaTblPhysNm : ""
-                                        rtn[targetIndex!].clmnAllChocYn = "N"
-                                        rtn[targetIndex!].attrJoinKeyClmnNm = ""
-                                        rtn[targetIndex!].mstrJoinKeyClmnNm = ""
-                                        return rtn
-                                    })
-                                    setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
-                                        let rtn = cloneDeep(prevState)
-                                        rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblId)
-                                        return rtn
-                                    })
-                                }
-                                if (isEdit) setIsEdit(false)
+                                setMstrSgmtRuleAttrTblList && setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+                                    let rtn = cloneDeep(prevState)
+                                    rtn[targetIndex!].mstrSgmtRuleTblId = v
+                                    //if (!isEdit) {
+                                    let tblInfo = metaTblAllList.find((item: TbCoMetaTbInfo) => item.metaTblId === v)
+                                    rtn[targetIndex!].mstrSgmtRuleTblNm = tblInfo ? tblInfo.metaTblPhysNm : ""
+                                    rtn[targetIndex!].clmnAllChocYn = "N"
+                                    rtn[targetIndex!].attrJoinKeyClmnNm = ""
+                                    rtn[targetIndex!].mstrJoinKeyClmnNm = ""
+                                    //}
+                                    return rtn
+                                })
+                                setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+                                    let rtn = cloneDeep(prevState)
+                                    rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblId)
+                                    return rtn
+                                })
+                                //if (metaTblInfo.mstrSgmtRuleTblId && isEdit) setIsEdit(false)
                             }}
                         >
                             {metaTblOptionList.map((item, index) => (
@@ -385,4 +389,4 @@ const MstrProfInfo = ({
     )
 }
 
-export default React.memo(MstrProfInfo)
+export default MstrProfInfo
