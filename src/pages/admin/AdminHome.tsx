@@ -7,7 +7,7 @@ import { AdminMainLink, GroupCodeType, ValidType } from '@/models/common/Constan
 import { FaqModel } from '@/models/model/FaqModel';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { NoticeModel } from '@/models/model/NoticeModel';
-import { PageModel, initPage } from '@/models/model/PageModel';
+import { initPage } from '@/models/model/PageModel';
 import { QnaModel } from '@/models/model/QnaModel';
 import { initFeatureParams } from '@/pages/user/biz-meta/feature';
 import { initFaqParams } from '@/pages/user/board/faq';
@@ -19,17 +19,32 @@ import { Link } from 'react-router-dom';
 
 const AdminHome = () => {
   const { toast } = useToast();
-  const [page, setPage] = useState<PageModel>({ ...initPage, pageSize: 5 });
   const [noticeList, setNoticeList] = useState<Array<NoticeModel>>([]);
   const [faqList, setFaqList] = useState<Array<FaqModel>>([]);
   const [qnaList, setQnaList] = useState<Array<QnaModel>>([]);
   const [featureList, setFeatureList] = useState<Array<FeatureModel>>([]);
   const [popularFeatureList, setPopularFeatureList] = useState<Array<FeatureModel>>([]);
-  const { data: nResponse, isError: nIsError } = useNoticeList(initNoticeParams, page);
-  const { data: fResponse, isError: fIsError } = useFaqList(initFaqParams, { ...page, pageSize: 3 });
-  const { data: qResponse, isError: qIsError } = useQnaList(initFaqParams, { ...page, pageSize: 4 });
-  const { data: feResponse, isError: feIsError } = useFeatureList(initFeatureParams, { ...page, pageSize: 4 });
-  const { data: pfResponse, isError: pfIsError } = usePopularFeatureList();
+  const { data: nResponse, isError: nIsError } = useNoticeList(
+    initNoticeParams,
+    { ...initPage, pageSize: 5 },
+    { suspense: false }
+  );
+  const { data: fResponse, isError: fIsError } = useFaqList(
+    initFaqParams,
+    { ...initPage, pageSize: 3 },
+    { suspense: false }
+  );
+  const { data: qResponse, isError: qIsError } = useQnaList(
+    initFaqParams,
+    { ...initPage, pageSize: 4 },
+    { suspense: false }
+  );
+  const { data: feResponse, isError: feIsError } = useFeatureList(
+    initFeatureParams,
+    { ...initPage, pageSize: 4 },
+    { suspense: false }
+  );
+  const { data: pfResponse, isError: pfIsError } = usePopularFeatureList({ suspense: false });
 
   useEffect(() => {
     if (nIsError || nResponse?.successOrNot === 'N') {

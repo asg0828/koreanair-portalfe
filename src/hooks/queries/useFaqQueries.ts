@@ -3,8 +3,8 @@ import { FaqParams } from '@/models/model/FaqModel';
 import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
-export const useFaqList = (params: FaqParams, page: PageModel) => {
-  return useQuery(['/faq/list'], () => getFaqList(params, page));
+export const useFaqList = (params: FaqParams, page: PageModel, options?: Object) => {
+  return useQuery(['/faq/list'], () => getFaqList(params, page), options);
 };
 
 export const useFaqById = (faqId: string) => {
