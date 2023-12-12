@@ -8,6 +8,10 @@ export interface DataroomParams {
 
 export interface DataroomModel extends CreatedDataroomModel, CommonModel {
   dataId: string;
+  nextSj: string;
+  nextId: string;
+  preSj: string;
+  preId: string;
 }
 
 export interface CreatedDataroomModel extends FileInfo {

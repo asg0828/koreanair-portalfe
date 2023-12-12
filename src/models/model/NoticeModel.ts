@@ -8,6 +8,10 @@ export interface NoticeParams {
 
 export interface NoticeModel extends CreatedNoticeModel, CommonModel {
   noticeId: string;
+  nextSj: string;
+  nextId: string;
+  preSj: string;
+  preId: string;
 }
 
 export interface CreatedNoticeModel extends FileInfo {

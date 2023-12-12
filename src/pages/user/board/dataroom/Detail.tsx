@@ -24,10 +24,7 @@ const Detail = () => {
   const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
   const dataId: string = location?.state?.dataId || '';
-  const rows: Array<DataroomModel> = location?.state?.rows;
   const [dataroomModel, setDataroomModel] = useState<DataroomModel>();
-  const [prevDataroomModel, setPrevDataroomModel] = useState<DataroomModel>();
-  const [nextDataroomModel, setNextDataroomModel] = useState<DataroomModel>();
   const { data: response, isSuccess, isError } = useDataroomById(dataId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteDataroom(dataId);
 
@@ -43,11 +40,10 @@ const Detail = () => {
     });
   };
 
-  const handleMoveDetail = (dataId: string | undefined) => {
+  const handleMoveDetail = (dataId: string) => {
     navigate('', {
       state: {
         dataId: dataId,
-        rows: rows,
       },
     });
   };
@@ -78,14 +74,6 @@ const Detail = () => {
       });
     }
   };
-
-  useEffect(() => {
-    if (rows?.length > 0) {
-      const index = rows.findIndex((row) => row.dataId === dataId);
-      setPrevDataroomModel(index === 0 ? undefined : rows[index - 1]);
-      setNextDataroomModel(index === rows.length - 1 ? undefined : rows[index + 1]);
-    }
-  }, [dataId, rows]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -164,9 +152,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
-              {nextDataroomModel?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(nextDataroomModel?.dataId)}>
-                  {nextDataroomModel?.sj}
+              {dataroomModel?.nextSj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(dataroomModel?.nextId)}>
+                  {dataroomModel?.nextSj}
                 </Link>
               )}
             </TD>
@@ -177,9 +165,9 @@ const Detail = () => {
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
-              {prevDataroomModel?.sj && (
-                <Link linkType="Page" onClick={() => handleMoveDetail(prevDataroomModel?.dataId)}>
-                  {prevDataroomModel?.sj}
+              {dataroomModel?.preSj && (
+                <Link linkType="Page" onClick={() => handleMoveDetail(dataroomModel?.preId)}>
+                  {dataroomModel?.preSj}
                 </Link>
               )}
             </TD>

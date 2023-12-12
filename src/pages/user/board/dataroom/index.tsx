@@ -46,11 +46,10 @@ const List = () => {
     navigate(View.REG);
   };
 
-  const goToDetail = (row: DataroomModel, index: number) => {
+  const goToDetail = (row: DataroomModel) => {
     navigate('detail', {
       state: {
         dataId: row.dataId,
-        rows: rows,
       },
     });
   };
