@@ -18,10 +18,10 @@ export interface DataTreeProps {
   onClick?: (item: HierarchyInfo, parentItem?: HierarchyInfo) => void;
   onMove?: MoveHandler<any>;
   onSearch?: (keyword: string) => void;
-  treeHeight?:number | undefined;
+  treeHeight?: number | undefined;
 }
 
-const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, onMove,treeHeight }: DataTreeProps) => {
+const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, onMove, treeHeight }: DataTreeProps) => {
   const height = treeHeight !== undefined ? treeHeight : 500;
   // 폴더 펼치기, 접기
   const handleToggle = (node: any) => {
@@ -112,13 +112,11 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
     // 드랍 시 대상 여부
     node.data.willReceiveDrop = node.willReceiveDrop;
 
-    // if (node.level === 0 && node.rowIndex === 0) {
-    //   const hasSelected = checkHasSelected(tree.root);
-
-    //   if (!hasSelected) {
-    //     handleClick(node, tree);
-    //   }
-    // }
+    // 파일인 경우 폴더 보다 1뎁스 더 margin-left
+    let paddingLeft;
+    if (node.children?.length === 0) {
+      paddingLeft = `${node.level === 0 ? (node.level + 1) * 24 : node.level * 24}px`;
+    }
 
     if (node.children?.length === 0) {
       content.push(
@@ -164,6 +162,7 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
       <Stack
         id={node.data.id}
         className={`tree-item width-100 ${isSelected ? 'primary-200' : ''} ${isChanged ? 'error-200' : ''}`}
+        style={{ paddingLeft }}
         ref={dragHandle}
       >
         <Stack className="width-100" style={style}>
