@@ -1,5 +1,5 @@
 import { MstrProfMetaTblColumnListProps, TbCoMetaTblClmnInfo, TbRsMstrSgmtRuleAttrClmn, TbRsMstrSgmtRuleAttrTbl } from "@/models/selfFeature/FeatureAdmModel"
-import React, { useState, useEffect, useCallback } from "react"
+import React, { useState, useEffect } from "react"
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
 
@@ -47,7 +47,7 @@ const MstrProfMetaTblColumnList = ({
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
 
-    const metaTableInfoResetCallback = useCallback(() => {
+    useEffect(() => {
         // 테이블 정보가 바뀌면 컬럼 항목 reset && 전체선택 해제(이전 선택된 테이블 ID를 알아야함)
         if (
             (!metaTblInfo || metaTblInfo.mstrSgmtRuleTblId === "")
@@ -73,10 +73,6 @@ const MstrProfMetaTblColumnList = ({
             })
         }
     }, [metaTblInfo, metaTblClmnAllList])
-
-    useEffect(() => {
-        metaTableInfoResetCallback()
-    }, [metaTableInfoResetCallback])
     // modal 확인/취소 이벤트
     const onConfirm = () => {
         if (modalType === ModalType.CONFIRM) {
@@ -98,19 +94,15 @@ const MstrProfMetaTblColumnList = ({
             setIsCheckedAllCol(() => true)
             setIsColListShow(() => false)
         }
-
     }, [metaTblInfo?.clmnAllChocYn])
-    const tmpMetaTableClmnCallback = useCallback(() => {
+    // 등록 및 수정시 컬럼 추가할 경우 필요
+    useEffect(() => {
         if (!metaTblClmnList || metaTblClmnList.length < 1) {
             setTmpMetaTblClmnList(() => [])
         } else {
             setTmpMetaTblClmnList(() => cloneDeep(metaTblClmnList))
         }
-    }, [metaTblClmnList])
-    // 등록 및 수정시 컬럼 추가할 경우 필요
-    useEffect(() => {
-        tmpMetaTableClmnCallback()
-    }, [tmpMetaTableClmnCallback])//저장된 메타테이블 컬럼 정보
+    }, [metaTblClmnList])//저장된 메타테이블 컬럼 정보
 
     // 새로운 항목 추가 버튼 클릭
     const onClickAddColInfo = () => {
@@ -517,4 +509,4 @@ const MstrProfMetaTblColumnList = ({
     )
 }
 
-export default React.memo(MstrProfMetaTblColumnList)
+export default MstrProfMetaTblColumnList

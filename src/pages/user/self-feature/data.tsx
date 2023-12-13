@@ -246,7 +246,7 @@ export const initSelfFeatureInfo: FeatureInfo = {
     tbRsCustFeatRuleCalc: initTbRsCustFeatRuleCalc,
     tbRsCustFeatRuleTrgtList: [{ ...initTbRsCustFeatRuleTrgt }],
     tbRsCustFeatRuleTrgtFilterList: [{ ...initTbRsCustFeatRuleTrgtFilter }],
-    tbRsCustFeatRuleCaseList: [{ ...initTbRsCustFeatRuleCase }],
+    //tbRsCustFeatRuleCaseList: [{ ...initTbRsCustFeatRuleCase }],
     featureTemp: initFeatureTemp,
     tbRsCustFeatRuleSql: initTbRsCustFeatRuleSql,
 }

@@ -12,11 +12,31 @@ import {
 } from '@components/ui'
 import MstrProfInfo from '@/components/self-feature-adm/MstrProfInfo'
 import HorizontalTable from '@/components/table/HorizontalTable'
-import { ModalType, RuleId, SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon'
+import { 
+    ModalType, 
+    RuleId, 
+    SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ConfirmModal from '@/components/modal/ConfirmModal'
-import { MasterProfileInfo, MetaInfoSearchProps, MetaType, TbCoMetaTbInfo, TbRsMstrSgmtRule, TbRsMstrSgmtRuleAttrClmn, TbRsMstrSgmtRuleAttrTbl, TbRsRslnRuleKeyPrty } from '@/models/selfFeature/FeatureAdmModel'
-import { initMasterProfileInfo, initMetaInfoSearchProps, initTbRsMstrSgmtRule, initTbRsMstrSgmtRuleAttrTbl, initTbRsRslnRuleKeyPrty } from './data'
+import { 
+    MasterProfileInfo, 
+    MetaInfoSearchProps, 
+    MetaType, 
+    TbCoMetaTbInfo, 
+    TbRsMstrSgmtRule, 
+    TbRsMstrSgmtRuleAttrClmn, 
+    TbRsMstrSgmtRuleAttrTbl, 
+    TbRsRslnRuleKeyPrty, 
+    TbRsRslnRuleRel 
+} from '@/models/selfFeature/FeatureAdmModel'
+import { 
+    initMasterProfileInfo, 
+    initMetaInfoSearchProps, 
+    initTbRsMstrSgmtRule, 
+    initTbRsMstrSgmtRuleAttrTbl, 
+    initTbRsRslnRuleKeyPrty, 
+    initTbRsRslnRuleRel 
+} from './data'
 import { useUpdateMstrProfInfo } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations'
 import { ValidType } from '@/models/common/Constants'
 import { useMetaInfo, useResolutionKeyList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
@@ -50,6 +70,8 @@ const MasterProfileManagementEdit = () => {
     const [behvMstrSgmtRuleAttrTblList, setBehvMstrSgmtRuleAttrTblList] = useState<Array<TbRsMstrSgmtRuleAttrTbl>>(cloneDeep([initTbRsMstrSgmtRuleAttrTbl]))
     // 테이블 컬럼 정보
     const [mstrSgmtRuleAttrClmnList, setMstrSgmtRuleAttrClmnList] = useState<Array<TbRsMstrSgmtRuleAttrClmn>>([])
+    // resolution 관계 정보
+    const [rslnRuleRelList, setRslnRuleRelList] = useState<Array<TbRsRslnRuleRel>>(cloneDeep([initTbRsRslnRuleRel]))
     // 모달, 버튼 클릭 종류
     const [btnClickType, setBtnClickType] = useState<string>('')
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
@@ -72,6 +94,7 @@ const MasterProfileManagementEdit = () => {
         setAttrMstrSgmtRuleAttrTblList(location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter((info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.ATTR))
         setBehvMstrSgmtRuleAttrTblList(location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter((info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.BEHV))
         setMstrSgmtRuleAttrClmnList(location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrClmn)
+        setRslnRuleRelList(location.state.masterProfileInfo.tbRsRslnRuleRel)
     }, [location])
     // 메타테이블 전체조회 테이블 선택 콤보박스 조회 API 호출
     useEffect(() => {
@@ -87,8 +110,8 @@ const MasterProfileManagementEdit = () => {
             });
         } else {
             if (metaInfoRes) {
-                setAttrMetaTbList(metaInfoRes.result.filter((info: TbCoMetaTbInfo) => info.metaTblDvCd === DivisionTypes.ATTR))
-                setBehvMetaTbList(metaInfoRes.result.filter((info: TbCoMetaTbInfo) => info.metaTblDvCd === DivisionTypes.BEHV))
+                setAttrMetaTbList(() => metaInfoRes.result.filter((info: TbCoMetaTbInfo) => info.metaTblDvCd === DivisionTypes.ATTR))
+                setBehvMetaTbList(() => metaInfoRes.result.filter((info: TbCoMetaTbInfo) => info.metaTblDvCd === DivisionTypes.BEHV))
             }
         }
     }, [metaInfoRes, metaInfoErr])
@@ -106,7 +129,7 @@ const MasterProfileManagementEdit = () => {
             });
         } else {
             if (rslnKeyListRes) {
-                setRslnRuleKeyPrtyList(rslnKeyListRes.result)
+                setRslnRuleKeyPrtyList(() => rslnKeyListRes.result)
             }
         }
     }, [rslnKeyListRes, rslnKeyListErr])
@@ -167,6 +190,14 @@ const MasterProfileManagementEdit = () => {
             return rtn
         })
     }, [mstrSgmtRuleAttrClmnList])
+    // resolution 관계 정보 수정시 formData setting
+    useEffect(() => {
+        setMstrSgmtFormData((prevState: MasterProfileInfo) => {
+            let rtn = cloneDeep(prevState)
+            rtn.tbRsRslnRuleRel = rslnRuleRelList
+            return rtn
+        })
+    }, [rslnRuleRelList])
     // 페이지 이동 및 버튼 처리
     const onClickPageMovHandler = (pageNm: string) => {
         if (pageNm === SelfFeatPgPpNm.LIST) {

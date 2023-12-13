@@ -98,7 +98,7 @@ export const initMasterProfileInfo: MasterProfileInfo = {
 	tbRsMstrSgmtRuleAttrTbl: [{...initTbRsMstrSgmtRuleAttrTbl}],
 	tbRsMstrSgmtRuleAttrClmn: [],
 	tbRsRslnRuleRel: [{...initTbRsRslnRuleRel}],
-	tbRsMstrSgmtRuleList: [{...initTbRsMstrSgmtRule}],
+	//tbRsMstrSgmtRuleList: [{...initTbRsMstrSgmtRule}],
 }
 export const initMstrProfSearchInfoProps: MstrProfSearchInfoProps = {
     useYn: '',

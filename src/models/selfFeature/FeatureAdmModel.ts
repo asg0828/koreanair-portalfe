@@ -174,7 +174,7 @@ export interface MasterProfileInfo {
 	tbRsMstrSgmtRuleAttrTbl: Array<TbRsMstrSgmtRuleAttrTbl>
 	tbRsMstrSgmtRuleAttrClmn: Array<TbRsMstrSgmtRuleAttrClmn>
 	tbRsRslnRuleRel: Array<TbRsRslnRuleRel>
-	tbRsMstrSgmtRuleList: Array<TbRsMstrSgmtRule>
+	//tbRsMstrSgmtRuleList: Array<TbRsMstrSgmtRule>
 }
 // Master Profile 삭제 Param Props
 export interface MstrProfDelProps {
