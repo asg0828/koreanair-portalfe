@@ -122,14 +122,18 @@ const OperatorOperand = ({
             return rtn
         })
     }
+    let dynStyle = {}
+    if (isPossibleEdit) {
+        dynStyle = {
+            flex: "0 1 23%",
+            maxWidth: "23%",
+        }
+    }
 
     return (
         <>
             <Stack
-                style={{
-                    flex: "0 1 23%",
-                    maxWidth: "23%",
-                }}
+                style={dynStyle}
             >
                 {(isPossibleEdit) &&
                     <Select
@@ -158,7 +162,9 @@ const OperatorOperand = ({
                     </Select>
                 }
                 {(!isPossibleEdit) &&
-                    <Typography variant='h5'>{item?.operator}</Typography>
+                    <Typography variant='body1'>
+                        {operatorOption.find((option) => option.cdv === item?.operator)?.cdvNm}
+                    </Typography>
                 }
             </Stack>
             <Stack
@@ -170,74 +176,84 @@ const OperatorOperand = ({
                 }}
             >
                 {(delimiterSelected && isPossibleEdit) &&
-                <Stack
-                    style={{
-                        flex: "0 1 30%",
-                        maxWidth: "30%",
-                    }}
-                >
-                    <Select
-                        appearance="Outline"
-                        value={item?.delimiter}
-                        placeholder='구분자 선택'
-                        shape="Square"
-                        size="SM"
-                        status="default"
+                    <Stack
                         style={{
-                            width: '11.25rem'
-                        }}
-                        onChange={(
-                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                            value: SelectValue<{}, false>
-                        ) => {
-                            // 구분자 선택
-                            onchangeSelectHandler(e, value, "delimiter")
+                            flex: "0 1 30%",
+                            maxWidth: "30%",
                         }}
                     >
-                        {delimiterOption.map((item, index) => (
-                            <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                        ))}
-                        {delimiterOption.length < 1 &&
-                            <SelectOption style={{ fontSize: "smaller" }} value="">구분자 선택</SelectOption>
-                        }
-                    </Select>
-                </Stack>
+                        <Select
+                            appearance="Outline"
+                            value={item?.delimiter}
+                            placeholder='구분자 선택'
+                            shape="Square"
+                            size="SM"
+                            status="default"
+                            style={{
+                                width: '11.25rem'
+                            }}
+                            onChange={(
+                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                value: SelectValue<{}, false>
+                            ) => {
+                                // 구분자 선택
+                                onchangeSelectHandler(e, value, "delimiter")
+                            }}
+                        >
+                            {delimiterOption.map((item, index) => (
+                                <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                            ))}
+                            {delimiterOption.length < 1 &&
+                                <SelectOption style={{ fontSize: "smaller" }} value="">구분자 선택</SelectOption>
+                            }
+                        </Select>
+                    </Stack>
                 }
-                {(delimiterSelected && !isPossibleEdit) &&
-                    <Typography variant='h5'>{item?.delimiter}</Typography>
-                }
+                {/* {(delimiterSelected && !isPossibleEdit) &&
+                    <Typography variant='body1'>{item?.delimiter}</Typography>
+                } */}
                 {(isPossibleEdit && dataType === ColDataType.NUM) &&
-                <Stack
-                    style={{
-                        flex: "0 1 30%",
-                        maxWidth: "30%",
-                    }}
-                >
-                    <TextField
-                        size="SM"
-                        type='number'
-                        placeholder="피연산자 입력"
-                        value={item?.operand1}
-                        id='operand1'
-                        onChange={onchangeInputHandler}
-                    />
-                </Stack>
+                    <Stack
+                        style={{
+                            flex: "0 1 30%",
+                            maxWidth: "30%",
+                        }}
+                    >
+                        <TextField
+                            size="SM"
+                            type='number'
+                            placeholder="피연산자 입력"
+                            value={item?.operand1}
+                            id='operand1'
+                            onChange={onchangeInputHandler}
+                        />
+                    </Stack>
                 }
                 {(isPossibleEdit && dataType === ColDataType.STR) &&
-                <Stack
-                    style={{
-                        flex: "0 1 30%",
-                        maxWidth: "30%",
-                    }}
-                >
-                    <TextField
-                        size="SM"
-                        placeholder="피연산자 입력"
-                        value={item?.operand1}
-                        id='operand1'
-                        onChange={onchangeInputHandler}
-                    />
-                </Stack>
+                    <Stack
+                        style={{
+                            flex: "0 1 30%",
+                            maxWidth: "30%",
+                        }}
+                    >
+                        <TextField
+                            size="SM"
+                            placeholder="피연산자 입력"
+                            value={item?.operand1}
+                            id='operand1'
+                            onChange={onchangeInputHandler}
+                        />
+                    </Stack>
+                }
+                {(!isPossibleEdit && (dataType === ColDataType.STR || dataType === ColDataType.NUM)) &&
+                    <Typography variant='body1'>{item?.operand1}</Typography>
+                    // <Stack
+                    //     style={{
+                    //         flex: "0 1 30%",
+                    //         maxWidth: "30%",
+                    //     }}
+                    // >
+                    // </Stack>
                 }
                 {(
                     isPossibleEdit
@@ -273,41 +289,41 @@ const OperatorOperand = ({
                             </Select>
                         </Stack>
                         {item?.operand1 === "date" &&
-                        <Stack
-                            style={{
-                                flex: "0 1 25%",
-                                maxWidth: "25%",
-                            }}
-                        >
-                            <DatePicker
-                                value={oprd2DpValue}
-                                appearance="Outline"
-                                calendarViewMode="days"
-                                mode="single"
-                                shape="Square"
-                                size="SM"
-                                popupOptionWhenPopup='fixed'
-                                onThisDayClick={[
-                                    () => {
-                                        let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
-                                        setOprd2DpValue(today)
-                                        onChangeDatePickerHandler("operand2", today)
-                                    },
-                                    true
-                                ]}
-                                onChange={(e) => { e.target.value = "" }}
-                                onValueChange={(nextVal) => {
-                                    //operand2
-                                    setOprd2DpValue(nextVal)
-                                    onChangeDatePickerHandler("operand2", nextVal)
-                                    /*
-                                    setSearch((prevState: SearchProps) => {
-                                        let rtn = cloneDeep(prevState)
-                                        rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                        return rtn
-                                    });
-                                    */
+                            <Stack
+                                style={{
+                                    flex: "0 1 40%",
+                                    maxWidth: "40%",
                                 }}
+                            >
+                                <DatePicker
+                                    value={oprd2DpValue}
+                                    appearance="Outline"
+                                    calendarViewMode="days"
+                                    mode="single"
+                                    shape="Square"
+                                    size="SM"
+                                    popupOptionWhenPopup='fixed'
+                                    onThisDayClick={[
+                                        () => {
+                                            let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                            setOprd2DpValue(today)
+                                            onChangeDatePickerHandler("operand2", today)
+                                        },
+                                        true
+                                    ]}
+                                    onChange={(e) => { e.target.value = "" }}
+                                    onValueChange={(nextVal) => {
+                                        //operand2
+                                        setOprd2DpValue(nextVal)
+                                        onChangeDatePickerHandler("operand2", nextVal)
+                                        /*
+                                        setSearch((prevState: SearchProps) => {
+                                            let rtn = cloneDeep(prevState)
+                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                            return rtn
+                                        });
+                                        */
+                                    }}
                                 // placeholderText='날짜 선택'
                                 // value={oprd2DpValue}
                                 // onChange={(date) => {
@@ -315,56 +331,91 @@ const OperatorOperand = ({
                                 //     setOprd2DpValue(d)
                                 //     onChangeDatePickerHandler("operand2", d)
                                 // }}
-                            />
-                        </Stack>
+                                />
+                            </Stack>
                         }
                         {item?.operand1 === "now" &&
-                        <Stack
-                            gap="MD"
-                            style={{
-                                flex: "0 1 75%",
-                                maxWidth: "75%",
-                            }}
-                        >
-                            <TextField
-                                size="SM"
-                                readOnly
-                                value="now"
-                            />
-                            <TextField
-                                size="SM"
-                                type='number'
-                                placeholder='피연산자 입력'
-                                value={item?.operand2}
-                                id="operand2"
-                                onChange={onchangeInputHandler}
-                            />
-                            <Select
-                                placeholder='기간 단위'
-                                appearance="Outline"
-                                value={item?.operand3}
-                                shape="Square"
-                                size="SM"
-                                status="default"
+                            <Stack
+                                gap="MD"
                                 style={{
-                                    width: '11.25rem'
-                                }}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    // 기간 단위
-                                    onchangeSelectHandler(e, value, "operand3")
+                                    flex: "0 1 75%",
+                                    maxWidth: "75%",
                                 }}
                             >
-                                {tsDateFormatOption.map((item, index) => (
-                                    <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                                ))}
-                                {tsDateFormatOption.length < 1 &&
-                                    <SelectOption style={{ fontSize: "smaller" }} value="">선택</SelectOption>
-                                }
-                            </Select>
-                        </Stack>
+                                <TextField
+                                    size="SM"
+                                    readOnly
+                                    value="now"
+                                />
+                                <TextField
+                                    size="SM"
+                                    type='number'
+                                    placeholder='피연산자 입력'
+                                    value={item?.operand2}
+                                    id="operand2"
+                                    onChange={onchangeInputHandler}
+                                />
+                                <Select
+                                    placeholder='기간 단위'
+                                    appearance="Outline"
+                                    value={item?.operand3}
+                                    shape="Square"
+                                    size="SM"
+                                    status="default"
+                                    style={{
+                                        width: '11.25rem'
+                                    }}
+                                    onChange={(
+                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                        value: SelectValue<{}, false>
+                                    ) => {
+                                        // 기간 단위
+                                        onchangeSelectHandler(e, value, "operand3")
+                                    }}
+                                >
+                                    {tsDateFormatOption.map((item, index) => (
+                                        <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                    ))}
+                                    {tsDateFormatOption.length < 1 &&
+                                        <SelectOption style={{ fontSize: "smaller" }} value="">선택</SelectOption>
+                                    }
+                                </Select>
+                            </Stack>
+                        }
+                    </>
+                }
+                {(
+                    !isPossibleEdit
+                    && dataType === ColDataType.TIME
+                    && (slctDateType === "before" || slctDateType === "after")
+                ) &&
+                    <>
+                        {item?.operand1 === "now" &&
+                            <Typography variant='body1'>now</Typography>
+                        }
+                        {item?.operand1 === "date" &&
+                            <Stack
+                                style={{
+                                    flex: "0 1 40%",
+                                    maxWidth: "40%",
+                                }}
+                            >
+                                <Typography variant='body1'>{item?.operand2}</Typography>
+                            </Stack>
+                        }
+                        {item?.operand1 === "now" &&
+                            <Stack
+                                gap="MD"
+                                style={{
+                                    flex: "0 1 75%",
+                                    maxWidth: "75%",
+                                }}
+                            >
+                                <Typography variant='body1'>{item?.operand2}</Typography>
+                                <Typography variant='body1'>
+                                    {tsDateFormatOption.find((option) => item?.operand3 === option.cdv)?.cdvNm}
+                                </Typography>
+                            </Stack>
                         }
                     </>
                 }
@@ -387,7 +438,7 @@ const OperatorOperand = ({
                             justifyContent="Start"
                             gap="SM"
                         >
-                            <Typography style={{minWidth: "8%", fontSize: "0.75rem"}} variant='h5'>From</Typography>
+                            <Typography style={{ minWidth: "8%", fontSize: "0.75rem" }} variant='h5'>From</Typography>
                             <Stack
                                 style={{
                                     flex: "0 1 30%",
@@ -416,42 +467,42 @@ const OperatorOperand = ({
                                 </Select>
                             </Stack>
                             {item?.operand1 === "date" &&
-                            <Stack
-                                style={{
-                                    flex: "0 1 40%",
-                                    maxWidth: "40%",
-                                }}
-                            >   
-                                <DatePicker
-                                    value={oprd2DpValue}
-                                    appearance="Outline"
-                                    calendarViewMode="days"
-                                    mode="single"
-                                    shape="Square"
-                                    size="SM"
-                                    popupOptionWhenPopup='fixed'
-                                    onThisDayClick={[
-                                        () => {
-                                            let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
-                                            setOprd2DpValue(today)
-                                            onChangeDatePickerHandler("operand2", today)
-                                        },
-                                        true
-                                    ]}
-                                    onChange={(e) => { e.target.value = "" }}
-                                    onValueChange={(nextVal) => {
-                                        //operand2
-                                        setOprd2DpValue(nextVal)
-                                        onChangeDatePickerHandler("operand2", nextVal)
-                                        /*
-                                        setRequestDateFrom(nextVal)
-                                        setSearch((prevState: SearchProps) => {
-                                            let rtn = cloneDeep(prevState)
-                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                            return rtn
-                                        });
-                                        */
+                                <Stack
+                                    style={{
+                                        flex: "0 1 40%",
+                                        maxWidth: "40%",
                                     }}
+                                >
+                                    <DatePicker
+                                        value={oprd2DpValue}
+                                        appearance="Outline"
+                                        calendarViewMode="days"
+                                        mode="single"
+                                        shape="Square"
+                                        size="SM"
+                                        popupOptionWhenPopup='fixed'
+                                        onThisDayClick={[
+                                            () => {
+                                                let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                                setOprd2DpValue(today)
+                                                onChangeDatePickerHandler("operand2", today)
+                                            },
+                                            true
+                                        ]}
+                                        onChange={(e) => { e.target.value = "" }}
+                                        onValueChange={(nextVal) => {
+                                            //operand2
+                                            setOprd2DpValue(nextVal)
+                                            onChangeDatePickerHandler("operand2", nextVal)
+                                            /*
+                                            setRequestDateFrom(nextVal)
+                                            setSearch((prevState: SearchProps) => {
+                                                let rtn = cloneDeep(prevState)
+                                                rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                                return rtn
+                                            });
+                                            */
+                                        }}
                                     // placeholderText='날짜 선택'
                                     // value={oprd2DpValue}
                                     // onChange={(date) => {
@@ -459,18 +510,18 @@ const OperatorOperand = ({
                                     //     setOprd2DpValue(d)
                                     //     onChangeDatePickerHandler("operand2", d)
                                     // }}
-                                />
-                            </Stack>
+                                    />
+                                </Stack>
                             }
                             {item?.operand1 === "now" &&
-                            <Stack
-                                gap="MD"
-                                style={{
-                                    flex: "0 1 80%",
-                                    maxWidth: "80%",
-                                    display: "inline-flex"
-                                }}
-                            >
+                                <Stack
+                                    gap="MD"
+                                    style={{
+                                        flex: "0 1 80%",
+                                        maxWidth: "80%",
+                                        display: "inline-flex"
+                                    }}
+                                >
                                     <TextField
                                         size="SM"
                                         readOnly
@@ -517,7 +568,7 @@ const OperatorOperand = ({
                             gap="SM"
                             className="width-100"
                         >
-                            <Typography style={{minWidth: "8%", fontSize: "0.75rem"}} variant='h5'>To</Typography>
+                            <Typography style={{ minWidth: "8%", fontSize: "0.75rem" }} variant='h5'>To</Typography>
                             <Stack
                                 style={{
                                     flex: "0 1 30%",
@@ -546,42 +597,42 @@ const OperatorOperand = ({
                                 </Select>
                             </Stack>
                             {item?.operand4 === "date" &&
-                            <Stack
-                                style={{
-                                    flex: "0 1 40%",
-                                    maxWidth: "40%",
-                                }}
-                            >
-                                <DatePicker
-                                    value={oprd5DpValue}
-                                    appearance="Outline"
-                                    calendarViewMode="days"
-                                    mode="single"
-                                    shape="Square"
-                                    size="SM"
-                                    popupOptionWhenPopup='fixed'
-                                    onThisDayClick={[
-                                        () => {
-                                            let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
-                                            setOprd5DpValue(today)
-                                            onChangeDatePickerHandler("operand5", today)
-                                        },
-                                        true
-                                    ]}
-                                    onChange={(e) => { e.target.value = "" }}
-                                    onValueChange={(nextVal) => {
-                                        //operand5
-                                        setOprd5DpValue(nextVal)
-                                        onChangeDatePickerHandler("operand5", nextVal)
-                                        /*
-                                        setRequestDateFrom(nextVal)
-                                        setSearch((prevState: SearchProps) => {
-                                            let rtn = cloneDeep(prevState)
-                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                            return rtn
-                                        });
-                                        */
+                                <Stack
+                                    style={{
+                                        flex: "0 1 40%",
+                                        maxWidth: "40%",
                                     }}
+                                >
+                                    <DatePicker
+                                        value={oprd5DpValue}
+                                        appearance="Outline"
+                                        calendarViewMode="days"
+                                        mode="single"
+                                        shape="Square"
+                                        size="SM"
+                                        popupOptionWhenPopup='fixed'
+                                        onThisDayClick={[
+                                            () => {
+                                                let today = getDateFormat(new Date().toString(), "YYYY-MM-DD")
+                                                setOprd5DpValue(today)
+                                                onChangeDatePickerHandler("operand5", today)
+                                            },
+                                            true
+                                        ]}
+                                        onChange={(e) => { e.target.value = "" }}
+                                        onValueChange={(nextVal) => {
+                                            //operand5
+                                            setOprd5DpValue(nextVal)
+                                            onChangeDatePickerHandler("operand5", nextVal)
+                                            /*
+                                            setRequestDateFrom(nextVal)
+                                            setSearch((prevState: SearchProps) => {
+                                                let rtn = cloneDeep(prevState)
+                                                rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
+                                                return rtn
+                                            });
+                                            */
+                                        }}
                                     // placeholderText='날짜 선택'
                                     // value={oprd5DpValue}
                                     // onChange={(date) => {
@@ -589,62 +640,132 @@ const OperatorOperand = ({
                                     //     setOprd5DpValue(d)
                                     //     onChangeDatePickerHandler("operand5", d)
                                     // }}
-                                />
-                            </Stack>
+                                    />
+                                </Stack>
                             }
                             {item?.operand4 === "now" &&
-                            <Stack
-                                gap="MD"
-                                style={{
-                                    flex: "0 1 80%",
-                                    maxWidth: "80%",
-                                    display: "inline-flex"
-                                }}
-                            >
-                                <TextField
-                                    size="SM"
-                                    readOnly
-                                    value="now"
-                                />
-                                <TextField
-                                    className='width-100'
-                                    size="SM"
-                                    type='number'
-                                    placeholder='피연산자 입력'
-                                    value={item?.operand5}
-                                    id="operand5"
-                                    onChange={onchangeInputHandler}
-                                />
-                                <Select
-                                    className='width-100'
-                                    placeholder='기간 단위'
-                                    appearance="Outline"
-                                    value={item?.operand6}
-                                    shape="Square"
-                                    size="SM"
-                                    status="default"
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // 기간 단위
-                                        onchangeSelectHandler(e, value, "operand6")
+                                <Stack
+                                    gap="MD"
+                                    style={{
+                                        flex: "0 1 80%",
+                                        maxWidth: "80%",
+                                        display: "inline-flex"
                                     }}
                                 >
-                                    {tsDateFormatOption.map((item, index) => (
-                                        <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
-                                    ))}
-                                    {tsDateFormatOption.length < 1 &&
-                                        <SelectOption style={{ fontSize: "smaller" }} value="">선택</SelectOption>
-                                    }
-                                </Select>
-                            </Stack>
+                                    <TextField
+                                        size="SM"
+                                        readOnly
+                                        value="now"
+                                    />
+                                    <TextField
+                                        className='width-100'
+                                        size="SM"
+                                        type='number'
+                                        placeholder='피연산자 입력'
+                                        value={item?.operand5}
+                                        id="operand5"
+                                        onChange={onchangeInputHandler}
+                                    />
+                                    <Select
+                                        className='width-100'
+                                        placeholder='기간 단위'
+                                        appearance="Outline"
+                                        value={item?.operand6}
+                                        shape="Square"
+                                        size="SM"
+                                        status="default"
+                                        onChange={(
+                                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                            value: SelectValue<{}, false>
+                                        ) => {
+                                            // 기간 단위
+                                            onchangeSelectHandler(e, value, "operand6")
+                                        }}
+                                    >
+                                        {tsDateFormatOption.map((item, index) => (
+                                            <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                        ))}
+                                        {tsDateFormatOption.length < 1 &&
+                                            <SelectOption style={{ fontSize: "smaller" }} value="">선택</SelectOption>
+                                        }
+                                    </Select>
+                                </Stack>
                             }
                         </Stack>
                     </Stack>
                 }
-                {!isPossibleEdit &&
-                    <Typography variant='h5'>{item?.operand1}</Typography>
+                {(
+                    !isPossibleEdit
+                    && dataType === ColDataType.TIME
+                    && (slctDateType === "between")
+                ) &&
+                    <Stack
+                        direction="Vertical"
+                        justifyContent="Start"
+                        gap="SM"
+                        className="width-100"
+                        style={{
+                            display: "inline-flex"
+                        }}
+                    >
+                        <Stack
+                            direction="Horizontal"
+                            justifyContent="Start"
+                            gap="SM"
+                        >
+                            <Stack
+                                style={{
+                                    flex: "0 1 7%",
+                                    maxWidth: "7%",
+                                }}
+                            >
+                                <Typography variant='body1'>From</Typography>
+                            </Stack>
+                            {item?.operand1 === "date" &&
+                                <Typography variant='body1'>{item?.operand2}</Typography>
+                            }
+                            {item?.operand1 === "now" &&
+                                <Stack
+                                    gap="MD"
+                                >
+                                    <Typography variant='body1'>now</Typography>
+                                    <Typography variant='body1'>{item?.operand2}</Typography>
+                                    <Typography variant='body1'>
+                                        {tsDateFormatOption.find((option) => item?.operand3 === option.cdv)?.cdvNm}
+                                    </Typography>
+                                </Stack>
+                            }
+                        </Stack>
+                        <Stack
+                            direction="Horizontal"
+                            justifyContent="Start"
+                            gap="SM"
+                            className="width-100"
+                        >
+                            <Stack
+                                style={{
+                                    flex: "0 1 7%",
+                                    maxWidth: "7%",
+                                }}
+                            >
+                                <Typography variant='body1'>To</Typography>
+                            </Stack>
+                            {item?.operand4 === "date" &&
+                                <Typography variant='body1'>{item?.operand5}</Typography>
+                            }
+                            {item?.operand4 === "now" &&
+                                <Stack
+                                    gap="MD"
+                                >
+                                    <Typography variant='body1'>now</Typography>
+                                    <Typography variant='body1'>{item?.operand5}</Typography>
+                                    <Typography variant='body1'>
+                                        {tsDateFormatOption.find((option) => item?.operand6 === option.cdv)?.cdvNm}
+                                    </Typography>
+                                </Stack>
+                            }
+                        </Stack>
+                    </Stack>
                 }
             </Stack>
         </>

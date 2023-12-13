@@ -29,6 +29,7 @@ import { SelectValue } from '@mui/base/useSelect';
 import { useNavigate } from 'react-router-dom';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
+import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -80,7 +81,6 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       metaTblClmnDesc: '',
     },
   ]);
-
   const {
     data: uResponse,
     isSuccess: uIsSuccess,
@@ -257,6 +257,54 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
 
   // 수정 버튼
   const editCustomerDetailInfo = (data: any) => {
+    const validationTool = (check: string) => {
+      if (check.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '') return true;
+      else return false;
+    };
+
+    // 유효성 검사
+    const validation = () => {
+      let checkValidation = '';
+      let searchError = false;
+
+      if (validationTool(tbCoMetaTbInfo.dbNm)) checkValidation = '데이터베이스명을 입력해주세요';
+      else if (validationTool(tbCoMetaTbInfo.metaTblPhysNm)) checkValidation = '테이블 물리명을 입력해주세요';
+      else if (validationTool(tbCoMetaTbInfo.metaTblLogiNm)) checkValidation = '테이블 논리명을 입력해주세요';
+      else if (validationTool(tbCoMetaTbInfo.metaTblDesc)) checkValidation = '테이블설명을 입력해주세요';
+      else if (validationTool(tbCoMetaTbInfo.metaTblDvCd)) checkValidation = '메타테이블구분을 입력해주세요';
+      else if (validationTool(tbCoMetaTbInfo.metaTblUseYn)) checkValidation = '사용여부을 입력해주세요';
+      else if (validationTool(tbCoMetaTbInfo.rtmTblYn)) checkValidation = '실시간여부을 입력해주세요';
+      else if (!tbCoMetaTblClmnInfoList.find((e) => e.clmnUseYn === 'Y'))
+        checkValidation = '사용여부가 1개이상 체크되어야 합니다.';
+      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.pkYn === 'Y'))
+        checkValidation = '사용여부가 Y인 것중 Key 여부를 하나 선택해주세요';
+      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.baseTimeYn === 'Y'))
+        checkValidation = '사용여부가 Y인 것중 수집 기준 시간 여부를 하나 선택해주세요';
+      else if (tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.metaTblClmnLogiNm === '')) {
+        checkValidation = '사용여부가 Y인 경우 논리명을 입력해주세요';
+      } else if (
+        tbCoMetaTblClmnInfoList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ('' || 'null' || null))
+      )
+        checkValidation = '변경 데이터 타입을 입력해주세요.';
+      else if (
+        tbCoMetaTblClmnInfoList
+          .filter((e) => e.changeYn === 'Y')
+          .filter((e) => e.chgDtpCd === 'timestamp')
+          .find((e) => e.dataFormat === ('' || null || 'null'))
+      )
+        checkValidation = '변경 데이터 형식을 입력해주세요.';
+      if (checkValidation !== '') {
+        toast({
+          type: 'Error',
+          content: checkValidation,
+        });
+        searchError = true;
+      }
+
+      return searchError;
+    };
+
+    if (validation()) return;
     setTbCoMetaTblClmnInfoListPost(() => {
       const updatedRows = tbCoMetaTblClmnInfoList.map((row) => {
         const { isNullable, remarks, dataType, ...rest } = row;
@@ -426,7 +474,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                             return (
                               <TextField
                                 key={`row-logiNm-${rowIndex}`}
-                                id={`${columns[columnIndex].field}-${rowIndex}`}
+                                id={`${columns[columnIndex].field}`}
                                 onChange={(e) => onChangeHandler(e, rowIndex)}
                                 value={row[columns[columnIndex].field]}
                               />
@@ -459,9 +507,9 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                               columns[columnIndex].maxLength
                             );
                           } else {
-                            if (row.chgDtpCd && row.changeYn !== 'Y') {
+                            if (row.chgDtpCd && !row.changeYn) {
                               return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
-                            } else if (row.changeYn === 'Y') {
+                            } else if (row.changeYn === 'Y' && row.baseTimeYn !== 'Y') {
                               return (
                                 <Select
                                   id="chgDtpCd"
@@ -479,6 +527,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                                   <SelectOption value={'double'}>double</SelectOption>
                                 </Select>
                               );
+                            } else {
+                              return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
                             }
                           }
                         })()}

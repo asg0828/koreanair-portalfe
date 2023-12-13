@@ -59,7 +59,6 @@ const SelfFeature = () => {
 	const [isOpenFeatPrntChldModal, setIsOpenFeatPrntChldModal] = useState<boolean>(false)
 	// session 값 setting
 	useEffect(() => {
-		console.log(sessionInfo)
 		if (!sessionInfo.deptCode) return
 		setSearchInfo({ ...searchInfo, ["team"]: sessionInfo.deptCode, })
 		setInitFeatListCall(true)

@@ -81,6 +81,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     data: response,
     isSuccess: isSuccess,
     isError: isError,
+
     mutate,
   } = useCreateMetaTableInfo(props, tbCoMetaTblClmnInfoListPost);
   const { data: responseTime, isError: isErrorTime, refetch: refetchTime } = useCommCodes(CommonCode.FORMAT);
@@ -126,7 +127,14 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   useEffect(() => {
     setTbCoMetaTblClmnInfoList(() => {
       const updatedRows: RowsInfo[] = rows.map((row, index) => {
-        return { ...row, clmnUseYn: 'Y', metaTblClmnLogiNm: row.remarks ? row.remarks : '', metaTblClmnDesc: '' };
+        return {
+          ...row,
+          clmnUseYn: 'Y',
+          metaTblClmnLogiNm: row.remarks ? row.remarks : '',
+          metaTblClmnDesc: '',
+          chgDtpCd: '',
+          dataFormat: '',
+        };
       });
 
       return updatedRows;
@@ -265,7 +273,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
       if (check.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '') return true;
       else return false;
     };
-    console.log(!tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.pkYn === 'Y'));
+
     // 유효성 검사
     const validation = () => {
       let checkValidation = '';
@@ -284,15 +292,17 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         checkValidation = '사용여부가 Y인 것중 Key 여부를 하나 선택해주세요';
       else if (!tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.baseTimeYn === 'Y'))
         checkValidation = '사용여부가 Y인 것중 수집 기준 시간 여부를 하나 선택해주세요';
-      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.pkYn === 'Y').find((e) => e.metaTblLogiNm === ''))
+      else if (tbCoMetaTblClmnInfoList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.metaTblClmnLogiNm === '')) {
         checkValidation = '사용여부가 Y인 경우 논리명을 입력해주세요';
-      else if (!tbCoMetaTblClmnInfoList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ''))
+      } else if (
+        tbCoMetaTblClmnInfoList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ('' || 'null' || null))
+      )
         checkValidation = '변경 데이터 타입을 입력해주세요.';
       else if (
-        !tbCoMetaTblClmnInfoList
+        tbCoMetaTblClmnInfoList
           .filter((e) => e.changeYn === 'Y')
-          .filter((e) => e.chgDtpCd === 'timeStamp')
-          .find((e) => e.dataFormat === '')
+          .filter((e) => e.chgDtpCd === 'timestamp')
+          .find((e) => e.dataFormat === ('' || null || 'null'))
       )
         checkValidation = '변경 데이터 형식을 입력해주세요.';
       if (checkValidation !== '') {
@@ -337,20 +347,23 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
 
   // 목록 버튼
   const goToList = () => {
-    if (rows !== tbCoMetaTblClmnInfoList) {
+    if (tbCoMetaTblClmnInfoList.length !== 0) {
       setOpen(true);
     } else {
       navigate('..');
     }
   };
+
+  // 등록 useEffect
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
+      console.log(response?.message);
       toast({
         type: 'Error',
-        content: '등록 중 에러가 발생했습니다.',
+        content: response?.message,
       });
     } else {
-      if (response?.result) {
+      if (isSuccess) {
         navigate('..');
         toast({
           type: 'Confirm',
@@ -471,7 +484,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                     return (
                       <TD
                         className="verticalTableTD"
-                        key={`column-${columnIndex}`}
+                        key={`column-${columnIndex}-${rowIndex}`}
                         colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
                         align={columns[columnIndex].align ? columns[columnIndex].align : AlignCode.CENTER}
                         onClick={() => handleClick(row, rowIndex)}
@@ -487,7 +500,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                             return (
                               <TextField
                                 key={`row-logiNm-${rowIndex}`}
-                                id={`${columns[columnIndex].field}-${rowIndex}`}
+                                id={`${columns[columnIndex].field}`}
                                 onChange={(e) => onChangeHandler(e, rowIndex)}
                                 value={
                                   columns[columnIndex].field === 'metaTblClmnLogiNm'
@@ -622,24 +635,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
           목록
         </Button>
       </Stack>
-      <Modal open={isOpenValidation} onClose={() => setOpenValidation(false)}>
-        <Modal.Header>오류</Modal.Header>
-        <Modal.Body>입력값이 부족합니다.</Modal.Body>
-        <Modal.Footer>
-          <Button priority="Primary" appearance="Contained" onClick={() => {}}>
-            확인
-          </Button>
-          <Button
-            priority="Normal"
-            appearance="Outline"
-            onClick={() => {
-              setOpenValidation(false);
-            }}
-          >
-            취소
-          </Button>
-        </Modal.Footer>
-      </Modal>
+
       <Modal open={isOpen} onClose={() => setOpen(false)}>
         <Modal.Header>오류</Modal.Header>
         <Modal.Body>작성중인 Data가 있습니다. 작성을 취소하고 이동하시겠습니까? </Modal.Body>

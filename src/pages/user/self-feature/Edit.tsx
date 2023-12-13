@@ -52,14 +52,11 @@ import {
 	initFeatureTemp,
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
+	initCustFeatureFormDataSql,
 } from './data'
-import { Method } from "@/utils/ApiUtil";
 import {
 	SubFeatStatus,
 	SelfFeatPgPpNm,
-	initConfig,
-	initApiRequest,
-	initCommonResponse,
 	ModalType,
 	ModalTitCont,
 //	ColDataType,
@@ -82,11 +79,6 @@ import { getFeatureSeList } from "@/api/FeatureAPI";
 //import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
 import { useUpdateCustFeatRule, useUpdateCustFeatSQL } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
-
-const calcUnit = [
-	{ value: '횟수', text: '횟수' },
-	{ value: '2', text: '명' },
-]
 
 const SelfFeatureEdit = () => {
 
@@ -403,8 +395,10 @@ const SelfFeatureEdit = () => {
 			})
 			return
 		}
-		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
+		let param: any = cloneDeep(initCustFeatureFormData)
 		param.customerFeature = updtFeatureInfo
+		delete param.customerFeature.tbRsCustFeatRuleCaseList
+		delete param.customerFeature.tbRsCustFeatRuleSql
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
 		let validRslt = validationCustReatRule(param)
@@ -423,7 +417,7 @@ const SelfFeatureEdit = () => {
 		if (updtRuleDesignErr || updtRuleDesignRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
-				content: '수정 중 에러가 발생했습니다.',
+				content: updtRuleDesignRes?.message ? updtRuleDesignRes?.message : '수정 중 에러가 발생했습니다.',
 			})
 		} else if (updtRuleDesignSucc) {
 			toast({
@@ -438,8 +432,12 @@ const SelfFeatureEdit = () => {
 	}, [updtRuleDesignRes, updtRuleDesignSucc, updtRuleDesignErr, toast])
 	// 수정 API 호출(SQL)
 	const updateCustFeatSQL = () => {
-		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
-		param.customerFeature = updtFeatureInfo
+		let param: any = cloneDeep(initCustFeatureFormDataSql)
+		param.customerFeatureSql = updtFeatureInfo
+		delete param.customerFeatureSql.tbRsCustFeatRuleCalc
+		delete param.customerFeatureSql.tbRsCustFeatRuleCaseList
+		delete param.customerFeatureSql.tbRsCustFeatRuleTrgtList
+		delete param.customerFeatureSql.tbRsCustFeatRuleTrgtFilterList
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
 		let validRslt = validationCustReatRule(param)
@@ -458,7 +456,7 @@ const SelfFeatureEdit = () => {
 		if (updtSQLErr || updtSQLRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
-				content: '수정 중 에러가 발생했습니다.',
+				content: updtSQLRes?.message ? updtSQLRes?.message : '수정 중 에러가 발생했습니다.',
 			})
 		} else if (updtSQLSucc) {
 			toast({
@@ -573,6 +571,16 @@ const SelfFeatureEdit = () => {
 		// 대구분 선택시 중구분 select ooption Group Id setting
 		if (keyNm === "featureSeGrp") {
 			setSeGrpId(v)
+			setFeatureTempInfo((state: FeatureTemp) => {
+				let rtn = cloneDeep(state)
+				Object.keys(rtn).map((key) => {
+					if (key === "featureSe") {
+						rtn[key] = ""
+					}
+					return key
+				})
+				return rtn
+			})
 		}
 	}
 	// 페이지 이동
@@ -613,7 +621,7 @@ const SelfFeatureEdit = () => {
 				<Typography variant="h4">Feature 기본 정보</Typography>
 				<HorizontalTable>
 					<TR>
-						<TH colSpan={1} align="center">대구분</TH>
+						<TH colSpan={1} align="center" required>대구분</TH>
 						<TD colSpan={3}>
 							<Select
 								value={seGrpId}
@@ -632,7 +640,7 @@ const SelfFeatureEdit = () => {
 								))}
 							</Select>
 						</TD>
-						<TH colSpan={1} align="center">중구분</TH>
+						<TH colSpan={1} align="center" required>중구분</TH>
 						<TD colSpan={3}>
 							<Select
 								defaultValue={location.state?.featureInfo.featureTemp.featureSe}
@@ -684,7 +692,7 @@ const SelfFeatureEdit = () => {
 						</TD>
 					</TR> */}
 					<TR>
-						<TH colSpan={1} align="center">한글명</TH>
+						<TH colSpan={1} align="center" required>한글명</TH>
 						<TD colSpan={3}>
 							<TextField
 								className="width-100"
@@ -694,7 +702,7 @@ const SelfFeatureEdit = () => {
 								onChange={onchangeInputHandler}
 							/>
 						</TD>
-						<TH colSpan={1} align="center">영문명</TH>
+						<TH colSpan={1} align="center" required>영문명</TH>
 						<TD colSpan={3}>
 							<TextField
 								className="width-100"
@@ -706,7 +714,7 @@ const SelfFeatureEdit = () => {
 						</TD>
 					</TR>
 					<TR>
-						<TH colSpan={1} align="center">Feature 정의</TH>
+						<TH colSpan={1} align="center" required>Feature 정의</TH>
 						<TD colSpan={7}>
 							<TextField
 								className="width-100"
@@ -747,7 +755,7 @@ const SelfFeatureEdit = () => {
 						</TD>
 					</TR>
 					<TR>
-						<TH colSpan={1} align="center">산출 로직</TH>
+						<TH colSpan={1} align="center" required>산출 로직</TH>
 						<TD colSpan={7}>
 							<TextField
 								style={{

@@ -298,6 +298,13 @@ export interface CustFeatureFormData {
         approvals: Array<SfSubmissionApproval>
     }
 }
+export interface CustFeatureFormDataSql {
+    customerFeatureSql: FeatureInfo
+    submissionInfo: {
+        submission: SfSubmissionRequestInfo
+        approvals: Array<SfSubmissionApproval>
+    }
+}
 
 //Required: tbRsCustFeatRule,tbRsCustFeatRuleCalc
 export interface FeatureInfo {
@@ -310,7 +317,7 @@ export interface FeatureInfo {
     //대상선택정보
     tbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt>,
     tbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>,
-    //tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase>,
+    tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase>,
     featureTemp: FeatureTemp,
     tbRsCustFeatRuleSql: TbRsCustFeatRuleSql,
 }

@@ -687,12 +687,12 @@ const SelfFeatureDetail = () => {
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
 					</Button>
-					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
+					{/* <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
 						삭제
 					</Button>
 					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
 						수정
-					</Button>
+					</Button> */}
 					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_CANCEL)}>
 						요청 취소
 					</Button>
@@ -725,6 +725,9 @@ const SelfFeatureDetail = () => {
 				<Stack justifyContent="End" gap="SM" className="width-100">
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
+					</Button>
+					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
+						삭제
 					</Button>
 					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
 						수정

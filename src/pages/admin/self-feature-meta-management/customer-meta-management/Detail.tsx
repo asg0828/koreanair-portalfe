@@ -110,33 +110,6 @@ const CustomerMetaManagementDetail = () => {
                 id="metaTblDesc"
               />
             </TD>
-            {tbCoMetaTbInfo.rtmTblYn === 'Y' ? (
-              <>
-                <TH align="right" colSpan={0.2004}>
-                  Topic
-                </TH>
-                <TD colSpan={0.416}>
-                  <Select
-                    id="metaTblDvCd"
-                    appearance="Outline"
-                    placeholder="전체"
-                    className="width-100"
-                    value={tbCoMetaTbInfo.metaTblDvCd}
-                    onChange={(
-                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                      value: SelectValue<{}, false>
-                    ) => {
-                      onchangeSelectHandler(e, value, 'metaTblDvCd');
-                    }}
-                  >
-                    <SelectOption value={'ATTR'}>??</SelectOption>
-                    <SelectOption value={'BEHV'}>???</SelectOption>
-                  </Select>
-                </TD>
-              </>
-            ) : (
-              <></>
-            )}
           </TR>
           <TR>
             <TH colSpan={0.11} align="right">
@@ -200,7 +173,6 @@ const CustomerMetaManagementDetail = () => {
                 }}
               >
                 <SelectOption value={'N'}>NO</SelectOption>
-                <SelectOption value={'Y'}>YES</SelectOption>
               </Select>
             </TD>
           </TR>
