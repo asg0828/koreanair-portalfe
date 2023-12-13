@@ -357,10 +357,10 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   // 등록 useEffect
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
-      console.log(response);
+      console.log(response?.message);
       toast({
         type: 'Error',
-        content: '등록 중 에러가 발생했습니다.',
+        content: response?.message,
       });
     } else {
       if (isSuccess) {

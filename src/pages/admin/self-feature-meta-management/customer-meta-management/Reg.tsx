@@ -75,9 +75,6 @@ const CustomerMetaManagementReg = () => {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    console.log(value);
-    console.log(id);
-    console.log(searchInfo.dbNm);
     if (value !== null && id === 'metaTblPhysNm' && searchInfo.metaTblPhysNm !== 'null') {
       dispatch(
         openModal({

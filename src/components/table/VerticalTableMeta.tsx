@@ -360,7 +360,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       navigate('..');
     }
   };
-  console.log(tbCoMetaTblClmnInfoList);
+
   // 수정 후 페이지 이동
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {
@@ -509,7 +509,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                           } else {
                             if (row.chgDtpCd && !row.changeYn) {
                               return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
-                            } else if (row.changeYn === 'Y') {
+                            } else if (row.changeYn === 'Y' && row.baseTimeYn !== 'Y') {
                               return (
                                 <Select
                                   id="chgDtpCd"
@@ -527,6 +527,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                                   <SelectOption value={'double'}>double</SelectOption>
                                 </Select>
                               );
+                            } else {
+                              return <Typography variant="h5">{row[columns[columnIndex].field]} </Typography>;
                             }
                           }
                         })()}

@@ -153,35 +153,11 @@ const CustomerMetaManagement = () => {
       })
     );
   };
-
   return (
     <>
       <SearchForm onSearch={handleSearch} onClear={onClear}>
         <HorizontalTable>
           <TR>
-            <TH colSpan={1} align="right">
-              메타구분
-            </TH>
-            <TD colSpan={3}>
-              <Select
-                appearance="Outline"
-                placeholder="전체"
-                className="width-100"
-                value={searchInfo.item}
-                onChange={(
-                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                  value: SelectValue<{}, false>
-                ) => {
-                  onchangeSelectHandler(e, value, 'item');
-                }}
-              >
-                {srchItemListOption.map((item, index) => (
-                  <SelectOption key={index} value={item.columnName}>
-                    {item.columnComment}
-                  </SelectOption>
-                ))}
-              </Select>
-            </TD>
             <TH colSpan={1} align="right">
               사용여부
             </TH>
@@ -206,8 +182,29 @@ const CustomerMetaManagement = () => {
               </Select>
             </TD>
             <TH colSpan={1} align="right">
-              검색어 기준
+              검색어기준
             </TH>
+            <TD colSpan={3}>
+              <Select
+                appearance="Outline"
+                placeholder="전체"
+                className="width-100"
+                value={searchInfo.item}
+                onChange={(
+                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                  value: SelectValue<{}, false>
+                ) => {
+                  onchangeSelectHandler(e, value, 'item');
+                }}
+              >
+                {srchItemListOption.map((item, index) => (
+                  <SelectOption key={index} value={item.columnName}>
+                    {item.columnComment}
+                  </SelectOption>
+                ))}
+              </Select>
+            </TD>
+
             <TD colSpan={4}>
               <TextField
                 className="width-100"
@@ -215,6 +212,7 @@ const CustomerMetaManagement = () => {
                 value={searchInfo.searchWord}
                 placeholder="검색어를 입력하세요."
                 id="searchWord"
+                disabled={searchInfo.item === ''}
               />
             </TD>
           </TR>
