@@ -27,7 +27,7 @@ import {
 	submissionStatus,
 } from "./data";
 import {
-	SelfFeatPgPpNm, SubFeatStatus, SubFeatStatusNm,
+	SelfFeatPgPpNm, SfAuthType, SubFeatStatus, SubFeatStatusNm,
 } from '@/models/selfFeature/FeatureCommon';
 import { useCustFeatRules } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { ValidType } from "@/models/common/Constants";
@@ -59,6 +59,7 @@ const SelfFeature = () => {
 	const [isOpenFeatPrntChldModal, setIsOpenFeatPrntChldModal] = useState<boolean>(false)
 	// session 값 setting
 	useEffect(() => {
+		console.log(sessionInfo)
 		if (!sessionInfo.deptCode) return
 		setSearchInfo({ ...searchInfo, ["team"]: sessionInfo.deptCode, })
 		setInitFeatListCall(true)
@@ -280,10 +281,12 @@ const SelfFeature = () => {
 							신규 등록
 						</Button>
 						{/* 관리자(1차)인 경우만 노출 */}
-						<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
-						<AddIcon />
-						SQL 신규 등록
-						</Button>
+						{sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH &&
+							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
+								<AddIcon />
+								SQL 신규 등록
+							</Button>
+						}
 					</>
 				}
 			/>

@@ -79,6 +79,10 @@ export enum RuleId {
     RESOLUTION = 'RS_0020',
     MASTERPROF = 'MS_0033',
 }
+// 권한 코드
+export enum SfAuthType {
+    MGR_APRV_AUTH = 'sf_mgr_aprv_auth1' // SF 관리자
+}
 
 export const useYn = [
     { value: '', text: '선택' },

@@ -353,11 +353,11 @@ const SelfFeatureReg = () => {
 	}, [custFeatRuleCalc])
 	// 계산식 case문 formData setting
 	useEffect(() => {
-		setFeatureInfo((state: FeatureInfo) => {
-			let rtn = cloneDeep(state)
-			rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
-			return rtn
-		})
+		// setFeatureInfo((state: FeatureInfo) => {
+		// 	let rtn = cloneDeep(state)
+		// 	rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
+		// 	return rtn
+		// })
 	}, [custFeatRuleCaseList])
 	// 대상 선택 list가 없는 경우 formula reset
 	useEffect(() => {
@@ -416,6 +416,7 @@ const SelfFeatureReg = () => {
 		param.customerFeature = featureInfo
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
+		console.log(param)
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({

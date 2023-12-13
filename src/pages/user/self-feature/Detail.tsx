@@ -255,7 +255,7 @@ const SelfFeatureDetail = () => {
 		setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
 		setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
 		setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
-		setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
+		//setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
 		setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
 	}, [featureInfo])
 	// 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting

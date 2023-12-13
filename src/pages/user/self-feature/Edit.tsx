@@ -314,6 +314,9 @@ const SelfFeatureEdit = () => {
 	useEffect(() => {
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
 		if (targetList.length < 1) setIsSelectAggregateTop(false)
+		// 수정시 TOP 함수가 있는 경우 drag 영역 비노출
+		let hasTop = targetList.filter((item) => item.operator === "top" )
+		if (hasTop && hasTop.length > 0) setIsSelectAggregateTop(true)
 
 		setUpdtFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)

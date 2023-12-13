@@ -310,7 +310,7 @@ export interface FeatureInfo {
     //대상선택정보
     tbRsCustFeatRuleTrgtList: Array<TbRsCustFeatRuleTrgt>,
     tbRsCustFeatRuleTrgtFilterList: Array<TbRsCustFeatRuleTrgtFilter>,
-    tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase>,
+    //tbRsCustFeatRuleCaseList: Array<TbRsCustFeatRuleCase>,
     featureTemp: FeatureTemp,
     tbRsCustFeatRuleSql: TbRsCustFeatRuleSql,
 }

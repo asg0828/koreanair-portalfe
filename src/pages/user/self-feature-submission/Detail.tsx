@@ -250,7 +250,7 @@ const SfSubmissionRequestDetail = () => {
         setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
         setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
         setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
-        setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
+        //setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
         setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
     }, [featureInfo])
     // 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
@@ -524,6 +524,10 @@ const SfSubmissionRequestDetail = () => {
                 content: '승인 중 에러가 발생했습니다',
             })
             return
+        }
+        // 수동실행 최소 1회 실행 validation
+        if (featureInfo.tbRsCustFeatRule.batManualExecTestCnt < 1) {
+            
         }
         setUserEmail(sessionInfo.userEmail)
         let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && item.status === SubFeatStatus.REQ)
