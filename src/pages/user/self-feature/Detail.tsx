@@ -967,7 +967,43 @@ const SelfFeatureDetail = () => {
 					</TR>
 				</HorizontalTable>
 				{/* 기본 정보 */}
-
+				{/* 신청 정보 SQL 등록 */}
+				{featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
+					<Stack
+						style={{
+							marginBottom: "2%"
+						}}
+						direction="Vertical"
+						gap="MD"
+					>
+						<Typography variant="h4">신청 정보</Typography>
+						<HorizontalTable>
+							<TR>
+								<TH align="right" colSpan={1} required>
+									Feature 신청자
+								</TH>
+								<TD colSpan={2}>
+									<Stack gap="SM" className="width-100" direction="Vertical">
+										<Stack gap="SM">
+											{/* {featureInfo.featureTemp && featureInfo.featureTemp.enrUserId} */}
+											{featureInfo.featureTemp && featureInfo.featureTemp.enrUserNm}
+										</Stack>
+									</Stack>
+								</TD>
+								<TH align="right" colSpan={1}>
+									신청부서
+								</TH>
+								<TD colSpan={2}>
+									<Stack gap="SM" className="width-100" direction="Vertical">
+										{/* {featureInfo.featureTemp && featureInfo.featureTemp.enrDeptCode} */}
+										{featureInfo.featureTemp && featureInfo.featureTemp.enrDeptNm}
+									</Stack>
+								</TD>
+							</TR>
+						</HorizontalTable>
+					</Stack>
+				}
+				{/* 신청 정보 SQL 등록 */}
 				{/* Feature 로직 */}
 				<Stack
 					gap="LG"

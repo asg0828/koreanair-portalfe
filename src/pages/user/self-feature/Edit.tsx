@@ -10,6 +10,9 @@ import { cloneDeep } from 'lodash'
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { SelectValue } from '@mui/base/useSelect';
+import { ModalType, } from '@/models/common/Constants'
+import { useAppDispatch } from '@/hooks/useRedux'
+import { openModal } from '@/reducers/modalSlice'
 
 import HorizontalTable from "@/components/table/HorizontalTable"
 import CalcValid from '@/components/self-feature/CalcValid';
@@ -57,16 +60,16 @@ import {
 import {
 	SubFeatStatus,
 	SelfFeatPgPpNm,
-	ModalType,
+	//ModalType,
 	ModalTitCont,
-//	ColDataType,
+	//	ColDataType,
 	CommonCode,
 	CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon';
 import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
-import { 
+import {
 	//GroupCodeType, 
 	ValidType,
 } from "@/models/common/Constants";
@@ -79,12 +82,14 @@ import { getFeatureSeList } from "@/api/FeatureAPI";
 //import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
 import { useRunScheduleByManually, useUpdateCustFeatRule, useUpdateCustFeatSQL } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
+import { UserModel } from "@/models/model/UserModel";
 
 const SelfFeatureEdit = () => {
 
 	const { toast } = useToast()
 	const navigate = useNavigate()
 	const location = useLocation()
+	const dispatch = useAppDispatch()
 	// 속성, 행동정보
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
@@ -109,8 +114,8 @@ const SelfFeatureEdit = () => {
 	// 대상선택 초기화시 flag
 	const [targetClear, setTargetClear] = useState<string>("")//location.state.TargetClear
 	// 한글 및 영문 입력시 입력값
-	const [ featureKoNmInput, setFeatureKoNmInput ] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureKoNm))
-	const [ featureEnNmInput, setFeatureEnNmInput ] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureEnNm))
+	const [featureKoNmInput, setFeatureKoNmInput] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureKoNm))
+	const [featureEnNmInput, setFeatureEnNmInput] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureEnNm))
 	// 기본정보
 	const [featureTempInfo, setFeatureTempInfo] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
 	const [custFeatRule, setCustFeatRule] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
@@ -143,7 +148,7 @@ const SelfFeatureEdit = () => {
 	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	// 수동실행 API
-    const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state?.featureInfo.tbRsCustFeatRule.id)
+	const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state?.featureInfo.tbRsCustFeatRule.id)
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
@@ -186,17 +191,17 @@ const SelfFeatureEdit = () => {
 	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr])
 	// 결재선 default setting을 위해
 	useEffect(() => {
-        if (approverCandidateErr || approverCandidateRes?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
-                content: '조회 중 에러가 발생했습니다.',
-            });
-        } else {
-            if (approverCandidateRes) {
+		if (approverCandidateErr || approverCandidateRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (approverCandidateRes) {
 				setAprvList(approverCandidateRes.result)
-            }
-        }
-    }, [approverCandidateRes, approverCandidateErr, toast])
+			}
+		}
+	}, [approverCandidateRes, approverCandidateErr, toast])
 
 	useEffect(() => {
 		if (!location.state) return
@@ -309,7 +314,7 @@ const SelfFeatureEdit = () => {
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
 		if (targetList.length < 1) setIsSelectAggregateTop(false)
 		// 수정시 TOP 함수가 있는 경우 drag 영역 비노출
-		let hasTop = targetList.filter((item) => item.operator === "top" )
+		let hasTop = targetList.filter((item) => item.operator === "top")
 		if (hasTop && hasTop.length > 0) setIsSelectAggregateTop(true)
 
 		setUpdtFeatureInfo((state: FeatureInfo) => {
@@ -536,7 +541,7 @@ const SelfFeatureEdit = () => {
 	) => {
 		let keyNm = String(id)
 		let v = String(value)
-        if (v === "null" || v === "undefined") return
+		if (v === "null" || v === "undefined") return
 
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
@@ -609,39 +614,39 @@ const SelfFeatureEdit = () => {
 		setConfirmModalCont(ModalTitCont.EDIT.context)
 		setIsOpenConfirmModal(true)
 	}
-    // 수동실행 API 호출
-    const runScheduleByManually = () => {
-        if (location.state?.featureInfo.tbRsCustFeatRule.id && location.state?.featureInfo.tbRsCustFeatRule.id !== "") {
-            if (location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt > 5) {
-                toast({
-                    type: ValidType.ERROR,
-                    content: '수동 가능한 횟수는 5회 입니다.',
-                })
-                return
-            }
-            runScheduleByManuallyMutate()
-        } else {
-            console.log("no custFeatRuleId! please check custFeatRuleId")
-            toast({
-                type: ValidType.ERROR,
-                content: '수동 실행 중 에러가 발생했습니다.',
-            })
-        }
-    }
-    // 수동실행 API callback
-    useEffect(() => {
-        if (runScheduleByManuallyErr || runScheduleByManuallyRes?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
+	// 수동실행 API 호출
+	const runScheduleByManually = () => {
+		if (location.state?.featureInfo.tbRsCustFeatRule.id && location.state?.featureInfo.tbRsCustFeatRule.id !== "") {
+			if (location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt > 5) {
+				toast({
+					type: ValidType.ERROR,
+					content: '수동 가능한 횟수는 5회 입니다.',
+				})
+				return
+			}
+			runScheduleByManuallyMutate()
+		} else {
+			console.log("no custFeatRuleId! please check custFeatRuleId")
+			toast({
+				type: ValidType.ERROR,
+				content: '수동 실행 중 에러가 발생했습니다.',
+			})
+		}
+	}
+	// 수동실행 API callback
+	useEffect(() => {
+		if (runScheduleByManuallyErr || runScheduleByManuallyRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
 				content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
-            })
-        } else if (runScheduleByManuallySucc) {
-            toast({
-                type: ValidType.CONFIRM,
-                content: '수동 실행이 완료되었습니다.',
-            })
-            if (runScheduleByManuallyRes.status === 200) {
-                //custFeatRuleInfosRefetch()
+			})
+		} else if (runScheduleByManuallySucc) {
+			toast({
+				type: ValidType.CONFIRM,
+				content: '수동 실행이 완료되었습니다.',
+			})
+			if (runScheduleByManuallyRes.status === 200) {
+				//custFeatRuleInfosRefetch()
 				updtFeatureInfo.tbRsCustFeatRuleTrgtList = targetList
 				updtFeatureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
 				updtFeatureInfo.featureTemp.featureSeGrp = ""
@@ -656,10 +661,26 @@ const SelfFeatureEdit = () => {
 						}
 					}
 				)
-            }
-        }
-    }, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
-
+			}
+		}
+	}, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
+	const handleUserSelectModal = () => {
+		dispatch(
+			openModal({
+				type: ModalType.USER_SELECT,
+				onConfirm: (users: UserModel) => {
+					setFeatureTempInfo((state: FeatureTemp) => {
+						let rtn = cloneDeep(state)
+						rtn.enrUserId = users.userId
+						rtn.enrUserNm = users.userNm
+						rtn.enrDeptCode = users.deptCode
+						rtn.enrDeptNm = users.deptNm
+						return rtn
+					})
+				},
+			})
+		)
+	}
 	return (
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 정보 영역 */}
@@ -785,11 +806,11 @@ const SelfFeatureEdit = () => {
 					<TR>
 						<TH colSpan={1} align="center">산출 단위</TH>
 						<TD colSpan={3}>
-							<TextField 
-								className="width-100" 
-								id="calcUnt" 
+							<TextField
+								className="width-100"
+								id="calcUnt"
 								defaultValue={location.state?.featureInfo.featureTemp?.calcUnt}
-								onChange={onchangeInputHandler} 
+								onChange={onchangeInputHandler}
 							/>
 							{/* <Select
 								defaultValue={location.state?.featureInfo.featureTemp?.calcUnt}
@@ -828,16 +849,72 @@ const SelfFeatureEdit = () => {
 					<TR>
 						<TH colSpan={1} align="center">비고</TH>
 						<TD colSpan={7}>
-							<TextField 
-								className="width-100" 
-								id="featureDsc" 
+							<TextField
+								className="width-100"
+								id="featureDsc"
 								defaultValue={location.state?.featureInfo.featureTemp?.featureDsc}
-								onChange={onchangeInputHandler} 
+								onChange={onchangeInputHandler}
 							/>
 						</TD>
 					</TR>
 				</HorizontalTable>
 				{/* 기본 정보 */}
+				{/* 신청 정보 SQL 등록 */}
+				{custFeatRule.sqlDirectInputYn === "Y" &&
+					<Stack
+						style={{
+							marginBottom: "2%"
+						}}
+						direction="Vertical"
+						gap="MD"
+					>
+						<Typography variant="h4">신청 정보</Typography>
+						<HorizontalTable>
+							<TR>
+								<TH align="right" colSpan={1} required>
+									Feature 신청자
+								</TH>
+								<TD colSpan={2}>
+									<Stack gap="SM" className="width-100" direction="Vertical">
+										<Stack gap="SM">
+											<TextField
+												className="width-100"
+												value={featureTempInfo.enrUserNm}
+												id="enrUserNm"
+												onChange={onchangeInputHandler}
+												disabled
+											/>
+											<Button
+												appearance="Contained"
+												priority="Normal"
+												shape="Square"
+												size="MD"
+												onClick={handleUserSelectModal}
+											>
+												<span className="searchIcon"></span>
+											</Button>
+										</Stack>
+									</Stack>
+								</TD>
+								<TH align="right" colSpan={1}>
+									신청부서
+								</TH>
+								<TD colSpan={2}>
+									<Stack gap="SM" className="width-100" direction="Vertical">
+										<TextField
+											className="width-100"
+											value={featureTempInfo.enrDeptNm}
+											id="enrDeptNm"
+											onChange={onchangeInputHandler}
+											disabled
+										/>
+									</Stack>
+								</TD>
+							</TR>
+						</HorizontalTable>
+					</Stack>
+				}
+				{/* 신청 정보 SQL 등록 */}
 				<Stack
 					gap="LG"
 					direction="Vertical"

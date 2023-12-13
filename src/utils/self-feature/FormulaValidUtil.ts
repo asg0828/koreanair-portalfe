@@ -279,7 +279,6 @@ export const validationCustReatRule = (formData: any) => {
 
     if (validInfo.valid) {
         // Rule-Design
-
         if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
             if (featureInfo.tbRsCustFeatRuleTrgtList.length < 1) {
                 validInfo.text = `Feature 로직의 대상을 1개 이상 설정 해주세요.`
@@ -387,7 +386,14 @@ export const validationCustReatRule = (formData: any) => {
         }
         // SQL
         if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
-            if (!featureInfo.tbRsCustFeatRuleSql.sqlQuery || featureInfo.tbRsCustFeatRuleSql.sqlQuery === "") {
+
+            if (featureInfo.featureTemp.enrUserId === "" || featureInfo.featureTemp.enrUserNm.trim() === "") {
+                validInfo.text = "Feature 신청자 정보를 확인 해주세요."
+                validInfo.valid = false
+            } else if (featureInfo.featureTemp.enrDeptCode === "" || featureInfo.featureTemp.enrDeptNm === "") {
+                validInfo.text = "Feature 신청자 부서를 확인 해주세요."
+                validInfo.valid = false
+            } else if (!featureInfo.tbRsCustFeatRuleSql.sqlQuery || featureInfo.tbRsCustFeatRuleSql.sqlQuery === "") {
                 validInfo.text = "Feature 생성 Query를 확인 해주세요."
                 validInfo.valid = false
             }

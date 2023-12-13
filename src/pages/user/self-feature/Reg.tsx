@@ -4,7 +4,8 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { cloneDeep, isEmpty } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
-//import { useAppSelector } from '@/hooks/useRedux'
+import { useAppDispatch } from '@/hooks/useRedux'
+import { openModal } from '@/reducers/modalSlice'
 
 import DragList from '@/components/self-feature/DragList'
 import DropList from '@/components/self-feature/DropList'
@@ -13,6 +14,7 @@ import HorizontalTable from '@/components/table/HorizontalTable'
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui'
 import ConfirmModal from '@/components/modal/ConfirmModal'
 import ApprovalList from '@/components/self-feature/ApprovalList'
+import { ModalType, } from '@/models/common/Constants'
 
 import {
 	FeatureInfo,
@@ -40,16 +42,17 @@ import {
 import {
 	SubFeatStatus,
 	SelfFeatPgPpNm,
-	ModalType,
+	//ModalType,
 	ModalTitCont,
 	CommonCode,
 	CommonCodeInfo,
 } from '@/models/selfFeature/FeatureCommon'
+import { UserModel } from '@/models/model/UserModel'
 import { AprvSeqNm, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from '@/models/selfFeature/FeatureSubmissionModel'
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from '../self-feature-submission/data'
-import { 
+import {
 	//GroupCodeType, 
-	ValidType, 
+	ValidType,
 } from '@/models/common/Constants'
 import { FeatureSeparatesModel } from '@/models/model/FeatureModel'
 
@@ -68,6 +71,7 @@ const SelfFeatureReg = () => {
 	const location = useLocation()
 	const { toast } = useToast()
 	const sessionInfo = useAppSelector(selectSessionInfo())
+	const dispatch = useAppDispatch()
 
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { } = useCommCodes(CommonCode.FUNCTION)
@@ -461,7 +465,10 @@ const SelfFeatureReg = () => {
 		delete param.customerFeatureSql.tbRsCustFeatRuleTrgtFilterList
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
+		console.log(param)
 		let validRslt = validationCustReatRule(param)
+		console.log(validRslt)
+		return
 		if (!validRslt.valid) {
 			toast({
 				type: ValidType.ERROR,
@@ -557,7 +564,7 @@ const SelfFeatureReg = () => {
 	) => {
 		let keyNm = String(id)
 		let v = String(value)
-        if (v === "null" || v === "undefined") return
+		if (v === "null" || v === "undefined") return
 
 		setCustFeatRule((state: TbRsCustFeatRule) => {
 			let rtn = cloneDeep(state)
@@ -630,7 +637,23 @@ const SelfFeatureReg = () => {
 		setConfirmModalCont(ModalTitCont.REG.context)
 		setIsOpenConfirmModal(true)
 	}
-
+	const handleUserSelectModal = () => {
+		dispatch(
+			openModal({
+				type: ModalType.USER_SELECT,
+				onConfirm: (users: UserModel) => {
+					setFeatureTempInfo((state: FeatureTemp) => {
+						let rtn = cloneDeep(state)
+						rtn.enrUserId = users.userId
+						rtn.enrUserNm = users.userNm
+						rtn.enrDeptCode = users.deptCode
+						rtn.enrDeptNm = users.deptNm
+						return rtn
+					})
+				},
+			})
+		)
+	}
 	return (
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 정보 영역 */}
@@ -699,12 +722,12 @@ const SelfFeatureReg = () => {
 						<TH colSpan={1} align="right" required>영문명</TH>
 						<TD colSpan={2}>
 							<Stack gap="SM" className='width-100'>
-								<TextField 
+								<TextField
 									placeholder="영문, 숫자, _ 만 입력 가능합니다."
-									className="width-100" 
-									id="featureEnNm" 
+									className="width-100"
+									id="featureEnNm"
 									value={featureEnNmInput}
-									onChange={onchangeInputHandler} 
+									onChange={onchangeInputHandler}
 								/>
 								{/* <Button>중복확인</Button> */}
 							</Stack>
@@ -788,7 +811,62 @@ const SelfFeatureReg = () => {
 					</TR>
 				</HorizontalTable>
 				{/* 기본 정보 */}
-
+				{/* 신청 정보 SQL 등록 */}
+				{(regType && (regType === SelfFeatPgPpNm.SQL_REG)) &&
+					<Stack
+						style={{
+							marginBottom: "2%"
+						}}
+						direction="Vertical"
+						gap="MD"
+					>
+						<Typography variant="h4">신청 정보</Typography>
+						<HorizontalTable>
+							<TR>
+								<TH align="right" colSpan={1} required>
+									Feature 신청자
+								</TH>
+								<TD colSpan={2}>
+									<Stack gap="SM" className="width-100" direction="Vertical">
+										<Stack gap="SM">
+											<TextField
+												className="width-100"
+												value={featureTempInfo.enrUserNm}
+												id="enrUserNm"
+												onChange={onchangeInputHandler}
+												disabled
+											/>
+											<Button
+												appearance="Contained"
+												priority="Normal"
+												shape="Square"
+												size="MD"
+												onClick={handleUserSelectModal}
+											>
+												<span className="searchIcon"></span>
+											</Button>
+										</Stack>
+									</Stack>
+								</TD>
+								<TH align="right" colSpan={1}>
+									신청부서
+								</TH>
+								<TD colSpan={2}>
+									<Stack gap="SM" className="width-100" direction="Vertical">
+										<TextField
+											className="width-100"
+											value={featureTempInfo.enrDeptNm}
+											id="enrDeptNm"
+											onChange={onchangeInputHandler}
+											disabled
+										/>
+									</Stack>
+								</TD>
+							</TR>
+						</HorizontalTable>
+					</Stack>
+				}
+				{/* 신청 정보 SQL 등록 */}
 				{/* 대상 선택 */}
 				<Stack
 					gap="LG"
