@@ -107,7 +107,7 @@ const SfSubmissionRequestDetail = () => {
     const [modalType, setModalType] = useState<string>('')
     // 상세 조회 API
     const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(location.state.referenceNo)
-	const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.referenceNo)
+    const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.referenceNo)
     const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
     const [submissionId, setSubmissionId] = useState<number>(0)
     const { data: submissionListRes, isError: submissionListErr, refetch: submissionListRefetch } = useSubmissionList(subListQueryParams)
@@ -154,11 +154,11 @@ const SfSubmissionRequestDetail = () => {
         initCustFeatRule()
         custFeatRuleInfosRefetch()
         //console.log(location)
-		// if (location.state.sqlDirectInputYn !== "Y") {
-		// 	custFeatRuleInfosRefetch()
-		// } else if (location.state.sqlDirectInputYn === "Y") {
-		// 	custFeatSQLInfosRefetch()
-		// }
+        // if (location.state.sqlDirectInputYn !== "Y") {
+        // 	custFeatRuleInfosRefetch()
+        // } else if (location.state.sqlDirectInputYn === "Y") {
+        // 	custFeatSQLInfosRefetch()
+        // }
         // if (location.state.sqlDirectInputYn !== "Y")
         //     mstrSgmtTbandColRefetch()
     }, [])
@@ -355,11 +355,11 @@ const SfSubmissionRequestDetail = () => {
                 }
                 return option
             })
-			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") dataType = "number"
-			if (targetList[i].function === "LENGTH") dataType = "number"
-			if (targetList[i].function === "TO_CHAR") dataType = "string"
-			if (targetList[i].function === "DATEDIFF") dataType = "number"
+            // 변환식(속성데이터의 경우)
+            if (targetList[i].function === "TO_NUMBER") dataType = "number"
+            if (targetList[i].function === "LENGTH") dataType = "number"
+            if (targetList[i].function === "TO_CHAR") dataType = "string"
+            if (targetList[i].function === "DATEDIFF") dataType = "number"
             t.dataType = dataType
 
             fList.push(t)
@@ -381,21 +381,21 @@ const SfSubmissionRequestDetail = () => {
             }
         }
     }, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
-	// 정보 조회 API callback (SQL)
-	useEffect(() => {
-		if (custFeatSQLInfosErr || custFeatSQLInfosRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: '조회 중 에러가 발생했습니다.',
-			})
-		} else {
-			if (custFeatSQLInfosRes?.result) {
-				setFeatureInfo(cloneDeep(custFeatSQLInfosRes.result))
-				// 승인 정보 호출 API parameter setting
-				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.referenceNo })
-			}
-		}
-	}, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
+    // 정보 조회 API callback (SQL)
+    useEffect(() => {
+        if (custFeatSQLInfosErr || custFeatSQLInfosRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            })
+        } else {
+            if (custFeatSQLInfosRes?.result) {
+                setFeatureInfo(cloneDeep(custFeatSQLInfosRes.result))
+                // 승인 정보 호출 API parameter setting
+                setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.referenceNo })
+            }
+        }
+    }, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
     // 승인정보 호출을 위한 승인 list API refetch
     useEffect(() => {
         if (isEmpty(subListQueryParams)) return
@@ -578,7 +578,7 @@ const SfSubmissionRequestDetail = () => {
         if (aprvSubAprvalErr || aprvSubAprvalRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
-				content: aprvSubAprvalRes?.message ? aprvSubAprvalRes?.message : '승인 처리 중 에러가 발생했습니다.',
+                content: aprvSubAprvalRes?.message ? aprvSubAprvalRes?.message : '승인 처리 중 에러가 발생했습니다.',
             })
         } else if (aprvSubAprvalSucc) {
             toast({
@@ -613,7 +613,7 @@ const SfSubmissionRequestDetail = () => {
         if (runScheduleByManuallyErr || runScheduleByManuallyRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
-				content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
+                content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
             })
         } else if (runScheduleByManuallySucc) {
             toast({
@@ -810,7 +810,43 @@ const SfSubmissionRequestDetail = () => {
                         </TR>
                     </HorizontalTable>
                     {/* 기본 정보 */}
-
+                    {/* 신청 정보 SQL 등록 */}
+                    {featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
+                        <Stack
+                            style={{
+                                marginBottom: "2%"
+                            }}
+                            direction="Vertical"
+                            gap="MD"
+                        >
+                            <Typography variant="h4">신청 정보</Typography>
+                            <HorizontalTable>
+                                <TR>
+                                    <TH align="right" colSpan={1} required>
+                                        Feature 신청자
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Stack gap="SM" className="width-100" direction="Vertical">
+                                            <Stack gap="SM">
+                                                {/* {featureInfo.featureTemp && featureInfo.featureTemp.enrUserId} */}
+                                                {featureInfo.featureTemp && featureInfo.featureTemp.enrUserNm}
+                                            </Stack>
+                                        </Stack>
+                                    </TD>
+                                    <TH align="right" colSpan={1}>
+                                        신청부서
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Stack gap="SM" className="width-100" direction="Vertical">
+                                            {/* {featureInfo.featureTemp && featureInfo.featureTemp.enrDeptCode} */}
+                                            {featureInfo.featureTemp && featureInfo.featureTemp.enrDeptNm}
+                                        </Stack>
+                                    </TD>
+                                </TR>
+                            </HorizontalTable>
+                        </Stack>
+                    }
+                    {/* 신청 정보 SQL 등록 */}
                     {/* Feature 로직 */}
                     <Stack
                         gap="LG"
