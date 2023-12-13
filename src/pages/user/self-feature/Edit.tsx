@@ -371,11 +371,11 @@ const SelfFeatureEdit = () => {
 		})
 	}, [custFeatRuleCalc])
 	useEffect(() => {
-		setUpdtFeatureInfo((state: FeatureInfo) => {
-			let rtn = cloneDeep(state)
-			rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
-			return rtn
-		})
+		// setUpdtFeatureInfo((state: FeatureInfo) => {
+		// 	let rtn = cloneDeep(state)
+		// 	rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
+		// 	return rtn
+		// })
 	}, [custFeatRuleCaseList])
 	// 대상 선택 list가 없는 경우 formula reset
 	useEffect(() => {
