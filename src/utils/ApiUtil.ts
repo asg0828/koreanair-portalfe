@@ -135,7 +135,6 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       }
       commonResponse.header = response?.headers;
       commonResponse.status = response?.status;
-      commonResponse.message = response?.message;
       commonResponse.statusCode = StatusCode.SUCCESS;
       commonResponse.successOrNot = 'Y';
 
@@ -148,7 +147,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
         statusCode: StatusCode.UNKNOWN_ERROR,
         data: {},
         status: error?.response?.status,
-        message: error?.response?.message,
+        message: error?.response?.data.message,
       };
       // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
