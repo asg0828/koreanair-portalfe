@@ -263,103 +263,107 @@ const SelfFeatureDetail = () => {
 	// 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
 	useEffect(() => {
 		if (isEmpty(mstrSgmtTableandColMetaInfo)) return
-		setTargetList(() => {
-			let tempTargetList = cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList).map((target: TbRsCustFeatRuleTrgt) => {
-				let metaTblId = target.tableName
-				let colNm = target.columnName
-				if (target.divisionCode === DivisionTypes.ATTR) {
-					/* 
-						속성 데이터면 동일한 테이블Id와 컬럼명을 가진 atrributes의 
-						metaTblClmnLogiNm 값을 columnLogiName항목으로 추가
-	
-						target.columnLogiName = attributes[].metaTblClmnLogiNm
-					*/
-					let logiAttr: Array<Attribute> = []
-					logiAttr = mstrSgmtTableandColMetaInfo.attributes.filter((attr: Attribute) => {
-						return (metaTblId === attr.metaTblId && colNm === attr.metaTblClmnPhysNm)
-					})
-					if (logiAttr.length > 0) {
-						target.columnLogiName = logiAttr[0].metaTblClmnLogiNm
-					} else {
-						target.columnLogiName = colNm
-					}
+		if (location.state.sqlDirectInputYn !== "Y") {
+			setTargetList(() => {
+				let tempTargetList = cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList).map((target: TbRsCustFeatRuleTrgt) => {
+					let metaTblId = target.tableName
+					let colNm = target.columnName
+					if (target.divisionCode === DivisionTypes.ATTR) {
+						/* 
+							속성 데이터면 동일한 테이블Id와 컬럼명을 가진 atrributes의 
+							metaTblClmnLogiNm 값을 columnLogiName항목으로 추가
+		
+							target.columnLogiName = attributes[].metaTblClmnLogiNm
+						*/
+						let logiAttr: Array<Attribute> = []
+						logiAttr = mstrSgmtTableandColMetaInfo.attributes.filter((attr: Attribute) => {
+							return (metaTblId === attr.metaTblId && colNm === attr.metaTblClmnPhysNm)
+						})
+						if (logiAttr.length > 0) {
+							target.columnLogiName = logiAttr[0].metaTblClmnLogiNm
+						} else {
+							target.columnLogiName = colNm
+						}
 
-				} else if (target.divisionCode === DivisionTypes.BEHV) {
+					} else if (target.divisionCode === DivisionTypes.BEHV) {
+						/* 
+							행동 데이터면  동일한 테이블 ID를 가진 behavior의
+							metaTblLogiNm 값을 tableLogiName항목에 추가
+						*/
+						let logiBehv: Array<Behavior> = []
+						logiBehv = mstrSgmtTableandColMetaInfo.behaviors.filter((behavior: Behavior) => {
+							return metaTblId === behavior.metaTblId
+						})
+
+						if (logiBehv.length > 0) {
+							target.tableLogiName = logiBehv[0].metaTblLogiNm
+						} else {
+							target.tableLogiName = metaTblId
+						}
+					}
+					return target
+				})
+				return tempTargetList
+			})
+			setTrgtFilterList(() => {
+				let tempTargetFilterList = cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList).map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
+					let metaTblId = ""
+					let targetId = trgtFilter.targetId
+					let colNm = trgtFilter.columnName
 					/* 
-						행동 데이터면  동일한 테이블 ID를 가진 behavior의
-						metaTblLogiNm 값을 tableLogiName항목에 추가
+						반드시 행동 데이터
+						동일한 targetId를 가진 targetList의 테이블 ID와 동일한 
+						behavior의 tbCoMetaTblClmnInfoList에서
+						colNm과 동일한 metaTblClmnPhysNm 의  metaTblClmnLogiNm을
+						columnLogiName항목에 추가				
 					*/
-					let logiBehv: Array<Behavior> = []
-					logiBehv = mstrSgmtTableandColMetaInfo.behaviors.filter((behavior: Behavior) => {
+					let trgtIdArr: Array<TbRsCustFeatRuleTrgt> = []
+					trgtIdArr = featureInfo.tbRsCustFeatRuleTrgtList.filter((target: TbRsCustFeatRuleTrgt) => targetId === target.targetId)
+					if (trgtIdArr.length > 0) metaTblId = trgtIdArr[0].tableName
+
+					let clmnBehv: Array<Behavior> = []
+					clmnBehv = mstrSgmtTableandColMetaInfo.behaviors.filter((behavior: Behavior) => {
 						return metaTblId === behavior.metaTblId
 					})
-
-					if (logiBehv.length > 0) {
-						target.tableLogiName = logiBehv[0].metaTblLogiNm
+					if (clmnBehv.length > 0) {
+						let clmnInfo: Array<TbCoMetaTblClmnInfo> = []
+						clmnInfo = clmnBehv[0].tbCoMetaTblClmnInfoList.filter((clnmInfo: TbCoMetaTblClmnInfo) => colNm === clnmInfo.metaTblClmnPhysNm)
+						trgtFilter.columnLogiName = clmnInfo[0] ? clmnInfo[0].metaTblClmnLogiNm : colNm
 					} else {
-						target.tableLogiName = metaTblId
+						trgtFilter.columnLogiName = colNm
 					}
-				}
-				return target
-			})
-			return tempTargetList
-		})
-		setTrgtFilterList(() => {
-			let tempTargetFilterList = cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList).map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
-				let metaTblId = ""
-				let targetId = trgtFilter.targetId
-				let colNm = trgtFilter.columnName
-				/* 
-					반드시 행동 데이터
-					동일한 targetId를 가진 targetList의 테이블 ID와 동일한 
-					behavior의 tbCoMetaTblClmnInfoList에서
-					colNm과 동일한 metaTblClmnPhysNm 의  metaTblClmnLogiNm을
-					columnLogiName항목에 추가				
-				*/
-				let trgtIdArr: Array<TbRsCustFeatRuleTrgt> = []
-				trgtIdArr = featureInfo.tbRsCustFeatRuleTrgtList.filter((target: TbRsCustFeatRuleTrgt) => targetId === target.targetId)
-				if (trgtIdArr.length > 0) metaTblId = trgtIdArr[0].tableName
-
-				let clmnBehv: Array<Behavior> = []
-				clmnBehv = mstrSgmtTableandColMetaInfo.behaviors.filter((behavior: Behavior) => {
-					return metaTblId === behavior.metaTblId
+					return trgtFilter
 				})
-				if (clmnBehv.length > 0) {
-					let clmnInfo: Array<TbCoMetaTblClmnInfo> = []
-					clmnInfo = clmnBehv[0].tbCoMetaTblClmnInfoList.filter((clnmInfo: TbCoMetaTblClmnInfo) => colNm === clnmInfo.metaTblClmnPhysNm)
-					trgtFilter.columnLogiName = clmnInfo[0] ? clmnInfo[0].metaTblClmnLogiNm : colNm
-				} else {
-					trgtFilter.columnLogiName = colNm
-				}
-				return trgtFilter
+				return tempTargetFilterList
 			})
-			return tempTargetFilterList
-		})
+		}
 	}, [mstrSgmtTableandColMetaInfo])
 	// 계산식 validation을 위한 대상 list 추출
 	useEffect(() => {
-		let fList = []
-		for (let i = 0; i < targetList.length; i++) {
-			let t = { targetId: `T${i + 1}`, dataType: "" }
-			let dataType = targetList[i].targetDataType
-			cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
-				if (option.cdv === targetList[i].operator) {
-					dataType = option.attr1
-					if (dataType === "") {
-						dataType = targetList[i].targetDataType
+		if (location.state.sqlDirectInputYn !== "Y") {
+			let fList = []
+			for (let i = 0; i < targetList.length; i++) {
+				let t = { targetId: `T${i + 1}`, dataType: "" }
+				let dataType = targetList[i].targetDataType
+				cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
+					if (option.cdv === targetList[i].operator) {
+						dataType = option.attr1
+						if (dataType === "") {
+							dataType = targetList[i].targetDataType
+						}
 					}
-				}
-				return option
-			})
-			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") dataType = "number"
-			if (targetList[i].function === "LENGTH") dataType = "number"
-			if (targetList[i].function === "TO_CHAR") dataType = "string"
-			if (targetList[i].function === "DATEDIFF") dataType = "number"
-			t.dataType = dataType
-			fList.push(t)
+					return option
+				})
+				// 변환식(속성데이터의 경우)
+				if (targetList[i].function === "TO_NUMBER") dataType = "number"
+				if (targetList[i].function === "LENGTH") dataType = "number"
+				if (targetList[i].function === "TO_CHAR") dataType = "string"
+				if (targetList[i].function === "DATEDIFF") dataType = "number"
+				t.dataType = dataType
+				fList.push(t)
+			}
+			setFormulaTrgtList(fList)
 		}
-		setFormulaTrgtList(fList)
 	}, [targetList])
 	// 페이지 이동 및 버튼 처리
 	const onClickPageMovHandler = (pageNm: string) => {
@@ -433,7 +437,7 @@ const SelfFeatureDetail = () => {
 				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.id })
 			}
 		}
-	}, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
+	}, [custFeatSQLInfosRes, custFeatSQLInfosErr, toast])
 	// 승인정보 호출을 위한 승인 list API refetch
 	useEffect(() => {
 		if (isEmpty(subListQueryParams)) return

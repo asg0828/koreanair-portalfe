@@ -42,7 +42,7 @@ export const retrieveCustFeatRuleInfos = (id: string) => {
 export const retrieveCustFeatSQLInfos = (id: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
-        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_SQL_BASE}/${id}`,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_SQL_DETL}/${id}`,
         method: Method.GET,
     })
 }
