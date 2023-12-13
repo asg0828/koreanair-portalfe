@@ -78,7 +78,7 @@ import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
 import { getFeatureSeList } from "@/api/FeatureAPI";
 //import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
-import { useUpdateCustFeatRule, useUpdateCustFeatSQL } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
+import { useRunScheduleByManually, useUpdateCustFeatRule, useUpdateCustFeatSQL } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 
 const SelfFeatureEdit = () => {
 
@@ -142,6 +142,8 @@ const SelfFeatureEdit = () => {
 	// 수정 API(Rule-Design / SQL)
 	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
+	// 수동실행 API
+    const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state?.featureInfo.tbRsCustFeatRule.id)
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
@@ -587,7 +589,8 @@ const SelfFeatureEdit = () => {
 	const onClickPageMovHandler = (pageNm: string) => {
 		if (pageNm === SelfFeatPgPpNm.LIST)
 			//navigate('..')
-			navigate(-1)
+			//navigate(-1)
+			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
 		else
 			navigate(`../${pageNm}`)
 	}
@@ -606,16 +609,70 @@ const SelfFeatureEdit = () => {
 		setConfirmModalCont(ModalTitCont.EDIT.context)
 		setIsOpenConfirmModal(true)
 	}
+    // 수동실행 API 호출
+    const runScheduleByManually = () => {
+        if (location.state?.featureInfo.tbRsCustFeatRule.id && location.state?.featureInfo.tbRsCustFeatRule.id !== "") {
+            if (location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt > 5) {
+                toast({
+                    type: ValidType.ERROR,
+                    content: '수동 가능한 횟수는 5회 입니다.',
+                })
+                return
+            }
+            runScheduleByManuallyMutate()
+        } else {
+            console.log("no custFeatRuleId! please check custFeatRuleId")
+            toast({
+                type: ValidType.ERROR,
+                content: '수동 실행 중 에러가 발생했습니다.',
+            })
+        }
+    }
+    // 수동실행 API callback
+    useEffect(() => {
+        if (runScheduleByManuallyErr || runScheduleByManuallyRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+				content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
+            })
+        } else if (runScheduleByManuallySucc) {
+            toast({
+                type: ValidType.CONFIRM,
+                content: '수동 실행이 완료되었습니다.',
+            })
+            if (runScheduleByManuallyRes.status === 200) {
+                //custFeatRuleInfosRefetch()
+				updtFeatureInfo.tbRsCustFeatRuleTrgtList = targetList
+				updtFeatureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
+				updtFeatureInfo.featureTemp.featureSeGrp = ""
+				updtFeatureInfo.tbRsCustFeatRule.batManualExecTestCnt += 1
+				navigate(
+					`../${SelfFeatPgPpNm.EDIT}`,
+					{
+						state: {
+							featureInfo: updtFeatureInfo,
+							sfSubmissionRequestData: sfSubmissionRequestData,
+							sfSubmissionApprovalList: sfSubmissionApprovalList
+						}
+					}
+				)
+            }
+        }
+    }, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
 
 	return (
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 정보 영역 */}
 			<Stack direction="Vertical" gap="MD" >
 				{/* 상단 버튼 영역 */}
-				<FeatQueryRsltButton
-					custFeatRuleId={location.state?.featureInfo.tbRsCustFeatRule.id}
-                    batManualExecTestCnt={location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
-				/>
+				<Stack direction="Horizontal" gap="MD" justifyContent="End">
+					<Button size="LG" onClick={runScheduleByManually}>
+						수동 실행
+					</Button>
+					<FeatQueryRsltButton
+						custFeatRuleId={location.state?.featureInfo.tbRsCustFeatRule.id}
+					/>
+				</Stack>
 
 				{/* 기본 정보 */}
 				<Typography variant="h4">Feature 기본 정보</Typography>
