@@ -50,6 +50,7 @@ const BehvDropItem = ({
     const [columnList, setColumnList] = useState<Array<AggregateCol>>([])
     const [aggregateTopSelect, setAggregateTopSelect] = useState<Boolean>(false)
     const [aggregateOption, setAggregateOption] = useState<Array<CommonCodeInfo>>([])
+    const [aggregateTopOption, setAggregateTopOption] = useState<Array<CommonCodeInfo>>([])
     //const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
     // 수집기준일 컬럼 정보
     const [baseTimeCol, setBaseTimeCol] = useState<TbCoMetaTblClmnInfo>(cloneDeep(initTbCoMetaTblClmnInfo))
@@ -196,6 +197,20 @@ const BehvDropItem = ({
                         })
                         return [...cloneDeep([initCommonCodeInfo]), ...rtn]
                     })
+                    // TOP 함수 피연사자 select option 셋팅
+                    setAggregateTopOption((prevState: Array<CommonCodeInfo>) => {
+                        let rtn = cloneDeep(prevState)
+                        rtn = cmmCodeAggrRes.result.filter((v: CommonCodeInfo) => {
+                            if (v.attr5 === "N") {
+                                return false
+                            } else {
+                                if ((col.dataType === ColDataType.NUM) && v.attr5.includes("ONLY_NUM")) return true
+                                else if ((col.dataType !== ColDataType.NUM) && v.attr5.includes("ONLY_NUM")) return false
+                                else return true
+                            }
+                        })
+                        return [...cloneDeep([initCommonCodeInfo]), ...rtn]
+                    })
                 }
             }
             return col
@@ -303,6 +318,8 @@ const BehvDropItem = ({
                     }
                     return col
                 })
+                // 우측 drag 영역 삭제 여부
+                setIsSelectAggregateTop && setIsSelectAggregateTop(false)
                 // 선택한 집계 컬럼 타입에 따라 case target validation을 위한 값 변경
                 setTargetList && setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                     let tl = cloneDeep(state)
@@ -487,8 +504,11 @@ const BehvDropItem = ({
                                         onchangeSelectHandler(e, value, "operand1")
                                     }}
                                 >
-                                    <SelectOption value="count">count</SelectOption>
-                                    <SelectOption value="last">last</SelectOption>
+                                    {/* <SelectOption value="count">count</SelectOption>
+                                    <SelectOption value="last">last</SelectOption> */}
+                                    {aggregateTopOption.map((item, index) => (
+                                        <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
+                                    ))}
                                 </Select>
                                 <TextField
                                     size="SM"

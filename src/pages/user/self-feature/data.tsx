@@ -21,6 +21,7 @@ import {
     CustFeatureFormData,
     FeatListSrchProps,
     FeatureBaseType,
+    CustFeatureFormDataSql,
 } from "@/models/selfFeature/FeatureModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
 
@@ -246,13 +247,20 @@ export const initSelfFeatureInfo: FeatureInfo = {
     tbRsCustFeatRuleCalc: initTbRsCustFeatRuleCalc,
     tbRsCustFeatRuleTrgtList: [{ ...initTbRsCustFeatRuleTrgt }],
     tbRsCustFeatRuleTrgtFilterList: [{ ...initTbRsCustFeatRuleTrgtFilter }],
-    //tbRsCustFeatRuleCaseList: [{ ...initTbRsCustFeatRuleCase }],
+    tbRsCustFeatRuleCaseList: [{ ...initTbRsCustFeatRuleCase }],
     featureTemp: initFeatureTemp,
     tbRsCustFeatRuleSql: initTbRsCustFeatRuleSql,
 }
 
 export const initCustFeatureFormData: CustFeatureFormData = {
     customerFeature: initSelfFeatureInfo,
+    submissionInfo: {
+        submission: initSfSubmissionRequestInfo,
+        approvals: [{ ...initSfSubmissionApproval }]
+    }
+}
+export const initCustFeatureFormDataSql: CustFeatureFormDataSql = {
+    customerFeatureSql: initSelfFeatureInfo,
     submissionInfo: {
         submission: initSfSubmissionRequestInfo,
         approvals: [{ ...initSfSubmissionApproval }]

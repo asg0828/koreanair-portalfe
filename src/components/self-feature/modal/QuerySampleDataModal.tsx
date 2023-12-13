@@ -99,7 +99,7 @@ const QuerySampleDataModal = ({
 
     return (
         <Modal open={isOpenQuerySampleDataModal} onClose={handleClose} size='LG'>
-            <Modal.Header>실행 내역</Modal.Header>
+            <Modal.Header>샘플 확인</Modal.Header>
             <Modal.Body>
                 {/* 목록 영역 */}
                 <DataGrid

@@ -1,7 +1,7 @@
 // 계산식 validation 공통
 import { cloneDeep } from "lodash"
 
-import { CustFeatureFormData, DivisionTypes, FormulaTrgtListProps, FormulaValidRslt, TbRsCustFeatRuleTrgt } from "@/models/selfFeature/FeatureModel"
+import { CustFeatureFormData, CustFeatureFormDataSql, DivisionTypes, FormulaTrgtListProps, FormulaValidRslt, TbRsCustFeatRuleTrgt, TbRsCustFeatRuleTrgtFilter } from "@/models/selfFeature/FeatureModel"
 import { initFormulaValidRslt } from "@/pages/user/self-feature/data"
 import { ColDataType } from "@/models/selfFeature/FeatureCommon"
 import { SfSubmissionApproval } from "@/models/selfFeature/FeatureSubmissionModel"
@@ -221,52 +221,57 @@ export const transFuncCalcStr = ({
 
 }
 
-export const validationCustReatRule = (formData: CustFeatureFormData) => {
+export const validationCustReatRule = (formData: any) => {
     let validInfo = { text: "", valid: true }
+
+    let featureInfo: any
+    if (formData.hasOwnProperty('customerFeature')) featureInfo = formData.customerFeature
+    else featureInfo = formData.customerFeatureSql
+
     if (
-        !formData.customerFeature.featureTemp.featureSeGrp
-        || formData.customerFeature.featureTemp.featureSeGrp === ""
-        || formData.customerFeature.featureTemp.featureSeGrp === "null"
+        !featureInfo.featureTemp.featureSeGrp
+        || featureInfo.featureTemp.featureSeGrp === ""
+        || featureInfo.featureTemp.featureSeGrp === "null"
     ) {
         validInfo.text = "대구분을 확인 해주세요."
         validInfo.valid = false
     } else if (
-        !formData.customerFeature.featureTemp.featureSe
-        || formData.customerFeature.featureTemp.featureSe === ""
-        || formData.customerFeature.featureTemp.featureSe === "null"
+        !featureInfo.featureTemp.featureSe
+        || featureInfo.featureTemp.featureSe === ""
+        || featureInfo.featureTemp.featureSe === "null"
     ) {
         validInfo.text = "중구분을 확인 해주세요."
         validInfo.valid = false
     } else if (
-        !formData.customerFeature.featureTemp.featureKoNm
-        || formData.customerFeature.featureTemp.featureKoNm === ""
-        || formData.customerFeature.featureTemp.featureKoNm === "null"
+        !featureInfo.featureTemp.featureKoNm
+        || featureInfo.featureTemp.featureKoNm === ""
+        || featureInfo.featureTemp.featureKoNm === "null"
     ) {
         validInfo.text = "한글명을 확인 해주세요."
         validInfo.valid = false
     } else if (
-        !formData.customerFeature.featureTemp.featureEnNm
-        || formData.customerFeature.featureTemp.featureEnNm === ""
-        || formData.customerFeature.featureTemp.featureEnNm === "null"
+        !featureInfo.featureTemp.featureEnNm
+        || featureInfo.featureTemp.featureEnNm === ""
+        || featureInfo.featureTemp.featureEnNm === "null"
     ) {
         validInfo.text = "영문명을 확인 해주세요."
         validInfo.valid = false
     } else if (
-        !formData.customerFeature.featureTemp.featureTyp
-        || formData.customerFeature.featureTemp.featureTyp === ""
-        || formData.customerFeature.featureTemp.featureTyp === "null"
+        !featureInfo.featureTemp.featureTyp
+        || featureInfo.featureTemp.featureTyp === ""
+        || featureInfo.featureTemp.featureTyp === "null"
     ) {
         validInfo.text = "Feature 타입을 확인 해주세요."
         validInfo.valid = false
     } else if (
-        !formData.customerFeature.featureTemp.featureDef
-        || formData.customerFeature.featureTemp.featureDef === ""
+        !featureInfo.featureTemp.featureDef
+        || featureInfo.featureTemp.featureDef === ""
     ) {
         validInfo.text = "Feature 정의를 확인 해주세요."
         validInfo.valid = false
     } else if (
-        !formData.customerFeature.featureTemp.featureFm
-        || formData.customerFeature.featureTemp.featureFm === ""
+        !featureInfo.featureTemp.featureFm
+        || featureInfo.featureTemp.featureFm === ""
     ) {
         validInfo.text = "산출 로직을 확인 해주세요."
         validInfo.valid = false
@@ -274,23 +279,118 @@ export const validationCustReatRule = (formData: CustFeatureFormData) => {
 
     if (validInfo.valid) {
         // Rule-Design
-        if (formData.customerFeature.tbRsCustFeatRule.sqlDirectInputYn === "N") {
-            formData.customerFeature.tbRsCustFeatRuleTrgtList.map((target: TbRsCustFeatRuleTrgt) => {
-                if (target.divisionCode === DivisionTypes.BEHV) {
-                    if (!target.columnName || target.columnName === "" || target.columnName === "null" || target.columnName === "undefined") {
-                        validInfo.text = `BaseFact 정보 '${target.targetId}'의 집계할 컬럼을 확인 해주세요.`
+
+        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+            if (featureInfo.tbRsCustFeatRuleTrgtList.length < 1) {
+                validInfo.text = `Feature 로직의 대상을 1개 이상 설정 해주세요.`
+                validInfo.valid = false
+            } else {
+                featureInfo.tbRsCustFeatRuleTrgtList.map((target: TbRsCustFeatRuleTrgt) => {
+                    if (target.divisionCode === DivisionTypes.BEHV) {
+                        if (!target.columnName || target.columnName === "" || target.columnName === "null" || target.columnName === "undefined") {
+                            validInfo.text = `BaseFact 정보 '${target.targetId}'의 집계할 컬럼을 확인 해주세요.`
+                            validInfo.valid = false
+                        } else if (!target.operator || target.operator === "" || target.operator === "null" || target.operator === "undefined") {
+                            validInfo.text = `BaseFact 정보 '${target.targetId}'의 집계할 함수를 확인 해주세요.`
+                            validInfo.valid = false
+                        }
+                        if (
+                            target.operator === "top"
+                            && (
+                                (!target.operand1 || target.operand1 === "" || target.operand1 === "null" || target.operand1 === "undefined")
+                                || (!target.operand2 || target.operand2 === "" || target.operand2 === "null" || target.operand2 === "undefined")
+                                || (!target.operand3 || target.operand3 === "" || target.operand3 === "null" || target.operand3 === "undefined")
+                                || (!target.operand4 || target.operand4 === "" || target.operand4 === "null" || target.operand4 === "undefined")
+                            )
+                        ) {
+                            validInfo.text = `BaseFact 정보(SELECT) '${target.targetId}'의 피연산자를 확인 해주세요.`
+                            validInfo.valid = false
+                        }
+                    }
+                    return target
+                })
+            }
+            if (validInfo.valid) {
+                featureInfo.tbRsCustFeatRuleTrgtFilterList.map((target: TbRsCustFeatRuleTrgtFilter) => {
+                    if (!target.operator || target.operator === "" || target.operator === "null" || target.operator === "undefined") {
+                        validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 연산자를 확인 해주세요.`
                         validInfo.valid = false
                     }
-                }
-                return target
-            })
+                    if (
+                        (target.operator === "in_str" || target.operator === "not_in_str" || target.operator === "in_num" || target.operator === "not_in_num")
+                        && (!target.delimiter || target.delimiter.trim() === "" || target.delimiter === "null" || target.delimiter === "undefined")
+                    ) {
+                        validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 구분자를 확인 해주세요.`
+                        validInfo.valid = false
+                    } else if ((!target.operand1 || target.operand1 === "" || target.operand1 === "null" || target.operand1 === "undefined")) {
+                        validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                        validInfo.valid = false
+                    }
+                    if (
+                        (target.operator === "before" || target.operator === "after")
+                        && target.operand1 === "date"
+                        && (!target.operand2 || target.operand2 === "" || target.operand2 === "null" || target.operand2 === "undefined")
+                    ) {
+                        validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                        validInfo.valid = false
+                    }
+                    if (
+                        (target.operator === "before" || target.operator === "after")
+                        && target.operand1 === "now"
+                        && (
+                            (!target.operand2 || target.operand2 === "" || target.operand2 === "null" || target.operand2 === "undefined")
+                            || (!target.operand3 || target.operand3 === "" || target.operand3 === "null" || target.operand3 === "undefined")
+                        )
+                    ) {
+                        validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                        validInfo.valid = false
+                    }
+                    if (target.operator === "between") {
+                        if (
+                            target.operand1 === "date"
+                            && (!target.operand2 || target.operand2 === "" || target.operand2 === "null" || target.operand2 === "undefined")
+                        ) {
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.valid = false
+                        }
+                        if (
+                            target.operand1 === "now"
+                            && (
+                                (!target.operand2 || target.operand2 === "" || target.operand2 === "null" || target.operand2 === "undefined")
+                                || (!target.operand3 || target.operand3 === "" || target.operand3 === "null" || target.operand3 === "undefined")
+                            )
+                        ) {
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.valid = false
+                        }
+                        if (
+                            target.operand1 === "date"
+                            && (!target.operand5 || target.operand5 === "" || target.operand5 === "null" || target.operand5 === "undefined")
+                        ) {
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.valid = false
+                        }
+                        if (
+                            target.operand1 === "now"
+                            && (
+                                (!target.operand5 || target.operand5 === "" || target.operand5 === "null" || target.operand5 === "undefined")
+                                || (!target.operand6 || target.operand6 === "" || target.operand6 === "null" || target.operand6 === "undefined")
+                            )
+                        ) {
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.valid = false
+                        }
+                    }
+                    return target
+                })
+            }
         }
         // SQL
-        if (formData.customerFeature.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
-            if (!formData.customerFeature.tbRsCustFeatRuleSql.sqlQuery || formData.customerFeature.tbRsCustFeatRuleSql.sqlQuery === "") {
+        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
+            if (!featureInfo.tbRsCustFeatRuleSql.sqlQuery || featureInfo.tbRsCustFeatRuleSql.sqlQuery === "") {
                 validInfo.text = "Feature 생성 Query를 확인 해주세요."
                 validInfo.valid = false
-            } 
+            }
         }
 
         formData.submissionInfo.approvals.map((approval: SfSubmissionApproval) => {

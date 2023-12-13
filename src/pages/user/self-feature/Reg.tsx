@@ -35,6 +35,7 @@ import {
 	initFeatureTemp,
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
+	initCustFeatureFormDataSql,
 } from './data'
 import {
 	SubFeatStatus,
@@ -412,11 +413,12 @@ const SelfFeatureReg = () => {
 			return
 		}
 		featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
-		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
+		let param: any = cloneDeep(initCustFeatureFormData)
 		param.customerFeature = featureInfo
+		delete param.customerFeature.tbRsCustFeatRuleCaseList
+		delete param.customerFeature.tbRsCustFeatRuleSql
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
-		console.log(param)
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({
@@ -433,7 +435,7 @@ const SelfFeatureReg = () => {
 		if (createRuleDesignErr || createRuleDesignRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
-				content: '등록 중 에러가 발생했습니다.',
+				content: createRuleDesignRes?.message ? createRuleDesignRes?.message : '등록 중 에러가 발생했습니다.',
 			})
 		} else if (createRuleDesignSucc) {
 			toast({
@@ -451,8 +453,12 @@ const SelfFeatureReg = () => {
 	// 등록 API 호출(SQL)
 	const createCustFeatSQL = () => {
 		featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
-		let param: CustFeatureFormData = cloneDeep(initCustFeatureFormData)
-		param.customerFeature = featureInfo
+		let param: any = cloneDeep(initCustFeatureFormDataSql)
+		param.customerFeatureSql = featureInfo
+		delete param.customerFeatureSql.tbRsCustFeatRuleCalc
+		delete param.customerFeatureSql.tbRsCustFeatRuleCaseList
+		delete param.customerFeatureSql.tbRsCustFeatRuleTrgtList
+		delete param.customerFeatureSql.tbRsCustFeatRuleTrgtFilterList
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
 		let validRslt = validationCustReatRule(param)
@@ -471,7 +477,7 @@ const SelfFeatureReg = () => {
 		if (createSQLErr || createSQLRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
-				content: '등록 중 에러가 발생했습니다.',
+				content: createSQLRes?.message ? createSQLRes?.message : '등록 중 에러가 발생했습니다.',
 			})
 		} else if (createSQLSucc) {
 			toast({
@@ -588,6 +594,16 @@ const SelfFeatureReg = () => {
 		// 대구분 선택시 중구분 select ooption Group ID setting
 		if (keyNm === "featureSeGrp") {
 			setSeGrpId(v)
+			setFeatureTempInfo((state: FeatureTemp) => {
+				let rtn = cloneDeep(state)
+				Object.keys(rtn).map((key) => {
+					if (key === "featureSe") {
+						rtn[key] = ""
+					}
+					return key
+				})
+				return rtn
+			})
 		}
 	}
 	// 페이지 이동
