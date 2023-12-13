@@ -69,7 +69,7 @@ import { QueryParams } from "@/utils/ApiUtil";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import SubRejectModal from "@/components/self-feature-submission/modal/SubRejectModal";
-import { useApproverCandidate, useCustFeatRuleInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
+import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatSQLInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { GroupCodeType, ValidType } from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
@@ -79,7 +79,7 @@ import { selectSessionInfo } from "@/reducers/authSlice";
 import { useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
 import { selectCodeList } from "@/reducers/codeSlice";
 import { getFeatureSeList } from "@/api/FeatureAPI";
-import { useApproveSubmissionApproval } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
+import { useApproveSubmissionApproval, useRunScheduleByManually } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 import { getDateFormat } from "@/utils/DateUtil";
 
 const SfSubmissionRequestDetail = () => {
@@ -107,6 +107,7 @@ const SfSubmissionRequestDetail = () => {
     const [modalType, setModalType] = useState<string>('')
     // 상세 조회 API
     const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(location.state.referenceNo)
+	const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.referenceNo)
     const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
     const [submissionId, setSubmissionId] = useState<number>(0)
     const { data: submissionListRes, isError: submissionListErr, refetch: submissionListRefetch } = useSubmissionList(subListQueryParams)
@@ -146,10 +147,18 @@ const SfSubmissionRequestDetail = () => {
     // 승인의 경우 승인합니다 로 고정
     const [aprvSubComment, setAprvSubComment] = useState<AprvSubCommentProps>(initAprvSubCommentProps)
     const { data: aprvSubAprvalRes, isSuccess: aprvSubAprvalSucc, isError: aprvSubAprvalErr, mutate: aprvSubAprvalMutate } = useApproveSubmissionApproval(userEmail, approvalId, aprvSubComment)
+    // 수동실행 API
+    const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state.referenceNo)
     // component mount
     useEffect(() => {
         initCustFeatRule()
         custFeatRuleInfosRefetch()
+        //console.log(location)
+		// if (location.state.sqlDirectInputYn !== "Y") {
+		// 	custFeatRuleInfosRefetch()
+		// } else if (location.state.sqlDirectInputYn === "Y") {
+		// 	custFeatSQLInfosRefetch()
+		// }
         // if (location.state.sqlDirectInputYn !== "Y")
         //     mstrSgmtTbandColRefetch()
     }, [])
@@ -372,6 +381,21 @@ const SfSubmissionRequestDetail = () => {
             }
         }
     }, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
+	// 정보 조회 API callback (SQL)
+	useEffect(() => {
+		if (custFeatSQLInfosErr || custFeatSQLInfosRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (custFeatSQLInfosRes?.result) {
+				setFeatureInfo(cloneDeep(custFeatSQLInfosRes.result))
+				// 승인 정보 호출 API parameter setting
+				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.referenceNo })
+			}
+		}
+	}, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
     // 승인정보 호출을 위한 승인 list API refetch
     useEffect(() => {
         if (isEmpty(subListQueryParams)) return
@@ -526,8 +550,15 @@ const SfSubmissionRequestDetail = () => {
             return
         }
         // 수동실행 최소 1회 실행 validation
-        if (featureInfo.tbRsCustFeatRule.batManualExecTestCnt < 1) {
-            
+        if (
+            featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N"
+            && featureInfo.tbRsCustFeatRule.batManualExecTestCnt < 1
+        ) {
+            toast({
+                type: ValidType.ERROR,
+                content: '수동실행을 최소 1회 실행 해주세요.',
+            })
+            return
         }
         setUserEmail(sessionInfo.userEmail)
         let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && item.status === SubFeatStatus.REQ)
@@ -547,7 +578,7 @@ const SfSubmissionRequestDetail = () => {
         if (aprvSubAprvalErr || aprvSubAprvalRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
-                content: '승인 처리 중 에러가 발생했습니다',
+				content: aprvSubAprvalRes?.message ? aprvSubAprvalRes?.message : '승인 처리 중 에러가 발생했습니다.',
             })
         } else if (aprvSubAprvalSucc) {
             toast({
@@ -558,15 +589,60 @@ const SfSubmissionRequestDetail = () => {
             navigate('..')
         }
     }, [aprvSubAprvalRes, aprvSubAprvalSucc, aprvSubAprvalErr])
+    // 수동실행 API 호출
+    const runScheduleByManually = () => {
+        if (location.state.referenceNo && location.state.referenceNo !== "") {
+            if (featureInfo.tbRsCustFeatRule.batManualExecTestCnt > 5) {
+                toast({
+                    type: ValidType.ERROR,
+                    content: '수동 가능한 횟수는 5회 입니다.',
+                })
+                return
+            }
+            runScheduleByManuallyMutate()
+        } else {
+            console.log("no custFeatRuleId! please check custFeatRuleId")
+            toast({
+                type: ValidType.ERROR,
+                content: '수동 실행 중 에러가 발생했습니다.',
+            })
+        }
+    }
+    // 수동실행 API callback
+    useEffect(() => {
+        if (runScheduleByManuallyErr || runScheduleByManuallyRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+				content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
+            })
+        } else if (runScheduleByManuallySucc) {
+            toast({
+                type: ValidType.CONFIRM,
+                content: '수동 실행이 완료되었습니다.',
+            })
+            if (runScheduleByManuallyRes.status === 200) {
+                custFeatRuleInfosRefetch()
+                // if (location.state.sqlDirectInputYn !== "Y") {
+                // 	custFeatRuleInfosRefetch()
+                // } else if (location.state.sqlDirectInputYn === "Y") {
+                // 	custFeatSQLInfosRefetch()
+                // }
+            }
+        }
+    }, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
 
     return (
         <>
             <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
                 {/* 상단 버튼 영역 */}
-                <FeatQueryRsltButton
-                    custFeatRuleId={location.state.referenceNo}
-                    batManualExecTestCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
-                />
+                <Stack direction="Horizontal" gap="MD" justifyContent="End">
+                    <Button size="LG" onClick={runScheduleByManually}>
+                        수동 실행
+                    </Button>
+                    <FeatQueryRsltButton
+                        custFeatRuleId={location.state.referenceNo}
+                    />
+                </Stack>
                 {/* 정보 영역 */}
                 <Typography variant="h4">승인 정보</Typography>
                 <Stack direction="Vertical" className="width-100" gap="MD">

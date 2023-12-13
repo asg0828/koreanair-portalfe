@@ -143,7 +143,7 @@ const SubRejectModal = ({
         if (rjctSubAprvalErr || rjctSubAprvalRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
-                content: '반려 처리 중 에러가 발생했습니다',
+				content: rjctSubAprvalRes?.message ? rjctSubAprvalRes?.message : '반려 처리 중 에러가 발생했습니다.',
             })
         } else if (rjctSubAprvalSucc) {
             toast({
