@@ -48,7 +48,7 @@ export const submissionGroupCode: SubmissionGroupCode = {
 
 export const initFeatureSubmissionSearchProps: FeatureSubmissionSearchProps = {
     type: FeatureType.CUST,
-    status: '',
+    submissionStatus: '',
     referenceNo: '',
     submissionNo: '',
     requester: '',
