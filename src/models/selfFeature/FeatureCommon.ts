@@ -71,7 +71,8 @@ export enum CommonCode {
     STAC_CALC_TYPE = "STAC_CALC_TYPE",
     FUNCTION = "FUNCTION", 
     DATA_TYPE_CONV_CD = "DATA_TYPE_CONV_CD", 
-    FORMAT = "FORMAT"
+    FORMAT = "FORMAT",
+    CATEGORY = "CATEGORY"
 }
 
 // Rule ID

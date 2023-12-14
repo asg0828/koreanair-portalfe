@@ -34,7 +34,6 @@ import {
     sfSubmissionApprovalListColumns as columns,
     initSfSubmissionApproval,
     initAprvSubCommentProps,
-    categoryOption
 } from "./data";
 import {
     DivisionTypes,
@@ -96,6 +95,8 @@ const SfSubmissionRequestDetail = () => {
 
     const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
     const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
+    const [categoryOption, setCategoryOption] = useState<Array<any>>([])
+    const { data: cmmCodeCateRes } = useCommCodes(CommonCode.CATEGORY)
     const { } = useCommCodes(CommonCode.FUNCTION)
     const { } = useCommCodes(CommonCode.OPERATOR)
     const { } = useCommCodes(CommonCode.FORMAT)
@@ -173,6 +174,21 @@ const SfSubmissionRequestDetail = () => {
             return rtn
         })
     }
+    // 카테고리 setting
+    useEffect(() => {
+		if (cmmCodeCateRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '공통 코드 조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (cmmCodeCateRes?.result) {
+				setCategoryOption(() => {
+					return [...[{ cdv: "", cdvNm: "선택" }], ...cmmCodeCateRes?.result]
+				})
+			}
+		}
+    }, [cmmCodeCateRes])
 	// 부서 목록 setting
 	useEffect(() => {
 		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
@@ -715,6 +731,12 @@ const SfSubmissionRequestDetail = () => {
                 type: ValidType.CONFIRM,
                 content: '카테고리 설정이 완료되었습니다.',
             })
+            if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+                custFeatRuleInfosRefetch()
+            }
+            if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
+                custFeatSQLInfosRefetch()
+            }
         }
     }, [updateFeatureCategoryRes, updateFeatureCategorySucc, updateFeatureCategoryErr, toast])
 
@@ -872,7 +894,9 @@ const SfSubmissionRequestDetail = () => {
                             </TD>
                             <TH colSpan={1} align="right">카테고리</TH>
                             <TD colSpan={2} align='left'>
-                                {featureInfo.tbRsCustFeatRule && featureInfo.tbRsCustFeatRule.category}
+                                {featureInfo.tbRsCustFeatRule && 
+                                    categoryOption.find((cate) => cate.cdv === featureInfo.tbRsCustFeatRule.category)?.cdvNm
+                                }
                             </TD>
                         </TR>
                         <TR>
@@ -928,7 +952,7 @@ const SfSubmissionRequestDetail = () => {
                                             }}
                                         >
                                             {categoryOption.map((item, index) => (
-                                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                                <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                                             ))}
                                         </Select>
                                         <Button 
