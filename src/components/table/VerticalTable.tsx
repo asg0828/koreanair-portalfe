@@ -37,6 +37,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
   const [sortedColumn, setSortedColumn] = useState('');
+  const [sortedDirection, setSortedDirection] = useState('');
 
   function formatNumber(value: number) {
     return new Intl.NumberFormat('ko-KR').format(value);
@@ -99,7 +100,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
         return a.rank - b.rank;
       }
 
-
       if (typeof valueA === 'string') {
         return valueA.localeCompare(valueB) * oValue;
       } else {
@@ -108,14 +108,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     });
 
     setSortRows(sortRows);
-  };
-
-  const sortData = (columnField:any) => {
-    const columnIndex = columns.findIndex(column => column.field === columnField);
-    if (columnIndex === -1) return;
-
-    const order = SortDirectionCode.DESC;
-    handleChangeSortDirection(order, columnIndex);
   };
 
   const initialSort = () => {
@@ -129,7 +121,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
         initialSortedColumn === 'purchaseAmount' ?
             SortDirectionCode.ASC :
             SortDirectionCode.ASC;
-
+    setSortedDirection(sortDirection);
     handleChangeSortDirection(sortDirection, columnIndex);
   };
 

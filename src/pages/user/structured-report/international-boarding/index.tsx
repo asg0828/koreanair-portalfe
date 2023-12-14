@@ -17,17 +17,13 @@ import DashboardPopup from "@pages/user/structured-report/purchase-contributors/
 import Modal from "react-modal";
 
 const initParams: ReportParams = {
+    sortedColumn:'',
+    sortedDirection:'',
+    rank:0,
     oneId: '',
-    memberNumber:0,
-    name:'',
-    vipYn:'',
-    purchaseAmount:0,
-    purchaseCount:0,
-    purchaseContribution:0,
-    domesticPurchaseAmount:0,
-    internationalAmount:0,
-    FrCount:0,
-    PrCount:0
+    skypassNm:0,
+    userNm:'',
+    vipType:''
 };
 
 const List = () => {
@@ -85,7 +81,7 @@ const List = () => {
         { headerName: '국제선 FR 탑승횟수', field: 'IntlFrCount', colSpan: 1 },
         { headerName: '국제선 PR 탑승횟수', field: 'IntlPrCount', colSpan: 1 },
         { headerName: '국제선 평균 탑승 주기', field: 'avgBoardingIntervalForIntl', colSpan: 1 },
-        { headerName: '국제선 최다 탑승 O&D', field: 'MostFrequentedO&DForIntl', colSpan: 1 },
+        { headerName: '국제선 최다 탑승 O&D', field: 'MostFrequentedOnDForIntl', colSpan: 1 },
     ];
 
     const [criteria, setCriteria] = useState('0 year');

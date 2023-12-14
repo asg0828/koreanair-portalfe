@@ -15,17 +15,13 @@ import {ReportParams} from "@models/model/ReportModel";
 import {ValidType} from "@models/common/Constants";
 
 const initParams: ReportParams = {
+    sortedColumn:'',
+    sortedDirection:'',
+    rank:0,
     oneId: '',
-    memberNumber:0,
-    name:'',
-    vipYn:'',
-    purchaseAmount:0,
-    purchaseCount:0,
-    purchaseContribution:0,
-    domesticPurchaseAmount:0,
-    internationalAmount:0,
-    FrCount:0,
-    PrCount:0
+    skypassNm:0,
+    userNm:'',
+    vipType:''
 };
 
 const List = () => {
@@ -36,7 +32,10 @@ const List = () => {
     const [showPopup, setShowPopup] = useState(false);
 
     const [params, setParams] = useState<ReportParams>(initParams);
-    const [page, setPage] = useState<PageModel>(initPage);
+    const [page, setPage] = useState<PageModel>({
+        ...initPage,
+        pageSize: 50
+    });
 
     const columns: Array<ColumnsInfo> = [
         {headerName: 'Rank', field: 'rank', colSpan: 0.5},
@@ -63,18 +62,6 @@ const List = () => {
     const handleSearch = useCallback(() => {
         refetch();
     }, [refetch]);
-
-    const handleClear = () => {
-        setParams(initParams);
-    };
-
-
-    const handleChangeParams = (name: string, value: any) => {
-        setParams((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
 
     useDidMountEffect(() => {
         handleSearch();
