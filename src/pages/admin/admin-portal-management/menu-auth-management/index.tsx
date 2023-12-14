@@ -52,10 +52,6 @@ const List = () => {
     mutate: cuaMutate,
   } = useCreateAdminAuthMenu();
 
-  const findCreatedItem = () => {
-    return data.find((item) => item.oprtrSe === 'C');
-  };
-
   const handleClickRow = (row: any, index: number, selected: boolean) => {
     setData((prevData) =>
       prevData.map((item) => {
@@ -115,7 +111,12 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setData(response.data.contents);
+        setData(
+          response.data.contents.map((item: any) => {
+            item.isChecked = false;
+            return item;
+          })
+        );
       }
     }
   }, [response, isError, toast]);
