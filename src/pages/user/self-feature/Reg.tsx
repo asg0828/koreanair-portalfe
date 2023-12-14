@@ -188,6 +188,7 @@ const SelfFeatureReg = () => {
 			})
 		} else {
 			if (mstrSgmtTbandColRes) {
+				if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
 				setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
 			}
 		}
@@ -300,6 +301,7 @@ const SelfFeatureReg = () => {
 	}, [featureTempInfo])
 	// 대상 선택시 formData setting
 	useEffect(() => {
+		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
 		if (targetList.length < 1) setIsSelectAggregateTop(false)
 
@@ -334,6 +336,7 @@ const SelfFeatureReg = () => {
 		setFormulaTrgtList(fList)
 	}, [targetList])
 	useEffect(() => {
+		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleTrgtFilterList = cloneDeep(trgtFilterList)
@@ -350,6 +353,7 @@ const SelfFeatureReg = () => {
 	}, [sqlQueryInfo])
 	// 계산식 입력시 formData setting
 	useEffect(() => {
+		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleCalc = cloneDeep(custFeatRuleCalc)
@@ -358,6 +362,7 @@ const SelfFeatureReg = () => {
 	}, [custFeatRuleCalc])
 	// 계산식 case문 formData setting
 	useEffect(() => {
+		//if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
 		// setFeatureInfo((state: FeatureInfo) => {
 		// 	let rtn = cloneDeep(state)
 		// 	rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
@@ -366,6 +371,7 @@ const SelfFeatureReg = () => {
 	}, [custFeatRuleCaseList])
 	// 대상 선택 list가 없는 경우 formula reset
 	useEffect(() => {
+		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
 		if (formulaTrgtList.length > 0) return
 
 		setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
