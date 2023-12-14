@@ -216,7 +216,7 @@ const SfSubmissionRequestDetail = () => {
                 setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
             }
         }
-    }, [mstrSgmtTbandColRes, mstrSgmtTbandColErr])
+    }, [mstrSgmtTbandColRes, custFeatRuleInfosRefetch, mstrSgmtTbandColErr])
     // SQL 등록 여부 API response callback
     useEffect(() => {
         if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
