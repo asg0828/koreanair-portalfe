@@ -465,7 +465,6 @@ const SelfFeatureReg = () => {
 		delete param.customerFeatureSql.tbRsCustFeatRuleTrgtFilterList
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
-		console.log(param)
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({
