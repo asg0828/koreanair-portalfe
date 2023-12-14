@@ -21,8 +21,14 @@ export interface DataTreeProps {
   treeHeight?: number | undefined;
 }
 
-const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, onMove, treeHeight }: DataTreeProps) => {
-  const height = treeHeight !== undefined ? treeHeight : 500;
+const DataTree = ({
+  enableChecked = false,
+  treeData = [],
+  term = '',
+  onClick,
+  onMove,
+  treeHeight = 500,
+}: DataTreeProps) => {
   // 폴더 펼치기, 접기
   const handleToggle = (node: any) => {
     node.toggle();
@@ -70,7 +76,7 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
   // 부모 노드들 체크 여부 적용
   const checkParentRecursive = (node: NodeApi) => {
     if (node.parent) {
-      node.parent.data.isChecked = node.parent.children && node.parent.children.every((n: any) => n.data.isChecked);
+      node.parent.data.isChecked = node.parent.children && node.parent.children.some((n: any) => n.data.isChecked);
       checkParentRecursive(node.parent);
     }
   };
@@ -115,7 +121,7 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
     // 파일인 경우 폴더 보다 1뎁스 더 margin-left
     let paddingLeft;
     if (node.children?.length === 0) {
-      paddingLeft = `${node.level === 0 ? (node.level + 1) * 24 : node.level * 24}px`;
+      paddingLeft = `24px`;
     }
 
     if (node.children?.length === 0) {
@@ -173,10 +179,16 @@ const DataTree = ({ enableChecked = false, treeData = [], term = '', onClick, on
   };
 
   return (
-    <section className="padding-10 width-100">
+    <section
+      className="padding-10 width-100"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+      }}
+    >
       <Tree
         width="100%"
-        height={height}
+        height={treeHeight}
         data={treeData}
         onMove={handleMove}
         searchTerm={term}

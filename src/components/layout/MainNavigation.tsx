@@ -2,7 +2,6 @@ import { useAppSelector } from '@/hooks/useRedux';
 import { selectContextPath } from '@/reducers/authSlice';
 import { selectMenuList } from '@/reducers/menuSlice';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Stack } from '@components/ui';
-import { MenuItem } from '@models/common/Menu';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const MainNavigation = () => {
@@ -12,7 +11,7 @@ const MainNavigation = () => {
   const menuList = useAppSelector(selectMenuList())!;
   const contextPath = useAppSelector(selectContextPath());
 
-  const getMenuRecursive = (menuList: MenuItem[], path: string): MenuItem | undefined => {
+  const getMenuRecursive = (menuList: any[], path: string): any | undefined => {
     for (let i = 0; i < menuList.length; i++) {
       if (menuList[i].path === path || menuList[i].path === '*') {
         return menuList[i];
