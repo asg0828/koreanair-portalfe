@@ -1027,7 +1027,7 @@ svg {
   margin-bottom: 0.75rem;
 }
 .MuiSelect-popper.MuiPopper-root {
-  height: 180px;
+  max-height: 180px;
   overflow: auto;
 }
 .tableTdScrollFix .verticalTableTD > div {
@@ -1037,31 +1037,31 @@ svg {
 .react-datepicker-popper {
   z-index: 999999999;
 }
-.RightScrollTable .verticalTableDiv div:nth-child(2){
+.RightScrollTable .verticalTableDiv div:nth-child(2) {
   max-height: 433px;
   overflow: auto;
 }
-.tree-wrap #root{
+.tree-wrap #root {
   min-width: unset;
 }
-.verticalTable p{
+.verticalTable p {
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.innerDataGridWidth100 .verticalTable{
-    width: 100%;
+.innerDataGridWidth100 .verticalTable {
+  width: 100%;
 }
-.tree-wrap p{
+.tree-wrap p {
   white-space: nowrap;
   padding-right: 8px;
   height: 24px;
   line-height: 24px;
 }
-.tree-wrap section .primary-200 p{
+.tree-wrap section .primary-200 p {
   background: #c5e7f4;
 }
-.multiSelectTable .verticalTableDiv>div:nth-child(2){
+.multiSelectTable .verticalTableDiv > div:nth-child(2) {
   height: 236px;
   max-height: 236px;
   overflow: auto;
