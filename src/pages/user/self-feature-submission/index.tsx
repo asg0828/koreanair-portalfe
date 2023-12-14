@@ -5,7 +5,6 @@ import { SelectValue } from '@mui/base/useSelect'
 import { useAppSelector } from "@/hooks/useRedux"
 import { selectSessionInfo } from "@/reducers/authSlice"
 
-import VerticalTable from "@/components/table/VerticalTable"
 import HorizontalTable from "@/components/table/HorizontalTable"
 import {
     Stack,
@@ -15,10 +14,8 @@ import {
     DatePicker,
     Button,
     Select,
-    Pagination,
     SelectOption,
     TextField,
-    Label,
     useToast,
 } from '@components/ui'
 
@@ -179,7 +176,7 @@ const SfSubmissionRequest = () => {
                                         setRequestDateFrom(today)
                                         setSearch((prevState: FeatureSubmissionSearchProps) => {
                                             let rtn = cloneDeep(prevState)
-                                            rtn.requestDateFrom = getDateFormat(today)//`${nextVal}T19:20:30+01:00`
+                                            rtn.requestDateFrom = `${today}T00:00:00`//getDateFormat(today)//`${nextVal}T19:20:30+01:00`
                                             return rtn
                                         });
                                     },
@@ -189,7 +186,7 @@ const SfSubmissionRequest = () => {
                                     setRequestDateFrom(nextVal)
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
-                                        rtn.requestDateFrom = getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
+                                        rtn.requestDateFrom = `${nextVal}T00:00:00`//getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
                                         return rtn
                                     });
                                 }}
@@ -208,7 +205,7 @@ const SfSubmissionRequest = () => {
                                         setRequestDateTo(today)
                                         setSearch((prevState: FeatureSubmissionSearchProps) => {
                                             let rtn = cloneDeep(prevState)
-                                            rtn.requestDateTo = getDateFormat(today)//`${nextVal}T19:20:30+01:00`
+                                            rtn.requestDateTo = `${today}T23:59:59`//getDateFormat(today)//`${nextVal}T19:20:30+01:00`
                                             return rtn
                                         });
                                     },
@@ -218,7 +215,7 @@ const SfSubmissionRequest = () => {
                                     setRequestDateTo(nextVal)
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
-                                        rtn.requestDateTo = getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
+                                        rtn.requestDateTo = `${nextVal}T23:59:59`//getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
                                         return rtn
                                     });
                                 }}
@@ -253,10 +250,9 @@ const SfSubmissionRequest = () => {
                                 e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                                 value: SelectValue<{}, false>
                                 ) => {
-                                    onchangeSelectHandler(e, value, "status")
+                                    onchangeSelectHandler(e, value, "submissionStatus")
                                 }}
                             >
-
                                 {sfSubmissionStatusOption.map((item, index) => (
                                 <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
                                 ))}

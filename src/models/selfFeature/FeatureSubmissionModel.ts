@@ -78,7 +78,7 @@ export interface ApporvalListComponentProps {
 export interface FeatureSubmissionSearchProps {
     [key: string]: string
     type: string
-    status: string
+    submissionStatus: string
     referenceNo: string
     submissionNo: string
     requester: string
