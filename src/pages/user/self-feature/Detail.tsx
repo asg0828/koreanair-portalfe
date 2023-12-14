@@ -370,8 +370,10 @@ const SelfFeatureDetail = () => {
 		if (pageNm === SelfFeatPgPpNm.LIST) {
 			navigate('..')
 		} else if (pageNm === SelfFeatPgPpNm.EDIT) {
-			featureInfo.tbRsCustFeatRuleTrgtList = targetList
-			featureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
+			if (location.state.sqlDirectInputYn !== "Y") {
+				featureInfo.tbRsCustFeatRuleTrgtList = targetList
+				featureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
+			}
 			featureInfo.featureTemp.featureSeGrp = ""
 			navigate(
 				`../${pageNm}`,

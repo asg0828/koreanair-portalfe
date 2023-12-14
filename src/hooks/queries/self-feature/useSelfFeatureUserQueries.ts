@@ -7,6 +7,7 @@ import {
     retrieveCustFeatRuleInfos, 
     retrieveCustFeatRules, 
     retrieveCustFeatSQLInfos, 
+    retrieveDirectSQLYn, 
     retrieveReadSql, 
     retrieveSampleData,
     retrieveSubmissionInfo,
@@ -63,4 +64,8 @@ export const useCustFeatParentChildList = (custFeatRuleName: string) => {
 // Self-feature 결재선 조회
 export const useApproverCandidate = () => {
     return useQuery(['/approver-candidate'], () => retrieveApproverCandidate())
+}
+// Self-feature SQL 직접입력 여부 조회
+export const useDirectSQLYn = (custFeatRuleId: string) => {
+    return useQuery(['/direct-sql-yn', custFeatRuleId], () => retrieveDirectSQLYn(custFeatRuleId))
 }

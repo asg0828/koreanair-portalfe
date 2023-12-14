@@ -122,6 +122,15 @@ export const retrieveApproverCandidate = () => {
         method: Method.GET,
     })
 }
+// Self-feature SQL 직접입력 여부 조회
+export const retrieveDirectSQLYn = (custFeatRuleId: string) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_WITH_SUB_SQL_DETL}/direct-sql/${custFeatRuleId}`,
+        method: Method.GET
+    })
+}
+
 // mutations
 // Self-feature 등록(Rule-Design)
 export const createCustFeatRule = (bodyParams: Object) => {
