@@ -1028,13 +1028,12 @@ const SelfFeatureDetail = () => {
 						<Typography variant="h4">신청 정보</Typography>
 						<HorizontalTable>
 							<TR>
-								<TH align="right" colSpan={1} required>
+								<TH align="right" colSpan={1}>
 									Feature 신청자
 								</TH>
 								<TD colSpan={2}>
 									<Stack gap="SM" className="width-100" direction="Vertical">
 										<Stack gap="SM">
-											{/* {featureInfo.featureTemp && featureInfo.featureTemp.enrUserId} */}
 											{featureInfo.featureTemp && featureInfo.featureTemp.enrUserNm}
 										</Stack>
 									</Stack>
@@ -1044,7 +1043,6 @@ const SelfFeatureDetail = () => {
 								</TH>
 								<TD colSpan={2}>
 									<Stack gap="SM" className="width-100" direction="Vertical">
-										{/* {featureInfo.featureTemp && featureInfo.featureTemp.enrDeptCode} */}
 										{featureInfo.featureTemp && 
 											deptOption.find((dept) => dept.deptCode === featureInfo.featureTemp.enrDeptCode)?.deptNm
 										}

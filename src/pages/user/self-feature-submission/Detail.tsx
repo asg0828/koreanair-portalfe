@@ -216,7 +216,7 @@ const SfSubmissionRequestDetail = () => {
                 setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
             }
         }
-    }, [custFeatRuleInfosRefetch])
+    }, [mstrSgmtTbandColRes, mstrSgmtTbandColErr])
     // SQL 등록 여부 API response callback
     useEffect(() => {
         if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
@@ -983,7 +983,7 @@ const SfSubmissionRequestDetail = () => {
                             <Typography variant="h4">신청 정보</Typography>
                             <HorizontalTable>
                                 <TR>
-                                    <TH align="right" colSpan={1} required>
+                                    <TH align="right" colSpan={1}>
                                         Feature 신청자
                                     </TH>
                                     <TD colSpan={2}>
