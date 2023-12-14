@@ -70,27 +70,34 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
           const sessionInfo: SessionInfo = sessionResponse.data as SessionInfo;
           sessionUtil.setSessionInfo(sessionInfo);
 
-          if (!sessionInfo.apldUserAuthId || !sessionInfo.apldMgrAuthId) {
-            setUnauthorized(true);
-            return;
-          }
-
           let contextPath;
           let baseMenuList: Array<any> = [];
           let myMenuList: Array<any> = [];
           let routerFileName;
 
           if (pathname.startsWith(ContextPath.ADMIN)) {
+            if (!sessionInfo.apldMgrAuthId) {
+              setUnauthorized(true);
+              return;
+            }
             contextPath = ContextPath.ADMIN;
             baseMenuList = adminMenulist;
             myMenuList = sessionInfo.menuByAuthMgr?.menus || [];
             routerFileName = 'adminRouter';
             setBaseApiUrl('/bo');
           } else if (pathname.startsWith(ContextPath.POPUP)) {
+            if (!sessionInfo.apldUserAuthId) {
+              setUnauthorized(true);
+              return;
+            }
             contextPath = ContextPath.POPUP;
             transferLocalStorage();
             setBaseApiUrl('/fo');
           } else {
+            if (!sessionInfo.apldUserAuthId) {
+              setUnauthorized(true);
+              return;
+            }
             contextPath = ContextPath.USER;
             baseMenuList = userMenuList;
             myMenuList = sessionInfo.menuByAuthUser?.menus || [];
