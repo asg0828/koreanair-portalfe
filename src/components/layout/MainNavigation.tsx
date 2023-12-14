@@ -7,17 +7,17 @@ import { useLocation, useNavigate } from 'react-router-dom';
 const MainNavigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const pathnames = location.pathname.split('/').filter((path) => path);
+  const menuUrlNames = location.pathname.split('/').filter((menuUrl) => menuUrl);
   const menuList = useAppSelector(selectMenuList())!;
   const contextPath = useAppSelector(selectContextPath());
 
-  const getMenuRecursive = (menuList: any[], path: string): any | undefined => {
+  const getMenuRecursive = (menuList: any[], menuUrl: string): any | undefined => {
     for (let i = 0; i < menuList.length; i++) {
-      if (menuList[i].path === path || menuList[i].path === '*') {
+      if (menuList[i].menuUrl === menuUrl || menuList[i].menuUrl === '*') {
         return menuList[i];
       } else {
         if (menuList[i].children) {
-          const menuObj = getMenuRecursive(menuList[i].children, path);
+          const menuObj = getMenuRecursive(menuList[i].children, menuUrl);
 
           if (menuObj) {
             return menuObj;
@@ -28,24 +28,24 @@ const MainNavigation = () => {
   };
 
   const getMenuInfo = (index: number): Array<string> => {
-    let path = '';
+    let menuUrl = '';
 
     for (let i = 0; i <= index; i++) {
-      path += `/${pathnames[i]}`;
+      menuUrl += `/${menuUrlNames[i]}`;
     }
 
-    const menuObj = getMenuRecursive(menuList, path);
-    let name = menuObj ? menuObj.name : '';
+    const menuObj = getMenuRecursive(menuList, menuUrl);
+    let menuNm = menuObj ? menuObj.menuNm : '';
 
-    return [name, path];
+    return [menuNm, menuUrl];
   };
 
   const goToHome = () => {
     navigate(contextPath);
   };
 
-  const goToMenu = (path: string) => {
-    navigate(path);
+  const goToMenu = (menuUrl: string) => {
+    navigate(menuUrl);
   };
 
   return (
@@ -54,13 +54,16 @@ const MainNavigation = () => {
         <BreadcrumbItem isCurrentPage={false}>
           <BreadcrumbLink onClick={goToHome}>Home</BreadcrumbLink>
         </BreadcrumbItem>
-        {pathnames.map(
-          (path, index) =>
-            path !== 'admin' && (
-              <BreadcrumbItem key={`${path}-${index}`} isCurrentPage={pathnames.length - 1 === index ? true : false}>
+        {menuUrlNames.map(
+          (menuUrl, index) =>
+            menuUrl !== 'admin' && (
+              <BreadcrumbItem
+                key={`${menuUrl}-${index}`}
+                isCurrentPage={menuUrlNames.length - 1 === index ? true : false}
+              >
                 {(() => {
-                  const [name, path] = getMenuInfo(index);
-                  return <BreadcrumbLink onClick={() => goToMenu(path)}>{name}</BreadcrumbLink>;
+                  const [menuNm, menuUrl] = getMenuInfo(index);
+                  return <BreadcrumbLink onClick={() => goToMenu(menuUrl)}>{menuNm}</BreadcrumbLink>;
                 })()}
               </BreadcrumbItem>
             )
