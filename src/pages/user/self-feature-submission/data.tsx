@@ -46,13 +46,6 @@ export const submissionGroupCode: SubmissionGroupCode = {
     sf_aprv_egroup3: "Self-Feature 3차승인(최종생성승인)",
 }
 
-export const categoryOption = [
-    { value: '', text: '선택' },
-    { value: '고객', text: '고객' },
-    { value: '여객', text: '여객' },
-    { value: '행동', text: '행동' },
-]
-
 export const initFeatureSubmissionSearchProps: FeatureSubmissionSearchProps = {
     type: FeatureType.CUST,
     status: '',
