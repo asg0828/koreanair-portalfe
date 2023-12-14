@@ -156,13 +156,15 @@ const SelfFeatureEdit = () => {
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
-			if (custFeatRule.sqlDirectInputYn === 'Y') {
-				updateCustFeatSQL()
-			} else if (
-				custFeatRule.sqlDirectInputYn === ''
-				|| custFeatRule.sqlDirectInputYn === 'N'
-			) {
-				updateCustFeatRule()
+			if (targetClear === "updateInfo") {
+				if (custFeatRule.sqlDirectInputYn === 'Y') {
+					updateCustFeatSQL()
+				} else if (
+					custFeatRule.sqlDirectInputYn === ''
+					|| custFeatRule.sqlDirectInputYn === 'N'
+				) {
+					updateCustFeatRule()
+				}
 			}
 			// 대상 초기화
 			if (targetClear === "trgtClear") {
@@ -641,6 +643,7 @@ const SelfFeatureEdit = () => {
 	// 수정 버튼 클릭시
 	const onSubmitUpdateHandler = () => {
 		setModalType(ModalType.CONFIRM)
+		setTargetClear("updateInfo")
 		setConfirmModalTit(ModalTitCont.EDIT.title)
 		setConfirmModalCont(ModalTitCont.EDIT.context)
 		setIsOpenConfirmModal(true)

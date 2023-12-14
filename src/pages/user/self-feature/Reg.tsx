@@ -158,10 +158,12 @@ const SelfFeatureReg = () => {
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
-			if (regType === SelfFeatPgPpNm.RULE_REG) {
-				createCustFeatRule()
-			} else if (regType === SelfFeatPgPpNm.SQL_REG) {
-				createCustFeatSQL()
+			if (clickType === "insertInfo") {
+				if (regType === SelfFeatPgPpNm.RULE_REG) {
+					createCustFeatRule()
+				} else if (regType === SelfFeatPgPpNm.SQL_REG) {
+					createCustFeatSQL()
+				}
 			}
 			// 대상선택 초기화
 			if (clickType === "trgtClear") {
@@ -636,6 +638,7 @@ const SelfFeatureReg = () => {
 	// 저장 버튼 클릭시
 	const onSubmitInsertHandler = () => {
 		setModalType(ModalType.CONFIRM)
+		setClickType("insertInfo")
 		setConfirmModalTit(ModalTitCont.REG.title)
 		setConfirmModalCont(ModalTitCont.REG.context)
 		setIsOpenConfirmModal(true)
