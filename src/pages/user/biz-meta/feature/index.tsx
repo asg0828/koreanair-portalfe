@@ -70,11 +70,11 @@ const List = () => {
         );
       },
     },
-    { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
-    { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
-    { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1.8, align: 'left' },
-    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1.8, align: 'left' },
-    { headerName: '정의', field: 'featureDef', colSpan: 1.8, align: 'left' },
+    { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 0.8 },
+    { headerName: '중구분', field: 'featureSeNm', colSpan: 0.8 },
+    { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1.9, align: 'left' },
+    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1.9, align: 'left' },
+    { headerName: '정의', field: 'featureDef', colSpan: 2, align: 'left' },
     { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
     { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1.2 },
   ];

@@ -69,3 +69,16 @@ export const findUpdatedArray = (oldArray: Array<any>, newArray: Array<any>) => 
 export const isEqual = (itemA: Object, itemB: Object) => {
   return JSON.stringify(itemA) === JSON.stringify(itemB);
 };
+
+export const findMenuRecursive = (menuList: any[], menuUrl: string): any | undefined => {
+  for (const menu of menuList) {
+    if (menu.menuUrl === menuUrl) {
+      return menu;
+    } else if (menu.children) {
+      const menuObj = findMenuRecursive(menu.children, menuUrl);
+      if (menuObj) {
+        return menuObj;
+      }
+    }
+  }
+};
