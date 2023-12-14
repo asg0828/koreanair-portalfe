@@ -3,7 +3,7 @@ import { useDeleteMultipleInterestFeature } from '@/hooks/mutations/useUserFeatu
 import { useInterestFeatureList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ModalType, ValidType, View } from '@/models/common/Constants';
+import { ContextPath, ModalType, ValidType, View } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
@@ -41,7 +41,7 @@ const List = () => {
   } = useDeleteMultipleInterestFeature(userId, featureIds);
 
   const goToDetail = (row: FeatureModel, index: number) => {
-    const path = contextPath === '/admin' ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
+    const path = contextPath === ContextPath.ADMIN ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
     navigate(`${contextPath}${path}`, {
       state: {
         featureId: row.featureId,

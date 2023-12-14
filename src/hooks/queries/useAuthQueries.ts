@@ -10,8 +10,8 @@ import { AuthParams } from '@/models/model/AuthModel';
 import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
-export const useUserAuthAllList = () => {
-  return useQuery(['/user/auth/list/all'], getUserAuthAllList);
+export const useUserAuthAllList = (options?: Object) => {
+  return useQuery(['/user/auth/list/all'], getUserAuthAllList, options);
 };
 
 export const useUserAuthList = (params: AuthParams, page: PageModel) => {
@@ -22,8 +22,8 @@ export const useUserAuthById = (authId: string) => {
   return useQuery(['/user/auth', authId], () => getUserAuthById(authId));
 };
 
-export const useAdminAuthAllList = () => {
-  return useQuery(['/admin/auth/list/all'], getAdminAuthAllList);
+export const useAdminAuthAllList = (options?: Object) => {
+  return useQuery(['/admin/auth/list/all'], getAdminAuthAllList, options);
 };
 
 export const useAdminAuthList = (params: AuthParams, page: PageModel) => {

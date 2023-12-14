@@ -3,7 +3,7 @@ import DataGrid from '@/components/grid/DataGrid';
 import { useCreateInterestFeature, useDeleteInterestFeature } from '@/hooks/mutations/useUserFeatureMutations';
 import { usePopularFeatureList } from '@/hooks/queries/useFeatureQueries';
 import { useAppSelector } from '@/hooks/useRedux';
-import { ValidType } from '@/models/common/Constants';
+import { ContextPath, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
@@ -64,7 +64,7 @@ const List = () => {
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
 
   const goToDetail = (row: FeatureModel, index: number) => {
-    const path = contextPath === '/admin' ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
+    const path = contextPath === ContextPath.ADMIN ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
     navigate(`${contextPath}${path}`, {
       state: {
         featureId: row.featureId,
