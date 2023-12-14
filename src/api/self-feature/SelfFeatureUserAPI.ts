@@ -233,3 +233,14 @@ export const rejectSubmissionApproval = (email: string, approvalId: number, body
         }
     })
 }
+// Self-feature 카테고리 설정
+export const updateFeatureCategory = (custFeatRuleId: string, bodyParams: Object) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.FEAT_BASE}/${custFeatRuleId}/category`,
+        method: Method.PUT,
+        params: {
+            bodyParams: bodyParams
+        }
+    })
+}

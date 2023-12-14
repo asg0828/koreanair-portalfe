@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { cloneDeep, isEmpty } from 'lodash'
+import { SelectValue } from '@mui/base/useSelect';
 
 import VerticalTable from "@/components/table/VerticalTable";
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -17,6 +18,8 @@ import {
     TextField,
     Button,
     useToast,
+    Select,
+    SelectOption,
 } from '@components/ui'
 
 import {
@@ -30,7 +33,8 @@ import {
     initSfSubmissionRequestInfo,
     sfSubmissionApprovalListColumns as columns,
     initSfSubmissionApproval,
-    initAprvSubCommentProps
+    initAprvSubCommentProps,
+    categoryOption
 } from "./data";
 import {
     DivisionTypes,
@@ -79,8 +83,9 @@ import { selectSessionInfo } from "@/reducers/authSlice";
 import { useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
 import { selectCodeList } from "@/reducers/codeSlice";
 import { getFeatureSeList } from "@/api/FeatureAPI";
-import { useApproveSubmissionApproval, useRunScheduleByManually } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
+import { useApproveSubmissionApproval, useFeatureCategory, useRunScheduleByManually } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 import { getDateFormat } from "@/utils/DateUtil";
+import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
 
 const SfSubmissionRequestDetail = () => {
 
@@ -95,6 +100,9 @@ const SfSubmissionRequestDetail = () => {
     const { } = useCommCodes(CommonCode.OPERATOR)
     const { } = useCommCodes(CommonCode.FORMAT)
     const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
+	// 부서 조회
+	const [deptOption, setDeptOption] = useState<Array<any>>([])
+	const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
     // 속성 및 행동 데이터
     const [mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
     // 승인 / 반려 버튼 타입 구분
@@ -106,7 +114,7 @@ const SfSubmissionRequestDetail = () => {
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
     // 상세 조회 API
-    const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch} = useDirectSQLYn(location.state.referenceNo)
+    const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(location.state.referenceNo)
     const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(location.state.referenceNo)
     const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.referenceNo)
     const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
@@ -123,6 +131,7 @@ const SfSubmissionRequestDetail = () => {
     // 계산식 validation을 위한 대상 list
     const [formulaTrgtList, setFormulaTrgtList] = useState<Array<FormulaTrgtListProps>>([])
     // 기본 정보
+    const [category, setCategory] = useState<string>("")
     const [featureTempInfo, setFeatureTempInfo] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
     const [featureInfo, setFeatureInfo] = useState<FeatureInfo>(cloneDeep(initSelfFeatureInfo))
     const [targetList, setTargetList] = useState<Array<TbRsCustFeatRuleTrgt>>([])
@@ -150,17 +159,11 @@ const SfSubmissionRequestDetail = () => {
     const { data: aprvSubAprvalRes, isSuccess: aprvSubAprvalSucc, isError: aprvSubAprvalErr, mutate: aprvSubAprvalMutate } = useApproveSubmissionApproval(userEmail, approvalId, aprvSubComment)
     // 수동실행 API
     const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state.referenceNo)
+    // 카테고리 update API
+    const { data: updateFeatureCategoryRes, isSuccess: updateFeatureCategorySucc, isError: updateFeatureCategoryErr, mutate: updateFeatureCategoryMutate } = useFeatureCategory(location.state.referenceNo, { category: category })
     // component mount
     useEffect(() => {
         initCustFeatRule()
-        //console.log(location)
-        // if (location.state.sqlDirectInputYn !== "Y") {
-        // 	custFeatRuleInfosRefetch()
-        // } else if (location.state.sqlDirectInputYn === "Y") {
-        // 	custFeatSQLInfosRefetch()
-        // }
-        // if (location.state.sqlDirectInputYn !== "Y")
-        //     mstrSgmtTbandColRefetch()
     }, [])
     // feature 정보 초기화
     const initCustFeatRule = () => {
@@ -170,6 +173,21 @@ const SfSubmissionRequestDetail = () => {
             return rtn
         })
     }
+	// 부서 목록 setting
+	useEffect(() => {
+		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '부서 목록 조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (deptAllListRes?.data) {
+				setDeptOption(() => {
+					return [...[{ deptCode: "", deptNm: "선택" }], ...deptAllListRes.data.contents]
+				})
+			}
+		}
+	}, [deptAllListRes, deptAllListErr, toast])
     // 속성 및 행동 데이터 정보 호출 callback
     useEffect(() => {
         if (mstrSgmtTbandColErr || mstrSgmtTbandColRes?.successOrNot === 'N') {
@@ -182,7 +200,7 @@ const SfSubmissionRequestDetail = () => {
                 setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
             }
         }
-    }, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, mstrSgmtTbandColRefetch, toast])
+    }, [custFeatRuleInfosRefetch])
     // SQL 등록 여부 API response callback
     useEffect(() => {
         if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
@@ -264,6 +282,9 @@ const SfSubmissionRequestDetail = () => {
             if (btnClickType === "approval") {
                 approveSubmissionApproval()
             }
+            if (btnClickType === "updtCategory") {
+                updateFeatureCategoryMutate()
+            }
         }
         setIsOpenConfirmModal(false)
     }
@@ -273,11 +294,16 @@ const SfSubmissionRequestDetail = () => {
     // 상세 정보 조회 후 값 setting
     useEffect(() => {
         setFeatureTempInfo(cloneDeep(featureInfo.featureTemp))
-        setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
-        setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
-        setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
-        //setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
-        setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
+        setCategory(cloneDeep(featureInfo.tbRsCustFeatRule.category))
+        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+            setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
+            setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
+            setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
+            //setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
+        }
+        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
+            setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
+        }
     }, [featureInfo])
     // 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
     useEffect(() => {
@@ -581,6 +607,17 @@ const SfSubmissionRequestDetail = () => {
             })
             return
         }
+        // 1차 승인자의 경우 카테고리 validation check
+        if (sessionInfo.apldUserAuthId === "sf_usr_aprv_auth1") {
+            // 설정하지 않은 경우 return -> 설정 api callback으로 flag setting 후 flag로 판단하기
+            if (!updateFeatureCategoryRes || updateFeatureCategoryRes.successOrNot === 'N') {
+                toast({
+                    type: ValidType.ERROR,
+                    content: '카테고리를 설정 해주세요.',
+                })
+                return
+            }
+        }
         setUserEmail(sessionInfo.userEmail)
         let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && item.status === SubFeatStatus.REQ)
         if (isEmpty(approval)) {
@@ -642,15 +679,44 @@ const SfSubmissionRequestDetail = () => {
                 content: '수동 실행이 완료되었습니다.',
             })
             if (runScheduleByManuallyRes.status === 200) {
-                custFeatRuleInfosRefetch()
-                // if (location.state.sqlDirectInputYn !== "Y") {
-                // 	custFeatRuleInfosRefetch()
-                // } else if (location.state.sqlDirectInputYn === "Y") {
-                // 	custFeatSQLInfosRefetch()
-                // }
+                if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+                	custFeatRuleInfosRefetch()
+                }
+                if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
+                	custFeatSQLInfosRefetch()
+                }
             }
         }
     }, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
+    // 카테고리 설정하기
+    const onClickCategorySetHandler = () => {
+        if (category === "") {
+            toast({
+                type: ValidType.ERROR,
+                content: '카테고리를 설정 해주세요.',
+            })
+            return
+        }
+        setModalType(ModalType.CONFIRM)
+        setBtnClickType("updtCategory")
+        setConfirmModalTit("Feature 결재 요청 상세")
+        setConfirmModalCont("카테고리 설정을 하시겠습니까?")
+        setIsOpenConfirmModal(true)
+    }
+    // 카테고리 update API callback
+    useEffect(() => {
+        if (updateFeatureCategoryErr || updateFeatureCategoryRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: updateFeatureCategoryRes?.message ? updateFeatureCategoryRes?.message : '카테고리 설정 중 에러가 발생했습니다.',
+            })
+        } else if (updateFeatureCategorySucc) {
+            toast({
+                type: ValidType.CONFIRM,
+                content: '카테고리 설정이 완료되었습니다.',
+            })
+        }
+    }, [updateFeatureCategoryRes, updateFeatureCategorySucc, updateFeatureCategoryErr, toast])
 
     return (
         <>
@@ -831,6 +897,56 @@ const SfSubmissionRequestDetail = () => {
                         </TR>
                     </HorizontalTable>
                     {/* 기본 정보 */}
+                    {/* 1차 승인자의 경우 카테고리 설정 */}
+                    {sessionInfo.apldUserAuthId === "sf_usr_aprv_auth1" &&
+                        <Stack
+                            style={{
+                                marginBottom: "2%"
+                            }}
+                            direction="Vertical"
+                            gap="MD"
+                        >
+                            <Typography variant="h4">카테고리 설정</Typography>
+                            <HorizontalTable>
+                                <TR>
+                                    <TH align="right" colSpan={1} required>
+                                        카테고리
+                                    </TH>
+                                    <TD colSpan={2}>
+                                        <Select
+                                            value={category}
+                                            appearance="Outline"
+                                            placeholder="카테고리"
+                                            className="width-100"
+                                            onChange={(
+                                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                                value: SelectValue<{}, false>
+                                            ) => {
+                                                if (!value) return
+                                                let v = String(value)
+                                                setCategory(v)
+                                            }}
+                                        >
+                                            {categoryOption.map((item, index) => (
+                                                <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+                                            ))}
+                                        </Select>
+                                        <Button 
+                                            priority="Primary" 
+                                            appearance="Contained" 
+                                            size="SM" 
+                                            onClick={onClickCategorySetHandler}
+                                        >
+                                            설정
+                                        </Button>
+                                    </TD>
+                                    <TD colSpan={2}>
+                                    </TD>
+                                </TR>
+                            </HorizontalTable>
+                        </Stack>
+                    }
+                    {/* 1차 승인자의 경우 카테고리 설정 */}
                     {/* 신청 정보 SQL 등록 */}
                     {featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
                         <Stack
@@ -849,7 +965,6 @@ const SfSubmissionRequestDetail = () => {
                                     <TD colSpan={2}>
                                         <Stack gap="SM" className="width-100" direction="Vertical">
                                             <Stack gap="SM">
-                                                {/* {featureInfo.featureTemp && featureInfo.featureTemp.enrUserId} */}
                                                 {featureInfo.featureTemp && featureInfo.featureTemp.enrUserNm}
                                             </Stack>
                                         </Stack>
@@ -859,8 +974,9 @@ const SfSubmissionRequestDetail = () => {
                                     </TH>
                                     <TD colSpan={2}>
                                         <Stack gap="SM" className="width-100" direction="Vertical">
-                                            {/* {featureInfo.featureTemp && featureInfo.featureTemp.enrDeptCode} */}
-                                            {featureInfo.featureTemp && featureInfo.featureTemp.enrDeptNm}
+                                            {featureInfo.featureTemp && 
+											    deptOption.find((dept) => dept.deptCode === featureInfo.featureTemp.enrDeptCode)?.deptNm
+                                            }
                                         </Stack>
                                     </TD>
                                 </TR>

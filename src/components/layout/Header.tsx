@@ -2,7 +2,6 @@ import { KeyboardArrowDownIcon, LogoutOutlinedIcon, MenuOutlinedIcon } from '@/a
 import { Avatar, DropdownMenu, Page, Stack, Typography } from '@/components/ui';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType } from '@/models/common/Constants';
-import { MenuItem } from '@/models/common/Menu';
 import { selectContextPath } from '@/reducers/authSlice';
 import { selectIsDropMenu, selectMenuList, setIsDropMenu } from '@/reducers/menuSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -46,18 +45,14 @@ const Header = () => {
     setSubActiveIndex(-1);
   };
 
-  const handleNaviLink = (e: any, menu: MenuItem) => {
-    if (menu.isPopup) {
+  const handleNaviLink = (e: any, menu: any) => {
+    if (menu.menuUrl.includes('/popup')) {
       e.preventDefault();
       sessionUtil.setLocalStorageInfo(sessionUtil.getAccessTokenRefreshTokenInfo());
       sessionUtil.setLocalStorageInfo(sessionUtil.getSessionRequestInfo());
       sessionUtil.setLocalStorageInfo(sessionUtil.getSessionInfo());
 
-      if (menu.path === '/tableau') {
-        window.open(`https://ssbiprdap.koreanair.com/#/projects/180`, '_blank', 'noopener, noreferrer');
-      } else {
-        window.open(`/popup${menu.path}`, '_blank', 'noopener, noreferrer');
-      }
+      window.open(`${menu.menuUrl}`, '_blank', 'noopener, noreferrer');
     }
   };
 
@@ -106,9 +101,9 @@ const Header = () => {
                   className={`dropdown-trigger ${activeIndex === index ? 'triger-active' : ''}`}
                   onMouseOver={() => handleTrigger(index)}
                 >
-                  <NavLink to={menu.path} end onClick={(e) => handleNaviLink(e, menu)}>
+                  <NavLink to={menu.menuUrl} end onClick={(e) => handleNaviLink(e, menu)}>
                     <Typography variant="h4" className="menu-title">
-                      {menu.name}
+                      {menu.menuNm}
                     </Typography>
                   </NavLink>
                 </DropdownMenu.Trigger>
@@ -116,47 +111,32 @@ const Header = () => {
                 {menu.children.length > 0 && (
                   <DropdownMenu.Portal forceMount={index === activeIndex ? true : undefined}>
                     <DropdownMenu.Content className="dropdown-content" onMouseLeave={handleClearTrigger}>
-                      {menu.children.map((subMenu, index: number) => (
+                      {menu.children.map((subMenu: any, index: number) => (
                         <>
-                          {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
-                            <DropdownMenu.Item
-                              key={`subMenu-${index}`}
-                              className="dropdown-item"
-                              disabled
-                              onMouseOver={() => handleSubTrigger(-1)}
-                            >
-                              <NavLink to={subMenu.path} end>
-                                {({ isActive }) => (
-                                  <Typography variant="body1" className={isActive ? 'path-active' : ''}>
-                                    {subMenu.name}
-                                  </Typography>
-                                )}
-                              </NavLink>
-                            </DropdownMenu.Item>
-                          ) : (
+                          {subMenu.children.length > 0 && subMenu.children.find((item: any) => !item.isCrudPage) ? (
                             <DropdownMenu.Sub>
                               <DropdownMenu.SubTrigger
                                 className="dropdown-item"
                                 onMouseOver={() => handleSubTrigger(index)}
                               >
                                 <Stack>
-                                  <Typography variant="body1">{subMenu.name}</Typography>
+                                  <Typography variant="body1">{subMenu.menuNm}</Typography>
                                   <KeyboardArrowDownIcon />
                                 </Stack>
                               </DropdownMenu.SubTrigger>
 
                               <DropdownMenu.Portal forceMount={index === subActiveIndex ? true : undefined}>
                                 <DropdownMenu.SubContent className="dropdown-content">
-                                  {subMenu.children.map((subMenuSecond, index: number) => (
+                                  {subMenu.children.map((subMenuSecond: any, index: number) => (
                                     <DropdownMenu.Item
                                       key={`subMenuSecond-${index}`}
                                       className="dropdown-item"
                                       disabled
                                     >
-                                      <NavLink to={subMenuSecond.path} end>
+                                      <NavLink to={subMenuSecond.menuUrl} end>
                                         {({ isActive }) => (
                                           <Typography variant="body1" className={isActive ? 'path-active' : ''}>
-                                            {subMenuSecond.name}
+                                            {subMenuSecond.menuNm}
                                           </Typography>
                                         )}
                                       </NavLink>
@@ -165,6 +145,21 @@ const Header = () => {
                                 </DropdownMenu.SubContent>
                               </DropdownMenu.Portal>
                             </DropdownMenu.Sub>
+                          ) : (
+                            <DropdownMenu.Item
+                              key={`subMenu-${index}`}
+                              className="dropdown-item"
+                              disabled
+                              onMouseOver={() => handleSubTrigger(-1)}
+                            >
+                              <NavLink to={subMenu.menuUrl} end>
+                                {({ isActive }) => (
+                                  <Typography variant="body1" className={isActive ? 'path-active' : ''}>
+                                    {subMenu.menuNm}
+                                  </Typography>
+                                )}
+                              </NavLink>
+                            </DropdownMenu.Item>
                           )}
                         </>
                       ))}
@@ -187,24 +182,24 @@ const Header = () => {
           <div className="dropDownWrap">
             {menuList?.map((menu, index: number) => (
               <div key={`menu-${index}`} className="dropDownItem">
-                <Link to={menu.path} className="depth1" onClick={(e) => handleNaviLink(e, menu)}>
-                  {menu.name}
+                <Link to={menu.menuUrl} className="depth1" onClick={(e) => handleNaviLink(e, menu)}>
+                  {menu.menuNm}
                 </Link>
                 {menu.children.length > 0 && (
                   <div>
-                    {menu.children.map((subMenu, index: number) => (
+                    {menu.children.map((subMenu: any, index: number) => (
                       <div key={`subMenu-${index}`}>
                         {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
-                          <Link to={subMenu.path} className="depth2" onClick={(e) => handleNaviLink(e, menu)}>
-                            {subMenu.name}
+                          <Link to={subMenu.menuUrl} className="depth2" onClick={(e) => handleNaviLink(e, menu)}>
+                            {subMenu.menuNm}
                           </Link>
                         ) : (
                           <div className="dropdown-subwrap">
-                            <Typography variant="body1">{subMenu.name}</Typography>
-                            {subMenu.children.map((subMenuSecond, index: number) => (
+                            <Typography variant="body1">{subMenu.menuNm}</Typography>
+                            {subMenu.children.map((subMenuSecond: any, index: number) => (
                               <div key={`subMenuSecond-${index}`} className="dropdown-item">
-                                <Link to={subMenuSecond.path} onClick={(e) => handleNaviLink(e, menu)}>
-                                  <Typography variant="body1">{subMenuSecond.name}</Typography>
+                                <Link to={subMenuSecond.menuUrl} onClick={(e) => handleNaviLink(e, menu)}>
+                                  <Typography variant="body1">{subMenuSecond.menuNm}</Typography>
                                 </Link>
                               </div>
                             ))}

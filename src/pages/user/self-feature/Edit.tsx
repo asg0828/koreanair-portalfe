@@ -83,6 +83,7 @@ import { getFeatureSeList } from "@/api/FeatureAPI";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
 import { useRunScheduleByManually, useUpdateCustFeatRule, useUpdateCustFeatSQL } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 import { UserModel } from "@/models/model/UserModel";
+import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
 
 const SelfFeatureEdit = () => {
 
@@ -92,6 +93,9 @@ const SelfFeatureEdit = () => {
 	const dispatch = useAppDispatch()
 	// 속성, 행동정보
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+	// 부서 조회
+	const [deptOption, setDeptOption] = useState<Array<any>>([])
+	const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { } = useCommCodes(CommonCode.FUNCTION)
 	const { } = useCommCodes(CommonCode.OPERATOR)
@@ -176,6 +180,22 @@ const SelfFeatureEdit = () => {
 		// if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
 		// 	mstrSgmtTbandColRefetch()
 	}, [])
+	// 부서 목록 setting
+	useEffect(() => {
+		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '부서 목록 조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (deptAllListRes?.data) {
+				if (location.state) {
+					let deptCd = location.state.featureInfo.featureTemp.enrDeptCode
+					location.state.featureInfo.featureTemp.enrDeptNm = deptAllListRes.data.contents.find((dept: any) => dept.deptCode === deptCd)?.deptNm
+				}
+			}
+		}
+	}, [deptAllListRes, deptAllListErr, toast])
 	// 속성,행동데이터 response callback
 	useEffect(() => {
 		if (mstrSgmtTbandColErr || mstrSgmtTbandColRes?.successOrNot === 'N') {
@@ -185,7 +205,9 @@ const SelfFeatureEdit = () => {
 			})
 		} else {
 			if (mstrSgmtTbandColRes) {
-				setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
+				if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'N') {
+					setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
+				}
 			}
 		}
 	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr])
@@ -207,11 +229,14 @@ const SelfFeatureEdit = () => {
 		if (!location.state) return
 		setFeatureTempInfo(cloneDeep(location.state.featureInfo.featureTemp))
 		setCustFeatRule(cloneDeep(location.state.featureInfo.tbRsCustFeatRule))
-		setTargetList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtList))
-		setTrgtFilterList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtFilterList))
-		setCustFeatRuleCalc(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCalc))
-		setCustFeatRuleCaseList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCaseList))
-		setSqlQueryInfo(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleSql))
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'N') {
+			setTargetList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtList))
+			setTrgtFilterList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtFilterList))
+			setCustFeatRuleCalc(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCalc))
+			setCustFeatRuleCaseList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCaseList))
+		} else if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') {
+			setSqlQueryInfo(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleSql))
+		}
 		setSfSubmissionRequestData(cloneDeep(location.state.sfSubmissionRequestData))
 		setSfSubmissionApprovalList(cloneDeep(location.state.sfSubmissionApprovalList))
 	}, [location.state])
@@ -311,6 +336,7 @@ const SelfFeatureEdit = () => {
 	}, [custFeatRule])
 	// 대상 선택시 formData setting
 	useEffect(() => {
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
 		if (targetList.length < 1) setIsSelectAggregateTop(false)
 		// 수정시 TOP 함수가 있는 경우 drag 영역 비노출
@@ -348,6 +374,7 @@ const SelfFeatureEdit = () => {
 		setFormulaTrgtList(fList)
 	}, [targetList])
 	useEffect(() => {
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
 		setUpdtFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleTrgtFilterList = cloneDeep(trgtFilterList)
@@ -355,6 +382,7 @@ const SelfFeatureEdit = () => {
 		})
 	}, [trgtFilterList])
 	useEffect(() => {
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'N') return
 		setUpdtFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleSql = cloneDeep(sqlQueryInfo)
@@ -363,6 +391,7 @@ const SelfFeatureEdit = () => {
 	}, [sqlQueryInfo])
 	// 계산식 입력시 formData setting
 	useEffect(() => {
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
 		setUpdtFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleCalc = cloneDeep(custFeatRuleCalc)
@@ -370,6 +399,7 @@ const SelfFeatureEdit = () => {
 		})
 	}, [custFeatRuleCalc])
 	useEffect(() => {
+		//if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
 		// setUpdtFeatureInfo((state: FeatureInfo) => {
 		// 	let rtn = cloneDeep(state)
 		// 	rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
@@ -378,6 +408,7 @@ const SelfFeatureEdit = () => {
 	}, [custFeatRuleCaseList])
 	// 대상 선택 list가 없는 경우 formula reset
 	useEffect(() => {
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
 		if (formulaTrgtList.length > 0) return
 
 		if (

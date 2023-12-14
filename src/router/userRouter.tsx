@@ -39,11 +39,11 @@ import PurchaseContributors from '@pages/user/structured-report/purchase-contrib
 import SavedMileage from '@pages/user/structured-report/saved-mileage';
 import VipCustomerFlightStatus from '@pages/user/structured-report/vip-customer-flight-status';
 import Tableau from '@pages/user/tableau';
-import { Navigate } from 'react-router-dom';
 
 const userRouter = [
   { index: true, element: <Home /> },
   {
+    id: '/biz-meta',
     path: 'biz-meta',
     children: [
       {
@@ -52,24 +52,26 @@ const userRouter = [
         loader: useFeatureLoader,
         children: [
           { index: true, element: <Feature /> },
-          { path: 'detail', element: <FeatureDetail /> },
           { path: 'reg', element: <FeatureReg /> },
+          { path: 'detail', element: <FeatureDetail /> },
           { path: 'edit', element: <FeatureEdit /> },
         ],
       },
       {
+        id: '/biz-meta/dataset',
         path: 'dataset',
         loader: useDatasetLoader,
         children: [
           { index: true, element: <DataSet /> },
-          { path: 'detail', element: <DataSetDetail /> },
           { path: 'reg', element: <DataSetReg /> },
+          { path: 'detail', element: <DataSetDetail /> },
           { path: 'edit', element: <DataSetEdit /> },
         ],
       },
     ],
   },
   {
+    id: '/customer-info',
     path: 'customer-info',
     children: [
       { index: true, element: <CustomerInfo /> },
@@ -77,20 +79,34 @@ const userRouter = [
     ],
   },
   {
+    id: '/structured-report',
     path: 'structured-report',
     children: [
-      { index: true, element: <Navigate to="/structured-report/vip-intl-flight-reservation-status" /> },
-      { path: 'vip-intl-flight-reservation-status', element: <VipCustomerFlightStatus /> },
-      { path: 'purchase-contributors', element: <PurchaseContributors /> },
-      { path: 'international-boarding', element: <InternationalBoarding /> },
-      { path: 'domestic-boarding', element: <DomesticBoarding /> },
-      { path: 'saved-mileage', element: <SavedMileage /> },
+      {
+        id: '/structured-report/vip-intl-flight-reservation-status',
+        path: 'vip-intl-flight-reservation-status',
+        element: <VipCustomerFlightStatus />,
+      },
+      {
+        id: '/structured-report/purchase-contributors',
+        path: 'purchase-contributors',
+        element: <PurchaseContributors />,
+      },
+      {
+        id: '/structured-report/international-boarding',
+        path: 'international-boarding',
+        element: <InternationalBoarding />,
+      },
+      { id: '/structured-report/domestic-boarding', path: 'domestic-boarding', element: <DomesticBoarding /> },
+      { id: '/structured-report/saved-mileage', path: 'saved-mileage', element: <SavedMileage /> },
     ],
   },
   {
+    id: '/self-feature',
     path: 'self-feature',
     children: [
       {
+        id: '/self-feature/self-feature',
         path: 'self-feature',
         loader: useFeatureLoader,
         children: [
@@ -101,6 +117,7 @@ const userRouter = [
         ],
       },
       {
+        id: '/self-feature/submission-request',
         path: 'submission-request',
         loader: useFeatureLoader,
         children: [
@@ -111,6 +128,7 @@ const userRouter = [
     ],
   },
   {
+    id: '/feature',
     path: 'feature',
     children: [
       { index: true, element: <InterestFeature /> },
@@ -119,9 +137,11 @@ const userRouter = [
     ],
   },
   {
+    id: '/board',
     path: 'board',
     children: [
       {
+        id: '/board/notice',
         path: 'notice',
         children: [
           { index: true, element: <Notice /> },
@@ -131,6 +151,7 @@ const userRouter = [
         ],
       },
       {
+        id: '/board/faq',
         path: 'faq',
         loader: useFaqLoader,
         children: [
@@ -140,6 +161,7 @@ const userRouter = [
         ],
       },
       {
+        id: '/board/qna',
         path: 'qna',
         loader: useQnaLoader,
         children: [
@@ -150,6 +172,7 @@ const userRouter = [
         ],
       },
       {
+        id: '/board/dataroom',
         path: 'dataroom',
         children: [
           { index: true, element: <Dataroom /> },
@@ -161,16 +184,13 @@ const userRouter = [
     ],
   },
   {
-    path: 'tableau',
-    children: [{ index: true, element: <Tableau /> }],
-  },
-  {
-    path: 'popup',
-    children: [{ path: 'tableau', element: <Tableau /> }],
+    id: '/popup/tableau',
+    path: 'https://ssbiprdap.koreanair.com/#/projects/180',
+    element: <Tableau />,
   },
   {
     path: 'mypage',
-    children: [{ index: true, element: <MyPage /> }],
+    element: <MyPage />,
   },
 ];
 

@@ -9,6 +9,7 @@ import {
   runScheduleByManually,
   updateCustFeatRule,
   updateCustFeatSQL,
+  updateFeatureCategory,
 } from '@/api/self-feature/SelfFeatureUserAPI'
 import { QueryParams } from '@/utils/ApiUtil'
 import { useMutation } from '@tanstack/react-query'
@@ -52,4 +53,8 @@ export const useRejectSubmissionApproval = (email: string, approvalId: number, b
 // customer feature 수동 실행
 export const useRunScheduleByManually = (custFeatRuleId: string) => {
   return useMutation(() => runScheduleByManually(custFeatRuleId))
+}
+// Self-feature 카테고리 설정
+export const useFeatureCategory = (custFeatRuleId: string, bodyParams: Object) => {
+  return useMutation(() => updateFeatureCategory(custFeatRuleId, bodyParams))
 }

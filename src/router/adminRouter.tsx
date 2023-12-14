@@ -1,6 +1,7 @@
-import { useDatasetLoader, useFaqLoader, useFeatureLoader, useMainLoader, useQnaLoader } from '@/hooks/useLoader';
+import { useDatasetLoader, useFaqLoader, useFeatureLoader, useQnaLoader } from '@/hooks/useLoader';
 import MyPage from '@/pages/MyPage';
 import AdminHome from '@/pages/admin/AdminHome';
+import AdminAdminAuthManagement from '@/pages/admin/admin-portal-management/menu-auth-management';
 import CustomerMetaManagement from '@/pages/admin/self-feature-meta-management/customer-meta-management';
 import CustomerMetaManagementDetail from '@/pages/admin/self-feature-meta-management/customer-meta-management/Detail';
 import CustomerMetaManagementReg from '@/pages/admin/self-feature-meta-management/customer-meta-management/Reg';
@@ -14,7 +15,6 @@ import Dataroom from '@/pages/user/board/dataroom';
 import DataroomDetail from '@/pages/user/board/dataroom/Detail';
 import DataroomEdit from '@/pages/user/board/dataroom/Edit';
 import DataroomReg from '@/pages/user/board/dataroom/Reg';
-import AdminAdminAuthManagement from '@/pages/admin/admin-portal-management/menu-auth-management';
 import AdminMenuManagement from '@pages/admin/admin-portal-management/menu-management';
 import DataConversion from '@pages/admin/admin-report/data-conversion';
 import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
@@ -54,169 +54,212 @@ import InterestFeature from '@pages/user/feature/interest';
 import PopularFeature from '@pages/user/feature/popular';
 
 const adminRouter = [
+  { index: true, element: <AdminHome /> },
   {
-    path: 'admin',
+    id: '/admin/biz-meta-management',
+    path: 'biz-meta-management',
     children: [
-      { index: true, element: <AdminHome /> },
       {
-        path: 'biz-meta-management',
-        children: [
-          {
-            id: '/biz-meta/feature',
-            path: 'feature',
-            loader: useFeatureLoader,
-            children: [
-              { index: true, element: <Feature /> },
-              { path: 'detail', element: <FeatureDetail /> },
-              { path: 'reg', element: <FeatureReg /> },
-              { path: 'edit', element: <FeatureEdit /> },
-            ],
-          },
-          {
-            path: 'dataset',
-            loader: useDatasetLoader,
-            children: [
-              { index: true, element: <DataSet /> },
-              { path: 'detail', element: <DataSetDetail /> },
-              { path: 'reg', element: <DataSetReg /> },
-              { path: 'edit', element: <DataSetEdit /> },
-            ],
-          },
-        ],
-      },
-      {
+        id: '/admin/biz-meta-management/feature',
         path: 'feature',
+        loader: useFeatureLoader,
         children: [
-          { index: true, element: <InterestFeature /> },
-          { path: 'interest', element: <InterestFeature /> },
-          { path: 'popular', element: <PopularFeature /> },
+          { index: true, element: <Feature /> },
+          { path: 'detail', element: <FeatureDetail /> },
+          { path: 'reg', element: <FeatureReg /> },
+          { path: 'edit', element: <FeatureEdit /> },
         ],
       },
       {
-        path: 'admin-report',
+        id: '/admin/biz-meta-management/dataset',
+        path: 'dataset',
+        loader: useDatasetLoader,
         children: [
-          {
-            path: 'one-id-main',
-            children: [
-              { index: true, element: <MasterHistory /> },
-              { path: 'master-history', element: <MasterHistory /> },
-              { path: 'mobile-number', element: <MobileNumber /> },
-              { path: 'pax-mapping', element: <PaxMapping /> },
-              { path: 'relationship-history-table', element: <RelationshipHistoryTable /> },
-            ],
-          },
-          { path: 'one-id-error-history', element: <OneIdErrorHistory /> },
-          {
-            path: 'one-id-report',
-            children: [
-              { index: true, element: <Daily /> },
-              { path: 'daily', element: <Daily /> },
-              { path: 'ctivoc', element: <Ctivoc /> },
-              { path: 'same-pnr-ucild', element: <SamePnrUcild /> },
-            ],
-          },
-          { path: 'data-conversion', element: <DataConversion /> },
+          { index: true, element: <DataSet /> },
+          { path: 'detail', element: <DataSetDetail /> },
+          { path: 'reg', element: <DataSetReg /> },
+          { path: 'edit', element: <DataSetEdit /> },
         ],
-      },
-      {
-        path: 'user-management',
-        children: [
-          {
-            path: 'user-management',
-            children: [
-              { index: true, element: <UserManagement /> },
-              { path: 'detail', element: <UserManagementDetail /> },
-            ],
-          },
-          { path: 'user-auth-group-management', element: <AuthGroupManagement /> },
-          { path: 'admin-auth-group-management', element: <AdminAuthGroupManagement /> },
-          { path: 'department-management', element: <DepartmentGroupManagement /> },
-          { path: 'user-exception-management', element: <UserExceptionManagement /> },
-        ],
-      },
-      {
-        path: 'user-portal-management',
-        children: [
-          { path: 'menu-management', element: <MenuManagement /> },
-          { path: 'menu-auth-management', element: <MenuAuthManagement /> },
-          {
-            path: 'board-management',
-            children: [
-              {
-                path: 'notice',
-                children: [
-                  { index: true, element: <Notice /> },
-                  { path: 'detail', element: <NoticeDetail /> },
-                  { path: 'reg', element: <NoticeReg /> },
-                  { path: 'edit', element: <NoticeEdit /> },
-                ],
-              },
-              {
-                path: 'faq',
-                loader: useFaqLoader,
-                children: [
-                  { index: true, element: <Faq /> },
-                  { path: 'reg', element: <FaqReg /> },
-                  { path: 'edit', element: <FaqEdit /> },
-                ],
-              },
-              {
-                path: 'qna',
-                loader: useQnaLoader,
-                children: [
-                  { index: true, element: <Qna /> },
-                  { path: 'detail', element: <QnaDetail /> },
-                  { path: 'reg', element: <QnaReg /> },
-                  { path: 'edit', element: <QnaEdit /> },
-                ],
-              },
-              {
-                path: 'dataroom',
-                children: [
-                  { index: true, element: <Dataroom /> },
-                  { path: 'detail', element: <DataroomDetail /> },
-                  { path: 'reg', element: <DataroomReg /> },
-                  { path: 'edit', element: <DataroomEdit /> },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        path: 'admin-portal-management',
-        children: [
-          { path: 'menu-management', element: <AdminMenuManagement /> },
-          { path: 'admin-auth-management', element: <AdminAdminAuthManagement /> },
-        ],
-      },
-      {
-        path: 'self-feature-meta-management',
-        children: [
-          {
-            path: 'customer-meta-management',
-            children: [
-              { index: true, element: <CustomerMetaManagement /> },
-              { path: 'detail', element: <CustomerMetaManagementDetail /> },
-              { path: 'reg', element: <CustomerMetaManagementReg /> },
-            ],
-          },
-          {
-            path: 'master-profile-management',
-            children: [
-              { index: true, element: <MasterProfileManagement /> },
-              { path: 'detail', element: <MasterProfileManagementDetail /> },
-              { path: 'reg', element: <MasterProfileManagementReg /> },
-              { path: 'edit', element: <MasterProfileManagementEdit /> },
-            ],
-          },
-        ],
-      },
-      {
-        path: 'mypage',
-        children: [{ index: true, element: <MyPage /> }],
       },
     ],
+  },
+  {
+    id: '/admin/feature',
+    path: 'feature',
+    children: [
+      { index: true, element: <InterestFeature /> },
+      { path: 'interest', element: <InterestFeature /> },
+      { path: 'popular', element: <PopularFeature /> },
+    ],
+  },
+  {
+    id: '/admin/admin-report',
+    path: 'admin-report',
+    children: [
+      {
+        id: '/admin/admin-report/one-id-main',
+        path: 'one-id-main',
+        children: [
+          { id: '/admin/admin-report/one-id-main/master-history', path: 'master-history', element: <MasterHistory /> },
+          { id: '/admin/admin-report/one-id-main/mobile-number', path: 'mobile-number', element: <MobileNumber /> },
+          { id: '/admin/admin-report/one-id-main/pax-mapping', path: 'pax-mapping', element: <PaxMapping /> },
+          {
+            id: '/admin/admin-report/one-id-main/relationship-history-table',
+            path: 'relationship-history-table',
+            element: <RelationshipHistoryTable />,
+          },
+        ],
+      },
+      { id: '/admin/admin-report/one-id-error-history', path: 'one-id-error-history', element: <OneIdErrorHistory /> },
+      {
+        id: '/admin/admin-report/one-id-report',
+        path: 'one-id-report',
+        children: [
+          { path: 'daily', element: <Daily /> },
+          { path: 'ctivoc', element: <Ctivoc /> },
+          { path: 'same-pnr-ucild', element: <SamePnrUcild /> },
+        ],
+      },
+      { id: '/admin/admin-report/data-conversion', path: 'data-conversion', element: <DataConversion /> },
+    ],
+  },
+  {
+    id: '/admin/user-management',
+    path: 'user-management',
+    children: [
+      {
+        id: '/admin/user-management/user-management',
+        path: 'user-management',
+        children: [
+          { index: true, element: <UserManagement /> },
+          { path: 'detail', element: <UserManagementDetail /> },
+        ],
+      },
+      {
+        id: '/admin/user-management/user-auth-group-management',
+        path: 'user-auth-group-management',
+        element: <AuthGroupManagement />,
+      },
+      {
+        id: '/admin/user-management/admin-auth-group-management',
+        path: 'admin-auth-group-management',
+        element: <AdminAuthGroupManagement />,
+      },
+      {
+        id: '/admin/user-management/department-management',
+        path: 'department-management',
+        element: <DepartmentGroupManagement />,
+      },
+      {
+        id: '/admin/user-management/user-exception-management',
+        path: 'user-exception-management',
+        element: <UserExceptionManagement />,
+      },
+    ],
+  },
+  {
+    id: '/admin/user-portal-management',
+    path: 'user-portal-management',
+    children: [
+      { id: '/admin/user-portal-management/menu-management', path: 'menu-management', element: <MenuManagement /> },
+      {
+        id: '/admin/user-portal-management/menu-auth-management',
+        path: 'menu-auth-management',
+        element: <MenuAuthManagement />,
+      },
+      {
+        id: '/admin/user-portal-management/board-management',
+        path: 'board-management',
+        children: [
+          {
+            id: '/admin/user-portal-management/board-management/notice',
+            path: 'notice',
+            children: [
+              { index: true, element: <Notice /> },
+              { path: 'detail', element: <NoticeDetail /> },
+              { path: 'reg', element: <NoticeReg /> },
+              { path: 'edit', element: <NoticeEdit /> },
+            ],
+          },
+          {
+            id: '/admin/user-portal-management/board-management/faq',
+            path: 'faq',
+            loader: useFaqLoader,
+            children: [
+              { index: true, element: <Faq /> },
+              { path: 'reg', element: <FaqReg /> },
+              { path: 'edit', element: <FaqEdit /> },
+            ],
+          },
+          {
+            id: '/admin/user-portal-management/board-management/qna',
+            path: 'qna',
+            loader: useQnaLoader,
+            children: [
+              { index: true, element: <Qna /> },
+              { path: 'detail', element: <QnaDetail /> },
+              { path: 'reg', element: <QnaReg /> },
+              { path: 'edit', element: <QnaEdit /> },
+            ],
+          },
+          {
+            id: '/admin/user-portal-management/board-management/dataroom',
+            path: 'dataroom',
+            children: [
+              { index: true, element: <Dataroom /> },
+              { path: 'detail', element: <DataroomDetail /> },
+              { path: 'reg', element: <DataroomReg /> },
+              { path: 'edit', element: <DataroomEdit /> },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: '/admin/admin-portal-management',
+    path: 'admin-portal-management',
+    children: [
+      {
+        id: '/admin/admin-portal-management/menu-management',
+        path: 'menu-management',
+        element: <AdminMenuManagement />,
+      },
+      {
+        id: '/admin/admin-portal-management/admin-auth-management',
+        path: 'admin-auth-management',
+        element: <AdminAdminAuthManagement />,
+      },
+    ],
+  },
+  {
+    id: '/admin/self-feature-meta-management',
+    path: 'self-feature-meta-management',
+    children: [
+      {
+        id: '/admin/self-feature-meta-management/customer-meta-management',
+        path: 'customer-meta-management',
+        children: [
+          { index: true, element: <CustomerMetaManagement /> },
+          { path: 'detail', element: <CustomerMetaManagementDetail /> },
+          { path: 'reg', element: <CustomerMetaManagementReg /> },
+        ],
+      },
+      {
+        id: '/admin/self-feature-meta-management/master-profile-management',
+        path: 'master-profile-management',
+        children: [
+          { index: true, element: <MasterProfileManagement /> },
+          { path: 'detail', element: <MasterProfileManagementDetail /> },
+          { path: 'reg', element: <MasterProfileManagementReg /> },
+          { path: 'edit', element: <MasterProfileManagementEdit /> },
+        ],
+      },
+    ],
+  },
+  {
+    path: 'mypage',
+    element: <MyPage />,
   },
 ];
 

@@ -387,7 +387,7 @@ export const validationCustReatRule = (formData: any) => {
         // SQL
         if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
 
-            if (featureInfo.featureTemp.enrUserId === "" || featureInfo.featureTemp.enrUserNm.trim() === "") {
+            if (featureInfo.featureTemp.enrUserId === "" || featureInfo.featureTemp.enrUserNm === "") {
                 validInfo.text = "Feature 신청자 정보를 확인 해주세요."
                 validInfo.valid = false
             } else if (featureInfo.featureTemp.enrDeptCode === "" || featureInfo.featureTemp.enrDeptNm === "") {
