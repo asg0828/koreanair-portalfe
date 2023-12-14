@@ -12,7 +12,7 @@ const Main = () => {
 
   const getMenuRecursive = (menuList: any[]): any | undefined => {
     for (let i = 0; i < menuList.length; i++) {
-      if (menuList[i].path === location.pathname) {
+      if (menuList[i].menuUrl === location.pathname) {
         return menuList[i];
       } else {
         if (menuList[i].children) {
@@ -27,7 +27,7 @@ const Main = () => {
   };
 
   const menuObj = getMenuRecursive(menuList);
-  const title = menuObj ? menuObj.name : '';
+  const title = menuObj ? menuObj.menuNm : '';
 
   return (
     <>
