@@ -69,7 +69,7 @@ import { QueryParams } from "@/utils/ApiUtil";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import SubRejectModal from "@/components/self-feature-submission/modal/SubRejectModal";
-import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatSQLInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
+import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatSQLInfos, useDirectSQLYn, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { GroupCodeType, ValidType } from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
@@ -106,6 +106,7 @@ const SfSubmissionRequestDetail = () => {
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
     // 상세 조회 API
+    const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch} = useDirectSQLYn(location.state.referenceNo)
     const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(location.state.referenceNo)
     const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.referenceNo)
     const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
@@ -152,7 +153,6 @@ const SfSubmissionRequestDetail = () => {
     // component mount
     useEffect(() => {
         initCustFeatRule()
-        custFeatRuleInfosRefetch()
         //console.log(location)
         // if (location.state.sqlDirectInputYn !== "Y") {
         // 	custFeatRuleInfosRefetch()
@@ -183,6 +183,23 @@ const SfSubmissionRequestDetail = () => {
             }
         }
     }, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, mstrSgmtTbandColRefetch, toast])
+    // SQL 등록 여부 API response callback
+    useEffect(() => {
+        if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            })
+        } else {
+            if (directSQLYnRes) {
+                if (directSQLYnRes.result === "N") {
+                    custFeatRuleInfosRefetch()
+                } else {
+                    custFeatSQLInfosRefetch()
+                }
+            }
+        }
+    }, [directSQLYnRes, directSQLYnErr, toast])
     // 대구분 API response callback
     useEffect(() => {
         if (seGroupErr || seGroupRes?.successOrNot === 'N') {
