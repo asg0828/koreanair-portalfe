@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, forwardRef } from 'react';
 import { cloneDeep } from 'lodash';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import MstrProfInfo from '@/components/self-feature-adm/MstrProfInfo';
@@ -33,7 +33,10 @@ import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 
 const MasterProfileManagementReg = () => {
   const navigate = useNavigate();
-  const ref = useRef();
+  const masterProfileRef = useRef<any>(null);
+  const descriptionRef = useRef<any>(null);
+  const attrRef = useRef<any>({ targetRef: '', findIndexRef: 0 });
+  const behvRef = useRef<any>({ targetRef: '', findIndexRef: 0 });
   const { toast } = useToast();
   // 테이블 추가 버튼 show / hide 처리
   const [isAttrAddIconShow, setIsAttrAddIconShow] = useState<Boolean>(false);
@@ -93,6 +96,7 @@ const MasterProfileManagementReg = () => {
   // 메타테이블 전체조회 테이블 선택 콤보박스 조회 API 호출
   useEffect(() => {
     if (!metaInfoSrchInfo || metaInfoSrchInfo.type === '' || metaInfoSrchInfo.rslnRuleId === '') return;
+
     metaInfoRefetch();
   }, [metaInfoSrchInfo]);
   // 메타테이블 전체조회 테이블 선택 콤보박스 조회 call back
@@ -194,6 +198,11 @@ const MasterProfileManagementReg = () => {
       navigate('..');
     } else if (pageNm === SelfFeatPgPpNm.REG) {
       const validation = () => {
+        // 포커스 초기화
+        attrRef.current.targetRef = '';
+        attrRef.current.findIndexRef = 0;
+        behvRef.current.targetRef = '';
+        behvRef.current.findIndexRef = 0;
         let searchError = false;
         // validation
         const validationTool = (check: string) => {
@@ -201,17 +210,52 @@ const MasterProfileManagementReg = () => {
           else return false;
         };
         let checkValidation = '';
-        // 등록 validation
 
-        if (validationTool(mstrSgmtRule.mstrSgmtRuleNm)) checkValidation = 'MasterProfile은 필수 입력값입니다.';
-        else if (validationTool(mstrSgmtRule.mstrSgmtRuleDesc)) checkValidation = 'Description은 필수 입력값입니다.';
-        else if (attrMstrSgmtRuleAttrTblList.find((e) => e.mstrSgmtRuleTblNm === ''))
+        // 등록 validation
+        if (validationTool(mstrSgmtRule.mstrSgmtRuleNm)) {
+          masterProfileRef?.current.firstElementChild.focus();
+          checkValidation = 'MasterProfile은 필수 입력값입니다.';
+        } else if (validationTool(mstrSgmtRule.mstrSgmtRuleDesc)) {
+          descriptionRef?.current.firstElementChild.focus();
+          checkValidation = 'Description은 필수 입력값입니다.';
+        } else if (
+          attrMstrSgmtRuleAttrTblList.find((e) => e.mstrSgmtRuleTblNm === '') ||
+          behvMstrSgmtRuleAttrTblList.find((e) => e.mstrSgmtRuleTblNm === '')
+        ) {
+          if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '') !== -1) {
+            attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '');
+            attrRef.current.targetRef = 'metaTblIdRef';
+          } else {
+            behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '');
+            behvRef.current.targetRef = 'metaTblIdRef';
+          }
+
           checkValidation = '테이블 정보를 선택해주십시오.';
-        else if (attrMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === ''))
+        } else if (
+          attrMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '') ||
+          behvMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '')
+        ) {
+          if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '') !== -1) {
+            attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '');
+            attrRef.current.targetRef = 'masterJoinKeyRef';
+          } else {
+            behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '');
+            behvRef.current.targetRef = 'masterJoinKeyRef';
+          }
           checkValidation = '마스터 join key를 선택해주십시오.';
-        else if (attrMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === ''))
+        } else if (
+          attrMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '') ||
+          behvMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '')
+        ) {
+          if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '') !== -1) {
+            attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '');
+            attrRef.current.targetRef = 'attrJoinKeyRef';
+          } else {
+            behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '');
+            behvRef.current.targetRef = 'attrJoinKeyRef';
+          }
           checkValidation = '속성 join key를 선택해주십시오.';
-        else if (
+        } else if (
           !attrMstrSgmtRuleAttrTblList
             .map((row) => row.mstrSgmtRuleTblId)
             .flat()
@@ -275,6 +319,7 @@ const MasterProfileManagementReg = () => {
       // } else {
       //     setIsAttrAddIconShow(true)
       // }
+
       setAttrMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
         let rtn = cloneDeep(prevState);
         let addItem = cloneDeep(initTbRsMstrSgmtRuleAttrTbl);
@@ -332,14 +377,24 @@ const MasterProfileManagementReg = () => {
               Master Profile
             </TH>
             <TD colSpan={2} align="left">
-              <TextField className="width-100" id="mstrSgmtRuleNm" onChange={onchangeInputHandler} />
+              <TextField
+                ref={masterProfileRef}
+                className="width-100"
+                id="mstrSgmtRuleNm"
+                onChange={onchangeInputHandler}
+              />
               {/* {masterProfileInfo.tbRsMstrSgmtRule.mstrSgmtRuleNm} */}
             </TD>
             <TH colSpan={1} align="right" required>
               Description
             </TH>
             <TD colSpan={2} align="left">
-              <TextField className="width-100" id="mstrSgmtRuleDesc" onChange={onchangeInputHandler} />
+              <TextField
+                ref={descriptionRef}
+                className="width-100"
+                id="mstrSgmtRuleDesc"
+                onChange={onchangeInputHandler}
+              />
               {/* {masterProfileInfo.tbRsMstrSgmtRule.mstrSgmtRuleDesc} */}
             </TD>
           </TR>
@@ -380,6 +435,7 @@ const MasterProfileManagementReg = () => {
                 mstrSgmtRuleAttrTblList={attrMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                 setMstrSgmtRuleAttrTblList={setAttrMstrSgmtRuleAttrTblList}
                 setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
+                focusTarget={attrRef}
               />
             );
           })}
@@ -420,6 +476,7 @@ const MasterProfileManagementReg = () => {
                 mstrSgmtRuleAttrTblList={behvMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                 setMstrSgmtRuleAttrTblList={setBehvMstrSgmtRuleAttrTblList}
                 setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
+                focusTarget={behvRef}
               />
             );
           })}
