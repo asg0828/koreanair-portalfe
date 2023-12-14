@@ -259,15 +259,20 @@ const Reg = () => {
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
-                  <TextField
-                    className="width-100"
-                    {...register('featureKoNm', {
-                      required: { value: true, message: 'featureKoNm is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
-                    })}
-                    validation={errors?.featureKoNm?.message ? 'Error' : undefined}
-                    autoFocus
-                  />
+                  <Stack gap="SM">
+                    <TextField
+                      className="width-100"
+                      {...register('featureKoNm', {
+                        required: { value: true, message: 'featureKoNm is required.' },
+                        maxLength: { value: 100, message: 'max length exceeded' },
+                      })}
+                      validation={errors?.featureKoNm?.message ? 'Error' : undefined}
+                      autoFocus
+                    />
+                    <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+                      중복확인
+                    </Button>
+                  </Stack>
                   <ErrorLabel message={errors?.featureKoNm?.message} />
                 </Stack>
               </TD>
@@ -276,14 +281,19 @@ const Reg = () => {
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
-                  <TextField
-                    className="width-100"
-                    {...register('featureEnNm', {
-                      required: { value: true, message: 'featureEnNm is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
-                    })}
-                    validation={errors?.featureEnNm?.message ? 'Error' : undefined}
-                  />
+                  <Stack gap="SM">
+                    <TextField
+                      className="width-100"
+                      {...register('featureEnNm', {
+                        required: { value: true, message: 'featureEnNm is required.' },
+                        maxLength: { value: 100, message: 'max length exceeded' },
+                      })}
+                      validation={errors?.featureEnNm?.message ? 'Error' : undefined}
+                    />
+                    <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+                      중복확인
+                    </Button>
+                  </Stack>
                   <ErrorLabel message={errors?.featureEnNm?.message} />
                 </Stack>
               </TD>

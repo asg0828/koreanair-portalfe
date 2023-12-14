@@ -1,23 +1,5 @@
 import { MenuInfo } from '@/models/common/CommonInfo';
 
-export const defaultPath: any = {
-  '/biz-meta': '/biz-meta/feature',
-  '/customer-info': '/customer-info/dashboard',
-  '/structured-report': '/structured-report/vip-intl-flight-reservation-status',
-  '/self-feature': '/self-feature/self-feature',
-  '/feature': '/feature/interest',
-  '/board': '/board/notice',
-  '/admin/biz-meta-management': '/admin/biz-meta-management/feature',
-  '/admin/admin-report': '/admin/admin-report/one-id-main',
-  '/admin/admin-report/one-id-main': '/admin/admin-report/one-id-main/master-history',
-  '/admin/admin-report/one-id-report': '/admin/admin-report/one-id-report/daily',
-  '/admin/user-management': '/admin/user-management/user-management',
-  '/admin/user-portal-management': '/admin/user-portal-management/menu-management',
-  '/admin/user-portal-management/board-management': '/admin/user-portal-management/board-management/notice',
-  '/admin/admin-portal-management': '/admin/admin-portal-management/menu-management',
-  '/admin/self-feature-meta-management': '/admin/self-feature-meta-management/customer-meta-management',
-};
-
 export const userMenuList: Array<MenuInfo> = [
   { menuNm: 'BIZ 메타', menuUrl: '/biz-meta' },
   { menuNm: 'Feature', menuUrl: '/biz-meta/feature' },

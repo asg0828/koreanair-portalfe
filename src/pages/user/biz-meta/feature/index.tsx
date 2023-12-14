@@ -70,13 +70,13 @@ const List = () => {
         );
       },
     },
-    { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 0.6 },
-    { headerName: '중구분', field: 'featureSeNm', colSpan: 0.6 },
-    { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1.8, align: 'left' },
-    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1.8, align: 'left' },
-    { headerName: '정의', field: 'featureDef', colSpan: 3.4, align: 'left' },
+    { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 0.8 },
+    { headerName: '중구분', field: 'featureSeNm', colSpan: 0.8 },
+    { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1.9, align: 'left' },
+    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1.9, align: 'left' },
+    { headerName: '정의', field: 'featureDef', colSpan: 2, align: 'left' },
     { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
-    { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1.4 },
+    { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1.2 },
   ];
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = useFeatureList(params, page);
