@@ -38,10 +38,11 @@ const List = () => {
   const [authId, setAuthId] = useState<string>('');
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<AuthModel>>([]);
+  const [initData, setInitData] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
   const [treeData, setTreeData] = useState<Array<HierarchyInfo>>([]);
   const { data: response, isError, refetch } = useUserMenuList('menu-auth-mgmt');
-  const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
+  const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList({ suspense: false });
   const { data: uamResponse, isError: uamIsError, refetch: uamRefetch } = useUserAuthMenuList(authId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateUserMenu();
   const {
@@ -84,8 +85,11 @@ const List = () => {
   };
 
   useEffect(() => {
-    authId && uamRefetch();
-  }, [authId, uamRefetch]);
+    if (authId) {
+      setData(initData);
+      uamRefetch();
+    }
+  }, [initData, authId, uamRefetch]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -110,7 +114,7 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setData(response.data.contents);
+        setInitData(response.data.contents);
       }
     }
   }, [response, isError, toast]);

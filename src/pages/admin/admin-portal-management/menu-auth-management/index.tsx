@@ -42,7 +42,7 @@ const List = () => {
   const [data, setData] = useState<Array<any>>([]);
   const [treeData, setTreeData] = useState<Array<HierarchyInfo>>([]);
   const { data: response, isError, refetch } = useAdminMenuList();
-  const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useAdminAuthAllList();
+  const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useAdminAuthAllList({ suspense: false });
   const { data: uamResponse, isError: uamIsError, refetch: uamRefetch } = useAdminAuthMenuList(authId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateAdminMenu();
   const {

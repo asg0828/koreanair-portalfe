@@ -63,7 +63,9 @@ const TreeSearchForm = ({
     <Stack direction="Vertical" className="height-100 width-50">
       <Stack className="padding-5 primary-600">
         <Stack justifyContent="Center" className="width-100">
-          <Typography variant="h3" className="white">메뉴</Typography>
+          <Typography variant="h3" className="white">
+            메뉴
+          </Typography>
         </Stack>
 
         {enableIcon && (
@@ -83,7 +85,14 @@ const TreeSearchForm = ({
           검색
         </Button>
       </Stack>
-      <DataTree enableChecked={true} treeData={newTreeData} term={term} onClick={onClick} onMove={onMove} />
+      <DataTree
+        enableChecked={true}
+        enableDelete={enableIcon}
+        treeData={newTreeData}
+        term={term}
+        onClick={onClick}
+        onMove={onMove}
+      />
     </Stack>
   );
 };

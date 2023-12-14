@@ -13,6 +13,7 @@ import { MoveHandler, NodeApi, NodeRendererProps, Tree } from 'react-arborist';
 
 export interface DataTreeProps {
   enableChecked?: boolean;
+  enableDelete?: boolean;
   treeData?: Array<HierarchyInfo>;
   term?: string;
   onClick?: (item: HierarchyInfo, parentItem?: HierarchyInfo) => void;
@@ -23,6 +24,7 @@ export interface DataTreeProps {
 
 const DataTree = ({
   enableChecked = false,
+  enableDelete = false,
   treeData = [],
   term = '',
   onClick,
@@ -76,7 +78,10 @@ const DataTree = ({
   // 부모 노드들 체크 여부 적용
   const checkParentRecursive = (node: NodeApi) => {
     if (node.parent) {
-      node.parent.data.isChecked = node.parent.children && node.parent.children.some((n: any) => n.data.isChecked);
+      node.parent.data.isChecked =
+        node.parent.children && enableDelete
+          ? node.parent.children.every((n: any) => n.data.isChecked)
+          : node.parent.children?.some((n: any) => n.data.isChecked);
       checkParentRecursive(node.parent);
     }
   };
@@ -179,13 +184,7 @@ const DataTree = ({
   };
 
   return (
-    <section
-      className="padding-10 width-100"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      }}
-    >
+    <section className="padding-10 width-100">
       <Tree
         width="100%"
         height={treeHeight}
