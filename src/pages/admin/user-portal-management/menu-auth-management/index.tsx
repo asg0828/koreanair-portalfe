@@ -38,7 +38,6 @@ const List = () => {
   const [authId, setAuthId] = useState<string>('');
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<AuthModel>>([]);
-  const [initData, setInitData] = useState<Array<any>>([]);
   const [data, setData] = useState<Array<any>>([]);
   const [treeData, setTreeData] = useState<Array<HierarchyInfo>>([]);
   const { data: response, isError, refetch } = useUserMenuList('menu-auth-mgmt');
@@ -85,11 +84,8 @@ const List = () => {
   };
 
   useEffect(() => {
-    if (authId) {
-      setData(initData);
-      uamRefetch();
-    }
-  }, [initData, authId, uamRefetch]);
+    authId && uamRefetch();
+  }, [authId, uamRefetch]);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -114,7 +110,12 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setInitData(response.data.contents);
+        setData(
+          response.data.contents.map((item: any) => {
+            item.isChecked = false;
+            return item;
+          })
+        );
       }
     }
   }, [response, isError, toast]);
