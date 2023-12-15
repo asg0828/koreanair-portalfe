@@ -142,7 +142,7 @@ const List = () => {
     const newItem: any = {
       ...initItem,
       oprtrSe: 'C',
-      upGroupCode: '',
+      upGroupCode: null,
       upGroupNm: '',
       ordSeq: ordSeq ? ordSeq + 1 : treeData.length,
       isSelected: true,

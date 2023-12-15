@@ -145,12 +145,10 @@ const List = () => {
         onClick={goToDetail}
         onChange={handlePage}
         buttonChildren={
-          contextPath === ContextPath.ADMIN && (
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
-              <AddIcon />
-              등록
-            </Button>
-          )
+          <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
+            <AddIcon />
+            등록
+          </Button>
         }
       />
     </>

@@ -1,5 +1,12 @@
 import { CommonModel } from '@/models/model/CommonModel';
 
+export type FeatureKeyType = 'featureKoNm' | 'featureEnNm';
+
+export interface FeatureAllParams {
+  featureKoNm?: string;
+  featureEnNm?: string;
+}
+
 export interface FeatureParams {
   featureSeGrp: string;
   featureSe: string;

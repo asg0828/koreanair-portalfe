@@ -1,4 +1,5 @@
 import {
+  getFeatureAllList,
   getFeatureById,
   getFeatureList,
   getFeatureSeList,
@@ -6,9 +7,13 @@ import {
   getInterestFeatureList,
   getPopularFeatureList,
 } from '@/api/FeatureAPI';
-import { FeatureParams } from '@/models/model/FeatureModel';
+import { FeatureAllParams, FeatureParams } from '@/models/model/FeatureModel';
 import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
+
+export const useFeatureAllList = (params: FeatureAllParams, options?: Object) => {
+  return useQuery(['/feature/all/list', params], () => getFeatureAllList(params), options);
+};
 
 export const useFeatureList = (params: FeatureParams, page: PageModel, options?: Object) => {
   return useQuery(['/feature/list'], () => getFeatureList(params, page), options);
@@ -27,9 +32,12 @@ export const useFeatureById = (featureId: string) => {
 };
 
 export const useFeatureTypList = () => {
-  return useQuery(['/feature-separates/list'], () => getFeatureTypList());
+  return useQuery(['/feature-separates/list'], () => getFeatureTypList(), { suspense: false });
 };
 
 export const useFeatureSeList = (seGrpId: string) => {
-  return useQuery(['/feature-separates', seGrpId], () => getFeatureSeList(seGrpId), { enabled: false });
+  return useQuery(['/feature-separates', seGrpId], () => getFeatureSeList(seGrpId), {
+    suspense: false,
+    enabled: false,
+  });
 };

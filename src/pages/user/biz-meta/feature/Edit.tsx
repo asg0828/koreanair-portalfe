@@ -2,10 +2,21 @@ import '@/assets/styles/Board.scss';
 import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useUpdateFeature } from '@/hooks/mutations/useFeatureMutations';
-import { useFeatureById, useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
+import {
+  useFeatureAllList,
+  useFeatureById,
+  useFeatureSeList,
+  useFeatureTypList,
+} from '@/hooks/queries/useFeatureQueries';
+import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
-import { FeatureSeparatesModel, UpdatedFeatureModel } from '@/models/model/FeatureModel';
+import {
+  FeatureAllParams,
+  FeatureKeyType,
+  FeatureSeparatesModel,
+  UpdatedFeatureModel,
+} from '@/models/model/FeatureModel';
 import { UserModel } from '@/models/model/UserModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -14,6 +25,11 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography,
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
+
+const initFeatureAllParams: FeatureAllParams = {
+  featureKoNm: undefined,
+  featureEnNm: undefined,
+};
 
 const Reg = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +43,8 @@ const Reg = () => {
     getValues,
     setValue,
     watch,
+    reset,
+    setError,
     formState: { errors },
   } = useForm<UpdatedFeatureModel>({
     mode: 'onChange',
@@ -51,10 +69,19 @@ const Reg = () => {
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE));
   const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
+  const [featureAllParams, setFeatureAllParams] = useState<FeatureAllParams>(initFeatureAllParams);
+  const [featureAllKey, setFeatureAllKey] = useState<FeatureKeyType>('featureKoNm');
+  const [duplicationError, setDuplicationError] = useState<any>(initFeatureAllParams);
+  const [featureInfo, setFeatureInfo] = useState<UpdatedFeatureModel>();
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFeature(featureId, values);
   const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
+  const {
+    data: faResponse,
+    isError: faIsError,
+    refetch: faRefetch,
+  } = useFeatureAllList({ [featureAllKey]: featureAllParams[featureAllKey] }, { enabled: false, suspense: false });
 
   const goToList = () => {
     dispatch(
@@ -67,7 +94,56 @@ const Reg = () => {
     );
   };
 
+  const handleCheckDuplication = (key: FeatureKeyType) => {
+    if (values[key] === featureInfo?.[key]) {
+      toast({
+        type: ValidType.INFO,
+        content: '변경되지 않은 이름입니다.',
+      });
+    } else if (values[key]) {
+      setFeatureAllKey(key);
+      setFeatureAllParams((prevState) => ({ ...prevState, [key]: values[key] }));
+    } else {
+      setError(key, {
+        type: 'empty',
+        message: '텍스트를 입력해주세요.',
+      });
+    }
+  };
+
   const onSubmit = (data: UpdatedFeatureModel) => {
+    if (data.featureKoNm !== featureInfo?.featureKoNm) {
+      if (data.featureKoNm !== featureAllParams.featureKoNm) {
+        setError('featureKoNm', {
+          type: 'validCheck',
+          message: '중복확인을 해주세요.',
+        });
+        return;
+      } else if (duplicationError.featureKoNm) {
+        setError('featureKoNm', {
+          type: 'duplication',
+          message: '이미 존재하는 이름입니다.',
+        });
+        return;
+      }
+    }
+
+    if (data.featureEnNm !== featureInfo?.featureEnNm) {
+      if (data.featureEnNm !== featureAllParams.featureEnNm) {
+        setError('featureEnNm', {
+          type: 'validCheck',
+          message: '중복확인을 해주세요.',
+        });
+        return;
+      } else if (duplicationError.featureEnNm) {
+        setError('featureEnNm', {
+          type: 'duplication',
+          message: '이미 존재하는 이름입니다.',
+        });
+        return;
+      }
+    }
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
@@ -92,25 +168,16 @@ const Reg = () => {
     );
   };
 
+  useDidMountEffect(() => {
+    faRefetch();
+  }, [featureAllParams]);
+
   useEffect(() => {
     if (isSuccess && response.data) {
-      setValue('featureId', response.data.featureId);
-      setValue('featureTyp', response.data.featureTyp);
-      setValue('featureSeGrp', response.data.featureSeGrp);
-      setValue('featureSe', response.data.featureSe);
-      setValue('featureKoNm', response.data.featureKoNm);
-      setValue('featureEnNm', response.data.featureEnNm);
-      setValue('calcUnt', response.data.calcUnt);
-      setValue('featureDef', response.data.featureDef);
-      setValue('featureFm', response.data.featureFm);
-      setValue('enrUserId', response.data.enrUserId);
-      setValue('enrDeptCode', response.data.enrDeptCode);
-      setValue('featureRelTb', response.data.featureRelTb);
-      setValue('featureDsc', response.data.featureDsc);
-      setValue('enrUserNm', response.data.enrUserNm);
-      setValue('enrDeptNm', response.data.enrDeptNm);
+      setFeatureInfo(response.data);
+      reset(response.data);
     }
-  }, [isSuccess, response?.data, setValue]);
+  }, [isSuccess, response?.data, reset]);
 
   useEffect(() => {
     if (values.featureSeGrp) {
@@ -122,7 +189,7 @@ const Reg = () => {
     if (tIsError || tResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: '대구분 조회 중 에러가 발생했습니다.',
       });
     } else {
       if (tResponse?.data) {
@@ -135,7 +202,7 @@ const Reg = () => {
     if (sIsError || sResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: '중구분 조회 중 에러가 발생했습니다.',
       });
     } else {
       if (sResponse?.data) {
@@ -152,6 +219,37 @@ const Reg = () => {
       });
     }
   }, [response, isError, toast]);
+
+  useEffect(() => {
+    if (faIsError || faResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '중복확인 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (faResponse?.data) {
+        if (faResponse.data.length === 0) {
+          setDuplicationError((prevState: any) => ({
+            ...prevState,
+            [featureAllKey]: undefined,
+          }));
+          toast({
+            type: ValidType.INFO,
+            content: '사용가능한 이름입니다.',
+          });
+        } else {
+          setError(featureAllKey, {
+            type: 'duplication',
+            message: '이미 존재하는 이름입니다.',
+          });
+          setDuplicationError((prevState: any) => ({
+            ...prevState,
+            [featureAllKey]: true,
+          }));
+        }
+      }
+    }
+  }, [faResponse, faIsError, featureAllKey, featureAllParams, setError, toast]);
 
   useEffect(() => {
     if (uIsError || uResponse?.successOrNot === 'N') {
@@ -309,15 +407,26 @@ const Reg = () => {
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
-                  <TextField
-                    className="width-100"
-                    {...register('featureKoNm', {
-                      required: { value: true, message: 'featureKoNm is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
-                    })}
-                    validation={errors?.featureKoNm?.message ? 'Error' : undefined}
-                    autoFocus
-                  />
+                  <Stack gap="SM">
+                    <TextField
+                      className="width-100"
+                      {...register('featureKoNm', {
+                        required: { value: true, message: 'featureKoNm is required.' },
+                        maxLength: { value: 100, message: 'max length exceeded' },
+                      })}
+                      validation={errors?.featureKoNm?.message ? 'Error' : undefined}
+                      autoFocus
+                    />
+                    <Button
+                      appearance="Contained"
+                      priority="Normal"
+                      shape="Square"
+                      size="MD"
+                      onClick={() => handleCheckDuplication('featureKoNm')}
+                    >
+                      중복확인
+                    </Button>
+                  </Stack>
                   <ErrorLabel message={errors?.featureKoNm?.message} />
                 </Stack>
               </TD>
@@ -326,14 +435,26 @@ const Reg = () => {
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
-                  <TextField
-                    className="width-100"
-                    {...register('featureEnNm', {
-                      required: { value: true, message: 'featureEnNm is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
-                    })}
-                    validation={errors?.featureEnNm?.message ? 'Error' : undefined}
-                  />
+                  <Stack gap="SM">
+                    <TextField
+                      className="width-100"
+                      {...register('featureEnNm', {
+                        pattern: { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' },
+                        required: { value: true, message: 'featureEnNm is required.' },
+                        maxLength: { value: 100, message: 'max length exceeded' },
+                      })}
+                      validation={errors?.featureEnNm?.message ? 'Error' : undefined}
+                    />
+                    <Button
+                      appearance="Contained"
+                      priority="Normal"
+                      shape="Square"
+                      size="MD"
+                      onClick={() => handleCheckDuplication('featureEnNm')}
+                    >
+                      중복확인
+                    </Button>
+                  </Stack>
                   <ErrorLabel message={errors?.featureEnNm?.message} />
                 </Stack>
               </TD>

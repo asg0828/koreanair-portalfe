@@ -140,7 +140,7 @@ const List = () => {
     const newItem: any = {
       ...initItem,
       oprtrSe: 'C',
-      upDeptCode: '',
+      upDeptCode: null,
       upDeptNm: '',
       ordSeq: ordSeq ? ordSeq + 1 : treeData.length,
       isSelected: true,

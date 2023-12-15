@@ -138,7 +138,7 @@ const List = () => {
     const newItem: any = {
       ...initItem,
       oprtrSe: 'C',
-      upMenuId: '',
+      upMenuId: null,
       upMenuNm: '',
       ordSeq: ordSeq ? ordSeq + 1 : treeData.length,
       isSelected: true,

@@ -400,16 +400,12 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
-        {contextPath === ContextPath.ADMIN && (
-          <>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-              수정
-            </Button>
-            <Button priority="Normal" size="LG" onClick={handleDelete}>
-              삭제
-            </Button>
-          </>
-        )}
+        <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+          수정
+        </Button>
+        <Button priority="Normal" size="LG" onClick={handleDelete}>
+          삭제
+        </Button>
         <Button size="LG" onClick={goToList}>
           목록
         </Button>
