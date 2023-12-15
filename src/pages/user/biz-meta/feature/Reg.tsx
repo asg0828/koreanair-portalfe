@@ -1,10 +1,16 @@
 import '@/assets/styles/Board.scss';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateFeature } from '@/hooks/mutations/useFeatureMutations';
-import { useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
+import { useFeatureAllList, useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
+import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
-import { CreatedFeatureModel, FeatureSeparatesModel } from '@/models/model/FeatureModel';
+import {
+  CreatedFeatureModel,
+  FeatureAllParams,
+  FeatureKeyType,
+  FeatureSeparatesModel,
+} from '@/models/model/FeatureModel';
 import { UserModel } from '@/models/model/UserModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -13,6 +19,11 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography,
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+
+const initFeatureAllParams: FeatureAllParams = {
+  featureKoNm: undefined,
+  featureEnNm: undefined,
+};
 
 const Reg = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +36,7 @@ const Reg = () => {
     getValues,
     setValue,
     watch,
+    setError,
     formState: { errors },
   } = useForm<CreatedFeatureModel>({
     mode: 'onChange',
@@ -48,9 +60,17 @@ const Reg = () => {
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE));
   const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
+  const [featureAllParams, setFeatureAllParams] = useState<FeatureAllParams>(initFeatureAllParams);
+  const [featureAllKey, setFeatureAllKey] = useState<FeatureKeyType>('featureKoNm');
+  const [duplicationError, setDuplicationError] = useState<any>(initFeatureAllParams);
   const { data: response, mutate, isSuccess, isError } = useCreateFeature(values);
   const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
+  const {
+    data: faResponse,
+    isError: faIsError,
+    refetch: faRefetch,
+  } = useFeatureAllList({ [featureAllKey]: featureAllParams[featureAllKey] }, { enabled: false, suspense: false });
 
   const goToList = () => {
     dispatch(
@@ -59,17 +79,6 @@ const Reg = () => {
         title: '확인',
         content: '목록으로 이동하시겠습니까?',
         onConfirm: () => navigate('..'),
-      })
-    );
-  };
-
-  const onSubmit = (data: CreatedFeatureModel) => {
-    dispatch(
-      openModal({
-        type: ModalType.CONFIRM,
-        title: '저장',
-        content: '등록하시겠습니까?',
-        onConfirm: mutate,
       })
     );
   };
@@ -88,6 +97,61 @@ const Reg = () => {
     );
   };
 
+  const handleCheckDuplication = (key: FeatureKeyType) => {
+    if (values[key]) {
+      setFeatureAllKey(key);
+      setFeatureAllParams((prevState) => ({ ...prevState, [key]: values[key] }));
+    } else {
+      setError(key, {
+        type: 'empty',
+        message: '텍스트를 입력해주세요.',
+      });
+    }
+  };
+
+  const onSubmit = (data: CreatedFeatureModel) => {
+    if (data.featureKoNm !== featureAllParams.featureKoNm) {
+      setError('featureKoNm', {
+        type: 'validCheck',
+        message: '중복확인을 해주세요.',
+      });
+      return;
+    } else if (duplicationError.featureKoNm) {
+      setError('featureKoNm', {
+        type: 'duplication',
+        message: '이미 존재하는 이름입니다.',
+      });
+      return;
+    }
+
+    if (data.featureEnNm !== featureAllParams.featureEnNm) {
+      setError('featureEnNm', {
+        type: 'validCheck',
+        message: '중복확인을 해주세요.',
+      });
+      return;
+    } else if (duplicationError.featureEnNm) {
+      setError('featureEnNm', {
+        type: 'duplication',
+        message: '이미 존재하는 이름입니다.',
+      });
+      return;
+    }
+
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '저장',
+        content: '등록하시겠습니까?',
+        onConfirm: mutate,
+      })
+    );
+  };
+
+  useDidMountEffect(() => {
+    faRefetch();
+  }, [featureAllParams]);
+
   useEffect(() => {
     if (values.featureSeGrp) {
       sRefetch();
@@ -98,7 +162,7 @@ const Reg = () => {
     if (tIsError || tResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: '대구분 조회 중 에러가 발생했습니다.',
       });
     } else {
       if (tResponse?.data) {
@@ -111,7 +175,7 @@ const Reg = () => {
     if (sIsError || sResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: '중구분 조회 중 에러가 발생했습니다.',
       });
     } else {
       if (sResponse?.data) {
@@ -119,6 +183,37 @@ const Reg = () => {
       }
     }
   }, [sResponse, sIsError, toast]);
+
+  useEffect(() => {
+    if (faIsError || faResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '중복확인 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (faResponse?.data) {
+        if (faResponse.data.length === 0) {
+          setDuplicationError((prevState: any) => ({
+            ...prevState,
+            [featureAllKey]: undefined,
+          }));
+          toast({
+            type: ValidType.INFO,
+            content: '사용가능한 이름입니다.',
+          });
+        } else {
+          setError(featureAllKey, {
+            type: 'duplication',
+            message: '이미 존재하는 이름입니다.',
+          });
+          setDuplicationError((prevState: any) => ({
+            ...prevState,
+            [featureAllKey]: true,
+          }));
+        }
+      }
+    }
+  }, [faResponse, faIsError, featureAllKey, featureAllParams, setError, toast]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -269,7 +364,13 @@ const Reg = () => {
                       validation={errors?.featureKoNm?.message ? 'Error' : undefined}
                       autoFocus
                     />
-                    <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+                    <Button
+                      appearance="Contained"
+                      priority="Normal"
+                      shape="Square"
+                      size="MD"
+                      onClick={() => handleCheckDuplication('featureKoNm')}
+                    >
                       중복확인
                     </Button>
                   </Stack>
@@ -285,12 +386,19 @@ const Reg = () => {
                     <TextField
                       className="width-100"
                       {...register('featureEnNm', {
+                        pattern: { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' },
                         required: { value: true, message: 'featureEnNm is required.' },
                         maxLength: { value: 100, message: 'max length exceeded' },
                       })}
                       validation={errors?.featureEnNm?.message ? 'Error' : undefined}
                     />
-                    <Button appearance="Contained" priority="Normal" shape="Square" size="MD">
+                    <Button
+                      appearance="Contained"
+                      priority="Normal"
+                      shape="Square"
+                      size="MD"
+                      onClick={() => handleCheckDuplication('featureEnNm')}
+                    >
                       중복확인
                     </Button>
                   </Stack>
@@ -398,6 +506,7 @@ const Reg = () => {
                         maxLength: { value: 32, message: 'max length exceeded' },
                       })}
                       validation={errors?.enrUserNm?.message ? 'Error' : undefined}
+                      disabled
                     />
                     <Button
                       appearance="Contained"

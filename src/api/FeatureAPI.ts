@@ -1,8 +1,21 @@
 import { PortalApiURL } from '@/models/common/ApiURL';
 import { Service } from '@/models/common/Service';
-import { FeatureParams } from '@/models/model/FeatureModel';
+import { FeatureAllParams, FeatureParams } from '@/models/model/FeatureModel';
 import { PageModel } from '@/models/model/PageModel';
 import { callApi, Method } from '@utils/ApiUtil';
+
+export const getFeatureAllList = (params: FeatureAllParams) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.FEATURE}/all`,
+    method: Method.GET,
+    params: {
+      queryParams: {
+        ...params,
+      },
+    },
+  });
+};
 
 export const getFeatureList = (params: FeatureParams, page: PageModel) => {
   return callApi({
