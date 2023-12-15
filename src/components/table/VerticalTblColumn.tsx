@@ -5,6 +5,7 @@ import { ModalType, View } from '@/models/common/Constants';
 import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { openModal } from '@/reducers/modalSlice';
+import { cloneDeep } from 'lodash'
 import '@components/table/VerticalTable.scss';
 import {
   Button,
@@ -117,7 +118,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         return -oValue;
       }
     });
-    setTbCoMetaTblClmnInfoList(tbCoMetaTblClmnInfoList);
+    setTbCoMetaTblClmnInfoList(() => cloneDeep(tbCoMetaTblClmnInfoList));
   };
 
   const handleClick = (row: RowsInfo, index: number) => {
@@ -126,7 +127,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
 
   useEffect(() => {
     setTbCoMetaTblClmnInfoList(() => {
-      const updatedRows: RowsInfo[] = rows.map((row, index) => {
+      const updatedRows: RowsInfo[] = cloneDeep(rows).map((row, index) => {
         return {
           ...row,
           clmnUseYn: 'Y',
@@ -144,7 +145,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   // 수집기준시간 변경 함수
   const timeStampChg = (rowIndex: number) => {
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
-      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+      const updatedRows = cloneDeep(tbCoMetaTblClmnInfoList).map((row, index) => {
         // 선택한 라디오 버튼이 속한 행이면 변경
         if (index === rowIndex) {
           return {
@@ -176,7 +177,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   // 체크박스 선택 값 변경 함수
   const ynChg = (rowIndex: number, field: string) => {
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
-      const updatedRows: RowsInfo[] = tbCoMetaTblClmnInfoList.map((row, index) => {
+      const updatedRows: RowsInfo[] = cloneDeep(tbCoMetaTblClmnInfoList).map((row, index) => {
         if (field === 'pkYn' && index === rowIndex) {
           return {
             ...row,
@@ -198,7 +199,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   const changeYnHandler = (rowIndex: number, field: string) => {
     // 체크 여부에 따라서
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
-      const updatedRows: RowsInfo[] = tbCoMetaTblClmnInfoList.map((row, index) => {
+      const updatedRows: RowsInfo[] = cloneDeep(tbCoMetaTblClmnInfoList).map((row, index) => {
         if (field === 'changeYn' && index === rowIndex && row.changeYn === 'Y') {
           return {
             ...row,
@@ -224,7 +225,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     const { id, value } = e.target;
 
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
-      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+      const updatedRows = cloneDeep(tbCoMetaTblClmnInfoList).map((row, index) => {
         if (index === rowIndex) {
           return {
             ...row,
@@ -246,7 +247,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     rowIndex?: number
   ) => {
     setTbCoMetaTblClmnInfoList((tbCoMetaTblClmnInfoList) => {
-      const updatedRows = tbCoMetaTblClmnInfoList.map((row, index) => {
+      const updatedRows = cloneDeep(tbCoMetaTblClmnInfoList).map((row, index) => {
         if (index === rowIndex) {
           if ((value === 'double' || 'int') && id === 'chgDtpCd') {
             return {
