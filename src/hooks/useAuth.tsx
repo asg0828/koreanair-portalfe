@@ -4,7 +4,7 @@ import { useMainLoader } from '@/hooks/useLoader';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath } from '@/models/common/Constants';
 import { adminMenulist, userMenuList } from '@/models/common/Menu';
-import { login, selectContextPath, selectSessionInfo, setContextPath } from '@/reducers/authSlice';
+import { login, selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { setBaseMenuList, setMenuList } from '@/reducers/menuSlice';
 import { setBaseApiUrl } from '@/utils/ApiUtil';
 import { convertToHierarchyInfo, sortChildrenRecursive } from '@/utils/ArrayUtil';
@@ -70,27 +70,24 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
           const sessionInfo: SessionInfo = sessionResponse.data as SessionInfo;
           sessionUtil.setSessionInfo(sessionInfo);
 
-          let contextPath;
           let baseMenuList: Array<any> = [];
           let myMenuList: Array<any> = [];
           let routerFileName;
 
-          if (pathname.startsWith(ContextPath.ADMIN)) {
+          if (contextPath === ContextPath.ADMIN) {
             if (!sessionInfo.apldMgrAuthId) {
               setUnauthorized(true);
               return;
             }
-            contextPath = ContextPath.ADMIN;
             baseMenuList = adminMenulist;
             myMenuList = sessionInfo.menuByAuthMgr?.menus || [];
             routerFileName = 'adminRouter';
             setBaseApiUrl('/bo');
-          } else if (pathname.startsWith(ContextPath.POPUP)) {
+          } else if (contextPath === ContextPath.POPUP) {
             if (!sessionInfo.apldUserAuthId) {
               setUnauthorized(true);
               return;
             }
-            contextPath = ContextPath.POPUP;
             transferLocalStorage();
             setBaseApiUrl('/fo');
           } else {
@@ -98,7 +95,6 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
               setUnauthorized(true);
               return;
             }
-            contextPath = ContextPath.USER;
             baseMenuList = userMenuList;
             myMenuList = sessionInfo.menuByAuthUser?.menus || [];
             routerFileName = 'userRouter';
@@ -143,7 +139,6 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
             },
           ];
 
-          dispatch(setContextPath(contextPath));
           dispatch(login(sessionInfo));
           dispatch(setBaseMenuList(baseMenuList));
           dispatch(setMenuList(hierarchyMenuList));
