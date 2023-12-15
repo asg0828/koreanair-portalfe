@@ -19,7 +19,7 @@ export const useUserAuthList = (params: AuthParams, page: PageModel) => {
 };
 
 export const useUserAuthById = (authId: string) => {
-  return useQuery(['/user/auth', authId], () => getUserAuthById(authId));
+  return useQuery(['/user/auth', authId], () => getUserAuthById(authId), { enabled: !!authId });
 };
 
 export const useAdminAuthAllList = (options?: Object) => {
@@ -31,5 +31,5 @@ export const useAdminAuthList = (params: AuthParams, page: PageModel) => {
 };
 
 export const useAdminAuthById = (authId: string) => {
-  return useQuery(['/admin/auth', authId], () => getAdminAuthById(authId));
+  return useQuery(['/admin/auth', authId], () => getAdminAuthById(authId), { enabled: !!authId });
 };

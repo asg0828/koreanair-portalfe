@@ -8,34 +8,40 @@ import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
-import { NoticeModel } from '@/models/model/NoticeModel';
+import { NoticeModel, NoticeParams } from '@/models/model/NoticeModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
-  const noticeId: string = location?.state?.noticeId || '';
+  const location = useLocation();
+  const noticeId = location?.state?.noticeId;
+  const params: NoticeParams = location?.state?.params;
   const [noticeModel, setNoticeModel] = useState<NoticeModel>();
   const { data: response, isSuccess, isError } = useNoticeById(noticeId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteNotice(noticeId);
 
-  const goToList = () => {
-    navigate('..');
-  };
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         noticeId: noticeId,
+        params: params,
       },
     });
   };
@@ -44,6 +50,7 @@ const Detail = () => {
     navigate('', {
       state: {
         noticeId: noticeId,
+        params: params,
       },
     });
   };
@@ -81,7 +88,7 @@ const Detail = () => {
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
-    } else if (isSuccess) {
+    } else if (isSuccess && response.data) {
       response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setNoticeModel(response.data);
     }
@@ -98,9 +105,9 @@ const Detail = () => {
         type: ValidType.CONFIRM,
         content: '삭제되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [dResponse, dIsSuccess, dIsError, toast, navigate]);
+  }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
 
   if (!noticeId) {
     return (
@@ -108,7 +115,7 @@ const Detail = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() => navigate('..')}
+        onConfirm={goToList}
       />
     );
   }

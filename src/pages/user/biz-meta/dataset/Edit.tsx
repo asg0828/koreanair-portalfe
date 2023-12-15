@@ -8,12 +8,12 @@ import { useDatasetById } from '@/hooks/queries/useDatasetQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
-import { DatasetColumnModel, UpdatedDatasetModel } from '@/models/model/DatasetModel';
+import { DatasetColumnModel, DatasetParams, UpdatedDatasetModel } from '@/models/model/DatasetModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -33,7 +33,8 @@ const Edit = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  const mtsId: string = location?.state?.mtsId || '';
+  const mtsId = location?.state?.mtsId;
+  const params: DatasetParams = location?.state?.params;
   const {
     register,
     handleSubmit,
@@ -178,13 +179,21 @@ const Edit = () => {
     );
   };
 
-  const goToList = () => {
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
+
+  const handleList = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: '확인',
         content: '목록으로 이동하시겠습니까?',
-        onConfirm: () => navigate('..'),
+        onConfirm: goToList,
       })
     );
   };
@@ -262,9 +271,9 @@ const Edit = () => {
         type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [uResponse, uIsSuccess, uIsError, toast, navigate]);
+  }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
 
   if (!mtsId) {
     return (
@@ -272,7 +281,7 @@ const Edit = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() => navigate('..')}
+        onConfirm={goToList}
       />
     );
   }
@@ -447,7 +456,7 @@ const Edit = () => {
           <Button priority="Primary" appearance="Contained" size="LG" type="submit">
             등록
           </Button>
-          <Button size="LG" onClick={goToList}>
+          <Button size="LG" onClick={handleList}>
             목록
           </Button>
         </Stack>

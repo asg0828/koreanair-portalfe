@@ -4,33 +4,39 @@ import { useDeleteFeature } from '@/hooks/mutations/useFeatureMutations';
 import { useFeatureById } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
-import { FeatureModel } from '@/models/model/FeatureModel';
+import { FeatureModel, FeatureParams } from '@/models/model/FeatureModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
-  const [featureModel, setFeatureModel] = useState<FeatureModel>();
+  const location = useLocation();
   const featureId: string = location?.state?.featureId || '';
+  const params: FeatureParams = location?.state?.params;
+  const [featureModel, setFeatureModel] = useState<FeatureModel>();
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFeature(featureId);
 
-  const goToList = () => {
-    navigate('..');
-  };
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         featureId: featureId,
+        params: params,
       },
     });
   };
@@ -68,9 +74,9 @@ const Detail = () => {
         type: ValidType.CONFIRM,
         content: '삭제되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [dResponse, dIsSuccess, dIsError, toast, navigate]);
+  }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
 
   if (!featureId) {
     return (
@@ -78,7 +84,7 @@ const Detail = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() => navigate('..')}
+        onConfirm={goToList}
       />
     );
   }

@@ -1,4 +1,4 @@
-import { getCodeGroupAllList, getCodeList, getCodeGroupById, getCodeById } from '@/api/CodeAPI';
+import { getCodeById, getCodeGroupAllList, getCodeGroupById, getCodeList } from '@/api/CodeAPI';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCodeGroupAllList = () => {
@@ -10,9 +10,9 @@ export const useCodeList = (groupId: string) => {
 };
 
 export const useCodeGroupById = (groupId: string) => {
-  return useQuery(['/code-group', groupId], () => getCodeGroupById(groupId));
+  return useQuery(['/code-group', groupId], () => getCodeGroupById(groupId), { enabled: !!groupId });
 };
 
 export const useCodeById = (groupId: string, codeId: string) => {
-  return useQuery(['/code', groupId], () => getCodeById(groupId, codeId));
+  return useQuery(['/code', groupId], () => getCodeById(groupId, codeId), { enabled: !!groupId && !!codeId });
 };

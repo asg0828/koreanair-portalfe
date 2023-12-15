@@ -6,7 +6,9 @@ import Fallback from '@/components/fallback/Fallback';
 import ModalContainer from '@/components/modal/ModalContainter';
 import useAuth from '@/hooks/useAuth';
 import useOAuth from '@/hooks/useOAuth';
-import { ValidType } from '@/models/common/Constants';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { ContextPath, ValidType } from '@/models/common/Constants';
+import { setContextPath } from '@/reducers/authSlice';
 import SessionApis from '@api/common/SessionApis';
 import { Toaster, useToast } from '@components/ui';
 import Watermark from '@uiw/react-watermark';
@@ -17,11 +19,25 @@ import { RouterProvider } from 'react-router-dom';
 
 const App = () => {
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const pathname = window.location.pathname;
   const sessionUtil = new SessionUtil();
   const sessionApis = new SessionApis();
   const searchParameters = new URLSearchParams(window.location.search);
   const authorizationCode: any = searchParameters.get('code');
+
+  if (!authorizationCode) {
+    localStorage.setItem('accessPathname', pathname);
+  }
+
+  if (pathname.startsWith(ContextPath.ADMIN)) {
+    dispatch(setContextPath(ContextPath.ADMIN));
+  } else if (pathname.startsWith(ContextPath.POPUP)) {
+    dispatch(setContextPath(ContextPath.POPUP));
+  } else {
+    dispatch(setContextPath(ContextPath.USER));
+  }
+
   const { sessionRequestInfo, isError: oIsError } = useOAuth(sessionUtil, sessionApis);
   const {
     sessionInfo,
@@ -29,10 +45,6 @@ const App = () => {
     isError: aIsError,
     unauthorized,
   } = useAuth(sessionUtil, sessionApis, sessionRequestInfo);
-
-  if (!authorizationCode) {
-    localStorage.setItem('accessPathname', pathname);
-  }
 
   useEffect(() => {
     if (oIsError) {

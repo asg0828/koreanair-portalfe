@@ -12,7 +12,7 @@ import { selectContextPath } from '@/reducers/authSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'No', field: 'rownum', colSpan: 0.5 },
@@ -35,19 +35,26 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
-  const [params, setParams] = useState(initNoticeParams);
+  const location = useLocation();
+  const beforeParams: NoticeParams = location?.state?.params;
+  const [params, setParams] = useState(beforeParams || initNoticeParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<NoticeModel>>([]);
   const { data: response, isError, refetch } = useNoticeList(params, page);
 
   const goToReg = () => {
-    navigate(View.REG);
+    navigate(View.REG, {
+      state: {
+        params: params,
+      },
+    });
   };
 
   const goToDetail = (row: RowsInfo) => {
     navigate(View.DETAIL, {
       state: {
         noticeId: row.noticeId,
+        params: params,
       },
     });
   };

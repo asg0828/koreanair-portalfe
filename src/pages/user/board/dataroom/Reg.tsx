@@ -5,18 +5,20 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
-import { CreatedDataroomModel } from '@/models/model/DataroomModel';
+import { CreatedDataroomModel, DataroomParams } from '@/models/model/DataroomModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Reg = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const location = useLocation();
+  const params: DataroomParams = location?.state?.params;
   const {
     register,
     handleSubmit,
@@ -37,13 +39,21 @@ const Reg = () => {
   const values = getValues();
   const { data: response, isSuccess, isError, mutate } = useCreateDataroom(values);
 
-  const goToList = () => {
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
+
+  const handleList = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: '확인',
         content: '목록으로 이동하시겠습니까?',
-        onConfirm: () => navigate('..'),
+        onConfirm: goToList,
       })
     );
   };
@@ -77,9 +87,9 @@ const Reg = () => {
         type: ValidType.CONFIRM,
         content: '등록되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [response, isSuccess, isError, toast, navigate]);
+  }, [response, isSuccess, isError, goToList, navigate, toast]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -152,7 +162,7 @@ const Reg = () => {
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
           등록
         </Button>
-        <Button size="LG" onClick={goToList}>
+        <Button size="LG" onClick={handleList}>
           목록
         </Button>
       </Stack>

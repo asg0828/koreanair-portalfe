@@ -8,5 +8,5 @@ export const useNoticeList = (params: NoticeParams, page: PageModel, options?: O
 };
 
 export const useNoticeById = (noticeId: string) => {
-  return useQuery(['/notice', noticeId], () => getNoticeById(noticeId));
+  return useQuery(['/notice', noticeId], () => getNoticeById(noticeId), { enabled: !!noticeId });
 };

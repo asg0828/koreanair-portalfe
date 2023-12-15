@@ -14,6 +14,7 @@ import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import {
   FeatureAllParams,
   FeatureKeyType,
+  FeatureParams,
   FeatureSeparatesModel,
   UpdatedFeatureModel,
 } from '@/models/model/FeatureModel';
@@ -22,7 +23,7 @@ import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -36,6 +37,7 @@ const Reg = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
+  const params: FeatureParams = location?.state?.params;
   const {
     register,
     handleSubmit,
@@ -83,13 +85,21 @@ const Reg = () => {
     refetch: faRefetch,
   } = useFeatureAllList({ [featureAllKey]: featureAllParams[featureAllKey] }, { enabled: false, suspense: false });
 
-  const goToList = () => {
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
+
+  const handleList = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: '확인',
         content: '목록으로 이동하시겠습니까?',
-        onConfirm: () => navigate('..'),
+        onConfirm: goToList,
       })
     );
   };
@@ -262,9 +272,9 @@ const Reg = () => {
         type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [uResponse, uIsSuccess, uIsError, toast, navigate]);
+  }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
 
   if (!featureId) {
     return (
@@ -272,13 +282,7 @@ const Reg = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() =>
-          navigate('..', {
-            state: {
-              isRefresh: true,
-            },
-          })
-        }
+        onConfirm={goToList}
       />
     );
   }
@@ -600,7 +604,7 @@ const Reg = () => {
             </svg>
             등록
           </Button>
-          <Button size="LG" onClick={goToList}>
+          <Button size="LG" onClick={handleList}>
             목록
           </Button>
         </Stack>
