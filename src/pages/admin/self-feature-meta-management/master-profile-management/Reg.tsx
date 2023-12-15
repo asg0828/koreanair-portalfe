@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import MstrProfInfo from '@/components/self-feature-adm/MstrProfInfo';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { ModalType, RuleId, SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon';
+import { ModalType, SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon';
 import { useNavigate } from 'react-router-dom';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import {
@@ -19,14 +19,14 @@ import {
 import {
   initMasterProfileInfo,
   initMetaInfoSearchProps,
+  initMstrProfSearchInfoProps,
   initTbRsMstrSgmtRule,
-  initTbRsMstrSgmtRuleAttrClmn,
   initTbRsMstrSgmtRuleAttrTbl,
   initTbRsRslnRuleKeyPrty,
 } from './data';
 import { useCreateMstrProfInfo } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
 import { ValidType } from '@/models/common/Constants';
-import { useMetaInfo, useResolutionKeyList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import { useMetaInfo, useMstrProfList, useResolutionKeyList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { DivisionTypes } from '@/models/selfFeature/FeatureModel';
 import { AddIcon } from '@/assets/icons';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
@@ -39,6 +39,12 @@ const MasterProfileManagementReg = () => {
   // const attrRef = useRef<any>({ targetRef: '', findIndexRef: 0 });
   // const behvRef = useRef<any>({ targetRef: '', findIndexRef: 0 });
   const { toast } = useToast();
+  // 사용될 rslnRuleId / mstrSgmtRuleId 조회
+  const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+  // rslnRuleId parameter
+  const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
+  // mstrSgmtRuleId parameter
+  const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
   // 테이블 추가 버튼 show / hide 처리
   const [isAttrAddIconShow, setIsAttrAddIconShow] = useState<Boolean>(false);
   const [isBehvAddIconShow, setIsBehvAddIconShow] = useState<Boolean>(false);
@@ -89,11 +95,35 @@ const MasterProfileManagementReg = () => {
     setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
       let rtn = cloneDeep(prevState);
       rtn.type = MetaType.MSTR_SGMT;
-      rtn.rslnRuleId = RuleId.RESOLUTION;
+      rtn.rslnRuleId = rslnRuleIdParam;
       return rtn;
     });
-    setRslnRuleId(RuleId.RESOLUTION);
-  }, []);
+    setRslnRuleId(rslnRuleIdParam);
+  }, [rslnRuleIdParam]);
+  // master segement rule Id setting
+  useEffect(() => {
+    if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      })
+    } else {
+      if (mstrProfListRes) {
+				// master profile id 설정값 변경
+        let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+        if (t) {
+          // 속성 및 행동 테이블 정보 조회를 위해
+          setRslnRuleIdParam(() => t.rslnRuleId)
+          setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+        } else {
+          toast({
+            type: ValidType.ERROR,
+            content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+          })
+        }
+      }
+    }
+  }, [mstrProfListRes, mstrProfListErr, toast])
   // 메타테이블 전체조회 테이블 선택 콤보박스 조회 API 호출
   useEffect(() => {
     if (!metaInfoSrchInfo || metaInfoSrchInfo.type === '' || metaInfoSrchInfo.rslnRuleId === '') return;
@@ -151,6 +181,7 @@ const MasterProfileManagementReg = () => {
     setMstrSgmtFormData((prevState: MasterProfileInfo) => {
       let rtn = cloneDeep(prevState);
       rtn.tbRsMstrSgmtRule = mstrSgmtRule;
+      if (rtn.tbRsMstrSgmtRule.rslnRuleId === "") rtn.tbRsMstrSgmtRule.rslnRuleId = rslnRuleIdParam
       return rtn;
     });
   }, [mstrSgmtRule]);
@@ -572,7 +603,7 @@ const MasterProfileManagementReg = () => {
                 mstrSgmtRuleAttrTblList={attrMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                 setMstrSgmtRuleAttrTblList={setAttrMstrSgmtRuleAttrTblList}
                 setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
-                // focusTarget={attrRef}
+              // focusTarget={attrRef}
               />
             );
           })}
@@ -613,7 +644,7 @@ const MasterProfileManagementReg = () => {
                 mstrSgmtRuleAttrTblList={behvMstrSgmtRuleAttrTblList} // 선택가능 테이블 정보 setting을 위해
                 setMstrSgmtRuleAttrTblList={setBehvMstrSgmtRuleAttrTblList}
                 setMstrSgmtRuleAttrClmnList={setMstrSgmtRuleAttrClmnList}
-                // focusTarget={behvRef}
+              // focusTarget={behvRef}
               />
             );
           })}

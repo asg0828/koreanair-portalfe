@@ -25,12 +25,14 @@ import DataGrid from '@/components/grid/DataGrid';
 export interface Props {
     isOpen?: boolean
     onClose?: (isOpen: boolean) => void
+    rslnRuleId: string
     custFeatRuleId: string
 }
 
 const QuerySampleDataModal = ({
     isOpen = false,
     onClose,
+    rslnRuleId,
     custFeatRuleId,
 }: Props) => {
 
@@ -43,7 +45,7 @@ const QuerySampleDataModal = ({
     const [rows, setRows] = useState<Array<FeatSampleData>>([])
     const [querySampleDataList, setQuerySampleDatadList] = useState<Array<FeatSampleData>>([])
 
-    const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch } = useSampleData(custFeatRuleId)
+    const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch } = useSampleData(rslnRuleId, custFeatRuleId)
 
     useEffect(() => {
         setIsOpenQuerySampleDataModal(isOpen)

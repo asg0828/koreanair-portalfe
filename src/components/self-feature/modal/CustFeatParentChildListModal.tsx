@@ -33,6 +33,7 @@ import { ValidType } from '@/models/common/Constants';
 export interface Props {
     isOpen?: boolean
     onClose?: (isOpen: boolean) => void
+    mstrSgmtRuleId: string
 }
 
 export interface SearchProps {
@@ -41,13 +42,17 @@ export interface SearchProps {
     custFeatRuleName: string
 }
 
-const CustFeatParentChildListModal = ({ isOpen = false, onClose }: Props) => {
+const CustFeatParentChildListModal = ({ 
+    isOpen = false, 
+    onClose,
+    mstrSgmtRuleId,
+}: Props) => {
 
     const { toast } = useToast()
 
     const [ isOpenParentChildListModal, setIsOpenParentChildListModal ] = useState<boolean>(false)
     const [ srchInfo, setSrchInfo ] = useState<SearchProps>({
-        mstrSgmtRuleId: RuleId.MASTERPROF,
+        mstrSgmtRuleId: mstrSgmtRuleId,
         custFeatRuleName: '',
     })
     

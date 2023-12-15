@@ -12,34 +12,35 @@ import {
 } from '@components/ui'
 import MstrProfInfo from '@/components/self-feature-adm/MstrProfInfo'
 import HorizontalTable from '@/components/table/HorizontalTable'
-import { 
-    ModalType, 
-    RuleId, 
-    SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon'
+import {
+    ModalType,
+    SelfFeatPgPpNm
+} from '@/models/selfFeature/FeatureCommon'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ConfirmModal from '@/components/modal/ConfirmModal'
-import { 
-    MasterProfileInfo, 
-    MetaInfoSearchProps, 
-    MetaType, 
-    TbCoMetaTbInfo, 
-    TbRsMstrSgmtRule, 
-    TbRsMstrSgmtRuleAttrClmn, 
-    TbRsMstrSgmtRuleAttrTbl, 
-    TbRsRslnRuleKeyPrty, 
-    TbRsRslnRuleRel 
+import {
+    MasterProfileInfo,
+    MetaInfoSearchProps,
+    MetaType,
+    TbCoMetaTbInfo,
+    TbRsMstrSgmtRule,
+    TbRsMstrSgmtRuleAttrClmn,
+    TbRsMstrSgmtRuleAttrTbl,
+    TbRsRslnRuleKeyPrty,
+    TbRsRslnRuleRel
 } from '@/models/selfFeature/FeatureAdmModel'
-import { 
-    initMasterProfileInfo, 
-    initMetaInfoSearchProps, 
-    initTbRsMstrSgmtRule, 
-    initTbRsMstrSgmtRuleAttrTbl, 
-    initTbRsRslnRuleKeyPrty, 
-    initTbRsRslnRuleRel 
+import {
+    initMasterProfileInfo,
+    initMetaInfoSearchProps,
+    initMstrProfSearchInfoProps,
+    initTbRsMstrSgmtRule,
+    initTbRsMstrSgmtRuleAttrTbl,
+    initTbRsRslnRuleKeyPrty,
+    initTbRsRslnRuleRel
 } from './data'
 import { useUpdateMstrProfInfo } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations'
 import { ValidType } from '@/models/common/Constants'
-import { useMetaInfo, useResolutionKeyList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
+import { useMetaInfo, useMstrProfList, useResolutionKeyList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
 import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
 import { AddIcon } from '@/assets/icons'
 
@@ -48,6 +49,12 @@ const MasterProfileManagementEdit = () => {
     const location = useLocation()
     const navigate = useNavigate()
     const { toast } = useToast()
+    // 사용될 rslnRuleId / mstrSgmtRuleId 조회
+    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+    // rslnRuleId parameter
+    const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
+    // mstrSgmtRuleId parameter
+    const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
     // 테이블 추가 버튼 show / hide 처리
     const [isAttrAddIconShow, setIsAttrAddIconShow] = useState<Boolean>(false)
     const [isBehvAddIconShow, setIsBehvAddIconShow] = useState<Boolean>(false)
@@ -80,16 +87,42 @@ const MasterProfileManagementEdit = () => {
     const [modalType, setModalType] = useState<string>('')
     // 수정 API
     const { data: updateMstrProfInfoRes, isSuccess: updateMstrProfInfoSucc, isError: updateMstrProfInfoErr, mutate: updateMstrProfInfoMutate } = useUpdateMstrProfInfo(mstrSgmtFormData.tbRsMstrSgmtRule.mstrSgmtRuleId, mstrSgmtFormData)
-    // component mount
+    // master segement rule Id setting
     useEffect(() => {
-        if (!location || !location.state) return
+        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            })
+        } else {
+            if (mstrProfListRes) {
+				// master profile id 설정값 변경
+                let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+                if (t) {
+                    // 속성 및 행동 테이블 정보 조회를 위해
+                    setRslnRuleIdParam(() => t.rslnRuleId)
+                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+                } else {
+                    toast({
+                        type: ValidType.ERROR,
+                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+                    })
+                }
+            }
+        }
+    }, [mstrProfListRes, mstrProfListErr, toast])
+    useEffect(() => {
+        if (rslnRuleIdParam === "") return
         setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
             let rtn = cloneDeep(prevState)
             rtn.type = MetaType.MSTR_SGMT
-            rtn.rslnRuleId = RuleId.RESOLUTION
+            rtn.rslnRuleId = rslnRuleIdParam
             return rtn
         })
-        setRslnRuleId(RuleId.RESOLUTION)
+        setRslnRuleId(rslnRuleIdParam)
+    }, [rslnRuleIdParam])
+    useEffect(() => {
+        if (!location || !location.state) return
         setMstrSgmtRule(location.state.masterProfileInfo.tbRsMstrSgmtRule)
         setAttrMstrSgmtRuleAttrTblList(location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter((info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.ATTR))
         setBehvMstrSgmtRuleAttrTblList(location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter((info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.BEHV))

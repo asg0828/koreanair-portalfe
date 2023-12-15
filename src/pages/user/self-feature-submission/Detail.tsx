@@ -85,6 +85,8 @@ import { getFeatureSeList } from "@/api/FeatureAPI";
 import { useApproveSubmissionApproval, useFeatureCategory, useRunScheduleByManually } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 import { getDateFormat } from "@/utils/DateUtil";
 import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
+import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
+import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
 
 const SfSubmissionRequestDetail = () => {
 
@@ -92,8 +94,14 @@ const SfSubmissionRequestDetail = () => {
     const location = useLocation()
     const sessionInfo = useAppSelector(selectSessionInfo())
     const { toast } = useToast()
-
-    const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId()
+    const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(location.state.referenceNo)
+    // 사용될 rslnRuleId / mstrSgmtRuleId 조회
+    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+    // rslnRuleId parameter
+	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
+    // mstrSgmtRuleId parameter
+	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
+	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
     const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
     const [categoryOption, setCategoryOption] = useState<Array<any>>([])
     const { data: cmmCodeCateRes } = useCommCodes(CommonCode.CATEGORY)
@@ -115,7 +123,6 @@ const SfSubmissionRequestDetail = () => {
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
     // 상세 조회 API
-    const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(location.state.referenceNo)
     const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(location.state.referenceNo)
     const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.referenceNo)
     const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
@@ -166,6 +173,34 @@ const SfSubmissionRequestDetail = () => {
     useEffect(() => {
         initCustFeatRule()
     }, [])
+    // master segement rule Id setting
+    useEffect(() => {
+        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            })
+        } else {
+            if (mstrProfListRes) {
+                // master profile id 설정값 변경
+                let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+                if (t) {
+                    // 속성 및 행동 테이블 정보 조회를 위해
+                    setRslnRuleIdParam(() => t.rslnRuleId)
+                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+                } else {
+                    toast({
+                        type: ValidType.ERROR,
+                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+                    })
+                }
+            }
+        }
+    }, [mstrProfListRes, mstrProfListErr, toast])
+    useEffect(() => {
+        if (mstrSgmtRuleIdParam === "") return
+        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") mstrSgmtTbandColRefetch()
+    }, [mstrSgmtRuleIdParam, featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
     // feature 정보 초기화
     const initCustFeatRule = () => {
         setFeatureInfo((state: FeatureInfo) => {
@@ -216,7 +251,7 @@ const SfSubmissionRequestDetail = () => {
                 setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
             }
         }
-    }, [mstrSgmtTbandColRes, custFeatRuleInfosRefetch, mstrSgmtTbandColErr])
+    }, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, mstrSgmtRuleIdParam])
     // SQL 등록 여부 API response callback
     useEffect(() => {
         if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
@@ -750,6 +785,8 @@ const SfSubmissionRequestDetail = () => {
                         수동 실행
                     </Button>
                     <FeatQueryRsltButton
+                        rslnRuleId={rslnRuleIdParam}
+                        mstrSgmtRuleId={mstrSgmtRuleIdParam}
                         custFeatRuleId={location.state.referenceNo}
                     />
                 </Stack>

@@ -2,7 +2,6 @@ import { SelfFeatureUserApiURL } from "@/models/common/ApiURL";
 import { Service } from "@/models/common/Service";
 import { 
     FeatureType, 
-    RuleId 
 } from "@/models/selfFeature/FeatureCommon";
 import { FeatListSrchProps } from "@/models/selfFeature/FeatureModel";
 import { 
@@ -23,10 +22,10 @@ export const retrieveCustFeatRules = (qParams: FeatListSrchProps) => {
     })
 }
 // Self-feature 속성,행동,FEAT 데이터 조회
-export const getTableandColumnMetaInfoByMstrSgmtRuleId = () => {
+export const getTableandColumnMetaInfoByMstrSgmtRuleId = (mstrSgmtRuleId: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
-        url: `${SelfFeatureUserApiURL.FACT_BASEFACT}/${RuleId.MASTERPROF}`,
+        url: `${SelfFeatureUserApiURL.FACT_BASEFACT}/${mstrSgmtRuleId}`,
         method: Method.GET,
     })
 }
@@ -93,24 +92,24 @@ export const retrieveBatchExecuteLogs = (custFeatRuleId: string) => {
     })
 }
 // Self-feature 실행 결과 샘플 조회
-export const retrieveSampleData = (custFeatRuleId: string) => {
+export const retrieveSampleData = (rslnRuleId: string, custFeatRuleId: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureUserApiURL.SAMPLE_DATA}/${custFeatRuleId}`,
         method: Method.GET,
         params: {
-            queryParams: { rslnId: RuleId.RESOLUTION }
+            queryParams: { rslnId: rslnRuleId }
         }
     })
 }
 // Self-feature 선후행 관계 리스트 조회
-export const retrieveCustFeatParentChildList = (custFeatRuleName: string) => {
+export const retrieveCustFeatParentChildList = (mstrSgmtRuleId: string, custFeatRuleName: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureUserApiURL.PARENT_CHILD}`,
         method: Method.GET,
         params: {
-            queryParams: { mstrSgmtRuleId: RuleId.MASTERPROF , custFeatRuleName: custFeatRuleName }
+            queryParams: { mstrSgmtRuleId: mstrSgmtRuleId , custFeatRuleName: custFeatRuleName }
         }
     })
 }
