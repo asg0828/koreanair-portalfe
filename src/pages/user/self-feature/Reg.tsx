@@ -306,6 +306,8 @@ const SelfFeatureReg = () => {
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn = cloneDeep(initSelfFeatureInfo)
+			if (rtn.tbRsCustFeatRule.rslnRuleId === "") rtn.tbRsCustFeatRule.rslnRuleId = rslnRuleIdParam
+			if (rtn.tbRsCustFeatRule.mstrSgmtRuleId === "") rtn.tbRsCustFeatRule.mstrSgmtRuleId = mstrSgmtRuleIdParam
 			return rtn
 		})
 		// 초기 결재 단계 이름 setting
