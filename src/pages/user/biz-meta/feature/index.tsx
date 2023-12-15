@@ -15,7 +15,7 @@ import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export const initFeatureParams: FeatureParams = {
   featureSeGrp: '',
@@ -34,9 +34,11 @@ const List = () => {
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
+  const location = useLocation();
+  const beforeParams: FeatureParams = location?.state?.params;
   const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
-  const [params, setParams] = useState<FeatureParams>(initFeatureParams);
+  const [params, setParams] = useState<FeatureParams>(beforeParams || initFeatureParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const columns: Array<ColumnsInfo> = [
     {
@@ -86,13 +88,18 @@ const List = () => {
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
 
   const goToReg = () => {
-    navigate(View.REG);
+    navigate(View.REG, {
+      state: {
+        params: params,
+      },
+    });
   };
 
   const goToDetail = (row: FeatureModel, index: number) => {
     navigate(View.DETAIL, {
       state: {
         featureId: row.featureId,
+        params: params,
       },
     });
   };

@@ -28,7 +28,7 @@ export const usePopularFeatureList = (options?: Object) => {
 };
 
 export const useFeatureById = (featureId: string) => {
-  return useQuery(['/feature', featureId], () => getFeatureById(featureId));
+  return useQuery(['/feature', featureId], () => getFeatureById(featureId), { enabled: !!featureId });
 };
 
 export const useFeatureTypList = () => {

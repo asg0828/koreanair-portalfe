@@ -5,19 +5,21 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
-import { CreatedFaqModel } from '@/models/model/FaqModel';
+import { CreatedFaqModel, FaqParams } from '@/models/model/FaqModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Reg = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const location = useLocation();
+  const params: FaqParams = location?.state?.params;
   const {
     register,
     handleSubmit,
@@ -40,13 +42,21 @@ const Reg = () => {
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FAQ_TYPE));
   const { data: response, isSuccess, isError, mutate } = useCreateFaq(values);
 
-  const goToList = () => {
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
+
+  const handleList = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: '확인',
         content: '목록으로 이동하시겠습니까?',
-        onConfirm: () => navigate('..'),
+        onConfirm: goToList,
       })
     );
   };
@@ -80,9 +90,9 @@ const Reg = () => {
         type: ValidType.CONFIRM,
         content: '등록되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [response, isSuccess, isError, toast, navigate]);
+  }, [response, isSuccess, isError, goToList, toast, navigate]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -181,7 +191,7 @@ const Reg = () => {
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
           등록
         </Button>
-        <Button size="LG" onClick={goToList}>
+        <Button size="LG" onClick={handleList}>
           목록
         </Button>
       </Stack>

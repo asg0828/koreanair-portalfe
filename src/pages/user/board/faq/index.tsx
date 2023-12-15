@@ -33,7 +33,8 @@ const List = () => {
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
-  const [params, setParams] = useState(initFaqParams);
+  const beforeParams: FaqParams = location?.state?.params;
+  const [params, setParams] = useState(beforeParams || initFaqParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<FaqModel>>([]);
   const [faqId, setFaqId] = useState<string>('');
@@ -43,7 +44,11 @@ const List = () => {
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(faqId);
 
   const goToReg = () => {
-    navigate(View.REG);
+    navigate(View.REG, {
+      state: {
+        params: params,
+      },
+    });
   };
 
   const handleSearch = useCallback(() => {
@@ -71,10 +76,11 @@ const List = () => {
     setDFaqId(faqId);
   };
 
-  const handleUpdate = (faqId: string) => {
+  const goToEdit = (faqId: string) => {
     navigate('./edit', {
       state: {
         faqId: faqId,
+        params: params,
       },
     });
   };
@@ -133,16 +139,14 @@ const List = () => {
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
-    } else if (gIsSuccess) {
-      if (gResponse?.data) {
-        gResponse.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
-        const data = gResponse.data;
-        const newRows = [...rows];
-        const index = newRows.findIndex((item) => item.faqId === data.faqId);
-        data.codeNm = getCode(GroupCodeType.FAQ_TYPE, data.clCode)?.codeNm || '';
-        newRows.splice(index, 1, data);
-        setRows(newRows);
-      }
+    } else if (gIsSuccess && gResponse.data) {
+      gResponse.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+      const data = gResponse.data;
+      const newRows = [...rows];
+      const index = newRows.findIndex((item) => item.faqId === data.faqId);
+      data.codeNm = getCode(GroupCodeType.FAQ_TYPE, data.clCode)?.codeNm || '';
+      newRows.splice(index, 1, data);
+      setRows(newRows);
     }
   }, [gResponse, gIsSuccess, gIsError, toast]);
 
@@ -198,7 +202,7 @@ const List = () => {
         page={page}
         onClick={handleClick}
         onChange={handlePage}
-        onUpdate={handleUpdate}
+        onUpdate={goToEdit}
         onDelete={handleDelete}
         buttonChildren={
           contextPath === ContextPath.ADMIN && (

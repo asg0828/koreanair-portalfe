@@ -8,12 +8,12 @@ import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
-import { UpdatedNoticeModel } from '@/models/model/NoticeModel';
+import { NoticeParams, UpdatedNoticeModel } from '@/models/model/NoticeModel';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ const Edit = () => {
   const { toast } = useToast();
   const location = useLocation();
   const noticeId = location?.state?.noticeId;
+  const params: NoticeParams = location?.state?.params;
   const {
     register,
     handleSubmit,
@@ -55,13 +56,21 @@ const Edit = () => {
     mutate,
   } = useUpdateNotice(values.noticeId, values);
 
-  const goToList = () => {
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
+
+  const handleList = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: '확인',
         content: '목록으로 이동하시겠습니까?',
-        onConfirm: () => navigate('..'),
+        onConfirm: goToList,
       })
     );
   };
@@ -118,9 +127,9 @@ const Edit = () => {
         type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [uResponse, uIsSuccess, uIsError, toast, navigate]);
+  }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
 
   if (!noticeId) {
     return (
@@ -128,13 +137,7 @@ const Edit = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() =>
-          navigate('..', {
-            state: {
-              isRefresh: true,
-            },
-          })
-        }
+        onConfirm={goToList}
       />
     );
   }
@@ -280,7 +283,7 @@ const Edit = () => {
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
           등록
         </Button>
-        <Button size="LG" onClick={goToList}>
+        <Button size="LG" onClick={handleList}>
           목록
         </Button>
       </Stack>

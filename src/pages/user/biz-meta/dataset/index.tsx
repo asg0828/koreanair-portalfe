@@ -24,7 +24,7 @@ import {
   useToast,
 } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: '테이블 한글명', field: 'mtsKoNm', colSpan: 2.5, align: 'left' },
@@ -43,20 +43,27 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
+  const location = useLocation();
+  const beforeParams: DatasetParams = location?.state?.params;
   const codeList = useAppSelector(selectCodeList(GroupCodeType.DBMS));
-  const [params, setParams] = useState<DatasetParams>(initParams);
+  const [params, setParams] = useState<DatasetParams>(beforeParams || initParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<DatasetModel>>([]);
   const { data: response, isError, refetch } = useDatasetList(params, page);
 
   const goToReg = () => {
-    navigate(View.REG);
+    navigate(View.REG, {
+      state: {
+        params: params,
+      },
+    });
   };
 
-  const goToDetail = (row: DatasetModel, index: number) => {
+  const goToDetail = (row: DatasetModel) => {
     navigate(View.DETAIL, {
       state: {
         mtsId: row.mtsId,
+        params: params,
       },
     });
   };

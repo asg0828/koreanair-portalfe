@@ -8,5 +8,5 @@ export const useQnaList = (params: QnaParams, page: PageModel, options?: Object)
 };
 
 export const useQnaById = (qnaId: string) => {
-  return useQuery(['/qna', qnaId], () => getQnaById(qnaId));
+  return useQuery(['/qna', qnaId], () => getQnaById(qnaId), { enabled: !!qnaId });
 };

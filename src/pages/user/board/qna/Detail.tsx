@@ -7,9 +7,9 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath, GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
-import { CreatedQnaModel, QnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
+import { CreatedQnaModel, QnaModel, QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -27,9 +27,9 @@ const Detail = () => {
   const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
   const qnaId: string = location?.state?.qnaId || '';
+  const params: QnaParams = location?.state?.params;
   const [qnaModel, setQnaModel] = useState<QnaModel>();
   const [cQnaId, setCQnaId] = useState<string>('');
-  const rows: Array<QnaModel> = location?.state?.rows;
   const {
     register,
     handleSubmit,
@@ -77,14 +77,19 @@ const Detail = () => {
     mutate: cuMutate,
   } = useUpdateQna(uValues.qnaId, uValues);
 
-  const goToList = () => {
-    navigate('..');
-  };
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         qnaId: qnaId,
+        params: params,
       },
     });
   };
@@ -93,7 +98,7 @@ const Detail = () => {
     navigate('', {
       state: {
         qnaId: qnaId,
-        rows: rows,
+        params: params,
       },
     });
   };
@@ -210,7 +215,7 @@ const Detail = () => {
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
-    } else if (isSuccess) {
+    } else if (isSuccess && response.data) {
       response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setQnaModel(response.data);
     }
@@ -227,9 +232,9 @@ const Detail = () => {
         type: ValidType.CONFIRM,
         content: '삭제되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [dResponse, dIsSuccess, dIsError, toast, navigate]);
+  }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
 
   if (!qnaId) {
     return (
@@ -237,7 +242,7 @@ const Detail = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() => navigate('..')}
+        onConfirm={goToList}
       />
     );
   }

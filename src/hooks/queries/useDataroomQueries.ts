@@ -8,5 +8,5 @@ export const useDataroomList = (params: DataroomParams, page: PageModel) => {
 };
 
 export const useDataroomById = (dataId: string) => {
-  return useQuery(['/dataroom', dataId], () => getDataroomById(dataId));
+  return useQuery(['/dataroom', dataId], () => getDataroomById(dataId), { enabled: !!dataId });
 };

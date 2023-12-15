@@ -8,5 +8,5 @@ export const useDatasetList = (params: DatasetParams, page: PageModel) => {
 };
 
 export const useDatasetById = (mtsId: string) => {
-  return useQuery(['/dataset', mtsId], () => getDatasetById(mtsId));
+  return useQuery(['/dataset', mtsId], () => getDatasetById(mtsId), { enabled: !!mtsId });
 };

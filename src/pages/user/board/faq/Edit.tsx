@@ -7,14 +7,14 @@ import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
-import { UpdatedFaqModel } from '@/models/model/FaqModel';
+import { FaqParams, UpdatedFaqModel } from '@/models/model/FaqModel';
 import { FileModel } from '@/models/model/FileModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -24,6 +24,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const faqId = location?.state?.faqId;
+  const params: FaqParams = location?.state?.params;
   const {
     register,
     handleSubmit,
@@ -49,13 +50,21 @@ const Reg = () => {
   const { data: response, isSuccess, isError } = useFaqById(values.faqId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFaq(values.faqId, values);
 
-  const goToList = () => {
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
+
+  const handleList = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: '확인',
         content: '목록으로 이동하시겠습니까?',
-        onConfirm: () => navigate('..'),
+        onConfirm: goToList,
       })
     );
   };
@@ -110,9 +119,9 @@ const Reg = () => {
         type: ValidType.CONFIRM,
         content: '수정되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [uResponse, uIsSuccess, uIsError, toast, navigate]);
+  }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
 
   if (!faqId) {
     return (
@@ -120,7 +129,7 @@ const Reg = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() => navigate('..')}
+        onConfirm={goToList}
       />
     );
   }
@@ -222,7 +231,7 @@ const Reg = () => {
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
           등록
         </Button>
-        <Button size="LG" onClick={goToList}>
+        <Button size="LG" onClick={handleList}>
           목록
         </Button>
       </Stack>

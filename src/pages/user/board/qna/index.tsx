@@ -13,7 +13,7 @@ import { getCode } from '@/reducers/codeSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'No', field: 'rownum', colSpan: 0.5 },
@@ -39,19 +39,26 @@ const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
-  const [params, setParams] = useState(initQnaParams);
+  const location = useLocation();
+  const beforeParams: QnaParams = location?.state?.params;
+  const [params, setParams] = useState(beforeParams || initQnaParams);
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<QnaModel>>([]);
   const { data: response, isError, refetch } = useQnaList(params, page);
 
   const goToReg = () => {
-    navigate(View.REG);
+    navigate(View.REG, {
+      state: {
+        params: params,
+      },
+    });
   };
 
   const goToDetail = (row: RowsInfo) => {
     navigate(View.DETAIL, {
       state: {
         qnaId: row.qnaId,
+        params: params,
       },
     });
   };

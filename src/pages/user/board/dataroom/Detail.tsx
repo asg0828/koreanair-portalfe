@@ -7,7 +7,7 @@ import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
-import { DataroomModel } from '@/models/model/DataroomModel';
+import { DataroomModel, DataroomParams } from '@/models/model/DataroomModel';
 import { FileModel } from '@/models/model/FileModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -21,21 +21,27 @@ const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
+  const location = useLocation();
   const dataId: string = location?.state?.dataId || '';
+  const params: DataroomParams = location?.state?.params;
   const [dataroomModel, setDataroomModel] = useState<DataroomModel>();
   const { data: response, isSuccess, isError } = useDataroomById(dataId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteDataroom(dataId);
 
   const goToList = () => {
-    navigate('..');
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
   };
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         dataId: dataId,
+        params: params,
       },
     });
   };
@@ -44,6 +50,7 @@ const Detail = () => {
     navigate('', {
       state: {
         dataId: dataId,
+        params: params,
       },
     });
   };
@@ -81,7 +88,7 @@ const Detail = () => {
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
-    } else if (isSuccess) {
+    } else if (isSuccess && response.data) {
       response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setDataroomModel(response.data);
     }
@@ -98,9 +105,9 @@ const Detail = () => {
         type: ValidType.CONFIRM,
         content: '삭제되었습니다.',
       });
-      navigate('..');
+      goToList();
     }
-  }, [dResponse, dIsSuccess, dIsError, toast, navigate]);
+  }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
 
   if (!dataId) {
     return (
@@ -108,7 +115,7 @@ const Detail = () => {
         type="warning"
         description="조회에 필요한 정보가 없습니다"
         confirmText="돌아가기"
-        onConfirm={() => navigate('..')}
+        onConfirm={goToList}
       />
     );
   }
