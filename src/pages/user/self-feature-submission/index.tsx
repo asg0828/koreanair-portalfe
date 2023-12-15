@@ -187,6 +187,8 @@ const SfSubmissionRequest = () => {
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
                                         rtn.requestDateFrom = `${nextVal}T00:00:00`//getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
+                                        if (nextVal !== "") rtn.requestDateFrom = `${nextVal}T00:00:00`//getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
+                                        else rtn.requestDateFrom = ""
                                         return rtn
                                     });
                                 }}
@@ -216,6 +218,8 @@ const SfSubmissionRequest = () => {
                                     setSearch((prevState: FeatureSubmissionSearchProps) => {
                                         let rtn = cloneDeep(prevState)
                                         rtn.requestDateTo = `${nextVal}T23:59:59`//getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
+                                        if (nextVal !== "") rtn.requestDateTo = `${nextVal}T23:59:59`//getDateFormat(nextVal)//`${nextVal}T19:20:30+01:00`
+                                        else rtn.requestDateTo = ""
                                         return rtn
                                     });
                                 }}

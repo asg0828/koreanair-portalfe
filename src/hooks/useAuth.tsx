@@ -148,7 +148,6 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
           dispatch(setBaseMenuList(baseMenuList));
           dispatch(setMenuList(hierarchyMenuList));
           setRouter(createBrowserRouter(router));
-          window.history.pushState({}, '', localStorage.getItem('accessPathname'));
         } else if (sessionResponse.status === 401) {
           sessionUtil.deleteSessionInfo();
           sessionApis.oauthLogin();

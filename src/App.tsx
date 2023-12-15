@@ -63,6 +63,8 @@ const App = () => {
             return <Unauthorized />;
           }
 
+          window.history.pushState({}, '', localStorage.getItem('accessPathname'));
+
           return (
             <>
               {sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router ? (
