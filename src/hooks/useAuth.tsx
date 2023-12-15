@@ -110,11 +110,11 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
             .catch((reject) => reject([]));
 
           // 권한 있는 메뉴만 필터
-          const filteredMenuList = myMenuList.filter((myMenuItem: any) =>
-            baseMenuList.find(
-              (menuItem: any) =>
-                myMenuItem.menuUrl === menuItem.menuUrl ||
-                (myMenuItem.menuUrl === menuItem.menuUrl && menuItem.isCrudPage)
+          const filteredMenuList = baseMenuList.filter((baseMenuItem: any) =>
+            myMenuList.find(
+              (myMenuItem) =>
+                myMenuItem.menuUrl === baseMenuItem.menuUrl ||
+                (myMenuItem.menuUrl === getMenuParentId(baseMenuItem.menuUrl) && baseMenuItem.isCrudPage)
             )
           );
 

@@ -25,7 +25,9 @@ const RootLayout = () => {
 
   return (
     <>
-      {menu?.children?.length > 0 && <Navigate to={menu.children[0].menuUrl} replace={true} />}
+      {menu?.children?.length > 0 && !menu.children[0].isCrudPage && (
+        <Navigate to={menu.children[0].menuUrl} replace={true} />
+      )}
 
       {isPopup ? (
         <Outlet />
