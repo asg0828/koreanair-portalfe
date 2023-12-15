@@ -323,8 +323,9 @@ const SfSubmissionRequestDetail = () => {
     }, [featureInfo])
     // 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
     useEffect(() => {
-        if (isEmpty(mstrSgmtTableandColMetaInfo)) return
-        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y") {
+        if (isEmpty(mstrSgmtTableandColMetaInfo) || mstrSgmtTableandColMetaInfo.rslnRuleId === "") return
+        
+        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
             setTargetList(() => {
                 let tempTargetList = cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList).map((target: TbRsCustFeatRuleTrgt) => {
                     let metaTblId = target.tableName
@@ -400,7 +401,7 @@ const SfSubmissionRequestDetail = () => {
                 return tempTargetFilterList
             })
         }
-    }, [mstrSgmtTableandColMetaInfo])
+    }, [mstrSgmtTableandColMetaInfo, featureInfo])
     // 계산식 validation을 위한 대상 list 추출
     useEffect(() => {
         if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y") {
