@@ -179,12 +179,7 @@ const DropList = ({
             {targetList.length > 0 &&
                 targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
                     let targetId = targetItem.targetId
-                    let tfList: Array<TbRsCustFeatRuleTrgtFilter> = []
-                    trgtFilterList.map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
-                        if (targetId === trgtFilter.targetId) {
-                            tfList.push(cloneDeep(trgtFilter))
-                        }
-                    })
+                    let tfList = trgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetId)
                     if (targetItem.divisionCode === DivisionTypes.ATTR) {
                         return <AttrDropItem 
                             key={`dropItem-${index}`}
@@ -204,7 +199,7 @@ const DropList = ({
                             delTargetInfo={deleteInfo}
                         />
                     } else if (targetItem.divisionCode === DivisionTypes.BEHV) {
-                        let bs = behaviors.filter((behavior: Behavior) => (behavior.metaTblId === targetItem.tableName))
+                        let bs = behaviors.find((behavior: Behavior) => (behavior.metaTblId === targetItem.tableName))
                         return <BehvDropItem 
                             key={`dropItem-${index}`}
                             itemIdx={index}
@@ -215,7 +210,7 @@ const DropList = ({
                             setTargetList={setTargetList} 
                             setTrgtFilterList={setTrgtFilterList} 
                             delTargetInfo={deleteInfo}
-                            aggregateColList={bs[0]?.tbCoMetaTblClmnInfoList}
+                            aggregateColList={bs?.tbCoMetaTblClmnInfoList}
                             setFormulaTrgtList={setFormulaTrgtList}
                         />
                     }
