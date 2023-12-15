@@ -22,8 +22,8 @@ export const useCustFeatRules = (qParams: FeatListSrchProps) => {
     return useQuery(['/cust-feat-rules'], () => retrieveCustFeatRules(qParams), { enabled: false })
 }
 // Self-feature 속성,행동,FEAT 데이터 조회
-export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = () => {
-    return useQuery(['/table-and-column-meta-info'], () => getTableandColumnMetaInfoByMstrSgmtRuleId())
+export const useGetTableandColumnMetaInfoByMstrSgmtRuleId = (mstrSgmtRuleId: string) => {
+    return useQuery(['/table-and-column-meta-info', mstrSgmtRuleId], () => getTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleId), { enabled: false, suspense: false })
 }
 // Self-feature 상세정보 조회(Rule-Design)
 export const useCustFeatRuleInfos = (custFeatRuleId: string) => {
@@ -54,12 +54,12 @@ export const useBatchExecuteLogs = (custFeatRuleId: string) => {
     return useQuery(['/batch-execute-logs', custFeatRuleId], () => retrieveBatchExecuteLogs(custFeatRuleId), { enabled: false, suspense: false })
 }
 // Self-feature 실행 결과 샘플 조회(팝업)
-export const useSampleData = (custFeatRuleId: string) => {
-    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(custFeatRuleId), { enabled: false, suspense: false })
+export const useSampleData = (rslnRuleId: string, custFeatRuleId: string) => {
+    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(rslnRuleId, custFeatRuleId), { enabled: false, suspense: false })
 }
 // Self-feature 선후행 관계 리스트 조회(팝업)
-export const useCustFeatParentChildList = (custFeatRuleName: string) => {
-    return useQuery(['/cust-feat-parent-child-list'], () => retrieveCustFeatParentChildList(custFeatRuleName), { enabled: false, suspense: false })
+export const useCustFeatParentChildList = (mstrSgmtRuleId: string, custFeatRuleName: string) => {
+    return useQuery(['/cust-feat-parent-child-list'], () => retrieveCustFeatParentChildList(mstrSgmtRuleId, custFeatRuleName), { enabled: false, suspense: false })
 }
 // Self-feature 결재선 조회
 export const useApproverCandidate = () => {

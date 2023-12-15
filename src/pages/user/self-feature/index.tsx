@@ -36,12 +36,20 @@ import { PagingUtil, setPageList } from "@/utils/self-feature/PagingUtil";
 import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
 import { selectSessionInfo } from "@/reducers/authSlice";
 import { useAppSelector } from "@/hooks/useRedux";
+import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
+import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
 
 const SelfFeature = () => {
 
 	const navigate = useNavigate()
 	const { toast } = useToast()
 	const sessionInfo = useAppSelector(selectSessionInfo())
+    // 사용될 rslnRuleId / mstrSgmtRuleId 조회
+    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+    // rslnRuleId parameter
+	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
+    // mstrSgmtRuleId parameter
+	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
 	// 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
 	const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
 	const [rows, setRows] = useState<Array<TbRsCustFeatRule>>([])
@@ -61,8 +69,36 @@ const SelfFeature = () => {
 	useEffect(() => {
 		if (!sessionInfo.deptCode) return
 		setSearchInfo({ ...searchInfo, ["team"]: sessionInfo.deptCode, })
-		setInitFeatListCall(true)
 	}, [sessionInfo])
+    // master segement rule Id setting
+    useEffect(() => {
+        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            })
+        } else {
+            if (mstrProfListRes) {
+				// master profile id 설정값 변경
+                let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+                if (t) {
+                    // 속성 및 행동 테이블 정보 조회를 위해
+                    setRslnRuleIdParam(() => t.rslnRuleId)
+                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+                } else {
+                    toast({
+                        type: ValidType.ERROR,
+                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+                    })
+                }
+            }
+        }
+    }, [mstrProfListRes, mstrProfListErr, toast])
+	useEffect(() => {
+		if (mstrSgmtRuleIdParam === "") return
+		setSearchInfo({ ...searchInfo, ["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, })
+		setInitFeatListCall(true)
+	}, [mstrSgmtRuleIdParam])
 	useEffect(() => {
 		if (!initFeatListCall) return
 		featureListRefetch()
@@ -294,6 +330,7 @@ const SelfFeature = () => {
 			<CustFeatParentChildListModal
 				isOpen={isOpenFeatPrntChldModal}
 				onClose={(isOpen) => setIsOpenFeatPrntChldModal(isOpen)}
+				mstrSgmtRuleId={mstrSgmtRuleIdParam}
 			/>
 
 		</Stack>

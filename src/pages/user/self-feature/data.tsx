@@ -92,7 +92,7 @@ export const batchExecuteLogListColumns = [
 ]
 // customer feature 검색 조건 초기화
 export const initFeatListSrchProps: FeatListSrchProps = {
-    mstrSgmtRuleId: RuleId.MASTERPROF,
+    mstrSgmtRuleId: '',
     custFeatRuleName: '',
     custFeatRuleNameEng: '',
     // category: '',
@@ -106,8 +106,8 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     name: '',
     featureEnNm: '',
     description: '',
-    rslnRuleId: RuleId.RESOLUTION,
-    mstrSgmtRuleId: RuleId.MASTERPROF,
+    rslnRuleId: '',//RuleId.RESOLUTION,
+    mstrSgmtRuleId: '',//RuleId.MASTERPROF,
     mstrSgmtRuleNm: '',
     useYn: 'Y',
     batManualExecTestCnt: 0,

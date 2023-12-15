@@ -10,10 +10,14 @@ import {
 
 export interface Props {
     [key: string]: string | number | undefined
+    rslnRuleId: string
+    mstrSgmtRuleId: string
     custFeatRuleId: string
 }
 
 const FeatQueryRsltButton = ({
+    rslnRuleId,
+    mstrSgmtRuleId,
     custFeatRuleId,
 }: Props) => {
 
@@ -51,6 +55,7 @@ const FeatQueryRsltButton = ({
             <QuerySampleDataModal
                 isOpen={isOpenQuerySampleDataModal}
                 onClose={(isOpen) => setIsOpenQuerySampleDataModal(isOpen)}
+                rslnRuleId={rslnRuleId}
                 custFeatRuleId={custFeatRuleId}
             />
             <BatchExecuteLogsModal

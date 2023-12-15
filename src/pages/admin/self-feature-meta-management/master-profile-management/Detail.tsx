@@ -13,11 +13,12 @@ import {
     Typography,
     useToast,
 } from '@components/ui'
-import { RuleId, SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon'
+import { SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon'
 
 import {
     initMasterProfileInfo,
     initMetaInfoSearchProps,
+    initMstrProfSearchInfoProps,
     initTbRsRslnRuleKeyPrty,
 } from './data'
 import {
@@ -33,6 +34,7 @@ import {
 import {
     useMetaInfo,
     useMstrProfInfo,
+    useMstrProfList,
     useResolutionKeyList
 } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
 import { ValidType } from '@/models/common/Constants'
@@ -43,6 +45,12 @@ const MasterProfileManagementDetail = () => {
     const location = useLocation()
 	const navigate = useNavigate()
     const { toast } = useToast()
+    // 사용될 rslnRuleId / mstrSgmtRuleId 조회
+    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+    // rslnRuleId parameter
+	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
+    // mstrSgmtRuleId parameter
+	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
     // 메타테이블 전체조회 테이블 선택 콤보박스 조회 API
     const [metaInfoSrchInfo, setMetaInfoSrchInfo] = useState<MetaInfoSearchProps>(cloneDeep(initMetaInfoSearchProps))
     const [attrMetaTbList, setAttrMetaTbList] = useState<Array<TbCoMetaTbInfo>>([])
@@ -73,18 +81,41 @@ const MasterProfileManagementDetail = () => {
 			navigate(`../${pageNm}`)
 		}
 	}
-    // component mount
     useEffect(() => {
         setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
             let rtn = cloneDeep(prevState)
             rtn.type = MetaType.MSTR_SGMT
-            rtn.rslnRuleId = RuleId.RESOLUTION
+            rtn.rslnRuleId = rslnRuleIdParam
             return rtn
         })
-        setRslnRuleId(RuleId.RESOLUTION)
+        setRslnRuleId(rslnRuleIdParam)
         if (location.state && location.state.row.mstrSgmtRuleId)
             setMstrSgmtRuleId(location.state.row.mstrSgmtRuleId)
-    }, [])
+    }, [rslnRuleIdParam])
+    // master segement rule Id setting
+    useEffect(() => {
+        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            })
+        } else {
+            if (mstrProfListRes) {
+				// master profile id 설정값 변경
+                let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+                if (t) {
+                    // 속성 및 행동 테이블 정보 조회를 위해
+                    setRslnRuleIdParam(() => t.rslnRuleId)
+                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+                } else {
+                    toast({
+                        type: ValidType.ERROR,
+                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+                    })
+                }
+            }
+        }
+    }, [mstrProfListRes, mstrProfListErr, toast])
     // 상세 조회 API 호출
     useEffect(() => {
         if (!mstrSgmtRuleId || mstrSgmtRuleId === "") return
