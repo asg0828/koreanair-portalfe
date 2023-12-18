@@ -144,11 +144,11 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
                 baseMenuItem.menuId = myMenuItem.menuId;
 
                 if (baseMenuItem.menuUrl.endsWith('/reg')) {
-                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 등록`
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 등록`;
                 } else if (baseMenuItem.menuUrl.endsWith('/detail')) {
-                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 상세`
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 상세`;
                 } else if (baseMenuItem.menuUrl.endsWith('/edit')) {
-                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 수정`
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 수정`;
                 }
 
                 return true;
@@ -187,9 +187,6 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
           dispatch(setBaseMenuList(baseMenuList));
           dispatch(setMenuList(hierarchyMenuList));
           setRouter(createBrowserRouter(router));
-        } else if (sessionResponse.status === 401) {
-          sessionUtil.deleteSessionInfo();
-          sessionApis.oauthLogin();
         } else {
           setIsError(true);
         }
