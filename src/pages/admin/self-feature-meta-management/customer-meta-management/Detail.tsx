@@ -1,4 +1,4 @@
-import { Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { Button, Modal, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import SearchForm from '@/components/form/SearchForm';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { useEffect, useState } from 'react';
@@ -8,6 +8,8 @@ import DataGridMeta from '@/components/grid/DataGridMeta';
 import { useMetaTableDetail } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { useLocation } from 'react-router-dom';
 import { TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
+import { ModalType } from '@/models/common/Constants';
+import { openModal } from '@/reducers/modalSlice';
 
 const CustomerMetaManagementDetail = () => {
   const location = useLocation();
@@ -19,8 +21,22 @@ const CustomerMetaManagementDetail = () => {
   });
 
   const [rows, setRows] = useState<any>([]);
-  const { data: response, isError, refetch } = useMetaTableDetail(searchInfo.metaTblId);
+  const { data: response, isError, refetch: dtlRefetch } = useMetaTableDetail(searchInfo.metaTblId);
   const { toast } = useToast();
+  const [isRefetch, setIsRefetch] = useState<number>(0);
+  const [isOpen, setOpen] = useState(false);
+
+  const research = () => {
+    // confirm(alert x)
+    setOpen(true);
+    setIsRefetch((cnt) => cnt + 1);
+    dtlRefetch();
+  };
+
+  useEffect(() => {
+    if (!location || !location.state) return;
+    dtlRefetch();
+  }, [location]);
 
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -39,7 +55,7 @@ const CustomerMetaManagementDetail = () => {
   };
 
   useEffect(() => {
-    refetch();
+    //dtlRefetch();
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: 'Error',
@@ -47,15 +63,15 @@ const CustomerMetaManagementDetail = () => {
       });
     } else {
       if (response?.result) {
-        setRows(response?.result.tbCoMetaTblClmnInfoList);
-        setTbCoMetaTbInfo(response?.result.tbCoMetaTbInfo);
+        setRows(JSON.parse(JSON.stringify(response?.result.tbCoMetaTblClmnInfoList)));
+        setTbCoMetaTbInfo(JSON.parse(JSON.stringify(response?.result.tbCoMetaTbInfo)));
       }
     }
-  }, [response, isError, toast]);
+  }, [response, isError, isRefetch, toast]);
 
   return (
     <Stack direction="Vertical">
-      <SearchForm>
+      <SearchForm onSearch={research}>
         <HorizontalTable>
           <TR>
             <TH colSpan={0.11} align="right">
@@ -185,6 +201,32 @@ const CustomerMetaManagementDetail = () => {
         columns={customerMetaInfoColumn}
         rows={rows}
       ></DataGridMeta>
+      <Modal open={isOpen} onClose={() => setOpen(false)}>
+        <Modal.Header>알림</Modal.Header>
+        <Modal.Body>작성중인 Data가 있습니다. 작성을 취소하고 다시 조회하시겠습니까? </Modal.Body>
+        <Modal.Footer>
+          <Button
+            priority="Primary"
+            appearance="Contained"
+            onClick={() => {
+              setOpen(false);
+              return false;
+            }}
+          >
+            확인
+          </Button>
+          <Button
+            priority="Normal"
+            appearance="Outline"
+            onClick={() => {
+              setOpen(false);
+              return true;
+            }}
+          >
+            취소
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Stack>
   );
 };
