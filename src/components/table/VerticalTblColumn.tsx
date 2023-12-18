@@ -5,7 +5,7 @@ import { ModalType, View } from '@/models/common/Constants';
 import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { openModal } from '@/reducers/modalSlice';
-import { cloneDeep } from 'lodash'
+import { cloneDeep } from 'lodash';
 import '@components/table/VerticalTable.scss';
 import {
   Button,
@@ -358,7 +358,6 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   // 등록 useEffect
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
-      console.log(response?.message);
       toast({
         type: 'Error',
         content: response?.message,
@@ -374,6 +373,38 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     }
   }, [response, isError, toast]);
 
+  // const gridComp = () => {
+  //   return (
+  //     <>
+  //       {/* pkYn : key 여부 체크박스 */}
+  //       <TD
+  //         key={`td-pkYn-${rowIndex}`}
+  //         colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+  //       >
+  //         <Checkbox
+  //           checked={row.pkYn === 'Y'}
+  //           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
+  //           key={`column-${columnIndex}`}
+  //           value={row.pkYn}
+  //         />
+  //       </TD>
+
+  //       {/* clmnUseYn : 사용 여부 체크박스 */}
+  //       <TD
+  //         key={`td-clmnUseYn-${rowIndex}`}
+  //         colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+  //       >
+  //         <Checkbox
+  //           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
+  //           key={`column-${columnIndex}`}
+  //           checked={row.clmnUseYn === 'Y'}
+  //           // defaultValue={columns[columnIndex].field === 'clmnUseYn' ? 'Y' : 'N'}
+  //           value={row.clmnUseYn}
+  //         />
+  //       </TD>
+  //     </>
+  //   );
+  // };
   return (
     <>
       <Table
