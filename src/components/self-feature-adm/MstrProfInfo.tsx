@@ -329,10 +329,13 @@ const MstrProfInfo = ({
                 setMstrSgmtRuleAttrTblList &&
                   setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
                     let rtn = cloneDeep(prevState);
+
                     rtn[targetIndex!].mstrSgmtRuleTblId = v;
                     //if (!isEdit) {
+
                     let tblInfo = metaTblAllList.find((item: TbCoMetaTbInfo) => item.metaTblId === v);
                     rtn[targetIndex!].mstrSgmtRuleTblNm = tblInfo ? tblInfo.metaTblPhysNm : '';
+                    rtn[targetIndex!].mstrSgmtRuleDbNm = tblInfo ? tblInfo.dbNm : '';
                     rtn[targetIndex!].clmnAllChocYn = 'N';
                     rtn[targetIndex!].attrJoinKeyClmnNm = '';
                     rtn[targetIndex!].mstrJoinKeyClmnNm = '';

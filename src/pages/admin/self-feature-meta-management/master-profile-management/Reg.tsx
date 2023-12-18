@@ -45,11 +45,7 @@ const MasterProfileManagementReg = () => {
   // const behvRef = useRef<any>({ targetRef: '', findIndexRef: 0 });
   const { toast } = useToast();
   // 사용될 rslnRuleId 조회
-  const {
-    data: rsltRuleIdRes,
-    isError: rsltRuleIdErr,
-    refetch: rsltRuleIdRefetch,
-  } = useResolutionRuleId();
+  const { data: rsltRuleIdRes, isError: rsltRuleIdErr, refetch: rsltRuleIdRefetch } = useResolutionRuleId();
   // rslnRuleId parameter
   const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>('');
   // 테이블 추가 버튼 show / hide 처리
@@ -117,7 +113,6 @@ const MasterProfileManagementReg = () => {
     } else {
       if (rsltRuleIdRes) {
         // master profile id 설정값 변경
-        console.log(rsltRuleIdRes)
         let t = rsltRuleIdRes.result[rsltRuleIdRes.result.length - 1];
         if (t) {
           // 속성 및 행동 테이블 정보 조회를 위해
@@ -155,6 +150,11 @@ const MasterProfileManagementReg = () => {
   // 선택한 Resolution 룰에 따른 마스터 join key 후보 조회 API 호출
   useEffect(() => {
     if (!rslnRuleId || rslnRuleId === '') return;
+    setMstrSgmtFormData((prevState: MasterProfileInfo) => {
+      let rtn = cloneDeep(prevState);
+      rtn.tbRsRslnRuleRel[0].rslnRuleId = rslnRuleIdParam;
+      return rtn;
+    });
     rslnKeyListRefetch();
   }, [rslnRuleId]);
   // 선택한 Resolution 룰에 따른 마스터 join key 후보 조회 call back
@@ -175,7 +175,6 @@ const MasterProfileManagementReg = () => {
     if (modalType === ModalType.CONFIRM) {
       if (btnClickType === 'reg') {
         // 등록 API 호출
-        console.log('저장 data :: ', mstrSgmtFormData);
         createMstrProfInfoMutate();
       }
     }
@@ -529,16 +528,15 @@ const MasterProfileManagementReg = () => {
     if (createMstrProfInfoErr || createMstrProfInfoRes?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '등록 중 에러가 발생했습니다.',
+        content: createMstrProfInfoRes?.message ? createMstrProfInfoRes?.message : '등록 중 에러가 발생했습니다.',
       });
     } else if (createMstrProfInfoSucc) {
       toast({
         type: ValidType.CONFIRM,
         content: '등록되었습니다.',
       });
-      console.log(createMstrProfInfoRes.result);
       // 상세로 redirect
-      // navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
+      navigate(`../${SelfFeatPgPpNm.DETL}`, { state: { row: { mstrSgmtRuleId: createMstrProfInfoRes.result } } });
     }
   }, [createMstrProfInfoRes, createMstrProfInfoSucc, createMstrProfInfoErr]);
 

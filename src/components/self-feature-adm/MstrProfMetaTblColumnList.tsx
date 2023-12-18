@@ -472,6 +472,8 @@ const MstrProfMetaTblColumnList = ({
                               (item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v
                             );
                             updtList[index].mstrSgmtRuleClmnId = item ? item.metaTblClmnId : '';
+                            updtList[index].clmnDtpCd = item ? item.dtpCd : '';
+                            updtList[index].baseTimeYn = item ? item.baseTimeYn : '';
                             updtList[index].mstrSgmtRuleClmnNm = v;
                             updtList[index].mstrSgmtRuleClmnDesc = item ? item.metaTblClmnLogiNm : '';
                             return [...keepList, ...updtList];
