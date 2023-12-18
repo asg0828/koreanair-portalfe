@@ -104,6 +104,6 @@ export const useResolutionRuleId = () => {
   return useQuery(
     ['/resolution-rule-id'],
     () => retrieveResolutionRuleId(),
-    { enabled: false, suspense: false }
+    { suspense: false }
   );
 }

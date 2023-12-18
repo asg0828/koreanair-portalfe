@@ -32,6 +32,7 @@ import {
   useMetaInfo,
   useMstrProfList,
   useResolutionKeyList,
+  useResolutionRuleId,
 } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { DivisionTypes } from '@/models/selfFeature/FeatureModel';
 import { AddIcon } from '@/assets/icons';
@@ -41,16 +42,14 @@ const MasterProfileManagementEdit = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
-  // 사용될 rslnRuleId / mstrSgmtRuleId 조회
+  // 사용될 rslnRuleId 조회
   const {
-    data: mstrProfListRes,
-    isError: mstrProfListErr,
-    refetch: mstrProfListRefetch,
-  } = useMstrProfList(initMstrProfSearchInfoProps);
+    data: rsltRuleIdRes,
+    isError: rsltRuleIdErr,
+    refetch: rsltRuleIdRefetch,
+  } = useResolutionRuleId();
   // rslnRuleId parameter
   const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>('');
-  // mstrSgmtRuleId parameter
-  const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>('');
   // 테이블 추가 버튼 show / hide 처리
   const [isAttrAddIconShow, setIsAttrAddIconShow] = useState<Boolean>(false);
   const [isBehvAddIconShow, setIsBehvAddIconShow] = useState<Boolean>(false);
@@ -98,30 +97,29 @@ const MasterProfileManagementEdit = () => {
     isError: updateMstrProfInfoErr,
     mutate: updateMstrProfInfoMutate,
   } = useUpdateMstrProfInfo(mstrSgmtFormData.tbRsMstrSgmtRule.mstrSgmtRuleId, mstrSgmtFormData);
-  // master segement rule Id setting
+  // resolution rule Id setting
   useEffect(() => {
-    if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+    if (rsltRuleIdErr || rsltRuleIdRes?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
         content: '조회 중 에러가 발생했습니다.',
       });
     } else {
-      if (mstrProfListRes) {
-        // master profile id 설정값 변경
-        let t = mstrProfListRes.result[mstrProfListRes.result.length - 1];
+      if (rsltRuleIdRes) {
+        // resolution id 설정값 변경
+        let t = rsltRuleIdRes.result[rsltRuleIdRes.result.length - 1]
         if (t) {
           // 속성 및 행동 테이블 정보 조회를 위해
-          setRslnRuleIdParam(() => t.rslnRuleId);
-          setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId);
+          setRslnRuleIdParam(() => t.rslnRuleId)
         } else {
           toast({
             type: ValidType.ERROR,
-            content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+            content: 'Resolution Rule에 대해 관리자에게 문의 하세요.',
           });
         }
       }
     }
-  }, [mstrProfListRes, mstrProfListErr, toast]);
+  }, [rsltRuleIdRes, rsltRuleIdErr, toast]);
   useEffect(() => {
     if (rslnRuleIdParam === '') return;
     setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
