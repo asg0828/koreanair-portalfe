@@ -450,7 +450,15 @@ const SelfFeatureDetail = () => {
 	// 페이지 이동 및 버튼 처리
 	const onClickPageMovHandler = (pageNm: string) => {
 		if (pageNm === SelfFeatPgPpNm.LIST) {
-			navigate('..')
+			navigate(
+				'..', 
+				{ 
+					state: { 
+						srchInfo: location?.state?.srchInfo, 
+						//pageInfo: location?.state?.pageInfo 
+					} 
+				}
+			)
 		} else if (pageNm === SelfFeatPgPpNm.EDIT) {
 			if (location.state.sqlDirectInputYn !== "Y") {
 				featureInfo.tbRsCustFeatRuleTrgtList = targetList
@@ -463,7 +471,9 @@ const SelfFeatureDetail = () => {
 					state: {
 						featureInfo: featureInfo,
 						sfSubmissionRequestData: sfSubmissionRequestData,
-						sfSubmissionApprovalList: sfSubmissionApprovalList
+						sfSubmissionApprovalList: sfSubmissionApprovalList,
+						srchInfo: location?.state?.srchInfo,
+						//pageInfo: location?.state?.pageInfo
 					}
 				}
 			)

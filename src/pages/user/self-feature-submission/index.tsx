@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { cloneDeep } from 'lodash'
 import { SelectValue } from '@mui/base/useSelect'
 import { useAppSelector } from "@/hooks/useRedux"
@@ -45,6 +45,7 @@ import DataGrid from "@/components/grid/DataGrid"
 const SfSubmissionRequest = () => {
 
 	const navigate = useNavigate()
+    const location = useLocation()
 	const { toast } = useToast()
     const sessionInfo = useAppSelector(selectSessionInfo())
 	// 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
@@ -63,6 +64,14 @@ const SfSubmissionRequest = () => {
     useEffect(() => {
         retrieveSubmissions()
     }, [])
+    useEffect(() => {
+        if (!location || !location.state) return
+		setSearch((prevState) => {
+			let rtn = cloneDeep(prevState)
+			if (location.state) rtn = location.state.srchInfo
+			return rtn
+		})
+    }, [location])
     // 결재 목록 API 호출
     useEffect(() => {
         if (userEmail && userEmail !== "") {
@@ -149,7 +158,17 @@ const SfSubmissionRequest = () => {
     // 페이지 이동
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
         if (pageNm === SelfFeatPgPpNm.DETL) {
-            navigate(pageNm, { state: rows })
+            navigate(
+                pageNm, 
+                { 
+                    state: {
+                        ...rows,
+                        ...{
+                            srchInfo: search
+                        }
+                    }
+                }
+            )
         } else {
             navigate(pageNm)
         }
@@ -228,12 +247,13 @@ const SfSubmissionRequest = () => {
                         <TH align="center" colSpan={1}>유형</TH>
                         <TD colSpan={1.7}>
                             <Select 
+                                value={search.type}
                                 appearance="Outline" 
                                 placeholder="전체" 
                                 className="width-100" 
                                 onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
                                 ) => {
                                     onchangeSelectHandler(e, value, "type")
                                 }}
@@ -247,12 +267,13 @@ const SfSubmissionRequest = () => {
                         <TH align="center" colSpan={1}>상태</TH>
                         <TD colSpan={1}>
                             <Select 
+                                value={search.submissionStatus}
                                 appearance="Outline" 
                                 placeholder="전체" 
                                 className="width-100" 
                                 onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
+                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                                    value: SelectValue<{}, false>
                                 ) => {
                                     onchangeSelectHandler(e, value, "submissionStatus")
                                 }}
@@ -266,7 +287,12 @@ const SfSubmissionRequest = () => {
                     <TR>
                         <TH colSpan={1} align="center">Feature 명</TH>
                         <TD colSpan={8}>
-                            <TextField className="width-100" id="title" onChange={onchangeInputHandler}/>
+                            <TextField 
+                                value={search.title}
+                                className="width-100" 
+                                id="title" 
+                                onChange={onchangeInputHandler}
+                            />
                         </TD>
                     </TR>
                 </HorizontalTable>
