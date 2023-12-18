@@ -52,6 +52,7 @@ export enum SelfFeatureUserApiURL {
 }
 
 export enum SelfFeatureAdmApiURL {
+  RESOLUTION = '/api/v1/resolution/rules',
   SCHEMA = '/api/v1/batchdb/schemas',
   META_TABLE = '/api/v1/metas/tables',
   COL_AND_CMMT = '/api/v1/metas/columnsAndComments',

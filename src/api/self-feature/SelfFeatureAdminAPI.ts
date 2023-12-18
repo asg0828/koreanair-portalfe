@@ -38,6 +38,14 @@ export const retrieveMetaTableDetail = (params: any) => {
     method: Method.GET,
   });
 };
+// Resolution Id 조회
+export const retrieveResolutionRuleId = () => {
+  return callApi({
+    service: Service.KAL_SF_BE,
+    url: `${SelfFeatureAdmApiURL.RESOLUTION}`,
+    method: Method.GET,
+  })
+}
 
 export const updateMetaTable = (
   metaTblId: string,
