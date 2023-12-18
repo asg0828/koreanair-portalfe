@@ -1,5 +1,5 @@
 export interface SessionInfo {
-  sessionId?: string;
+  sessionId: string;
   apldMgrAuthId?: string
   apldMgrAuthNm?: string
   apldUserAuthId?: string
@@ -8,9 +8,9 @@ export interface SessionInfo {
   deptNm?: string
   menuByAuthMgr?: MenuByAuthMgrUser
   menuByAuthUser?: MenuByAuthMgrUser
-  userEmail?: string
-  userId?: string
-  userNm?: string
+  userEmail: string
+  userId: string
+  userNm: string
 }
 
 export interface MenuByAuthMgrUser {

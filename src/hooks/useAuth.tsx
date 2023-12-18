@@ -1,14 +1,16 @@
 import ErrorRouteBoundary from '@/components/error/ErrorRouteBoundary';
 import RootLayout from '@/components/layout';
+import { useQuickMenuList } from '@/hooks/queries/useQuickMenuQueries';
 import { useMainLoader } from '@/hooks/useLoader';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath } from '@/models/common/Constants';
+import { ContextPath, ValidType } from '@/models/common/Constants';
 import { adminMenulist, userMenuList } from '@/models/common/Menu';
 import { login, selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
-import { setBaseMenuList, setMenuList } from '@/reducers/menuSlice';
+import { setBaseMenuList, setMenuList, setQuickMenuList } from '@/reducers/menuSlice';
 import { setBaseApiUrl } from '@/utils/ApiUtil';
 import { convertToHierarchyInfo, sortChildrenRecursive } from '@/utils/ArrayUtil';
 import SessionApis from '@api/common/SessionApis';
+import { useToast } from '@ke-design/components';
 import CommonResponse from '@models/common/CommonResponse';
 import { SessionInfo, SessionRequest } from '@models/common/Session';
 import SessionUtil from '@utils/SessionUtil';
@@ -17,12 +19,19 @@ import { createBrowserRouter } from 'react-router-dom';
 
 const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequestInfo?: SessionRequest) => {
   const dispatch = useAppDispatch();
+  const { toast } = useToast();
   const pathname = window.location.pathname;
   const sessionInfo = useAppSelector(selectSessionInfo());
   const contextPath = useAppSelector(selectContextPath());
   const [router, setRouter] = useState<any>();
   const [unauthorized, setUnauthorized] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const {
+    data: qmResponse,
+    isSuccess: qmIsSuccess,
+    isError: qmError,
+    refetch: qmRefetch,
+  } = useQuickMenuList(sessionInfo.userId);
 
   const transferLocalStorage = useCallback(() => {
     const localTokenInfo = sessionUtil.getLocalAccessTokenRefreshTokenInfo();
@@ -60,6 +69,25 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
     },
     []
   );
+
+  useEffect(() => {
+    if (qmError || qmResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '퀵 메뉴 조회 중 에러가 발생했습니다.',
+      });
+    } else if (qmIsSuccess) {
+      if (qmResponse?.data) {
+        dispatch(setQuickMenuList(qmResponse.data.menus));
+      }
+    }
+  }, [qmResponse, qmIsSuccess, qmError, dispatch, toast]);
+
+  useEffect(() => {
+    if (sessionInfo.userId) {
+      qmRefetch();
+    }
+  }, [sessionInfo.userId, qmRefetch]);
 
   useEffect(() => {
     if (sessionRequestInfo?.googleAccessToken && !sessionInfo.sessionId && !isError && !unauthorized) {
@@ -106,13 +134,20 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
             .catch((reject) => reject([]));
 
           // 권한 있는 메뉴만 필터
-          const filteredMenuList = baseMenuList.filter((baseMenuItem: any) =>
-            myMenuList.find(
+          const filteredMenuList = baseMenuList.filter((baseMenuItem: any) => {
+            const myMenu = myMenuList.find(
               (myMenuItem) =>
                 myMenuItem.menuUrl === baseMenuItem.menuUrl ||
                 (myMenuItem.menuUrl === getMenuParentId(baseMenuItem.menuUrl) && baseMenuItem.isCrudPage)
-            )
-          );
+            );
+
+            if (myMenu) {
+              baseMenuItem.menuId = myMenu.menuId;
+              return true;
+            } else {
+              return false;
+            }
+          });
 
           // 라우터 필터
           const filteredRouterList = filterRouterRecursive(routerList, filteredMenuList);

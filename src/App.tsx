@@ -73,21 +73,17 @@ const App = () => {
             return <ErrorPage />;
           } else if (unauthorized) {
             return <Unauthorized />;
+          } else if (sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router) {
+            window.history.pushState({}, '', localStorage.getItem('accessPathname'));
+
+            return (
+              <Watermark content={sessionInfo.userEmail} className="width-100 height-100">
+                <RouterProvider router={router} />
+              </Watermark>
+            );
+          } else {
+            <Fallback />;
           }
-
-          window.history.pushState({}, '', localStorage.getItem('accessPathname'));
-
-          return (
-            <>
-              {sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router ? (
-                <Watermark content={sessionInfo.userEmail} className="width-100 height-100">
-                  <RouterProvider router={router} />
-                </Watermark>
-              ) : (
-                <Fallback />
-              )}
-            </>
-          );
         })()}
         <ModalContainer />
         <Toaster />
