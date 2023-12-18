@@ -103,7 +103,7 @@ const MasterProfileManagementReg = () => {
     });
     setRslnRuleId(rslnRuleIdParam);
   }, [rslnRuleIdParam]);
-  // master segement rule Id setting
+  // resolution rule Id setting
   useEffect(() => {
     if (rsltRuleIdErr || rsltRuleIdRes?.successOrNot === 'N') {
       toast({
@@ -112,7 +112,7 @@ const MasterProfileManagementReg = () => {
       });
     } else {
       if (rsltRuleIdRes) {
-        // master profile id 설정값 변경
+        // resolution id 설정값 변경
         let t = rsltRuleIdRes.result[rsltRuleIdRes.result.length - 1];
         if (t) {
           // 속성 및 행동 테이블 정보 조회를 위해

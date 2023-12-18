@@ -164,7 +164,8 @@ const SelfFeatureReg = () => {
         } else {
             if (mstrProfListRes) {
 				// master profile id 설정값 변경
-                let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+				let useMstrProf = mstrProfListRes.result.filter((mstrProf: any) => mstrProf.mstrSgmtRuleUseYn === "Y")
+                let t = useMstrProf[mstrProfListRes.result.length - 1]
                 if (t) {
                     // 속성 및 행동 테이블 정보 조회를 위해
                     setRslnRuleIdParam(() => t.rslnRuleId)
