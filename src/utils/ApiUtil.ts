@@ -164,7 +164,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
                 return retryResponse.data as CommonResponse;
               });
             });
-          } else {
+          } else if (error.response.data.message === 'SESSION_EXPIRE') {
             // PORTAL SESSION 만료
             sessionUtil.deleteSessionInfo();
             window.location.reload();
