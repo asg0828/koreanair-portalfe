@@ -45,11 +45,11 @@ const SelfFeature = () => {
 	const location = useLocation()
 	const { toast } = useToast()
 	const sessionInfo = useAppSelector(selectSessionInfo())
-    // 사용될 rslnRuleId / mstrSgmtRuleId 조회
-    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
-    // rslnRuleId parameter
+	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
+	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+	// rslnRuleId parameter
 	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
-    // mstrSgmtRuleId parameter
+	// mstrSgmtRuleId parameter
 	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
 	// 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
 	const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
@@ -79,30 +79,30 @@ const SelfFeature = () => {
 		// 	setPage(location.state.pageInfo)
 		// }
 	}, [location, sessionInfo])
-    // master segement rule Id setting
-    useEffect(() => {
-        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
-                content: '조회 중 에러가 발생했습니다.',
-            })
-        } else {
-            if (mstrProfListRes) {
+	// master segement rule Id setting
+	useEffect(() => {
+		if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (mstrProfListRes) {
 				// master profile id 설정값 변경
-                let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
-                if (t) {
-                    // 속성 및 행동 테이블 정보 조회를 위해
-                    setRslnRuleIdParam(() => t.rslnRuleId)
-                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
-                } else {
-                    toast({
-                        type: ValidType.ERROR,
-                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
-                    })
-                }
-            }
-        }
-    }, [mstrProfListRes, mstrProfListErr, toast])
+				let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+				if (t) {
+					// 속성 및 행동 테이블 정보 조회를 위해
+					setRslnRuleIdParam(() => t.rslnRuleId)
+					setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+				} else {
+					toast({
+						type: ValidType.ERROR,
+						content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+					})
+				}
+			}
+		}
+	}, [mstrProfListRes, mstrProfListErr, toast])
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
 		setSearchInfo({ ...searchInfo, ["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, })
@@ -183,28 +183,28 @@ const SelfFeature = () => {
 	const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
 		if (pageNm === SelfFeatPgPpNm.DETL) {
 			navigate(
-				pageNm, 
-				{ 
+				pageNm,
+				{
 					state: {
 						...rows,
-						...{ 
-							srchInfo: searchInfo, 
+						...{
+							srchInfo: searchInfo,
 							//pageInfo: page 
 						}
-					} 
+					}
 				}
 			)
 		} else if (pageNm === SelfFeatPgPpNm.PRNTCHLD) {
 			setIsOpenFeatPrntChldModal((prevState) => !prevState)
 		} else if (pageNm === SelfFeatPgPpNm.RULE_REG || pageNm === SelfFeatPgPpNm.SQL_REG) {
 			navigate(
-				SelfFeatPgPpNm.REG, 
-				{ 
-					state: {  
+				SelfFeatPgPpNm.REG,
+				{
+					state: {
 						regType: pageNm,
-						srchInfo: searchInfo, 
+						srchInfo: searchInfo,
 						//pageInfo: page,
-					} 
+					}
 				}
 			)
 		} else {
@@ -231,6 +231,14 @@ const SelfFeature = () => {
 		e.preventDefault()
 		featureListRefetch()
 	}
+	// 검색 조건 초기화
+	const onClearSearchInfo = () => {
+		setSearchInfo(() => {
+			let rtn = cloneDeep(initFeatListSrchProps)
+			if (sessionInfo.deptCode) rtn.team = sessionInfo.deptCode
+			return rtn
+		})
+	}
 
 	return (
 		<Stack direction="Vertical" gap="LG" className="height-100">
@@ -249,20 +257,20 @@ const SelfFeature = () => {
 						<TR>
 							<TH colSpan={1} align="right">Feature 명(한글)</TH>
 							<TD colSpan={3}>
-								<TextField 
+								<TextField
 									value={searchInfo.custFeatRuleName}
-									className="width-100" 
-									id="custFeatRuleName" 
-									onChange={onchangeInputHandler} 
+									className="width-100"
+									id="custFeatRuleName"
+									onChange={onchangeInputHandler}
 								/>
 							</TD>
 							<TH colSpan={1} align="right">Feature 명(영문)</TH>
 							<TD colSpan={3}>
-								<TextField 
+								<TextField
 									value={searchInfo.custFeatRuleNameEng}
-									className="width-100" 
-									id="custFeatRuleNameEng" 
-									onChange={onchangeInputHandler} 
+									className="width-100"
+									id="custFeatRuleNameEng"
+									onChange={onchangeInputHandler}
 								/>
 							</TD>
 						</TR>
@@ -333,6 +341,9 @@ const SelfFeature = () => {
 						<Button type="submit" priority="Primary" appearance="Contained" size="LG" >
 							<span className="searchIcon"></span>
 							검색
+						</Button>
+						<Button type="reset" size="LG" onClick={onClearSearchInfo}>
+							초기화
 						</Button>
 					</Stack>
 				</Stack>

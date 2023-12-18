@@ -155,6 +155,12 @@ const SfSubmissionRequest = () => {
     const onClickSearch = () => {
         subReqListRefetch()
     }
+	// 검색 조건 초기화
+	const onClearSearchInfo = () => {
+        setRequestDateFrom("")
+        setRequestDateTo("")
+		setSearch(cloneDeep(initFeatureSubmissionSearchProps))
+	}
     // 페이지 이동
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
         if (pageNm === SelfFeatPgPpNm.DETL) {
@@ -300,6 +306,9 @@ const SfSubmissionRequest = () => {
                     <Button priority="Primary" appearance="Contained" size="LG" onClick={onClickSearch}>
                     <span className="searchIcon"></span>
                     검색
+                    </Button>
+                    <Button type="reset" size="LG" onClick={onClearSearchInfo}>
+                        초기화
                     </Button>
                 </Stack>
             </Stack>
