@@ -29,8 +29,6 @@ const CustomerMetaManagementDetail = () => {
   const research = () => {
     // confirm(alert x)
     setOpen(true);
-    setIsRefetch((cnt) => cnt + 1);
-    dtlRefetch();
   };
 
   useEffect(() => {
@@ -71,7 +69,7 @@ const CustomerMetaManagementDetail = () => {
 
   return (
     <Stack direction="Vertical">
-      <SearchForm onSearch={research}>
+      <SearchForm onSearch={research} showClearButton={false}>
         <HorizontalTable>
           <TR>
             <TH colSpan={0.11} align="right">
@@ -201,6 +199,7 @@ const CustomerMetaManagementDetail = () => {
         columns={customerMetaInfoColumn}
         rows={rows}
       ></DataGridMeta>
+
       <Modal open={isOpen} onClose={() => setOpen(false)}>
         <Modal.Header>알림</Modal.Header>
         <Modal.Body>작성중인 Data가 있습니다. 작성을 취소하고 다시 조회하시겠습니까? </Modal.Body>
@@ -209,6 +208,8 @@ const CustomerMetaManagementDetail = () => {
             priority="Primary"
             appearance="Contained"
             onClick={() => {
+              setIsRefetch((cnt) => cnt + 1);
+              dtlRefetch();
               setOpen(false);
               return false;
             }}

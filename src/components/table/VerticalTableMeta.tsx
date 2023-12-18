@@ -419,7 +419,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                           key={`column-${columnIndex}`}
                           name="metaCustomerRadio"
                           onChange={(e) => timeStampChg(rowIndex)}
-                          defaultChecked={row[columns[columnIndex].field] === 'Y'}
+                          checked={row.baseTimeYn === 'Y'}
+                          value={row.baseTimeYn}
                         />
                       </TD>
                     );
@@ -439,13 +440,34 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                     );
                   }
                   // 체크박스
-                  else if (columns[columnIndex].field.includes('Yn')) {
+                  else if (columns[columnIndex].field === 'clmnUseYn') {
                     return (
-                      <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
+                      <TD
+                        key={`td-clmnUseYn-${rowIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      >
                         <Checkbox
-                          key={`column-${columnIndex}`}
-                          defaultChecked={row[columns[columnIndex].field] === 'Y'}
                           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
+                          key={`column-${columnIndex}`}
+                          checked={row.clmnUseYn === 'Y'}
+                          // defaultValue={columns[columnIndex].field === 'clmnUseYn' ? 'Y' : 'N'}
+                          value={row.clmnUseYn}
+                        />
+                      </TD>
+                    );
+                  }
+                  // 체크박스
+                  else if (columns[columnIndex].field === 'pkYn') {
+                    return (
+                      <TD
+                        key={`td-pkYn-${rowIndex}`}
+                        colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
+                      >
+                        <Checkbox
+                          checked={row.pkYn === 'Y'}
+                          onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
+                          key={`column-${columnIndex}`}
+                          value={row.pkYn}
                         />
                       </TD>
                     );
