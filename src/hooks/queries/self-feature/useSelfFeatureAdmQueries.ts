@@ -7,6 +7,7 @@ import {
   retrieveMstrProfInfo,
   retrieveMstrProfList,
   retrieveResolutionKeyList,
+  retrieveResolutionRuleId,
   retrieveSchemaList,
   retrieveTableColumns,
   retrieveTableInfo,
@@ -98,3 +99,11 @@ export const useMetaColumnIsResolutionJoinkeyInfo = (
     { enabled: false, suspense: false }
   );
 };
+// Resolution Id 조회
+export const useResolutionRuleId = () => {
+  return useQuery(
+    ['/resolution-rule-id'],
+    () => retrieveResolutionRuleId(),
+    { enabled: false, suspense: false }
+  );
+}
