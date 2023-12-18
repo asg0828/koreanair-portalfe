@@ -35,7 +35,8 @@ import {
     useMetaInfo,
     useMstrProfInfo,
     useMstrProfList,
-    useResolutionKeyList
+    useResolutionKeyList,
+    useResolutionRuleId
 } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries'
 import { ValidType } from '@/models/common/Constants'
 import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
@@ -43,14 +44,14 @@ import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
 const MasterProfileManagementDetail = () => {
 
     const location = useLocation()
-	const navigate = useNavigate()
+    const navigate = useNavigate()
     const { toast } = useToast()
-    // 사용될 rslnRuleId / mstrSgmtRuleId 조회
-    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+    // 사용될 rslnRuleId 조회
+    //const { data: rsltRuleIdRes, isError: rsltRuleIdErr, refetch: rsltRuleIdRefetch } = useResolutionRuleId();
     // rslnRuleId parameter
-	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
+    const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
     // mstrSgmtRuleId parameter
-	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
+    const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
     // 메타테이블 전체조회 테이블 선택 콤보박스 조회 API
     const [metaInfoSrchInfo, setMetaInfoSrchInfo] = useState<MetaInfoSearchProps>(cloneDeep(initMetaInfoSearchProps))
     const [attrMetaTbList, setAttrMetaTbList] = useState<Array<TbCoMetaTbInfo>>([])
@@ -64,58 +65,61 @@ const MasterProfileManagementDetail = () => {
     const [mstrSgmtRuleId, setMstrSgmtRuleId] = useState<string>("")
     const [masterProfileInfo, setMasterProfileInfo] = useState<MasterProfileInfo>(cloneDeep(initMasterProfileInfo))
     const { data: mstrProfInfoRes, isError: mstrProfInfoErr, refetch: mstrProfInfoRefetch } = useMstrProfInfo(mstrSgmtRuleId)
-	// 페이지 이동 및 버튼 처리
-	const onClickPageMovHandler = (pageNm: string) => {
-		if (pageNm === SelfFeatPgPpNm.LIST) {
-			navigate('..')
-		} else if (pageNm === SelfFeatPgPpNm.EDIT) {
-			navigate(
-				`../${pageNm}`,
-				{
-					state: {
-						masterProfileInfo: masterProfileInfo,
-					}
-				}
-			)
-		} else {
-			navigate(`../${pageNm}`)
-		}
-	}
+    // 페이지 이동 및 버튼 처리
+    const onClickPageMovHandler = (pageNm: string) => {
+        if (pageNm === SelfFeatPgPpNm.LIST) {
+            navigate('..')
+        } else if (pageNm === SelfFeatPgPpNm.EDIT) {
+            navigate(
+                `../${pageNm}`,
+                {
+                    state: {
+                        masterProfileInfo: masterProfileInfo,
+                    }
+                }
+            )
+        } else {
+            navigate(`../${pageNm}`)
+        }
+    }
     useEffect(() => {
+        if (!location || !location.state || !location.state.row) return
+
         setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
             let rtn = cloneDeep(prevState)
             rtn.type = MetaType.MSTR_SGMT
-            rtn.rslnRuleId = rslnRuleIdParam
+            rtn.rslnRuleId = location.state.row.rslnRuleId
             return rtn
         })
-        setRslnRuleId(rslnRuleIdParam)
-        if (location.state && location.state.row.mstrSgmtRuleId)
-            setMstrSgmtRuleId(location.state.row.mstrSgmtRuleId)
-    }, [rslnRuleIdParam])
-    // master segement rule Id setting
+        if (location.state.row.rslnRuleId) setRslnRuleId(location.state.row.rslnRuleId)
+        if (location.state.row.mstrSgmtRuleId) setMstrSgmtRuleId(location.state.row.mstrSgmtRuleId)
+    }, [location.state.row])
+    // resolution rule Id setting
+    /*
     useEffect(() => {
-        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+        if (rsltRuleIdErr || rsltRuleIdRes?.successOrNot === 'N') {
             toast({
                 type: ValidType.ERROR,
                 content: '조회 중 에러가 발생했습니다.',
-            })
+            });
         } else {
-            if (mstrProfListRes) {
-				// master profile id 설정값 변경
-                let t = mstrProfListRes.result[mstrProfListRes.result.length - 1]
+            if (rsltRuleIdRes) {
+                // resolution id 설정값 변경
+                let t = rsltRuleIdRes.result[rsltRuleIdRes.result.length - 1];
                 if (t) {
                     // 속성 및 행동 테이블 정보 조회를 위해
-                    setRslnRuleIdParam(() => t.rslnRuleId)
-                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+                    setRslnRuleIdParam(() => t.rslnRuleId);
+                    //setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId);
                 } else {
                     toast({
                         type: ValidType.ERROR,
-                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
-                    })
+                        content: 'Resolution Rule 대해 관리자에게 문의 하세요.',
+                    });
                 }
             }
         }
-    }, [mstrProfListRes, mstrProfListErr, toast])
+    }, [rsltRuleIdRes, rsltRuleIdErr, toast])
+    */
     // 상세 조회 API 호출
     useEffect(() => {
         if (!mstrSgmtRuleId || mstrSgmtRuleId === "") return
@@ -208,28 +212,28 @@ const MasterProfileManagementDetail = () => {
                     style={{
                         border: '1px solid rgb(218, 218, 218)',
                         borderRadius: '5px',
-                        padding:"1rem"
+                        padding: "1rem"
                     }}
                 >
-                <Typography variant="h4">Fact 정보</Typography>
-                {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
-                    masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((attrTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
-                        if (attrTblInfo.sgmtDvCd === DivisionTypes.ATTR) {
-                            //저장된 메타테이블 컬럼 항목
-                            let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((attrTblColInfo: TbRsMstrSgmtRuleAttrClmn) => attrTblColInfo.mstrSgmtRuleTblId === attrTblInfo.mstrSgmtRuleTblId)
-                            return (
-                                <MstrProfInfo 
-                                    key={`attr-mstr-prof-detail-${index}`}
-                                    editMode={false}
-                                    rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
-                                    metaTblInfo={attrTblInfo}                   //저장된 메타테이블 정보
-                                    metaTblAllList={attrMetaTbList}             //모든 속성정보 메타테이블 정보(선택된 resolution id에 해당되는)
-                                    metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
-                                />
-                            )
-                        }
-                    })
-                }
+                    <Typography variant="h4">Fact 정보</Typography>
+                    {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
+                        masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((attrTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
+                            if (attrTblInfo.sgmtDvCd === DivisionTypes.ATTR) {
+                                //저장된 메타테이블 컬럼 항목
+                                let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((attrTblColInfo: TbRsMstrSgmtRuleAttrClmn) => attrTblColInfo.mstrSgmtRuleTblId === attrTblInfo.mstrSgmtRuleTblId)
+                                return (
+                                    <MstrProfInfo
+                                        key={`attr-mstr-prof-detail-${index}`}
+                                        editMode={false}
+                                        rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
+                                        metaTblInfo={attrTblInfo}                   //저장된 메타테이블 정보
+                                        metaTblAllList={attrMetaTbList}             //모든 속성정보 메타테이블 정보(선택된 resolution id에 해당되는)
+                                        metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
+                                    />
+                                )
+                            }
+                        })
+                    }
                 </Stack>
             </Stack>
             {/* 속성 정보 */}
@@ -246,43 +250,43 @@ const MasterProfileManagementDetail = () => {
                     style={{
                         border: '1px solid rgb(218, 218, 218)',
                         borderRadius: '5px',
-                        padding:"1rem"
+                        padding: "1rem"
                     }}
                 >
-                <Typography variant="h4">Base Fact 정보</Typography>
-                {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
-                    masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((behvTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
-                        if (behvTblInfo.sgmtDvCd === DivisionTypes.BEHV) {
-                            //저장된 메타테이블 컬럼 항목
-                            let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((behvTblColInfo: TbRsMstrSgmtRuleAttrClmn) => behvTblColInfo.mstrSgmtRuleTblId === behvTblInfo.mstrSgmtRuleTblId)
-                            return (
-                                <MstrProfInfo 
-                                    key={`behv-mstr-prof-detail-${index}`}
-                                    editMode={false}
-                                    rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
-                                    metaTblInfo={behvTblInfo}                   //저장된 메타테이블 정보
-                                    metaTblAllList={behvMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
-                                    metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
-                                />
-                            )
-                        }
-                    })
-                }
+                    <Typography variant="h4">Base Fact 정보</Typography>
+                    {(masterProfileInfo && masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.length > 0) &&
+                        masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.map((behvTblInfo: TbRsMstrSgmtRuleAttrTbl, index: number) => {
+                            if (behvTblInfo.sgmtDvCd === DivisionTypes.BEHV) {
+                                //저장된 메타테이블 컬럼 항목
+                                let metaTblColList = masterProfileInfo.tbRsMstrSgmtRuleAttrClmn.filter((behvTblColInfo: TbRsMstrSgmtRuleAttrClmn) => behvTblColInfo.mstrSgmtRuleTblId === behvTblInfo.mstrSgmtRuleTblId)
+                                return (
+                                    <MstrProfInfo
+                                        key={`behv-mstr-prof-detail-${index}`}
+                                        editMode={false}
+                                        rslnRuleKeyPrtyList={rslnRuleKeyPrtyList}   //선택된 resolution id에 해당되는 마스터 조인키 리스트
+                                        metaTblInfo={behvTblInfo}                   //저장된 메타테이블 정보
+                                        metaTblAllList={behvMetaTbList}             //모든 행동정보 메타테이블 정보(선택된 resolution id에 해당되는)
+                                        metaTblColList={metaTblColList}             //저장된 메타테이블 컬럼 항목
+                                    />
+                                )
+                            }
+                        })
+                    }
                 </Stack>
             </Stack>
             {/* 행동 정보 */}
-			{/* 버튼 영역 */}
-			<Stack direction="Vertical" gap="MD" justifyContent="End">
-				<Stack justifyContent="End" gap="SM" className="width-100">
-					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
-						목록
-					</Button>
-					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
-						수정
-					</Button>
-				</Stack>
-			</Stack>
-			{/* 버튼 영역 */}
+            {/* 버튼 영역 */}
+            <Stack direction="Vertical" gap="MD" justifyContent="End">
+                <Stack justifyContent="End" gap="SM" className="width-100">
+                    <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
+                        목록
+                    </Button>
+                    <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
+                        수정
+                    </Button>
+                </Stack>
+            </Stack>
+            {/* 버튼 영역 */}
         </Stack>
     )
 }
