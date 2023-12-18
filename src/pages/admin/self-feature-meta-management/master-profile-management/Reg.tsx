@@ -237,225 +237,225 @@ const MasterProfileManagementReg = () => {
     if (pageNm === SelfFeatPgPpNm.LIST) {
       navigate('..');
     } else if (pageNm === SelfFeatPgPpNm.REG) {
-      // const validation = () => {
-      //   // 포커스 초기화
-      //   // attrRef.current.targetRef = '';
-      //   // attrRef.current.findIndexRef = 0;
-      //   // behvRef.current.targetRef = '';
-      //   // behvRef.current.findIndexRef = 0;
-      //   let searchError = false;
-      //   // validation
-      //   const validationTool = (check: string) => {
-      //     if (check.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '') return true;
-      //     else return false;
-      //   };
-      //   let checkValidation = '';
+      const validation = () => {
+        // 포커스 초기화
+        // attrRef.current.targetRef = '';
+        // attrRef.current.findIndexRef = 0;
+        // behvRef.current.targetRef = '';
+        // behvRef.current.findIndexRef = 0;
+        let searchError = false;
+        // validation
+        const validationTool = (check: string) => {
+          if (check.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '') return true;
+          else return false;
+        };
+        let checkValidation = '';
 
-      //   // 등록 validation
-      //   if (validationTool(mstrSgmtRule.mstrSgmtRuleNm)) {
-      //     // masterProfileRef?.current.firstElementChild.focus();
-      //     checkValidation = 'MasterProfile은 필수 입력값입니다.';
-      //   } else if (validationTool(mstrSgmtRule.mstrSgmtRuleDesc)) {
-      //     // descriptionRef?.current.firstElementChild.focus();
-      //     checkValidation = 'Description은 필수 입력값입니다.';
-      //   } else {
-      //     if (attrMstrSgmtRuleAttrTblList.length < 1) {
-      //       checkValidation = `Fact 정보 테이블은 최소 1개 이상 등록되어야 합니다.`;
-      //     } else if (behvMstrSgmtRuleAttrTblList.length < 1) {
-      //       checkValidation = `Base Fact 정보 테이블은 최소 1개 이상 등록되어야 합니다.`;
-      //     }
-      //     let attrClmnList = mstrSgmtRuleAttrClmnList.filter((i) => i.sgmtDvCd === DivisionTypes.ATTR);
-      //     let behvClmnList = mstrSgmtRuleAttrClmnList.filter((i) => i.sgmtDvCd === DivisionTypes.BEHV);
-      //     attrClmnList.map((item) => {
-      //       if (item.mstrSgmtRuleClmnId === '') {
-      //         let tableLogiNm = attrMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
-      //         checkValidation = `${tableLogiNm} 속성 테이블의 컬럼항목을 확인해주세요`;
-      //       }
-      //       return item;
-      //     });
-      //     if (checkValidation === '') {
-      //       behvClmnList.map((item) => {
-      //         if (item.mstrSgmtRuleClmnId === '') {
-      //           let tableLogiNm = behvMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
-      //           checkValidation = `${tableLogiNm} 행동 테이블의 컬럼항목을 확인해주세요`;
-      //         }
-      //         return item;
-      //       });
-      //     }
-      //     attrMstrSgmtRuleAttrTblList.map((item, index) => {
-      //       if (checkValidation === '') {
-      //         let tableLogiNm = attrMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
-      //         if (item.mstrSgmtRuleTblId === '')
-      //           checkValidation = `${index + 1}번쨰 속성 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
-      //         else if (item.mstrJoinKeyClmnNm === '')
-      //           checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
-      //         else if (item.attrJoinKeyClmnNm === '')
-      //           checkValidation = `${tableLogiNm} 테이블의 속성 조인키 확인해주세요`;
-      //         else if (attrClmnList.filter((col) => col.mstrSgmtRuleTblId === item.mstrSgmtRuleTblId).length < 1) {
-      //           checkValidation = `${tableLogiNm} 테이블의 최소1개이상 컬럼항목을 추가해주세요`;
-      //         }
-      //       }
-      //       return item;
-      //     });
-      //     if (checkValidation === '') {
-      //       behvMstrSgmtRuleAttrTblList.map((item, index) => {
-      //         if (checkValidation === '') {
-      //           let tableLogiNm = behvMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
-      //           if (item.mstrSgmtRuleTblId === '')
-      //             checkValidation = `${index + 1}번쨰 행동 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
-      //           else if (item.mstrJoinKeyClmnNm === '')
-      //             checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
-      //           else if (item.attrJoinKeyClmnNm === '')
-      //             checkValidation = `${tableLogiNm} 테이블의 속성 조인키 확인해주세요`;
-      //           else if (behvClmnList.filter((col) => col.mstrSgmtRuleTblId === item.mstrSgmtRuleTblId).length < 1) {
-      //             checkValidation = `${tableLogiNm} 테이블의 최소1개이상 컬럼항목을 추가해주세요`;
-      //           }
-      //         }
-      //         return item;
-      //       });
-      //     }
-      //   }
+        // 등록 validation
+        if (validationTool(mstrSgmtRule.mstrSgmtRuleNm)) {
+          // masterProfileRef?.current.firstElementChild.focus();
+          checkValidation = 'MasterProfile은 필수 입력값입니다.';
+        } else if (validationTool(mstrSgmtRule.mstrSgmtRuleDesc)) {
+          // descriptionRef?.current.firstElementChild.focus();
+          checkValidation = 'Description은 필수 입력값입니다.';
+        } else {
+          if (attrMstrSgmtRuleAttrTblList.length < 1) {
+            checkValidation = `Fact 정보 테이블은 최소 1개 이상 등록되어야 합니다.`;
+          } else if (behvMstrSgmtRuleAttrTblList.length < 1) {
+            checkValidation = `Base Fact 정보 테이블은 최소 1개 이상 등록되어야 합니다.`;
+          }
+          let attrClmnList = mstrSgmtRuleAttrClmnList.filter((i) => i.sgmtDvCd === DivisionTypes.ATTR);
+          let behvClmnList = mstrSgmtRuleAttrClmnList.filter((i) => i.sgmtDvCd === DivisionTypes.BEHV);
+          attrClmnList.map((item) => {
+            if (item.mstrSgmtRuleClmnId === '') {
+              let tableLogiNm = attrMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+              checkValidation = `${tableLogiNm} 속성 테이블의 컬럼항목을 확인해주세요`;
+            }
+            return item;
+          });
+          if (checkValidation === '') {
+            behvClmnList.map((item) => {
+              if (item.mstrSgmtRuleClmnId === '') {
+                let tableLogiNm = behvMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+                checkValidation = `${tableLogiNm} 행동 테이블의 컬럼항목을 확인해주세요`;
+              }
+              return item;
+            });
+          }
+          attrMstrSgmtRuleAttrTblList.map((item, index) => {
+            if (checkValidation === '') {
+              let tableLogiNm = attrMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+              if (item.mstrSgmtRuleTblId === '')
+                checkValidation = `${index + 1}번쨰 속성 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
+              else if (item.mstrJoinKeyClmnNm === '')
+                checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
+              else if (item.attrJoinKeyClmnNm === '')
+                checkValidation = `${tableLogiNm} 테이블의 속성 조인키 확인해주세요`;
+              else if (attrClmnList.filter((col) => col.mstrSgmtRuleTblId === item.mstrSgmtRuleTblId).length < 1) {
+                checkValidation = `${tableLogiNm} 테이블의 최소1개이상 컬럼항목을 추가해주세요`;
+              }
+            }
+            return item;
+          });
+          if (checkValidation === '') {
+            behvMstrSgmtRuleAttrTblList.map((item, index) => {
+              if (checkValidation === '') {
+                let tableLogiNm = behvMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+                if (item.mstrSgmtRuleTblId === '')
+                  checkValidation = `${index + 1}번쨰 행동 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
+                else if (item.mstrJoinKeyClmnNm === '')
+                  checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
+                else if (item.attrJoinKeyClmnNm === '')
+                  checkValidation = `${tableLogiNm} 테이블의 속성 조인키 확인해주세요`;
+                else if (behvClmnList.filter((col) => col.mstrSgmtRuleTblId === item.mstrSgmtRuleTblId).length < 1) {
+                  checkValidation = `${tableLogiNm} 테이블의 최소1개이상 컬럼항목을 추가해주세요`;
+                }
+              }
+              return item;
+            });
+          }
+        }
 
-      //   // else if (
-      //   //   attrMstrSgmtRuleAttrTblList.find((e) => e.mstrSgmtRuleTblNm === '') ||
-      //   //   behvMstrSgmtRuleAttrTblList.find((e) => e.mstrSgmtRuleTblNm === '')
-      //   // ) {
-      //   //   if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '') !== -1) {
-      //   //     // attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '');
-      //   //     // attrRef.current.targetRef = 'metaTblIdRef';
-      //   //     checkValidation = 'Fact 정보 속성 테이블을 선택해주십시오.';
-      //   //   } else {
-      //   //     // behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '');
-      //   //     // behvRef.current.targetRef = 'metaTblIdRef';
-      //   //     checkValidation = 'Base Fact 정보 속성 테이블을 선택해주십시오.';
-      //   //   }
-      //   // } else if (
-      //   //   attrMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '') ||
-      //   //   behvMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '')
-      //   // ) {
-      //   //   if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '') !== -1) {
-      //   //     const validationName = attrMetaTbList.find(
-      //   //       (info: TbCoMetaTbInfo) =>
-      //   //         info.metaTblId ===
-      //   //         attrMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
-      //   //     )?.metaTblLogiNm;
-      //   //     checkValidation = `${validationName} 테이블의 마스터 join key를 선택해주십시오.`;
-      //   //     // attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '');
-      //   //     // attrRef.current.targetRef = 'masterJoinKeyRef';
-      //   //   } else {
-      //   //     const validationName = behvMetaTbList.find(
-      //   //       (info: TbCoMetaTbInfo) =>
-      //   //         info.metaTblId ===
-      //   //         behvMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
-      //   //     )?.metaTblLogiNm;
-      //   //     checkValidation = `${validationName} 테이블의 마스터 join key를 선택해주십시오.`;
-      //   //     // behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '');
-      //   //     // behvRef.current.targetRef = 'masterJoinKeyRef';
-      //   //   }
-      //   // } else if (
-      //   //   attrMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '') ||
-      //   //   behvMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '')
-      //   // ) {
-      //   //   if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '') !== -1) {
-      //   //     const validationName = attrMetaTbList.find(
-      //   //       (info: TbCoMetaTbInfo) =>
-      //   //         info.metaTblId ===
-      //   //         attrMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
-      //   //     )?.metaTblLogiNm;
-      //   //     checkValidation = `${validationName} 테이블의 속성 join key를 선택해주십시오.`;
-      //   //     // attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '');
-      //   //     // attrRef.current.targetRef = 'attrJoinKeyRef';
-      //   //   } else {
-      //   //     const validationName = behvMetaTbList.find(
-      //   //       (info: TbCoMetaTbInfo) =>
-      //   //         info.metaTblId ===
-      //   //         behvMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
-      //   //     )?.metaTblLogiNm;
-      //   //     checkValidation = `${validationName} 테이블의 속성 join key를 선택해주십시오.`;
-      //   //     // behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '');
-      //   //     // behvRef.current.targetRef = 'attrJoinKeyRef';
-      //   //   }
-      //   // } else if (
-      //   // !attrMstrSgmtRuleAttrTblList
-      //   //   .map((row) => row.mstrSgmtRuleTblId)
-      //   //   .flat()
-      //   //   .concat(behvMstrSgmtRuleAttrTblList.map((row) => row.mstrSgmtRuleTblId).flat())
-      //   //   .map((e) =>
-      //   //     mstrSgmtRuleAttrClmnList
-      //   //       .map((row) => row.mstrSgmtRuleTblId)
-      //   //       .flat()
-      //   //       .every((c) => c !== e)
-      //   //   )
-      //   //   .every((e) => e === false) ||
-      //   //   !mstrSgmtRuleAttrClmnList.map((e) => e.mstrSgmtRuleClmnId === '').every((c) => c === false)
-      //   // ) {
-      //   //   if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'ATTR') {
-      //   //     const validationName = attrMetaTbList.find(
-      //   //       (info: TbCoMetaTbInfo) =>
-      //   //         info.metaTblId === mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.mstrSgmtRuleTblId
-      //   //     )?.metaTblLogiNm;
-      //   //     checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
-      //   //   } else if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'BEHV') {
-      //   //     const validationName = behvMetaTbList.find(
-      //   //       (info: TbCoMetaTbInfo) =>
-      //   //         info.metaTblId === mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.mstrSgmtRuleTblId
-      //   //     )?.metaTblLogiNm;
-      //   //     checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
-      //   //     // 컬럼 리스트에서 등록하고 있는 테이블의 아이디가 없는 경우
-      //   //   }
-      //   //  else if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'ATTR') {
-      //   //   const validationName = attrMetaTbList.find(
-      //   //     (info: TbCoMetaTbInfo) =>
-      //   //       info.metaTblId ===
-      //   //       attrMstrSgmtRuleAttrTblList
-      //   //         .map((e) => e.mstrSgmtRuleTblId)
-      //   //         .find((e) =>
-      //   //           attrMstrSgmtRuleAttrTblList
-      //   //             .map((row) => row.mstrSgmtRuleTblId)
-      //   //             .flat()
-      //   //             .map((e) =>
-      //   //               mstrSgmtRuleAttrClmnList
-      //   //                 .map((row) => row.mstrSgmtRuleTblId)
-      //   //                 .flat()
-      //   //                 .map((l) => l !== e)
-      //   //             )
-      //   //         )
-      //   //   )?.metaTblLogiNm;
-      //   //   checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
-      //   // } else if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'BEHV') {
-      //   //   const validationName = behvMetaTbList.find(
-      //   //     (info: TbCoMetaTbInfo) =>
-      //   //       info.metaTblId ===
-      //   //       behvMstrSgmtRuleAttrTblList
-      //   //         .map((e) => e.mstrSgmtRuleTblId)
-      //   //         .find((e) =>
-      //   //           behvMstrSgmtRuleAttrTblList
-      //   //             .map((row) => row.mstrSgmtRuleTblId)
-      //   //             .flat()
-      //   //             .map((e) =>
-      //   //               mstrSgmtRuleAttrClmnList
-      //   //                 .map((row) => row.mstrSgmtRuleTblId)
-      //   //                 .flat()
-      //   //                 .map((l) => l !== e)
-      //   //             )
-      //   //         )
-      //   //   )?.metaTblLogiNm;
-      //   //   checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
-      //   // }
-      //   // else if(mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === ''))
-      //   // 속성, 행동 테이블이 존재하지 않는 경우
-      //   // }
-      //   if (checkValidation !== '') {
-      //     toast({
-      //       type: 'Error',
-      //       content: checkValidation,
-      //     });
-      //     searchError = true;
-      //   }
-      //   return searchError;
-      // };
+        //   // else if (
+        //   //   attrMstrSgmtRuleAttrTblList.find((e) => e.mstrSgmtRuleTblNm === '') ||
+        //   //   behvMstrSgmtRuleAttrTblList.find((e) => e.mstrSgmtRuleTblNm === '')
+        //   // ) {
+        //   //   if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '') !== -1) {
+        //   //     // attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '');
+        //   //     // attrRef.current.targetRef = 'metaTblIdRef';
+        //   //     checkValidation = 'Fact 정보 속성 테이블을 선택해주십시오.';
+        //   //   } else {
+        //   //     // behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrSgmtRuleTblNm === '');
+        //   //     // behvRef.current.targetRef = 'metaTblIdRef';
+        //   //     checkValidation = 'Base Fact 정보 속성 테이블을 선택해주십시오.';
+        //   //   }
+        //   // } else if (
+        //   //   attrMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '') ||
+        //   //   behvMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '')
+        //   // ) {
+        //   //   if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '') !== -1) {
+        //   //     const validationName = attrMetaTbList.find(
+        //   //       (info: TbCoMetaTbInfo) =>
+        //   //         info.metaTblId ===
+        //   //         attrMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
+        //   //     )?.metaTblLogiNm;
+        //   //     checkValidation = `${validationName} 테이블의 마스터 join key를 선택해주십시오.`;
+        //   //     // attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '');
+        //   //     // attrRef.current.targetRef = 'masterJoinKeyRef';
+        //   //   } else {
+        //   //     const validationName = behvMetaTbList.find(
+        //   //       (info: TbCoMetaTbInfo) =>
+        //   //         info.metaTblId ===
+        //   //         behvMstrSgmtRuleAttrTblList.find((e) => e.mstrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
+        //   //     )?.metaTblLogiNm;
+        //   //     checkValidation = `${validationName} 테이블의 마스터 join key를 선택해주십시오.`;
+        //   //     // behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.mstrJoinKeyClmnNm === '');
+        //   //     // behvRef.current.targetRef = 'masterJoinKeyRef';
+        //   //   }
+        //   // } else if (
+        //   //   attrMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '') ||
+        //   //   behvMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '')
+        //   // ) {
+        //   //   if (attrMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '') !== -1) {
+        //   //     const validationName = attrMetaTbList.find(
+        //   //       (info: TbCoMetaTbInfo) =>
+        //   //         info.metaTblId ===
+        //   //         attrMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
+        //   //     )?.metaTblLogiNm;
+        //   //     checkValidation = `${validationName} 테이블의 속성 join key를 선택해주십시오.`;
+        //   //     // attrRef.current.findIndexRef = attrMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '');
+        //   //     // attrRef.current.targetRef = 'attrJoinKeyRef';
+        //   //   } else {
+        //   //     const validationName = behvMetaTbList.find(
+        //   //       (info: TbCoMetaTbInfo) =>
+        //   //         info.metaTblId ===
+        //   //         behvMstrSgmtRuleAttrTblList.find((e) => e.attrJoinKeyClmnNm === '')?.mstrSgmtRuleTblId
+        //   //     )?.metaTblLogiNm;
+        //   //     checkValidation = `${validationName} 테이블의 속성 join key를 선택해주십시오.`;
+        //   //     // behvRef.current.findIndexRef = behvMstrSgmtRuleAttrTblList.findIndex((e) => e.attrJoinKeyClmnNm === '');
+        //   //     // behvRef.current.targetRef = 'attrJoinKeyRef';
+        //   //   }
+        //   // } else if (
+        //   // !attrMstrSgmtRuleAttrTblList
+        //   //   .map((row) => row.mstrSgmtRuleTblId)
+        //   //   .flat()
+        //   //   .concat(behvMstrSgmtRuleAttrTblList.map((row) => row.mstrSgmtRuleTblId).flat())
+        //   //   .map((e) =>
+        //   //     mstrSgmtRuleAttrClmnList
+        //   //       .map((row) => row.mstrSgmtRuleTblId)
+        //   //       .flat()
+        //   //       .every((c) => c !== e)
+        //   //   )
+        //   //   .every((e) => e === false) ||
+        //   //   !mstrSgmtRuleAttrClmnList.map((e) => e.mstrSgmtRuleClmnId === '').every((c) => c === false)
+        //   // ) {
+        //   //   if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'ATTR') {
+        //   //     const validationName = attrMetaTbList.find(
+        //   //       (info: TbCoMetaTbInfo) =>
+        //   //         info.metaTblId === mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.mstrSgmtRuleTblId
+        //   //     )?.metaTblLogiNm;
+        //   //     checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
+        //   //   } else if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'BEHV') {
+        //   //     const validationName = behvMetaTbList.find(
+        //   //       (info: TbCoMetaTbInfo) =>
+        //   //         info.metaTblId === mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.mstrSgmtRuleTblId
+        //   //     )?.metaTblLogiNm;
+        //   //     checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
+        //   //     // 컬럼 리스트에서 등록하고 있는 테이블의 아이디가 없는 경우
+        //   //   }
+        //   //  else if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'ATTR') {
+        //   //   const validationName = attrMetaTbList.find(
+        //   //     (info: TbCoMetaTbInfo) =>
+        //   //       info.metaTblId ===
+        //   //       attrMstrSgmtRuleAttrTblList
+        //   //         .map((e) => e.mstrSgmtRuleTblId)
+        //   //         .find((e) =>
+        //   //           attrMstrSgmtRuleAttrTblList
+        //   //             .map((row) => row.mstrSgmtRuleTblId)
+        //   //             .flat()
+        //   //             .map((e) =>
+        //   //               mstrSgmtRuleAttrClmnList
+        //   //                 .map((row) => row.mstrSgmtRuleTblId)
+        //   //                 .flat()
+        //   //                 .map((l) => l !== e)
+        //   //             )
+        //   //         )
+        //   //   )?.metaTblLogiNm;
+        //   //   checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
+        //   // } else if (mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === '')?.sgmtDvCd === 'BEHV') {
+        //   //   const validationName = behvMetaTbList.find(
+        //   //     (info: TbCoMetaTbInfo) =>
+        //   //       info.metaTblId ===
+        //   //       behvMstrSgmtRuleAttrTblList
+        //   //         .map((e) => e.mstrSgmtRuleTblId)
+        //   //         .find((e) =>
+        //   //           behvMstrSgmtRuleAttrTblList
+        //   //             .map((row) => row.mstrSgmtRuleTblId)
+        //   //             .flat()
+        //   //             .map((e) =>
+        //   //               mstrSgmtRuleAttrClmnList
+        //   //                 .map((row) => row.mstrSgmtRuleTblId)
+        //   //                 .flat()
+        //   //                 .map((l) => l !== e)
+        //   //             )
+        //   //         )
+        //   //   )?.metaTblLogiNm;
+        //   //   checkValidation = `${validationName} 테이블의 Key Column 입력이 필요합니다.`;
+        //   // }
+        //   // else if(mstrSgmtRuleAttrClmnList.find((e) => e.mstrSgmtRuleClmnId === ''))
+        //   // 속성, 행동 테이블이 존재하지 않는 경우
+        //   // }
+        if (checkValidation !== '') {
+          toast({
+            type: 'Error',
+            content: checkValidation,
+          });
+          searchError = true;
+        }
+        return searchError;
+      };
 
-      // if (validation()) return;
+      if (validation()) return;
       // 등록 확인 팝업
       setModalType(ModalType.CONFIRM);
       setBtnClickType('reg');
