@@ -498,7 +498,18 @@ const SelfFeatureReg = () => {
 			featureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
 			featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
 			// 상세로 redirect
-			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
+			navigate(
+				`../${SelfFeatPgPpNm.DETL}`, 
+				{ 
+					state: {
+						...featureInfo.tbRsCustFeatRule, 
+						...{ 
+							srchInfo: location?.state?.srchInfo, 
+							//pageInfo: location?.state?.pageInfo 
+						}
+					} 
+				}
+			)
 		}
 	}, [createRuleDesignRes, createRuleDesignSucc, createRuleDesignErr, toast])
 
@@ -540,7 +551,18 @@ const SelfFeatureReg = () => {
 			featureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
 			featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
 			// 상세로 redirect
-			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
+			navigate(
+				`../${SelfFeatPgPpNm.DETL}`, 
+				{ 
+					state: {
+						...featureInfo.tbRsCustFeatRule, 
+						...{ 
+							srchInfo: location?.state?.srchInfo, 
+							//pageInfo: location?.state?.pageInfo 
+						}
+					}
+				}
+			)
 		}
 	}, [createSQLRes, createSQLSucc, createSQLErr, toast])
 
@@ -660,10 +682,19 @@ const SelfFeatureReg = () => {
 	}
 	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string) => {
-		if (pageNm === SelfFeatPgPpNm.LIST)
-			navigate('..')
-		else
+		if (pageNm === SelfFeatPgPpNm.LIST) {
+			navigate(
+				'..', 
+				{ 
+					state: { 
+						srchInfo: location?.state?.srchInfo, 
+						//pageInfo: location?.state?.pageInfo 
+					} 
+				}
+			)
+		} else {
 			navigate(`../${pageNm}`)
+		}
 	}
 	// 대상선택 초기화
 	const targetClearHanbler = () => {

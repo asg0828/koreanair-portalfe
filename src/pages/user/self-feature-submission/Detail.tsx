@@ -625,7 +625,14 @@ const SfSubmissionRequestDetail = () => {
     const onClickPageMovHandler = (pageNm: string): void => {
 
         if (pageNm === SelfFeatPgPpNm.LIST) {
-            navigate('..')
+            navigate(
+                '..'
+                ,{
+                    state: {
+                        srchInfo: location?.state?.srchInfo
+                    }
+                }
+            )
         } else if (pageNm === SelfFeatPgPpNm.SUB_APRV) {
             // 승인 처리
             setModalType(ModalType.CONFIRM)
@@ -696,7 +703,14 @@ const SfSubmissionRequestDetail = () => {
                 content: '승인 처리 되었습니다.',
             })
             // 목록으로
-            navigate('..')
+            navigate(
+                '..',
+                {
+                    state: {
+                        srchInfo: location?.state?.srchInfo
+                    }
+                }
+            )
         }
     }, [aprvSubAprvalRes, aprvSubAprvalSucc, aprvSubAprvalErr])
     // 수동실행 API 호출

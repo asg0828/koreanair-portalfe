@@ -505,7 +505,18 @@ const SelfFeatureEdit = () => {
 			//navigate(-1)
 			// 상세로 redirect
 			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
-			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
+			navigate(
+				`../${SelfFeatPgPpNm.DETL}`, 
+				{ 
+					state: {
+						...updtFeatureInfo.tbRsCustFeatRule, 
+						...{
+							srchInfo: location?.state?.srchInfo, 
+							//pageInfo: location?.state?.pageInfo
+						}
+					} 
+				}
+			)
 		}
 	}, [updtRuleDesignRes, updtRuleDesignSucc, updtRuleDesignErr, toast])
 	// 수정 API 호출(SQL)
@@ -544,7 +555,18 @@ const SelfFeatureEdit = () => {
 			//navigate(-1)
 			// 상세로 redirect
 			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
-			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
+			navigate(
+				`../${SelfFeatPgPpNm.DETL}`, 
+				{ 
+					state: {
+						...updtFeatureInfo.tbRsCustFeatRule, 
+						...{
+							srchInfo: location?.state?.srchInfo, 
+							//pageInfo: location?.state?.pageInfo
+						}
+					} 
+				}
+			)
 		}
 	}, [updtSQLRes, updtSQLSucc, updtSQLErr, toast])
 	// input 입력값 변경시
@@ -663,12 +685,24 @@ const SelfFeatureEdit = () => {
 	}
 	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string) => {
-		if (pageNm === SelfFeatPgPpNm.LIST)
-			//navigate('..')
+		if (pageNm === SelfFeatPgPpNm.LIST) {
+			//navigate('..') srchInfo: location?.state?.srchInfo 
 			//navigate(-1)
-			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: updtFeatureInfo.tbRsCustFeatRule })
-		else
+			navigate(
+				`../${SelfFeatPgPpNm.DETL}`, 
+				{ 
+					state: {
+						...updtFeatureInfo.tbRsCustFeatRule, 
+						...{
+							srchInfo: location?.state?.srchInfo, 
+							//pageInfo: location?.state?.pageInfo
+						}
+					} 
+				}
+			)
+		} else {
 			navigate(`../${pageNm}`)
+		}
 	}
 	// 대상선택 초기화
 	const targetClearHanbler = () => {
@@ -729,7 +763,9 @@ const SelfFeatureEdit = () => {
 						state: {
 							featureInfo: updtFeatureInfo,
 							sfSubmissionRequestData: sfSubmissionRequestData,
-							sfSubmissionApprovalList: sfSubmissionApprovalList
+							sfSubmissionApprovalList: sfSubmissionApprovalList,
+							srchInfo: location?.state?.srchInfo,
+							//pageInfo: location?.state?.pageInfo
 						}
 					}
 				)

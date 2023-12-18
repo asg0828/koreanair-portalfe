@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SelectValue } from '@mui/base/useSelect';
 import { cloneDeep, isEmpty } from "lodash";
 
@@ -42,6 +42,7 @@ import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQ
 const SelfFeature = () => {
 
 	const navigate = useNavigate()
+	const location = useLocation()
 	const { toast } = useToast()
 	const sessionInfo = useAppSelector(selectSessionInfo())
     // 사용될 rslnRuleId / mstrSgmtRuleId 조회
@@ -68,8 +69,16 @@ const SelfFeature = () => {
 	// session 값 setting
 	useEffect(() => {
 		if (!sessionInfo.deptCode) return
-		setSearchInfo({ ...searchInfo, ["team"]: sessionInfo.deptCode, })
-	}, [sessionInfo])
+		setSearchInfo((prevState) => {
+			let rtn = cloneDeep(prevState)
+			if (location.state) rtn = location.state.srchInfo
+			if (sessionInfo.deptCode) rtn.team = sessionInfo.deptCode
+			return rtn
+		})
+		// if (location && location.state && location.state.pageInfo) {
+		// 	setPage(location.state.pageInfo)
+		// }
+	}, [location, sessionInfo])
     // master segement rule Id setting
     useEffect(() => {
         if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
@@ -173,11 +182,31 @@ const SelfFeature = () => {
 	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
 		if (pageNm === SelfFeatPgPpNm.DETL) {
-			navigate(pageNm, { state: rows })
+			navigate(
+				pageNm, 
+				{ 
+					state: {
+						...rows,
+						...{ 
+							srchInfo: searchInfo, 
+							//pageInfo: page 
+						}
+					} 
+				}
+			)
 		} else if (pageNm === SelfFeatPgPpNm.PRNTCHLD) {
 			setIsOpenFeatPrntChldModal((prevState) => !prevState)
 		} else if (pageNm === SelfFeatPgPpNm.RULE_REG || pageNm === SelfFeatPgPpNm.SQL_REG) {
-			navigate(SelfFeatPgPpNm.REG, { state: { regType: pageNm } })
+			navigate(
+				SelfFeatPgPpNm.REG, 
+				{ 
+					state: {  
+						regType: pageNm,
+						srchInfo: searchInfo, 
+						//pageInfo: page,
+					} 
+				}
+			)
 		} else {
 			navigate(pageNm)
 		}
@@ -220,11 +249,21 @@ const SelfFeature = () => {
 						<TR>
 							<TH colSpan={1} align="right">Feature 명(한글)</TH>
 							<TD colSpan={3}>
-								<TextField className="width-100" id="custFeatRuleName" onChange={onchangeInputHandler} />
+								<TextField 
+									value={searchInfo.custFeatRuleName}
+									className="width-100" 
+									id="custFeatRuleName" 
+									onChange={onchangeInputHandler} 
+								/>
 							</TD>
 							<TH colSpan={1} align="right">Feature 명(영문)</TH>
 							<TD colSpan={3}>
-								<TextField className="width-100" id="custFeatRuleNameEng" onChange={onchangeInputHandler} />
+								<TextField 
+									value={searchInfo.custFeatRuleNameEng}
+									className="width-100" 
+									id="custFeatRuleNameEng" 
+									onChange={onchangeInputHandler} 
+								/>
 							</TD>
 						</TR>
 						<TR>
