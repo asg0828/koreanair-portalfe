@@ -134,20 +134,29 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
             .catch((reject) => reject([]));
 
           // 권한 있는 메뉴만 필터
-          const filteredMenuList = baseMenuList.filter((baseMenuItem: any) => {
-            const myMenu = myMenuList.find(
-              (myMenuItem) =>
-                myMenuItem.menuUrl === baseMenuItem.menuUrl ||
-                (myMenuItem.menuUrl === getMenuParentId(baseMenuItem.menuUrl) && baseMenuItem.isCrudPage)
-            );
+          const filteredMenuList = baseMenuList.filter((baseMenuItem: any) =>
+            myMenuList.find((myMenuItem) => {
+              if (myMenuItem.menuUrl === baseMenuItem.menuUrl) {
+                baseMenuItem.menuId = myMenuItem.menuId;
+                baseMenuItem.menuNm = myMenuItem.menuNm;
+                return true;
+              } else if (myMenuItem.menuUrl === getMenuParentId(baseMenuItem.menuUrl) && baseMenuItem.isCrudPage) {
+                baseMenuItem.menuId = myMenuItem.menuId;
 
-            if (myMenu) {
-              baseMenuItem.menuId = myMenu.menuId;
-              return true;
-            } else {
+                if (baseMenuItem.menuUrl.endsWith('/reg')) {
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 등록`
+                } else if (baseMenuItem.menuUrl.endsWith('/detail')) {
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 상세`
+                } else if (baseMenuItem.menuUrl.endsWith('/edit')) {
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 수정`
+                }
+
+                return true;
+              }
+
               return false;
-            }
-          });
+            })
+          );
 
           // 라우터 필터
           const filteredRouterList = filterRouterRecursive(routerList, filteredMenuList);
