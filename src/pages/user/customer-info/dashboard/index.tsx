@@ -337,13 +337,13 @@ export default function List() {
       {/* searchBar 영역 */}
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
-          <Stack style={{ position: 'relative' }}>
+          <Stack>
             <Typography variant="h3" className="dashboardTitle">
               Customer Info.
             </Typography>
-            <h5 style={{ position: 'absolute', right: 10, bottom: 0, color: 'gray' }}>업데이트 날짜 : {batchDate}</h5>
           </Stack>
-          <div className="topCard">
+          <div style={{ position: 'relative' }} className="topCard">
+            <h5 style={{ position: 'absolute', left: 250, top: 10, color: 'white' }}>{batchDate} 기준</h5>
             <div className="dashBoardBox n1">
               <div className="name">
                 {profile?.name}
@@ -449,7 +449,9 @@ export default function List() {
                 <div className="value">{selectedSkypass?.expireMileage}</div>
               </div>
             </div>
-            <div className="dashBoardBox n3">
+            <div style={{ position: 'relative' }} className="dashBoardBox n3">
+              <h5 style={{ position: 'absolute', left: 225, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
+
               <div className="top" style={{ position: 'relative' }}>
                 Family Member
                 <div className="kr">가족</div>
@@ -518,7 +520,8 @@ export default function List() {
             Customer Reference.
           </Typography>
           <Stack className="width-100" gap="LG" alignItems="Start">
-            <div className="dashBoardBox under width-50">
+            <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
+              <h5 style={{ position: 'absolute', left: 405, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
               <div className="top">
                 MY Trips
                 <div className="kr">여행</div>
@@ -651,7 +654,8 @@ export default function List() {
               </button>
             </div>
             <Stack className="width-50" gap="LG">
-              <div className="dashBoardBox under width-50">
+              <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
+                <h5 style={{ position: 'absolute', left: 150, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
                 <div className="top">
                   Wallet
                   <div className="kr">지갑</div>
@@ -675,7 +679,8 @@ export default function List() {
                   </Stack>
                 </div>
               </div>
-              <div className="dashBoardBox under width-50">
+              <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
+                <h5 style={{ position: 'absolute', left: 150, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
                 <div className="top">
                   Preference
                   <div className="kr">선호도</div>
@@ -699,7 +704,8 @@ export default function List() {
             Customer History.
           </Typography>
           <Stack className="width-100" gap="LG" alignItems="Start">
-            <div className="dashBoardBox under width-50">
+            <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
+              <h5 style={{ position: 'absolute', left: 405, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
               <div className="top">
                 Boarding history
                 <div className="kr">탑승 이력</div>
@@ -773,7 +779,8 @@ export default function List() {
                 {isListView2 ? '숨기기' : '더보기'}
               </button>
             </div>
-            <div className="dashBoardBox under width-50">
+            <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
+              <h5 style={{ position: 'absolute', left: 405, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
               <div className="top">communication records</div>
               <div className="itemWrap">
                 <Stack justifyContent="Between" gap="LG">
