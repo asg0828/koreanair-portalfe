@@ -61,7 +61,14 @@ export default function List() {
   const [snss, setSnss] = useState<Array<Sns>>([]);
   const [emails, setEmails] = useState<Array<Email>>([]);
   const [rows, setRows] = useState<Array<any>>([]);
-  const [searchInfo, setSearchInfo] = useState<any>({ skypassNum: '', oneId: '' });
+  const [searchInfo, setSearchInfo] = useState<any>({
+    skypassNum: '',
+    phoneNumber: '',
+    korFname: '',
+    korLname: '',
+    engLname: '',
+    engFname: '',
+  });
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   // const [skypassList, setSkypassList] = useState<Array<any>>([]);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
@@ -70,11 +77,11 @@ export default function List() {
 
   const validation = () => {
     // 검색 조건 자체는 두개다 들어가도 가능
-    // 회원당 skypass는 일대다 관계이므로 oneId로 검색할 경우 skypass list를
+    // 회원당 skypass는 일대다 관계이므로 phoneNumber로 검색할 경우 skypass list를
     let searchError = false;
     if (
       searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-      searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
+      searchInfo.phoneNumber.replace(htmlTagReg, '').trim() === ''
     ) {
       setOpen(true);
       searchError = true;
@@ -95,7 +102,7 @@ export default function List() {
       let searchError = false;
       if (
         searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
+        searchInfo.phoneNumber.replace(htmlTagReg, '').trim() === ''
       ) {
         setOpen(true);
         searchError = true;
@@ -104,7 +111,7 @@ export default function List() {
     };
 
     if (validation()) return;
-    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.phoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setProfile(profileData[0]);
       setSkypass(skypassData1);
       setFamily(familyMemberData[0]);
@@ -122,7 +129,7 @@ export default function List() {
       setEmails(emailData);
       setSnss(snsData);
       setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.phoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setProfile(profileData[1]);
       setSkypass(skypassData2);
       setFamily(familyMemberData[3]);
@@ -185,7 +192,7 @@ export default function List() {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.phoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112423935550') {
         setFamily(familyMemberData[0]);
@@ -194,7 +201,7 @@ export default function List() {
       } else if (value === '112617209394') {
         setFamily(familyMemberData[2]);
       }
-    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.phoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112315856573') {
         setFamily(familyMemberData[3]);
@@ -227,33 +234,90 @@ export default function List() {
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       {/* searchBar 영역 */}
       <Stack>
-        <div className="componentWrapper" style={{ width: '100%' }}>
-          <TextField
-            id="skypassNum"
-            value={searchInfo.skypassNum}
-            appearance="Outline"
-            placeholder="Skypass Number"
+        <Stack className={'width-100'}>
+          <Stack direction={'Vertical'} className={'width-100'}>
+            <Stack>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  id="skypassNum"
+                  value={searchInfo.skypassNum}
+                  appearance="Outline"
+                  placeholder="Skypass Number"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                  autoFocus
+                />
+              </div>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.phoneNumber}
+                  id="phoneNumber"
+                  appearance="Outline"
+                  placeholder="핸드폰번호"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>
+            </Stack>
+            <Stack>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.korLname}
+                  id="korLname"
+                  appearance="Outline"
+                  placeholder="KOR. - Last Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>{' '}
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.korFname}
+                  id="korFname"
+                  appearance="Outline"
+                  placeholder="KOR. - First Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>{' '}
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.engLname}
+                  id="engLname"
+                  appearance="Outline"
+                  placeholder="ENG. - Last Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.engFname}
+                  id="engFname"
+                  appearance="Outline"
+                  placeholder="ENG. - First Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>
+            </Stack>
+          </Stack>
+          <Button
+            priority="Primary"
+            appearance="Contained"
             size="LG"
-            textAlign="left"
-            onChange={onchangeInputHandler}
-            autoFocus
-          />
-        </div>
-        <div className="componentWrapper" style={{ width: '100%' }}>
-          <TextField
-            value={searchInfo.oneId}
-            id="oneId"
-            appearance="Outline"
-            placeholder="One ID NO."
-            size="LG"
-            textAlign="left"
-            onChange={onchangeInputHandler}
-          />
-        </div>
-
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSearch}>
-          검색
-        </Button>
+            style={{ minHeight: '72px' }}
+            onClick={handleSearch}
+          >
+            검색
+          </Button>
+        </Stack>
         <Modal open={isOpen} onClose={() => setOpen(false)}>
           <Modal.Header>오류</Modal.Header>
           <Modal.Body>검색 조건을 입력해주세요</Modal.Body>
