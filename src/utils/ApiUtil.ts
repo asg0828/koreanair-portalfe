@@ -164,8 +164,14 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
                 return retryResponse.data as CommonResponse;
               });
             });
-          } else if (error.response.data.message === 'SESSION_EXPIRE') {
             // PORTAL SESSION 만료
+          } else if (error.response.data.message === 'SESSION_EXPIRE') {
+            sessionStorage.removeItem('sessionId');
+            window.location.reload();
+          }
+          // INVALID_GOOGLE_ID_TOKEN
+        } else if (error.response.status.toString() === '401') {
+          if (error.response.data.message === 'INVALID_GOOGLE_ID_TOKEN') {
             sessionUtil.deleteSessionInfo();
             window.location.reload();
           }

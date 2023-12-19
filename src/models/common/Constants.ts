@@ -29,7 +29,7 @@ export enum GroupCodeType {
 }
 
 export enum ContextPath {
-  USER = '',
+  USER = '/',
   ADMIN = '/admin',
   TEST = '/test',
   POPUP = '/popup',
