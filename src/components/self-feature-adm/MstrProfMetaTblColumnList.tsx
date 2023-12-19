@@ -486,6 +486,7 @@ const MstrProfMetaTblColumnList = ({
                             (item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v
                           );
                           rtn[index].metaTblClmnLogiNm = item ? item.metaTblClmnLogiNm : '';
+                          rtn[index].metaTblClmnDesc = item ? item.metaTblClmnLogiNm : '';
                           rtn[index].metaTblClmnPhysNm = v;
                           return rtn;
                         });
@@ -538,13 +539,23 @@ const MstrProfMetaTblColumnList = ({
                         width: '40%',
                         color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
                       }}
-                      value={clmnInfo.metaTblClmnLogiNm}
+                      value={clmnInfo.metaTblClmnDesc}
                       onChange={(e) => {
                         const { id, value } = e.target;
 
+                        // formData list
+                        if (metaTblInfo?.clmnAllChocYn === "Y") {
+                          setMstrSgmtRuleAttrTblList &&
+                            setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+                              let rtn = cloneDeep(prevState);
+                              rtn[targetIndex!].clmnAllChocYn = "N";
+                              return rtn;
+                            });
+                        }
                         setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
                           let rtn = cloneDeep(prevState);
                           rtn[index].metaTblClmnLogiNm = value;
+                          rtn[index].metaTblClmnDesc = value;
                           return rtn;
                         });
                         setMstrSgmtRuleAttrClmnList &&
