@@ -95,7 +95,7 @@ const MstrProfMetaTblColumnList = ({
     if (!metaTblClmnList || metaTblClmnList.length < 1) {
       setTmpMetaTblClmnList(() => []);
     } else {
-      setTmpMetaTblClmnList(() => cloneDeep(metaTblClmnList));
+      setTmpMetaTblClmnList(() => cloneDeep(metaTblClmnList).filter((e) => e.baseTimeYn !== 'Y'));
     }
   }, [metaTblClmnList]); //저장된 메타테이블 컬럼 정보
 
@@ -124,7 +124,11 @@ const MstrProfMetaTblColumnList = ({
       rtn.push(addItem);
       return rtn;
     });
-    // formData list
+
+    let baseTimeYnClmn: Array<TbCoMetaTblClmnInfo> = cloneDeep([{ ...initTbCoMetaTblClmnInfo }]);
+    baseTimeYnClmn = cloneDeep(metaTblClmnAllList)?.filter((e) => e.baseTimeYn === 'Y');
+    let isPushBaseTime = cloneDeep(metaTblClmnList)?.filter((e) => e.baseTimeYn === 'Y').length === 0;
+    let updtItem: TbRsMstrSgmtRuleAttrClmn = cloneDeep(initTbRsMstrSgmtRuleAttrClmn);
     setMstrSgmtRuleAttrClmnList &&
       setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
         let rtn = cloneDeep(prevState);
@@ -133,6 +137,7 @@ const MstrProfMetaTblColumnList = ({
           metaTblInfo &&
             Object.keys(metaTblInfo).map((tblKey) => {
               if (colKey === tblKey) {
+                if (isPushBaseTime) updtItem[colKey] = metaTblInfo[tblKey];
                 addItem[colKey] = metaTblInfo[tblKey];
               }
               return tblKey;
@@ -140,6 +145,16 @@ const MstrProfMetaTblColumnList = ({
           return colKey;
         });
         rtn.push(addItem);
+        if (isPushBaseTime) {
+          updtItem.mstrSgmtRuleTblId = baseTimeYnClmn[0]?.metaTblId;
+          updtItem.mstrSgmtRuleTblNm = baseTimeYnClmn[0]?.metaTblClmnPhysNm;
+          updtItem.mstrSgmtRuleClmnId = baseTimeYnClmn[0]?.metaTblClmnId;
+          updtItem.mstrSgmtRuleClmnNm = baseTimeYnClmn[0]?.metaTblClmnPhysNm;
+          updtItem.mstrSgmtRuleClmnDesc = baseTimeYnClmn[0]?.metaTblClmnLogiNm;
+          updtItem.clmnDtpCd = baseTimeYnClmn[0]?.dtpCd;
+          updtItem.baseTimeYn = 'Y';
+          rtn.push(updtItem);
+        }
         return rtn;
       });
   };
@@ -163,10 +178,16 @@ const MstrProfMetaTblColumnList = ({
           (item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId
         );
         let updtList = rtn.filter(
-          (item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn !== 'Y'
         );
+        let baseTimeClmn = rtn.filter(
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn === 'Y'
+        );
+
         updtList = updtList.filter((item: TbRsMstrSgmtRuleAttrClmn, index: number) => index !== delIdx);
-        return [...keepList, ...updtList];
+        return [...keepList, ...updtList, ...baseTimeClmn];
       });
   };
   // 컬럼 전체선택
@@ -220,9 +241,12 @@ const MstrProfMetaTblColumnList = ({
             updtItem.mstrSgmtRuleTblNm = colItem.metaTblClmnPhysNm;
             updtItem.mstrSgmtRuleClmnId = colItem.metaTblClmnId;
             updtItem.mstrSgmtRuleClmnNm = colItem.metaTblClmnPhysNm;
-            updtItem.mstrSgmtRuleClmnDesc = colItem.metaTblClmnDesc;
+            updtItem.mstrSgmtRuleClmnDesc = colItem.metaTblClmnLogiNm;
             updtItem.clmnDtpCd = colItem.dtpCd;
+            updtItem.baseTimeYn = colItem.baseTimeYn;
+            updtItem.sgmtDvCd = divisionType;
             updtList.push(updtItem);
+            return colItem;
           });
           return [...rtn, ...updtList];
         });
@@ -354,7 +378,7 @@ const MstrProfMetaTblColumnList = ({
                   position: 'absolute',
                   left: '6%',
                 }}
-                onClick={onClickAddColInfo}
+                onClick={() => onClickAddColInfo()}
               />
             )}
             <Checkbox checked={isCheckedAllCol} onCheckedChange={onClickCheckAll} />
@@ -466,7 +490,11 @@ const MstrProfMetaTblColumnList = ({
                             );
                             let updtList = rtn.filter(
                               (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId
+                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn !== 'Y'
+                            );
+                            let baseTimeCol = rtn.filter(
+                              (item: TbRsMstrSgmtRuleAttrClmn) =>
+                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn === 'Y'
                             );
                             let item = metaTblClmnAllList.find(
                               (item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v
@@ -476,16 +504,18 @@ const MstrProfMetaTblColumnList = ({
                             updtList[index].baseTimeYn = item ? item.baseTimeYn : '';
                             updtList[index].mstrSgmtRuleClmnNm = v;
                             updtList[index].mstrSgmtRuleClmnDesc = item ? item.metaTblClmnLogiNm : '';
-                            return [...keepList, ...updtList];
+                            return [...keepList, ...updtList, ...baseTimeCol];
                           });
                       }}
                     >
-                      {mstrSgmtRuleClmnOption.map((item, index) => (
-                        <SelectOption
-                          key={index}
-                          value={item.metaTblClmnPhysNm}
-                        >{`${item.metaTblClmnLogiNm} [${item.metaTblClmnPhysNm}]`}</SelectOption>
-                      ))}
+                      {mstrSgmtRuleClmnOption
+                        .filter((e) => e.baseTimeYn !== 'Y')
+                        .map((item, index) => (
+                          <SelectOption
+                            key={index}
+                            value={item.metaTblClmnPhysNm}
+                          >{`${item.metaTblClmnLogiNm} [${item.metaTblClmnPhysNm}]`}</SelectOption>
+                        ))}
                     </Select>
                     <TextField
                       style={{
@@ -510,10 +540,14 @@ const MstrProfMetaTblColumnList = ({
                             );
                             let updtList = rtn.filter(
                               (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId
+                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn !== 'Y'
+                            );
+                            let baseTimeCol = rtn.filter(
+                              (item: TbRsMstrSgmtRuleAttrClmn) =>
+                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn === 'Y'
                             );
                             updtList[index].mstrSgmtRuleClmnDesc = value;
-                            return [...keepList, ...updtList];
+                            return [...keepList, ...updtList, ...baseTimeCol];
                           });
                       }}
                     />
