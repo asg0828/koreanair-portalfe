@@ -1,3 +1,5 @@
+import { useAppSelector } from '@/hooks/useRedux';
+import { selectContextPath } from '@/reducers/authSlice';
 import SessionApis from '@api/common/SessionApis';
 import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
 import { AccessTokenRefreshTokenRequest, SessionRequest } from '@models/common/Session';
@@ -5,6 +7,7 @@ import SessionUtil from '@utils/SessionUtil';
 import { useCallback, useEffect, useState } from 'react';
 
 const useOAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis) => {
+  const contextPath = useAppSelector(selectContextPath());
   const refreshToken = sessionUtil.getAccessTokenRefreshTokenInfo().refreshToken;
   const searchParameters = new URLSearchParams(window.location.search);
   const authorizationCode: any = searchParameters.get('code');
@@ -36,14 +39,16 @@ const useOAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis) => {
   }, [sessionApis, sessionUtil, authorizationCode]);
 
   useEffect(() => {
-    if (!refreshToken && !isError) {
-      if (authorizationCode) {
-        getAccessTokenInfo();
-      } else {
-        sessionApis.oauthLogin();
+    if (contextPath) {
+      if (!refreshToken && !isError) {
+        if (authorizationCode) {
+          getAccessTokenInfo();
+        } else {
+          sessionApis.oauthLogin();
+        }
       }
     }
-  }, [sessionApis, authorizationCode, refreshToken, getAccessTokenInfo, isError]);
+  }, [contextPath, authorizationCode]);
 
   return { sessionRequestInfo, isError };
 };

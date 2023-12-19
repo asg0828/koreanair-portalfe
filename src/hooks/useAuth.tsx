@@ -20,7 +20,6 @@ import { createBrowserRouter } from 'react-router-dom';
 const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequestInfo?: SessionRequest) => {
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const pathname = window.location.pathname;
   const sessionInfo = useAppSelector(selectSessionInfo());
   const contextPath = useAppSelector(selectContextPath());
   const [router, setRouter] = useState<any>();
@@ -90,7 +89,7 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
   }, [sessionInfo.userId, qmRefetch]);
 
   useEffect(() => {
-    if (sessionRequestInfo?.googleAccessToken && !sessionInfo.sessionId && !isError && !unauthorized) {
+    if (contextPath && sessionRequestInfo?.googleAccessToken && !sessionInfo.sessionId && !isError && !unauthorized) {
       (async () => {
         const sessionResponse: CommonResponse = await sessionApis.login(sessionRequestInfo);
 
@@ -192,19 +191,7 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
         }
       })();
     }
-  }, [
-    sessionApis,
-    sessionUtil,
-    sessionRequestInfo,
-    sessionInfo,
-    isError,
-    contextPath,
-    pathname,
-    unauthorized,
-    filterRouterRecursive,
-    transferLocalStorage,
-    dispatch,
-  ]);
+  }, [sessionRequestInfo, contextPath]);
 
   return { sessionInfo, router, isError, unauthorized };
 };
