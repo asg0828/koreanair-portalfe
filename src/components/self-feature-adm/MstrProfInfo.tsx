@@ -151,6 +151,8 @@ const MstrProfInfo = ({
         let isInit: Boolean = true;
         metaTblClmnAllList.map((colInfo) => {
           if (saveColInfo.mstrSgmtRuleClmnId === colInfo.metaTblClmnId) {
+            colInfo.metaTblClmnDesc = saveColInfo.mstrSgmtRuleClmnDesc
+            if (colInfo.metaTblClmnDesc === "") colInfo.metaTblClmnDesc = colInfo.metaTblClmnLogiNm
             colList.push(colInfo);
             isInit = false;
           }
