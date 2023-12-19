@@ -201,6 +201,17 @@ const MstrProfInfo = ({
     } else {
       if (metaColIsRslnInfoRes) {
         setMetaTblClmnAllList(() => cloneDeep(metaColIsRslnInfoRes.result));
+        setMstrSgmtRuleAttrClmnList && setMstrSgmtRuleAttrClmnList((prevState) => {
+          let rtn = cloneDeep(prevState)
+          rtn = rtn.map((clmn) => {
+            cloneDeep(metaColIsRslnInfoRes.result).map((col: any) => {
+              if (col.metaTblClmnId === clmn.mstrSgmtRuleClmnId) clmn.baseTimeYn = col.baseTimeYn
+              return col
+            })
+            return clmn
+          })
+          return rtn
+        })
       }
     }
   }, [metaColIsRslnInfoRes, metaColIsRslnInfoErr]);
