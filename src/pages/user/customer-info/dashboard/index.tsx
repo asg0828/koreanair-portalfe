@@ -450,7 +450,7 @@ export default function List() {
               </div>
             </div>
             <div style={{ position: 'relative' }} className="dashBoardBox n3">
-              <h5 style={{ position: 'absolute', left: 225, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
+              <h5 style={{ position: 'absolute', right: 30, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
 
               <div className="top" style={{ position: 'relative' }}>
                 Family Member
@@ -521,7 +521,7 @@ export default function List() {
           </Typography>
           <Stack className="width-100" gap="LG" alignItems="Start">
             <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
-              <h5 style={{ position: 'absolute', left: 405, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
+              <h5 style={{ position: 'absolute', right: 20, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
               <div className="top">
                 MY Trips
                 <div className="kr">여행</div>
@@ -655,7 +655,7 @@ export default function List() {
             </div>
             <Stack className="width-50" gap="LG">
               <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
-                <h5 style={{ position: 'absolute', left: 150, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
+                <h5 style={{ position: 'absolute', right: 20, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
                 <div className="top">
                   Wallet
                   <div className="kr">지갑</div>
@@ -680,7 +680,7 @@ export default function List() {
                 </div>
               </div>
               <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
-                <h5 style={{ position: 'absolute', left: 150, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
+                <h5 style={{ position: 'absolute', right: 20, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
                 <div className="top">
                   Preference
                   <div className="kr">선호도</div>
@@ -705,7 +705,7 @@ export default function List() {
           </Typography>
           <Stack className="width-100" gap="LG" alignItems="Start">
             <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
-              <h5 style={{ position: 'absolute', left: 405, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
+              <h5 style={{ position: 'absolute', right: 20, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
               <div className="top">
                 Boarding history
                 <div className="kr">탑승 이력</div>
@@ -780,7 +780,7 @@ export default function List() {
               </button>
             </div>
             <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
-              <h5 style={{ position: 'absolute', left: 405, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
+              <h5 style={{ position: 'absolute', right: 20, top: 10, color: 'gray' }}>{batchDate} 기준</h5>
               <div className="top">communication records</div>
               <div className="itemWrap">
                 <Stack justifyContent="Between" gap="LG">
