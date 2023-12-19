@@ -16,17 +16,13 @@ import DashboardPopup from "@pages/user/structured-report/purchase-contributors/
 import Modal from "react-modal";
 
 const initParams: ReportParams = {
+    sortedColumn:'',
+    sortedDirection:'',
+    rank:0,
     oneId: '',
-    memberNumber:0,
-    name:'',
-    vipYn:'',
-    purchaseAmount:0,
-    purchaseCount:0,
-    purchaseContribution:0,
-    domesticPurchaseAmount:0,
-    internationalAmount:0,
-    FrCount:0,
-    PrCount:0
+    skypassNm:0,
+    userNm:'',
+    vipType:''
 };
 
 const List = () => {
@@ -50,7 +46,7 @@ const List = () => {
 
         const buttonStyle = isSelected ? // 클릭할때 버튼 스타일
             { backgroundColor: '#a2d2eb', color: '#000000', height: '50px' } :
-            { backgroundColor: '#5F9DCF', color: '#FFFFFF', height: '50px' };
+            { backgroundColor: '#255da1', color: '#FFFFFF', height: '50px' };
 
         return (
             <Button
@@ -81,12 +77,12 @@ const List = () => {
         { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
         { headerName: '이름', field: 'name', colSpan: 2 },
         { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-        { headerName: '국내선\n' + '수익금액\n', field: 'income', colSpan: 1 },
-        { headerName: '국내선\n' + '탑승횟수\n', field: 'boardingCount', colSpan: 1 },
-        { headerName: '국내선\n' + '구매금액', field: 'purchaseAmount', colSpan: 1 },
-        { headerName: '국내선 보너스\n' +'항공권 탑승횟수', field: 'bonusBoardingCount', colSpan: 1 },
-        { headerName: '국내선 PR 탑승횟수', field: 'PrCount', colSpan: 1 },
-        { headerName: '국내선 평균 탑승주기', field: 'avgBoardingCycle', colSpan: 1 },
+        { headerName: '국내선 수익금액', field: 'domesticIncomeAmount', colSpan: 1 },
+        { headerName: '국내선 탑승횟수', field: 'domesticBoardingCount', colSpan: 1 },
+        { headerName: '국내선 구매금액', field: 'domesticPurchaseAmount', colSpan: 1 },
+        { headerName: '국내선 보너스 항공권 탑승횟수', field: 'domesticBonusBoardingCount', colSpan: 1 },
+        { headerName: '국내선 PR 탑승횟수', field: 'domesticPrBoardingCount', colSpan: 1 },
+        { headerName: '국내선 평균 탑승주기', field: 'domesticAvgBoardingCycle', colSpan: 1 },
     ];
 
     const [criteria, setCriteria] = useState('0 year');
@@ -109,19 +105,19 @@ const List = () => {
         switch (period) {
             case '선택':
                 return '';
-            case '1':
+            case '0 year':
                 startDate = new Date(endDate.getFullYear() , 0, 2);
                 break;
-            case '2':
+            case '1 year':
                 startDate = new Date(endDate.getFullYear() - 1, 0, 2);
                 break;
-            case '3':
+            case '2 year':
                 startDate = new Date(endDate.getFullYear() - 2, 0, 2);
                 break;
-            case '4':
+            case '3 year':
                 startDate = new Date(endDate.getFullYear() - 3, 0, 2);
                 break;
-            case '5':
+            case '4 year':
                 startDate = new Date(endDate.getFullYear() - 4, 0, 2);
                 break;
             default:

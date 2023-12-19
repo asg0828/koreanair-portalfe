@@ -8,7 +8,6 @@ import {ColumnsInfo} from "@models/components/Table";
 import {ValidType, View} from "@models/common/Constants";
 import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
-import { dummyData } from "./testData";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import DashboardPopup from "./dashboardPopUp";
 import Modal from 'react-modal';
@@ -16,17 +15,13 @@ import {ReportParams} from "@models/model/ReportModel";
 import {usePurchaseContributionList} from "@/hooks/queries/useReportQueries";
 
 const initParams: ReportParams = {
+    sortedColumn:'',
+    sortedDirection:'',
+    rank:0,
     oneId: '',
-    memberNumber:0,
-    name:'',
-    vipYn:'',
-    purchaseAmount:0,
-    purchaseCount:0,
-    purchaseContribution:0,
-    domesticPurchaseAmount:0,
-    internationalAmount:0,
-    FrCount:0,
-    PrCount:0
+    skypassNm:0,
+    userNm:'',
+    vipType:''
 };
 
 const List = () => {

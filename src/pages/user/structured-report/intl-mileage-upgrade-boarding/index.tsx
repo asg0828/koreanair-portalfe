@@ -3,18 +3,14 @@ import {Button, Select, SelectOption, Stack, TD, TH, TR, useToast} from "@compon
 import {useAppSelector} from "@/hooks/useRedux";
 import {selectSessionInfo} from "@reducers/authSlice";
 import React, {useCallback, useEffect, useState} from "react";
-import {FeatureModel, FeatureParams, FeatureSeparatesModel} from "@models/model/FeatureModel";
 import {initPage, PageModel} from "@models/model/PageModel";
 import {ColumnsInfo} from "@models/components/Table";
 import {ValidType, View} from "@models/common/Constants";
 import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
-import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import {ReportParams} from "@models/model/ReportModel";
-import {category} from "./data";
-import { dummyData } from "./testData";
-import {useTotalMileageTop100List} from "@/hooks/queries/useReportQueries";
+import {useDomesticBoardingTop100List} from "@/hooks/queries/useReportQueries";
 import DashboardPopup from "@pages/user/structured-report/purchase-contributors/dashboardPopUp";
 import Modal from "react-modal";
 
@@ -49,7 +45,7 @@ const List = () => {
 
         const buttonStyle = isSelected ?
             { backgroundColor: '#a2d2eb', color: '#000000', height: '50px' } :
-            { backgroundColor: '#407dba', color: '#FFFFFF', height: '50px' };
+            { backgroundColor: '#80badf', color: '#FFFFFF', height: '50px' };
 
         return (
             <Button
@@ -79,17 +75,18 @@ const List = () => {
         { headerName: 'One ID', field: 'oneId', colSpan: 1 },
         { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
         { headerName: '이름', field: 'name', colSpan: 1 },
-        { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-        { headerName: '총 적립 마일리지', field: 'totalMileage', colSpan: 1 },
-        { headerName: '총 적립 마일리지(항공 탑승)', field: 'totalFlightMileage', colSpan: 1 },
-        { headerName: '총 적립 마일리지(항공 이외)', field: 'totalEtcMileage', colSpan: 1 },
-        { headerName: '잔여 마일리지', field: 'availableMileage', colSpan: 1 },
-        { headerName: '잔여 마일리지(가족합산)', field: 'familyAvailableMileage', colSpan: 1 },
-        { headerName: '마일리지 제휴카드(PLCC) 보유여부', field: 'mileagePartnerCardYn', colSpan: 1.2 },
+        { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1.2 },
+        { headerName: 'Upgrade 소진 마일리지', field: 'mileageSpentForUpgrade', colSpan: 1.1 },
+        { headerName: '마일리지 FR Upgrade횟수', field: 'frUpgradeCountByMileage', colSpan: 1 },
+        { headerName: '마일리지 PR Upgrade횟수', field: 'prUpgradeCountByMileage', colSpan: 1 },
+        { headerName: '국제선 탑승횟수', field: 'intlBoardingCount', colSpan: 1.1 },
+        { headerName: '국제선 FR 탑승횟수', field: 'intlFrCount', colSpan: 1 },
+        { headerName: '국제선 PR 탑승횟수', field: 'intlPrCount', colSpan: 1 },
     ];
+
     const [criteria, setCriteria] = useState('0 year');
-    const [rows, setRows] = useState(dummyData.data.contents);
-    const { data: response, isError, refetch } = useTotalMileageTop100List(criteria);
+    const [rows, setRows] = useState<any>([]);
+    const { data: response, isError, refetch } = useDomesticBoardingTop100List(criteria);
 
     const toggleModal = () => {
         setShowPopup(!showPopup);
@@ -128,6 +125,12 @@ const List = () => {
         return `${startDate.toISOString().split('T')[0]} ~ ${endDate.toISOString().split('T')[0]}`;
     };
 
+    const handlePeriodSelect = (period: string) => {
+        setCriteria(period);
+        setSelectedPeriod(period);
+        setDateRange(calculateDateRange(period));
+    };
+
     const handlePage = (page: PageModel) => {
         setPage(page);
     };
@@ -142,15 +145,8 @@ const List = () => {
     };
 
     useEffect(() => {
-        setDateRange(calculateDateRange(selectedPeriod));
+        setDateRange(calculateDateRange(selectedPeriod)); // 선택된 기간에 따라 날짜 범위 계산
     }, [selectedPeriod]);
-
-
-    const handlePeriodSelect = (period: string) => {
-        setCriteria(period);
-        setSelectedPeriod(period);
-        setDateRange(calculateDateRange(period));
-    };
 
     useDidMountEffect(() => {
         handleSearch();
@@ -192,7 +188,7 @@ const List = () => {
                 showPageSizeSelect={false}
                 showPagination={false}
                 page={page}
-                initialSortedColumn="totalMileage"
+                initialSortedColumn="boardingCount"
                 onClick={toggleModal}
                 onChange={handlePage}
             />
