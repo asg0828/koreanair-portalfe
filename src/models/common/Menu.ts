@@ -36,6 +36,8 @@ export const userMenuList: Array<MenuInfo> = [
   { menuNm: '국제선 탑승횟수 Top100', menuUrl: '/structured-report/international-boarding' },
   { menuNm: '국내선 탑승횟수 Top100', menuUrl: '/structured-report/domestic-boarding' },
   { menuNm: '마일리지 적립 Top100', menuUrl: '/structured-report/saved-mileage' },
+  { menuNm: '보너스항공권 탑승 Top100', menuUrl: '/structured-report/award-ticket-boarding' },
+  { menuNm: '국제선 마일리지 Upgrade 탑승 Top100', menuUrl: '/structured-report/intl-mileage-upgrade-boarding' },
   { menuNm: 'Self Feature', menuUrl: '/self-feature' },
   { menuNm: 'Feature 목록', menuUrl: '/self-feature/self-feature' },
   { menuNm: 'Feature 등록', menuUrl: '/self-feature/self-feature/reg', isCrudPage: true },

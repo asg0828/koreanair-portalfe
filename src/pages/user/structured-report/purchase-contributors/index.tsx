@@ -8,7 +8,6 @@ import {ColumnsInfo} from "@models/components/Table";
 import {ValidType, View} from "@models/common/Constants";
 import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
-import { dummyData } from "./testData";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import DashboardPopup from "./dashboardPopUp";
 import Modal from 'react-modal';

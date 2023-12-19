@@ -7,22 +7,11 @@ import {initPage, PageModel} from "@models/model/PageModel";
 import {ColumnsInfo} from "@models/components/Table";
 import DataGrid from "@components/grid/DataGrid";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
-import { dummyData } from "./testData";
 import DashboardPopup from "./dashboardPopUp";
 import Modal from 'react-modal';
 import {useVipList} from "@/hooks/queries/useReportQueries";
 import {ReportParams} from "@models/model/ReportModel";
 import {ValidType} from "@models/common/Constants";
-
-const initParams: ReportParams = {
-    sortedColumn:'',
-    sortedDirection:'',
-    rank:0,
-    oneId: '',
-    skypassNm:0,
-    userNm:'',
-    vipType:''
-};
 
 const List = () => {
     const navigate = useNavigate();
@@ -31,11 +20,14 @@ const List = () => {
 
     const [showPopup, setShowPopup] = useState(false);
 
-    const [params, setParams] = useState<ReportParams>(initParams);
     const [page, setPage] = useState<PageModel>({
         ...initPage,
+        page: 0,
         pageSize: 50
     });
+
+    const [sortedColumn, setSortedColumn] = useState('');
+    const [sortedDirection, setSortedDirection] = useState('');
 
     const columns: Array<ColumnsInfo> = [
         {headerName: 'Rank', field: 'rank', colSpan: 0.5},
@@ -49,7 +41,12 @@ const List = () => {
     ];
 
     const [rows, setRows] = useState<any>([]);
-    const { data: response, isError, refetch } = useVipList(params, page);
+    const { data: response, isError, refetch } = useVipList(page, sortedColumn,sortedDirection);
+    const handleSortChange = async (sortedColumn: string, sortedDirection: string,sortedRows:[]) => {
+        setSortedColumn(sortedColumn);
+        setSortedDirection(sortedDirection);
+        setRows(sortedRows);
+    };
 
     const toggleModal = () => {
         setShowPopup(!showPopup);
@@ -65,7 +62,7 @@ const List = () => {
 
     useDidMountEffect(() => {
         handleSearch();
-    }, [page.page, page.pageSize, handleSearch]);
+    }, [page.page, page.pageSize, handleSearch,sortedColumn,sortedDirection]);
 
     useEffect(() => {
         if (isError || response?.successOrNot === 'N') {
@@ -90,10 +87,11 @@ const List = () => {
                 clickable={true}
                 showPageSizeSelect={true}
                 showPagination={true}
-                initialSortedColumn="scheduledIntlFlightDate"
+                initialSortedColumn="rank"
                 page={page}
                 onClick={toggleModal}
                 onChange={handlePage}
+                onSortChange={handleSortChange}
             />
             <Modal
                 isOpen={showPopup}

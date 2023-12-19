@@ -1,4 +1,3 @@
-import { ReportParams } from '@/models/model/ReportModel';
 import { useQuery } from '@tanstack/react-query';
 import {
     getDomesticBoardingTop100List,
@@ -8,8 +7,8 @@ import {
 } from "@api/ReportAPI";
 import {PageModel} from "@models/model/PageModel";
 
-export const useVipList = (params: ReportParams, page: PageModel) => {
-    return useQuery(['/report/vip'], () => getReportVipList(params, page));
+export const useVipList = (page: PageModel, sortedColumn:string, sortedDirection:string) => {
+    return useQuery(['/report/vip'], () => getReportVipList(page, sortedColumn,sortedDirection));
 };
 
 export const usePurchaseContributionList = (criteria: string) => {

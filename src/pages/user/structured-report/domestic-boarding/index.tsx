@@ -46,7 +46,7 @@ const List = () => {
 
         const buttonStyle = isSelected ? // 클릭할때 버튼 스타일
             { backgroundColor: '#a2d2eb', color: '#000000', height: '50px' } :
-            { backgroundColor: '#5F9DCF', color: '#FFFFFF', height: '50px' };
+            { backgroundColor: '#255da1', color: '#FFFFFF', height: '50px' };
 
         return (
             <Button
@@ -105,19 +105,19 @@ const List = () => {
         switch (period) {
             case '선택':
                 return '';
-            case '1':
+            case '0 year':
                 startDate = new Date(endDate.getFullYear() , 0, 2);
                 break;
-            case '2':
+            case '1 year':
                 startDate = new Date(endDate.getFullYear() - 1, 0, 2);
                 break;
-            case '3':
+            case '2 year':
                 startDate = new Date(endDate.getFullYear() - 2, 0, 2);
                 break;
-            case '4':
+            case '3 year':
                 startDate = new Date(endDate.getFullYear() - 3, 0, 2);
                 break;
-            case '5':
+            case '4 year':
                 startDate = new Date(endDate.getFullYear() - 4, 0, 2);
                 break;
             default:

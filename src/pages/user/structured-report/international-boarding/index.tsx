@@ -44,7 +44,7 @@ const List = () => {
 
         const buttonStyle = isSelected ?
             { backgroundColor: '#a2d2eb', color: '#000000', height: '50px' } :
-            { backgroundColor: '#407DBA', color: '#FFFFFF', height: '50px' } ;
+            { backgroundColor: '#80badf', color: '#FFFFFF', height: '50px' } ;
 
 
         return (
