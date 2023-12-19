@@ -39,6 +39,8 @@ import PurchaseContributors from '@pages/user/structured-report/purchase-contrib
 import SavedMileage from '@pages/user/structured-report/saved-mileage';
 import VipCustomerFlightStatus from '@pages/user/structured-report/vip-customer-flight-status';
 import Tableau from '@pages/user/tableau';
+import AwardTicketBoarding from "@pages/user/structured-report/award-ticket-boarding";
+import IntlMileageUpgradeBoarding from "@pages/user/structured-report/intl-mileage-upgrade-boarding";
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -97,8 +99,18 @@ const userRouter = [
         path: 'international-boarding',
         element: <InternationalBoarding />,
       },
-      { id: '/structured-report/domestic-boarding', path: 'domestic-boarding', element: <DomesticBoarding /> },
-      { id: '/structured-report/saved-mileage', path: 'saved-mileage', element: <SavedMileage /> },
+      { id: '/structured-report/domestic-boarding',
+        path: 'domestic-boarding',
+        element: <DomesticBoarding /> },
+      { id: '/structured-report/saved-mileage',
+        path: 'saved-mileage',
+        element: <SavedMileage /> },
+      { id: '/structured-report/award-ticket-boarding',
+        path: 'award-ticket-boarding',
+        element: <AwardTicketBoarding /> },
+      { id: '/structured-report/intl-mileage-upgrade-boarding',
+        path: 'intl-mileage-upgrade-boarding',
+        element: <IntlMileageUpgradeBoarding /> },
     ],
   },
   {

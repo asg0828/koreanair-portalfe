@@ -25,6 +25,7 @@ const DataGrid: React.FC<DatagridProps> = ({
   showPagination = true,
   showPageSizeSelect = true,
   isMultiSelected,
+  onSortChange
 }) => {
   const [pages, setPages] = useState<PageModel>(initPage);
 
@@ -71,6 +72,7 @@ const DataGrid: React.FC<DatagridProps> = ({
         rows={rows}
         enableSort={enableSort}
         initialSortedColumn={initialSortedColumn}
+        onSortChange={onSortChange}
         clickable={clickable}
         isMultiSelected={isMultiSelected}
         onClick={onClick}

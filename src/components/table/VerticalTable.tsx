@@ -16,6 +16,7 @@ export interface VerticalTableProps {
   initialSortedColumn?: string;
   rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
   onClick?: Function;
+  onSortChange?: Function;
   children?: ReactNode;
 }
 
@@ -30,13 +31,15 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   isMultiSelected = true,
   rowSelection,
   onClick,
-}) => {
+  onSortChange,
+                                                     }) => {
   const isCheckbox = typeof rowSelection === 'function';
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);
   const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
   const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
   const [sortedColumn, setSortedColumn] = useState('');
+  const [sortedDirection, setSortedDirection] = useState('');
 
   function formatNumber(value: number) {
     return new Intl.NumberFormat('ko-KR').format(value);
@@ -88,17 +91,19 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     const field = columns[index].field;
     const oValue = order === SortDirectionCode.DESC ? 1 : -1;
 
-    const colorColumn = initialSortedColumn = field;
-    setSortedColumn(colorColumn);
+    // 방향이 반대로 설정되는 버그 처리 위해 임시로 설정
+    let direction;
+    if (order === 'asc') {
+      direction = 'desc';
+    } else {
+      direction = 'asc';
+    }
+
+    const sortedColumn = field;
 
     const sortRows = [...rows].sort((a, b) => {
       let valueA = a[field] || '';
       let valueB = b[field] || '';
-
-      if (valueA === valueB) {
-        return a.rank - b.rank;
-      }
-
 
       if (typeof valueA === 'string') {
         return valueA.localeCompare(valueB) * oValue;
@@ -106,48 +111,35 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
         return (valueA - valueB) * oValue;
       }
     });
-
     setSortRows(sortRows);
-  };
-
-  const sortData = (columnField:any) => {
-    const columnIndex = columns.findIndex(column => column.field === columnField);
-    if (columnIndex === -1) return;
-
-    const order = SortDirectionCode.DESC;
-    handleChangeSortDirection(order, columnIndex);
-  };
+    setSortedDirection(direction);
+    setSortedColumn(sortedColumn);
+    onSortChange?.(sortedColumn, direction, sortRows);
+  }
 
   const initialSort = () => {
     if (!initialSortedColumn || columns.length === 0) return;
 
-    const columnIndex = columns.findIndex(column => column.field === initialSortedColumn);
+    const columnIndex = columns.findIndex((column) => column.field === initialSortedColumn);
     if (columnIndex === -1) return;
 
-    const sortDirection = initialSortedColumn === 'scheduledIntlFlightDate' ?
-        SortDirectionCode.DESC :
-        initialSortedColumn === 'purchaseAmount' ?
-            SortDirectionCode.ASC :
-            SortDirectionCode.ASC;
-
+    const sortDirection = SortDirectionCode.DESC;
     handleChangeSortDirection(sortDirection, columnIndex);
   };
-
-  useEffect(() => {
-    initialSort();
-  }, [rows, initialSortedColumn]);
 
   const handleClick = (row: RowsInfo, index: number, selected: boolean) => {
     onClick && onClick(row, index, selected);
   };
 
   useEffect(() => {
+    initialSort();
+  }, []);
+
+  useEffect(() => {
+    setSortRows(rows);
     setIsCheckedAll(false);
     setCheckedIndexList([]);
-    if (!initialSortedColumn) {
-      setSortRows(rows);
-    }
-  }, [rows, initialSortedColumn]);
+  }, [rows]);
 
   return (
     <Table variant="vertical" size="normal" align="center" className={`verticalTable ${className}`}>
