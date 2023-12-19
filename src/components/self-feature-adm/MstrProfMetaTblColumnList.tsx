@@ -164,6 +164,13 @@ const MstrProfMetaTblColumnList = ({
     setIsCheckedAllCol(() => false);
     setIsAddIconShow(() => true);
     if (tmpMetaTblClmnList.length > 1) setIsColListShow(() => true);
+    // formData list
+    setMstrSgmtRuleAttrTblList &&
+      setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+        let rtn = cloneDeep(prevState);
+        rtn[targetIndex!].clmnAllChocYn = 'N';
+        return rtn;
+      });
     // 화면용 list
     setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
       let rtn = cloneDeep(prevState);
@@ -226,7 +233,7 @@ const MstrProfMetaTblColumnList = ({
     } else if (clmnAllYn === 'Y') {
       setIsAddIconShow(() => false);
       // 화면용 list
-      setTmpMetaTblClmnList(() => cloneDeep(metaTblClmnAllList));
+      //setTmpMetaTblClmnList(() => cloneDeep(metaTblClmnAllList).filter((e) => e.baseTimeYn !== 'Y')); //() => cloneDeep(metaTblClmnAllList));
       // formData list
       setMstrSgmtRuleAttrClmnList &&
         setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
@@ -237,6 +244,7 @@ const MstrProfMetaTblColumnList = ({
           let updtList: Array<TbRsMstrSgmtRuleAttrClmn> = [];
           metaTblClmnAllList.map((colItem: TbCoMetaTblClmnInfo) => {
             let updtItem: TbRsMstrSgmtRuleAttrClmn = cloneDeep(initTbRsMstrSgmtRuleAttrClmn);
+            if (metaTblInfo && metaTblInfo.mstrSgmtRuleId !== '') updtItem.mstrSgmtRuleId = metaTblInfo.mstrSgmtRuleId;
             updtItem.mstrSgmtRuleTblId = colItem.metaTblId;
             updtItem.mstrSgmtRuleTblNm = colItem.metaTblClmnPhysNm;
             updtItem.mstrSgmtRuleClmnId = colItem.metaTblClmnId;
@@ -282,20 +290,20 @@ const MstrProfMetaTblColumnList = ({
             >
               컬럼 정보
             </Typography>
-            {/* <Checkbox
-                            checked={metaTblInfo?.clmnAllChocYn === 'Y'}
-                            disabled
-                        />
-                        <Label style={{
-                            fontSize: "0.75rem",
-                            color: "rgb(85, 85, 85)",
-                            lineHeight: "1.5",
-                            fontWeight: "400",
-                            textAlign: "start",
-                            marginLeft: "0.5%",
-                        }}>
-                            항목 전체선택
-                        </Label> */}
+            {metaTblInfo?.clmnAllChocYn === 'Y' && (
+              <Label
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'rgb(85, 85, 85)',
+                  lineHeight: '1.5',
+                  fontWeight: '400',
+                  textAlign: 'start',
+                  marginLeft: '0.5%',
+                }}
+              >
+                컬럼 전체선택 테이블입니다. 펼쳐서 항목을 확인해주세요.
+              </Label>
+            )}
             {isColListShow && (
               <KeyboardArrowUpOutlinedIcon
                 style={{
@@ -484,6 +492,14 @@ const MstrProfMetaTblColumnList = ({
                         setMstrSgmtRuleAttrClmnList &&
                           setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
                             let rtn = cloneDeep(prevState);
+                            rtn = rtn.map((col) => {
+                              let colRtn = cloneDeep(col);
+                              if (!col.baseTimeYn || col.baseTimeYn === '') {
+                                let t = metaTblClmnList.find((clmn) => clmn.metaTblClmnId === col.mstrSgmtRuleClmnId);
+                                if (t) colRtn.baseTimeYn = t.baseTimeYn;
+                              }
+                              return colRtn;
+                            });
                             let keepList = rtn.filter(
                               (item: TbRsMstrSgmtRuleAttrClmn) =>
                                 item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId

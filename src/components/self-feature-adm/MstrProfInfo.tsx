@@ -156,7 +156,12 @@ const MstrProfInfo = ({
           }
           return colInfo;
         });
-        if (isInit) colList.push(cloneDeep(initTbCoMetaTblClmnInfo));
+        if (isInit) {
+          let t = cloneDeep(initTbCoMetaTblClmnInfo);
+          t.metaTblId = metaTableInfo?.metaTblId ? metaTableInfo.metaTblId : '';
+          t.metaTblLogiNm = metaTableInfo?.metaTblLogiNm ? metaTableInfo.me?.metaTblLogiNm : '';
+          colList.push(t);
+        }
         return saveColInfo;
       });
       setMetaTblClmnList(() => cloneDeep(colList));

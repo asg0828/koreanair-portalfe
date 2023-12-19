@@ -188,6 +188,15 @@ const MasterProfileManagementEdit = () => {
     if (modalType === ModalType.CONFIRM) {
       if (btnClickType === 'update') {
         // 수정 API 호출
+        // 컬럼 전체선택인 경우 clmn리스트 비워주기
+        let clmnAllCheckList = mstrSgmtFormData.tbRsMstrSgmtRuleAttrTbl.filter((table) => table.clmnAllChocYn === 'Y');
+        clmnAllCheckList.map((table) => {
+          mstrSgmtFormData.tbRsMstrSgmtRuleAttrClmn = mstrSgmtFormData.tbRsMstrSgmtRuleAttrClmn.filter(
+            (clmn) => clmn.mstrSgmtRuleTblId !== table.mstrSgmtRuleTblId
+          );
+          return table;
+        });
+        setMstrSgmtFormData(() => mstrSgmtFormData);
         updateMstrProfInfoMutate();
       }
     }
@@ -300,7 +309,7 @@ const MasterProfileManagementEdit = () => {
             if (checkValidation === '') {
               let tableLogiNm = attrMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
               if (item.mstrSgmtRuleTblId === '')
-                checkValidation = `${index + 1}번쨰 속성 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
+                checkValidation = `${index + 1}번째 속성 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
               else if (item.mstrJoinKeyClmnNm === '')
                 checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
               else if (item.attrJoinKeyClmnNm === '')
@@ -316,7 +325,7 @@ const MasterProfileManagementEdit = () => {
               if (checkValidation === '') {
                 let tableLogiNm = behvMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
                 if (item.mstrSgmtRuleTblId === '')
-                  checkValidation = `${index + 1}번쨰 행동 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
+                  checkValidation = `${index + 1}번째 행동 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
                 else if (item.mstrJoinKeyClmnNm === '')
                   checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
                 else if (item.attrJoinKeyClmnNm === '')
