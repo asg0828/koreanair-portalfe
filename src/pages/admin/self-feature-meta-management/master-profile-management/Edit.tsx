@@ -366,6 +366,7 @@ const MasterProfileManagementEdit = () => {
       return rtn;
     });
   };
+
   // 속성 및 행동 테이블 정보 추가(default 테이블 정보 setting)
   const onClickAddTblInfo = (divType: string) => {
     if (divType === DivisionTypes.ATTR) {
@@ -544,7 +545,7 @@ const MasterProfileManagementEdit = () => {
                 fill="currentColor"
               ></path>
             </svg>
-            저장
+            수정
           </Button>
         </Stack>
       </Stack>
