@@ -31,12 +31,12 @@ export default function DashBoardCLevelPopUp() {
         <div>
           <Stack>
             <div>
-              {searchText && profile.skypassNm.includes(searchText)
+              {searchText && profile.skypassNm.toLowerCase().includes(searchText.toLowerCase())
                 ? searchHighlight(profile.skypassNm, searchText)
                 : profile.skypassNm}
             </div>
             <div>
-              {searchText && profile.name.includes(searchText)
+              {searchText && profile.name.toLowerCase().includes(searchText.toLowerCase())
                 ? searchHighlight(profile.name, searchText)
                 : profile.name}
             </div>
