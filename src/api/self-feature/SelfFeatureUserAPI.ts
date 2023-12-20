@@ -97,9 +97,9 @@ export const retrieveSampleData = (rslnRuleId: string, custFeatRuleId: string) =
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureUserApiURL.SAMPLE_DATA}/${custFeatRuleId}`,
         method: Method.GET,
-        params: {
-            queryParams: { rslnId: rslnRuleId }
-        }
+        // params: {
+        //     queryParams: { rslnId: rslnRuleId }
+        // }
     })
 }
 // Self-feature 선후행 관계 리스트 조회
