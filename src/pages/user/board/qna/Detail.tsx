@@ -324,7 +324,7 @@ const Detail = () => {
                       <Stack>
                         <Stack gap="SM" className="width-100">
                           <Typography variant="h6">{`${qnaItem.rgstDeptNm || ''} ${qnaItem.rgstNm || ''}`}</Typography>
-                          <Label>{qnaItem.modiDt}</Label>
+                          <Label>{`${qnaItem.modiDt}${qnaItem.rgstDt !== qnaItem.modiDt ? ' (수정됨)' : ''}`}</Label>
                         </Stack>
 
                         {watch().qnaId === qnaItem.qnaId ? (
