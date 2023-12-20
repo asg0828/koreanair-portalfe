@@ -10,7 +10,6 @@ import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import {ReportParams} from "@models/model/ReportModel";
-import { dummyData } from "./testData";
 import {useDomesticBoardingTop100List} from "@/hooks/queries/useReportQueries";
 import DashboardPopup from "@pages/user/structured-report/purchase-contributors/dashboardPopUp";
 import Modal from "react-modal";
@@ -86,7 +85,7 @@ const List = () => {
     ];
 
     const [criteria, setCriteria] = useState('0 year');
-    const [rows, setRows] = useState(dummyData.data.contents);
+    const [rows, setRows] = useState<any>([]);
     const { data: response, isError, refetch } = useDomesticBoardingTop100List(criteria);
 
     const toggleModal = () => {

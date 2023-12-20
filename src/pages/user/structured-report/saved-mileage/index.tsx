@@ -3,17 +3,14 @@ import {Button, Select, SelectOption, Stack, TD, TH, TR, useToast} from "@compon
 import {useAppSelector} from "@/hooks/useRedux";
 import {selectSessionInfo} from "@reducers/authSlice";
 import React, {useCallback, useEffect, useState} from "react";
-import {FeatureModel, FeatureParams, FeatureSeparatesModel} from "@models/model/FeatureModel";
 import {initPage, PageModel} from "@models/model/PageModel";
 import {ColumnsInfo} from "@models/components/Table";
 import {ValidType, View} from "@models/common/Constants";
 import SearchForm from "@components/form/SearchForm";
 import DataGrid from "@components/grid/DataGrid";
-import {useFeatureList, useFeatureSeList} from "@/hooks/queries/useFeatureQueries";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import {ReportParams} from "@models/model/ReportModel";
 import {category} from "./data";
-import { dummyData } from "./testData";
 import {useTotalMileageTop100List} from "@/hooks/queries/useReportQueries";
 import DashboardPopup from "@pages/user/structured-report/purchase-contributors/dashboardPopUp";
 import Modal from "react-modal";
@@ -88,7 +85,7 @@ const List = () => {
         { headerName: '마일리지 제휴카드(PLCC) 보유여부', field: 'mileagePartnerCardYn', colSpan: 1.2 },
     ];
     const [criteria, setCriteria] = useState('0 year');
-    const [rows, setRows] = useState(dummyData.data.contents);
+    const [rows, setRows] = useState<any>([]);
     const { data: response, isError, refetch } = useTotalMileageTop100List(criteria);
 
     const toggleModal = () => {
