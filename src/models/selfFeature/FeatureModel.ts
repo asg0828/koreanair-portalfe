@@ -239,11 +239,17 @@ export interface TbCoMetaTblClmnInfo {
     dataTypeCategory: string,
     //example: 데이터 타입 유형
 }
+export interface AttributeAccordian {
+    [key: string]: string | Array<Attribute>
+    metaTblLogiNm: string,
+    attributes: Array<Attribute>,
+}
 
 export interface Attribute {
     [key: string]: string | number
     rtmTblYn: string,
     metaTblId: string,
+    metaTblLogiNm: string,
     metaTblClmnId: string,
     metaTblClmnPhysNm: string,
     //example: 메타테이블컬럼물리명

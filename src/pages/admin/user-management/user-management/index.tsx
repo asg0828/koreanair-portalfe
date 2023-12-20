@@ -9,7 +9,7 @@ import { PageModel, initPage } from '@/models/model/PageModel';
 import { UserModel, UserParams } from '@/models/model/UserModel';
 import { Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const columns = [
   { headerName: 'No', field: 'rownum', colSpan: 0.5 },
@@ -34,7 +34,9 @@ const initParams: UserParams = {
 const List = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [params, setParams] = useState<UserParams>(initParams);
+  const location = useLocation();
+  const beforeParams: UserParams = location?.state?.params;
+  const [params, setParams] = useState<UserParams>(beforeParams || initParams);
   const [userAuthList, setUserAuthList] = useState<Array<AuthModel>>();
   const [adminAuthList, setAdminAuthList] = useState<Array<AuthModel>>();
   const [page, setPage] = useState<PageModel>(initPage);
@@ -47,6 +49,7 @@ const List = () => {
     navigate(View.DETAIL, {
       state: {
         userId: row.userId,
+        params: params,
       },
     });
   };

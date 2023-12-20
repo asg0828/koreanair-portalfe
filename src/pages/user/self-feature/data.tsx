@@ -323,6 +323,7 @@ export const initBehavior: Behavior = {
 export const initAttribute: Attribute = {
     rtmTblYn: '',
     metaTblId: '',
+    metaTblLogiNm: '',
     metaTblClmnId: '',
     metaTblClmnPhysNm: '',
     metaTblClmnLogiNm: '',

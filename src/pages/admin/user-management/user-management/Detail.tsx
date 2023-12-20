@@ -2,23 +2,28 @@ import '@/assets/styles/Board.scss';
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useUserById } from '@/hooks/queries/useUserQueries';
 import { ValidType } from '@/models/common/Constants';
-import { UserModel } from '@/models/model/UserModel';
+import { UserModel, UserParams } from '@/models/model/UserModel';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
+  const params: UserParams = location?.state?.params;
   const [userModel, setUserModel] = useState<UserModel>();
   const userId: string = location?.state?.userId || '';
   const { data: response, isSuccess, isError } = useUserById(userId);
 
-  const goToList = () => {
-    navigate('..');
-  };
+  const goToList = useCallback(() => {
+    navigate('..', {
+      state: {
+        params: params,
+      },
+    });
+  }, [params, navigate]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
