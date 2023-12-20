@@ -25,6 +25,11 @@ import {
   Wallet,
 } from '@/models/model/CustomerInfoModel';
 
+const matchedProfile: any[] = [
+  { name: '홍홍동', skypassNm: '11122' },
+  { name: '이순신', skypassNm: '33344' },
+  { name: 'Jesus', skypassNm: '55566' },
+];
 const analysisIndexList: AnalysisIndexList[] = [
   {
     name: '잠재상용 추론지수',
@@ -463,4 +468,5 @@ export {
   internetData,
   vocData,
   smsData,
+  matchedProfile,
 };

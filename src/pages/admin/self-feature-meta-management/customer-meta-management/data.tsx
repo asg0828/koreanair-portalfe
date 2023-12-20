@@ -33,8 +33,8 @@ export const customerMetaInfoColumn: Column[] = [
   { headerName: '컬럼 논리명', field: 'metaTblClmnLogiNm', colSpan: 2 },
   { headerName: '컬럼 설명', field: 'metaTblClmnDesc', colSpan: 2 },
   { headerName: '데이터타입', field: 'dtpCd', colSpan: 1 },
-  { headerName: '변경여부', field: 'changeYn', colSpan: 1 }, // 수정 요망
-  { headerName: '변경 데이터타입', field: 'chgDtpCd', colSpan: 1 },
+  { headerName: '변경여부', field: 'changeYn', colSpan: 0.8 }, // 수정 요망
+  { headerName: '변경 데이터타입', field: 'chgDtpCd', colSpan: 1.2 },
   { headerName: '변경 데이터형식', field: 'dataFormat', colSpan: 1 },
 ];
 

@@ -20,7 +20,7 @@ import {
   smsData,
   emailData,
   snsData,
-} from './data';
+} from '../dashboard/data';
 import {
   FamilyMember,
   Profile,
@@ -38,6 +38,7 @@ import {
   Sns,
   Email,
 } from '@/models/model/CustomerInfoModel';
+import DashBoardCLevelPopUp from '../dashboardCLevelPopUp';
 
 export default function List() {
   const today = new Date();
@@ -63,21 +64,25 @@ export default function List() {
   const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({
     skypassNum: '',
-    oneId: '',
+    phoneNumber: '',
+    korFname: '',
+    korLname: '',
+    engLname: '',
+    engFname: '',
   });
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   // const [skypassList, setSkypassList] = useState<Array<any>>([]);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { refetch, data: response, isError } = useCustomerInfo(searchInfo);
   const { toast } = useToast();
-
+  const [showPopup, setShowPopup] = useState(false);
   const validation = () => {
     // 검색 조건 자체는 두개다 들어가도 가능
     // 회원당 skypass는 일대다 관계이므로 phoneNumber로 검색할 경우 skypass list를
     let searchError = false;
     if (
       searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-      searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
+      searchInfo.phoneNumber.replace(htmlTagReg, '').trim() === ''
     ) {
       setOpen(true);
       searchError = true;
@@ -98,7 +103,7 @@ export default function List() {
       let searchError = false;
       if (
         searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
+        searchInfo.phoneNumber.replace(htmlTagReg, '').trim() === ''
       ) {
         setOpen(true);
         searchError = true;
@@ -107,7 +112,7 @@ export default function List() {
     };
 
     if (validation()) return;
-    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.phoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setProfile(profileData[0]);
       setSkypass(skypassData1);
       setFamily(familyMemberData[0]);
@@ -125,7 +130,7 @@ export default function List() {
       setEmails(emailData);
       setSnss(snsData);
       setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.phoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setProfile(profileData[1]);
       setSkypass(skypassData2);
       setFamily(familyMemberData[3]);
@@ -145,6 +150,7 @@ export default function List() {
       setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
     }
     // refetch();
+    setShowPopup(true);
   }, [refetch, searchInfo, validation]);
 
   // style > 배경색 변경
@@ -188,7 +194,7 @@ export default function List() {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.phoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112423935550') {
         setFamily(familyMemberData[0]);
@@ -197,7 +203,7 @@ export default function List() {
       } else if (value === '112617209394') {
         setFamily(familyMemberData[2]);
       }
-    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.phoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112315856573') {
         setFamily(familyMemberData[3]);
@@ -229,35 +235,91 @@ export default function List() {
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       {/* searchBar 영역 */}
-
-      <Stack className={'width-100'}>
-        <div className="componentWrapper" style={{ width: '100%' }}>
-          <TextField
-            id="skypassNum"
-            value={searchInfo.skypassNum}
-            appearance="Outline"
-            placeholder="Skypass Number"
+      <Stack>
+        <Stack className={'width-100'}>
+          <Stack direction={'Vertical'} className={'width-100'}>
+            <Stack>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  id="skypassNum"
+                  value={searchInfo.skypassNum}
+                  appearance="Outline"
+                  placeholder="Skypass Number"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                  autoFocus
+                />
+              </div>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.phoneNumber}
+                  id="phoneNumber"
+                  appearance="Outline"
+                  placeholder="핸드폰번호"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>
+            </Stack>
+            <Stack>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.korLname}
+                  id="korLname"
+                  appearance="Outline"
+                  placeholder="KOR. - Last Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>{' '}
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.korFname}
+                  id="korFname"
+                  appearance="Outline"
+                  placeholder="KOR. - First Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>{' '}
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.engLname}
+                  id="engLname"
+                  appearance="Outline"
+                  placeholder="ENG. - Last Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>
+              <div className="componentWrapper" style={{ width: '100%' }}>
+                <TextField
+                  value={searchInfo.engFname}
+                  id="engFname"
+                  appearance="Outline"
+                  placeholder="ENG. - First Name"
+                  size="LG"
+                  textAlign="left"
+                  onChange={onchangeInputHandler}
+                />
+              </div>
+            </Stack>
+          </Stack>
+          <Button
+            priority="Primary"
+            appearance="Contained"
             size="LG"
-            textAlign="left"
-            onChange={onchangeInputHandler}
-            autoFocus
-          />
-        </div>
-        <div className="componentWrapper" style={{ width: '100%' }}>
-          <TextField
-            value={searchInfo.oneId}
-            id="oneId"
-            appearance="Outline"
-            placeholder="One ID NO."
-            size="LG"
-            textAlign="left"
-            onChange={onchangeInputHandler}
-          />
-        </div>
-
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSearch}>
-          검색
-        </Button>
+            style={{ minHeight: '72px' }}
+            onClick={handleSearch}
+          >
+            검색
+          </Button>
+        </Stack>
         <Modal open={isOpen} onClose={() => setOpen(false)}>
           <Modal.Header>오류</Modal.Header>
           <Modal.Body>검색 조건을 입력해주세요</Modal.Body>
@@ -267,6 +329,23 @@ export default function List() {
               appearance="Contained"
               onClick={() => {
                 setOpen(false);
+              }}
+            >
+              확인
+            </Button>
+          </Modal.Footer>
+        </Modal>
+        <Modal open={showPopup} onClose={() => setShowPopup(false)}>
+          <Modal.Header>중복회원검색</Modal.Header>
+          <Modal.Body>
+            <DashBoardCLevelPopUp />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+              priority="Primary"
+              appearance="Contained"
+              onClick={() => {
+                setShowPopup(false);
               }}
             >
               확인
@@ -283,15 +362,7 @@ export default function List() {
             </Typography>
           </Stack>
           <div style={{ position: 'relative' }} className="topCard">
-            <h5
-              style={{
-                fontWeight: '400',
-                position: 'absolute',
-                left: 250,
-                top: 10,
-                color: 'white',
-              }}
-            >
+            <h5 style={{ fontWeight: '400', position: 'absolute', left: 250, top: 10, color: 'white' }}>
               {batchDate} 기준
             </h5>
             <div className="dashBoardBox n1">

@@ -12,6 +12,7 @@ export const userMenuList: Array<MenuInfo> = [
   { menuNm: '테이블정의서 수정', menuUrl: '/biz-meta/dataset/edit', isCrudPage: true },
   { menuNm: '고객통합정보조회', menuUrl: '/customer-info' },
   { menuNm: '고객360대시보드', menuUrl: '/customer-info/dashboard' },
+  { menuNm: '고객360대시보드임원용', menuUrl: '/customer-info/dashboardCLevel' },
   { menuNm: '실적정보', menuUrl: '/structured-report' },
   { menuNm: 'VIP고객 국제선 예약현황', menuUrl: '/structured-report/vip-intl-flight-reservation-status' },
   { menuNm: '구매기여도 Top100', menuUrl: '/structured-report/purchase-contributors' },

@@ -28,6 +28,7 @@ import QnaDetail from '@pages/user/board/qna/Detail';
 import QnaEdit from '@pages/user/board/qna/Edit';
 import QnaReg from '@pages/user/board/qna/Reg';
 import CustomerInfo from '@pages/user/customer-info/dashboard';
+import CustomerInfoCLevel from '@pages/user/customer-info/dashboardCLevel';
 import InterestFeature from '@pages/user/feature/interest';
 import PopularFeature from '@pages/user/feature/popular';
 import SelfFeature from '@pages/user/self-feature';
@@ -39,8 +40,8 @@ import PurchaseContributors from '@pages/user/structured-report/purchase-contrib
 import SavedMileage from '@pages/user/structured-report/saved-mileage';
 import VipCustomerFlightStatus from '@pages/user/structured-report/vip-customer-flight-status';
 import Tableau from '@pages/user/tableau';
-import AwardTicketBoarding from "@pages/user/structured-report/award-ticket-boarding";
-import IntlMileageUpgradeBoarding from "@pages/user/structured-report/intl-mileage-upgrade-boarding";
+import AwardTicketBoarding from '@pages/user/structured-report/award-ticket-boarding';
+import IntlMileageUpgradeBoarding from '@pages/user/structured-report/intl-mileage-upgrade-boarding';
 
 const userRouter = [
   { index: true, element: <Home /> },
@@ -77,7 +78,8 @@ const userRouter = [
     path: 'customer-info',
     children: [
       { index: true, element: <CustomerInfo /> },
-      { path: 'dashboard', element: <CustomerInfo /> },
+      { id: '/customer-info/dashboard', path: 'dashboard', element: <CustomerInfo /> },
+      { id: '/customer-info/dashboardCLevel', path: 'dashboardCLevel', element: <CustomerInfoCLevel /> },
     ],
   },
   {
@@ -99,18 +101,18 @@ const userRouter = [
         path: 'international-boarding',
         element: <InternationalBoarding />,
       },
-      { id: '/structured-report/domestic-boarding',
-        path: 'domestic-boarding',
-        element: <DomesticBoarding /> },
-      { id: '/structured-report/saved-mileage',
-        path: 'saved-mileage',
-        element: <SavedMileage /> },
-      { id: '/structured-report/award-ticket-boarding',
+      { id: '/structured-report/domestic-boarding', path: 'domestic-boarding', element: <DomesticBoarding /> },
+      { id: '/structured-report/saved-mileage', path: 'saved-mileage', element: <SavedMileage /> },
+      {
+        id: '/structured-report/award-ticket-boarding',
         path: 'award-ticket-boarding',
-        element: <AwardTicketBoarding /> },
-      { id: '/structured-report/intl-mileage-upgrade-boarding',
+        element: <AwardTicketBoarding />,
+      },
+      {
+        id: '/structured-report/intl-mileage-upgrade-boarding',
         path: 'intl-mileage-upgrade-boarding',
-        element: <IntlMileageUpgradeBoarding /> },
+        element: <IntlMileageUpgradeBoarding />,
+      },
     ],
   },
   {
