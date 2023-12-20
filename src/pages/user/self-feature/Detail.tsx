@@ -1062,6 +1062,12 @@ const SelfFeatureDetail = () => {
 							/>
 						</TD>
 					</TR>
+					{/* <TR>
+						<TH colSpan={1} align="right">연관테이블</TH>
+						<TD colSpan={5} align='left'>
+							{featureInfo.featureTemp && featureInfo.featureTemp.featureRelTb}
+						</TD>
+					</TR> */}
 					<TR>
 						<TH colSpan={1} align="right">비고</TH>
 						<TD colSpan={5} align='left'>
