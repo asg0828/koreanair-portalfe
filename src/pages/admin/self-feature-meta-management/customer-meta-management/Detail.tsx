@@ -8,8 +8,6 @@ import DataGridMeta from '@/components/grid/DataGridMeta';
 import { useMetaTableDetail } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { useLocation } from 'react-router-dom';
 import { TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
-import { ModalType } from '@/models/common/Constants';
-import { openModal } from '@/reducers/modalSlice';
 
 const CustomerMetaManagementDetail = () => {
   const location = useLocation();
@@ -19,7 +17,6 @@ const CustomerMetaManagementDetail = () => {
     metaTblLogiNm: location?.state?.metaTblLogiNm || '',
     rtmTblYn: location?.state?.rtmTblYn || '',
   });
-
   const [rows, setRows] = useState<any>([]);
   const { data: response, isError, refetch: dtlRefetch } = useMetaTableDetail(searchInfo.metaTblId);
   const { toast } = useToast();
@@ -30,7 +27,6 @@ const CustomerMetaManagementDetail = () => {
     // confirm(alert x)
     setOpen(true);
   };
-
   useEffect(() => {
     if (!location || !location.state) return;
     dtlRefetch();
@@ -131,16 +127,12 @@ const CustomerMetaManagementDetail = () => {
             </TH>
             <TD colSpan={0.22}>
               <Select
-                id="metaTblDvCd"
                 appearance="Outline"
                 placeholder="전체"
                 className="width-100"
                 value={tbCoMetaTbInfo.metaTblDvCd}
-                onChange={(
-                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                  value: SelectValue<{}, false>
-                ) => {
-                  onchangeSelectHandler(e, value, 'metaTblDvCd');
+                onChange={(e, value) => {
+                  value && onchangeSelectHandler(e, value, 'metaTblDvCd');
                 }}
               >
                 <SelectOption value={'ATTR'}>속성</SelectOption>
@@ -152,16 +144,12 @@ const CustomerMetaManagementDetail = () => {
             </TH>
             <TD colSpan={0.22}>
               <Select
-                id="metaTblUseYn"
                 appearance="Outline"
                 placeholder="전체"
                 className="width-100"
                 value={tbCoMetaTbInfo.metaTblUseYn}
-                onChange={(
-                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                  value: SelectValue<{}, false>
-                ) => {
-                  onchangeSelectHandler(e, value, 'metaTblUseYn');
+                onChange={(e, value) => {
+                  value && onchangeSelectHandler(e, value, 'metaTblUseYn');
                 }}
               >
                 <SelectOption value={'Y'}>사용</SelectOption>

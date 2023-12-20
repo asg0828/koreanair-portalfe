@@ -534,15 +534,13 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                             } else if (row.changeYn === 'Y' && row.baseTimeYn !== 'Y') {
                               return (
                                 <Select
-                                  id="chgDtpCd"
                                   appearance="Outline"
                                   placeholder="전체"
+                                  style={{ maxWidth: '80px' }}
                                   className="width-100"
-                                  onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                  ) => onchangeSelectHandler(e, value, 'chgDtpCd', rowIndex)}
-                                  value={row.chgDtpCd}
+                                  onChange={(e, value) =>
+                                    value && onchangeSelectHandler(e, value, 'chgDtpCd', rowIndex)
+                                  }
                                 >
                                   <SelectOption value={'timestamp'}>timestamp</SelectOption>
                                   <SelectOption value={'int'}>int</SelectOption>
@@ -590,11 +588,9 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                                     appearance="Outline"
                                     placeholder="전체"
                                     className="width-100"
-                                    onChange={(
-                                      e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                      value: SelectValue<{}, false>
-                                    ) => onchangeSelectHandler(e, value, 'dataFormat', rowIndex)}
-                                    value={row.dataFormat}
+                                    onChange={(e, value) =>
+                                      value && onchangeSelectHandler(e, value, 'dataFormat', rowIndex)
+                                    }
                                   >
                                     {timeFormat?.map((row, index) => (
                                       <SelectOption value={row.cdvCntn}>{row.cdvNm}</SelectOption>
