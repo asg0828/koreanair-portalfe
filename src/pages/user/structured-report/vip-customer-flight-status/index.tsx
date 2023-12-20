@@ -10,11 +10,9 @@ import useDidMountEffect from "@/hooks/useDidMountEffect";
 import DashboardPopup from "./dashboardPopUp";
 import Modal from 'react-modal';
 import {useVipList} from "@/hooks/queries/useReportQueries";
-import {ReportParams} from "@models/model/ReportModel";
 import {ValidType} from "@models/common/Constants";
 
 const List = () => {
-    const navigate = useNavigate();
     const { toast } = useToast();
     const userId = useAppSelector(selectSessionInfo()).userId || '';
 
@@ -42,6 +40,7 @@ const List = () => {
 
     const [rows, setRows] = useState<any>([]);
     const { data: response, isError, refetch } = useVipList(page, sortedColumn,sortedDirection);
+
     const handleSortChange = async (sortedColumn: string, sortedDirection: string,sortedRows:[]) => {
         setSortedColumn(sortedColumn);
         setSortedDirection(sortedDirection);
@@ -62,7 +61,7 @@ const List = () => {
 
     useDidMountEffect(() => {
         handleSearch();
-    }, [page.page, page.pageSize, handleSearch,sortedColumn,sortedDirection]);
+    }, [page.page, page.pageSize,sortedColumn,sortedDirection]);
 
     useEffect(() => {
         if (isError || response?.successOrNot === 'N') {
@@ -87,7 +86,7 @@ const List = () => {
                 clickable={true}
                 showPageSizeSelect={true}
                 showPagination={true}
-                initialSortedColumn="rank"
+                initialSortedColumn="scheduledIntlFlightDate"
                 page={page}
                 onClick={toggleModal}
                 onChange={handlePage}

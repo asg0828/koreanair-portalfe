@@ -188,7 +188,7 @@ const List = () => {
                 showPageSizeSelect={false}
                 showPagination={false}
                 page={page}
-                initialSortedColumn="boardingCount"
+                initialSortedColumn="mileageSpentForUpgrade"
                 onClick={toggleModal}
                 onChange={handlePage}
             />
