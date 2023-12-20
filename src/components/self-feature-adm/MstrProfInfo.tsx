@@ -161,7 +161,7 @@ const MstrProfInfo = ({
         if (isInit) {
           let t = cloneDeep(initTbCoMetaTblClmnInfo);
           t.metaTblId = metaTableInfo?.metaTblId ? metaTableInfo.metaTblId : '';
-          t.metaTblLogiNm = metaTableInfo?.metaTblLogiNm ? metaTableInfo.me?.metaTblLogiNm : '';
+          t.metaTblLogiNm = metaTableInfo?.metaTblLogiNm ? metaTableInfo?.metaTblLogiNm : '';
           colList.push(t);
         }
         return saveColInfo;
