@@ -369,7 +369,7 @@ const List = () => {
                   사용여부
                 </TH>
                 <TD colSpan={2} align="left">
-                  <Radio label="사용" defaultChecked={values?.useYn === 'Y'} value="Y" {...register('useYn')} />
+                  <Radio label="사용" defaultChecked={values?.useYn === 'Y' || values?.useYn === null} value="Y" {...register('useYn')} />
                   <Radio label="미사용" defaultChecked={values?.useYn === 'N'} value="N" {...register('useYn')} />
                 </TD>
               </TR>
