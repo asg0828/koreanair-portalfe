@@ -64,7 +64,7 @@ const App = () => {
   }, [sessionRequestInfo, initContextPath, dispatch]);
 
   useEffect(() => {
-    if (contextPath && router) {
+    if (contextPath !== ContextPath.UNAUTHORIZED && router) {
       window.history.pushState({}, '', localStorage.getItem('accessPathname'));
     }
   }, [contextPath, router]);
