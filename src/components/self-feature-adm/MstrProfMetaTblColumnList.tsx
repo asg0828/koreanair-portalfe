@@ -261,7 +261,99 @@ const MstrProfMetaTblColumnList = ({
       setIsColListShow(() => false);
     }
   };
+  // 컬럼 항목 선택 select
+  const onChangeClmnhandler = (
+    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: SelectValue<{}, false>,
+    index: number,
+  ) => {
+    if (!value) return
+    let v = String(value);
+    if (!v || v === 'null' || v === 'undefined') return;
 
+    setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
+      let rtn = cloneDeep(prevState);
+      let item = metaTblClmnAllList.find(
+        (item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v
+      );
+      rtn[index].metaTblClmnLogiNm = item ? item.metaTblClmnLogiNm : '';
+      rtn[index].metaTblClmnDesc = item ? item.metaTblClmnLogiNm : '';
+      rtn[index].metaTblClmnPhysNm = v;
+      return rtn;
+    });
+    setMstrSgmtRuleAttrClmnList &&
+      setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+        let rtn = cloneDeep(prevState);
+        rtn = rtn.map((col) => {
+          let colRtn = cloneDeep(col);
+          if (!col.baseTimeYn || col.baseTimeYn === '') {
+            let t = metaTblClmnList.find((clmn) => clmn.metaTblClmnId === col.mstrSgmtRuleClmnId);
+            if (t) colRtn.baseTimeYn = t.baseTimeYn;
+          }
+          return colRtn;
+        });
+        let keepList = rtn.filter(
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId
+        );
+        let updtList = rtn.filter(
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn !== 'Y'
+        );
+        let baseTimeCol = rtn.filter(
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn === 'Y'
+        );
+        let item = metaTblClmnAllList.find(
+          (item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v
+        );
+        updtList[index].mstrSgmtRuleClmnId = item ? item.metaTblClmnId : '';
+        updtList[index].clmnDtpCd = item ? item.dtpCd : '';
+        updtList[index].baseTimeYn = item ? item.baseTimeYn : '';
+        updtList[index].mstrSgmtRuleClmnNm = v;
+        updtList[index].mstrSgmtRuleClmnDesc = item ? item.metaTblClmnLogiNm : '';
+        return [...keepList, ...updtList, ...baseTimeCol];
+      });
+  }
+  // 컬럼 설명 text
+  const onChangeClmnDescHandler = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+    const { id, value } = e.target;
+
+    // formData list
+    if (metaTblInfo?.clmnAllChocYn === "Y") {
+      setMstrSgmtRuleAttrTblList &&
+        setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+          let rtn = cloneDeep(prevState);
+          rtn[targetIndex!].clmnAllChocYn = "N";
+          return rtn;
+        });
+    }
+    setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
+      let rtn = cloneDeep(prevState);
+      rtn[index].metaTblClmnLogiNm = value;
+      rtn[index].metaTblClmnDesc = value;
+      return rtn;
+    });
+    setMstrSgmtRuleAttrClmnList &&
+      setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+        let rtn = cloneDeep(prevState);
+        let keepList = rtn.filter(
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId
+        );
+        let updtList = rtn.filter(
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn !== 'Y'
+        );
+        let baseTimeCol = rtn.filter(
+          (item: TbRsMstrSgmtRuleAttrClmn) =>
+            item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn === 'Y'
+        );
+        updtList[index].mstrSgmtRuleClmnDesc = value;
+        return [...keepList, ...updtList, ...baseTimeCol];
+      });
+  }
+  
   return (
     <Stack
       direction="Vertical"
@@ -472,58 +564,7 @@ const MstrProfMetaTblColumnList = ({
                       appearance="Outline"
                       placeholder="선택"
                       className="width-100"
-                      onChange={(
-                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                        value: SelectValue<{}, false>
-                      ) => {
-                        let v = String(value);
-
-                        if (!v || v === 'null' || v === 'undefined') return;
-
-                        setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
-                          let rtn = cloneDeep(prevState);
-                          let item = metaTblClmnAllList.find(
-                            (item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v
-                          );
-                          rtn[index].metaTblClmnLogiNm = item ? item.metaTblClmnLogiNm : '';
-                          rtn[index].metaTblClmnDesc = item ? item.metaTblClmnLogiNm : '';
-                          rtn[index].metaTblClmnPhysNm = v;
-                          return rtn;
-                        });
-                        setMstrSgmtRuleAttrClmnList &&
-                          setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
-                            let rtn = cloneDeep(prevState);
-                            rtn = rtn.map((col) => {
-                              let colRtn = cloneDeep(col);
-                              if (!col.baseTimeYn || col.baseTimeYn === '') {
-                                let t = metaTblClmnList.find((clmn) => clmn.metaTblClmnId === col.mstrSgmtRuleClmnId);
-                                if (t) colRtn.baseTimeYn = t.baseTimeYn;
-                              }
-                              return colRtn;
-                            });
-                            let keepList = rtn.filter(
-                              (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId
-                            );
-                            let updtList = rtn.filter(
-                              (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn !== 'Y'
-                            );
-                            let baseTimeCol = rtn.filter(
-                              (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn === 'Y'
-                            );
-                            let item = metaTblClmnAllList.find(
-                              (item: TbCoMetaTblClmnInfo) => item.metaTblClmnPhysNm === v
-                            );
-                            updtList[index].mstrSgmtRuleClmnId = item ? item.metaTblClmnId : '';
-                            updtList[index].clmnDtpCd = item ? item.dtpCd : '';
-                            updtList[index].baseTimeYn = item ? item.baseTimeYn : '';
-                            updtList[index].mstrSgmtRuleClmnNm = v;
-                            updtList[index].mstrSgmtRuleClmnDesc = item ? item.metaTblClmnLogiNm : '';
-                            return [...keepList, ...updtList, ...baseTimeCol];
-                          });
-                      }}
+                      onChange={(e, value) => value && onChangeClmnhandler(e, value, index)}
                     >
                       {mstrSgmtRuleClmnOption
                         .filter((e) => e.baseTimeYn !== 'Y')
@@ -540,43 +581,7 @@ const MstrProfMetaTblColumnList = ({
                         color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
                       }}
                       value={clmnInfo.metaTblClmnDesc}
-                      onChange={(e) => {
-                        const { id, value } = e.target;
-
-                        // formData list
-                        if (metaTblInfo?.clmnAllChocYn === "Y") {
-                          setMstrSgmtRuleAttrTblList &&
-                            setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
-                              let rtn = cloneDeep(prevState);
-                              rtn[targetIndex!].clmnAllChocYn = "N";
-                              return rtn;
-                            });
-                        }
-                        setTmpMetaTblClmnList((prevState: Array<TbCoMetaTblClmnInfo>) => {
-                          let rtn = cloneDeep(prevState);
-                          rtn[index].metaTblClmnLogiNm = value;
-                          rtn[index].metaTblClmnDesc = value;
-                          return rtn;
-                        });
-                        setMstrSgmtRuleAttrClmnList &&
-                          setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
-                            let rtn = cloneDeep(prevState);
-                            let keepList = rtn.filter(
-                              (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId !== metaTblInfo!.mstrSgmtRuleTblId
-                            );
-                            let updtList = rtn.filter(
-                              (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn !== 'Y'
-                            );
-                            let baseTimeCol = rtn.filter(
-                              (item: TbRsMstrSgmtRuleAttrClmn) =>
-                                item.mstrSgmtRuleTblId === metaTblInfo!.mstrSgmtRuleTblId && item.baseTimeYn === 'Y'
-                            );
-                            updtList[index].mstrSgmtRuleClmnDesc = value;
-                            return [...keepList, ...updtList, ...baseTimeCol];
-                          });
-                      }}
+                      onChange={(e) => onChangeClmnDescHandler(e, index)}
                     />
                   </Stack>
                 </Stack>

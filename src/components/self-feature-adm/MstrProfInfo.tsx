@@ -269,6 +269,45 @@ const MstrProfInfo = ({
       });
   };
 
+  // 컬럼 항목 선택 select
+  const onChangeTableIdhandler = (
+    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: SelectValue<{}, false>,
+  ) => {
+    /*
+      속성테이블 select 선택시 
+      선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API 호출
+      및 이전 컬럼 항목 reset
+    */
+    if (!value) return
+    let v = String(value);
+    if (!v || v === '' || v === 'null' || v === 'undefined') return;
+    // 최초 수정 정보가 있는 경우 초기화 로직 제외
+    setMstrSgmtRuleAttrTblList &&
+      setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
+        let rtn = cloneDeep(prevState);
+
+        rtn[targetIndex!].mstrSgmtRuleTblId = v;
+        //if (!isEdit) {
+
+        let tblInfo = metaTblAllList.find((item: TbCoMetaTbInfo) => item.metaTblId === v);
+        rtn[targetIndex!].mstrSgmtRuleTblNm = tblInfo ? tblInfo.metaTblPhysNm : '';
+        rtn[targetIndex!].mstrSgmtRuleDbNm = tblInfo ? tblInfo.dbNm : '';
+        rtn[targetIndex!].clmnAllChocYn = 'N';
+        rtn[targetIndex!].attrJoinKeyClmnNm = '';
+        rtn[targetIndex!].mstrJoinKeyClmnNm = '';
+        //}
+        return rtn;
+      });
+    setMstrSgmtRuleAttrClmnList &&
+      setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
+        let rtn = cloneDeep(prevState);
+        rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblId);
+        return rtn;
+      });
+    //if (metaTblInfo.mstrSgmtRuleTblId && isEdit) setIsEdit(false)
+  }
+
   return (
     <Stack
       direction="Vertical"
@@ -332,42 +371,7 @@ const MstrProfInfo = ({
               appearance="Outline"
               placeholder="선택"
               className="width-100"
-              onChange={(
-                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                value: SelectValue<{}, false>
-              ) => {
-                /*
-                                    속성테이블 select 선택시 
-                                    선택된 메타테이블 id 값으로 메타컬럼테이블조회 meta_tbl_id 에 따라 조회 API 호출
-                                    및 이전 컬럼 항목 reset
-                                */
-                let v = String(value);
-                if (!v || v === '' || v === 'null' || v === 'undefined') return;
-                // 최초 수정 정보가 있는 경우 초기화 로직 제외
-                setMstrSgmtRuleAttrTblList &&
-                  setMstrSgmtRuleAttrTblList((prevState: Array<TbRsMstrSgmtRuleAttrTbl>) => {
-                    let rtn = cloneDeep(prevState);
-
-                    rtn[targetIndex!].mstrSgmtRuleTblId = v;
-                    //if (!isEdit) {
-
-                    let tblInfo = metaTblAllList.find((item: TbCoMetaTbInfo) => item.metaTblId === v);
-                    rtn[targetIndex!].mstrSgmtRuleTblNm = tblInfo ? tblInfo.metaTblPhysNm : '';
-                    rtn[targetIndex!].mstrSgmtRuleDbNm = tblInfo ? tblInfo.dbNm : '';
-                    rtn[targetIndex!].clmnAllChocYn = 'N';
-                    rtn[targetIndex!].attrJoinKeyClmnNm = '';
-                    rtn[targetIndex!].mstrJoinKeyClmnNm = '';
-                    //}
-                    return rtn;
-                  });
-                setMstrSgmtRuleAttrClmnList &&
-                  setMstrSgmtRuleAttrClmnList((prevState: Array<TbRsMstrSgmtRuleAttrClmn>) => {
-                    let rtn = cloneDeep(prevState);
-                    rtn = rtn.filter((item: TbRsMstrSgmtRuleAttrClmn) => item.mstrSgmtRuleTblId !== metaTblId);
-                    return rtn;
-                  });
-                //if (metaTblInfo.mstrSgmtRuleTblId && isEdit) setIsEdit(false)
-              }}
+              onChange={(e, value) => value && onChangeTableIdhandler(e, value)}
             >
               {metaTblOptionList.map((item, index) => (
                 <SelectOption key={index} value={item.metaTblId}>
@@ -382,7 +386,7 @@ const MstrProfInfo = ({
                 left: '97%',
               }}
               size="SM"
-              onClick={onClickDeleteHandler}
+              onClick={() => onClickDeleteHandler()}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path
@@ -405,12 +409,7 @@ const MstrProfInfo = ({
               appearance="Outline"
               placeholder="선택"
               className="width-100"
-              onChange={(
-                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                value: SelectValue<{}, false>
-              ) => {
-                onchangeSelectHandler(e, value, 'mstrJoinKeyClmnNm');
-              }}
+              onChange={(e, value) => value && onchangeSelectHandler(e, value, 'mstrJoinKeyClmnNm')}
             >
               {rslnRuleKeyPrtyList.map((item, index) => (
                 <SelectOption key={index} value={item.rslnRuleKeyClmnNm}>
@@ -427,12 +426,7 @@ const MstrProfInfo = ({
               appearance="Outline"
               placeholder="선택"
               className="width-100"
-              onChange={(
-                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                value: SelectValue<{}, false>
-              ) => {
-                onchangeSelectHandler(e, value, 'attrJoinKeyClmnNm');
-              }}
+              onChange={(e, value) => value && onchangeSelectHandler(e, value, 'attrJoinKeyClmnNm')}
             >
               {metaTblClmnJoinkeyList &&
                 metaTblClmnJoinkeyList.map((item, index) => (
