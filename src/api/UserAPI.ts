@@ -9,6 +9,11 @@ export const getUserAllList = () => {
     service: Service.KAL_BE,
     url: `${PortalApiURL.USER_MGMT}`,
     method: Method.GET,
+    params: {
+      queryParams: {
+        withNoPaging: 'Y',
+      },
+    },
   });
 };
 

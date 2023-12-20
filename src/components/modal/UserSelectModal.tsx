@@ -3,7 +3,6 @@ import DataTree from '@/components/Tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useUserAllList } from '@/hooks/queries/useUserQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { ValidType } from '@/models/common/Constants';
 import { ModalInfo } from '@/models/components/Modal';
 import { DeptModel } from '@/models/model/DeptModel';
