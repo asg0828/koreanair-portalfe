@@ -9,6 +9,7 @@ import useOAuth from '@/hooks/useOAuth';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ValidType } from '@/models/common/Constants';
 import { selectContextPath, setContextPath } from '@/reducers/authSlice';
+import { setBaseApiUrl } from '@/utils/ApiUtil';
 import SessionApis from '@api/common/SessionApis';
 import { Toaster, useToast } from '@components/ui';
 import Watermark from '@uiw/react-watermark';
@@ -37,13 +38,16 @@ const App = () => {
 
   const initContextPath = useCallback(() => {
     const accessPathname = localStorage.getItem('accessPathname') || '';
-    if (!contextPath) {
+    if (contextPath === ContextPath.UNAUTHORIZED) {
       if (accessPathname.startsWith(ContextPath.ADMIN)) {
         dispatch(setContextPath(ContextPath.ADMIN));
+        setBaseApiUrl('/bo');
       } else if (accessPathname.startsWith(ContextPath.POPUP)) {
         dispatch(setContextPath(ContextPath.POPUP));
+        setBaseApiUrl('/fo');
       } else {
         dispatch(setContextPath(ContextPath.USER));
+        setBaseApiUrl('/fo');
       }
     }
   }, [contextPath, dispatch]);

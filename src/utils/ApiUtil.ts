@@ -151,10 +151,17 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       };
       // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
-        // eslint-disable-next-line
-        if (error.response.status.toString() === '403') {
-          // APIGEE ACCESS TOKEN 만료
-          if (error.response?.data?.errorCode?.toString() === '301') {
+        // APIGEE 응답 errorCode
+        const errorCode = error.response?.data?.errorCode?.toString();
+
+        if (errorCode) {
+          // APIGEE ACCESS TOKEN 누락
+          if (errorCode === '101') {
+            sessionUtil.deleteSessionInfo();
+            window.location.reload();
+
+            // APIGEE ACCESS TOKEN 만료
+          } else if (errorCode === '301') {
             return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
               const originalRequest = error.config;
               originalRequest.headers['authorization'] = `Bearer ${
@@ -164,19 +171,22 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
                 return retryResponse.data as CommonResponse;
               });
             });
-            // PORTAL SESSION 만료
-          } else if (error.response.data.message === 'SESSION_EXPIRE') {
-            sessionStorage.removeItem('sessionId');
-            window.location.reload();
           }
-          // INVALID_GOOGLE_ID_TOKEN
         } else if (error.response.status.toString() === '401') {
+          //INVALID_GOOGLE_ID_TOKEN
           if (error.response.data.message === 'INVALID_GOOGLE_ID_TOKEN') {
             sessionUtil.deleteSessionInfo();
             window.location.reload();
           }
+        } else if (error.response.status.toString() === '403') {
+          // 포탈 세션 만료
+          if (error.response.data.message === 'SESSION_EXPIRE') {
+            sessionStorage.removeItem('sessionId');
+            window.location.reload();
+          }
         }
       }
+
       return unknownError;
     }
   );
