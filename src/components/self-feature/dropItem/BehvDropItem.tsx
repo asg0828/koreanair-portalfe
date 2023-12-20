@@ -54,10 +54,17 @@ const BehvDropItem = ({
     //const [ dataTypeCol, setDataTypeCol ] = useState<string>("")
     // 수집기준일 컬럼 정보
     const [baseTimeCol, setBaseTimeCol] = useState<TbCoMetaTblClmnInfo>(cloneDeep(initTbCoMetaTblClmnInfo))
+    // 최초등록, 수정 구분 flag
+    const [isUpdtInfo, setIsUpdtInfo] = useState<Boolean>(false)
     const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
     const [modalType, setModalType] = useState<string>("")
     const [confirmModalTit, setConfirmModalTit] = useState<string>('')
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
+
+    useEffect(() => {
+        if (!targetItem || targetItem.custFeatRuleId === "") setIsUpdtInfo(() => false)
+        else setIsUpdtInfo(() => true)
+    }, [])
 
     const onConfirm = () => {
         if (modalType === ModalType.CONFIRM) {
@@ -325,8 +332,9 @@ const BehvDropItem = ({
                     let tl = cloneDeep(state)
                     if (tl[itemIdx].targetId === targetItem.targetId) {
                         tl[itemIdx].targetDataType = colDtp
-                        // 집계함수 초기화
-                        tl[itemIdx].operator = ""
+                        // 집계함수 초기화(수정시 최초 update 방지)
+                        if (!isUpdtInfo) tl[itemIdx].operator = ""
+                        setIsUpdtInfo(() => false)
                     }
                     return tl
                 })
