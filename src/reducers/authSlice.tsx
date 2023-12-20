@@ -1,3 +1,4 @@
+import { ContextPath } from '@/models/common/Constants';
 import { SessionInfo } from '@/models/common/Session';
 import { RootState } from '@/store';
 import { createSelector, createSlice } from '@reduxjs/toolkit';
@@ -8,6 +9,7 @@ export interface AuthState {
 }
 
 const initialState: AuthState = {
+  contextPath: ContextPath.UNAUTHORIZED,
   sessionInfo: {
     sessionId: '',
     apldMgrAuthId: '',
@@ -34,7 +36,6 @@ const initialState: AuthState = {
     userId: '',
     userNm: '',
   },
-  contextPath: '',
 };
 
 const authSlice = createSlice({

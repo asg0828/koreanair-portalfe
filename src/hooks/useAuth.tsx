@@ -7,7 +7,6 @@ import { ContextPath, ValidType } from '@/models/common/Constants';
 import { adminMenulist, userMenuList } from '@/models/common/Menu';
 import { login, selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { setBaseMenuList, setMenuList, setQuickMenuList } from '@/reducers/menuSlice';
-import { setBaseApiUrl } from '@/utils/ApiUtil';
 import { convertToHierarchyInfo, sortChildrenRecursive } from '@/utils/ArrayUtil';
 import SessionApis from '@api/common/SessionApis';
 import { useToast } from '@ke-design/components';
@@ -89,7 +88,13 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
   }, [sessionInfo.userId, qmRefetch]);
 
   useEffect(() => {
-    if (contextPath && sessionRequestInfo?.googleAccessToken && !sessionInfo.sessionId && !isError && !unauthorized) {
+    if (
+      contextPath !== ContextPath.UNAUTHORIZED &&
+      sessionRequestInfo?.googleAccessToken &&
+      !sessionInfo.sessionId &&
+      !isError &&
+      !unauthorized
+    ) {
       (async () => {
         const sessionResponse: CommonResponse = await sessionApis.login(sessionRequestInfo);
 
@@ -109,14 +114,12 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
             baseMenuList = adminMenulist;
             myMenuList = sessionInfo.menuByAuthMgr?.menus || [];
             routerFileName = 'adminRouter';
-            setBaseApiUrl('/bo');
           } else if (contextPath === ContextPath.POPUP) {
             if (!sessionInfo.apldUserAuthId) {
               setUnauthorized(true);
               return;
             }
             transferLocalStorage();
-            setBaseApiUrl('/fo');
           } else {
             if (!sessionInfo.apldUserAuthId) {
               setUnauthorized(true);
@@ -125,37 +128,33 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
             baseMenuList = userMenuList;
             myMenuList = sessionInfo.menuByAuthUser?.menus || [];
             routerFileName = 'userRouter';
-            setBaseApiUrl('/fo');
           }
 
           const routerList = await import(`@router/${routerFileName}`)
             .then((module) => module.default)
             .catch((reject) => reject([]));
 
-          // 권한 있는 메뉴만 필터
-          const filteredMenuList = baseMenuList.filter((baseMenuItem: any) =>
+          // 마이메뉴와 매핑되는 CRUD 메뉴 필터
+          const crudMenuList = baseMenuList.filter((baseMenuItem: any) =>
             myMenuList.find((myMenuItem) => {
-              if (myMenuItem.menuUrl === baseMenuItem.menuUrl) {
-                baseMenuItem.menuId = myMenuItem.menuId;
-                baseMenuItem.menuNm = myMenuItem.menuNm;
-                return true;
-              } else if (myMenuItem.menuUrl === getMenuParentId(baseMenuItem.menuUrl) && baseMenuItem.isCrudPage) {
-                baseMenuItem.menuId = myMenuItem.menuId;
-
+              if (myMenuItem.menuUrl === getMenuParentId(baseMenuItem.menuUrl) && baseMenuItem.isCrudPage) {
+                baseMenuItem.upMenuId = myMenuItem.menuId;
                 if (baseMenuItem.menuUrl.endsWith('/reg')) {
+                  baseMenuItem.menuId = `${myMenuItem.menuId}reg`;
                   baseMenuItem.menuNm = `${myMenuItem.menuNm} 등록`;
                 } else if (baseMenuItem.menuUrl.endsWith('/detail')) {
+                  baseMenuItem.menuId = `${myMenuItem.menuId}detail`;
                   baseMenuItem.menuNm = `${myMenuItem.menuNm} 상세`;
                 } else if (baseMenuItem.menuUrl.endsWith('/edit')) {
+                  baseMenuItem.menuId = `${myMenuItem.menuId}edit`;
                   baseMenuItem.menuNm = `${myMenuItem.menuNm} 수정`;
                 }
-
                 return true;
               }
-
               return false;
             })
           );
+          const filteredMenuList = myMenuList.concat(crudMenuList);
 
           // 라우터 필터
           const filteredRouterList = filterRouterRecursive(routerList, filteredMenuList);
@@ -164,8 +163,8 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
           const hierarchyMenuList = convertToHierarchyInfo(
             filteredMenuList.map((item: any) => ({
               ...item,
-              id: item.menuUrl,
-              parentId: getMenuParentId(item.menuUrl),
+              id: item.menuId,
+              parentId: item.upMenuId,
             }))
           );
 

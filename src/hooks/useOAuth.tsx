@@ -1,4 +1,5 @@
 import { useAppSelector } from '@/hooks/useRedux';
+import { ContextPath } from '@/models/common/Constants';
 import { selectContextPath } from '@/reducers/authSlice';
 import SessionApis from '@api/common/SessionApis';
 import CommonResponse, { StatusCode } from '@models/common/CommonResponse';
@@ -39,7 +40,7 @@ const useOAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis) => {
   }, [sessionApis, sessionUtil, authorizationCode]);
 
   useEffect(() => {
-    if (contextPath) {
+    if (contextPath !== ContextPath.UNAUTHORIZED) {
       if (!refreshToken && !isError) {
         if (authorizationCode) {
           getAccessTokenInfo();
