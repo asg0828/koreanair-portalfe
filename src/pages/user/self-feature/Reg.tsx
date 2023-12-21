@@ -725,7 +725,7 @@ const SelfFeatureReg = () => {
 	}
 	// 저장 버튼 클릭시
 	const onSubmitInsertHandler = () => {
-
+		// 중복확인 validation
 		// if (!isDupCheckKo) {
 		// 	toast({
 		// 		type: ValidType.ERROR,
@@ -776,9 +776,10 @@ const SelfFeatureReg = () => {
 			setIsOpenConfirmModal(true)
 		}
 	}
-	useDidMountEffect(() => {
-		faRefetch()
-	}, [featureAllParams])
+	// 중복확인 API 호출
+	// useDidMountEffect(() => {
+	// 	faRefetch()
+	// }, [featureAllParams])
 	// 중복 확인 Call back
 	useEffect(() => {
 		if (faIsError || faResponse?.successOrNot === 'N') {
