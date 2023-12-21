@@ -20,6 +20,12 @@
   text-align: center;
   word-break: keep-all;
   width: 100px !important;
+
+  & > div > div {
+    &:nth-child(2) {
+      visibility: hidden;
+    }
+  }
 }
 
 .verticalTableDiv {

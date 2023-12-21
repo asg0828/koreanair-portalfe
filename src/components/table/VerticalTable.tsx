@@ -1,8 +1,8 @@
 import NoResult from '@/components/emptyState/NoData';
-import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
+import { AlignCode, CheckedState, SortDirection } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import '@components/table/VerticalTable.scss';
-import { Checkbox, TBody, TD, TH, THead, TR, Table, Typography } from '@components/ui';
+import { Checkbox, Sort, TBody, TD, TH, THead, TR, Table, Typography } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
 
 export interface VerticalTableProps {
@@ -13,11 +13,12 @@ export interface VerticalTableProps {
   enableSort?: boolean;
   clickable?: boolean;
   isMultiSelected?: boolean;
-  initialSortedColumn?: string;
   rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
   onClick?: Function;
   onSortChange?: Function;
   children?: ReactNode;
+  sortedColumn?: string;
+  sortedDirection?: SortDirection;
 }
 
 const VerticalTable: React.FC<VerticalTableProps> = ({
@@ -27,19 +28,17 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   showHeader = true,
   enableSort = false,
   clickable = false,
-  initialSortedColumn = '',
   isMultiSelected = true,
   rowSelection,
   onClick,
   onSortChange,
-                                                     }) => {
+  sortedColumn,
+  sortedDirection,
+}) => {
   const isCheckbox = typeof rowSelection === 'function';
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);
   const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
-  const [sortRows, setSortRows] = useState<Array<RowsInfo>>(Array.from(rows));
-  const [sortedColumn, setSortedColumn] = useState('');
-  const [sortedDirection, setSortedDirection] = useState('');
 
   function formatNumber(value: number) {
     return new Intl.NumberFormat('ko-KR').format(value);
@@ -87,58 +86,18 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     isCheckbox && rowSelection(resultList[0], resultList[1]);
   };
 
-  const handleChangeSortDirection = (order: SortDirection, index: number) => {
-    const field = columns[index].field;
-    const oValue = order === SortDirectionCode.DESC ? 1 : -1;
-
-    // 방향이 반대로 설정되는 버그 처리 위해 임시로 설정
-    let direction;
-    if (order === 'asc') {
-      direction = 'desc';
-    } else {
-      direction = 'asc';
-    }
-
-    const sortedColumn = field;
-
-    const sortRows = [...rows].sort((a, b) => {
-      let valueA = a[field] || '';
-      let valueB = b[field] || '';
-
-      if (typeof valueA === 'string') {
-        return valueA.localeCompare(valueB) * oValue;
-      } else {
-        return (valueA - valueB) * oValue;
-      }
-    });
-    setSortRows(sortRows);
-    setSortedDirection(direction);
-    setSortedColumn(sortedColumn);
-    onSortChange?.(sortedColumn, direction, sortRows);
-  }
-
-  const initialSort = () => {
-    if (!initialSortedColumn || columns.length === 0) return;
-
-    const columnIndex = columns.findIndex((column) => column.field === initialSortedColumn);
-    if (columnIndex === -1) return;
-
-    const sortDirection = SortDirectionCode.DESC;
-    handleChangeSortDirection(sortDirection, columnIndex);
-  };
-
   const handleClick = (row: RowsInfo, index: number, selected: boolean) => {
     onClick && onClick(row, index, selected);
   };
 
-  useEffect(() => {
-    initialSort();
-  }, []);
+  const handleChangeSortDirection = (order: SortDirection, index: number) => {
+    onSortChange && onSortChange(order, index);
+  };
 
   useEffect(() => {
-    setSortRows(rows);
     setIsCheckedAll(false);
     setCheckedIndexList([]);
+    setCheckedList([]);
   }, [rows]);
 
   return (
@@ -156,23 +115,30 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                 </TH>
               )}
               {columns.map((column, index) => (
-                <TH
-                  className={`verticalTableTH ${sortedColumn && column.field === sortedColumn ? 'sortedColumn' : ''}`}
-                  key={`header-${index}`}
-                  required={column.require}
-                  colSpan={column.colSpan ? column.colSpan : undefined}
-                  enableSort={column.field.length > 0 && enableSort}
-                  onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
-                >
-                  {column.headerName}
-                </TH>
+                <>
+                  <TH
+                    className={`verticalTableTH ${sortedColumn && column.field === sortedColumn ? 'sortedColumn' : ''}`}
+                    key={`header-${index}`}
+                    required={column.require}
+                    colSpan={column.colSpan ? column.colSpan : undefined}
+                  >
+                    {column.headerName}
+                    {column.field.length > 0 && enableSort && (
+                      <Sort
+                        key={`${column.field}-${sortedDirection}`}
+                        defaultDirection={sortedColumn === column.field ? sortedDirection : undefined}
+                        onChangeSortDirection={(order) => handleChangeSortDirection(order, index)}
+                      />
+                    )}
+                  </TH>
+                </>
               ))}
             </TR>
           </THead>
         )}
-        {sortRows?.length > 0 ? (
+        {rows?.length > 0 ? (
           <TBody clickable={clickable}>
-            {sortRows.map((row, rowIndex) => {
+            {rows.map((row, rowIndex) => {
               const selected = checkedIndexList.includes(rowIndex);
 
               return (
