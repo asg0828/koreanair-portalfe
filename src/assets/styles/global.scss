@@ -1067,7 +1067,6 @@ svg {
   overflow: auto;
 }
 
-
 .c_level_right_modal_wrap {
   position: fixed;
   top: 102px;
@@ -1088,7 +1087,7 @@ svg {
   }
 
   .right_modal_btn_wrap {
-    width: 38px;
+    width: 25px;
     height: 240px;
     background-color: #64b6ed;
     border-radius: 19px;
@@ -1111,7 +1110,7 @@ svg {
 
   .right_modal_content_wrap {
     overflow: hidden;
-    transition: width .2s ease-in;
+    transition: width 0.2s ease-in;
     width: 0;
     filter: drop-shadow(0 0 20px rgba(0, 0, 0, 0.16));
   }
@@ -1124,7 +1123,6 @@ svg {
     padding: 32px;
 
     .right_modal_content_inner {
-
       > div {
         height: 100%;
       }
@@ -1136,8 +1134,7 @@ svg {
         border: 1px solid #dddddd;
         padding: 24px;
         text-align: center;
-        
-  
+
         .box_inner_txt {
           font-weight: 500;
           font-size: 0.875rem;
@@ -1195,7 +1192,7 @@ svg {
         padding: 10px 4px;
         letter-spacing: -1px;
       }
-  
+
       tbody > tr:first-child > td {
         border-top: 1px solid #a9a9a9;
       }
@@ -1219,5 +1216,4 @@ svg {
   }
   .right_modal_content {
   }
-  
 }
