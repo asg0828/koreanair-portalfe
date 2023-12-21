@@ -32,6 +32,8 @@ import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import { useTimeColumn } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
+import CstmrMetaColumnList from '../self-feature-adm/CstmrMetaColumnList';
+import CstmrMetaColumnLists from '../self-feature-adm/CstmrMetaColumnLists';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -373,38 +375,6 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
     }
   }, [response, isError, toast]);
 
-  // const gridComp = () => {
-  //   return (
-  //     <>
-  //       {/* pkYn : key 여부 체크박스 */}
-  //       <TD
-  //         key={`td-pkYn-${rowIndex}`}
-  //         colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-  //       >
-  //         <Checkbox
-  //           checked={row.pkYn === 'Y'}
-  //           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
-  //           key={`column-${columnIndex}`}
-  //           value={row.pkYn}
-  //         />
-  //       </TD>
-
-  //       {/* clmnUseYn : 사용 여부 체크박스 */}
-  //       <TD
-  //         key={`td-clmnUseYn-${rowIndex}`}
-  //         colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}
-  //       >
-  //         <Checkbox
-  //           onClick={(e) => ynChg(rowIndex, columns[columnIndex].field)}
-  //           key={`column-${columnIndex}`}
-  //           checked={row.clmnUseYn === 'Y'}
-  //           // defaultValue={columns[columnIndex].field === 'clmnUseYn' ? 'Y' : 'N'}
-  //           value={row.clmnUseYn}
-  //         />
-  //       </TD>
-  //     </>
-  //   );
-  // };
   return (
     <>
       <Table
@@ -434,6 +404,8 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         )}
         {tbCoMetaTblClmnInfoList?.length > 0 ? (
           <TBody clickable={clickable}>
+            {/* <CstmrMetaColumnLists columns={columns} rows={rows} list={tbCoMetaTblClmnInfoList} /> */}
+            {/* <CstmrMetaColumnList list={tbCoMetaTblClmnInfoList} columns={columns} rows={rows} /> */}
             {tbCoMetaTblClmnInfoList.map((row, rowIndex) => (
               <TR key={`row-${rowIndex}`}>
                 {Object.keys(columns).map((column, columnIndex) => {

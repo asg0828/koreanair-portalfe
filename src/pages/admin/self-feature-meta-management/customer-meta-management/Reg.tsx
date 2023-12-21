@@ -1,7 +1,7 @@
 import SearchForm from '@/components/form/SearchForm';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { Select, SelectOption, TD, TH, TR, TextField, useToast, Stack, Modal, Button } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import { customerMetaInfoColumn, customerMetaTableColumn, initTbCoMetaTblInfo } from './data';
 import DataGrid from '@/components/grid/DataGrid';
@@ -19,6 +19,7 @@ import { openModal } from '@/reducers/modalSlice';
 import { useAppDispatch } from '@/hooks/useRedux';
 
 const CustomerMetaManagementReg = () => {
+  // 테이블 정보
   const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<TbCoMetaTbInfo>(initTbCoMetaTblInfo);
   const [searchInfo, setSearchInfo] = useState<any>({
     metaTblPhysNm: '',
@@ -41,6 +42,7 @@ const CustomerMetaManagementReg = () => {
 
   //
   const { data: responseSchema, isError: isErrorSchema, refetch: refetchSchema } = useSchemaList();
+
   const {
     data: responseTblInfo,
     isError: isErrorTblInfo,
@@ -53,8 +55,11 @@ const CustomerMetaManagementReg = () => {
     isError: isErrorTblColumn,
     refetch: refetchTblColumn,
   } = useTableColumns(searchInfo.dbNm, searchInfo.metaTblPhysNm);
+
+  // 메타 테이블 컬럼 리스트
   const [tblColumns, setTblColumns] = useState<Array<any>>([]);
 
+  const tblLogicList = useCallback(() => refetchTblColumn(), responseTblColumn?.result);
   // 초기화 버튼
   const onClear = () => {
     setSearchInfo({
@@ -109,16 +114,20 @@ const CustomerMetaManagementReg = () => {
     const { id, value } = e.target;
     setSearchInfo({ ...searchInfo, [id]: value });
   }
-
+  const metaDetail = useCallback(() => refetch(), response?.result);
   const searchTblColumns = () => {
-    refetchTblColumn();
-    refetch();
+    // refetchTblColumn();
+    // refetch();
+    tblLogicList();
+    metaDetail();
   };
 
   // 테이블 리스트 조회
+  const tblList = useCallback(() => refetchTblInfo(), responseTblInfo?.result);
+
   useEffect(() => {
     if (searchInfo.dbNm !== (null || '')) {
-      refetchTblInfo();
+      tblList();
     }
   }, [searchInfo.dbNm]);
 
@@ -162,7 +171,7 @@ const CustomerMetaManagementReg = () => {
         setTblColumns(responseTblColumn?.result);
       }
     }
-  }, [responseTblColumn, isErrorTblColumn, toast]);
+  }, [responseTblColumn?.result, isErrorTblColumn, toast]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

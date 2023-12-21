@@ -1,4 +1,4 @@
-import { useCustomerInfo } from '@/hooks/queries/useCustomerInfoQueires';
+import { useCustomerInfo, useProfileOneId, useProfileSkypassNo } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -70,6 +70,11 @@ export default function List() {
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { refetch, data: response, isError } = useCustomerInfo(searchInfo);
   const { toast } = useToast();
+
+  // oneId로 profile 조회 api
+  const { refetch: refetchOneId, data: responseOneId, isError: isErrorOneId } = useProfileOneId('S200003049125482');
+  // skypassNo로 profile 조회 api
+  const { refetch: refetchSkypassNo, data: responseSkypassNo, isError: isErrorSkypassNo } = useProfileSkypassNo(0);
 
   const validation = () => {
     // 검색 조건 자체는 두개다 들어가도 가능
@@ -145,6 +150,7 @@ export default function List() {
       setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
     }
     // refetch();
+    refetchOneId();
   }, [refetch, searchInfo, validation]);
 
   // style > 배경색 변경
