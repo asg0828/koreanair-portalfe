@@ -9,6 +9,11 @@ import {
     Modal,
     Button,
     useToast,
+    Stack,
+    TR,
+    TH,
+    TD,
+    TextField,
 } from '@components/ui';
 import '@/assets/styles/SelfFeature.scss'
 
@@ -21,6 +26,7 @@ import { ValidType } from '@/models/common/Constants';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { PagingUtil, setPageList } from '@/utils/self-feature/PagingUtil';
 import DataGrid from '@/components/grid/DataGrid';
+import HorizontalTable from '@/components/table/HorizontalTable';
 
 export interface Props {
     isOpen?: boolean
@@ -44,8 +50,9 @@ const QuerySampleDataModal = ({
     const [page, setPage] = useState<PageModel>(cloneDeep(initPage))
     const [rows, setRows] = useState<Array<FeatSampleData>>([])
     const [querySampleDataList, setQuerySampleDatadList] = useState<Array<FeatSampleData>>([])
+    const [rslnId, setRslnId] = useState<string>("")
 
-    const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch } = useSampleData(rslnRuleId, custFeatRuleId)
+    const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch } = useSampleData(rslnId, custFeatRuleId)
 
     useEffect(() => {
         setIsOpenQuerySampleDataModal(isOpen)
@@ -99,16 +106,57 @@ const QuerySampleDataModal = ({
         setPageList(page, querySampleDataList, setRows)
     }, [page.page, page.pageSize, querySampleDataList])
 
+	// 검색 버튼 클릭시
+	const onsubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		sampleDataRefetch()
+	}
+	// 검색 조건 초기화
+	const onClearSearchInfo = () => {
+        setRslnId("")
+	}
     return (
         <Modal open={isOpenQuerySampleDataModal} onClose={handleClose} size='LG'>
             <Modal.Header>샘플 확인</Modal.Header>
             <Modal.Body>
+                {/* 검색 영역 */}
+                <form style={{width: "100%"}} onSubmit={onsubmitHandler}>
+                    <Stack direction="Vertical" gap="LG">
+                        <HorizontalTable>
+                            <TR>
+                                <TH colSpan={1} align="right">One ID</TH>
+                                <TD colSpan={3}>
+                                    <TextField
+                                        value={rslnId}
+                                        className="width-100"
+                                        onChange={(e) => {
+                                            const { id, value } = e.target
+                                            setRslnId(value)
+                                        }}
+                                    />
+                                </TD>
+                            </TR>
+                        </HorizontalTable>
+                        <Stack gap="SM" justifyContent="Center">
+                            <Button type="submit" priority="Primary" appearance="Contained" size="LG" >
+                                <span className="searchIcon"></span>
+                                검색
+                            </Button>
+                            <Button type="reset" size="LG" onClick={onClearSearchInfo}>
+                                초기화
+                            </Button>
+                        </Stack>
+                    </Stack>
+                </form>
+                {/* 검색 영역 */}
                 {/* 목록 영역 */}
                 <DataGrid
                     columns={columns}
                     rows={rows}
                     //enableSort={true}
                     //clickable={true}
+                    showPagination={false}
+                    showPageSizeSelect={false}
                     page={page}
                     onChange={handlePage}
                     //onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}

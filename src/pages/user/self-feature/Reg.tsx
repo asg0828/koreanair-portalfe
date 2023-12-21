@@ -726,20 +726,20 @@ const SelfFeatureReg = () => {
 	// 저장 버튼 클릭시
 	const onSubmitInsertHandler = () => {
 		// 중복확인 validation
-		// if (!isDupCheckKo) {
-		// 	toast({
-		// 		type: ValidType.ERROR,
-		// 		content: '한글명 중복 확인을 해주세요.',
-		// 	})
-		// 	return
-		// }
-		// if (!isDupCheckEn) {
-		// 	toast({
-		// 		type: ValidType.ERROR,
-		// 		content: '영문명 중복 확인을 해주세요.',
-		// 	})
-		// 	return
-		// }
+		if (!isDupCheckKo) {
+			toast({
+				type: ValidType.ERROR,
+				content: '한글명 중복 확인을 해주세요.',
+			})
+			return
+		}
+		if (!isDupCheckEn) {
+			toast({
+				type: ValidType.ERROR,
+				content: '영문명 중복 확인을 해주세요.',
+			})
+			return
+		}
 
 		setModalType(ModalType.CONFIRM)
 		setClickType("insertInfo")
@@ -777,9 +777,9 @@ const SelfFeatureReg = () => {
 		}
 	}
 	// 중복확인 API 호출
-	// useDidMountEffect(() => {
-	// 	faRefetch()
-	// }, [featureAllParams])
+	useDidMountEffect(() => {
+		faRefetch()
+	}, [featureAllParams])
 	// 중복 확인 Call back
 	useEffect(() => {
 		if (faIsError || faResponse?.successOrNot === 'N') {
@@ -875,7 +875,7 @@ const SelfFeatureReg = () => {
 									value={featureKoNmInput}
 									onChange={onchangeInputHandler}
 								/>
-								{/* <Button
+								<Button
 									appearance="Contained"
 									priority="Normal"
 									shape="Square"
@@ -883,7 +883,7 @@ const SelfFeatureReg = () => {
 									onClick={() => handleCheckDuplication('featureKoNm')}
 								>
 									중복확인
-								</Button> */}
+								</Button>
 							</Stack>
 						</TD>
 						<TH colSpan={1} align="right" required>영문명</TH>
@@ -896,7 +896,7 @@ const SelfFeatureReg = () => {
 									value={featureEnNmInput}
 									onChange={onchangeInputHandler}
 								/>
-								{/* <Button
+								<Button
 									appearance="Contained"
 									priority="Normal"
 									shape="Square"
@@ -904,7 +904,7 @@ const SelfFeatureReg = () => {
 									onClick={() => handleCheckDuplication('featureEnNm')}
 								>
 									중복확인
-								</Button> */}
+								</Button>
 							</Stack>
 						</TD>
 					</TR>
