@@ -147,7 +147,7 @@ const MstrProfMetaTblColumnList = ({
         rtn.push(addItem);
         if (isPushBaseTime) {
           updtItem.mstrSgmtRuleTblId = baseTimeYnClmn[0]?.metaTblId;
-          updtItem.mstrSgmtRuleTblNm = baseTimeYnClmn[0]?.metaTblClmnPhysNm;
+          updtItem.mstrSgmtRuleTblNm = baseTimeYnClmn[0]?.metaTblId ? baseTimeYnClmn[0]?.metaTblId.split('.')[1] : "";
           updtItem.mstrSgmtRuleClmnId = baseTimeYnClmn[0]?.metaTblClmnId;
           updtItem.mstrSgmtRuleClmnNm = baseTimeYnClmn[0]?.metaTblClmnPhysNm;
           updtItem.mstrSgmtRuleClmnDesc = baseTimeYnClmn[0]?.metaTblClmnLogiNm;
@@ -246,7 +246,7 @@ const MstrProfMetaTblColumnList = ({
             let updtItem: TbRsMstrSgmtRuleAttrClmn = cloneDeep(initTbRsMstrSgmtRuleAttrClmn);
             if (metaTblInfo && metaTblInfo.mstrSgmtRuleId !== '') updtItem.mstrSgmtRuleId = metaTblInfo.mstrSgmtRuleId;
             updtItem.mstrSgmtRuleTblId = colItem.metaTblId;
-            updtItem.mstrSgmtRuleTblNm = colItem.metaTblClmnPhysNm;
+            updtItem.mstrSgmtRuleTblNm = colItem.metaTblId ? colItem.metaTblId.split('.')[1] : ""
             updtItem.mstrSgmtRuleClmnId = colItem.metaTblClmnId;
             updtItem.mstrSgmtRuleClmnNm = colItem.metaTblClmnPhysNm;
             updtItem.mstrSgmtRuleClmnDesc = colItem.metaTblClmnLogiNm;
