@@ -3,6 +3,7 @@ import { ModalInfo } from '@/models/components/Modal';
 import { closeModal } from '@/reducers/modalSlice';
 import { Button, Modal, Stack, TextField } from '@components/ui';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const CalculationLogicModal = ({
   isOpen = false,
@@ -14,6 +15,7 @@ const CalculationLogicModal = ({
   onCancle,
   onClose,
 }: ModalInfo) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const [value, setValue] = useState<any>('');
 
@@ -64,15 +66,15 @@ const CalculationLogicModal = ({
         <Modal.Footer>
           {disabled ? (
             <Button priority="Primary" appearance="Contained" size="LG" onClick={handleConfirm}>
-              확인
+              {t('common.button.confirm')}
             </Button>
           ) : (
             <>
               <Button priority="Primary" appearance="Contained" size="LG" onClick={handleConfirm}>
-                저장
+                {t('common.button.reg')}
               </Button>
               <Button priority="Normal" appearance="Outline" size="LG" onClick={handleCancle}>
-                취소
+                {t('common.button.cancel')}
               </Button>
             </>
           )}

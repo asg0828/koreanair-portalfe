@@ -6,9 +6,11 @@ import { UserModel, UserParams } from '@/models/model/UserModel';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
@@ -29,7 +31,7 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.read'),
       });
     } else if (isSuccess) {
       setUserModel(response.data);
@@ -40,8 +42,8 @@ const Detail = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
         onConfirm={goToList}
       />
     );
@@ -50,17 +52,17 @@ const Detail = () => {
   return (
     <>
       <Stack direction="Vertical" gap="MD">
-        <Typography variant="h3">사용자 기본정보</Typography>
+        <Typography variant="h3">{t('management:header.userBasicInfo')}</Typography>
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
-              이메일
+              {t('management:label.userEmail')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.userEmail}
             </TD>
             <TH colSpan={1} align="right">
-              성명
+              {t('management:label.userNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.userNm}
@@ -68,13 +70,13 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              사번
+              {t('management:label.userId')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.userId}
             </TD>
             <TH colSpan={1} align="right">
-              부서
+              {t('management:label.deptNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.deptNm}
@@ -82,13 +84,13 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              사용여부
+              {t('management:label.employmentYn')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.useYn}
             </TD>
             <TH colSpan={1} align="right">
-              사용자예외그룹
+              {t('management:label.eUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.eUserAuthNm}
@@ -98,17 +100,17 @@ const Detail = () => {
       </Stack>
 
       <Stack direction="Vertical" gap="MD">
-        <Typography variant="h3">사용자 권한정보</Typography>
+        <Typography variant="h3">{t('management:header.userAuthInfo')}</Typography>
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
-              이전 사용자 권한
+              {t('management:label.bfUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.bfUserAuthNm}
             </TD>
             <TH colSpan={1} align="right">
-              적용 사용자 권한
+              {t('management:label.apldUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.apldUserAuthNm}
@@ -116,13 +118,13 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              이전 관리자 권한
+              {t('management:label.bfMgrAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.bfMgrAuthNm}
             </TD>
             <TH colSpan={1} align="right">
-              적용 관리자 권한
+              {t('management:label.apldMgrAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.apldMgrAuthNm}
@@ -130,7 +132,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              최종변경일시
+              {t('management:label.modiDt')}
             </TH>
             <TD colSpan={5} align="left">
               {userModel?.rgstDt}
@@ -141,7 +143,7 @@ const Detail = () => {
 
       <Stack gap="SM" justifyContent="End">
         <Button size="LG" onClick={goToList}>
-          목록
+          {t('common.button.list')}
         </Button>
       </Stack>
     </>

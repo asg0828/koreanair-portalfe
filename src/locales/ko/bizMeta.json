@@ -1,0 +1,62 @@
+{
+  "header": {
+    "basicInfo": "기본 정보",
+    "applyInfo": "신청 정보"
+  },
+  "label": {
+    "featureSeGrp": "대구분",
+    "featureSe": "중구분",
+    "searchFeature": "검색 Feature",
+    "searchCondition": "검색 조건",
+    "featureKoNm": "Feature 한글명",
+    "featureEnNm": "Feature 영문명",
+    "def": "정의",
+    "enrUserNm": "Feature 신청자",
+    "enrDeptNm": "신청부서(팀)",
+    "featureId": "Feature ID",
+    "featureTyp": "Feature 타입",
+    "koNm": "한글명",
+    "enNm": "영문명",
+    "featureDef": "Feature 정의",
+    "calcUnt": "산출단위",
+    "featureFm": "산출로직",
+    "featureRelTb": "연관테이블",
+    "featureDsc": "비고",
+    "searchTable": "검색 테이블",
+    "tableKoNm": "테이블 한글명",
+    "tableEnNm": "테이블 영문명",
+    "tableDef": "테이블 정의",
+    "srcTbNm": "원천테이블명",
+    "dbNm": "DB명",
+    "columnDef": "컬럼 정의",
+    "srcSys": "원천시스템",
+    "srcClNm": "원천 컬럼명"
+  },
+  "message": {
+    "validCheck": "중복확인을 해주세요.",
+    "duplicationNm": "이미 존재하는 이름입니다.",
+    "textInput": "텍스트를 입력해주세요."
+  },
+  "toast": {
+    "confirm": {
+      "availableNm": "사용가능한 이름입니다.",
+      "duplicationNm": "이미 존재하는 이름입니다."
+    },
+    "info": {
+      "notChangedNm": "변경되지 않은 이름입니다.",
+      "notCheckedFeature": "선택된 Feature가 없습니다."
+    },
+    "success": {
+      "addedInterestFeature": "관심 Feature에 추가되었습니다.",
+      "deletedInterestFeature": "관심 Feature에서 삭제되었습니다."
+    },
+    "error": {
+      "featureSeGrpList": "Feature 대구분 목록 조회 중 에러가 발생했습니다.",
+      "featureSeList": "Feature 중구분 목록 조회 중 에러가 발생했습니다.",
+      "featureTypList": "Feature 타입 목록 조회 중 에러가 발생했습니다.",
+      "duplication": "중복확인 중 에러가 발생했습니다.",
+      "addedInterestFeature": "관심 Feature 추가 중 에러가 발생했습니다.",
+      "deletedInterestFeature": "관심 Feature 삭제 중 에러가 발생했습니다."
+    }
+  }
+}

@@ -9,19 +9,8 @@ import { PageModel, initPage } from '@/models/model/PageModel';
 import { UserModel, UserParams } from '@/models/model/UserModel';
 import { Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const columns = [
-  { headerName: 'No', field: 'rownum', colSpan: 0.5 },
-  { headerName: '이메일', field: 'userEmail', colSpan: 1.5 },
-  { headerName: '성명', field: 'userNm', colSpan: 1 },
-  { headerName: '사번', field: 'userId', colSpan: 1 },
-  { headerName: '부서명', field: 'deptNm', colSpan: 1 },
-  { headerName: '사용자권한', field: 'userAuthNm', colSpan: 1 },
-  { headerName: '관리자권한', field: 'mgrAuthNm', colSpan: 1 },
-  { headerName: '최종접속시간', field: 'lastLogDt', colSpan: 1 },
-  { headerName: '재직구분', field: 'useYn', colSpan: 1 },
-];
 
 const initParams: UserParams = {
   userNm: '',
@@ -32,6 +21,7 @@ const initParams: UserParams = {
 };
 
 const List = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
@@ -44,6 +34,18 @@ const List = () => {
   const { data: response, isError, refetch } = useUserList(params, page);
   const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
   const { data: aaResponse, isError: aaIsError, refetch: aaUreftch } = useAdminAuthAllList();
+
+  const columns = [
+    { headerName: 'No', field: 'rownum', colSpan: 0.5 },
+    { headerName: t('management:label.userEmail'), field: 'userEmail', colSpan: 1.5 },
+    { headerName: t('management:label.userNm'), field: 'userNm', colSpan: 1 },
+    { headerName: t('management:label.userId'), field: 'userId', colSpan: 1 },
+    { headerName: t('management:label.deptNm'), field: 'deptNm', colSpan: 1 },
+    { headerName: t('management:label.userAuthNm'), field: 'userAuthNm', colSpan: 1 },
+    { headerName: t('management:label.mgrAuthNm'), field: 'mgrAuthNm', colSpan: 1 },
+    { headerName: t('management:label.lastLogDt'), field: 'lastLogDt', colSpan: 1 },
+    { headerName: t('management:label.employmentYn'), field: 'useYn', colSpan: 1 },
+  ];
 
   const goToDetail = (row: UserModel, index: number) => {
     navigate(View.DETAIL, {
@@ -81,21 +83,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
-      });
-    } else {
-      if (response?.data) {
-        setRows(response.data.contents);
-        setPage(response.data.page);
-      }
-    }
-  }, [response, isError, toast]);
-
-  useEffect(() => {
-    if (isError || response?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.menuList'),
       });
     } else {
       if (response?.data) {
@@ -109,7 +97,7 @@ const List = () => {
     if (uaIsError || uaResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '사용자 권한그룹 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.userAuthList'),
       });
     } else {
       if (uaResponse?.data) {
@@ -122,7 +110,7 @@ const List = () => {
     if (aaIsError || aaResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '관리자 권한그룹 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.mgmtAuthList'),
       });
     } else {
       if (aaResponse?.data) {
@@ -136,7 +124,7 @@ const List = () => {
       <SearchForm onSearch={handleSearch} onClear={handleClear}>
         <TR>
           <TH colSpan={1} align="right">
-            성명
+            {t('management:label.userNm')}
           </TH>
           <TD colSpan={2} align="left">
             <TextField
@@ -147,7 +135,7 @@ const List = () => {
             />
           </TD>
           <TH colSpan={1} align="right">
-            부서명
+            {t('management:label.deptNm')}
           </TH>
           <TD colSpan={2} align="left">
             <TextField
@@ -160,7 +148,7 @@ const List = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">
-            관리자권한
+            {t('management:label.mgrAuthNm')}
           </TH>
           <TD colSpan={2} align="left">
             <Select
@@ -178,12 +166,12 @@ const List = () => {
             </Select>
           </TD>
           <TH colSpan={1} align="right">
-            사용자권한
+            {t('management:label.userAuthNm')}
           </TH>
           <TD colSpan={2} align="left">
             <Select
               appearance="Outline"
-              placeholder="전체"
+              placeholder={t('common.placeholder.all')}
               className="width-100"
               onChange={(e, value) => value && handleChangeParams('userAuthId', value)}
               value={params.userAuthId}
@@ -198,12 +186,12 @@ const List = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">
-            재직구분
+            {t('management:label.employmentYn')}
           </TH>
           <TD colSpan={5} align="left">
             <Stack gap="LG" className="width-100">
               <Radio
-                label="전체"
+                label={t('management:label.all')}
                 checked={!params.useYn}
                 value={''}
                 onChange={(e) => handleChangeParams('useYn', e.target.value)}

@@ -3,7 +3,7 @@ import { useDeleteMultipleInterestFeature } from '@/hooks/mutations/useUserFeatu
 import { useInterestFeatureList } from '@/hooks/queries/useFeatureQueries';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath, ModalType, ValidType, View } from '@/models/common/Constants';
+import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { FeatureModel } from '@/models/model/FeatureModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
@@ -11,19 +11,11 @@ import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
-const columns: Array<ColumnsInfo> = [
-  { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
-  { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
-  { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1.8, align: 'left' },
-  { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1.8, align: 'left' },
-  { headerName: '정의', field: 'featureDef', colSpan: 1.9, align: 'left' },
-  { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
-  { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
-];
-
 const List = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const dispatch = useAppDispatch();
@@ -40,6 +32,16 @@ const List = () => {
     mutate: dmMutate,
   } = useDeleteMultipleInterestFeature(userId, featureIds);
 
+  const columns: Array<ColumnsInfo> = [
+    { headerName: t('bizMeta:label.featureSeGrp'), field: 'featureSeGrpNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.featureSe'), field: 'featureSeNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.featureEnNm'), field: 'featureEnNm', colSpan: 1.8, align: 'left' },
+    { headerName: t('bizMeta:label.featureKoNm'), field: 'featureKoNm', colSpan: 1.8, align: 'left' },
+    { headerName: t('bizMeta:label.def'), field: 'featureDef', colSpan: 1.9, align: 'left' },
+    { headerName: t('bizMeta:label.enrUserNm'), field: 'enrUserNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.enrDeptNm'), field: 'enrDeptNm', colSpan: 1 },
+  ];
+
   const goToDetail = (row: FeatureModel, index: number) => {
     const path = contextPath === ContextPath.ADMIN ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
     navigate(`${contextPath}${path}`, {
@@ -53,14 +55,14 @@ const List = () => {
     if (featureIds.length === 0) {
       toast({
         type: ValidType.INFO,
-        content: '선택된 대상이 없습니다.',
+        content: t('bizMeta:toast.info.notCheckedFeature'),
       });
     } else {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
-          title: '삭제',
-          content: '관심 Feature를 삭제하시겠습니까?',
+          title: t('common.modal.title.delete'),
+          content: t('common.modal.message.deleteFeatureConfirm'),
           onConfirm: dmMutate,
         })
       );
@@ -83,7 +85,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.list'),
       });
     } else {
       if (response?.data) {
@@ -97,12 +99,12 @@ const List = () => {
     if (dmIsError || dmResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '관심 Feature 삭제 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.deletedInterestFeature'),
       });
     } else if (dmIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '관심 Feature에서 삭제되었습니다.',
+        content: t('bizMeta:toast.success.deletedInterestFeature'),
       });
       handleSearch();
     }
@@ -122,7 +124,7 @@ const List = () => {
         }}
         buttonChildren={
           <Button priority="Primary" appearance="Contained" size="LG" onClick={handleRemoveInterestFeature}>
-            관심 해제
+            {t('common.button.cancelInterestFeature')}
           </Button>
         }
       />

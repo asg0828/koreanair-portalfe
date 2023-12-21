@@ -15,6 +15,7 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const initRows: DatasetColumnModel = {
@@ -29,6 +30,7 @@ const initRows: DatasetColumnModel = {
 export type fieldType = 'mcsKoNm' | 'mcsEnNm' | 'mcsDef' | 'srcClNm' | 'clFm';
 
 const Edit = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -64,7 +66,7 @@ const Edit = () => {
   const codeList = useAppSelector(selectCodeList(GroupCodeType.DBMS));
   const columns: Array<ColumnsInfo> = [
     {
-      headerName: '한글명',
+      headerName: t('bizMeta:label.koNm'),
       field: 'mcsKoNm',
       colSpan: 2,
       maxLength: 100,
@@ -73,7 +75,7 @@ const Edit = () => {
         EditableColumnItem(rowIndex, fieldName, maxLength),
     },
     {
-      headerName: '영문명',
+      headerName: t('bizMeta:label.enNm'),
       field: 'mcsEnNm',
       colSpan: 2,
       maxLength: 100,
@@ -82,7 +84,7 @@ const Edit = () => {
         EditableColumnItem(rowIndex, fieldName, maxLength),
     },
     {
-      headerName: '원천 컬럼명',
+      headerName: t('bizMeta:label.srcClNm'),
       field: 'srcClNm',
       colSpan: 2,
       maxLength: 300,
@@ -91,7 +93,7 @@ const Edit = () => {
         EditableColumnItem(rowIndex, fieldName, maxLength),
     },
     {
-      headerName: '정의',
+      headerName: t('bizMeta:label.def'),
       field: 'mcsDef',
       colSpan: 2.9,
       require: true,
@@ -99,7 +101,7 @@ const Edit = () => {
         EditableColumnItem(rowIndex, fieldName, maxLength),
     },
     {
-      headerName: '산출로직',
+      headerName: t('bizMeta:label.featureFm'),
       field: 'clFm',
       colSpan: 1.1,
       require: true,
@@ -131,9 +133,9 @@ const Edit = () => {
           className="width-100"
           {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
             pattern:
-              fieldName === 'mcsEnNm' ? { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' } : undefined,
-            required: { value: true, message: `${fieldName} is required.` },
-            maxLength: maxLength && { value: maxLength, message: 'max length exceeded' },
+              fieldName === 'mcsEnNm' ? { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') } : undefined,
+            required: { value: true, message: t('common.validate.required') },
+            maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
           })}
           onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
         />
@@ -150,8 +152,8 @@ const Edit = () => {
             multiline
             className="hidden"
             {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
-              required: { value: true, message: `${fieldName} is required.` },
-              maxLength: maxLength && { value: maxLength, message: 'max length exceeded' },
+              required: { value: true, message: t('common.validate.required') },
+              maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
             })}
           />
           <Button
@@ -159,7 +161,7 @@ const Edit = () => {
             appearance="Contained"
             onClick={() => openCalculationLogicModal(rowIndex, fieldName)}
           >
-            입력
+            {t('common.button.input')}
           </Button>
         </Stack>
         <ErrorLabel message={errors?.columnSpecs?.[rowIndex]?.[fieldName]?.message} />
@@ -171,7 +173,7 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CALCULATION_LOGIC,
-        title: '산출로직',
+        title: t('bizMeta:label.featureFm'),
         content: values.columnSpecs[rowIndex][fieldName],
         onConfirm: (value: string) => setValue(`columnSpecs.${rowIndex}.${fieldName}`, value),
         onCancle: () => setValue(`columnSpecs.${rowIndex}.${fieldName}`, values.columnSpecs[rowIndex][fieldName]),
@@ -191,8 +193,8 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '확인',
-        content: '목록으로 이동하시겠습니까?',
+        title: t('common.modal.title.confirm'),
+        content: t('common.modal.message.listConfirm'),
         onConfirm: goToList,
       })
     );
@@ -225,8 +227,8 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '저장',
-        content: '수정하시겠습니까?',
+        title: t('common.modal.title.update'),
+        content: t('common.modal.message.updateConfirm'),
         onConfirm: mutate,
       })
     );
@@ -236,7 +238,7 @@ const Edit = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.read'),
       });
     } else if (isSuccess && response.data) {
       setValue('mtsKoNm', response.data.mtsKoNm);
@@ -264,12 +266,12 @@ const Edit = () => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '수정 중 에러가 발생했습니다.',
+        content: t('common.toast.error.update'),
       });
     } else if (uIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '수정되었습니다.',
+        content: t('common.toast.success.update'),
       });
       goToList();
     }
@@ -279,8 +281,8 @@ const Edit = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
         onConfirm={goToList}
       />
     );
@@ -290,19 +292,19 @@ const Edit = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
         <Stack direction="Vertical" gap="MD" className="height-100">
-          <Typography variant="h3">기본 정보</Typography>
+          <Typography variant="h3">{t('bizMeta:header.basicInfo')}</Typography>
           <HorizontalTable>
             <TR>
               <TH required colSpan={1} align="right">
-                테이블 한글명
+                {t('bizMeta:label.tableKoNm')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('mtsKoNm', {
-                      required: { value: true, message: 'mtsKoNm is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
+                      required: { value: true, message: t('common.validate.required') },
+                      maxLength: { value: 100, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.mtsKoNm?.message ? 'Error' : undefined}
                     autoFocus
@@ -311,16 +313,16 @@ const Edit = () => {
                 </Stack>
               </TD>
               <TH required colSpan={1} align="right">
-                테이블 영문명
+                {t('bizMeta:label.tableEnNm')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('mtsEnNm', {
-                      pattern: { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' },
-                      required: { value: true, message: 'mtsEnNm is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
+                      pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
+                      required: { value: true, message: t('common.validate.required') },
+                      maxLength: { value: 100, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.mtsEnNm?.message ? 'Error' : undefined}
                     autoFocus
@@ -331,7 +333,7 @@ const Edit = () => {
             </TR>
             <TR>
               <TH required colSpan={1} align="right">
-                테이블 정의
+                {t('bizMeta:label.tableDef')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -339,8 +341,8 @@ const Edit = () => {
                     multiline
                     className="width-100"
                     {...register('mtsDef', {
-                      required: { value: true, message: 'mtsDef is required.' },
-                      maxLength: { value: 100, message: 'max length exceeded' },
+                      required: { value: true, message: t('common.validate.required') },
+                      maxLength: { value: 100, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.mtsDef?.message ? 'Error' : undefined}
                     autoFocus
@@ -351,7 +353,7 @@ const Edit = () => {
             </TR>
             <TR>
               <TH colSpan={1} required align="right">
-                컬럼 정의
+                {t('bizMeta:label.columnDef')}
               </TH>
               <TD colSpan={5} className="height-300 overflow-auto">
                 <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
@@ -366,14 +368,14 @@ const Edit = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                원천시스템
+                {t('bizMeta:label.srcSys')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('srcSys', {
-                      maxLength: { value: 300, message: 'max length exceeded' },
+                      maxLength: { value: 300, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.srcSys?.message ? 'Error' : undefined}
                     autoFocus
@@ -384,14 +386,14 @@ const Edit = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                원천테이블명
+                {t('bizMeta:label.srcTbNm')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('srcTbNm', {
-                      maxLength: { value: 300, message: 'max length exceeded' },
+                      maxLength: { value: 300, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.srcTbNm?.message ? 'Error' : undefined}
                     autoFocus
@@ -402,7 +404,7 @@ const Edit = () => {
             </TR>
             <TR>
               <TH colSpan={1} required align="right">
-                DB명
+                {t('bizMeta:label.dbNm')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -410,13 +412,13 @@ const Edit = () => {
                     name="srcDbCd"
                     control={control}
                     rules={{
-                      maxLength: { value: 32, message: 'max length exceeded' },
-                      required: 'srcDbCd is required.',
+                      required: t('common.validate.required'),
+                      maxLength: { value: 32, message: t('common.validate.maxLength') },
                     }}
                     render={({ field }) => (
                       <Select
                         appearance="Outline"
-                        placeholder="전체"
+                        placeholder={t('common.placeholder.all')}
                         className="width-100"
                         ref={field.ref}
                         onChange={(e, value) => value && field.onChange(value)}
@@ -435,7 +437,7 @@ const Edit = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                비고
+                {t('bizMeta:label.featureDsc')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -454,10 +456,10 @@ const Edit = () => {
 
         <Stack gap="SM" justifyContent="End">
           <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-            등록
+            {t('common.button.reg')}
           </Button>
           <Button size="LG" onClick={handleList}>
-            목록
+            {t('common.button.list')}
           </Button>
         </Stack>
       </Stack>

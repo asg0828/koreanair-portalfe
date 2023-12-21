@@ -15,6 +15,7 @@ import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { Button, Checkbox, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 export const initFeatureParams: FeatureParams = {
@@ -29,8 +30,9 @@ export const initFeatureParams: FeatureParams = {
 };
 
 const List = () => {
-  const navigate = useNavigate();
+  const { t } = useTranslation();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
@@ -40,6 +42,13 @@ const List = () => {
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
   const [params, setParams] = useState<FeatureParams>(beforeParams || initFeatureParams);
   const [page, setPage] = useState<PageModel>(initPage);
+  const [rows, setRows] = useState<Array<FeatureModel>>([]);
+  const { data: response, isError, refetch } = useFeatureList(params, page);
+  const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
+  const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
+  const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateInterestFeature();
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
+
   const columns: Array<ColumnsInfo> = [
     {
       headerName: '',
@@ -72,20 +81,14 @@ const List = () => {
         );
       },
     },
-    { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 0.8 },
-    { headerName: '중구분', field: 'featureSeNm', colSpan: 0.8 },
-    { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1.9, align: 'left' },
-    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1.9, align: 'left' },
-    { headerName: '정의', field: 'featureDef', colSpan: 2, align: 'left' },
-    { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
-    { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1.2 },
+    { headerName: t('bizMeta:label.featureSeGrp'), field: 'featureSeGrpNm', colSpan: 0.8 },
+    { headerName: t('bizMeta:label.featureSe'), field: 'featureSeNm', colSpan: 0.8 },
+    { headerName: t('bizMeta:label.featureKoNm'), field: 'featureKoNm', colSpan: 1.9, align: 'left' },
+    { headerName: t('bizMeta:label.featureEnNm'), field: 'featureEnNm', colSpan: 1.9, align: 'left' },
+    { headerName: t('bizMeta:label.def'), field: 'featureDef', colSpan: 2, align: 'left' },
+    { headerName: t('bizMeta:label.enrUserNm'), field: 'enrUserNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.enrDeptNm'), field: 'enrDeptNm', colSpan: 1.2 },
   ];
-  const [rows, setRows] = useState<Array<FeatureModel>>([]);
-  const { data: response, isError, refetch } = useFeatureList(params, page);
-  const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
-  const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
-  const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateInterestFeature();
-  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
 
   const goToReg = () => {
     navigate(View.REG, {
@@ -187,7 +190,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.list'),
       });
     } else {
       if (response?.data) {
@@ -201,7 +204,7 @@ const List = () => {
     if (tIsError || tResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.featureSeGrpList'),
       });
     } else {
       if (tResponse?.data) {
@@ -214,7 +217,7 @@ const List = () => {
     if (sIsError || sResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.featureSeList'),
       });
     } else {
       if (sResponse?.data) {
@@ -227,12 +230,12 @@ const List = () => {
     if (cIsError || cResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '관심 Feature 추가 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.addedInterestFeature'),
       });
     } else if (cIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '관심 Feature에 추가되었습니다.',
+        content: t('bizMeta:toast.success.addedInterestFeature'),
       });
       refetch();
     }
@@ -242,12 +245,12 @@ const List = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '관심 Feature 삭제 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.deletedInterestFeature'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '관심 Feature에서 삭제되었습니다.',
+        content: t('bizMeta:toast.success.deletedInterestFeature'),
       });
       refetch();
     }
@@ -258,12 +261,12 @@ const List = () => {
       <SearchForm onSearch={handleSearch} onClear={handleClear}>
         <TR>
           <TH colSpan={1} align="right">
-            대구분
+            {t('bizMeta:label.featureSeGrp')}
           </TH>
           <TD colSpan={2}>
             <Select
               appearance="Outline"
-              placeholder="전체"
+              placeholder={t('common.placeholder.all')}
               className="width-100"
               onChange={(e, value) => value && handleChangeParams('featureSeGrp', value)}
               value={params.featureSeGrp}
@@ -274,12 +277,12 @@ const List = () => {
             </Select>
           </TD>
           <TH colSpan={1} align="right">
-            중구분
+            {t('bizMeta:label.featureSe')}
           </TH>
           <TD colSpan={2}>
             <Select
               appearance="Outline"
-              placeholder="전체"
+              placeholder={t('common.placeholder.all')}
               className="width-100"
               onChange={(e, value) => value && handleChangeParams('featureSe', value)}
               value={params.featureSe}
@@ -292,7 +295,7 @@ const List = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">
-            검색 Feature
+            {t('bizMeta:label.searchFeature')}
           </TH>
           <TD colSpan={5} align="left">
             <TextField
@@ -306,21 +309,21 @@ const List = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">
-            검색 조건
+            {t('bizMeta:label.searchCondition')}
           </TH>
           <TD colSpan={5} align="left">
             <Checkbox
-              label="Feature 한글명"
+              label={t('bizMeta:label.featureKoNm')}
               onCheckedChange={(checked) => handleChangeSearchConditions('featureKoNm', checked)}
               checked={params.searchConditions.includes('featureKoNm')}
             />
             <Checkbox
-              label="Feature 영문명"
+              label={t('bizMeta:label.featureEnNm')}
               onCheckedChange={(checked) => handleChangeSearchConditions('featureEnNm', checked)}
               checked={params.searchConditions.includes('featureEnNm')}
             />
             <Checkbox
-              label="정의"
+              label={t('bizMeta:label.def')}
               onCheckedChange={(checked) => handleChangeSearchConditions('featureDef', checked)}
               checked={params.searchConditions.includes('featureDef')}
             />
@@ -328,7 +331,7 @@ const List = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">
-            Feature 신청자
+            {t('bizMeta:label.enrUserNm')}
           </TH>
           <TD colSpan={2}>
             <Stack gap="SM" className="width-100">
@@ -345,7 +348,7 @@ const List = () => {
             </Stack>
           </TD>
           <TH colSpan={1} align="right">
-            {`신청부서(팀)`}
+            {t('bizMeta:label.enrDeptNm')}
           </TH>
           <TD colSpan={2}>
             <Stack gap="SM" className="width-100">
@@ -375,7 +378,7 @@ const List = () => {
           contextPath === ContextPath.ADMIN && (
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
               <AddIcon />
-              등록
+              {t('common.button.reg')}
             </Button>
           )
         }

@@ -1,0 +1,40 @@
+{
+  "common": {
+    "bizMeta": "BIZ 메타",
+    "cdp": "Customer Data Portal",
+    "feature": "Feature",
+    "tableDefinition": "테이블정의",
+    "averageDailyUsers": "일평균사용자",
+    "notice": "공지사항",
+    "faq": "FAQ",
+    "qna": "Q&A",
+    "recentFeature": "최근 Feature",
+    "popularfeature": "인기 Feature",
+    "more": "more"
+  },
+  "userHome": {
+    "myDepartment": "내 부서",
+    "applyRegistFeature": "신청/등록 Feature",
+    "interestFeature": "관심 Feature"
+  },
+  "adminHome": {
+    "loginInfo": "접속 정보",
+    "loginTime": "로그인 시간",
+    "ipAddress": "IP 주소",
+    "usersByDepartment": "부서별 접속자수",
+    "oneWeek": "지난 일주일 기준"
+  },
+  "toast": {
+    "confirm": {
+      "addedInterestFeature": "관심 Feature에 추가되었습니다.",
+      "deletedInterestFeature": "관심 Feature에서 삭제되었습니다."
+    },
+    "error": {
+      "noticeList": "공지사항 목록 조회 중 에러가 발생했습니다.",
+      "faqList": "FAQ 목록 조회 중 에러가 발생했습니다.",
+      "qnaList": "QNA 목록 조회 중 에러가 발생했습니다.",
+      "recentFeatureList": "최근 Feature 목록 조회 중 에러가 발생했습니다.",
+      "popularFeatureList": "인기 Feature 목록 조회 중 에러가 발생했습니다."
+    }
+  }
+}

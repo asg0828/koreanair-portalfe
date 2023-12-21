@@ -14,10 +14,12 @@ import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -29,13 +31,13 @@ const Detail = () => {
   const { data: response, isSuccess, isError } = useDataroomById(dataId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteDataroom(dataId);
 
-  const goToList = () => {
+  const goToList = useCallback(() => {
     navigate('..', {
       state: {
         params: params,
       },
     });
-  };
+  }, [params, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
@@ -59,8 +61,8 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '삭제',
-        content: '삭제하시겠습니까?',
+        title: t('common.modal.title.delete'),
+        content: t('common.modal.message.deleteConfirm'),
         onConfirm: mutate,
       })
     );
@@ -72,12 +74,12 @@ const Detail = () => {
     if (isSuccess) {
       toast({
         type: ValidType.INFO,
-        content: '파일이 다운로드되었습니다.',
+        content: t('common.toast.success.download'),
       });
     } else {
       toast({
         type: ValidType.ERROR,
-        content: '파일 다운로드 중 에러가 발생했습니다.',
+        content: t('common.toast.error.download'),
       });
     }
   };
@@ -86,7 +88,7 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.list'),
       });
     } else if (isSuccess && response.data) {
       response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
@@ -98,12 +100,12 @@ const Detail = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: t('common.toast.error.delete'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: t('common.toast.success.delete'),
       });
       goToList();
     }
@@ -113,8 +115,8 @@ const Detail = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
         onConfirm={goToList}
       />
     );
@@ -136,7 +138,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right" className="attachFile">
-              첨부파일
+              {t('board:label.attachedFile')}
             </TH>
             <TD colSpan={5} align="left">
               <ul className="attachFileList">
@@ -155,7 +157,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              다음
+              {t('board:label.next')}
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
@@ -168,7 +170,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              이전
+              {t('board:label.prev')}
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
@@ -186,15 +188,15 @@ const Detail = () => {
         {contextPath === ContextPath.ADMIN && (
           <>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-              수정
+              {t('common.button.edit')}
             </Button>
             <Button priority="Normal" size="LG" onClick={handleDelete}>
-              삭제
+              {t('common.button.delete')}
             </Button>
           </>
         )}
         <Button size="LG" onClick={goToList}>
-          목록
+          {t('common.button.list')}
         </Button>
       </Stack>
     </>

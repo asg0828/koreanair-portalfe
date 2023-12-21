@@ -16,9 +16,11 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -64,8 +66,8 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '확인',
-        content: '목록으로 이동하시겠습니까?',
+        title: t('common.modal.title.confirm'),
+        content: t('common.modal.message.listConfirm'),
         onConfirm: goToList,
       })
     );
@@ -75,8 +77,8 @@ const Edit = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '수정',
-        content: '수정하시겠습니까?',
+        title: t('common.modal.title.update'),
+        content: t('common.modal.message.updateConfirm'),
         onConfirm: mutate,
       })
     );
@@ -106,7 +108,7 @@ const Edit = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.read'),
       });
     }
   }, [response, isError, toast]);
@@ -115,12 +117,12 @@ const Edit = () => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '수정 중 에러가 발생했습니다.',
+        content: t('common.toast.error.update'),
       });
     } else if (uIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '수정되었습니다.',
+        content: t('common.toast.success.update'),
       });
       goToList();
     }
@@ -130,8 +132,8 @@ const Edit = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
         onConfirm={goToList}
       />
     );
@@ -143,15 +145,15 @@ const Edit = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={1} align="right" required>
-              제목
+              {t('board:label.sj')}
             </TH>
             <TD colSpan={5} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
                   {...register('sj', {
-                    required: { value: true, message: 'subject is required.' },
-                    maxLength: { value: 100, message: 'max length exceeded' },
+                    required: { value: true, message: t('common.validate.required') },
+                    maxLength: { value: 100, message: t('common.validate.maxLength') },
                   })}
                   validation={errors?.sj?.message ? 'Error' : undefined}
                   autoFocus
@@ -162,18 +164,18 @@ const Edit = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right" required>
-              분류
+              {t('board:label.clCodeNm')}
             </TH>
             <TD colSpan={5} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <Controller
                   name="clCode"
                   control={control}
-                  rules={{ required: 'code is required.' }}
+                  rules={{ required: t('common.validate.required') }}
                   render={({ field }) => (
                     <Select
                       appearance="Outline"
-                      placeholder="전체"
+                      placeholder={t('common.placeholder.all')}
                       className="width-100"
                       ref={field.ref}
                       onChange={(e, value) => value && field.onChange(value)}
@@ -192,25 +194,35 @@ const Edit = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              공개여부
+              {t('board:label.openYn')}
             </TH>
             <TD colSpan={2} align="left">
-              <Radio label="공개" value="Y" defaultChecked={values.openYn === 'Y'} {...register('openYn')} />
-              <Radio label="미공개" value="N" defaultChecked={values.openYn === 'N'} {...register('openYn')} />
+              <Radio
+                label={t('board:label.open')}
+                value="Y"
+                defaultChecked={values.openYn === 'Y'}
+                {...register('openYn')}
+              />
+              <Radio
+                label={t('board:label.unopen')}
+                value="N"
+                defaultChecked={values.openYn === 'N'}
+                {...register('openYn')}
+              />
             </TD>
             <TH colSpan={1} align="right" required>
-              상태
+              {t('board:label.qnaStatNm')}
             </TH>
             <TD colSpan={2} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <Controller
                   name="qnaStat"
                   control={control}
-                  rules={{ required: 'stat is required.' }}
+                  rules={{ required: t('common.validate.required') }}
                   render={({ field }) => (
                     <Select
                       appearance="Outline"
-                      placeholder="전체"
+                      placeholder={t('common.placeholder.all')}
                       className="width-100"
                       ref={field.ref}
                       onChange={(e, value) => value && field.onChange(value)}
@@ -229,7 +241,7 @@ const Edit = () => {
           </TR>
           <TR className="height-100">
             <TH colSpan={1} align="right" required>
-              내용
+              {t('board:label.cn')}
             </TH>
             <TD colSpan={5} align="left" className="content">
               <Stack gap="SM" className="width-100" direction="Vertical">
@@ -237,7 +249,7 @@ const Edit = () => {
                   name="cn"
                   control={control}
                   rules={{
-                    required: { value: true, message: 'content is required.' },
+                    required: { value: true, message: t('common.validate.required') },
                   }}
                   render={({ field }) => (
                     <TinyEditor
@@ -253,7 +265,7 @@ const Edit = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              첨부파일
+              {t('board:label.attachedFile')}
             </TH>
             <TD colSpan={5} align="left" className="attachFile">
               <UploadDropzone fileCl="qna" uploadFiles={handleUploadFiles} fileList={watch().fileList} />
@@ -264,10 +276,10 @@ const Edit = () => {
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-          등록
+          {t('common.button.reg')}
         </Button>
         <Button size="LG" onClick={handleList}>
-          목록
+          {t('common.button.list')}
         </Button>
       </Stack>
     </form>

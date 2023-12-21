@@ -10,8 +10,10 @@ import { Loader, Stack, Typography, useToast } from '@components/ui';
 import { Suspense, useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import './Main.scss';
+import { useTranslation } from 'react-i18next';
 
 const Main = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const location = useLocation();
@@ -51,7 +53,7 @@ const Main = () => {
     if (qmError || qmResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '퀵 메뉴 조회 중 에러가 발생했습니다.',
+        content: t('quickMenu.toast.error.list'),
       });
     } else if (qmIsSuccess) {
       if (qmResponse?.data) {
@@ -64,12 +66,12 @@ const Main = () => {
     if (cqIsError || cqResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '퀵 메뉴 등록 중 에러가 발생했습니다.',
+        content: t('quickMenu.toast.success.create'),
       });
     } else if (cqIsSuccess) {
       toast({
         type: ValidType.INFO,
-        content: '퀵 메뉴가 추가되었습니다.',
+        content: t('quickMenu.toast.error.create'),
       });
       qmRefetch();
     }
@@ -79,12 +81,12 @@ const Main = () => {
     if (dqIsError || dqResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '퀵 메뉴 삭제 중 에러가 발생했습니다.',
+        content: t('quickMenu.toast.error.delete'),
       });
     } else if (dqIsSuccess) {
       toast({
         type: ValidType.INFO,
-        content: '퀵 메뉴가 삭제되었습니다.',
+        content: t('quickMenu.toast.success.delete'),
       });
       qmRefetch();
     }
@@ -104,7 +106,7 @@ const Main = () => {
           <Suspense
             fallback={
               <Stack justifyContent="Center" className="height-100 width-100">
-                <Loader title="진행중" description="잠시만 기다려주세요" />
+                <Loader title={t('common.message.proceeding')} description={t('common.message.wait')} />
               </Stack>
             }
           >

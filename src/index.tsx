@@ -1,3 +1,4 @@
+import '@/i18n';
 import store from '@/store';
 import { Providers } from '@components/ui';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';

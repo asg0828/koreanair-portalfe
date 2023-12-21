@@ -5,6 +5,7 @@ import { closeModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Checkbox, Modal, Stack, TD, TH, TR, Typography } from '@components/ui';
 import { useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface Props {
   isOpen?: boolean;
@@ -12,6 +13,7 @@ export interface Props {
 }
 
 const NoticeModal = ({ isOpen = false, onClose }: Props) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const hasVisited = localStorage.getItem('hasVisited');
 
@@ -39,13 +41,13 @@ const NoticeModal = ({ isOpen = false, onClose }: Props) => {
 
   return (
     <Modal open={isOpen} onClose={handleClose} size="LG">
-      <Modal.Header>공지사항</Modal.Header>
+      <Modal.Header>{t('board:label.notice')}</Modal.Header>
       <Modal.Body>
         <Stack direction="Vertical" gap="MD" className="height-100 width-100">
           <HorizontalTable className="height-100">
             <TR>
               <TH colSpan={4} className="headerName">
-                <Typography variant="h3">공지사항 테스트</Typography>
+                <Typography variant="h3"></Typography>
               </TH>
             </TR>
             <TR className="height-100">
@@ -53,16 +55,16 @@ const NoticeModal = ({ isOpen = false, onClose }: Props) => {
             </TR>
             <TR>
               <TH colSpan={1} className="attachFile">
-                첨부파일
+                {t('board:label.attachedFile')}
               </TH>
               <TD colSpan={3}></TD>
             </TR>
             <TR>
-              <TH colSpan={1}>다음</TH>
+              <TH colSpan={1}>{t('board:label.next')}</TH>
               <TD colSpan={3}></TD>
             </TR>
             <TR>
-              <TH colSpan={1}>이전</TH>
+              <TH colSpan={1}>{t('board:label.prev')}</TH>
               <TD colSpan={3}></TD>
             </TR>
           </HorizontalTable>
@@ -70,10 +72,10 @@ const NoticeModal = ({ isOpen = false, onClose }: Props) => {
       </Modal.Body>
       <Modal.Footer>
         <Stack className="width-100">
-          <Checkbox label="오늘 하루 보지 않음" onCheckedChange={handleChecked} />
+          <Checkbox label={t('board:label.noView')} onCheckedChange={handleChecked} />
           <Stack justifyContent="End" className="width-100">
             <Button priority="Primary" appearance="Contained" onClick={handleConfirm}>
-              확인
+              {t('common.button.reg')}
             </Button>
           </Stack>
         </Stack>

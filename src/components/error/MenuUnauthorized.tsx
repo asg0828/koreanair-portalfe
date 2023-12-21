@@ -1,9 +1,11 @@
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useAppSelector } from '@/hooks/useRedux';
 import { selectContextPath } from '@/reducers/authSlice';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 
 const MenuUnauthorized = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const contextPath = useAppSelector(selectContextPath());
 
@@ -19,9 +21,9 @@ const MenuUnauthorized = () => {
     <>
       <EmptyState
         type="warning"
-        description="메뉴 권한이 없습니다."
-        confirmText="홈으로"
-        cancleText="이전으로"
+        description={t('common.message.menuUnauthorized')}
+        confirmText={t('common.button.home')}
+        cancleText={t('common.button.prev')}
         onConfirm={handleConfirm}
         onCancle={handleCancel}
       />

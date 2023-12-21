@@ -20,6 +20,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } 
 import { useEffect, useState } from 'react';
 import { MoveHandler } from 'react-arborist';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 const initItem: UpdatedDeptModel = {
   deptCode: '',
@@ -36,6 +37,7 @@ const initItem: UpdatedDeptModel = {
 };
 
 const List = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [userAuthList, setUserAuthList] = useState<Array<AuthModel>>([]);
@@ -74,7 +76,7 @@ const List = () => {
       } else {
         toast({
           type: ValidType.INFO,
-          content: '저장되지 않은 메뉴가 있습니다.',
+          content: t('management:toast.info.saveMenu'),
         });
         setData([...data]);
       }
@@ -87,7 +89,7 @@ const List = () => {
     if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
-        content: '저장되지 않은 메뉴가 있습니다.',
+        content: t('management:toast.info.saveMenu'),
       });
       return;
     }
@@ -131,7 +133,7 @@ const List = () => {
     if (findCreatedItem()) {
       toast({
         type: ValidType.INFO,
-        content: '저장되지 않은 메뉴가 있습니다.',
+        content: t('management:toast.info.saveMenu'),
       });
       return;
     }
@@ -162,14 +164,14 @@ const List = () => {
     if (checkedList.length === 0) {
       toast({
         type: ValidType.INFO,
-        content: '메뉴를 선택해주세요.',
+        content: t('management:toast.info.selectMenu'),
       });
     } else {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
-          title: '삭제',
-          content: '삭제하시겠습니까?',
+          title: t('common.modal.title.delete'),
+          content: t('common.modal.message.deleteConfirm'),
           onConfirm: () => {
             const hasIdList = checkedList.filter((item) => item.deptCode);
 
@@ -191,8 +193,8 @@ const List = () => {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
-          title: '저장',
-          content: '등록하시겠습니까?',
+          title: t('common.modal.title.create'),
+          content: t('common.modal.message.createConfirm'),
           onConfirm: () => uMutate([{ ...formData, oprtrSe: 'C' }]),
         })
       );
@@ -202,14 +204,14 @@ const List = () => {
       if (updatedList.length === 0) {
         toast({
           type: ValidType.INFO,
-          content: '변경된 메뉴가 없습니다.',
+          content: t('management:toast.info.notChangedMenu'),
         });
       } else {
         dispatch(
           openModal({
             type: ModalType.CONFIRM,
-            title: '수정',
-            content: '수정하시겠습니까?',
+            title: t('common.modal.title.update'),
+            content: t('common.modal.message.updateConfirm'),
             onConfirm: () => uMutate(updatedList.map((item) => ({ ...item, oprtrSe: 'U' }))),
           })
         );
@@ -251,7 +253,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '메뉴 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.menuList'),
       });
     } else {
       if (response?.data) {
@@ -265,7 +267,7 @@ const List = () => {
     if (uaIsError || uaResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '사용자 권한그룹 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.userAuthList'),
       });
     } else {
       if (uaResponse?.data) {
@@ -278,7 +280,7 @@ const List = () => {
     if (aaIsError || aaResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '관리자 권한그룹 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.mgmtAuthList'),
       });
     } else {
       if (aaResponse?.data) {
@@ -291,12 +293,12 @@ const List = () => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '수정 중 에러가 발생했습니다.',
+        content: t('common.toast.error.update'),
       });
     } else if (uIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '수정되었습니다.',
+        content: t('common.toast.success.update'),
       });
       refetch();
       reset({ ...initItem });
@@ -321,14 +323,14 @@ const List = () => {
             <HorizontalTable>
               <TR>
                 <TH colSpan={1} align="right">
-                  상위부서명
+                  {t('management:label.upDeptNm')}
                 </TH>
                 <TD colSpan={2} align="left">
                   <Stack gap="SM" className="width-100" direction="Vertical">
                     <TextField
                       className="width-100"
                       {...register('upDeptNm', {
-                        maxLength: { value: 100, message: 'max length exceeded' },
+                        maxLength: { value: 100, message: t('common.validate.maxLength') },
                       })}
                       validation={errors?.upDeptNm?.message ? 'Error' : undefined}
                       disabled
@@ -340,15 +342,15 @@ const List = () => {
               </TR>
               <TR>
                 <TH colSpan={1} align="right" required>
-                  부서명
+                  {t('management:label.deptNm')}
                 </TH>
                 <TD colSpan={2} align="left">
                   <Stack gap="SM" className="width-100" direction="Vertical">
                     <TextField
                       className="width-100"
                       {...register('deptNm', {
-                        required: { value: true, message: 'deptNm is required.' },
-                        maxLength: { value: 100, message: 'max length exceeded' },
+                        required: { value: true, message: t('common.validate.required') },
+                        maxLength: { value: 100, message: t('common.validate.maxLength') },
                       })}
                       validation={errors?.deptNm?.message ? 'Error' : undefined}
                     />
@@ -358,15 +360,15 @@ const List = () => {
               </TR>
               <TR>
                 <TH colSpan={1} align="right" required>
-                  부서코드
+                  {t('management:label.deptCode')}
                 </TH>
                 <TD colSpan={2} align="left">
                   <Stack gap="SM" className="width-100" direction="Vertical">
                     <TextField
                       className="width-100"
                       {...register('deptCode', {
-                        required: { value: true, message: 'deptCode is required.' },
-                        maxLength: { value: 16, message: 'max length exceeded' },
+                        required: { value: true, message: t('common.validate.required') },
+                        maxLength: { value: 16, message: t('common.validate.maxLength') },
                       })}
                       validation={errors?.deptCode?.message ? 'Error' : undefined}
                     />
@@ -376,7 +378,7 @@ const List = () => {
               </TR>
               <TR>
                 <TH required colSpan={1} align="right">
-                  사용자권한그룹
+                  {t('management:label.userAuthId')}
                 </TH>
                 <TD colSpan={2}>
                   <Stack gap="SM" className="width-100" direction="Vertical">
@@ -384,12 +386,12 @@ const List = () => {
                       name="userAuthId"
                       control={control}
                       rules={{
-                        required: 'userAuthId is required.',
+                        required: t('common.validate.required'),
                       }}
                       render={({ field }) => (
                         <Select
                           appearance="Outline"
-                          placeholder="전체"
+                          placeholder={t('common.placeholder.all')}
                           className="width-100"
                           ref={field.ref}
                           onChange={(e, value) => value && field.onChange(value)}
@@ -408,7 +410,7 @@ const List = () => {
               </TR>
               <TR>
                 <TH required colSpan={1} align="right">
-                  관리자권한그룹
+                  {t('management:label.mgrAuthId')}
                 </TH>
                 <TD colSpan={2}>
                   <Stack gap="SM" className="width-100" direction="Vertical">
@@ -416,12 +418,12 @@ const List = () => {
                       name="mgrAuthId"
                       control={control}
                       rules={{
-                        required: 'mgrAuthId is required.',
+                        required: t('common.validate.required'),
                       }}
                       render={({ field }) => (
                         <Select
                           appearance="Outline"
-                          placeholder="전체"
+                          placeholder={t('common.placeholder.all')}
                           className="width-100"
                           ref={field.ref}
                           onChange={(e, value) => value && field.onChange(value)}
@@ -445,7 +447,7 @@ const List = () => {
 
       <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG" type="submit" form="form">
-          저장
+          {t('common.button.reg')}
         </Button>
       </Stack>
     </Stack>

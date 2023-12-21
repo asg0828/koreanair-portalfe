@@ -11,8 +11,7 @@ import { convertToHierarchyInfo, getNodeChildrenDeptCodeRecursive } from '@/util
 import VerticalTable from '@components/table/VerticalTable';
 import { Button, Modal, Stack, TextField, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
-
-const columns = [{ headerName: '부서명', field: 'deptNm', colSpan: 10 }];
+import { useTranslation } from 'react-i18next';
 
 const defaultResultInfo = {
   deptCode: '',
@@ -22,13 +21,14 @@ const defaultResultInfo = {
 const UserSelectModal = ({
   isOpen = false,
   autoClose = true,
-  title = '사용자 선택',
+  title,
   content,
   onConfirm,
   onCancle,
   onClose,
   btnType,
 }: ModalInfo) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [keyword, setKeyword] = useState<string>('');
@@ -37,6 +37,8 @@ const UserSelectModal = ({
   const [prevRows, setPrevRows] = useState<Array<UserModel>>([]);
   const [prevCheckedList, setPrevCheckedList] = useState<Array<UserModel>>([]);
   const { data: response, isError, refetch } = useDeptAllList();
+
+  const columns = [{ headerName: t('management:label.deptNm'), field: 'deptNm', colSpan: 10 }];
 
   const handleSearch = () => {
     if (keyword) {
@@ -79,7 +81,7 @@ const UserSelectModal = ({
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '부서 목록 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.deptList'),
       });
     } else {
       if (response?.data) {
@@ -97,7 +99,7 @@ const UserSelectModal = ({
 
   return (
     <Modal open={isOpen} onClose={handleClose} size="LG">
-      <Modal.Header>부서 선택</Modal.Header>
+      <Modal.Header>{t('management:header.selectDept')}</Modal.Header>
       <Modal.Body>
         <Stack className="width-100" alignItems="Start">
           <Stack className="tree-wrap width-100">
@@ -112,7 +114,7 @@ const UserSelectModal = ({
                   onKeyDown={handleKeyDown}
                   onChange={(e) => handleChangeKeyword(e.target.value)}
                 />
-                <Button onClick={handleSearch}>검색</Button>
+                <Button onClick={handleSearch}>{t('common.button.search')}</Button>
               </Stack>
               <VerticalTable
                 className="RightScrollTable"
@@ -128,7 +130,7 @@ const UserSelectModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button size="LG" priority="Primary" appearance="Contained" onClick={handleConfirm}>
-          확인
+          {t('common.button.reg')}
         </Button>
       </Modal.Footer>
     </Modal>

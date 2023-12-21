@@ -14,11 +14,7 @@ import { convertToHierarchyInfo, getNodeCheckedListRecursive, sortChildrenRecurs
 import { getTotalPage } from '@/utils/PagingUtil';
 import { Button, Stack, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
-
-const columns = [
-  { headerName: '권한그룹ID', field: 'authId', colSpan: 5 },
-  { headerName: '권한그룹명', field: 'authNm', colSpan: 5 },
-];
+import { useTranslation } from 'react-i18next';
 
 const initItem: UpdatedMenuModel = {
   menuId: '',
@@ -33,6 +29,7 @@ const initItem: UpdatedMenuModel = {
 };
 
 const List = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [authId, setAuthId] = useState<string>('');
@@ -51,6 +48,11 @@ const List = () => {
     mutate: cuaMutate,
   } = useCreateUserAuthMenu();
 
+  const columns = [
+    { headerName: t('management:label.authId'), field: 'authId', colSpan: 5 },
+    { headerName: t('management:label.authNm'), field: 'authNm', colSpan: 5 },
+  ];
+
   const handleClickRow = (row: any, index: number, selected: boolean) => {
     setData((prevData) =>
       prevData.map((item) => {
@@ -67,11 +69,19 @@ const List = () => {
   };
 
   const handleSave = () => {
+    if (!authId) {
+      toast({
+        type: ValidType.INFO,
+        content: t('management:toast.info.selectAuthGroup'),
+      });
+      return;
+    }
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '저장',
-        content: '저장하시겠습니까?',
+        title: t('common.modal.title.create'),
+        content: t('common.modal.message.createConfirm'),
         onConfirm: () => {
           const menuIds = getNodeCheckedListRecursive(treeData).map((item) => item.menuId);
           cuaMutate({
@@ -106,7 +116,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '메뉴 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.menuList'),
       });
     } else {
       if (response?.data) {
@@ -124,7 +134,7 @@ const List = () => {
     if (uamIsError || uamResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '권한 메뉴 조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.authMenuList'),
       });
     } else {
       if (uamResponse?.data) {
@@ -148,7 +158,7 @@ const List = () => {
     if (uaIsError || uaResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('management:toast.error.authlist'),
       });
     } else {
       if (uaResponse?.data) {
@@ -166,12 +176,12 @@ const List = () => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '수정 중 에러가 발생했습니다.',
+        content: t('common.toast.error.update'),
       });
     } else if (uIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '수정되었습니다.',
+        content: t('common.toast.success.update'),
       });
       refetch();
     }
@@ -181,12 +191,12 @@ const List = () => {
     if (cuaIsError || cuaResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '저장 중 에러가 발생했습니다.',
+        content: t('common.toast.error.create'),
       });
     } else if (cuaIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '저장되었습니다.',
+        content: t('common.toast.success.create'),
       });
       uamRefetch();
     }
@@ -196,14 +206,19 @@ const List = () => {
     <Stack>
       <Stack direction="Vertical" className="width-100">
         <Stack gap="SM" alignItems="Start">
-          <TableSearchForm title="권한그룹 목록" columns={columns} rows={rows} onClick={handleClickRow} />
+          <TableSearchForm
+            title={t('management:header.authGroupList')}
+            columns={columns}
+            rows={rows}
+            onClick={handleClickRow}
+          />
 
           <TreeSearchForm treeData={treeData} initItem={initItem} />
         </Stack>
 
         <Stack gap="SM" justifyContent="End">
           <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSave}>
-            저장
+            {t('common.button.reg')}
           </Button>
         </Stack>
       </Stack>
