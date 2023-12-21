@@ -13,15 +13,10 @@ import { getPagingList, getTotalPage } from '@/utils/PagingUtil';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-
-const columns: Array<ColumnsInfo> = [
-  { headerName: 'No', field: 'rownum', colSpan: 0.5 },
-  { headerName: '권한그룹ID', field: 'authId', colSpan: 2, align: 'left' },
-  { headerName: '권한그룹명', field: 'authNm', colSpan: 2, align: 'left' },
-  { headerName: '비고', field: 'authDsc', colSpan: 5.5, align: 'left' },
-];
+import { useTranslation } from 'react-i18next';
 
 const List = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
   const [page, setPage] = useState<PageModel>(initPage);
@@ -49,6 +44,13 @@ const List = () => {
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMuate } = useUpdateUserAuth();
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteUserAuth();
 
+  const columns: Array<ColumnsInfo> = [
+    { headerName: 'No', field: 'rownum', colSpan: 0.5 },
+    { headerName: t('management:label.authId'), field: 'authId', colSpan: 2, align: 'left' },
+    { headerName: t('management:label.authNm'), field: 'authNm', colSpan: 2, align: 'left' },
+    { headerName: t('management:label.authDsc'), field: 'authDsc', colSpan: 5.5, align: 'left' },
+  ];
+
   const handlePage = (page: PageModel) => {
     setPage(page);
   };
@@ -64,15 +66,15 @@ const List = () => {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
-          title: '삭제',
-          content: '삭제하시겠습니까?',
+          title: t('common.modal.title.delete'),
+          content: t('common.modal.message.deleteConfirm'),
           onConfirm: () => dMutate(values.authId),
         })
       );
     } else {
       toast({
         type: ValidType.INFO,
-        content: '선택된 권한그룹이 없습니다.',
+        content: t('management:toast.info.selectAuthGroup'),
       });
     }
   };
@@ -82,8 +84,8 @@ const List = () => {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
-          title: '수정',
-          content: '수정하시겠습니까?',
+          title: t('common.modal.title.update'),
+          content: t('common.modal.message.updateConfirm'),
           onConfirm: () => uMuate(data),
         })
       );
@@ -91,8 +93,8 @@ const List = () => {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
-          title: '저장',
-          content: '등록하시겠습니까?',
+          title: t('common.modal.title.create'),
+          content: t('common.modal.message.createConfirm'),
           onConfirm: () => cMuate(data),
         })
       );
@@ -108,7 +110,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.list'),
       });
     } else {
       if (response?.data) {
@@ -126,12 +128,12 @@ const List = () => {
     if (cIsError || cResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '등록 중 에러가 발생했습니다.',
+        content: t('common.toast.error.create'),
       });
     } else if (cIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '등록되었습니다.',
+        content: t('common.toast.success.create'),
       });
       refetch();
       reset();
@@ -142,12 +144,12 @@ const List = () => {
     if (uIsError || uResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '수정 중 에러가 발생했습니다.',
+        content: t('common.toast.error.update'),
       });
     } else if (uIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '수정되었습니다.',
+        content: t('common.toast.success.update'),
       });
       refetch();
       reset();
@@ -158,12 +160,12 @@ const List = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: t('common.toast.error.delete'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: t('common.toast.success.delete'),
       });
       refetch();
       reset();
@@ -184,18 +186,18 @@ const List = () => {
       />
 
       <Stack direction="Vertical" gap="MD">
-        <Typography variant="h3">권한그룹 등록</Typography>
+        <Typography variant="h3">{t('management:header.authGroupReg')}</Typography>
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
-              권한그룹 ID
+              {t('management:label.authId')}
             </TH>
             <TD colSpan={2} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
                   {...register('authId', {
-                    maxLength: { value: 100, message: 'max length exceeded' },
+                    maxLength: { value: 100, message: t('common.validate.maxLength') },
                   })}
                   validation={errors?.authId?.message ? 'Error' : undefined}
                   disabled
@@ -204,15 +206,15 @@ const List = () => {
               </Stack>
             </TD>
             <TH colSpan={1} align="right" required>
-              권한그룹명
+              {t('management:label.authNm')}
             </TH>
             <TD colSpan={2} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
                   {...register('authNm', {
-                    required: { value: true, message: 'authNm is required.' },
-                    maxLength: { value: 100, message: 'max length exceeded' },
+                    required: { value: true, message: t('common.validate.required') },
+                    maxLength: { value: 100, message: t('common.validate.maxLength') },
                   })}
                   validation={errors?.authNm?.message ? 'Error' : undefined}
                 />
@@ -222,14 +224,14 @@ const List = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              비고
+              {t('management:label.authDsc')}
             </TH>
             <TD colSpan={5} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
                   {...register('authDsc', {
-                    maxLength: { value: 1000, message: 'max length exceeded' },
+                    maxLength: { value: 1000, message: t('common.validate.maxLength') },
                   })}
                   validation={errors?.authDsc?.message ? 'Error' : undefined}
                 />
@@ -240,15 +242,15 @@ const List = () => {
         </HorizontalTable>
       </Stack>
 
-      <Stack gap="SM" justifyContent="End">
+      <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={handleClear}>
-          신규
+          {t('common.button.new')}
         </Button>
         <Button size="LG" type="submit">
-          저장
+          {t('common.button.reg')}
         </Button>
         <Button size="LG" onClick={handleDelete}>
-          삭제
+          {t('common.button.delete')}
         </Button>
       </Stack>
     </form>

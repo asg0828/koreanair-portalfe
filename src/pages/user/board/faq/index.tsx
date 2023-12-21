@@ -15,12 +15,8 @@ import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const searchInfoList = [
-  { key: 'qstn', value: '제목' },
-  { key: 'answ', value: '내용' },
-];
 
 export const initFaqParams: FaqParams = {
   searchConditions: 'all',
@@ -28,6 +24,7 @@ export const initFaqParams: FaqParams = {
 };
 
 const List = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -42,6 +39,11 @@ const List = () => {
   const { data: response, isSuccess, isError, refetch } = useFaqList(params, page);
   const { data: gResponse, isSuccess: gIsSuccess, isError: gIsError, refetch: gRefetch } = useFaqById(faqId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(faqId);
+
+  const searchInfoList = [
+    { key: 'sj', value: t('board:label.sj') },
+    { key: 'cn', value: t('board:label.cn') },
+  ];
 
   const goToReg = () => {
     navigate(View.REG, {
@@ -89,8 +91,8 @@ const List = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '삭제',
-        content: '삭제하시겠습니까?',
+        title: t('common.modal.title.delete'),
+        content: t('common.modal.message.deleteConfirm'),
         onConfirm: () => handleDeleteFaqId(faqId),
       })
     );
@@ -120,7 +122,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.list'),
       });
     } else if (isSuccess) {
       if (response?.data) {
@@ -137,7 +139,7 @@ const List = () => {
     if (gIsError || gResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.read'),
       });
     } else if (gIsSuccess && gResponse.data) {
       gResponse.data.fileList.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
@@ -154,12 +156,12 @@ const List = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: t('common.toast.error.delete'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: t('common.toast.success.delete'),
       });
       handleSearch();
     }
@@ -170,13 +172,13 @@ const List = () => {
       <SearchForm onSearch={handleSearch} onClear={handleClear}>
         <TR>
           <TH colSpan={1} align="right">
-            검색
+            {t('common.button.search')}
           </TH>
           <TD colSpan={5} align="left">
             <Stack gap="SM" className="width-100">
               <Select
                 appearance="Outline"
-                placeholder="전체"
+                placeholder={t('common.placeholder.all')}
                 className="select-basic"
                 onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
@@ -208,7 +210,7 @@ const List = () => {
           contextPath === ContextPath.ADMIN && (
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
               <AddIcon />
-              등록
+              {t('common.button.reg')}
             </Button>
           )
         }

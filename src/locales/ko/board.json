@@ -1,0 +1,46 @@
+{
+  "label": {
+    "search": "검색",
+    "attachedFile": "첨부파일",
+    "next": "다음",
+    "prev": "이전",
+    "sj": "제목",
+    "postYn": "게시여부",
+    "post": "게시",
+    "unpost": "미게시",
+    "importantYn": "중요여부",
+    "important": "중요",
+    "normal": "일반",
+    "cn": "내용",
+    "question": "질문",
+    "clCodeNm": "분류",
+    "answer": "답변",
+    "openYn": "공개여부",
+    "open": "공개",
+    "unopen": "미공개",
+    "qnaStatNm": "상태",
+    "rgstNm": "등록자",
+    "rgstDt": "등록일",
+    "viewCnt": "조회수",
+    "comment": "Comment",
+    "notice": "공지사항",
+    "noView": "오늘 하루 보지 않음"
+  },
+  "modal": {
+    "message": {
+      "deleteAnserConfirm": "답글을 삭제하시겠습니까?"
+    }
+  },
+  "toast": {
+    "success": {
+      "createAnswer": "답글이 등록되었습니다.",
+      "updateAnswer": "답글이 수정되었습니다.",
+      "deleteAnswer": "답글이 삭제되었습니다."
+    },
+    "error": {
+      "createAnswer": "답글 등록 중 에러가 발생했습니다.",
+      "updateAnswer": "답글 수정 중 에러가 발생했습니다.",
+      "deleteAnswer": "답글 삭제 중 에러가 발생했습니다."
+    }
+  }
+}

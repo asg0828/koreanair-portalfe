@@ -24,14 +24,8 @@ import {
   useToast,
 } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const columns: Array<ColumnsInfo> = [
-  { headerName: '테이블 한글명', field: 'mtsKoNm', colSpan: 2.5, align: 'left' },
-  { headerName: '테이블 영문명', field: 'mtsEnNm', colSpan: 2.5, align: 'left' },
-  { headerName: '테이블 정의', field: 'mtsDef', colSpan: 2.5, align: 'left' },
-  { headerName: '원천테이블명', field: 'srcTbNm', colSpan: 2.5, align: 'left' },
-];
 
 const initParams: DatasetParams = {
   searchTable: '',
@@ -40,6 +34,7 @@ const initParams: DatasetParams = {
 };
 
 const List = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
@@ -50,6 +45,13 @@ const List = () => {
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<DatasetModel>>([]);
   const { data: response, isError, refetch } = useDatasetList(params, page);
+
+  const columns: Array<ColumnsInfo> = [
+    { headerName: t('bizMeta:label.tableKoNm'), field: 'mtsKoNm', colSpan: 2.5, align: 'left' },
+    { headerName: t('bizMeta:label.tableEnNm'), field: 'mtsEnNm', colSpan: 2.5, align: 'left' },
+    { headerName: t('bizMeta:label.tableDef'), field: 'mtsDef', colSpan: 2.5, align: 'left' },
+    { headerName: t('bizMeta:label.srcTbNm'), field: 'srcTbNm', colSpan: 2.5, align: 'left' },
+  ];
 
   const goToReg = () => {
     navigate(View.REG, {
@@ -112,7 +114,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.list'),
       });
     } else {
       if (response?.data) {
@@ -127,7 +129,7 @@ const List = () => {
       <SearchForm onSearch={handleSearch} onClear={handleClear}>
         <TR>
           <TH colSpan={1} align="right">
-            검색 테이블
+            {t('bizMeta:label.searchTable')}
           </TH>
           <TD colSpan={5} align="left">
             <TextField
@@ -140,34 +142,34 @@ const List = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">
-            검색 조건
+            {t('bizMeta:label.searchCondition')}
           </TH>
           <TD colSpan={5} align="left">
             <Checkbox
-              label="테이블 한글명"
+              label={`${t('bizMeta:label.tableKoNm')}`}
               onCheckedChange={(checked) => handleChangeDataSetConditions('mtsKoNm', checked)}
               checked={params.dataSetConditions.includes('mtsKoNm')}
             />
             <Checkbox
-              label="테이블 영문명"
+              label={`${t('bizMeta:label.tableEnNm')}`}
               onCheckedChange={(checked) => handleChangeDataSetConditions('mtsEnNm', checked)}
               checked={params.dataSetConditions.includes('mtsEnNm')}
             />
             <Checkbox
-              label="테이블정의"
+              label={`${t('bizMeta:label.tableDef')}`}
               onCheckedChange={(checked) => handleChangeDataSetConditions('mtsDef', checked)}
               checked={params.dataSetConditions.includes('mtsDef')}
             />
             <Checkbox
-              label="원천테이블명"
+              label={`${t('bizMeta:label.srcTbNm')}`}
               onCheckedChange={(checked) => handleChangeDataSetConditions('srcTbNm', checked)}
               checked={params.dataSetConditions.includes('srcTbNm')}
             />
             <Stack gap="LG" className="width-100">
-              <Typography variant="body1">DB명</Typography>
+              <Typography variant="body1">{t('bizMeta:label.dbNm')}</Typography>
               <Select
                 appearance="Outline"
-                placeholder="전체"
+                placeholder={t('common.placeholder.all')}
                 className="select-basic"
                 onChange={(e, value) => value && handleChangeParams('srcDbCd', value)}
                 value={params.srcDbCd}
@@ -192,7 +194,7 @@ const List = () => {
             contextPath === ContextPath.ADMIN && (
               <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
                 <AddIcon />
-                등록
+                {t('common.button.reg')}
               </Button>
             )
           }

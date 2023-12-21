@@ -1,143 +1,113 @@
 {
   "common": {
+    "header": {
+      "menu": "메뉴",
+      "authGroupList": "권한그룹 목록"
+    },
     "label": {
-      "search": "검색",
-      "creatorName": "생성자",
-      "createdDatetime": "생성 일시",
-      "updaterName": "최종 수정자",
-      "updatedDatetime": "최종 수정 일시",
-      "reset": "초기화",
-      "backToList": "목록으로 돌아가기",
-      "showFilter": "필터 보이기",
-      "hideFilter": "필터 숨기기",
-      "total": "총",
-      "cancel": "취소",
-      "save": "저장",
-      "register": "등록",
+      "home": "Home",
+      "quickLink": "Quick Link",
+      "countingUnit": {
+        "person": "명",
+        "thing": "건"
+      }
+    },
+    "placeholder": {
+      "all": "전체"
+    },
+    "validate": {
+      "requiredEn": "영문, _만 입력 가능합니다.",
+      "required": "필수값입니다.",
+      "maxLength": "최대 길이가 초과되었습니다."
+    },
+    "button": {
       "confirm": "확인",
-      "excelDownload": "엑셀 다운로드",
-      "fullScreenMode": "전체화면",
-      "english": "영어",
-      "korean": "한국어",
-      "noData": "조회된 데이터가 없습니다.",
-      "searchPlaceHolder": "검색..."
+      "list": "목록",
+      "reg": "등록",
+      "detail": "상세",
+      "edit": "수정",
+      "delete": "삭제",
+      "new": "신규",
+      "cancel": "취소",
+      "home": "홈으로",
+      "prev": "이전으로",
+      "search": "검색",
+      "reset": "초기화",
+      "visible": "보기",
+      "input": "입력",
+      "duplicateCheck": "중복확인",
+      "disinterest": "관심 해제",
+      "memberManagement": "멤버 관리 (사용자 추가/삭제)",
+      "cancelInterestFeature": "관심 해제"
+    },
+    "message": {
+      "proceeding": "진행중",
+      "wait": "잠시만 기다려주세요",
+      "noRequireInfo": "조회에 필요한 정보가 없습니다",
+      "goBack": "돌아가기",
+      "error": "에러가 발생했습니다.",
+      "notFound": "페이지가 존재하지 않습니다.",
+      "unauthorized": "권한이 없습니다.",
+      "menuUnauthorized": "메뉴 권한이 없습니다.",
+      "yes": "예",
+      "no": "아니오"
+    },
+    "modal": {
+      "title": {
+        "confirm": "확인",
+        "create": "저장",
+        "update": "수정",
+        "delete": "삭제"
+      },
+      "message": {
+        "listConfirm": "목록으로 이동하시겠습니까?",
+        "createConfirm": "저장하시겠습니까?",
+        "updateConfirm": "수정하시겠습니까?",
+        "deleteConfirm": "삭제하시겠습니까?",
+        "deleteFeatureConfirm": "관심 Feature를 삭제하시겠습니까?"
+      }
     },
     "toast": {
-      "requiredValue": "필수 값을 입력해주세요.",
-      "etcFail": "서버와 통신 중 오류가 발생하였습니다. 시스템관리자에게 문의해주세요.",
-      "noData": "조회 결과가 없습니다.",
-      "successRegister": "신규 등록되었습니다.",
-      "failRegister": "등록에 실패하였습니다.",
-      "successModify": "정보가 수정되었습니다.",
-      "failModify": "수정에 실패하였습니다."
+      "success": {
+        "create": "저장되었습니다.",
+        "update": "수정되었습니다.",
+        "delete": "삭제되었습니다.",
+        "download": "파일이 다운로드되었습니다."
+      },
+      "error": {
+        "list": "목록 조회 중 에러가 발생했습니다.",
+        "read": "상세 조회 중 에러가 발생했습니다.",
+        "create": "저장 중 에러가 발생했습니다.",
+        "update": "수정 중 에러가 발생했습니다.",
+        "delete": "삭제 중 에러가 발생했습니다.",
+        "download": "파일 다운로드 중 에러가 발생했습니다.",
+        "uploadImage": "이미지 업로드 중 에러가 발생했습니다."
+      }
     }
   },
   "login": {
-    "label": {
-      "LoginPage": {
-        "title": "KAL React Frontend",
-        "login": "Log in"
-      },
-      "LoginForm": {
-        "loginButton": "Login"
-      },
-      "LoginFooter": {
-        "copyrightDescription": "본 사이트의 모든 콘텐츠는 저작권법의 보호를 받는 바, 무단 전재, 복사, 배포 등을 금합니다.",
-        "copyright": "Copyright © 2022 Korean air. All Rights Reserved.",
-        "legal": "이용약관",
-        "privacy": "개인정보처리방침"
-      }
-    },
     "message": {
-      "email": {
-        "required": "이메일주소는 필수입니다.",
-        "format": "이메일 형식으로 입력하세요."
-      },
-      "password": {
-        "required": "패스워드를 입력하세요."
-      },
-      "toast": {
-        "loginFail": "이메일 아이디 또는 패스워드가 올바르지 않습니다.",
-        "lockedAccount": "패스워드 5회 불일치로 계정이 잠겼습니다. 시스템관리자에게 문의해주세요.",
-        "etcFail": "서버와 통신 중 오류가 발생하였습니다. 시스템관리자에게 문의해주세요."
-      }
-    }
-  },
-  "layout": {
-    "label": {
-      "KalHeader": {
-        "title": "Korean Air",
-        "logout": "Logout",
-        "account": "My Account",
-        "changeLanguage": "English",
-        "menu": {
-          "dashboard": "대시보드",
-          "monitoring": "모니터링",
-          "search": "검색",
-          "reports": "리포트",
-          "admin": "시스템관리"
-        },
-        "monitoringSubMenu": {
-          "systemMonitoring": "시스템 모니터링",
-          "infraMonitoring": "인프라 모니터링"
-        }
-      },
-      "KalFooter": {
-        "contactDescription": "시스템에 필요한 정보가 없으신가요?",
-        "contactLabel": "문의 하기",
-        "help": "데이터 및 서비스 문의 : 1544-1111",
-        "company": "대표이사 : xxx / 사업자등록번호: 111-11-11111 / 대표번호: 02-1111-1111",
-        "address": "주소: 서울시 강서구 방화동"
-      }
-    }
-  },
-  "admin": {
-    "menu": {
-      "member": "사용자 관리",
-      "groupCode": "그룹코드 관리",
-      "commonCode": "공통코드 관리"
+      "logout": "로그아웃 하시겠습니까?"
     },
-    "member": {
-      "label": {
-        "searchTitle": "검색 조건",
-        "contentTitle": "사용자 목록"
-      },
-      "search": {
-        "tenant": "테넌트",
-        "memberName": "사용자 명"
-      },
-      "list": {
-        "memberId": "사용자 ID",
-        "email": "Email 주소",
-        "memberName": "사용자 명",
-        "language": "언어",
-        "passwordWrongCount": "패스워드 틀린 횟수",
-        "memberState": "사용자 상태",
-        "roleType": "역할 타입",
-        "lastLoginDatetime": "최종 로그인 일시",
-        "passwordLastModifiedDatetime": "최종 패스워드 수정 일시"
-      },
-      "toast": {}
+    "toast": {
+      "error": {
+        "apigge": "Apigee 에러가 발생했습니다.",
+        "login": "로그인 중 에러가 발생했습니다.",
+        "unauthorized": "권한이 없습니다."
+      }
     }
   },
-  "landing": {
-    "label": {
-      "title": "Power your Frontend services with\nthe KAL Frontend.",
-      "platformContent": "KAL Frontend can be faster, creating new services and\ngaining more insights.",
-      "understandBtnTitle": "Understand",
-      "understandBtnContent": "Real-time and\nLearning behavior",
-      "curateBtnTitle": "Curate",
-      "curateBtnContent": "Interpretation of the\nUnderstanding",
-      "predictBtnTitle": "Predict",
-      "predictBtnContent": "Get valuable insights to\ngrow up your frontend service"
-    }
-  },
-  "apigeesample": {
-    "label": {
-      "getPetsbutton": "Get pets from apigee.",
-      "deleteSessionButton": "Delete session storage.",
-      "accessTokenButton": "Access token request.",
-      "logoutButton": "Log Out."
+  "quickMenu": {
+    "toast": {
+      "success": {
+        "create": "퀵 메뉴가 추가되었습니다.",
+        "delete": "퀵 메뉴가 삭제되었습니다."
+      },
+      "error": {
+        "list": "퀵 메뉴 목록 조회 중 에러가 발생했습니다.",
+        "create": "퀵 메뉴 추가 중 에러가 발생했습니다.",
+        "delete": "퀵 메뉴 삭제 중 에러가 발생했습니다."
+      }
     }
   }
 }

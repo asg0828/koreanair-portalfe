@@ -1,0 +1,65 @@
+{
+  "header": {
+    "userBasicInfo": "사용자 기본정보",
+    "userAuthInfo": "사용자 권한정보",
+    "authGroupList": "권한그룹 목록",
+    "authGroupReg": "권한그룹 등록",
+    "selectDept": "부서 선택",
+    "selectUser": "사용자 선택"
+  },
+  "label": {
+    "all": "전체",
+    "userNm": "성명",
+    "deptNm": "부서명",
+    "mgrAuthNm": "관리자권한",
+    "userAuthNm": "사용자권한",
+    "employmentYn": "재직구분",
+    "userEmail": "이메일",
+    "userId": "사번",
+    "lastLogDt": "최종접속시간",
+    "useYn": "사용여부",
+    "use": "사용",
+    "unuse": "미사용",
+    "eUserAuthNm": "사용자예외그룹",
+    "bfUserAuthNm": "이전 사용자 권한",
+    "apldUserAuthNm": "적용 사용자 권한",
+    "bfMgrAuthNm": "이전 관리자 권한",
+    "apldMgrAuthNm": "적용 관리자 권한",
+    "modiDt": "최종변경일시",
+    "authId": "권한그룹 ID",
+    "authNm": "권한그룹명",
+    "authDsc": "비고",
+    "upDeptNm": "상위부서명",
+    "deptCode": "부서코드",
+    "userAuthId": "사용자권한그룹",
+    "mgrAuthId": "관리자권한그룹",
+    "upGroupNm": "상위그룹명",
+    "exceptionGroupNm": "예외그룹명",
+    "exceptionGroupCode": "예외그룹코드",
+    "upMenuNm": "상위메뉴명",
+    "menuNm": "메뉴명",
+    "menuUrl": "메뉴 URL",
+    "menuDsc": "메뉴 설명"
+  },
+  "toast": {
+    "info": {
+      "notChangedMenu": "변경된 메뉴가 없습니다.",
+      "selectMenu": "메뉴를 선택해주세요.",
+      "saveMenu": "저장되지 않은 메뉴가 있습니다.",
+      "addExceptionGroup": "예외그룹 저장 후 추가해주세요.",
+      "selectExceptionGroup": "예외그룹을 선택해주세요.",
+      "selectAuthGroup": "선택된 권한그룹이 없습니다."
+    },
+    "error": {
+      "menuList": "메뉴 목록 조회 중 에러가 발생했습니다.",
+      "authlist": "권한 목록 조회 중 에러가 발생했습니다.",
+      "userList": "사용자 목록 조회 중 에러가 발생했습니다.",
+      "deptList": "부서 목록 조회 중 에러가 발생했습니다.",
+      "authMenuList": "메뉴 권한 목록 조회 중 에러가 발생했습니다.",
+      "userAuthList": "사용자 권한그룹 조회 중 에러가 발생했습니다.",
+      "mgmtAuthList": "관리자 권한그룹 조회 중 에러가 발생했습니다.",
+      "exceptionGroupList": "예외그룹 조회 중 에러가 발생했습니다.",
+      "exceptionGroupUserList": "예외그룹 사용자 조회 중 에러가 발생했습니다."
+    }
+  }
+}

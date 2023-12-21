@@ -7,27 +7,14 @@ import { useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ValidType, View } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DataroomModel, DataroomParams } from '@/models/model/DataroomModel';
-import { NoticeParams } from '@/models/model/NoticeModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { getDateString } from '@/utils/DateUtil';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-const columns: Array<ColumnsInfo> = [
-  { headerName: 'No', field: 'rownum', colSpan: 0.5 },
-  { headerName: '제목', field: 'sj', colSpan: 5.5, align: 'left' },
-  { headerName: '등록자', field: 'rgstNm', colSpan: 2 },
-  { headerName: '등록일', field: 'rgstDt', colSpan: 1 },
-  { headerName: '조회수', field: 'viewCnt', colSpan: 1 },
-];
-
-const searchInfoList = [
-  { key: 'sj', value: '제목' },
-  { key: 'cn', value: '내용' },
-];
 
 const initParams: DataroomParams = {
   searchConditions: 'all',
@@ -35,6 +22,7 @@ const initParams: DataroomParams = {
 };
 
 const List = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
@@ -44,6 +32,19 @@ const List = () => {
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<DataroomModel>>([]);
   const { data: response, isError, refetch } = useDataroomList(params, page);
+
+  const columns: Array<ColumnsInfo> = [
+    { headerName: 'No', field: 'rownum', colSpan: 0.5 },
+    { headerName: t('board:label.sj'), field: 'sj', colSpan: 5.5, align: 'left' },
+    { headerName: t('board:label.rgstNm'), field: 'rgstNm', colSpan: 2 },
+    { headerName: t('board:label.rgstDt'), field: 'rgstDt', colSpan: 1 },
+    { headerName: t('board:label.viewCnt'), field: 'viewCnt', colSpan: 1 },
+  ];
+
+  const searchInfoList = [
+    { key: 'sj', value: t('board:label.sj') },
+    { key: 'cn', value: t('board:label.cn') },
+  ];
 
   const goToReg = () => {
     navigate(View.REG, {
@@ -95,7 +96,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.list'),
       });
     } else {
       if (response?.data) {
@@ -103,7 +104,7 @@ const List = () => {
           item.rgstDt = getDateString(item.rgstDt, '-');
           item.cn = item.cn.replace(htmlTagReg, '').replace(htmlSpeReg, '');
           item.rgstNm = `${item.rgstDeptNm || ''} ${item.rgstNm || ''}`;
-          item.useYn = item.useYn === 'Y' ? '예' : '아니오';
+          item.useYn = item.useYn === 'Y' ? t('common.message.yes') : t('common.message.no');
         });
         setRows(response.data.contents);
         setPage(response.data.page);
@@ -116,13 +117,13 @@ const List = () => {
       <SearchForm onSearch={handleSearch} onClear={handleClear}>
         <TR>
           <TH colSpan={1} align="right">
-            검색
+            {t('common.button.search')}
           </TH>
           <TD colSpan={5} align="left">
             <Stack gap="SM" className="width-100">
               <Select
                 appearance="Outline"
-                placeholder="전체"
+                placeholder={t('common.placeholder.all')}
                 className="select-basic"
                 onChange={(e, value) => handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
@@ -153,7 +154,7 @@ const List = () => {
           contextPath === ContextPath.ADMIN && (
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToReg}>
               <AddIcon />
-              등록
+              {t('common.button.reg')}
             </Button>
           )
         }

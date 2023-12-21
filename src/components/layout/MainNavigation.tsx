@@ -2,9 +2,11 @@ import { useAppSelector } from '@/hooks/useRedux';
 import { selectContextPath } from '@/reducers/authSlice';
 import { selectMenuList } from '@/reducers/menuSlice';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Stack } from '@components/ui';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const MainNavigation = () => {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const menuUrlNames = location.pathname.split('/').filter((menuUrl) => menuUrl);
@@ -52,7 +54,7 @@ const MainNavigation = () => {
     <Stack>
       <Breadcrumb seperator="Arrow" showHomeIcon={true}>
         <BreadcrumbItem isCurrentPage={false}>
-          <BreadcrumbLink onClick={goToHome}>Home</BreadcrumbLink>
+          <BreadcrumbLink onClick={goToHome}>{t('common.label.home')}</BreadcrumbLink>
         </BreadcrumbItem>
         {menuUrlNames.map(
           (menuUrl, index) =>

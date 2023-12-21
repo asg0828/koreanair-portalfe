@@ -19,6 +19,7 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const initFeatureAllParams: FeatureAllParams = {
@@ -27,6 +28,7 @@ const initFeatureAllParams: FeatureAllParams = {
 };
 
 const Reg = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -87,8 +89,8 @@ const Reg = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '확인',
-        content: '목록으로 이동하시겠습니까?',
+        title: t('common.modal.title.confirm'),
+        content: t('common.modal.message.listConfirm'),
         onConfirm: goToList,
       })
     );
@@ -115,7 +117,7 @@ const Reg = () => {
     } else {
       setError(key, {
         type: 'empty',
-        message: '텍스트를 입력해주세요.',
+        message: t('bizMeta:message.textInput'),
       });
     }
   };
@@ -124,13 +126,13 @@ const Reg = () => {
     if (data.featureKoNm !== featureAllParams.featureKoNm) {
       setError('featureKoNm', {
         type: 'validCheck',
-        message: '중복확인을 해주세요.',
+        message: t('bizMeta:message.validCheck'),
       });
       return;
     } else if (duplicationError.featureKoNm) {
       setError('featureKoNm', {
         type: 'duplication',
-        message: '이미 존재하는 이름입니다.',
+        message: t('bizMeta:message.duplicationNm'),
       });
       return;
     }
@@ -138,13 +140,13 @@ const Reg = () => {
     if (data.featureEnNm !== featureAllParams.featureEnNm) {
       setError('featureEnNm', {
         type: 'validCheck',
-        message: '중복확인을 해주세요.',
+        message: t('bizMeta:message.validCheck'),
       });
       return;
     } else if (duplicationError.featureEnNm) {
       setError('featureEnNm', {
         type: 'duplication',
-        message: '이미 존재하는 이름입니다.',
+        message: t('bizMeta:message.duplicationNm'),
       });
       return;
     }
@@ -152,8 +154,8 @@ const Reg = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '저장',
-        content: '등록하시겠습니까?',
+        title: t('common.modal.title.create'),
+        content: t('common.modal.message.createConfirm'),
         onConfirm: mutate,
       })
     );
@@ -173,7 +175,7 @@ const Reg = () => {
     if (tIsError || tResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '대구분 조회 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.featureSeGrpList'),
       });
     } else {
       if (tResponse?.data) {
@@ -186,7 +188,7 @@ const Reg = () => {
     if (sIsError || sResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '중구분 조회 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.featureSeList'),
       });
     } else {
       if (sResponse?.data) {
@@ -199,7 +201,7 @@ const Reg = () => {
     if (faIsError || faResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '중복확인 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.duplication'),
       });
     } else {
       if (faResponse?.data) {
@@ -210,12 +212,12 @@ const Reg = () => {
           }));
           toast({
             type: ValidType.INFO,
-            content: '사용가능한 이름입니다.',
+            content: t('bizMeta:toast.confirm.availableNm'),
           });
         } else {
           setError(featureAllKey, {
             type: 'duplication',
-            message: '이미 존재하는 이름입니다.',
+            message: t('bizMeta:toast.confirm.duplicationNm'),
           });
           setDuplicationError((prevState: any) => ({
             ...prevState,
@@ -230,12 +232,12 @@ const Reg = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '등록 중 에러가 발생했습니다.',
+        content: t('common.toast.error.create'),
       });
     } else if (isSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '등록되었습니다.',
+        content: t('common.toast.success.create'),
       });
       goToList();
     }
@@ -245,11 +247,11 @@ const Reg = () => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
         <Stack direction="Vertical" gap="MD" className="height-100">
-          <Typography variant="h3">기본 정보</Typography>
+          <Typography variant="h3">{t('bizMeta:header.basicInfo')}</Typography>
           <HorizontalTable>
             <TR>
               <TH required colSpan={1} align="right">
-                대구분
+                {t('bizMeta:label.featureSeGrp')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -257,12 +259,12 @@ const Reg = () => {
                     name="featureSeGrp"
                     control={control}
                     rules={{
-                      required: 'featureSeGrp is required.',
+                      required: t('common.validate.required'),
                     }}
                     render={({ field }) => (
                       <Select
                         appearance="Outline"
-                        placeholder="전체"
+                        placeholder={t('common.placeholder.all')}
                         className="width-100"
                         ref={field.ref}
                         onChange={(e, value) => value && field.onChange(value)}
@@ -279,7 +281,7 @@ const Reg = () => {
                 </Stack>
               </TD>
               <TH required colSpan={1} align="right">
-                중구분
+                {t('bizMeta:label.featureSe')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -287,13 +289,13 @@ const Reg = () => {
                     name="featureSe"
                     control={control}
                     rules={{
-                      required: 'featureSe is required.',
-                      maxLength: { value: 16, message: 'max length exceeded' },
+                      required: t('common.validate.required'),
+                      maxLength: { value: 16, message: t('common.validate.maxLength') },
                     }}
                     render={({ field }) => (
                       <Select
                         appearance="Outline"
-                        placeholder="전체"
+                        placeholder={t('common.placeholder.all')}
                         className="width-100"
                         ref={field.ref}
                         onChange={(e, value) => value && field.onChange(value)}
@@ -312,14 +314,14 @@ const Reg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                Feature ID
+                {t('bizMeta:label.featureId')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('featureId', {
-                      maxLength: { value: 32, message: 'max length exceeded' },
+                      maxLength: { value: 32, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.featureId?.message ? 'Error' : undefined}
                     disabled
@@ -328,7 +330,7 @@ const Reg = () => {
                 </Stack>
               </TD>
               <TH required colSpan={1} align="right">
-                Feature 타입
+                {t('bizMeta:label.featureTyp')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -336,13 +338,13 @@ const Reg = () => {
                     name="featureTyp"
                     control={control}
                     rules={{
-                      required: 'featureTyp is required.',
-                      maxLength: { value: 16, message: 'max length exceeded' },
+                      required: t('common.validate.required'),
+                      maxLength: { value: 16, message: t('common.validate.maxLength') },
                     }}
                     render={({ field }) => (
                       <Select
                         appearance="Outline"
-                        placeholder="전체"
+                        placeholder={t('common.placeholder.all')}
                         className="width-100"
                         ref={field.ref}
                         onChange={(e, value) => value && field.onChange(value)}
@@ -361,7 +363,7 @@ const Reg = () => {
             </TR>
             <TR>
               <TH required colSpan={1} align="right">
-                한글명
+                {t('bizMeta:label.koNm')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -369,8 +371,8 @@ const Reg = () => {
                     <TextField
                       className="width-100"
                       {...register('featureKoNm', {
-                        required: { value: true, message: 'featureKoNm is required.' },
-                        maxLength: { value: 100, message: 'max length exceeded' },
+                        required: { value: true, message: t('common.validate.required') },
+                        maxLength: { value: 100, message: t('common.validate.maxLength') },
                       })}
                       validation={errors?.featureKoNm?.message ? 'Error' : undefined}
                       autoFocus
@@ -382,14 +384,14 @@ const Reg = () => {
                       size="MD"
                       onClick={() => handleCheckDuplication('featureKoNm')}
                     >
-                      중복확인
+                      {t('common.button.duplicateCheck')}
                     </Button>
                   </Stack>
                   <ErrorLabel message={errors?.featureKoNm?.message} />
                 </Stack>
               </TD>
               <TH required colSpan={1} align="right">
-                영문명
+                {t('bizMeta:label.enNm')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -397,9 +399,9 @@ const Reg = () => {
                     <TextField
                       className="width-100"
                       {...register('featureEnNm', {
-                        pattern: { value: /^[a-zA-Z_]*$/, message: '영문, _만 입력 가능합니다' },
-                        required: { value: true, message: 'featureEnNm is required.' },
-                        maxLength: { value: 100, message: 'max length exceeded' },
+                        pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
+                        required: { value: true, message: t('common.validate.required') },
+                        maxLength: { value: 100, message: t('common.validate.maxLength') },
                       })}
                       validation={errors?.featureEnNm?.message ? 'Error' : undefined}
                     />
@@ -410,7 +412,7 @@ const Reg = () => {
                       size="MD"
                       onClick={() => handleCheckDuplication('featureEnNm')}
                     >
-                      중복확인
+                      {t('common.button.duplicateCheck')}
                     </Button>
                   </Stack>
                   <ErrorLabel message={errors?.featureEnNm?.message} />
@@ -419,14 +421,14 @@ const Reg = () => {
             </TR>
             <TR>
               <TH colSpan={1} required align="right">
-                Feature 정의
+                {t('bizMeta:label.featureDef')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('featureDef', {
-                      required: { value: true, message: 'featureDef is required.' },
+                      required: { value: true, message: t('common.validate.required') },
                     })}
                     validation={errors?.featureDef?.message ? 'Error' : undefined}
                   />
@@ -436,14 +438,14 @@ const Reg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                산출단위
+                {t('bizMeta:label.calcUnt')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('calcUnt', {
-                      maxLength: { value: 32, message: 'max length exceeded' },
+                      maxLength: { value: 32, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.calcUnt?.message ? 'Error' : undefined}
                   />
@@ -453,7 +455,7 @@ const Reg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                산출로직
+                {t('bizMeta:label.featureFm')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -469,7 +471,7 @@ const Reg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                연관테이블
+                {t('bizMeta:label.featureRelTb')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -484,7 +486,7 @@ const Reg = () => {
             </TR>
             <TR>
               <TH colSpan={1} align="right">
-                비고
+                {t('bizMeta:label.featureDsc')}
               </TH>
               <TD colSpan={5}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -501,11 +503,11 @@ const Reg = () => {
         </Stack>
 
         <Stack direction="Vertical" gap="MD">
-          <Typography variant="h3">신청 정보</Typography>
+          <Typography variant="h3">{t('bizMeta:header.applyInfo')}</Typography>
           <HorizontalTable>
             <TR>
               <TH align="right" colSpan={1} required>
-                Feature 신청자
+                {t('bizMeta:label.enrUserNm')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
@@ -513,8 +515,8 @@ const Reg = () => {
                     <TextField
                       className="width-100"
                       {...register('enrUserNm', {
-                        required: { value: true, message: 'enrUserNm is required.' },
-                        maxLength: { value: 32, message: 'max length exceeded' },
+                        required: { value: true, message: t('common.validate.required') },
+                        maxLength: { value: 32, message: t('common.validate.maxLength') },
                       })}
                       validation={errors?.enrUserNm?.message ? 'Error' : undefined}
                       disabled
@@ -533,14 +535,14 @@ const Reg = () => {
                 </Stack>
               </TD>
               <TH align="right" colSpan={1}>
-                신청부서
+                {t('bizMeta:label.enrDeptNm')}
               </TH>
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
                     {...register('enrDeptNm', {
-                      maxLength: { value: 16, message: 'max length exceeded' },
+                      maxLength: { value: 16, message: t('common.validate.maxLength') },
                     })}
                     validation={errors?.enrDeptNm?.message ? 'Error' : undefined}
                     disabled
@@ -557,10 +559,10 @@ const Reg = () => {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path>
             </svg>
-            등록
+            {t('common.button.reg')}
           </Button>
           <Button size="LG" onClick={handleList}>
-            목록
+            {t('common.button.list')}
           </Button>
         </Stack>
       </Stack>

@@ -2,6 +2,7 @@ import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalInfo } from '@/models/components/Modal';
 import { closeModal } from '@/reducers/modalSlice';
 import { Button, Modal, Stack } from '@components/ui';
+import { useTranslation } from 'react-i18next';
 
 const ConfirmModal = ({
   isOpen = false,
@@ -13,6 +14,7 @@ const ConfirmModal = ({
   onClose,
   btnType,
 }: ModalInfo) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   const handleClose = () => {
@@ -40,7 +42,7 @@ const ConfirmModal = ({
       return (
         <>
           <Button priority="Primary" appearance="Contained" onClick={handleCancle}>
-            확인
+            {t('common.button.confirm')}
           </Button>
         </>
       );
@@ -48,10 +50,10 @@ const ConfirmModal = ({
       return (
         <>
           <Button autoFocus priority="Primary" appearance="Contained" onClick={handleConfirm}>
-            확인
+            {t('common.button.confirm')}
           </Button>
           <Button priority="Normal" appearance="Outline" onClick={handleCancle}>
-            취소
+            {t('common.button.cancel')}
           </Button>
         </>
       );

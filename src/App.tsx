@@ -16,9 +16,11 @@ import Watermark from '@uiw/react-watermark';
 import SessionUtil from '@utils/SessionUtil';
 import { Suspense, useCallback, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
+import { useTranslation } from 'react-i18next';
 import { RouterProvider } from 'react-router-dom';
 
 const App = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
@@ -73,17 +75,17 @@ const App = () => {
     if (oIsError) {
       toast({
         type: ValidType.ERROR,
-        content: 'Apigee 에러가 발생했습니다.',
+        content: t('login.toast.error.apigge'),
       });
     } else if (aIsError) {
       toast({
         type: ValidType.ERROR,
-        content: '로그인 중 에러가 발생했습니다.',
+        content: t('login.toast.error.login'),
       });
     } else if (unauthorized) {
       toast({
         type: ValidType.ERROR,
-        content: '권한이 없습니다.',
+        content: t('login.toast.error.unauthorized'),
       });
     }
   }, [oIsError, aIsError, unauthorized, toast]);

@@ -18,6 +18,7 @@ export const getFeatureAllList = (params: FeatureAllParams) => {
 };
 
 export const getFeatureList = (params: FeatureParams, page: PageModel) => {
+  console.log('----: ', page);
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.FEATURE}`,

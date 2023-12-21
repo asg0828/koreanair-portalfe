@@ -10,9 +10,11 @@ import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -45,8 +47,8 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '삭제',
-        content: '삭제하시겠습니까?',
+        title: t('common.modal.title.delete'),
+        content: t('common.modal.message.deleteConfirm'),
         onConfirm: mutate,
       })
     );
@@ -56,7 +58,7 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.read'),
       });
     } else if (isSuccess) {
       setFeatureModel(response.data);
@@ -67,12 +69,12 @@ const Detail = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: t('common.toast.error.delete'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: t('common.toast.success.delete'),
       });
       goToList();
     }
@@ -82,8 +84,8 @@ const Detail = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
         onConfirm={goToList}
       />
     );
@@ -92,17 +94,17 @@ const Detail = () => {
   return (
     <>
       <Stack direction="Vertical" gap="MD">
-        <Typography variant="h3">기본 정보</Typography>
+        <Typography variant="h3">{t('bizMeta:header.basicInfo')}</Typography>
         <HorizontalTable>
           <TR>
             <TH required colSpan={1} align="right">
-              대구분
+              {t('bizMeta:label.featureSeGrp')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.featureSeGrpNm}
             </TD>
             <TH required colSpan={1} align="right">
-              중구분
+              {t('bizMeta:label.featureSe')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.featureSeNm}
@@ -110,13 +112,13 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              Feature ID
+              {t('bizMeta:label.featureId')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.featureId}
             </TD>
             <TH required colSpan={1} align="right">
-              Feature 타입
+              {t('bizMeta:label.featureTyp')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.featureTypNm}
@@ -124,13 +126,13 @@ const Detail = () => {
           </TR>
           <TR>
             <TH required colSpan={1} align="right">
-              한글명
+              {t('bizMeta:label.koNm')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.featureKoNm}
             </TD>
             <TH required colSpan={1} align="right">
-              영문명
+              {t('bizMeta:label.enNm')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.featureEnNm}
@@ -138,7 +140,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} required align="right">
-              Feature 정의
+              {t('bizMeta:label.featureDef')}
             </TH>
             <TD colSpan={5} align="left">
               {featureModel?.featureDef}
@@ -146,7 +148,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              산출단위
+              {t('bizMeta:label.calcUnt')}
             </TH>
             <TD colSpan={5} align="left">
               {featureModel?.calcUnt}
@@ -154,7 +156,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              산출로직
+              {t('bizMeta:label.featureFm')}
             </TH>
             <TD colSpan={5} align="left">
               <TextField multiline disabled className="width-100 height-200" value={featureModel?.featureFm} />
@@ -162,7 +164,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              연관테이블
+              {t('bizMeta:label.featureRelTb')}
             </TH>
             <TD colSpan={5} align="left">
               {featureModel?.featureRelTb}
@@ -170,7 +172,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              비고
+              {t('bizMeta:label.featureDsc')}
             </TH>
             <TD colSpan={5} align="left">
               {featureModel?.featureDsc}
@@ -180,17 +182,17 @@ const Detail = () => {
       </Stack>
 
       <Stack direction="Vertical" gap="MD">
-        <Typography variant="h3">신청 정보</Typography>
+        <Typography variant="h3">{t('bizMeta:header.applyInfo')}</Typography>
         <HorizontalTable>
           <TR>
             <TH align="right" colSpan={1}>
-              Feature 신청자
+              {t('bizMeta:label.enrUserNm')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.enrUserNm}
             </TD>
             <TH align="right" colSpan={1}>
-              신청부서
+              {t('bizMeta:label.enrDeptNm')}
             </TH>
             <TD colSpan={2} align="left">
               {featureModel?.enrDeptNm}
@@ -203,15 +205,15 @@ const Detail = () => {
         {contextPath === ContextPath.ADMIN && (
           <>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-              수정
+              {t('common.button.edit')}
             </Button>
             <Button priority="Normal" size="LG" onClick={handleDelete}>
-              삭제
+              {t('common.button.delete')}
             </Button>
           </>
         )}
         <Button appearance="Outline" size="LG" onClick={goToList}>
-          목록
+          {t('common.button.list')}
         </Button>
       </Stack>
     </>

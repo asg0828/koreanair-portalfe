@@ -12,9 +12,11 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Reg = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -54,8 +56,8 @@ const Reg = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '확인',
-        content: '목록으로 이동하시겠습니까?',
+        title: t('common.modal.title.confirm'),
+        content: t('common.modal.message.listConfirm'),
         onConfirm: goToList,
       })
     );
@@ -65,8 +67,8 @@ const Reg = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '저장',
-        content: '등록하시겠습니까?',
+        title: t('common.modal.title.create'),
+        content: t('common.modal.message.createConfirm'),
         onConfirm: mutate,
       })
     );
@@ -83,12 +85,12 @@ const Reg = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '등록 중 에러가 발생했습니다.',
+        content: t('common.toast.error.create'),
       });
     } else if (isSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '등록되었습니다.',
+        content: t('common.toast.success.create'),
       });
       goToList();
     }
@@ -100,15 +102,15 @@ const Reg = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={1} align="right" required>
-              질문
+              {t('board:label.question')}
             </TH>
             <TD colSpan={5} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <TextField
                   className="width-100"
                   {...register('qstn', {
-                    required: { value: true, message: 'question is required.' },
-                    maxLength: { value: 1000, message: 'max length exceeded' },
+                    required: { value: true, message: t('common.validate.required') },
+                    maxLength: { value: 1000, message: t('common.validate.maxLength') },
                   })}
                   validation={errors?.qstn?.message ? 'Error' : undefined}
                   autoFocus
@@ -119,18 +121,18 @@ const Reg = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right" required>
-              분류
+              {t('board:label.clCodeNm')}
             </TH>
             <TD colSpan={2} align="left">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <Controller
                   name="clCode"
                   control={control}
-                  rules={{ required: { value: true, message: 'code is required.' } }}
+                  rules={{ required: { value: true, message: t('common.validate.required') } }}
                   render={({ field }) => (
                     <Select
                       appearance="Outline"
-                      placeholder="전체"
+                      placeholder={t('common.placeholder.all')}
                       className="width-100"
                       ref={field.ref}
                       onChange={(e, value) => value && field.onChange(value)}
@@ -147,23 +149,33 @@ const Reg = () => {
               </Stack>
             </TD>
             <TH colSpan={1} align="right">
-              게시여부
+              {t('board:label.postYn')}
             </TH>
             <TD colSpan={2} align="left">
-              <Radio label="게시" value="Y" defaultChecked={values.useYn === 'Y'} {...register('useYn')} />
-              <Radio label="미개시" value="N" defaultChecked={values.useYn === 'N'} {...register('useYn')} />
+              <Radio
+                label={t('board:label.post')}
+                value="Y"
+                defaultChecked={values.useYn === 'Y'}
+                {...register('useYn')}
+              />
+              <Radio
+                label={t('board:label.unpost')}
+                value="N"
+                defaultChecked={values.useYn === 'N'}
+                {...register('useYn')}
+              />
             </TD>
           </TR>
           <TR className="height-100">
             <TH colSpan={1} align="right" required>
-              답변
+              {t('board:label.answer')}
             </TH>
             <TD colSpan={5} align="left" className="content">
               <Stack gap="SM" className="width-100" direction="Vertical">
                 <Controller
                   name="answ"
                   control={control}
-                  rules={{ required: { value: true, message: 'answer is required.' } }}
+                  rules={{ required: { value: true, message: t('common.validate.required') } }}
                   render={({ field }) => (
                     <TinyEditor
                       ref={field.ref}
@@ -178,7 +190,7 @@ const Reg = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              첨부파일
+              {t('board:label.attachedFile')}
             </TH>
             <TD colSpan={5} align="left" className="attachFile">
               <UploadDropzone fileCl="faq" uploadFiles={handleUploadFiles} fileList={values.fileList} />
@@ -189,10 +201,10 @@ const Reg = () => {
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-          등록
+          {t('common.button.reg')}
         </Button>
         <Button size="LG" onClick={handleList}>
-          목록
+          {t('common.button.list')}
         </Button>
       </Stack>
     </form>

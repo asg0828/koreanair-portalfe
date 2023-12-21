@@ -10,9 +10,11 @@ import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { Stack, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
 const List = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
@@ -50,13 +52,13 @@ const List = () => {
         );
       },
     },
-    { headerName: '대구분', field: 'featureSeGrpNm', colSpan: 1 },
-    { headerName: '중구분', field: 'featureSeNm', colSpan: 1 },
-    { headerName: 'Feature 영문명', field: 'featureEnNm', colSpan: 1.8, align: 'left' },
-    { headerName: 'Feature 한글명', field: 'featureKoNm', colSpan: 1.8, align: 'left' },
-    { headerName: '정의', field: 'featureDef', colSpan: 1.9, align: 'left' },
-    { headerName: 'Feature 신청자', field: 'enrUserNm', colSpan: 1 },
-    { headerName: '신청부서', field: 'enrDeptNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.featureSeGrp'), field: 'featureSeGrpNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.featureSe'), field: 'featureSeNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.featureEnNm'), field: 'featureEnNm', colSpan: 1.8, align: 'left' },
+    { headerName: t('bizMeta:label.featureKoNm'), field: 'featureKoNm', colSpan: 1.8, align: 'left' },
+    { headerName: t('bizMeta:label.def'), field: 'featureDef', colSpan: 1.9, align: 'left' },
+    { headerName: t('bizMeta:label.enrUserNm'), field: 'enrUserNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.enrDeptNm'), field: 'enrDeptNm', colSpan: 1 },
   ];
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = usePopularFeatureList();
@@ -76,7 +78,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.list'),
       });
     } else {
       if (response?.data) {
@@ -93,12 +95,12 @@ const List = () => {
     if (cIsError || cResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '관심 Feature 추가 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.addedInterestFeature'),
       });
     } else if (cIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '관심 Feature에 추가되었습니다.',
+        content: t('bizMeta:toast.success.addedInterestFeature'),
       });
       refetch();
     }
@@ -108,12 +110,12 @@ const List = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '관심 Feature 삭제 중 에러가 발생했습니다.',
+        content: t('bizMeta:toast.error.addedInterestFeature'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '관심 Feature에서 삭제되었습니다.',
+        content: t('bizMeta:toast.success.addedInterestFeature'),
       });
       refetch();
     }

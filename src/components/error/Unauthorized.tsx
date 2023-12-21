@@ -1,8 +1,10 @@
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useAppSelector } from '@/hooks/useRedux';
 import { selectContextPath } from '@/reducers/authSlice';
+import { useTranslation } from 'react-i18next';
 
 const Unauthorized = () => {
+  const { t } = useTranslation();
   const contextPath = useAppSelector(selectContextPath());
 
   const handleConfirm = () => {
@@ -11,7 +13,12 @@ const Unauthorized = () => {
 
   return (
     <>
-      <EmptyState type="warning" description="권한이 없습니다." confirmText="홈으로" onConfirm={handleConfirm} />
+      <EmptyState
+        type="warning"
+        description={t('common.message.unauthorized')}
+        confirmText={t('common.button.home')}
+        onConfirm={handleConfirm}
+      />
     </>
   );
 };

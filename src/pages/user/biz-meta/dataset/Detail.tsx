@@ -13,9 +13,11 @@ import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -26,7 +28,7 @@ const Detail = () => {
   const [datasetModel, setDatasetModel] = useState<DatasetModel>();
   const columns: Array<ColumnsInfo> = [
     {
-      headerName: '한글명',
+      headerName: t('bizMeta:label.koNm'),
       field: 'mcsKoNm',
       colSpan: 2,
       maxLength: 100,
@@ -34,28 +36,28 @@ const Detail = () => {
       align: 'left',
     },
     {
-      headerName: '영문명',
+      headerName: t('bizMeta:label.enNm'),
       field: 'mcsEnNm',
       colSpan: 2,
       require: true,
       align: 'left',
     },
     {
-      headerName: '원천 컬럼명',
+      headerName: t('bizMeta:label.srcClNm'),
       field: 'srcClNm',
       colSpan: 2,
       require: true,
       align: 'left',
     },
     {
-      headerName: '정의',
+      headerName: t('bizMeta:label.def'),
       field: 'mcsDef',
       colSpan: 2.9,
       require: true,
       align: 'left',
     },
     {
-      headerName: '산출로직',
+      headerName: t('bizMeta:label.featureFm'),
       field: 'clFm',
       colSpan: 1.1,
       require: true,
@@ -67,7 +69,7 @@ const Detail = () => {
               appearance="Contained"
               onClick={() => openCalculationLogicModal(rowIndex, fieldName)}
             >
-              보기
+              {t('common.button.visible')}
             </Button>
           </Stack>
         );
@@ -82,7 +84,7 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CALCULATION_LOGIC,
-        title: '산출로직',
+        title: t('bizMeta:label.featureFm'),
         content: rows[rowIndex][fieldName],
         disabled: true,
       })
@@ -110,8 +112,8 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '삭제',
-        content: '삭제하시겠습니까?',
+        title: t('common.modal.title.delete'),
+        content: t('common.modal.message.deleteConfirm'),
         onConfirm: mutate,
       })
     );
@@ -121,7 +123,7 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.read'),
       });
     } else if (isSuccess) {
       setDatasetModel(response.data);
@@ -133,12 +135,12 @@ const Detail = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: t('common.toast.error.delete'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: t('common.toast.success.delete'),
       });
       goToList();
     }
@@ -148,8 +150,8 @@ const Detail = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
         onConfirm={goToList}
       />
     );
@@ -158,17 +160,17 @@ const Detail = () => {
   return (
     <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
       <Stack direction="Vertical" gap="MD" className="height-100">
-        <Typography variant="h3">기본 정보</Typography>
+        <Typography variant="h3">{t('bizMeta:header.basicInfo')}</Typography>
         <HorizontalTable>
           <TR>
             <TH required colSpan={1} align="right">
-              테이블 한글명
+              {t('bizMeta:label.tableKoNm')}
             </TH>
             <TD colSpan={2} align="left">
               {datasetModel?.mtsKoNm}
             </TD>
             <TH required colSpan={1} align="right">
-              테이블 영문명
+              {t('bizMeta:label.tableEnNm')}
             </TH>
             <TD colSpan={2} align="left">
               {datasetModel?.mtsEnNm}
@@ -176,7 +178,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH required colSpan={1} align="right">
-              테이블 정의
+              {t('bizMeta:label.tableDef')}
             </TH>
             <TD colSpan={5} align="left">
               {datasetModel?.mtsDef}
@@ -184,7 +186,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} required align="right">
-              컬럼 정의
+              {t('bizMeta:label.columnDef')}
             </TH>
             <TD colSpan={5} align="left" className="height-300 overflow-auto">
               <Stack gap="SM" className="width-100 height-100" direction="Vertical" alignItems="Start">
@@ -200,7 +202,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              원천시스템
+              {t('bizMeta:label.srcSys')}
             </TH>
             <TD colSpan={5} align="left">
               {datasetModel?.srcSys}
@@ -208,7 +210,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              원천테이블명
+              {t('bizMeta:label.srcTbNm')}
             </TH>
             <TD colSpan={5} align="left">
               {datasetModel?.srcTbNm}
@@ -216,7 +218,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              DB명
+              {t('bizMeta:label.dbNm')}
             </TH>
             <TD colSpan={5} align="left">
               {datasetModel?.srcDbCd}
@@ -224,7 +226,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              비고
+              {t('bizMeta:label.featureDsc')}
             </TH>
             <TD colSpan={5} align="left">
               {datasetModel?.mtsDsc}
@@ -237,15 +239,15 @@ const Detail = () => {
         {contextPath === ContextPath.ADMIN && (
           <>
             <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-              수정
+              {t('common.button.edit')}
             </Button>
             <Button priority="Normal" size="LG" onClick={handleDelete}>
-              삭제
+              {t('common.button.delete')}
             </Button>
           </>
         )}
         <Button size="LG" onClick={goToList}>
-          목록
+          {t('common.button.list')}
         </Button>
       </Stack>
     </Stack>

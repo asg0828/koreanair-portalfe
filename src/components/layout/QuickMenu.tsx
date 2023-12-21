@@ -4,8 +4,10 @@ import { Stack, Typography } from '@components/ui';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './QuickMenu.scss';
+import { useTranslation } from 'react-i18next';
 
 const QuickLink = () => {
+  const { t } = useTranslation();
   const quickMenuList = useAppSelector(selectQuickMenuList());
   const [isToggleOpen, setIsToggleOpen] = useState('open');
 
@@ -22,7 +24,7 @@ const QuickLink = () => {
       <Stack direction="Vertical" alignItems="Left" className="quickMenu-wrap shadowBox1">
         <Typography variant="h4" className="quickMenuTop" onClick={quickLinkToggle}>
           <Stack justifyContent="Between" className="width-100">
-            <div className="text">Quick Link</div>
+            <div className="text">{t('common.label.quickLink')}</div>
             <div className="quickMenuTopIcon" />
           </Stack>
         </Typography>

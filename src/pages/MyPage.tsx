@@ -6,26 +6,22 @@ import { ValidType } from '@/models/common/Constants';
 import { UserModel } from '@/models/model/UserModel';
 import { selectSessionInfo } from '@/reducers/authSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
+import { Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const MyPage = () => {
-  const navigate = useNavigate();
+  const { t } = useTranslation();
   const { toast } = useToast();
   const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [userModel, setUserModel] = useState<UserModel>();
   const { data: response, isSuccess, isError } = useUserById(userId);
 
-  const goToList = () => {
-    navigate('..');
-  };
-
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.read'),
       });
     } else if (isSuccess) {
       setUserModel(response.data);
@@ -36,9 +32,8 @@ const MyPage = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
-        onConfirm={goToList}
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
       />
     );
   }
@@ -46,17 +41,17 @@ const MyPage = () => {
   return (
     <Stack direction="Vertical" gap="MD" className="width-100 padding-20 single-page">
       <Stack direction="Vertical" gap="MD" className="width-100">
-        <Typography variant="h3">사용자 기본정보</Typography>
+        <Typography variant="h3">{t('management:header.userBasicInfo')}</Typography>
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
-              이메일
+              {t('management:label.userEmail')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.userEmail}
             </TD>
             <TH colSpan={1} align="right">
-              성명
+              {t('management:label.userNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.userNm}
@@ -64,13 +59,13 @@ const MyPage = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              사번
+              {t('management:label.userId')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.userId}
             </TD>
             <TH colSpan={1} align="right">
-              부서
+              {t('management:label.deptNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.deptNm}
@@ -78,13 +73,13 @@ const MyPage = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              사용여부
+              {t('management:label.employmentYn')}
             </TH>
             <TD colSpan={2} align="left">
-              {userModel?.useYn === 'Y' ? '예' : userModel?.useYn === 'N' ? '아니오' : ''}
+              {userModel?.useYn}
             </TD>
             <TH colSpan={1} align="right">
-              사용자예외그룹
+              {t('management:label.eUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.eUserAuthNm}
@@ -94,17 +89,17 @@ const MyPage = () => {
       </Stack>
 
       <Stack direction="Vertical" gap="MD" className="width-100">
-        <Typography variant="h3">사용자 권한정보</Typography>
+        <Typography variant="h3">{t('management:header.userAuthInfo')}</Typography>
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
-              이전 사용자 권한
+              {t('management:label.bfUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.bfUserAuthNm}
             </TD>
             <TH colSpan={1} align="right">
-              적용 사용자 권한
+              {t('management:label.apldUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.apldUserAuthNm}
@@ -112,13 +107,13 @@ const MyPage = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              이전 관리자 권한
+              {t('management:label.bfMgrAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.bfMgrAuthNm}
             </TD>
             <TH colSpan={1} align="right">
-              적용 관리자 권한
+              {t('management:label.apldMgrAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
               {userModel?.apldMgrAuthNm}
@@ -126,19 +121,13 @@ const MyPage = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              최종변경일시
+              {t('management:label.modiDt')}
             </TH>
             <TD colSpan={5} align="left">
               {userModel?.rgstDt}
             </TD>
           </TR>
         </HorizontalTable>
-      </Stack>
-
-      <Stack gap="SM" justifyContent="End">
-        <Button size="LG" onClick={goToList}>
-          목록
-        </Button>
       </Stack>
     </Stack>
   );

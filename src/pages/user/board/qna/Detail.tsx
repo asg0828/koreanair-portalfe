@@ -6,11 +6,10 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
-import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { CreatedQnaModel, QnaModel, QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
-import { selectContextPath } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
@@ -18,14 +17,15 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Detail = () => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  const contextPath = useAppSelector(selectContextPath());
   const qnaId: string = location?.state?.qnaId || '';
   const params: QnaParams = location?.state?.params;
   const [qnaModel, setQnaModel] = useState<QnaModel>();
@@ -107,8 +107,8 @@ const Detail = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '삭제',
-        content: '삭제하시겠습니까?',
+        title: t('common.modal.title.delete'),
+        content: t('common.modal.message.deleteConfirm'),
         onConfirm: mutate,
       })
     );
@@ -132,7 +132,7 @@ const Detail = () => {
       openModal({
         type: ModalType.CONFIRM,
         title: '삭제',
-        content: '답글을 삭제하시겠습니까?',
+        content: t('common.modal.message.deleteAnserConfirm'),
         onConfirm: cdMutate,
       })
     );
@@ -152,12 +152,12 @@ const Detail = () => {
     if (isSuccess) {
       toast({
         type: ValidType.INFO,
-        content: '파일이 다운로드되었습니다.',
+        content: t('common.toast.success.download'),
       });
     } else {
       toast({
         type: ValidType.ERROR,
-        content: '파일 다운로드 중 에러가 발생했습니다.',
+        content: t('common.toast.error.download'),
       });
     }
   };
@@ -166,13 +166,13 @@ const Detail = () => {
     if (cdIsError || cdResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '답글 삭제 중 에러가 발생했습니다.',
+        content: t('board:toast.error.deleteAnswer'),
       });
     } else if (cdIsSuccess) {
       refetch();
       toast({
         type: ValidType.CONFIRM,
-        content: '답글이 삭제되었습니다.',
+        content: t('board:toast.success.deleteAnswer'),
       });
     }
   }, [cdResponse, cdIsSuccess, cdIsError, toast, refetch]);
@@ -181,13 +181,13 @@ const Detail = () => {
     if (cIsError || cResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '답글 등록 중 에러가 발생했습니다.',
+        content: t('board:toast.error.createAnswer'),
       });
     } else if (cIsSuccess) {
       refetch();
       toast({
         type: ValidType.CONFIRM,
-        content: '답글이 등록되었습니다.',
+        content: t('board:toast.success.createAnswer'),
       });
       setValue('answ', '');
     }
@@ -197,13 +197,13 @@ const Detail = () => {
     if (cuIsError || cuResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '답글 수정 중 에러가 발생했습니다.',
+        content: t('board:toast.error.updateAnswer'),
       });
     } else if (cuIsSuccess) {
       refetch();
       toast({
         type: ValidType.CONFIRM,
-        content: '답글이 수정되었습니다.',
+        content: t('board:toast.success.updateAnswer'),
       });
       handleCommentCancel();
     }
@@ -213,7 +213,7 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: t('common.toast.error.list'),
       });
     } else if (isSuccess && response.data) {
       response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
@@ -225,12 +225,12 @@ const Detail = () => {
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '삭제 중 에러가 발생했습니다.',
+        content: t('common.toast.error.delete'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '삭제되었습니다.',
+        content: t('common.toast.success.delete'),
       });
       goToList();
     }
@@ -240,8 +240,8 @@ const Detail = () => {
     return (
       <EmptyState
         type="warning"
-        description="조회에 필요한 정보가 없습니다"
-        confirmText="돌아가기"
+        description={t('common.message.noRequireInfo')}
+        confirmText={t('common.message.goBack')}
         onConfirm={goToList}
       />
     );
@@ -259,7 +259,7 @@ const Detail = () => {
                   <li>{getCode(GroupCodeType.QNA_TYPE, qnaModel?.clCode || '')?.codeNm}</li>
                   <li>{`${qnaModel?.rgstDeptNm || ''} ${qnaModel?.rgstNm || ''}`}</li>
                   <li>{qnaModel?.modiDt}</li>
-                  <li>{`조회수 ${qnaModel?.viewCnt}`}</li>
+                  <li>{`${t('board:label.viewCnt')} ${qnaModel?.viewCnt}`}</li>
                 </ul>
               </Stack>
             </TH>
@@ -271,7 +271,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} className="attachFile">
-              첨부파일
+              {t('board:label.attachedFile')}
             </TH>
             <TD colSpan={3}>
               <ul className="attachFileList">
@@ -292,7 +292,8 @@ const Detail = () => {
             <TD colSpan={4} className="reply">
               <Stack direction="Vertical" gap="SM" className="width-100">
                 <Typography variant="h6">
-                  Comment
+                  {t('board:label.comment')}
+                  &nbsp;
                   <span className="total">{`${qnaModel?.comments.length || 0}`}</span>건
                 </Typography>
 
@@ -311,7 +312,7 @@ const Detail = () => {
                       />
                     </Stack>
                     <Button type="submit" size="LG" className="btn-reg">
-                      등록
+                      {t('common.button.reg')}
                     </Button>
                   </Stack>
                   <ErrorLabel message={errors?.answ?.message} />
@@ -330,16 +331,16 @@ const Detail = () => {
                         {watch().qnaId === qnaItem.qnaId ? (
                           <Stack>
                             <Button appearance="Unfilled" onClick={handleCommentCancel}>
-                              취소
+                              {t('common.button.cancel')}
                             </Button>
                           </Stack>
                         ) : (
                           <Stack>
                             <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
-                              수정
+                              {t('common.button.edit')}
                             </Button>
                             <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
-                              삭제
+                              {t('common.button.delete')}
                             </Button>
                           </Stack>
                         )}
@@ -361,7 +362,7 @@ const Detail = () => {
                                 />
                               </Stack>
                               <Button type="submit" size="LG" className="btn-confirm">
-                                확인
+                                {t('common.button.confirm')}
                               </Button>
                             </Stack>
                             <ErrorLabel message={uErrors?.answ?.message} />
@@ -377,7 +378,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              다음
+              {t('board:label.next')}
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
@@ -390,7 +391,7 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              이전
+              {t('board:label.prev')}
               <ExpandLessIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
@@ -406,13 +407,13 @@ const Detail = () => {
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-          수정
+          {t('common.button.edit')}
         </Button>
         <Button priority="Normal" size="LG" onClick={handleDelete}>
-          삭제
+          {t('common.button.delete')}
         </Button>
         <Button size="LG" onClick={goToList}>
-          목록
+          {t('common.button.list')}
         </Button>
       </Stack>
     </>

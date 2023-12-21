@@ -10,8 +10,10 @@ import SessionUtil from '@utils/SessionUtil';
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import './Header.scss';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const sessionApis = new SessionApis();
@@ -64,8 +66,8 @@ const Header = () => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
-        title: '확인',
-        content: '로그아웃 하시겠습니까?',
+        title: t('common.modal.title.confirm'),
+        content: t('login.message.logout'),
         onConfirm: async () => {
           await sessionApis.logoutSession();
           await sessionApis.revokeToken();
