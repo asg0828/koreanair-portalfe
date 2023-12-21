@@ -89,6 +89,8 @@ export default function List() {
     }
     return searchError;
   };
+  
+
 
   // 등록가족 상세 모달 오픈 버튼
   const retrieveFamilyInfo = () => {
@@ -231,6 +233,11 @@ export default function List() {
       }
     }
   }, [response, isError, toast]);
+
+
+  const [cLevelModalOpen, setcLevelModalOpen] = useState(false);
+
+
 
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
@@ -1119,6 +1126,91 @@ export default function List() {
               </button>
             </div>
           </Stack>
+
+          <div className={"c_level_right_modal_wrap " +  (cLevelModalOpen ? "panel_opened" : "")}>
+            <Stack>
+              <div className="right_modal_btn_wrap" onClick={()=>{setcLevelModalOpen(!cLevelModalOpen)}}><div className="btn_modal_icon"></div></div>
+              <div className="right_modal_content_wrap height-100">
+                <div className="right_modal_content height-100">
+                  <div className="right_modal_content_inner height-100">
+                    <Stack direction="Vertical">
+                      <div className="right_modal_search_wrap">
+                        <Stack>
+                          <TextField className="width-100" size="LG" placeholder="결과내 검색"/>
+                          <Button appearance="Contained" priority="Primary" shape="Square" size="LG">검색</Button>
+                        </Stack>
+                      </div>
+                      <div className="right_modal_box_wrap">
+                        <div className="box_inner_txt"><span className="point_txt">100명</span>을 초과하는 데이터입니다.</div>
+                        <div className="box_inner_sub">(추가 데이터 외 조회는 모달을 닫으신 후 Skypass Number 혹은<br/>핸드폰번호로 조회해주시기 바랍니다.)</div>
+                      </div>
+                      <div className="right_modal_table_wrap">
+                        <div className="right_modal_table_inner height-100">
+                          <table>
+                            <colgroup>
+                            <col width="80px" />
+                            <col width="130px" />
+                            <col width="54px" />
+                            <col width="100px" />
+                            <col width="*" />
+                          </colgroup>
+                          <thead>
+                            <tr>
+                              <th><div className="ellipsis1">이름<span className="subtxt">(KOR)</span></div></th>
+                              <th><div className="ellipsis1">이름<span className="subtxt">(ENG)</span></div></th>
+                              <th><div className="ellipsis1">성별</div></th>
+                              <th><div className="ellipsis1">생년월일</div></th>
+                              <th><div className="ellipsis1">Skypass No.</div></th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td><div className="ellipsis1">김대한</div></td>
+                              <td><div className="ellipsis1">Eeahan-Kim</div></td>
+                              <td><div className="ellipsis1">M</div></td>
+                              <td><div className="ellipsis1">1999.01.01</div></td>
+                              <td><div className="ellipsis1">123456789112</div></td>
+                            </tr>
+                            <tr>
+                              <td><div className="ellipsis1">김대한</div></td>
+                              <td><div className="ellipsis1">Eeahan-Kim</div></td>
+                              <td><div className="ellipsis1">M</div></td>
+                              <td><div className="ellipsis1">1999.01.01</div></td>
+                              <td><div className="ellipsis1">123456789112</div></td>
+                            </tr>
+                            <tr>
+                              <td><div className="ellipsis1">김대한</div></td>
+                              <td><div className="ellipsis1">Eeahan-Kim</div></td>
+                              <td><div className="ellipsis1">M</div></td>
+                              <td><div className="ellipsis1">1999.01.01</div></td>
+                              <td><div className="ellipsis1">123456789112</div></td>
+                            </tr>
+                            <tr>
+                              <td><div className="ellipsis1">김대한</div></td>
+                              <td><div className="ellipsis1">Eeahan-Kim</div></td>
+                              <td><div className="ellipsis1">M</div></td>
+                              <td><div className="ellipsis1">1999.01.01</div></td>
+                              <td><div className="ellipsis1">123456789112</div></td>
+                            </tr>
+                            <tr>
+                              <td><div className="ellipsis1">김대한</div></td>
+                              <td><div className="ellipsis1">Eeahan-Kim</div></td>
+                              <td><div className="ellipsis1">M</div></td>
+                              <td><div className="ellipsis1">1999.01.01</div></td>
+                              <td><div className="ellipsis1">123456789112</div></td>
+                            </tr>
+                          </tbody>
+
+                          </table>
+                        </div>
+                      </div>
+                    </Stack>
+                  </div>
+                </div>
+              </div>
+            </Stack>
+          </div>
+
         </Stack>
       </div>
     </Stack>
