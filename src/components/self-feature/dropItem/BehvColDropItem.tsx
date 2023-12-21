@@ -55,6 +55,8 @@ const BehvColDropItem = ({
             || trgtFilterItem.operator === "between"
         ) {
             setSlctDateType(trgtFilterItem.operator)
+        } else {
+            setSlctDateType("")
         }
 
     }, [trgtFilterItem.operator])

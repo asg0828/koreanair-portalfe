@@ -8,7 +8,6 @@ export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
   showPageSizeSelect?: boolean;
   showPagination?: boolean;
-  initialSortedColumn?: string;
 }
 
 const DataGrid: React.FC<DatagridProps> = ({
@@ -20,12 +19,13 @@ const DataGrid: React.FC<DatagridProps> = ({
   onChange,
   buttonChildren,
   page,
-  initialSortedColumn,
   rowSelection,
   showPagination = true,
   showPageSizeSelect = true,
   isMultiSelected,
-  onSortChange
+  onSortChange,
+  sortedColumn,
+  sortedDirection,
 }) => {
   const [pages, setPages] = useState<PageModel>(initPage);
 
@@ -71,12 +71,13 @@ const DataGrid: React.FC<DatagridProps> = ({
         columns={columns}
         rows={rows}
         enableSort={enableSort}
-        initialSortedColumn={initialSortedColumn}
         onSortChange={onSortChange}
         clickable={clickable}
         isMultiSelected={isMultiSelected}
         onClick={onClick}
         rowSelection={rowSelection}
+        sortedColumn={sortedColumn}
+        sortedDirection={sortedDirection}
       />
       <Stack className="pagination-layout">
         {showPagination && (

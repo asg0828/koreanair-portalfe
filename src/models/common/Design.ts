@@ -40,15 +40,15 @@ export const AlignItemsCode = {
 } as const;
 
 export const VariantCode = {
-  H1: "h1",
-  H2: "h2",
-  H3: "h3",
-  H4: "h4",
-  H5: "h5",
-  H6: "h6",
-  BODY1: "body1",
-  BODY2: "body2",
-  CAPTION: "caption"
+  H1: 'h1',
+  H2: 'h2',
+  H3: 'h3',
+  H4: 'h4',
+  H5: 'h5',
+  H6: 'h6',
+  BODY1: 'body1',
+  BODY2: 'body2',
+  CAPTION: 'caption',
 } as const;
 
 export const ShapeCode = {
@@ -96,21 +96,21 @@ export const CheckedCode = {
   INDETERMINATE: 'indeterminate',
 } as const;
 
-export type Appearance = typeof AppearanceCode[keyof typeof AppearanceCode];
-export type Size = typeof AppearanceCode[keyof typeof AppearanceCode];
-export type Gap = typeof GapCode[keyof typeof GapCode];
-export type Align = typeof AlignCode[keyof typeof AlignCode];
-export type AlignItems = typeof AlignItemsCode[keyof typeof AlignItemsCode];
-export type Variant = typeof VariantCode[keyof typeof VariantCode];
-export type Shape = typeof ShapeCode[keyof typeof ShapeCode];
-export type Status = typeof StatusCode[keyof typeof StatusCode];
-export type Direction = typeof DirectionCode[keyof typeof DirectionCode];
-export type JustifyContent = typeof JustifyContentCode[keyof typeof JustifyContentCode];
-export type Priority = typeof PriorityCode[keyof typeof PriorityCode];
-export type ButtonType = typeof ButtonTypeCode[keyof typeof ButtonTypeCode];
-export type Validation = typeof ValidationCode[keyof typeof ValidationCode];
-export type SortDirection = typeof SortDirectionCode[keyof typeof SortDirectionCode];
-export type CheckedState = boolean | typeof CheckedCode[keyof typeof CheckedCode];
+export type Appearance = (typeof AppearanceCode)[keyof typeof AppearanceCode];
+export type Size = (typeof AppearanceCode)[keyof typeof AppearanceCode];
+export type Gap = (typeof GapCode)[keyof typeof GapCode];
+export type Align = (typeof AlignCode)[keyof typeof AlignCode];
+export type AlignItems = (typeof AlignItemsCode)[keyof typeof AlignItemsCode];
+export type Variant = (typeof VariantCode)[keyof typeof VariantCode];
+export type Shape = (typeof ShapeCode)[keyof typeof ShapeCode];
+export type Status = (typeof StatusCode)[keyof typeof StatusCode];
+export type Direction = (typeof DirectionCode)[keyof typeof DirectionCode];
+export type JustifyContent = (typeof JustifyContentCode)[keyof typeof JustifyContentCode];
+export type Priority = (typeof PriorityCode)[keyof typeof PriorityCode];
+export type ButtonType = (typeof ButtonTypeCode)[keyof typeof ButtonTypeCode];
+export type Validation = (typeof ValidationCode)[keyof typeof ValidationCode];
+export type SortDirection = (typeof SortDirectionCode)[keyof typeof SortDirectionCode] | undefined;
+export type CheckedState = boolean | (typeof CheckedCode)[keyof typeof CheckedCode];
 export type Required = boolean;
 export type Selected = boolean;
 export type Disabled = boolean;

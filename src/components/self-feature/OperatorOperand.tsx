@@ -44,6 +44,33 @@ const OperatorOperand = ({
     const [oprd2DpValue, setOprd2DpValue] = useState<string>("")
     const [oprd5DpValue, setOprd5DpValue] = useState<string>("")
 
+    // 최초 등록/수정 판단 flag
+    let isUpdtInfo: Boolean = false
+
+    useEffect(() => {
+        if (item?.id) isUpdtInfo = true
+        else isUpdtInfo = false
+    }, [])
+
+    useEffect(() => {
+        if (isUpdtInfo) return
+
+        setTrgtFilterList && setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
+            let tl = cloneDeep(state)
+            let updtTrgtFilterList = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === item?.targetId)
+            updtTrgtFilterList[itemIdx]["operator"] = ""
+            updtTrgtFilterList[itemIdx]["operand1"] = ""
+            updtTrgtFilterList[itemIdx]["operand2"] = ""
+            updtTrgtFilterList[itemIdx]["operand3"] = ""
+            updtTrgtFilterList[itemIdx]["operand4"] = ""
+            updtTrgtFilterList[itemIdx]["operand5"] = ""
+            updtTrgtFilterList[itemIdx]["operand6"] = ""
+            tl = tl.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId !== item?.targetId)
+            tl = [...tl, ...updtTrgtFilterList]
+            return tl
+        })
+    }, [item?.function])
+
     useEffect(() => {
         if (cmmCodeOprtRes) {
             setOperatorOption((prevState: Array<CommonCodeInfo>) => {
@@ -146,12 +173,7 @@ const OperatorOperand = ({
                         }}
                         appearance="Outline"
                         placeholder="연산자 선택"
-                        onChange={(
-                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                            value: SelectValue<{}, false>
-                        ) => {
-                            onchangeSelectHandler(e, value, "operator")
-                        }}
+                        onChange={(e, value) => value && onchangeSelectHandler(e, value, "operator")}
                     >
                         {operatorOption.map((item, index) => (
                             <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
@@ -192,13 +214,7 @@ const OperatorOperand = ({
                             style={{
                                 width: '11.25rem'
                             }}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                // 구분자 선택
-                                onchangeSelectHandler(e, value, "delimiter")
-                            }}
+                            onChange={(e, value) => value && onchangeSelectHandler(e, value, "delimiter")}
                         >
                             {delimiterOption.map((item, index) => (
                                 <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
@@ -276,13 +292,7 @@ const OperatorOperand = ({
                                 style={{
                                     width: '11.25rem'
                                 }}
-                                onChange={(
-                                    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                    value: SelectValue<{}, false>
-                                ) => {
-                                    // 구분자 선택
-                                    onchangeSelectHandler(e, value, "operand1")
-                                }}
+                                onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand1")}
                             >
                                 <SelectOption style={{ fontSize: "smaller" }} value="date">날짜</SelectOption>
                                 <SelectOption style={{ fontSize: "smaller" }} value="now">조건식</SelectOption>
@@ -313,24 +323,9 @@ const OperatorOperand = ({
                                     ]}
                                     onChange={(e) => { e.target.value = "" }}
                                     onValueChange={(nextVal) => {
-                                        //operand2
                                         setOprd2DpValue(nextVal)
                                         onChangeDatePickerHandler("operand2", nextVal)
-                                        /*
-                                        setSearch((prevState: SearchProps) => {
-                                            let rtn = cloneDeep(prevState)
-                                            rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                            return rtn
-                                        });
-                                        */
                                     }}
-                                // placeholderText='날짜 선택'
-                                // value={oprd2DpValue}
-                                // onChange={(date) => {
-                                //     let d = dayjs(date).format("YYYY-MM-DD").toString()
-                                //     setOprd2DpValue(d)
-                                //     onChangeDatePickerHandler("operand2", d)
-                                // }}
                                 />
                             </Stack>
                         }
@@ -365,13 +360,7 @@ const OperatorOperand = ({
                                     style={{
                                         width: '11.25rem'
                                     }}
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // 기간 단위
-                                        onchangeSelectHandler(e, value, "operand3")
-                                    }}
+                                    onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand3")}
                                 >
                                     {tsDateFormatOption.map((item, index) => (
                                         <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
@@ -454,13 +443,7 @@ const OperatorOperand = ({
                                     style={{
                                         width: '11.25rem'
                                     }}
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // 구분자 선택
-                                        onchangeSelectHandler(e, value, "operand1")
-                                    }}
+                                    onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand1")}
                                 >
                                     <SelectOption style={{ fontSize: "smaller" }} value="date">날짜</SelectOption>
                                     <SelectOption style={{ fontSize: "smaller" }} value="now">조건식</SelectOption>
@@ -491,25 +474,9 @@ const OperatorOperand = ({
                                         ]}
                                         onChange={(e) => { e.target.value = "" }}
                                         onValueChange={(nextVal) => {
-                                            //operand2
                                             setOprd2DpValue(nextVal)
                                             onChangeDatePickerHandler("operand2", nextVal)
-                                            /*
-                                            setRequestDateFrom(nextVal)
-                                            setSearch((prevState: SearchProps) => {
-                                                let rtn = cloneDeep(prevState)
-                                                rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                                return rtn
-                                            });
-                                            */
                                         }}
-                                    // placeholderText='날짜 선택'
-                                    // value={oprd2DpValue}
-                                    // onChange={(date) => {
-                                    //     let d = dayjs(date).format("YYYY-MM-DD").toString()
-                                    //     setOprd2DpValue(d)
-                                    //     onChangeDatePickerHandler("operand2", d)
-                                    // }}
                                     />
                                 </Stack>
                             }
@@ -544,13 +511,7 @@ const OperatorOperand = ({
                                         size="SM"
                                         status="default"
                                         className='width-100'
-                                        onChange={(
-                                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                            value: SelectValue<{}, false>
-                                        ) => {
-                                            // 기간 단위
-                                            onchangeSelectHandler(e, value, "operand3")
-                                        }}
+                                        onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand3")}
                                     >
                                         {tsDateFormatOption.map((item, index) => (
                                             <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
@@ -584,13 +545,7 @@ const OperatorOperand = ({
                                     style={{
                                         width: '11.25rem'
                                     }}
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // 구분자 선택
-                                        onchangeSelectHandler(e, value, "operand4")
-                                    }}
+                                    onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand4")}
                                 >
                                     <SelectOption style={{ fontSize: "smaller" }} value="date">날짜</SelectOption>
                                     <SelectOption style={{ fontSize: "smaller" }} value="now">조건식</SelectOption>
@@ -621,25 +576,9 @@ const OperatorOperand = ({
                                         ]}
                                         onChange={(e) => { e.target.value = "" }}
                                         onValueChange={(nextVal) => {
-                                            //operand5
                                             setOprd5DpValue(nextVal)
                                             onChangeDatePickerHandler("operand5", nextVal)
-                                            /*
-                                            setRequestDateFrom(nextVal)
-                                            setSearch((prevState: SearchProps) => {
-                                                let rtn = cloneDeep(prevState)
-                                                rtn.requestDateFrom = `${nextVal}T19:20:30+01:00`
-                                                return rtn
-                                            });
-                                            */
                                         }}
-                                    // placeholderText='날짜 선택'
-                                    // value={oprd5DpValue}
-                                    // onChange={(date) => {
-                                    //     let d = dayjs(date).format("YYYY-MM-DD").toString()
-                                    //     setOprd5DpValue(d)
-                                    //     onChangeDatePickerHandler("operand5", d)
-                                    // }}
                                     />
                                 </Stack>
                             }
@@ -674,13 +613,7 @@ const OperatorOperand = ({
                                         shape="Square"
                                         size="SM"
                                         status="default"
-                                        onChange={(
-                                            e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                            value: SelectValue<{}, false>
-                                        ) => {
-                                            // 기간 단위
-                                            onchangeSelectHandler(e, value, "operand6")
-                                        }}
+                                        onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand6")}
                                     >
                                         {tsDateFormatOption.map((item, index) => (
                                             <SelectOption style={{ fontSize: "smaller" }} key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
