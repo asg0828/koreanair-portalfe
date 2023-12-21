@@ -196,10 +196,6 @@ const MasterProfileManagementEdit = () => {
           );
           return table;
         });
-        mstrSgmtFormData.tbRsMstrSgmtRuleAttrClmn = mstrSgmtFormData.tbRsMstrSgmtRuleAttrClmn.map((item, number) => {
-          item.mstrSgmtRuleTblNm = item.mstrSgmtRuleTblId.split('.')[1]
-          return item
-        })
         setMstrSgmtFormData(() => mstrSgmtFormData);
         updateMstrProfInfoMutate();
       }
