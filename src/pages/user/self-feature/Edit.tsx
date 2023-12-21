@@ -74,8 +74,8 @@ import {
 	ValidType,
 } from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
-import { useFeatureSeList, useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
-import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
+import { useFeatureAllList, useFeatureSeList, useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
+import { FeatureAllParams, FeatureKeyType, FeatureSeparatesModel } from "@/models/model/FeatureModel";
 //import { selectCodeList } from "@/reducers/codeSlice";
 //import { useAppSelector } from "@/hooks/useRedux";
 import { getFeatureSeList } from "@/api/FeatureAPI";
@@ -86,6 +86,12 @@ import { UserModel } from "@/models/model/UserModel";
 import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
 import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
 import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
+import useDidMountEffect from "@/hooks/useDidMountEffect";
+
+const initFeatureAllParams: FeatureAllParams = {
+	featureKoNm: undefined,
+	featureEnNm: undefined,
+}
 
 const SelfFeatureEdit = () => {
 
@@ -94,10 +100,10 @@ const SelfFeatureEdit = () => {
 	const location = useLocation()
 	const dispatch = useAppDispatch()
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
-    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
-    // rslnRuleId parameter
+	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+	// rslnRuleId parameter
 	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
-    // mstrSgmtRuleId parameter
+	// mstrSgmtRuleId parameter
 	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
 	// 속성, 행동정보
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
@@ -161,6 +167,18 @@ const SelfFeatureEdit = () => {
 	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	// 수동실행 API
 	const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state?.featureInfo.tbRsCustFeatRule.id)
+	// 중복 확인 API
+	const [featureAllParams, setFeatureAllParams] = useState<FeatureAllParams>(initFeatureAllParams);
+	const [featureAllKey, setFeatureAllKey] = useState<FeatureKeyType>('featureKoNm');
+	const [needDupCheckKo, setNeedDupCheckKo] = useState<Boolean>(false)
+	const [needDupCheckEn, setNeedDupCheckEn] = useState<Boolean>(false)
+	const [isDupCheckKo, setIsDupCheckKo] = useState<Boolean>(false)
+	const [isDupCheckEn, setIsDupCheckEn] = useState<Boolean>(false)
+	const {
+		data: faResponse,
+		isError: faIsError,
+		refetch: faRefetch,
+	} = useFeatureAllList({ [featureAllKey]: featureAllParams[featureAllKey] }, { enabled: false, suspense: false });
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
 		if (modalType === ModalType.CONFIRM) {
@@ -190,37 +208,37 @@ const SelfFeatureEdit = () => {
 		// if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
 		// 	mstrSgmtTbandColRefetch()
 	}, [])
-    // master segement rule Id setting
-    useEffect(() => {
-        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
-                content: '조회 중 에러가 발생했습니다.',
-            })
-        } else {
-            if (mstrProfListRes) {
+	// master segement rule Id setting
+	useEffect(() => {
+		if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (mstrProfListRes) {
 				// master profile id 설정값 변경
 				let useMstrProf = mstrProfListRes.result.filter((mstrProf: any) => mstrProf.mstrSgmtRuleUseYn === "Y")
-                let t = useMstrProf[mstrProfListRes.result.length - 1]
-                if (t) {
-                    // 속성 및 행동 테이블 정보 조회를 위해
-                    setRslnRuleIdParam(() => t.rslnRuleId)
-                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
-                } else {
-                    toast({
-                        type: ValidType.ERROR,
-                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
-                    })
-                }
-            }
-        }
-    }, [mstrProfListRes, mstrProfListErr, toast])
-    useEffect(() => {
-        if (mstrSgmtRuleIdParam === "") return
+				let t = useMstrProf[mstrProfListRes.result.length - 1]
+				if (t) {
+					// 속성 및 행동 테이블 정보 조회를 위해
+					setRslnRuleIdParam(() => t.rslnRuleId)
+					setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+				} else {
+					toast({
+						type: ValidType.ERROR,
+						content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+					})
+				}
+			}
+		}
+	}, [mstrProfListRes, mstrProfListErr, toast])
+	useEffect(() => {
+		if (mstrSgmtRuleIdParam === "") return
 
 		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") mstrSgmtTbandColRefetch()
 
-    }, [mstrSgmtRuleIdParam, location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
+	}, [mstrSgmtRuleIdParam, location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
 	// 부서 목록 setting
 	useEffect(() => {
 		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
@@ -507,15 +525,15 @@ const SelfFeatureEdit = () => {
 			// 상세로 redirect
 			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`, 
-				{ 
+				`../${SelfFeatPgPpNm.DETL}`,
+				{
 					state: {
-						...updtFeatureInfo.tbRsCustFeatRule, 
+						...updtFeatureInfo.tbRsCustFeatRule,
 						...{
-							srchInfo: location?.state?.srchInfo, 
+							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo
 						}
-					} 
+					}
 				}
 			)
 		}
@@ -557,15 +575,15 @@ const SelfFeatureEdit = () => {
 			// 상세로 redirect
 			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`, 
-				{ 
+				`../${SelfFeatPgPpNm.DETL}`,
+				{
 					state: {
-						...updtFeatureInfo.tbRsCustFeatRule, 
+						...updtFeatureInfo.tbRsCustFeatRule,
 						...{
-							srchInfo: location?.state?.srchInfo, 
+							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo
 						}
-					} 
+					}
 				}
 			)
 		}
@@ -577,10 +595,12 @@ const SelfFeatureEdit = () => {
 		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+영문+숫자만 / 영문 - 영문+숫자만)
 		if (id === "featureKoNm") {
 			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|\s|_]/g, "")
+			setNeedDupCheckKo(true)
 			setFeatureKoNmInput(inputValue)
 		}
 		if (id === "featureEnNm") {
 			inputValue = value.replace(/[^a-z|A-Z|0-9|\s|_]/g, "")
+			setNeedDupCheckEn(true)
 			setFeatureEnNmInput(inputValue)
 		}
 
@@ -690,15 +710,15 @@ const SelfFeatureEdit = () => {
 			//navigate('..') srchInfo: location?.state?.srchInfo 
 			//navigate(-1)
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`, 
-				{ 
+				`../${SelfFeatPgPpNm.DETL}`,
+				{
 					state: {
-						...updtFeatureInfo.tbRsCustFeatRule, 
+						...updtFeatureInfo.tbRsCustFeatRule,
 						...{
-							srchInfo: location?.state?.srchInfo, 
+							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo
 						}
-					} 
+					}
 				}
 			)
 		} else {
@@ -715,6 +735,29 @@ const SelfFeatureEdit = () => {
 	}
 	// 수정 버튼 클릭시
 	const onSubmitUpdateHandler = () => {
+		// 중복확인 validation
+		if (location.state.featureInfo.featureTemp.featureKoNm !== updtFeatureInfo.featureTemp.featureKoNm) {
+			if (needDupCheckKo && !isDupCheckKo) {
+				toast({
+					type: ValidType.ERROR,
+					content: '한글명 중복 확인을 해주세요.',
+				})
+				return
+			}
+		} else {
+			setNeedDupCheckKo(false)
+		}
+		if (location.state.featureInfo.featureTemp.featureEnNm !== updtFeatureInfo.featureTemp.featureEnNm) {
+			if (needDupCheckEn && !isDupCheckEn) {
+				toast({
+					type: ValidType.ERROR,
+					content: '영문명 중복 확인을 해주세요.',
+				})
+				return
+			}
+		} else {
+			setNeedDupCheckEn(false)
+		}
 		setModalType(ModalType.CONFIRM)
 		setTargetClear("updateInfo")
 		setConfirmModalTit(ModalTitCont.EDIT.title)
@@ -790,6 +833,60 @@ const SelfFeatureEdit = () => {
 			})
 		)
 	}
+	// 중복 확인
+	const handleCheckDuplication = (key: FeatureKeyType) => {
+		if (featureTempInfo[key]) {
+			setFeatureAllKey(key)
+			setFeatureAllParams((prevState) => ({ ...prevState, [key]: featureTempInfo[key] }))
+		} else {
+			setModalType("alert")
+			setConfirmModalTit("중복 확인")
+			setConfirmModalCont("텍스트를 입력 해주세요.")
+			setIsOpenConfirmModal(true)
+		}
+	}
+	// 중복확인 API 호출
+	useDidMountEffect(() => {
+		faRefetch()
+	}, [featureAllParams])
+	// 중복 확인 Call back
+	useEffect(() => {
+		if (faIsError || faResponse?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '중복확인 중 에러가 발생했습니다.',
+			})
+			if (featureAllKey === "featureKoNm") setIsDupCheckKo(false)
+			else if (featureAllKey === "featureEnNm") setIsDupCheckEn(false)
+			return
+		} else {
+			if (faResponse?.data) {
+				if (faResponse.data.length === 0) {
+					toast({
+						type: ValidType.INFO,
+						content: '사용가능한 이름입니다.',
+					})
+					if (featureAllKey === "featureKoNm") {
+						setNeedDupCheckKo(false)
+						setIsDupCheckKo(true)
+					} else if (featureAllKey === "featureEnNm") {
+						setNeedDupCheckEn(false)
+						setIsDupCheckEn(true)
+					}
+					return
+				} else {
+					toast({
+						type: ValidType.ERROR,
+						content: '이미 존재하는 이름입니다.',
+					})
+					if (featureAllKey === "featureKoNm") setIsDupCheckKo(false)
+					else if (featureAllKey === "featureEnNm") setIsDupCheckEn(false)
+					return
+				}
+			}
+		}
+	}, [faResponse, faIsError, featureAllKey, featureAllParams])
+
 	return (
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 정보 영역 */}
@@ -800,8 +897,8 @@ const SelfFeatureEdit = () => {
 						수동 실행
 					</Button>
 					<FeatQueryRsltButton
-                        rslnRuleId={rslnRuleIdParam}
-                        mstrSgmtRuleId={mstrSgmtRuleIdParam}
+						rslnRuleId={rslnRuleIdParam}
+						mstrSgmtRuleId={mstrSgmtRuleIdParam}
 						custFeatRuleId={location.state?.featureInfo.tbRsCustFeatRule.id}
 					/>
 				</Stack>
@@ -890,6 +987,15 @@ const SelfFeatureEdit = () => {
 								value={featureKoNmInput}
 								onChange={onchangeInputHandler}
 							/>
+							<Button
+								appearance="Contained"
+								priority="Normal"
+								shape="Square"
+								size="MD"
+								onClick={() => handleCheckDuplication('featureKoNm')}
+							>
+								중복확인
+							</Button>
 						</TD>
 						<TH colSpan={1} align="center" required>영문명</TH>
 						<TD colSpan={3}>
@@ -900,6 +1006,15 @@ const SelfFeatureEdit = () => {
 								value={featureEnNmInput}
 								onChange={onchangeInputHandler}
 							/>
+							<Button
+								appearance="Contained"
+								priority="Normal"
+								shape="Square"
+								size="MD"
+								onClick={() => handleCheckDuplication('featureEnNm')}
+							>
+								중복확인
+							</Button>
 						</TD>
 					</TR>
 					<TR>

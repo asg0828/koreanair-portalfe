@@ -92,14 +92,14 @@ export const retrieveBatchExecuteLogs = (custFeatRuleId: string) => {
     })
 }
 // Self-feature 실행 결과 샘플 조회
-export const retrieveSampleData = (rslnRuleId: string, custFeatRuleId: string) => {
+export const retrieveSampleData = (rslnId: string, custFeatRuleId: string) => {
     return callApi({
         service: Service.KAL_SF_BE,
         url: `${SelfFeatureUserApiURL.SAMPLE_DATA}/${custFeatRuleId}`,
         method: Method.GET,
-        // params: {
-        //     queryParams: { rslnId: rslnRuleId }
-        // }
+        params: {
+            queryParams: { rslnId: rslnId }
+        }
     })
 }
 // Self-feature 선후행 관계 리스트 조회

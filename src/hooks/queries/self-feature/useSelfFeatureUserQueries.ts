@@ -54,8 +54,8 @@ export const useBatchExecuteLogs = (custFeatRuleId: string) => {
     return useQuery(['/batch-execute-logs', custFeatRuleId], () => retrieveBatchExecuteLogs(custFeatRuleId), { enabled: false, suspense: false })
 }
 // Self-feature 실행 결과 샘플 조회(팝업)
-export const useSampleData = (rslnRuleId: string, custFeatRuleId: string) => {
-    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(rslnRuleId, custFeatRuleId), { enabled: false, suspense: false })
+export const useSampleData = (rslnId: string, custFeatRuleId: string) => {
+    return useQuery(['/sample-data', custFeatRuleId], () => retrieveSampleData(rslnId, custFeatRuleId), { enabled: false, suspense: false })
 }
 // Self-feature 선후행 관계 리스트 조회(팝업)
 export const useCustFeatParentChildList = (mstrSgmtRuleId: string, custFeatRuleName: string) => {
