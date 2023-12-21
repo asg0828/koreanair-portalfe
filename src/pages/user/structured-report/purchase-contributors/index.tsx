@@ -32,7 +32,7 @@ const columns: Array<ColumnsInfo> = [
 ];
 
 const initSortedColumn = 'purchaseAmount';
-const initSortedDirection = 'asc';
+const initSortedDirection = 'desc';
 
 const List = () => {
   const { toast } = useToast();

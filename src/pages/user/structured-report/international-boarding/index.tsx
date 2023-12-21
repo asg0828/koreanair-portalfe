@@ -8,7 +8,6 @@ import { ColumnsInfo } from '@models/components/Table';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import { useNavigate } from 'react-router-dom';
 
 const periods = [
   { period: '0 year', text: '올해' },
