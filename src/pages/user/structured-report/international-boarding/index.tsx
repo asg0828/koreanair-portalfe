@@ -177,6 +177,9 @@ const List = () => {
         showPageSizeSelect={false}
         showPagination={false}
         onClick={toggleModal}
+        onSortChange={handleSortChange}
+        sortedColumn={sortedColumn}
+        sortedDirection={sortedDirection}
       />
       <Modal
         isOpen={showPopup}
