@@ -405,7 +405,7 @@ const Detail = () => {
         </HorizontalTable>
       </Stack>
 
-      <Stack gap="SM" justifyContent="End" className="margin-top-8">
+      <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
           {t('common.button.edit')}
         </Button>
