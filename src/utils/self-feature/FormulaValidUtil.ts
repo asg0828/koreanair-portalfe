@@ -349,7 +349,7 @@ export const validationCustReatRule = (formData: any) => {
                             target.operand1 === "date"
                             && (!target.operand2 || target.operand2 === "" || target.operand2 === "null" || target.operand2 === "undefined")
                         ) {
-                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 From 피연산자를 확인 해주세요.`
                             validInfo.valid = false
                         }
                         if (
@@ -359,24 +359,24 @@ export const validationCustReatRule = (formData: any) => {
                                 || (!target.operand3 || target.operand3 === "" || target.operand3 === "null" || target.operand3 === "undefined")
                             )
                         ) {
-                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 From 피연산자를 확인 해주세요.`
                             validInfo.valid = false
                         }
                         if (
-                            target.operand1 === "date"
+                            target.operand4 === "date"
                             && (!target.operand5 || target.operand5 === "" || target.operand5 === "null" || target.operand5 === "undefined")
                         ) {
-                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 To 피연산자를 확인 해주세요.`
                             validInfo.valid = false
                         }
                         if (
-                            target.operand1 === "now"
+                            target.operand4 === "now"
                             && (
                                 (!target.operand5 || target.operand5 === "" || target.operand5 === "null" || target.operand5 === "undefined")
                                 || (!target.operand6 || target.operand6 === "" || target.operand6 === "null" || target.operand6 === "undefined")
                             )
                         ) {
-                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 피연산자를 확인 해주세요.`
+                            validInfo.text = `BaseFact 정보(WHERE) '${target.columnLogiName}'의 To 피연산자를 확인 해주세요.`
                             validInfo.valid = false
                         }
                     }

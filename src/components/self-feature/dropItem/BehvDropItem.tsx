@@ -62,8 +62,8 @@ const BehvDropItem = ({
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
 
     useEffect(() => {
-        if (!targetItem || targetItem.custFeatRuleId === "") setIsUpdtInfo(() => false)
-        else setIsUpdtInfo(() => true)
+        if (!targetItem || targetItem.custFeatRuleId === "") setIsUpdtInfo(false)
+        else setIsUpdtInfo(true)
     }, [])
 
     const onConfirm = () => {
@@ -334,7 +334,7 @@ const BehvDropItem = ({
                         tl[itemIdx].targetDataType = colDtp
                         // 집계함수 초기화(수정시 최초 update 방지)
                         if (!isUpdtInfo) tl[itemIdx].operator = ""
-                        setIsUpdtInfo(() => false)
+                        setIsUpdtInfo(false)
                     }
                     return tl
                 })
@@ -454,13 +454,7 @@ const BehvDropItem = ({
                             style={{
                                 width: '15rem',
                             }}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                // 집계함수에 사용될 컬럼명
-                                onchangeSelectHandler(e, value, "columnName")
-                            }}
+                            onChange={(e, value) => value && onchangeSelectHandler(e, value, "columnName")}
                         >
                             {columnList.map((item, index) => (
                                 <SelectOption style={{fontSize: 'smaller'}} key={index} value={item.value}>{item.text}</SelectOption>
@@ -477,12 +471,7 @@ const BehvDropItem = ({
                             style={{
                                 width: '11rem'
                             }}
-                            onChange={(
-                                e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                value: SelectValue<{}, false>
-                            ) => {
-                                onchangeSelectHandler(e, value, "operator")
-                            }}
+                            onChange={(e, value) => value && onchangeSelectHandler(e, value, "operator")}
                         >
                             {aggregateOption.map((item, index) => (
                                 <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
@@ -504,13 +493,7 @@ const BehvDropItem = ({
                                     style={{
                                         width: '11.25rem'
                                     }}
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // Top 기준 함수
-                                        onchangeSelectHandler(e, value, "operand1")
-                                    }}
+                                    onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand1")}
                                 >
                                     {/* <SelectOption value="count">count</SelectOption>
                                     <SelectOption value="last">last</SelectOption> */}
@@ -538,13 +521,7 @@ const BehvDropItem = ({
                                     style={{
                                         width: '11.25rem'
                                     }}
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // 동률일 때 기준 컬럼
-                                        onchangeSelectHandler(e, value, "operand3")
-                                    }}
+                                    onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand3")}
                                 >
                                     {columnList.map((item, index) => (
                                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
@@ -561,13 +538,7 @@ const BehvDropItem = ({
                                     style={{
                                         width: '11.25rem'
                                     }}
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        // 동률일 때 기준 정렬
-                                        onchangeSelectHandler(e, value, "operand4")
-                                    }}
+                                    onChange={(e, value) => value && onchangeSelectHandler(e, value, "operand4")}
                                 >
                                     <SelectOption value="asc">오름차순</SelectOption>
                                     <SelectOption value="desc">내림차순</SelectOption>
@@ -604,12 +575,7 @@ const BehvDropItem = ({
                                     style={{
                                         width: '16rem'
                                     }}
-                                    onChange={(
-                                        e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-                                        value: SelectValue<{}, false>
-                                    ) => {
-                                        onchangeSelectHandler(e, value, "filterLogiOption")
-                                    }}
+                                    onChange={(e, value) => value && onchangeSelectHandler(e, value, "filterLogiOption")}
                                 >
                                     {filterOption.map((item, index) => (
                                         <SelectOption key={index} value={item.value}>{item.text}</SelectOption>
