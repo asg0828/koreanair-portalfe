@@ -32,7 +32,7 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '국내선 보너스항공권 탑승횟수', field: 'domesticBoardingCountByAwardTicket', colSpan: 1 },
 ];
 
-const initSortedColumn = 'boardingCount';
+const initSortedColumn = 'totalMileageSpentForAwardTicket';
 const initSortedDirection = 'asc';
 
 const List = () => {
