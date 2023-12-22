@@ -66,12 +66,12 @@ const Main = () => {
     if (cqIsError || cqResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: t('quickMenu.toast.success.create'),
+        content: t('quickMenu.toast.error.create'),
       });
     } else if (cqIsSuccess) {
       toast({
         type: ValidType.INFO,
-        content: t('quickMenu.toast.error.create'),
+        content: t('quickMenu.toast.success.create'),
       });
       qmRefetch();
     }
