@@ -169,6 +169,7 @@ export const initTbRsCustFeatRuleTrgt: TbRsCustFeatRuleTrgt = {
     variable2: '',
     variable3: '',
     targetDataType: '',
+    dtpCd: '',
 }
 
 export const initTbRsCustFeatRuleTrgtFilter: TbRsCustFeatRuleTrgtFilter = {

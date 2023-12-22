@@ -98,10 +98,10 @@ const SfSubmissionRequestDetail = () => {
     // 사용될 rslnRuleId / mstrSgmtRuleId 조회
     const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
     // rslnRuleId parameter
-	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
+    const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
     // mstrSgmtRuleId parameter
-	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
-	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
+    const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
+    const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
     const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
     const [categoryOption, setCategoryOption] = useState<Array<any>>([])
     const { data: cmmCodeCateRes } = useCommCodes(CommonCode.CATEGORY)
@@ -109,9 +109,9 @@ const SfSubmissionRequestDetail = () => {
     const { } = useCommCodes(CommonCode.OPERATOR)
     const { } = useCommCodes(CommonCode.FORMAT)
     const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
-	// 부서 조회
-	const [deptOption, setDeptOption] = useState<Array<any>>([])
-	const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
+    // 부서 조회
+    const [deptOption, setDeptOption] = useState<Array<any>>([])
+    const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
     // 속성 및 행동 데이터
     const [mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
     // 승인 / 반려 버튼 타입 구분
@@ -183,7 +183,7 @@ const SfSubmissionRequestDetail = () => {
         } else {
             if (mstrProfListRes) {
                 // master profile id 설정값 변경
-				let useMstrProf = mstrProfListRes.result.filter((mstrProf: any) => mstrProf.mstrSgmtRuleUseYn === "Y")
+                let useMstrProf = mstrProfListRes.result.filter((mstrProf: any) => mstrProf.mstrSgmtRuleUseYn === "Y")
                 let t = useMstrProf[mstrProfListRes.result.length - 1]
                 if (t) {
                     // 속성 및 행동 테이블 정보 조회를 위해
@@ -212,34 +212,34 @@ const SfSubmissionRequestDetail = () => {
     }
     // 카테고리 setting
     useEffect(() => {
-		if (cmmCodeCateRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: '공통 코드 조회 중 에러가 발생했습니다.',
-			});
-		} else {
-			if (cmmCodeCateRes?.result) {
-				setCategoryOption(() => {
-					return [...[{ cdv: "", cdvNm: "선택" }], ...cmmCodeCateRes?.result]
-				})
-			}
-		}
+        if (cmmCodeCateRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '공통 코드 조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (cmmCodeCateRes?.result) {
+                setCategoryOption(() => {
+                    return [...[{ cdv: "", cdvNm: "선택" }], ...cmmCodeCateRes?.result]
+                })
+            }
+        }
     }, [cmmCodeCateRes])
-	// 부서 목록 setting
-	useEffect(() => {
-		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: '부서 목록 조회 중 에러가 발생했습니다.',
-			});
-		} else {
-			if (deptAllListRes?.data) {
-				setDeptOption(() => {
-					return [...[{ deptCode: "", deptNm: "선택" }], ...deptAllListRes.data.contents]
-				})
-			}
-		}
-	}, [deptAllListRes, deptAllListErr, toast])
+    // 부서 목록 setting
+    useEffect(() => {
+        if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '부서 목록 조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (deptAllListRes?.data) {
+                setDeptOption(() => {
+                    return [...[{ deptCode: "", deptNm: "선택" }], ...deptAllListRes.data.contents]
+                })
+            }
+        }
+    }, [deptAllListRes, deptAllListErr, toast])
     // 속성 및 행동 데이터 정보 호출 callback
     useEffect(() => {
         if (mstrSgmtTbandColErr || mstrSgmtTbandColRes?.successOrNot === 'N') {
@@ -360,7 +360,7 @@ const SfSubmissionRequestDetail = () => {
     // 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
     useEffect(() => {
         if (isEmpty(mstrSgmtTableandColMetaInfo) || mstrSgmtTableandColMetaInfo.rslnRuleId === "") return
-        
+
         if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
             setTargetList(() => {
                 let tempTargetList = cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList).map((target: TbRsCustFeatRuleTrgt) => {
@@ -441,10 +441,13 @@ const SfSubmissionRequestDetail = () => {
     // 계산식 validation을 위한 대상 list 추출
     useEffect(() => {
         if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y") {
+
             let fList = []
             for (let i = 0; i < targetList.length; i++) {
-                let t = { targetId: `T${i + 1}`, dataType: "" }
+                let t = { targetId: `T${i + 1}`, dataType: "", dtpCd: "" }
                 let dataType = targetList[i].targetDataType
+                t.dtpCd = targetList[i].dtpCd
+                // 집계함수(행동데이터의 경우)
                 cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
                     if (option.cdv === targetList[i].operator) {
                         dataType = option.attr1
@@ -455,12 +458,11 @@ const SfSubmissionRequestDetail = () => {
                     return option
                 })
                 // 변환식(속성데이터의 경우)
-                if (targetList[i].function === "TO_NUMBER") dataType = "number"
-                if (targetList[i].function === "LENGTH") dataType = "number"
-                if (targetList[i].function === "TO_CHAR") dataType = "string"
-                if (targetList[i].function === "DATEDIFF") dataType = "number"
+                if (targetList[i].function === "TO_NUMBER") { dataType = "number"; t.dtpCd = "int" }
+                if (targetList[i].function === "LENGTH") { dataType = "number"; t.dtpCd = "int" }
+                if (targetList[i].function === "TO_CHAR") { dataType = "string"; t.dtpCd = "string" }
+                if (targetList[i].function === "DATEDIFF") { dataType = "number"; t.dtpCd = "int" }
                 t.dataType = dataType
-
                 fList.push(t)
             }
             setFormulaTrgtList(fList)
@@ -628,7 +630,7 @@ const SfSubmissionRequestDetail = () => {
         if (pageNm === SelfFeatPgPpNm.LIST) {
             navigate(
                 '..'
-                ,{
+                , {
                     state: {
                         srchInfo: location?.state?.srchInfo
                     }
@@ -747,10 +749,10 @@ const SfSubmissionRequestDetail = () => {
             })
             if (runScheduleByManuallyRes.status === 200) {
                 if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
-                	custFeatRuleInfosRefetch()
+                    custFeatRuleInfosRefetch()
                 }
                 if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
-                	custFeatSQLInfosRefetch()
+                    custFeatSQLInfosRefetch()
                 }
             }
         }
@@ -947,7 +949,7 @@ const SfSubmissionRequestDetail = () => {
                             </TD>
                             <TH colSpan={1} align="right">카테고리</TH>
                             <TD colSpan={2} align='left'>
-                                {featureInfo.tbRsCustFeatRule && 
+                                {featureInfo.tbRsCustFeatRule &&
                                     categoryOption.find((cate) => cate.cdv === featureInfo.tbRsCustFeatRule.category)?.cdvNm
                                 }
                             </TD>
@@ -1008,10 +1010,10 @@ const SfSubmissionRequestDetail = () => {
                                                 <SelectOption key={index} value={item.cdv}>{item.cdvNm}</SelectOption>
                                             ))}
                                         </Select>
-                                        <Button 
-                                            priority="Primary" 
-                                            appearance="Contained" 
-                                            size="SM" 
+                                        <Button
+                                            priority="Primary"
+                                            appearance="Contained"
+                                            size="SM"
                                             onClick={onClickCategorySetHandler}
                                         >
                                             설정
@@ -1051,8 +1053,8 @@ const SfSubmissionRequestDetail = () => {
                                     </TH>
                                     <TD colSpan={2}>
                                         <Stack gap="SM" className="width-100" direction="Vertical">
-                                            {featureInfo.featureTemp && 
-											    deptOption.find((dept) => dept.deptCode === featureInfo.featureTemp.enrDeptCode)?.deptNm
+                                            {featureInfo.featureTemp &&
+                                                deptOption.find((dept) => dept.deptCode === featureInfo.featureTemp.enrDeptCode)?.deptNm
                                             }
                                         </Stack>
                                     </TD>

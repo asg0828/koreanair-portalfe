@@ -172,10 +172,11 @@ const BehvDropItem = ({
         let baseTimeColInfo: TbCoMetaTblClmnInfo = cloneDeep(initTbCoMetaTblClmnInfo)
         let colList: Array<AggregateCol> = []
         aggregateColList?.map((colInfo: TbCoMetaTblClmnInfo) => {
-            let col = { value: "", text: "", dataType: "" }
+            let col = { value: "", text: "", dataType: "", dtpCd: "" }
             col.value = colInfo.metaTblClmnPhysNm
             col.text = colInfo.metaTblClmnLogiNm
             col.dataType = colInfo.dataTypeCategory
+            col.dtpCd = colInfo.dtpCd
             colList.push(col)
             // 수집기준일 check
             if (colInfo.baseTimeYn === "Y") baseTimeColInfo = colInfo

@@ -97,6 +97,7 @@ export interface FormulaCaseProps {
 export interface FormulaTrgtListProps {
     targetId: string
     dataType: string
+    dtpCd: string
 }
 
 export interface OperatorOperandProps {
@@ -466,6 +467,7 @@ export interface TbRsCustFeatRuleTrgt {
     variable3: string,
     //example: 대상 데이터 타입()
     targetDataType: string,
+    dtpCd: string,
 }
 
 export interface TbRsCustFeatRuleTrgtFilter {
