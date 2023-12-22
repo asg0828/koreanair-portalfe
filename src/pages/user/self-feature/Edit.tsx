@@ -429,6 +429,7 @@ const SelfFeatureEdit = () => {
 					if (dataType === "") {
 						dataType = targetList[i].targetDataType
 					}
+					if (dataType === "number") t.dtpCd = "int"
 				}
 				return option
 			})
@@ -522,6 +523,13 @@ const SelfFeatureEdit = () => {
 		} else if (!trgtDtpCd && param.customerFeature.tbRsCustFeatRuleCalc.formula !== "") {
 			param.customerFeature.tbRsCustFeatRule.dataType = "int"
 		}
+		param.customerFeature.tbRsCustFeatRuleTrgtList = param.customerFeature.tbRsCustFeatRuleTrgtList.map((item: TbRsCustFeatRuleTrgt) => {
+			let dtpCd = formulaTrgtList.find((trgt) => trgt.targetId === item.targetId)
+			if (dtpCd) {
+				item.targetDataType = dtpCd.dtpCd
+			}
+			return item
+		})
 		setCustFeatureFormData(param)
 		updtRuleDesignMutate()
 	}
