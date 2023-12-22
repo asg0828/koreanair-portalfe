@@ -340,12 +340,30 @@ const Detail = () => {
                           </Stack>
                         ) : (
                           <Stack>
-                            <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
-                              {t('common.button.edit')}
-                            </Button>
-                            <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
-                              {t('common.button.delete')}
-                            </Button>
+                            {(() => {
+                              if (
+                                sessionInfo.userId === qnaItem?.rgstId ||
+                                sessionInfo.apldMgrAuthId === 'ma23000000001'
+                              ) {
+                                return (
+                                  <>
+                                    <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
+                                      {t('common.button.edit')}
+                                    </Button>
+                                    <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
+                                      {t('common.button.delete')}
+                                    </Button>
+                                  </>
+                                );
+                              } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+                                return (
+                                  <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
+                                    {t('common.button.delete')}
+                                  </Button>
+                                );
+                              }
+                              return null;
+                            })()}
                           </Stack>
                         )}
                       </Stack>
