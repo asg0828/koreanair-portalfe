@@ -41,8 +41,8 @@ const List = () => {
     { headerName: t('management:label.userNm'), field: 'userNm', colSpan: 1 },
     { headerName: t('management:label.userId'), field: 'userId', colSpan: 1 },
     { headerName: t('management:label.deptNm'), field: 'deptNm', colSpan: 1 },
-    { headerName: t('management:label.userAuthNm'), field: 'userAuthNm', colSpan: 1 },
-    { headerName: t('management:label.mgrAuthNm'), field: 'mgrAuthNm', colSpan: 1 },
+    { headerName: t('management:label.userAuthNm'), field: 'euserAuthNm', colSpan: 1 },
+    { headerName: t('management:label.mgrAuthNm'), field: 'emgrAuthNm', colSpan: 1 },
     { headerName: t('management:label.lastLogDt'), field: 'lastLogDt', colSpan: 1 },
     { headerName: t('management:label.employmentYn'), field: 'useYn', colSpan: 1 },
   ];
