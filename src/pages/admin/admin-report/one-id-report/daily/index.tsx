@@ -11,7 +11,7 @@ import DataGridChild from '@/components/grid/DataGridChild';
 export default function Daily() {
   const today = new Date();
   const [searchInfo, setSearchInfo] = useState<dailySearch>({
-    criteria: 'one',
+    criteria: 'daily',
     aggrStartDate: '',
     aggrEndDate: '',
   });
@@ -67,7 +67,7 @@ export default function Daily() {
 
   /* 초기화 버튼 */
   function onClear() {
-    setSearchInfo({ ...searchInfo, criteria: 'one', aggrEndDate: '', aggrStartDate: '' });
+    setSearchInfo({ ...searchInfo, criteria: 'daily', aggrEndDate: '', aggrStartDate: '' });
   }
 
   /* radio 입력 함수 */
@@ -141,7 +141,7 @@ export default function Daily() {
                 name="criteria"
                 onChange={(e) => radioHandler(e)}
                 label="History단건"
-                value="one"
+                value="daily"
                 defaultChecked
               />
               <Radio
