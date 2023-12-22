@@ -430,7 +430,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                     return (
                       <TD colSpan={columns[columnIndex].colSpan ? columns[columnIndex].colSpan : undefined}>
                         <Checkbox
-                          checked={row.chgDtpCd !== null || row.changeYn === 'Y'}
+                          checked={row.chgDtpCd !== '' || row.changeYn === 'Y'}
                           disabled={row.baseTimeYn === 'Y'}
                           key={`checkbox-${columnIndex}`}
                           onClick={(e) => changeYnHandler(rowIndex, columns[columnIndex].field)}
@@ -452,7 +452,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
                           checked={row.clmnUseYn === 'Y'}
                           // defaultValue={columns[columnIndex].field === 'clmnUseYn' ? 'Y' : 'N'}
                           value={row.clmnUseYn}
-                        />
+                        />{' '}
                       </TD>
                     );
                   }
