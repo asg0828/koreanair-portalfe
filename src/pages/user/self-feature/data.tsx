@@ -90,13 +90,6 @@ export const batchExecuteLogListColumns = [
     { headerName: '생성 건수', field: 'rsltCnt', colSpan: 3 },
     { headerName: '수행 결과', field: 'batchResultStatus', colSpan: 3 },
 ]
-
-export const featureDataTypeOption = [
-    { value: 'string', text: 'String' },
-    { value: 'number', text: 'Number' },
-    { value: 'timestamp', text: 'Timestamp' },
-]
-
 // customer feature 검색 조건 초기화
 export const initFeatListSrchProps: FeatListSrchProps = {
     mstrSgmtRuleId: '',

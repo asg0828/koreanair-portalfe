@@ -1125,6 +1125,7 @@ const SfSubmissionRequestDetail = () => {
                                     justifyContent="Between"
                                     style={{
                                         height: '400px',
+                                        marginBottom: '2%'
                                     }}
                                 >
                                     <TextField
@@ -1135,6 +1136,17 @@ const SfSubmissionRequestDetail = () => {
                                         defaultValue={featureInfo.tbRsCustFeatRuleSql?.sqlQuery}
                                     />
                                 </Stack>
+                                <HorizontalTable>
+                                    <TR>
+                                        <TH align="right" colSpan={1}>
+                                            Feature Data Type
+                                        </TH>
+                                        <TD colSpan={2}>
+                                            {featureInfo.tbRsCustFeatRule.dataType}
+                                        </TD>
+                                        <TD colSpan={5}></TD>
+                                    </TR>
+                                </HorizontalTable>
                             </Stack>
                         }
 
