@@ -155,23 +155,15 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
         const errorCode = error.response?.data?.errorCode?.toString();
 
         if (errorCode) {
-          // APIGEE ACCESS TOKEN 누락
-          if (errorCode === '101') {
-            sessionUtil.deleteSessionInfo();
-            window.location.reload();
-
-            // APIGEE ACCESS TOKEN 만료
-          } else if (errorCode === '301') {
-            return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
-              const originalRequest = error.config;
-              originalRequest.headers['authorization'] = `Bearer ${
-                JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
-              }`;
-              return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
-                return retryResponse.data as CommonResponse;
-              });
+          return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
+            const originalRequest = error.config;
+            originalRequest.headers['authorization'] = `Bearer ${
+              JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
+            }`;
+            return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
+              return retryResponse.data as CommonResponse;
             });
-          }
+          });
         } else if (error.response.status.toString() === '401') {
           //INVALID_GOOGLE_ID_TOKEN
           if (error.response.data.message === 'INVALID_GOOGLE_ID_TOKEN') {
