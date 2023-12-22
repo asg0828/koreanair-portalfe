@@ -198,6 +198,7 @@ const List = () => {
                   className="width-100"
                   {...register('authId', {
                     maxLength: { value: 100, message: t('common.validate.maxLength') },
+                    validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                   })}
                   validation={errors?.authId?.message ? 'Error' : undefined}
                   disabled
@@ -215,6 +216,7 @@ const List = () => {
                   {...register('authNm', {
                     required: { value: true, message: t('common.validate.required') },
                     maxLength: { value: 100, message: t('common.validate.maxLength') },
+                    validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                   })}
                   validation={errors?.authNm?.message ? 'Error' : undefined}
                 />
@@ -232,6 +234,7 @@ const List = () => {
                   className="width-100"
                   {...register('authDsc', {
                     maxLength: { value: 1000, message: t('common.validate.maxLength') },
+                    validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                   })}
                   validation={errors?.authDsc?.message ? 'Error' : undefined}
                 />

@@ -159,6 +159,7 @@ const Edit = () => {
                   {...register('sj', {
                     required: { value: true, message: t('common.validate.required') },
                     maxLength: { value: 100, message: t('common.validate.maxLength') },
+                    validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                   })}
                   validation={errors?.sj?.message ? 'Error' : undefined}
                   autoFocus
@@ -277,6 +278,7 @@ const Edit = () => {
                   control={control}
                   rules={{
                     required: { value: true, message: t('common.validate.required') },
+                    validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                   }}
                   render={({ field }) => (
                     <TinyEditor

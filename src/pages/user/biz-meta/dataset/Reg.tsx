@@ -131,6 +131,7 @@ const Reg = () => {
               fieldName === 'mcsEnNm' ? { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') } : undefined,
             required: { value: true, message: t('common.validate.required') },
             maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
+            validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
           })}
           onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
         />
@@ -149,6 +150,7 @@ const Reg = () => {
             {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
               required: { value: true, message: t('common.validate.required') },
               maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
+              validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
             })}
           />
           <Button
@@ -261,6 +263,7 @@ const Reg = () => {
                     {...register('mtsKoNm', {
                       required: { value: true, message: t('common.validate.required') },
                       maxLength: { value: 100, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.mtsKoNm?.message ? 'Error' : undefined}
                     autoFocus
@@ -279,6 +282,7 @@ const Reg = () => {
                       pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
                       required: { value: true, message: t('common.validate.required') },
                       maxLength: { value: 100, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.mtsEnNm?.message ? 'Error' : undefined}
                     autoFocus
@@ -299,6 +303,7 @@ const Reg = () => {
                     {...register('mtsDef', {
                       required: { value: true, message: t('common.validate.required') },
                       maxLength: { value: 100, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.mtsDef?.message ? 'Error' : undefined}
                     autoFocus
@@ -332,6 +337,7 @@ const Reg = () => {
                     className="width-100"
                     {...register('srcSys', {
                       maxLength: { value: 300, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.srcSys?.message ? 'Error' : undefined}
                     autoFocus
@@ -350,6 +356,7 @@ const Reg = () => {
                     className="width-100"
                     {...register('srcTbNm', {
                       maxLength: { value: 300, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.srcTbNm?.message ? 'Error' : undefined}
                     autoFocus
@@ -370,6 +377,7 @@ const Reg = () => {
                     rules={{
                       required: t('common.validate.required'),
                       maxLength: { value: 32, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     }}
                     render={({ field }) => (
                       <Select
@@ -399,7 +407,9 @@ const Reg = () => {
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
-                    {...register('mtsDsc', {})}
+                    {...register('mtsDsc', {
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                    })}
                     validation={errors?.mtsDsc?.message ? 'Error' : undefined}
                     autoFocus
                   />

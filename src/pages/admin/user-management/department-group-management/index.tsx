@@ -331,6 +331,7 @@ const List = () => {
                       className="width-100"
                       {...register('upDeptNm', {
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.upDeptNm?.message ? 'Error' : undefined}
                       disabled
@@ -351,6 +352,7 @@ const List = () => {
                       {...register('deptNm', {
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.deptNm?.message ? 'Error' : undefined}
                     />
@@ -369,6 +371,7 @@ const List = () => {
                       {...register('deptCode', {
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 16, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.deptCode?.message ? 'Error' : undefined}
                     />

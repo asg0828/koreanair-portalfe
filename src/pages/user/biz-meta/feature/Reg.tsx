@@ -322,6 +322,7 @@ const Reg = () => {
                     className="width-100"
                     {...register('featureId', {
                       maxLength: { value: 32, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.featureId?.message ? 'Error' : undefined}
                     disabled
@@ -373,6 +374,7 @@ const Reg = () => {
                       {...register('featureKoNm', {
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.featureKoNm?.message ? 'Error' : undefined}
                       autoFocus
@@ -402,6 +404,7 @@ const Reg = () => {
                         pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.featureEnNm?.message ? 'Error' : undefined}
                     />
@@ -429,6 +432,7 @@ const Reg = () => {
                     className="width-100"
                     {...register('featureDef', {
                       required: { value: true, message: t('common.validate.required') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.featureDef?.message ? 'Error' : undefined}
                   />
@@ -446,6 +450,7 @@ const Reg = () => {
                     className="width-100"
                     {...register('calcUnt', {
                       maxLength: { value: 32, message: t('common.validate.maxLength') },
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.calcUnt?.message ? 'Error' : undefined}
                   />
@@ -462,7 +467,9 @@ const Reg = () => {
                   <TextField
                     multiline
                     className="width-100 height-200"
-                    {...register('featureFm', {})}
+                    {...register('featureFm', {
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                    })}
                     validation={errors?.featureFm?.message ? 'Error' : undefined}
                   />
                   <ErrorLabel message={errors?.featureFm?.message} />
@@ -477,7 +484,9 @@ const Reg = () => {
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
-                    {...register('featureRelTb', {})}
+                    {...register('featureRelTb', {
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                    })}
                     validation={errors?.featureRelTb?.message ? 'Error' : undefined}
                   />
                   <ErrorLabel message={errors?.featureRelTb?.message} />
@@ -492,7 +501,9 @@ const Reg = () => {
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
                     className="width-100"
-                    {...register('featureDsc', {})}
+                    {...register('featureDsc', {
+                      validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                    })}
                     validation={errors?.featureDsc?.message ? 'Error' : undefined}
                   />
                   <ErrorLabel message={errors?.featureDsc?.message} />
