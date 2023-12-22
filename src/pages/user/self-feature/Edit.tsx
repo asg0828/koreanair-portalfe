@@ -56,6 +56,7 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 	initCustFeatureFormDataSql,
+	featureDataTypeOption,
 } from './data'
 import {
 	SubFeatStatus,
@@ -1238,6 +1239,32 @@ const SelfFeatureEdit = () => {
 									onChange={onchangeInputHandler}
 								/>
 							</Stack>
+							<HorizontalTable>
+								<TR>
+									<TH align="right" colSpan={1} required>
+										Feature Data Type
+									</TH>
+									<TD colSpan={2}>
+										<Select
+											value={custFeatRule.dataType}
+											appearance="Outline"
+											placeholder="선택"
+											className="width-100"
+											onChange={(
+												e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+												value: SelectValue<{}, false>
+											) => {
+												onchangeSelectHandler(e, value, "dataType")
+											}}
+										>
+											{featureDataTypeOption.map((item, index) => (
+												<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+											))}
+										</Select>
+									</TD>
+									<TD colSpan={5}></TD>
+								</TR>
+							</HorizontalTable>
 						</Stack>
 					}
 					{/* 계산식 */}

@@ -38,6 +38,7 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 	initCustFeatureFormDataSql,
+	featureDataTypeOption,
 } from './data'
 import {
 	SubFeatStatus,
@@ -858,12 +859,6 @@ const SelfFeatureReg = () => {
 							</Select>
 						</TD>
 					</TR>
-					{/* <TR>
-						<TH colSpan={1} align="right">Feature ID</TH>
-						<TD colSpan={2}>
-							<TextField className="width-100" id="featureId" readOnly onChange={onchangeInputHandler} />
-						</TD>
-					</TR> */}
 					<TR>
 						<TH colSpan={1} align="right" required>한글명</TH>
 						<TD colSpan={2}>
@@ -908,27 +903,6 @@ const SelfFeatureReg = () => {
 							</Stack>
 						</TD>
 					</TR>
-					{/* <TR>
-						<TH colSpan={1} align="right" required>Feature 타입</TH>
-						<TD colSpan={2}>
-							<Select
-								appearance="Outline"
-								placeholder="선택"
-								className="width-100"
-								onChange={(
-									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-									value: SelectValue<{}, false>
-								) => {
-									onchangeSelectHandler(e, value, "featureTyp")
-								}}
-							>
-								{codeList.map((codeItem: any, index) => (
-									<SelectOption key={index} value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
-								))}
-							</Select>
-						</TD>
-						<TD colSpan={3}></TD>
-					</TR> */}
 					<TR>
 						<TH colSpan={1} align="right" required>Feature 정의</TH>
 						<TD colSpan={5}>
@@ -939,30 +913,8 @@ const SelfFeatureReg = () => {
 						<TH colSpan={1} align="right">산출 단위</TH>
 						<TD colSpan={2}>
 							<TextField className="width-100" id="calcUnt" onChange={onchangeInputHandler} />
-							{/* <Select
-								appearance="Outline"
-								placeholder="선택"
-								className="width-100"
-								onChange={(
-									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-									value: SelectValue<{}, false>
-								) => {
-									onchangeSelectHandler(e, value, "calcUnit")
-								}}
-							>
-								{calcUnit.map((item, index) => (
-									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-								))}
-							</Select> */}
 						</TD>
-						{/* 관리자가 승인 단계시 노출 */}
 						<TD colSpan={3}></TD>
-						{/* <TH colSpan={1} align="right" required>카테고리</TH>
-              <TD colSpan={2}>
-                <Select className='width-100'  appearance="Outline" >
-                    <SelectOption value={1}>test</SelectOption>
-                </Select>
-              </TD> */}
 					</TR>
 					<TR>
 						<TH colSpan={1} align="right" required>산출 로직</TH>
@@ -1122,10 +1074,36 @@ const SelfFeatureReg = () => {
 								justifyContent="Between"
 								style={{
 									height: '400px',
+									marginBottom: '2%'
 								}}
 							>
 								<TextField className="width-100 height-100" multiline id="sqlQuery" onChange={onchangeInputHandler} />
 							</Stack>
+							<HorizontalTable>
+								<TR>
+									<TH align="right" colSpan={1} required>
+										Feature Data Type
+									</TH>
+									<TD colSpan={2}>
+										<Select
+											appearance="Outline"
+											placeholder="선택"
+											className="width-100"
+											onChange={(
+												e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+												value: SelectValue<{}, false>
+											) => {
+												onchangeSelectHandler(e, value, "dataType")
+											}}
+										>
+											{featureDataTypeOption.map((item, index) => (
+												<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+											))}
+										</Select>
+									</TD>
+									<TD colSpan={5}></TD>
+								</TR>
+							</HorizontalTable>
 						</Stack>
 					}
 					{/* SQL 입력 */}
