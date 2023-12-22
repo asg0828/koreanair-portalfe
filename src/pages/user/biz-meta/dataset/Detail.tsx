@@ -8,7 +8,7 @@ import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetModel, DatasetParams } from '@/models/model/DatasetModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
-import { selectContextPath } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
@@ -22,6 +22,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
+  const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
   const mtsId = location?.state?.mtsId;
   const params: DatasetParams = location?.state?.params;
@@ -236,16 +237,27 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        {contextPath === ContextPath.ADMIN && (
-          <>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-              {t('common.button.edit')}
-            </Button>
-            <Button priority="Normal" size="LG" onClick={handleDelete}>
-              {t('common.button.delete')}
-            </Button>
-          </>
-        )}
+        {(() => {
+          if (sessionInfo.userId === datasetModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+            return (
+              <>
+                <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+                  {t('common.button.edit')}
+                </Button>
+                <Button priority="Normal" size="LG" onClick={handleDelete}>
+                  {t('common.button.delete')}
+                </Button>
+              </>
+            );
+          } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+            return (
+              <Button priority="Normal" size="LG" onClick={handleDelete}>
+                {t('common.button.delete')}
+              </Button>
+            );
+          }
+          return null;
+        })()}
         <Button size="LG" onClick={goToList}>
           {t('common.button.list')}
         </Button>

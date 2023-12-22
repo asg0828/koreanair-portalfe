@@ -55,7 +55,8 @@
       "no": "아니오",
       "modified": "수정됨",
       "dropFile": "DROP FILES HERE OR CLICK TO UPLOAD.",
-      "noData": "No data."
+      "noData": "No data.",
+      "preparingPage": "준비중인 페이지입니다."
     },
     "modal": {
       "title": {

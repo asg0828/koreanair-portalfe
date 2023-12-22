@@ -296,7 +296,6 @@ const List = () => {
                       className="width-100"
                       {...register('upMenuNm', {
                         maxLength: { value: 16, message: t('common.validate.maxLength') },
-                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.upMenuNm?.message ? 'Error' : undefined}
                       disabled
