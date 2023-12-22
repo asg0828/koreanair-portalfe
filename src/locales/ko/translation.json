@@ -50,7 +50,8 @@
       "unauthorized": "권한이 없습니다.",
       "menuUnauthorized": "메뉴 권한이 없습니다.",
       "yes": "예",
-      "no": "아니오"
+      "no": "아니오",
+      "modified": "수정됨"
     },
     "modal": {
       "title": {
