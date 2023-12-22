@@ -63,10 +63,11 @@ const DropList = ({
     useEffect(()=> {
         let colList: Array<AggregateCol> = []
         attributes?.map((colInfo: Attribute) => {
-            let col = { value: "", text: "", dataType: "" }
+            let col = { value: "", text: "", dataType: "", dtpCd: "" }
             col.value = colInfo.metaTblClmnPhysNm
             col.text  = colInfo.metaTblClmnLogiNm
             col.dataType = colInfo.dataTypeCategory
+            col.dtpCd = colInfo.dtpCd
             colList.push(col)
             return colInfo
         })
@@ -104,6 +105,7 @@ const DropList = ({
                     }
                     target.divisionCode = String(targetType)
                     target.targetDataType = targetObj.dataTypeCategory//targetObj.dtpCd
+                    target.dtpCd = targetObj.dtpCd
                     tl.push(target)
                     return tl
                 })

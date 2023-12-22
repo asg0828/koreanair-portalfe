@@ -6,6 +6,7 @@ import { Button, Stack, TextField, Typography } from '@components/ui';
 import { CheckedState } from '@radix-ui/react-checkbox';
 import { useEffect, useState } from 'react';
 import { MoveHandler } from 'react-arborist';
+import { useTranslation } from 'react-i18next';
 
 export interface TreeSearchFormProps {
   treeData?: Array<HierarchyInfo>;
@@ -29,6 +30,7 @@ const TreeSearchForm = ({
   onClick,
   onMove,
 }: TreeSearchFormProps) => {
+  const { t } = useTranslation();
   const [keyword, setKeyword] = useState<string>('');
   const [term, setTerm] = useState<string>('');
   const [newTreeData, setNewTreeData] = useState<Array<HierarchyInfo>>(treeData);
@@ -64,7 +66,7 @@ const TreeSearchForm = ({
       <Stack className="padding-5 primary-600">
         <Stack justifyContent="Center" className="width-100">
           <Typography variant="h3" className="white">
-            메뉴
+            {t('common.header.menu')}
           </Typography>
         </Stack>
 
@@ -82,7 +84,7 @@ const TreeSearchForm = ({
       <Stack gap="XS" className="padding-10">
         <TextField className="width-100" onChange={handleChangeKeyword} onKeyDown={handleKeyDown} />
         <Button priority="Normal" appearance="Contained" onClick={handleSearch}>
-          검색
+          {t('common.button.search')}
         </Button>
       </Stack>
       <DataTree

@@ -31,7 +31,7 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '국내선 평균 탑승주기', field: 'domesticAvgBoardingCycle', colSpan: 1 },
 ];
 
-const initSortedColumn = 'boardingCount';
+const initSortedColumn = 'domesticBoardingCount';
 const initSortedDirection = 'asc';
 
 const List = () => {

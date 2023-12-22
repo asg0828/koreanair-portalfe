@@ -22,6 +22,7 @@ import {
   useToast,
 } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './AccordionGrid.scss';
 
 export interface AccordionGridProps extends PageProps {
@@ -43,6 +44,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
   onDelete,
   onChange,
 }) => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const [pages, setPages] = useState<PageModel>(initPage);
@@ -67,12 +69,12 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
     if (isSuccess) {
       toast({
         type: ValidType.INFO,
-        content: '파일이 다운로드되었습니다.',
+        content: t('common.toast.success.download'),
       });
     } else {
       toast({
         type: ValidType.ERROR,
-        content: '파일 다운로드 중 에러가 발생했습니다.',
+        content: t('common.toast.error.download'),
       });
     }
   };
@@ -85,7 +87,9 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
     <Stack className="dataGridWrap" direction="Vertical" gap="MD">
       <Stack className="total-layout">
         <Label>
-          총 <span className="total">{pages.totalCount}</span> 건
+          {t('common.label.countingUnit.total')}
+          <span className="total">{` ${pages.totalCount} `}</span>
+          {t('common.label.countingUnit.thing')}
         </Label>
         <Select
           appearance="Outline"
@@ -95,7 +99,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
           onChange={(e, value) => value && handleChange('pageSize', value)}
         >
           {pageSizeList.map((pageSize) => (
-            <SelectOption value={pageSize}>{`${pageSize} 건`}</SelectOption>
+            <SelectOption value={pageSize}>{`${pageSize} ${t('common.label.countingUnit.thing')}`}</SelectOption>
           ))}
         </Select>
       </Stack>
@@ -109,10 +113,10 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                     {contextPath === ContextPath.ADMIN && (
                       <>
                         <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
-                          수정
+                          {t('common.button.edit')}
                         </Button>
                         <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
-                          삭제
+                          {t('common.button.delete')}
                         </Button>
                       </>
                     )}

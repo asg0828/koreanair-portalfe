@@ -5,6 +5,7 @@ import { useToast } from '@ke-design/components';
 import { Editor } from '@tinymce/tinymce-react';
 import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react';
 import './TinyEditor.scss';
+import { useTranslation } from 'react-i18next';
 
 export interface TinyEditorProps {
   content?: string;
@@ -13,8 +14,9 @@ export interface TinyEditorProps {
 }
 
 const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content, disabled, onEditorChange }, ref) => {
-  const editorRef = useRef<any>(null);
+  const { t } = useTranslation();
   const { toast } = useToast();
+  const editorRef = useRef<any>(null);
 
   useImperativeHandle(ref, () => editorRef.current.editor);
 
@@ -100,7 +102,7 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content,
                 } else {
                   toast({
                     type: ValidType.ERROR,
-                    content: '이미지 업로드 중 에러가 발생했습니다.',
+                    content: t('common.toast.error.uploadImage'),
                   });
                   reject(false);
                 }

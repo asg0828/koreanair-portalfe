@@ -105,7 +105,7 @@ const App = () => {
               </Watermark>
             );
           } else {
-            <Fallback />;
+            return <Fallback />;
           }
         })()}
         <ModalContainer />

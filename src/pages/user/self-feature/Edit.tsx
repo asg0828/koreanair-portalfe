@@ -56,7 +56,6 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 	initCustFeatureFormDataSql,
-	featureDataTypeOption,
 } from './data'
 import {
 	SubFeatStatus,
@@ -112,6 +111,8 @@ const SelfFeatureEdit = () => {
 	//const [deptOption, setDeptOption] = useState<Array<any>>([])
 	const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
+	const { data: cmmCodeDtpCdRes } = useCommCodes(CommonCode.DATA_TYPE_CATEGORY)
+	const [featureDataTypeOption, setFeatureDataTypeOption] = useState<Array<any>>([])
 	const { } = useCommCodes(CommonCode.FUNCTION)
 	const { } = useCommCodes(CommonCode.OPERATOR)
 	const { } = useCommCodes(CommonCode.FORMAT)
@@ -234,6 +235,13 @@ const SelfFeatureEdit = () => {
 			}
 		}
 	}, [mstrProfListRes, mstrProfListErr, toast])
+	useEffect(() => {
+		if (cmmCodeDtpCdRes && cmmCodeDtpCdRes.successOrNot === "Y") {
+			if (cmmCodeDtpCdRes.result) {
+				setFeatureDataTypeOption(cmmCodeDtpCdRes.result)
+			}
+		}
+	}, [cmmCodeDtpCdRes])
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
 
@@ -411,8 +419,10 @@ const SelfFeatureEdit = () => {
 		// 계산식 validation을 위한 대상 list 추출
 		let fList = []
 		for (let i = 0; i < targetList.length; i++) {
-			let t = { targetId: `T${i + 1}`, dataType: "" }
+			let t = { targetId: `T${i + 1}`, dataType: "", dtpCd: "" }
 			let dataType = targetList[i].targetDataType
+			t.dtpCd = targetList[i].dtpCd
+			// 집계함수(행동데이터의 경우)
 			cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
 				if (option.cdv === targetList[i].operator) {
 					dataType = option.attr1
@@ -423,12 +433,11 @@ const SelfFeatureEdit = () => {
 				return option
 			})
 			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") dataType = "number"
-			if (targetList[i].function === "LENGTH") dataType = "number"
-			if (targetList[i].function === "TO_CHAR") dataType = "string"
-			if (targetList[i].function === "DATEDIFF") dataType = "number"
+			if (targetList[i].function === "TO_NUMBER") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "LENGTH") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "TO_CHAR") { dataType = "string"; t.dtpCd = "string" }
+			if (targetList[i].function === "DATEDIFF") { dataType = "number"; t.dtpCd = "int" }
 			t.dataType = dataType
-
 			fList.push(t)
 		}
 		setFormulaTrgtList(fList)
@@ -506,6 +515,12 @@ const SelfFeatureEdit = () => {
 				content: validRslt.text,
 			})
 			return
+		}
+		let trgtDtpCd = formulaTrgtList.find((trgt) => trgt.targetId === param.customerFeature.tbRsCustFeatRuleCalc.formula)
+		if (trgtDtpCd) {
+			param.customerFeature.tbRsCustFeatRule.dataType = trgtDtpCd.dtpCd ? trgtDtpCd.dtpCd : null
+		} else if (!trgtDtpCd && param.customerFeature.tbRsCustFeatRuleCalc.formula !== "") {
+			param.customerFeature.tbRsCustFeatRule.dataType = "int"
 		}
 		setCustFeatureFormData(param)
 		updtRuleDesignMutate()
@@ -947,37 +962,6 @@ const SelfFeatureEdit = () => {
 							</Select>
 						</TD>
 					</TR>
-					{/* <TR>
-						<TH colSpan={1} align="center">Feature ID</TH>
-						<TD colSpan={3}>
-							<TextField
-								readOnly
-								className="width-100"
-								id="featureId"
-								defaultValue={location.state?.featureInfo.featureTemp?.featureId}
-							//onChange={onchangeInputHandler}
-							/>
-						</TD>
-						<TH colSpan={1} align="center">Feature 타입</TH>
-						<TD colSpan={3}>
-							<Select
-								defaultValue={codeList.find((featureType: CodeModel) => featureType.codeId === location.state?.featureInfo.featureTemp.featureTyp)?.codeId}
-								appearance="Outline"
-								placeholder="Feature 타입"
-								className="width-100"
-								onChange={(
-									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-									value: SelectValue<{}, false>
-								) => {
-									onchangeSelectHandler(e, value, "featureTyp")
-								}}
-							>
-								{codeList.map((codeItem, index) => (
-									<SelectOption key={index} value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
-								))}
-							</Select>
-						</TD>
-					</TR> */}
 					<TR>
 						<TH colSpan={1} align="center" required>한글명</TH>
 						<TD colSpan={3}>
@@ -1039,22 +1023,6 @@ const SelfFeatureEdit = () => {
 								defaultValue={location.state?.featureInfo.featureTemp?.calcUnt}
 								onChange={onchangeInputHandler}
 							/>
-							{/* <Select
-								defaultValue={location.state?.featureInfo.featureTemp?.calcUnt}
-								appearance="Outline"
-								placeholder="산출 단위"
-								className="width-100"
-								onChange={(
-									e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-									value: SelectValue<{}, false>
-								) => {
-									onchangeSelectHandler(e, value, "calcUnit")
-								}}
-							>
-								{calcUnit.map((item, index) => (
-									<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
-								))}
-							</Select> */}
 						</TD>
 						<TD colSpan={4}>
 						</TD>
@@ -1229,6 +1197,7 @@ const SelfFeatureEdit = () => {
 								justifyContent="Between"
 								style={{
 									height: '400px',
+									marginBottom: '2%'
 								}}
 							>
 								<TextField
@@ -1258,7 +1227,7 @@ const SelfFeatureEdit = () => {
 											}}
 										>
 											{featureDataTypeOption.map((item, index) => (
-												<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+												<SelectOption key={index} value={item.cdv}>{item.cdv}</SelectOption>
 											))}
 										</Select>
 									</TD>

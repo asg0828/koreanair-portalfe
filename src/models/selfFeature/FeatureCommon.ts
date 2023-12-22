@@ -72,7 +72,8 @@ export enum CommonCode {
     FUNCTION = "FUNCTION", 
     DATA_TYPE_CONV_CD = "DATA_TYPE_CONV_CD", 
     FORMAT = "FORMAT",
-    CATEGORY = "CATEGORY"
+    CATEGORY = "CATEGORY",
+    DATA_TYPE_CATEGORY = "DATA_TYPE_CATEGORY"
 }
 
 // Rule ID

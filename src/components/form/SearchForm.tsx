@@ -1,6 +1,7 @@
 import { CommonFormProps } from '@/models/components/Form';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack } from '@components/ui';
+import { useTranslation } from 'react-i18next';
 
 export interface SearchCommonFormProps extends CommonFormProps {
   showSearchButton?: boolean;
@@ -14,6 +15,8 @@ const SearchForm: React.FC<SearchCommonFormProps> = ({
   showSearchButton = true,
   showClearButton = true,
 }) => {
+  const { t } = useTranslation();
+
   const handleSearch = (e: any) => {
     e.preventDefault();
     onSearch && onSearch();
@@ -32,12 +35,12 @@ const SearchForm: React.FC<SearchCommonFormProps> = ({
           {showSearchButton && (
             <Button priority="Primary" appearance="Contained" size="LG" type="submit">
               <span className="searchIcon"></span>
-              검색
+              {t('common.button.search')}
             </Button>
           )}
           {showClearButton && (
             <Button size="LG" onClick={handleClear}>
-              초기화
+              {t('common.button.reset')}
             </Button>
           )}
         </Stack>

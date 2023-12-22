@@ -427,8 +427,10 @@ const SelfFeatureDetail = () => {
 		if (location.state.sqlDirectInputYn === "Y") return
 		let fList = []
 		for (let i = 0; i < targetList.length; i++) {
-			let t = { targetId: `T${i + 1}`, dataType: "" }
+			let t = { targetId: `T${i + 1}`, dataType: "", dtpCd: "" }
 			let dataType = targetList[i].targetDataType
+			t.dtpCd = targetList[i].dtpCd
+			// 집계함수(행동데이터의 경우)
 			cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
 				if (option.cdv === targetList[i].operator) {
 					dataType = option.attr1
@@ -439,10 +441,10 @@ const SelfFeatureDetail = () => {
 				return option
 			})
 			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") dataType = "number"
-			if (targetList[i].function === "LENGTH") dataType = "number"
-			if (targetList[i].function === "TO_CHAR") dataType = "string"
-			if (targetList[i].function === "DATEDIFF") dataType = "number"
+			if (targetList[i].function === "TO_NUMBER") {dataType = "number";t.dtpCd = "int"}
+			if (targetList[i].function === "LENGTH") {dataType = "number";t.dtpCd = "int"}
+			if (targetList[i].function === "TO_CHAR") {dataType = "string";t.dtpCd = "string"}
+			if (targetList[i].function === "DATEDIFF") {dataType = "number";t.dtpCd = "int"}
 			t.dataType = dataType
 			fList.push(t)
 		}
@@ -1175,6 +1177,7 @@ const SelfFeatureDetail = () => {
 								justifyContent="Between"
 								style={{
 									height: '400px',
+									marginBottom: '2%'
 								}}
 							>
 								<TextField
@@ -1185,6 +1188,17 @@ const SelfFeatureDetail = () => {
 									defaultValue={featureInfo.tbRsCustFeatRuleSql?.sqlQuery}
 								/>
 							</Stack>
+							<HorizontalTable>
+								<TR>
+									<TH align="right" colSpan={1}>
+										Feature Data Type
+									</TH>
+									<TD colSpan={2}>
+										{featureInfo.tbRsCustFeatRule.dataType}
+									</TD>
+									<TD colSpan={5}></TD>
+								</TR>
+							</HorizontalTable>
 						</Stack>
 					}
 

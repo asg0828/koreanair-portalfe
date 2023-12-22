@@ -306,7 +306,7 @@ const Detail = () => {
                         className="width-100"
                         autoFocus
                         {...register('answ', {
-                          required: { value: true, message: 'answer is required.' },
+                          required: { value: true, message: t('common.validate.required') },
                         })}
                         validation={errors?.answ?.message ? 'Error' : undefined}
                       />
@@ -325,7 +325,9 @@ const Detail = () => {
                       <Stack>
                         <Stack gap="SM" className="width-100">
                           <Typography variant="h6">{`${qnaItem.rgstDeptNm || ''} ${qnaItem.rgstNm || ''}`}</Typography>
-                          <Label>{`${qnaItem.modiDt}${qnaItem.rgstDt !== qnaItem.modiDt ? ' (수정됨)' : ''}`}</Label>
+                          <Label>{`${qnaItem.modiDt}${
+                            qnaItem.rgstDt !== qnaItem.modiDt ? ` (${t('common.message.modified')})` : ''
+                          }`}</Label>
                         </Stack>
 
                         {watch().qnaId === qnaItem.qnaId ? (
@@ -356,7 +358,7 @@ const Detail = () => {
                                   className="width-100"
                                   autoFocus
                                   {...uRegister('answ', {
-                                    required: { value: true, message: 'answer is required.' },
+                                    required: { value: true, message: t('common.validate.required') },
                                   })}
                                   validation={uErrors?.answ?.message ? 'Error' : undefined}
                                 />

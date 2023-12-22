@@ -38,7 +38,6 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 	initCustFeatureFormDataSql,
-	featureDataTypeOption,
 } from './data'
 import {
 	SubFeatStatus,
@@ -91,6 +90,8 @@ const SelfFeatureReg = () => {
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
 
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
+	const { data: cmmCodeDtpCdRes } = useCommCodes(CommonCode.DATA_TYPE_CATEGORY)
+	const [featureDataTypeOption, setFeatureDataTypeOption] = useState<Array<any>>([])
 	const { } = useCommCodes(CommonCode.FUNCTION)
 	const { } = useCommCodes(CommonCode.OPERATOR)
 	const { } = useCommCodes(CommonCode.FORMAT)
@@ -196,6 +197,13 @@ const SelfFeatureReg = () => {
 			}
 		}
 	}, [mstrProfListRes, mstrProfListErr, toast])
+	useEffect(() => {
+		if (cmmCodeDtpCdRes && cmmCodeDtpCdRes.successOrNot === "Y") {
+			if (cmmCodeDtpCdRes.result) {
+				setFeatureDataTypeOption(cmmCodeDtpCdRes.result)
+			}
+		}
+	}, [cmmCodeDtpCdRes])
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
 		if (location.state.regType === SelfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
@@ -373,8 +381,9 @@ const SelfFeatureReg = () => {
 		// 계산식 validation을 위한 대상 list 추출
 		let fList = []
 		for (let i = 0; i < targetList.length; i++) {
-			let t = { targetId: `T${i + 1}`, dataType: "" }
+			let t = { targetId: `T${i + 1}`, dataType: "", dtpCd: "" }
 			let dataType = targetList[i].targetDataType
+			t.dtpCd = targetList[i].dtpCd
 			// 집계함수(행동데이터의 경우)
 			cmmCodeAggrRes?.result.map((option: CommonCodeInfo) => {
 				if (option.cdv === targetList[i].operator) {
@@ -386,10 +395,10 @@ const SelfFeatureReg = () => {
 				return option
 			})
 			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") dataType = "number"
-			if (targetList[i].function === "LENGTH") dataType = "number"
-			if (targetList[i].function === "TO_CHAR") dataType = "string"
-			if (targetList[i].function === "DATEDIFF") dataType = "number"
+			if (targetList[i].function === "TO_NUMBER") {dataType = "number";t.dtpCd = "int"}
+			if (targetList[i].function === "LENGTH") {dataType = "number";t.dtpCd = "int"}
+			if (targetList[i].function === "TO_CHAR") {dataType = "string";t.dtpCd = "string"}
+			if (targetList[i].function === "DATEDIFF") {dataType = "number";t.dtpCd = "int"}
 			t.dataType = dataType
 			fList.push(t)
 		}
@@ -496,6 +505,12 @@ const SelfFeatureReg = () => {
 				content: validRslt.text,
 			})
 			return
+		}
+		let trgtDtpCd = formulaTrgtList.find((trgt) => trgt.targetId === param.customerFeature.tbRsCustFeatRuleCalc.formula)
+		if (trgtDtpCd) {
+			param.customerFeature.tbRsCustFeatRule.dataType = trgtDtpCd.dtpCd ? trgtDtpCd.dtpCd : null
+		} else if (!trgtDtpCd && param.customerFeature.tbRsCustFeatRuleCalc.formula !== "") {
+			param.customerFeature.tbRsCustFeatRule.dataType = "int"
 		}
 		setCustFeatureFormData(param)
 		createRuleDesignMutate()
@@ -1097,7 +1112,7 @@ const SelfFeatureReg = () => {
 											}}
 										>
 											{featureDataTypeOption.map((item, index) => (
-												<SelectOption key={index} value={item.value}>{item.text}</SelectOption>
+												<SelectOption key={index} value={item.cdv}>{item.cdv}</SelectOption>
 											))}
 										</Select>
 									</TD>
