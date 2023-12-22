@@ -400,7 +400,6 @@ const List = () => {
                       className="width-100"
                       {...register('upGroupNm', {
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
-                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.upGroupNm?.message ? 'Error' : undefined}
                       disabled

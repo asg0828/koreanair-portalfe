@@ -16,7 +16,7 @@ export const useFeatureAllList = (params: FeatureAllParams, options?: Object) =>
 };
 
 export const useFeatureList = (params: FeatureParams, page: PageModel, options?: Object) => {
-  return useQuery(['/feature/list', page], () => getFeatureList(params, page), options);
+  return useQuery(['/feature/list', options], () => getFeatureList(params, page), options);
 };
 
 export const useInterestFeatureList = (userId: string, page: PageModel) => {
@@ -24,7 +24,7 @@ export const useInterestFeatureList = (userId: string, page: PageModel) => {
 };
 
 export const usePopularFeatureList = (options?: Object) => {
-  return useQuery(['/popular/feature/list'], () => getPopularFeatureList(), options);
+  return useQuery(['/popular/feature/list', options], () => getPopularFeatureList(), options);
 };
 
 export const useFeatureById = (featureId: string) => {

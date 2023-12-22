@@ -82,7 +82,7 @@ const MyPage = () => {
               {t('management:label.eUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
-              {userModel?.eUserAuthNm}
+              {userModel?.groupNm}
             </TD>
           </TR>
         </HorizontalTable>
@@ -124,7 +124,7 @@ const MyPage = () => {
               {t('management:label.modiDt')}
             </TH>
             <TD colSpan={5} align="left">
-              {userModel?.rgstDt}
+              {userModel?.modiDt}
             </TD>
           </TR>
         </HorizontalTable>

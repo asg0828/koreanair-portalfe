@@ -6,10 +6,11 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
-import { useAppDispatch } from '@/hooks/useRedux';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { CreatedQnaModel, QnaModel, QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
+import { selectSessionInfo } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
@@ -26,6 +27,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
+  const sessionInfo = useAppSelector(selectSessionInfo());
   const qnaId: string = location?.state?.qnaId || '';
   const params: QnaParams = location?.state?.params;
   const [qnaModel, setQnaModel] = useState<QnaModel>();
@@ -338,12 +340,30 @@ const Detail = () => {
                           </Stack>
                         ) : (
                           <Stack>
-                            <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
-                              {t('common.button.edit')}
-                            </Button>
-                            <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
-                              {t('common.button.delete')}
-                            </Button>
+                            {(() => {
+                              if (
+                                sessionInfo.userId === qnaItem?.rgstId ||
+                                sessionInfo.apldMgrAuthId === 'ma23000000001'
+                              ) {
+                                return (
+                                  <>
+                                    <Button appearance="Unfilled" onClick={() => handleCommentUpdate(qnaItem)}>
+                                      {t('common.button.edit')}
+                                    </Button>
+                                    <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
+                                      {t('common.button.delete')}
+                                    </Button>
+                                  </>
+                                );
+                              } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+                                return (
+                                  <Button appearance="Unfilled" onClick={() => handleCommentDelete(qnaItem.qnaId)}>
+                                    {t('common.button.delete')}
+                                  </Button>
+                                );
+                              }
+                              return null;
+                            })()}
                           </Stack>
                         )}
                       </Stack>
@@ -408,12 +428,27 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-          {t('common.button.edit')}
-        </Button>
-        <Button priority="Normal" size="LG" onClick={handleDelete}>
-          {t('common.button.delete')}
-        </Button>
+        {(() => {
+          if (sessionInfo.userId === qnaModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+            return (
+              <>
+                <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+                  {t('common.button.edit')}
+                </Button>
+                <Button priority="Normal" size="LG" onClick={handleDelete}>
+                  {t('common.button.delete')}
+                </Button>
+              </>
+            );
+          } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+            return (
+              <Button priority="Normal" size="LG" onClick={handleDelete}>
+                {t('common.button.delete')}
+              </Button>
+            );
+          }
+          return null;
+        })()}
         <Button size="LG" onClick={goToList}>
           {t('common.button.list')}
         </Button>

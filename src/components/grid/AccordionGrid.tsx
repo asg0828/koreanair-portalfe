@@ -7,7 +7,7 @@ import { ContextPath, ValidType } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
 import { FileModel } from '@/models/model/FileModel';
 import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
-import { selectContextPath } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import {
   Accordion,
   AccordionItem,
@@ -47,6 +47,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
   const { t } = useTranslation();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
+  const sessionInfo = useAppSelector(selectSessionInfo());
   const [pages, setPages] = useState<PageModel>(initPage);
 
   const handleChange = (key: string, value: any) => {
@@ -110,16 +111,27 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
               <div onClick={() => onClick && onClick(row.faqId)}>
                 <AccordionItem title={`[${row.codeNm || ''}] ${row.qstn || ''}`} value={row.faqId}>
                   <Stack justifyContent="End" gap="SM" className="width-100">
-                    {contextPath === ContextPath.ADMIN && (
-                      <>
-                        <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
-                          {t('common.button.edit')}
-                        </Button>
-                        <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
-                          {t('common.button.delete')}
-                        </Button>
-                      </>
-                    )}
+                    {(() => {
+                      if (sessionInfo.userId === row.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+                        return (
+                          <>
+                            <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
+                              {t('common.button.edit')}
+                            </Button>
+                            <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
+                              {t('common.button.delete')}
+                            </Button>
+                          </>
+                        );
+                      } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+                        return (
+                          <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
+                            {t('common.button.delete')}
+                          </Button>
+                        );
+                      }
+                      return null;
+                    })()}
                   </Stack>
                   <Stack className="width-100">
                     <Typography variant="body1" className="answer"></Typography>

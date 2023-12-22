@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { NoticeModel, NoticeParams } from '@/models/model/NoticeModel';
-import { selectContextPath } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -24,6 +24,7 @@ const Detail = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
+  const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
   const noticeId = location?.state?.noticeId;
   const params: NoticeParams = location?.state?.params;
@@ -185,16 +186,27 @@ const Detail = () => {
       </Stack>
 
       <Stack gap="SM" justifyContent="End">
-        {contextPath === ContextPath.ADMIN && (
-          <>
-            <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-              {t('common.button.edit')}
-            </Button>
-            <Button priority="Normal" size="LG" onClick={handleDelete}>
-              {t('common.button.delete')}
-            </Button>
-          </>
-        )}
+        {(() => {
+          if (sessionInfo.userId === noticeModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+            return (
+              <>
+                <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+                  {t('common.button.edit')}
+                </Button>
+                <Button priority="Normal" size="LG" onClick={handleDelete}>
+                  {t('common.button.delete')}
+                </Button>
+              </>
+            );
+          } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+            return (
+              <Button priority="Normal" size="LG" onClick={handleDelete}>
+                {t('common.button.delete')}
+              </Button>
+            );
+          }
+          return null;
+        })()}
         <Button size="LG" onClick={goToList}>
           {t('common.button.list')}
         </Button>

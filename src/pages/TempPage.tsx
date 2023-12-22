@@ -1,7 +1,11 @@
+import { useTranslation } from 'react-i18next';
+
 const TempPage = () => {
+  const { t } = useTranslation();
+
   return (
     <>
-      <h1>페이지 준비중입니다.</h1>
+      <h1>{t('common.message.preparingPage')}</h1>
     </>
   );
 };
