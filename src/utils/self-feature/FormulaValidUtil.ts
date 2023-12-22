@@ -396,6 +396,9 @@ export const validationCustReatRule = (formData: any) => {
             } else if (!featureInfo.tbRsCustFeatRuleSql.sqlQuery || featureInfo.tbRsCustFeatRuleSql.sqlQuery === "") {
                 validInfo.text = "Feature 생성 Query를 확인 해주세요."
                 validInfo.valid = false
+            } else if (!featureInfo.tbRsCustFeatRule.dataType || featureInfo.tbRsCustFeatRule.dataType === "") {
+                validInfo.text = "Feature Data Type을 확인 해주세요."
+                validInfo.valid = false
             }
         }
 
