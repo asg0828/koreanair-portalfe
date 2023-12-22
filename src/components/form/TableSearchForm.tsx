@@ -3,6 +3,7 @@ import VerticalTable from '@/components/table/VerticalTable';
 import { menuIconSx } from '@/models/common/Constants';
 import { Button, Select, SelectOption, Stack, TextField, Typography } from '@components/ui';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface TableSearchFormProps {
   title?: string;
@@ -19,6 +20,7 @@ const TableSearchForm = ({
   enableIcon = false,
   onClick,
 }: TableSearchFormProps) => {
+  const { t } = useTranslation();
   const [searchInfoList, setSearchInfoList] = useState<Array<any>>([]);
   const [searchCondition, setSearchCondition] = useState<string>('');
   const [keyword, setKeyword] = useState<string>('');
@@ -71,7 +73,9 @@ const TableSearchForm = ({
     <Stack direction="Vertical" className="height-100 width-50">
       <Stack className="padding-5 primary-600">
         <Stack justifyContent="Center" className="width-100">
-          <Typography variant="h3" className="white">{title}</Typography>
+          <Typography variant="h3" className="white">
+            {title}
+          </Typography>
         </Stack>
 
         {enableIcon && (
@@ -84,7 +88,7 @@ const TableSearchForm = ({
       <Stack gap="XS" className="padding-10">
         <Select
           appearance="Outline"
-          placeholder="전체"
+          placeholder={t('common.placeholder.all')}
           className="select-basic"
           onChange={(e, value) => value && handleSearchConditions(value)}
         >
@@ -94,7 +98,7 @@ const TableSearchForm = ({
         </Select>
         <TextField className="width-100" onChange={handleChangeKeyword} onKeyDown={handleKeyDown} />
         <Button priority="Normal" appearance="Contained" onClick={handleSearch}>
-          검색
+          {t('common.button.search')}
         </Button>
       </Stack>
 

@@ -2,9 +2,9 @@ import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/Pag
 import { VerticalTableProps } from '@components/table/VerticalTable';
 import { Label, Pagination, Select, SelectOption, Stack } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
-import './DataGrid.scss';
+import { useTranslation } from 'react-i18next';
 import VerticalTableChildNode from '../table/VerticalTableChildNode';
-import { RowsInfo } from '@/models/components/Table';
+import './DataGrid.scss';
 
 export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
@@ -23,6 +23,7 @@ const DataGridChild: React.FC<DatagridProps> = ({
   rowSelection,
   totals,
 }) => {
+  const { t } = useTranslation();
   const [pages, setPages] = useState<PageModel>(initPage);
 
   useEffect(() => {
@@ -46,7 +47,9 @@ const DataGridChild: React.FC<DatagridProps> = ({
     <Stack className="dataGridWrap" direction="Vertical" gap="MD">
       <Stack className="total-layout">
         <Label>
-          총 <span className="total">{pages.totalCount}</span> 건
+          {t('common.label.countingUnit.total')}
+          <span className="total">{` ${pages.totalCount} `}</span>
+          {t('common.label.countingUnit.thing')}
         </Label>
         <Select
           appearance="Outline"
@@ -55,8 +58,10 @@ const DataGridChild: React.FC<DatagridProps> = ({
           value={pages.pageSize}
           onChange={(e, value) => handleChange('pageSize', value)}
         >
-          {pageSizeList.map((pageSize) => (
-            <SelectOption value={pageSize}>{`${pageSize} 건`}</SelectOption>
+          {pageSizeList.map((pageSize, index) => (
+            <SelectOption key={index} value={pageSize}>{`${pageSize} ${t(
+              'common.label.countingUnit.thing'
+            )}`}</SelectOption>
           ))}
         </Select>
       </Stack>

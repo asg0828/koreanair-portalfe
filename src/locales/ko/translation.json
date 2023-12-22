@@ -8,6 +8,7 @@
       "home": "Home",
       "quickLink": "Quick Link",
       "countingUnit": {
+        "total": "총",
         "person": "명",
         "thing": "건"
       }
@@ -51,7 +52,9 @@
       "menuUnauthorized": "메뉴 권한이 없습니다.",
       "yes": "예",
       "no": "아니오",
-      "modified": "수정됨"
+      "modified": "수정됨",
+      "dropFile": "DROP FILES HERE OR CLICK TO UPLOAD.",
+      "noData": "No data."
     },
     "modal": {
       "title": {
@@ -73,7 +76,13 @@
         "create": "저장되었습니다.",
         "update": "수정되었습니다.",
         "delete": "삭제되었습니다.",
-        "download": "파일이 다운로드되었습니다."
+        "upload": "파일 업로드되었습니다.",
+        "download": "파일이 다운로드되었습니다.",
+        "deleteFile": "파일이 삭제되었습니다."
+      },
+      "info": {
+        "existsFile": "파일이 이미 존재합니다.",
+        "uploadingFile": "업로드 중입니다. 잠시만 기다려주세요."
       },
       "error": {
         "list": "목록 조회 중 에러가 발생했습니다.",
@@ -81,8 +90,10 @@
         "create": "저장 중 에러가 발생했습니다.",
         "update": "수정 중 에러가 발생했습니다.",
         "delete": "삭제 중 에러가 발생했습니다.",
+        "upload": "파일 업로드 중 에러가 발생했습니다.",
         "download": "파일 다운로드 중 에러가 발생했습니다.",
-        "uploadImage": "이미지 업로드 중 에러가 발생했습니다."
+        "uploadImage": "이미지 업로드 중 에러가 발생했습니다.",
+        "deleteFile": "파일 삭제 중 에러가 발생했습니다."
       }
     }
   },

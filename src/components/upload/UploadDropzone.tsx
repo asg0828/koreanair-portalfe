@@ -7,6 +7,7 @@ import { getFileSize } from '@/utils/FileUtil';
 import { Stack, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
+import { useTranslation } from 'react-i18next';
 import './UploadDropzone.scss';
 
 export interface UploadDropzoneProps {
@@ -21,6 +22,7 @@ export interface Params {
 }
 
 const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropzoneProps) => {
+  const { t } = useTranslation();
   const { toast } = useToast();
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDropRejected: handleDropRejected,
@@ -66,7 +68,7 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
     if (isLoading) {
       toast({
         type: ValidType.INFO,
-        content: `업로드 중입니다. 잠시만 기다려주세요.`,
+        content: t('common.toast.info.uploadingFile'),
       });
       return;
     }
@@ -77,7 +79,7 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
       if (hasFile(file)) {
         toast({
           type: ValidType.ERROR,
-          content: `${file.name} 파일이 이미 존재합니다.`,
+          content: `${file.name} ${t('common.toast.info.existsFile')}`,
         });
       } else {
         addedFiles.push(file);
@@ -99,12 +101,12 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '파일업로드 중 에러가 발생했습니다.',
+        content: t('common.toast.error.upload'),
       });
     } else if (isSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '파일이 업로드되었습니다.',
+        content: t('common.toast.success.upload'),
       });
 
       if (response.data) {
@@ -137,12 +139,12 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
     if (dIsError || dResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '파일 삭제 중 에러가 발생했습니다.',
+        content: t('common.toast.error.deleteFile'),
       });
     } else if (dIsSuccess) {
       toast({
         type: ValidType.CONFIRM,
-        content: '파일이 삭제되었습니다.',
+        content: t('common.toast.success.deleteFile'),
       });
 
       setFiles((prevState) => prevState.filter((file) => file.fileId !== fileId));
@@ -174,7 +176,7 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
             {files.length === 0 ? (
               <Stack justifyContent="Center" className="width-100 height-100">
                 <UploadIcon />
-                <Typography variant="body1">DROP FILES HERE OR CLICK TO UPLOAD.</Typography>
+                <Typography variant="body1">{t('common.message.dropFile')}</Typography>
               </Stack>
             ) : (
               files.map((file) => (
@@ -204,4 +206,5 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
     </>
   );
 };
+
 export default UploadDropzone;
