@@ -4,7 +4,7 @@ import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
 export const useFaqList = (params: FaqParams, page: PageModel, options?: Object) => {
-  return useQuery(['/faq/list'], () => getFaqList(params, page), options);
+  return useQuery(['/faq/list', options], () => getFaqList(params, page), options);
 };
 
 export const useFaqById = (faqId: string) => {

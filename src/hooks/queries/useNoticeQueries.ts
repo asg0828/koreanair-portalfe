@@ -4,7 +4,7 @@ import { PageModel } from '@/models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
 export const useNoticeList = (params: NoticeParams, page: PageModel, options?: Object) => {
-  return useQuery(['/notice/list'], () => getNoticeList(params, page), options);
+  return useQuery(['/notice/list', options], () => getNoticeList(params, page), options);
 };
 
 export const useNoticeById = (noticeId: string) => {
