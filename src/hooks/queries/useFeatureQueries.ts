@@ -16,11 +16,11 @@ export const useFeatureAllList = (params: FeatureAllParams, options?: Object) =>
 };
 
 export const useFeatureList = (params: FeatureParams, page: PageModel, options?: Object) => {
-  return useQuery(['/feature/list', params, page], () => getFeatureList(params, page), options);
+  return useQuery(['/feature/list', page], () => getFeatureList(params, page), options);
 };
 
 export const useInterestFeatureList = (userId: string, page: PageModel) => {
-  return useQuery(['/interest/feature/list', userId, page], () => getInterestFeatureList(userId, page));
+  return useQuery(['/interest/feature/list'], () => getInterestFeatureList(userId, page));
 };
 
 export const usePopularFeatureList = (options?: Object) => {

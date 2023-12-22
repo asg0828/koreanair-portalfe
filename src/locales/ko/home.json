@@ -1,5 +1,5 @@
 {
-  "common": {
+  "label": {
     "bizMeta": "BIZ 메타",
     "cdp": "Customer Data Portal",
     "feature": "Feature",
@@ -10,19 +10,15 @@
     "qna": "Q&A",
     "recentFeature": "최근 Feature",
     "popularfeature": "인기 Feature",
-    "more": "more"
-  },
-  "userHome": {
+    "more": "more",
     "myDepartment": "내 부서",
     "applyRegistFeature": "신청/등록 Feature",
-    "interestFeature": "관심 Feature"
-  },
-  "adminHome": {
+    "interestFeature": "관심 Feature",
     "loginInfo": "접속 정보",
     "loginTime": "로그인 시간",
     "ipAddress": "IP 주소",
     "usersByDepartment": "부서별 접속자수",
-    "oneWeek": "지난 일주일 기준"
+    "oneWeek": "(지난 일주일 기준)"
   },
   "toast": {
     "confirm": {

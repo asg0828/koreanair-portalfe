@@ -1,8 +1,10 @@
 import '@/assets/styles/Home.scss';
+import NoData from '@/components/emptyState/NoData';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import { useFeatureList, usePopularFeatureList } from '@/hooks/queries/useFeatureQueries';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import { useQnaList } from '@/hooks/queries/useQnaQueries';
+import { useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, MainLink, ValidType } from '@/models/common/Constants';
 import { FaqModel } from '@/models/model/FaqModel';
 import { FeatureModel } from '@/models/model/FeatureModel';
@@ -12,13 +14,17 @@ import { QnaModel } from '@/models/model/QnaModel';
 import { initFeatureParams } from '@/pages/user/biz-meta/feature';
 import { initFaqParams } from '@/pages/user/board/faq';
 import { initNoticeParams } from '@/pages/user/board/notice';
+import { selectSessionInfo } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { Stack, Tag, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+  const { t } = useTranslation();
   const { toast } = useToast();
+  const sessionInfo = useAppSelector(selectSessionInfo());
   const [noticeList, setNoticeList] = useState<Array<NoticeModel>>([]);
   const [faqList, setFaqList] = useState<Array<FaqModel>>([]);
   const [qnaList, setQnaList] = useState<Array<QnaModel>>([]);
@@ -50,7 +56,7 @@ const Home = () => {
     if (nIsError || nResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '공지사항 조회 중 에러가 발생했습니다.',
+        content: t('home:toast.error.noticeList'),
       });
     } else {
       if (nResponse?.data) {
@@ -63,7 +69,7 @@ const Home = () => {
     if (fIsError || fResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: 'FAQ 조회 중 에러가 발생했습니다.',
+        content: t('home:toast.error.faqList'),
       });
     } else {
       if (fResponse?.data) {
@@ -76,7 +82,7 @@ const Home = () => {
     if (qIsError || qResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: 'QNA 조회 중 에러가 발생했습니다.',
+        content: t('home:toast.error.qnaList'),
       });
     } else {
       if (qResponse?.data) {
@@ -96,7 +102,7 @@ const Home = () => {
     if (feIsError || feResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '최근 Feature 조회 중 에러가 발생했습니다.',
+        content: t('home:toast.error.recentFeatureList'),
       });
     } else {
       if (feResponse?.data) {
@@ -109,7 +115,7 @@ const Home = () => {
     if (pfIsError || pfResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '인기 Feature 조회 중 에러가 발생했습니다.',
+        content: t('home:toast.error.popularFeatureList'),
       });
     } else {
       if (pfResponse?.data) {
@@ -130,147 +136,159 @@ const Home = () => {
                 shape="Round"
                 style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
               >
-                BIZ메타
+                {t('home:label.bizMeta')}
               </Tag>
             </>
           </div>
           <Typography variant="h2" style={{ lineHeight: '50px', marginBottom: '12px' }}>
-            Customer Data Portal
+            {t('home:label.cdp')}
           </Typography>
           <Stack gap="MD" alignItems="Start">
             <Link to="/biz-meta/feature" className="box5">
-              <Typography variant="h3">Feature</Typography>
+              <Typography variant="h3">{t('home:label.feature')}</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_01"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
                 <span className="number n1">126</span>
-                <span className="count">건</span>
+                <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>
 
             <Link to="/biz-meta/dataset" className="box5">
-              <Typography variant="h3">테이블정의</Typography>
+              <Typography variant="h3">{t('home:label.tableDefinition')}</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_02"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
                 <span className="number n2">126</span>
-                <span className="count">건</span>
+                <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>
 
             <Link to="/" className="box5">
-              <Typography variant="h3">일평균사용자</Typography>
+              <Typography variant="h3">{t('home:label.averageDailyUsers')}</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_03"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
                 <span className="number n3">14,226</span>
-                <span className="count">명</span>
+                <span className="count">{t('common.label.countingUnit.person')}</span>
               </Stack>
             </Link>
           </Stack>
         </Stack>
-        {/* 기존 포탈 영역 */}
         <Stack direction={'Vertical'} className="box2 shadowBox1">
           <div>
-            <Tag
-              variety="01"
-              size="LG"
-              shape="Round"
-              style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
-            >
-              여객마케팅부
-            </Tag>
+            {sessionInfo.deptNm && (
+              <Tag
+                variety="01"
+                size="LG"
+                shape="Round"
+                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
+              >
+                {sessionInfo.deptNm}
+              </Tag>
+            )}
           </div>
           <Typography variant="h2" style={{ lineHeight: '50px', marginBottom: '12px' }}>
-            내 부서
+            {t('home:label.myDepartment')}
           </Typography>
           <Link to="/biz-meta/feature" className="box6 leftIconBox n1">
-            <Typography variant="h3">신청/등록 Feature</Typography>
+            <Typography variant="h3">{t('home:label.applyRegistFeature')}</Typography>
             <span className="smallBox_title"></span>
             <Stack justifyContent="End" alignItems="Center">
               <span className="number">226</span>
-              <span className="count">건</span>
+              <span className="count">{t('common.label.countingUnit.thing')}</span>
             </Stack>
           </Link>
           <Stack direction="Vertical" className="">
             <Link to="/feature/interest" className="box6 leftIconBox n2">
-              <Typography variant="h3">관심 Feature</Typography>
+              <Typography variant="h3">{t('home:label.interestFeature')}</Typography>
               <Stack justifyContent="End" alignItems="Center">
                 <span className="number">55</span>
-                <span className="count">건</span>
+                <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>
           </Stack>
         </Stack>
-        {/* 기존 포탈 영역 */}
       </Stack>
       <Stack gap="LG" alignItems="Start">
         <div className="box3 shadowBox1 noticeBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-            <Typography variant="h5">공지사항</Typography>
+            <Typography variant="h5">{t('home:label.notice')}</Typography>
             <Link to={MainLink.NOTICE} className="seeMore">
-              more
+              {t('home:label.more')}
             </Link>
           </Stack>
           <div className="boardListWrap">
-            {noticeList.map((item) => (
-              <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link className="ellipsis1" to={`${MainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
-                  {item.sj}
-                </Link>
-                <span className="date">{item.rgstDt}</span>
-              </Stack>
-            ))}
+            {noticeList.length === 0 ? (
+              <NoData className="board-nodata" />
+            ) : (
+              noticeList.map((item) => (
+                <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Link className="ellipsis1" to={`${MainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
+                    {item.sj}
+                  </Link>
+                  <span className="date">{item.rgstDt}</span>
+                </Stack>
+              ))
+            )}
           </div>
         </div>
         <div className="box3 shadowBox1 faqBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-            <Typography variant="h5">FAQ</Typography>
+            <Typography variant="h5">{t('home:label.faq')}</Typography>
             <Link to={MainLink.FAQ} className="seeMore">
-              more
+              {t('home:label.more')}
             </Link>
           </Stack>
           <div className="boardListWrap">
-            {faqList.map((item) => (
-              <div>
-                <Link to={MainLink.FAQ} state={{ faqId: item.faqId }}>
-                  <div className="question">{item.qstn}</div>
-                  <div className="answer">
-                    <div className="ellipsis1" dangerouslySetInnerHTML={{ __html: item.answ }}></div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+            {faqList.length === 0 ? (
+              <NoData className="board-nodata" />
+            ) : (
+              faqList.map((item) => (
+                <div>
+                  <Link to={MainLink.FAQ} state={{ faqId: item.faqId }}>
+                    <div className="question">{item.qstn}</div>
+                    <div className="answer">
+                      <div className="ellipsis1" dangerouslySetInnerHTML={{ __html: item.answ }}></div>
+                    </div>
+                  </Link>
+                </div>
+              ))
+            )}
           </div>
         </div>
         <div className="box3 shadowBox1 qnaBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
-            <Typography variant="h5">Q&A</Typography>
+            <Typography variant="h5">{t('home:label.qna')}</Typography>
             <Link to={MainLink.QNA} className="seeMore">
-              more
+              {t('home:label.more')}
             </Link>
           </Stack>
           <div className="boardListWrap ">
-            {qnaList.map((item) => (
-              <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <Tag
-                  variety={item.qnaStat === 'UNREAD' ? '05' : '03'}
-                  size="MD"
-                  shape="Round"
-                  type={item.qnaStat === 'ANSWER' ? 'Strong' : undefined}
-                  style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '5px' }}
-                >
-                  {item.qnaStatNm}
-                </Tag>
-                <Link className="ellipsis1" to={`${MainLink.QNA}/detail`} state={{ qnaId: item.qnaId }}>
-                  {item.sj}
-                </Link>
-                <span className="date">{item.rgstDt}</span>
-              </Stack>
-            ))}
+            {qnaList.length === 0 ? (
+              <NoData className="board-nodata" />
+            ) : (
+              qnaList.map((item) => (
+                <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Tag
+                    variety={item.qnaStat === 'UNREAD' ? '05' : '03'}
+                    size="MD"
+                    shape="Round"
+                    type={item.qnaStat === 'ANSWER' ? 'Strong' : undefined}
+                    style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '5px' }}
+                  >
+                    {item.qnaStatNm}
+                  </Tag>
+                  <Link className="ellipsis1" to={`${MainLink.QNA}/detail`} state={{ qnaId: item.qnaId }}>
+                    {item.sj}
+                  </Link>
+                  <span className="date">{item.rgstDt}</span>
+                </Stack>
+              ))
+            )}
           </div>
         </div>
       </Stack>
@@ -278,49 +296,57 @@ const Home = () => {
         <div className="box4 shadowBox1 recentFeatureBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
             <Typography variant="h5" className="recentFeatureTypo">
-              최근 Feature
+              {t('home:label.recentFeature')}
             </Typography>
             <Link to={MainLink.FEATURE} className="seeMore">
-              more
+              {t('home:label.more')}
             </Link>
           </Stack>
           <div className="boardListWrap ">
-            {featureList.map((item) => (
-              <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                <Link to={`${MainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
-                  <div className="listLocation">{`${item.featureTypNm} > ${item.featureSeGrpNm}`}</div>
-                  <div className="listInfo">
-                    <div className="item">{item.featureKoNm}</div>
-                    <div className="item">{item.enrUserNm}</div>
-                    <div className="item">{item.enrDeptNm}</div>
-                  </div>
-                </Link>
-              </Stack>
-            ))}
+            {featureList.length === 0 ? (
+              <NoData className="feature-nodata" />
+            ) : (
+              featureList.map((item) => (
+                <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Link to={`${MainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
+                    <div className="listLocation">{`${item.featureTypNm} > ${item.featureSeGrpNm}`}</div>
+                    <div className="listInfo">
+                      <div className="item">{item.featureKoNm}</div>
+                      <div className="item">{item.enrUserNm}</div>
+                      <div className="item">{item.enrDeptNm}</div>
+                    </div>
+                  </Link>
+                </Stack>
+              ))
+            )}
           </div>
         </div>
         <div className="box4 shadowBox1 popFeatureBox">
           <Stack className="width-100 box_top" style={{ justifyContent: 'space-between' }}>
             <Typography variant="h5" className="popFeatureTypo">
-              인기 Feature
+              {t('home:label.popularfeature')}
             </Typography>
             <Link to={MainLink.POPULAR_FEATURE} className="seeMore">
-              more
+              {t('home:label.more')}
             </Link>
           </Stack>
           <div className="boardListWrap ">
-            {popularFeatureList.map((item) => (
-              <div className="item">
-                <Link to={`${MainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
-                  <Stack>
-                    <div className="exp">{item.featureKoNm}</div>
-                    <div className="ellipsis1">{item.enrUserNm}</div>
-                    <div className="exp"></div>
-                    <div className="ellipsis1">{item.enrDeptNm}</div>
-                  </Stack>
-                </Link>
-              </div>
-            ))}
+            {popularFeatureList.length === 0 ? (
+              <NoData className="feature-nodata" />
+            ) : (
+              popularFeatureList.map((item) => (
+                <div className="item">
+                  <Link to={`${MainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
+                    <Stack>
+                      <div className="exp">{item.featureKoNm}</div>
+                      <div className="ellipsis1">{item.enrUserNm}</div>
+                      <div className="exp"></div>
+                      <div className="ellipsis1">{item.enrDeptNm}</div>
+                    </Stack>
+                  </Link>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </Stack>
