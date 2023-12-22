@@ -303,7 +303,8 @@ const List = () => {
                     <TextField
                       className="width-100"
                       {...register('upMenuNm', {
-                        maxLength: { value: 16, message: t('common.validate.maxLength') },
+                        maxLength: { value: 16, message: t('common.validate.maxLength') }, 
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.upMenuNm?.message ? 'Error' : undefined}
                       disabled
@@ -324,6 +325,7 @@ const List = () => {
                       {...register('menuNm', {
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.menuNm?.message ? 'Error' : undefined}
                     />
@@ -342,6 +344,7 @@ const List = () => {
                       {...register('menuUrl', {
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 256, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.menuUrl?.message ? 'Error' : undefined}
                     />
@@ -359,6 +362,7 @@ const List = () => {
                       className="width-100"
                       {...register('menuDsc', {
                         maxLength: { value: 1000, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.menuDsc?.message ? 'Error' : undefined}
                     />

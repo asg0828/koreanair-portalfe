@@ -111,6 +111,7 @@ const Reg = () => {
                   {...register('qstn', {
                     required: { value: true, message: t('common.validate.required') },
                     maxLength: { value: 1000, message: t('common.validate.maxLength') },
+                    validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                   })}
                   validation={errors?.qstn?.message ? 'Error' : undefined}
                   autoFocus
@@ -175,7 +176,10 @@ const Reg = () => {
                 <Controller
                   name="answ"
                   control={control}
-                  rules={{ required: { value: true, message: t('common.validate.required') } }}
+                  rules={{
+                    required: { value: true, message: t('common.validate.required') },
+                    validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                  }}
                   render={({ field }) => (
                     <TinyEditor
                       ref={field.ref}

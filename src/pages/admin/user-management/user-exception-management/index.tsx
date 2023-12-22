@@ -400,6 +400,7 @@ const List = () => {
                       className="width-100"
                       {...register('upGroupNm', {
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.upGroupNm?.message ? 'Error' : undefined}
                       disabled
@@ -420,6 +421,7 @@ const List = () => {
                       {...register('groupNm', {
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.groupNm?.message ? 'Error' : undefined}
                     />
@@ -437,6 +439,7 @@ const List = () => {
                       className="width-100"
                       {...register('groupCode', {
                         maxLength: { value: 16, message: t('common.validate.maxLength') },
+                        validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       })}
                       validation={errors?.groupCode?.message ? 'Error' : undefined}
                       disabled
