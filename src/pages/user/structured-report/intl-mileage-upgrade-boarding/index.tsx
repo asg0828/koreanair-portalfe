@@ -31,7 +31,7 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '국제선 PR 탑승횟수', field: 'intlPrCount', colSpan: 1 },
 ];
 
-const initSortedColumn = 'boardingCount';
+const initSortedColumn = 'mileageSpentForUpgrade';
 const initSortedDirection = 'asc';
 
 const List = () => {
