@@ -20,8 +20,8 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content,
 
   useImperativeHandle(ref, () => editorRef.current.editor);
 
-  const handleEditorChange = (content: string, editor: any) => {
-    onEditorChange && onEditorChange(content, editor);
+  const handleEditorChange = (cn: string, editor: any) => {
+    onEditorChange && onEditorChange(cn, editor);
   };
 
   return (

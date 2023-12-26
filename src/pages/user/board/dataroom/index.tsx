@@ -84,8 +84,8 @@ const List = () => {
     }));
   };
 
-  const handlePage = (page: PageModel) => {
-    setPage(page);
+  const handlePage = (nPage: PageModel) => {
+    setPage(nPage);
   };
 
   useDidMountEffect(() => {

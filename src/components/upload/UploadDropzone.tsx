@@ -43,8 +43,8 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
     mutate: dMutate,
   } = useDeleteFile(fileId);
 
-  const removeFile = (fileId: string) => () => {
-    setFileId(fileId);
+  const removeFile = (nFileId: string) => () => {
+    setFileId(nFileId);
   };
 
   const hasFile = (file: any) => {
@@ -73,7 +73,7 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
       return;
     }
 
-    const addedFiles: Array<any> = [];
+    const nAddedFiles: Array<any> = [];
 
     acceptedFiles.forEach((file) => {
       if (hasFile(file)) {
@@ -82,18 +82,18 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
           content: `${file.name} ${t('common.toast.info.existsFile')}`,
         });
       } else {
-        addedFiles.push(file);
+        nAddedFiles.push(file);
       }
     });
 
-    if (addedFiles.length > 0) {
-      const formData = new FormData();
-      formData.append('fileCl', fileCl);
-      addedFiles.forEach((file) => {
-        formData.append('files', file);
+    if (nAddedFiles.length > 0) {
+      const nFormData = new FormData();
+      nFormData.append('fileCl', fileCl);
+      nAddedFiles.forEach((file) => {
+        nFormData.append('files', file);
       });
-      setAddedFiles(addedFiles);
-      setFormData(formData);
+      setAddedFiles(nAddedFiles);
+      setFormData(nFormData);
     }
   }
 

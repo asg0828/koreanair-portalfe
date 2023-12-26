@@ -1,7 +1,6 @@
 import DataTree from '@/components/Tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { ValidType } from '@/models/common/Constants';
 import { ModalInfo } from '@/models/components/Modal';
 import { DeptModel } from '@/models/model/DeptModel';
@@ -36,7 +35,7 @@ const UserSelectModal = ({
   const [deptTreeData, setDeptTreeData] = useState<Array<any>>([]);
   const [prevRows, setPrevRows] = useState<Array<UserModel>>([]);
   const [prevCheckedList, setPrevCheckedList] = useState<Array<UserModel>>([]);
-  const { data: response, isError, refetch } = useDeptAllList();
+  const { data: response, isError } = useDeptAllList();
 
   const columns = [{ headerName: t('management:label.deptNm'), field: 'deptNm', colSpan: 10 }];
 
@@ -48,8 +47,8 @@ const UserSelectModal = ({
     }
   };
 
-  const handleChangeKeyword = (keyword: string) => {
-    setKeyword(keyword);
+  const handleChangeKeyword = (nKeyword: string) => {
+    setKeyword(nKeyword);
   };
 
   const handleKeyDown = (e: any) => {
@@ -58,8 +57,8 @@ const UserSelectModal = ({
     }
   };
 
-  const handlePrevRowSelection = (prevCheckedIndexList: Array<number>, prevCheckedList: Array<any>) => {
-    setPrevCheckedList(prevCheckedList);
+  const handlePrevRowSelection = (prevCheckedIndexList: Array<number>, nPrevCheckedList: Array<any>) => {
+    setPrevCheckedList(nPrevCheckedList);
   };
 
   const handleClickFile = (deptItem: any) => {

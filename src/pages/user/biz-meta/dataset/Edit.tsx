@@ -42,7 +42,6 @@ const Edit = () => {
     handleSubmit,
     getValues,
     setValue,
-    watch,
     control,
     formState: { errors },
   } = useForm<UpdatedDatasetModel>({
@@ -58,7 +57,7 @@ const Edit = () => {
       columnSpecs: [],
     },
   });
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, append, update } = useFieldArray({
     control,
     name: 'columnSpecs',
   });

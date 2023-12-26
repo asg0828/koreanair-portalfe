@@ -46,8 +46,7 @@ export const getCodeListWithOut = async (groupId: string) => {
   if (filterCodeList.length === 0) {
     const response = await getCodeList(groupId);
 
-    if (response.successOrNot === 'N') {
-    } else {
+    if (response.successOrNot === 'Y') {
       store.dispatch(codeSlice.actions.addCodeList(response.data));
     }
   }

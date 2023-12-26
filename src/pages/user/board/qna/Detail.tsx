@@ -96,10 +96,10 @@ const Detail = () => {
     });
   };
 
-  const handleMoveDetail = (qnaId: string | undefined) => {
+  const handleMoveDetail = (nQnaId: string | undefined) => {
     navigate('', {
       state: {
-        qnaId: qnaId,
+        qnaId: nQnaId,
         params: params,
       },
     });
@@ -128,8 +128,8 @@ const Detail = () => {
     uSetValue('answ', '');
   }, [uSetValue]);
 
-  const handleCommentDelete = (qnaId: string) => {
-    setCQnaId(qnaId);
+  const handleCommentDelete = (nQnaId: string) => {
+    setCQnaId(nQnaId);
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
@@ -149,9 +149,9 @@ const Detail = () => {
   };
 
   const handleFileDownload = async (fileId: string, fileNm: string) => {
-    const isSuccess = await downloadFile(fileId, fileNm);
+    const isDownload = await downloadFile(fileId, fileNm);
 
-    if (isSuccess) {
+    if (isDownload) {
       toast({
         type: ValidType.INFO,
         content: t('common.toast.success.download'),

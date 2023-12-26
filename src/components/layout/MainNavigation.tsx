@@ -13,13 +13,13 @@ const MainNavigation = () => {
   const menuList = useAppSelector(selectMenuList())!;
   const contextPath = useAppSelector(selectContextPath());
 
-  const getMenuRecursive = (menuList: any[], menuUrl: string): any | undefined => {
-    for (let i = 0; i < menuList.length; i++) {
-      if (menuList[i].menuUrl === menuUrl || menuList[i].menuUrl === '*') {
-        return menuList[i];
+  const getMenuRecursive = (cMenuList: any[], menuUrl: string): any | undefined => {
+    for (let i = 0; i < cMenuList.length; i++) {
+      if (cMenuList[i].menuUrl === menuUrl || cMenuList[i].menuUrl === '*') {
+        return cMenuList[i];
       } else {
-        if (menuList[i].children) {
-          const menuObj = getMenuRecursive(menuList[i].children, menuUrl);
+        if (cMenuList[i].children) {
+          const menuObj = getMenuRecursive(cMenuList[i].children, menuUrl);
 
           if (menuObj) {
             return menuObj;
@@ -30,16 +30,16 @@ const MainNavigation = () => {
   };
 
   const getMenuInfo = (index: number): Array<string> => {
-    let menuUrl = '';
+    let cMenuUrl = '';
 
     for (let i = 0; i <= index; i++) {
-      menuUrl += `/${menuUrlNames[i]}`;
+      cMenuUrl += `/${menuUrlNames[i]}`;
     }
 
-    const menuObj = getMenuRecursive(menuList, menuUrl);
+    const menuObj = getMenuRecursive(menuList, cMenuUrl);
     let menuNm = menuObj ? menuObj.menuNm : '';
 
-    return [menuNm, menuUrl];
+    return [menuNm, cMenuUrl];
   };
 
   const goToHome = () => {
@@ -64,8 +64,8 @@ const MainNavigation = () => {
                 isCurrentPage={menuUrlNames.length - 1 === index ? true : false}
               >
                 {(() => {
-                  const [menuNm, menuUrl] = getMenuInfo(index);
-                  return <BreadcrumbLink onClick={() => goToMenu(menuUrl)}>{menuNm}</BreadcrumbLink>;
+                  const [menuNm, cMenuUrl] = getMenuInfo(index);
+                  return <BreadcrumbLink onClick={() => goToMenu(cMenuUrl)}>{menuNm}</BreadcrumbLink>;
                 })()}
               </BreadcrumbItem>
             )

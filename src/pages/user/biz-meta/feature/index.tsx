@@ -44,7 +44,7 @@ const List = () => {
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = useFeatureList(params, page);
-  const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
+  const { data: tResponse, isError: tIsError } = useFeatureTypList();
   const { data: sResponse, isError: sIsError, refetch: sRefetch } = useFeatureSeList(params.featureSeGrp);
   const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateInterestFeature();
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
@@ -116,8 +116,8 @@ const List = () => {
     setFeatureSeList([]);
   };
 
-  const handlePage = (page: PageModel) => {
-    setPage(page);
+  const handlePage = (nPage: PageModel) => {
+    setPage(nPage);
   };
 
   const handleChangeParams = (name: string, value: any) => {

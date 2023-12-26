@@ -6,10 +6,10 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useNoticeById } from '@/hooks/queries/useNoticeQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { NoticeModel, NoticeParams } from '@/models/model/NoticeModel';
-import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
+import { selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -23,7 +23,6 @@ const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
   const noticeId = location?.state?.noticeId;
@@ -49,10 +48,10 @@ const Detail = () => {
     });
   };
 
-  const handleMoveDetail = (noticeId: string) => {
+  const handleMoveDetail = (nNoticeId: string) => {
     navigate('', {
       state: {
-        noticeId: noticeId,
+        noticeId: nNoticeId,
         params: params,
       },
     });
@@ -70,9 +69,9 @@ const Detail = () => {
   };
 
   const handleFileDownload = async (fileId: string, fileNm?: string) => {
-    const isSuccess = await downloadFile(fileId, fileNm);
+    const isDownload = await downloadFile(fileId, fileNm);
 
-    if (isSuccess) {
+    if (isDownload) {
       toast({
         type: ValidType.INFO,
         content: t('common.toast.success.download'),

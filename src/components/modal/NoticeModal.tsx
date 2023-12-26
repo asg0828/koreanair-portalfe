@@ -27,8 +27,8 @@ const NoticeModal = ({ isOpen = false, onClose }: Props) => {
 
   const handleChecked = (checked: CheckedState) => {
     if (checked) {
-      const hasVisited = new Date().setHours(23, 59, 59, 0).toString();
-      localStorage.setItem('hasVisited', hasVisited);
+      const nHasVisited = new Date().setHours(23, 59, 59, 0).toString();
+      localStorage.setItem('hasVisited', nHasVisited);
       handleClose();
     }
   };

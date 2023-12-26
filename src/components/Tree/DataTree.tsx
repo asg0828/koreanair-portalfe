@@ -19,7 +19,7 @@ export interface DataTreeProps {
   onClick?: (item: HierarchyInfo, parentItem?: HierarchyInfo) => void;
   onMove?: MoveHandler<any>;
   onSearch?: (keyword: string) => void;
-  treeHeight?: number | undefined;
+  treeHeight?: number;
 }
 
 const DataTree = ({
@@ -106,8 +106,8 @@ const DataTree = ({
   };
 
   // 트리 필터
-  const handleSearchMatch = (node: NodeApi, term: string) => {
-    return node.data.name.toLowerCase().includes(term.toLowerCase());
+  const handleSearchMatch = (node: NodeApi, termStr: string) => {
+    return node.data.name.toLowerCase().includes(termStr.toLowerCase());
   };
 
   // 노드 렌더링

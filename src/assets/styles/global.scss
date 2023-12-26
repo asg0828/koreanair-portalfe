@@ -470,7 +470,6 @@ svg {
 .badge {
   height: 28px;
   border-radius: 14px;
-  font-size: 14px;
   width: auto;
   display: inline-block;
   font-size: 0.875rem;
@@ -734,7 +733,6 @@ svg {
   color: #ffffff;
   font-weight: 500;
   display: block;
-  width: 100%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -784,7 +782,6 @@ svg {
   width: 65%;
   font-size: 0.8125rem;
   color: #222222;
-  font-weight: 400;
   padding-right: 1rem;
   font-weight: 500;
   display: block;
@@ -863,7 +860,6 @@ svg {
   letter-spacing: -1px;
   line-height: 28px;
   color: #222222;
-  font-family: 'Noto Sans KR';
   font-weight: 500;
 }
 .width-25 {
@@ -1213,7 +1209,5 @@ svg {
     .btn_modal_icon {
       background-image: url(./../images/icon_modal_arrow_right.png);
     }
-  }
-  .right_modal_content {
   }
 }

@@ -117,13 +117,13 @@ const Header = () => {
                 {menu.children.length > 0 && (
                   <DropdownMenu.Portal forceMount={index === activeIndex ? true : undefined}>
                     <DropdownMenu.Content className="dropdown-content" onMouseLeave={handleClearTrigger}>
-                      {menu.children.map((subMenu: any, index: number) => (
+                      {menu.children.map((subMenu: any, subIndex: number) => (
                         <>
                           {subMenu.children.length > 0 && subMenu.children.find((item: any) => !item.isCrudPage) ? (
                             <DropdownMenu.Sub>
                               <DropdownMenu.SubTrigger
                                 className="dropdown-item"
-                                onMouseOver={() => handleSubTrigger(index)}
+                                onMouseOver={() => handleSubTrigger(subIndex)}
                               >
                                 <Stack>
                                   <Typography variant="body1">{subMenu.menuNm}</Typography>
@@ -131,11 +131,11 @@ const Header = () => {
                                 </Stack>
                               </DropdownMenu.SubTrigger>
 
-                              <DropdownMenu.Portal forceMount={index === subActiveIndex ? true : undefined}>
+                              <DropdownMenu.Portal forceMount={subIndex === subActiveIndex ? true : undefined}>
                                 <DropdownMenu.SubContent className="dropdown-content">
-                                  {subMenu.children.map((subMenuSecond: any, index: number) => (
+                                  {subMenu.children.map((subMenuSecond: any, subIndex: number) => (
                                     <DropdownMenu.Item
-                                      key={`subMenuSecond-${index}`}
+                                      key={`subMenuSecond-${subIndex}`}
                                       className="dropdown-item"
                                       disabled
                                     >
@@ -153,7 +153,7 @@ const Header = () => {
                             </DropdownMenu.Sub>
                           ) : (
                             <DropdownMenu.Item
-                              key={`subMenu-${index}`}
+                              key={`subMenu-${subIndex}`}
                               className="dropdown-item"
                               disabled
                               onMouseOver={() => handleSubTrigger(-1)}

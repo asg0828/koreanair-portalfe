@@ -38,7 +38,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   const isCheckbox = typeof rowSelection === 'function';
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);
-  const [checkedList, setCheckedList] = useState<Array<RowsInfo>>([]);
 
   function formatNumber(value: number) {
     return new Intl.NumberFormat('ko-KR').format(value);
@@ -67,7 +66,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
       }
     }
 
-    newCheckedList = rows.filter((item, index) => newCheckedIndexList.some((index2) => index === index2));
+    newCheckedList = rows.filter((item, fIndex) => newCheckedIndexList.some((sIndex) => fIndex === sIndex));
 
     if (newCheckedIndexList.length === rows.length) {
       setIsCheckedAll(true);
@@ -76,7 +75,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     }
 
     setCheckedIndexList(newCheckedIndexList);
-    setCheckedList(newCheckedList);
 
     return [newCheckedIndexList, newCheckedList];
   };
@@ -97,7 +95,6 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   useEffect(() => {
     setIsCheckedAll(false);
     setCheckedIndexList([]);
-    setCheckedList([]);
   }, [rows]);
 
   return (

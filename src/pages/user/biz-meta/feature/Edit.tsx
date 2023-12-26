@@ -33,7 +33,7 @@ const initFeatureAllParams: FeatureAllParams = {
   featureEnNm: undefined,
 };
 
-const Reg = () => {
+const Edit = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -79,7 +79,7 @@ const Reg = () => {
   const [featureInfo, setFeatureInfo] = useState<UpdatedFeatureModel>();
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFeature(featureId, values);
-  const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
+  const { data: tResponse, isError: tIsError } = useFeatureTypList();
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
   const {
     data: faResponse,
@@ -625,4 +625,4 @@ const Reg = () => {
     </form>
   );
 };
-export default Reg;
+export default Edit;
