@@ -17,7 +17,7 @@ const defaultResultInfo = {
   deptNm: '',
 };
 
-const UserSelectModal = ({
+const DeptSelectModal = ({
   isOpen = false,
   autoClose = true,
   title,
@@ -136,4 +136,4 @@ const UserSelectModal = ({
   );
 };
 
-export default UserSelectModal;
+export default DeptSelectModal;

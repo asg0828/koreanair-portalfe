@@ -133,9 +133,9 @@ const Header = () => {
 
                               <DropdownMenu.Portal forceMount={subIndex === subActiveIndex ? true : undefined}>
                                 <DropdownMenu.SubContent className="dropdown-content">
-                                  {subMenu.children.map((subMenuSecond: any, subIndex: number) => (
+                                  {subMenu.children.map((subMenuSecond: any, subMenuSecondIndex: number) => (
                                     <DropdownMenu.Item
-                                      key={`subMenuSecond-${subIndex}`}
+                                      key={`subMenuSecond-${subMenuSecondIndex}`}
                                       className="dropdown-item"
                                       disabled
                                     >
@@ -193,8 +193,8 @@ const Header = () => {
                 </Link>
                 {menu.children.length > 0 && (
                   <div>
-                    {menu.children.map((subMenu: any, index: number) => (
-                      <div key={`subMenu-${index}`}>
+                    {menu.children.map((subMenu: any, subIndex: number) => (
+                      <div key={`subMenu-${subIndex}`}>
                         {!subMenu.children[0] || subMenu.children[0].children.length === 0 ? (
                           <Link to={subMenu.menuUrl} className="depth2" onClick={(e) => handleNaviLink(e, menu)}>
                             {subMenu.menuNm}
@@ -202,8 +202,8 @@ const Header = () => {
                         ) : (
                           <div className="dropdown-subwrap">
                             <Typography variant="body1">{subMenu.menuNm}</Typography>
-                            {subMenu.children.map((subMenuSecond: any, index: number) => (
-                              <div key={`subMenuSecond-${index}`} className="dropdown-item">
+                            {subMenu.children.map((subMenuSecond: any, subMenuIndex: number) => (
+                              <div key={`subMenuSecond-${subMenuIndex}`} className="dropdown-item">
                                 <Link to={subMenuSecond.menuUrl} onClick={(e) => handleNaviLink(e, menu)}>
                                   <Typography variant="body1">{subMenuSecond.menuNm}</Typography>
                                 </Link>
