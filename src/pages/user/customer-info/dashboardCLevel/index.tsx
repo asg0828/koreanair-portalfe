@@ -20,6 +20,7 @@ import {
   smsData,
   emailData,
   snsData,
+  skyPassList,
 } from '../dashboard/data';
 import {
   FamilyMember,
@@ -38,7 +39,6 @@ import {
   Sns,
   Email,
 } from '@/models/model/CustomerInfoModel';
-import DashBoardCLevelPopUp from '../dashboardCLevelPopUp';
 
 export default function List() {
   const today = new Date();
@@ -75,7 +75,26 @@ export default function List() {
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { refetch, data: response, isError } = useCustomerInfo(searchInfo);
   const { toast } = useToast();
-  const [showPopup, setShowPopup] = useState(false);
+
+  const [searchText, setSearchText] = useState<any>();
+
+  const searchHighlight = (text: any, search: any) => {
+    const regex = new RegExp(`(${search})`, 'gi');
+    return text.split(regex).map((part: any, index: number) =>
+      regex.test(part) ? (
+        <span key={index} style={{ backgroundColor: 'yellow' }}>
+          {part}
+        </span>
+      ) : (
+        part
+      )
+    );
+  };
+
+  const onchangeModalInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setSearchText(value);
+  };
   const validation = () => {
     // 검색 조건 자체는 두개다 들어가도 가능
     // 회원당 skypass는 일대다 관계이므로 phoneNumber로 검색할 경우 skypass list를
@@ -150,7 +169,6 @@ export default function List() {
       setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
     }
     // refetch();
-    setShowPopup(true);
   }, [refetch, searchInfo, validation]);
 
   // style > 배경색 변경
@@ -233,9 +251,24 @@ export default function List() {
   }, [response, isError, toast]);
 
   const [cLevelModalOpen, setcLevelModalOpen] = useState(false);
+  const toggleDropMenu = (e: React.MouseEvent<Element>) => {
+    e.stopPropagation(); // 이벤트 캡쳐링 방지
+    setcLevelModalOpen((prevState) => !prevState);
+  };
 
   return (
-    <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
+    <Stack
+      onClick={(e: React.MouseEvent<HTMLElement>) => {
+        const { id } = e.target as HTMLElement;
+        console.log(id);
+        // if (id.slice(0, -1) !== 'skypassSearch' || id !== 'searchBar') setcLevelModalOpen(false);
+        if (id === '') setcLevelModalOpen(false);
+      }}
+      direction="Vertical"
+      justifyContent="Start"
+      className={'width-100'}
+      wrap={true}
+    >
       {/* searchBar 영역 */}
       <Stack>
         <Stack className={'width-100'}>
@@ -331,23 +364,6 @@ export default function List() {
               appearance="Contained"
               onClick={() => {
                 setOpen(false);
-              }}
-            >
-              확인
-            </Button>
-          </Modal.Footer>
-        </Modal>
-        <Modal open={showPopup} onClose={() => setShowPopup(false)}>
-          <Modal.Header>중복회원검색</Modal.Header>
-          <Modal.Body>
-            <DashBoardCLevelPopUp />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              priority="Primary"
-              appearance="Contained"
-              onClick={() => {
-                setShowPopup(false);
               }}
             >
               확인
@@ -1122,41 +1138,47 @@ export default function List() {
             </div>
           </Stack>
 
-          <div className={'c_level_right_modal_wrap ' + (cLevelModalOpen ? 'panel_opened' : '')}>
-            <Stack>
-              <div
-                className="right_modal_btn_wrap"
-                onClick={() => {
-                  setcLevelModalOpen(!cLevelModalOpen);
-                }}
-              >
-                <div className="btn_modal_icon"></div>
+          <div id="skypassSearch" className={'c_level_right_modal_wrap ' + (cLevelModalOpen ? 'panel_opened' : '')}>
+            <Stack id="skypassSearch0">
+              <div id="skypassSearch1" className="right_modal_btn_wrap" onClick={(e) => toggleDropMenu(e)}>
+                <div id="skypassSearch2" className="btn_modal_icon"></div>
               </div>
-              <div className="right_modal_content_wrap height-100">
-                <div className="right_modal_content height-100">
-                  <div className="right_modal_content_inner height-100">
-                    <Stack direction="Vertical">
-                      <div className="right_modal_search_wrap">
-                        <Stack>
-                          <TextField className="width-100" size="LG" placeholder="결과내 검색" />
-                          <Button appearance="Contained" priority="Primary" shape="Square" size="LG">
+              <div id="skypassSearch3" className="right_modal_content_wrap height-100">
+                <div id="skypassSearch4" className="right_modal_content height-100">
+                  <div id="skypassSearch5" className="right_modal_content_inner height-100">
+                    <Stack id="skypassSearch6" direction="Vertical">
+                      <div id="skypassSearch7" className="right_modal_search_wrap">
+                        <Stack id="skypassSearch8">
+                          <TextField
+                            id="searchBar"
+                            name="searchBar"
+                            onChange={onchangeModalInputHandler}
+                            value={searchText}
+                            className="width-100"
+                            size="LG"
+                            placeholder="결과내 검색"
+                          />
+                          <Button id="searchBar1" appearance="Contained" priority="Primary" shape="Square" size="LG">
                             검색
                           </Button>
                         </Stack>
                       </div>
-                      <div className="right_modal_box_wrap">
-                        <div className="box_inner_txt">
-                          <span className="point_txt">100명</span>을 초과하는 데이터입니다.
+                      <div id="skypassSearch9" className="right_modal_box_wrap">
+                        <div id="skypassSearch10" className="box_inner_txt">
+                          <span id="skypassSearch11" className="point_txt">
+                            100명
+                          </span>
+                          을 초과하는 데이터입니다.
                         </div>
-                        <div className="box_inner_sub">
+                        <div id="skypassSearch12" className="box_inner_sub">
                           (추가 데이터 조회는 모달을 닫으신 후 Skypass Number 혹은
                           <br />
                           핸드폰번호로 조회해주시기 바랍니다.)
                         </div>
                       </div>
-                      <div className="right_modal_table_wrap">
-                        <div className="right_modal_table_inner height-100">
-                          <table>
+                      <div id="skypassSearch13" className="right_modal_table_wrap">
+                        <div id="skypassSearch14" className="right_modal_table_inner height-100">
+                          <table id="skypassSearch15">
                             <colgroup>
                               <col width="80px" />
                               <col width="130px" />
@@ -1164,115 +1186,86 @@ export default function List() {
                               <col width="100px" />
                               <col width="*" />
                             </colgroup>
-                            <thead>
-                              <tr>
-                                <th>
-                                  <div className="ellipsis1">
-                                    이름<span className="subtxt">(KOR)</span>
+                            <thead id="skypassSearch16">
+                              <tr id="skypassSearch17">
+                                <th id="skypassSearch18">
+                                  <div id="skypassSearch19" className="ellipsis1">
+                                    이름
+                                    <span id="skypassSearch28" className="subtxt">
+                                      (KOR)
+                                    </span>
                                   </div>
                                 </th>
-                                <th>
-                                  <div className="ellipsis1">
-                                    이름<span className="subtxt">(ENG)</span>
+                                <th id="skypassSearch20">
+                                  <div id="skypassSearch21" className="ellipsis1">
+                                    이름
+                                    <span id="skypassSearch29" className="subtxt">
+                                      (ENG)
+                                    </span>
                                   </div>
                                 </th>
-                                <th>
-                                  <div className="ellipsis1">성별</div>
+                                <th id="skypassSearch22">
+                                  <div id="skypassSearch23" className="ellipsis1">
+                                    성별
+                                  </div>
                                 </th>
-                                <th>
-                                  <div className="ellipsis1">생년월일</div>
+                                <th id="skypassSearch24">
+                                  <div id="skypassSearch25" className="ellipsis1">
+                                    생년월일
+                                  </div>
                                 </th>
-                                <th>
-                                  <div className="ellipsis1">Skypass No.</div>
+                                <th id="skypassSearch26">
+                                  <div id="skypassSearch27" className="ellipsis1">
+                                    Skypass No.
+                                  </div>
                                 </th>
                               </tr>
                             </thead>
-                            <tbody>
-                              <tr>
-                                <td>
-                                  <div className="ellipsis1">김대한</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">Eeahan-Kim</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">M</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">1999.01.01</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">123456789112</div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div className="ellipsis1">김대한</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">Eeahan-Kim</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">M</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">1999.01.01</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">123456789112</div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div className="ellipsis1">김대한</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">Eeahan-Kim</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">M</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">1999.01.01</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">123456789112</div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div className="ellipsis1">김대한</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">Eeahan-Kim</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">M</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">1999.01.01</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">123456789112</div>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>
-                                  <div className="ellipsis1">김대한</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">Eeahan-Kim</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">M</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">1999.01.01</div>
-                                </td>
-                                <td>
-                                  <div className="ellipsis1">123456789112</div>
-                                </td>
-                              </tr>
+                            <tbody id="skypassSearch30">
+                              {skyPassList.map((list) => (
+                                <tr id="skypassSearch31">
+                                  <td id="skypassSearch32">
+                                    <div id="skypassSearch33" className="ellipsis1">
+                                      {' '}
+                                      {searchText && list.korName.toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight(list.korName, searchText)
+                                        : list.korName}
+                                    </div>
+                                  </td>
+                                  <td id="skypassSearch34">
+                                    <div id="skypassSearch35" className="ellipsis1">
+                                      {' '}
+                                      {searchText && list.engName.toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight(list.engName, searchText)
+                                        : list.engName}
+                                    </div>
+                                  </td>
+                                  <td id="skypassSearch36">
+                                    <div id="skypassSearch37" className="ellipsis1">
+                                      {' '}
+                                      {searchText && list.sexCode.toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight(list.sexCode, searchText)
+                                        : list.sexCode}
+                                    </div>
+                                  </td>
+                                  <td id="skypassSearch38">
+                                    <div id="skypassSearch39" className="ellipsis1">
+                                      {' '}
+                                      {searchText && list.birthV.toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight(list.birthV, searchText)
+                                        : list.birthV}
+                                    </div>
+                                  </td>
+                                  <td id="skypassSearch40">
+                                    <div id="skypassSearch41" className="ellipsis1">
+                                      {' '}
+                                      {searchText && list.skypassNo
+                                        ? searchHighlight(list.skypassNo, searchText)
+                                        : list.skypassNo}
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
                             </tbody>
                           </table>
                         </div>

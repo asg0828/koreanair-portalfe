@@ -196,3 +196,11 @@ export interface CartData {
   onewayTrip: string;
   travelDate: string;
 }
+
+export interface SkypassList {
+  korName: string;
+  engName: string;
+  sexCode: string;
+  birthV: string;
+  skypassNo: string;
+}
