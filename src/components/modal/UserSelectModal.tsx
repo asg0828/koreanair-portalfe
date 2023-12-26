@@ -1,5 +1,5 @@
 import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
-import DataTree from '@/components/Tree/DataTree';
+import DataTree from '@/components/tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useUserAllList } from '@/hooks/queries/useUserQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
@@ -62,8 +62,8 @@ const UserSelectModal = ({
     }
   };
 
-  const handleChangeKeyword = (keyword: string) => {
-    setKeyword(keyword);
+  const handleChangeKeyword = (nKeyword: string) => {
+    setKeyword(nKeyword);
   };
 
   const handleKeyDown = (e: any) => {
@@ -72,12 +72,12 @@ const UserSelectModal = ({
     }
   };
 
-  const handlePrevRowSelection = (prevCheckedIndexList: Array<number>, prevCheckedList: Array<any>) => {
-    setPrevCheckedList(prevCheckedList);
+  const handlePrevRowSelection = (prevCheckedIndexList: Array<number>, nPrevCheckedList: Array<any>) => {
+    setPrevCheckedList(nPrevCheckedList);
   };
 
-  const handleNextRowSelection = (nextCheckedIndexList: Array<number>, nextCheckedList: Array<any>) => {
-    setNextCheckedList(nextCheckedList);
+  const handleNextRowSelection = (nextCheckedIndexList: Array<number>, nNextCheckedList: Array<any>) => {
+    setNextCheckedList(nNextCheckedList);
   };
 
   const handleClickFile = (deptItem: any) => {

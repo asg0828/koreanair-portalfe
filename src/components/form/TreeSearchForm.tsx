@@ -1,5 +1,5 @@
 import { CreateNewFolderOutlinedIcon, DeleteOutlineOutlinedIcon } from '@/assets/icons';
-import DataTree from '@/components/Tree/DataTree';
+import DataTree from '@/components/tree/DataTree';
 import { HierarchyInfo } from '@/models/common/CommonInfo';
 import { menuIconSx } from '@/models/common/Constants';
 import { Button, Stack, TextField, Typography } from '@components/ui';

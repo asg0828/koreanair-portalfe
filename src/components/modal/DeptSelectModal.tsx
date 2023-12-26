@@ -1,4 +1,4 @@
-import DataTree from '@/components/Tree/DataTree';
+import DataTree from '@/components/tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ValidType } from '@/models/common/Constants';
@@ -17,7 +17,7 @@ const defaultResultInfo = {
   deptNm: '',
 };
 
-const UserSelectModal = ({
+const DeptSelectModal = ({
   isOpen = false,
   autoClose = true,
   title,
@@ -136,4 +136,4 @@ const UserSelectModal = ({
   );
 };
 
-export default UserSelectModal;
+export default DeptSelectModal;
