@@ -112,23 +112,25 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                 <AccordionItem title={`[${row.codeNm || ''}] ${row.qstn || ''}`} value={row.faqId}>
                   <Stack justifyContent="End" gap="SM" className="width-100">
                     {(() => {
-                      if (sessionInfo.userId === row.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
-                        return (
-                          <>
-                            <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
-                              {t('common.button.edit')}
-                            </Button>
+                      if (contextPath === ContextPath.ADMIN) {
+                        if (sessionInfo.userId === row.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+                          return (
+                            <>
+                              <Button appearance="Unfilled" onClick={() => onUpdate && onUpdate(row.faqId)}>
+                                {t('common.button.edit')}
+                              </Button>
+                              <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
+                                {t('common.button.delete')}
+                              </Button>
+                            </>
+                          );
+                        } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+                          return (
                             <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
                               {t('common.button.delete')}
                             </Button>
-                          </>
-                        );
-                      } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
-                        return (
-                          <Button appearance="Unfilled" onClick={() => onDelete && onDelete(row.faqId)}>
-                            {t('common.button.delete')}
-                          </Button>
-                        );
+                          );
+                        }
                       }
                       return null;
                     })()}
