@@ -18,16 +18,16 @@ const Body = ({ onClick }: Props) => {
   const [content, setContent] = useState<any>();
 
   useEffect(() => {
-    let content = <Main />;
+    let newContent = <Main />;
     if (location.pathname === '/') {
-      content = <Home />;
+      newContent = <Home />;
     } else if (location.pathname === '/admin') {
-      content = <AdminHome />;
+      newContent = <AdminHome />;
     } else if (location.pathname === '/mypage' || location.pathname === '/admin/mypage') {
-      content = <MyPage />;
+      newContent = <MyPage />;
     }
 
-    setContent(content);
+    setContent(newContent);
   }, [location.pathname]);
 
   return (

@@ -17,6 +17,7 @@ import { SelectValue } from '@mui/base/useSelect';
 import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import React from 'react';
+import { AlignCode } from '@/models/common/Design';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -35,7 +36,7 @@ export interface VerticalTableProps {
   getFlag: (flag: string) => void;
   getData: (row: RowsInfo) => void;
 }
-const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
+const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
   columns = [],
   rows = [],
   onClick,
@@ -75,22 +76,21 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
 
   // 수집기준시간 변경 함수
   const timeStampChg = (rowIndex: number) => {
-    //부모에게 flag 전달(tbCoMetaTblClmnInfo.columnName)
-    getFlag(tbCoMetaTblClmnInfo.columnName);
+    //부모에게 flag 전달(tbCoMetaTblClmnInfo.metaTblClmnPhysNm)
+    getFlag(tbCoMetaTblClmnInfo.metaTblClmnPhysNm);
   };
 
   /* 데이터 타입 변경 여부 체크박스 */
   const changeYnHandler = useCallback(
     (rowIndex: number, field: string) => {
       // 체크 여부에 따라서
-
       setTbCoMetaTblClmnInfo((tbCoMetaTblClmnInfo) => {
         if (field === 'changeYn' && tbCoMetaTblClmnInfo.changeYn === 'Y') {
           return {
             ...tbCoMetaTblClmnInfo,
             changeYn: 'N',
             dataFormat: null,
-            chgDtpCd: null,
+            chgDtpCd: '',
           };
         } else if (field === 'changeYn') {
           return {
@@ -171,10 +171,9 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
     },
     [setTbCoMetaTblClmnInfo]
   );
-
   useEffect(() => {
     if (flag === '') return;
-    if (flag !== tbCoMetaTblClmnInfo.columnName) {
+    if (flag !== tbCoMetaTblClmnInfo.metaTblClmnPhysNm) {
       setTbCoMetaTblClmnInfo((tbCoMetaTblClmnInfo) => {
         // 선택한 라디오 버튼이 속한 행이면 변경
         if (tbCoMetaTblClmnInfo.baseTimeYn && tbCoMetaTblClmnInfo.baseTimeYn === 'Y')
@@ -212,12 +211,20 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
       });
     }
   }, [flag]);
-
   return (
     <>
       <TR key={`row-${rowIndex}`}>
+        {/* 번호 */}
+        <TD
+          key={`td-index-${rowIndex}`}
+          colSpan={columns[0].colSpan}
+          align={AlignCode.CENTER}
+          onClick={() => handleClick(tbCoMetaTblClmnInfo, rowIndex)}
+        >
+          {rowIndex + 1}
+        </TD>
         {/* Key 여부 */}
-        <TD colSpan={columns[0].colSpan} key={`td-pkYn-${rowIndex}`}>
+        <TD colSpan={columns[1].colSpan} key={`td-pkYn-${rowIndex}`}>
           <Checkbox
             key={`checkbox-pkYn-${rowIndex}`}
             onClick={() => ynChg(rowIndex, 'pkYn')}
@@ -227,7 +234,7 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
         </TD>
 
         {/* 사용 여부 */}
-        <TD colSpan={columns[1].colSpan} key={`td-clmnUseYn-${rowIndex}`}>
+        <TD colSpan={columns[2].colSpan} key={`td-clmnUseYn-${rowIndex}`}>
           <Checkbox
             key={`checkbox-clmnUseYn-${rowIndex}`}
             onClick={() => ynChg(rowIndex, 'clmnUseYn')}
@@ -237,29 +244,29 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
         </TD>
 
         {/* 수집 기준 시간 */}
-        <TD colSpan={columns[2].colSpan} key={`td-baseTimeYn-${rowIndex}`}>
+        <TD colSpan={columns[3].colSpan} key={`td-baseTimeYn-${rowIndex}`}>
           <Radio
             name="metaCustomerRadio"
             onChange={(e) => timeStampChg(rowIndex)}
-            checked={flag === tbCoMetaTblClmnInfo.columnName}
-            value={tbCoMetaTblClmnInfo.columnName}
+            checked={flag === tbCoMetaTblClmnInfo.metaTblClmnPhysNm || tbCoMetaTblClmnInfo.baseTimeYn === 'Y'}
+            value={tbCoMetaTblClmnInfo.metaTblClmnPhysNm}
             key={`radio-baseTimeYn-${rowIndex}`}
           />
         </TD>
 
         {/* 컬럼명 */}
-        <TD className="verticalTableTD" colSpan={columns[3].colSpan} key={`td-columnName-${rowIndex}`}>
-          <Typography variant="h5">{tbCoMetaTblClmnInfo.columnName}</Typography>
+        <TD className="verticalTableTD" colSpan={columns[4].colSpan} key={`td-metaTblClmnPhysNm-${rowIndex}`}>
+          <Typography variant="h5">{tbCoMetaTblClmnInfo.metaTblClmnPhysNm}</Typography>
         </TD>
 
         {/* 컬럼 논리명 */}
         <TD
           onClick={() => handleClick(tbCoMetaTblClmnInfo, rowIndex)}
-          colSpan={columns[4].colSpan}
+          colSpan={columns[5].colSpan}
           key={`td-metaTblClmnLogiNm-${rowIndex}`}
         >
           <TextField
-            key={`textField-metaTblClmnLogiNm-${rowIndex}`}
+            key={`textField-metaTblLogiNm-${rowIndex}`}
             onChange={(e) => onChangeHandler(e, 'metaTblClmnLogiNm')}
             value={tbCoMetaTblClmnInfo.metaTblClmnLogiNm}
           />
@@ -268,27 +275,30 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
         {/* 컬럼 설명 */}
         <TD
           onClick={() => handleClick(tbCoMetaTblClmnInfo, rowIndex)}
-          colSpan={columns[5].colSpan}
-          key={`td-metaTblClmnDesc-${rowIndex}`}
+          colSpan={columns[6].colSpan}
+          key={`td-metaTblDesc-${rowIndex}`}
         >
           <TextField
-            key={`textField-metaTblClmnDesc-${rowIndex}`}
-            // id="metaTblClmnDesc"
-            onChange={(e) => onChangeHandler(e, 'metaTblClmnDesc')}
-            value={tbCoMetaTblClmnInfo.metaTblClmnDesc}
+            key={`textField-metaTblDesc-${rowIndex}`}
+            onChange={(e) => onChangeHandler(e, 'metaTblDesc')}
+            value={tbCoMetaTblClmnInfo.metaTblDesc}
           />
         </TD>
 
         {/* 데이터 타입 */}
-        <TD className="verticalTableTD" colSpan={columns[6].colSpan} key={`td-dataType-${rowIndex}`}>
-          <Typography variant="h5">{tbCoMetaTblClmnInfo.dataType}</Typography>
+        <TD className="verticalTableTD" colSpan={columns[7].colSpan} key={`td-dtpCd-${rowIndex}`}>
+          <Typography variant="h5">{tbCoMetaTblClmnInfo.dtpCd}</Typography>
         </TD>
 
         {/* 변경 여부 */}
-        <TD colSpan={columns[7].colSpan} key={`td-changeYn-${rowIndex}`}>
+        <TD className="verticalTableTD" colSpan={columns[8].colSpan} key={`td-changeYn-${rowIndex}`}>
           <Checkbox
             key={`checkbox-changeYn-${rowIndex}`}
-            checked={tbCoMetaTblClmnInfo.changeYn === 'Y'}
+            checked={
+              tbCoMetaTblClmnInfo.changeYn === 'Y' ||
+              tbCoMetaTblClmnInfo.baseTimeYn === 'Y' ||
+              tbCoMetaTblClmnInfo.chgDtpCd !== (null || '')
+            }
             disabled={tbCoMetaTblClmnInfo.baseTimeYn === 'Y'}
             value={tbCoMetaTblClmnInfo.changeYn}
             onClick={() => changeYnHandler(rowIndex, 'changeYn')}
@@ -296,7 +306,7 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
         </TD>
 
         {/* 변경 데이터 타입 */}
-        <TD colSpan={columns[8].colSpan} key={`td-chgDtpCd-${rowIndex}`}>
+        <TD className="verticalTableTD" colSpan={columns[9].colSpan} key={`td-chgDtpCd-${rowIndex}`}>
           {/* 변경여부가 Y이면서 수집기준시간이 Y가 아닌 경우 Select*/}
           {tbCoMetaTblClmnInfo.changeYn === 'Y' && tbCoMetaTblClmnInfo.baseTimeYn !== 'Y' ? (
             <Select
@@ -304,7 +314,6 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
               appearance="Outline"
               placeholder="전체"
               style={{ maxWidth: '80px' }}
-              className="width-100"
               onChange={(e, value) => value && onchangeSelectHandler(e, value, 'chgDtpCd', rowIndex)}
             >
               <SelectOption value={'timestamp'}>timestamp</SelectOption>
@@ -317,7 +326,7 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
         </TD>
 
         {/* 변경 데이터 형식 */}
-        <TD colSpan={columns[9].colSpan} key={`td-timestamp-${rowIndex}`}>
+        <TD className="verticalTableTD" colSpan={columns[10].colSpan} key={`td-dataFormat-${rowIndex}`}>
           {tbCoMetaTblClmnInfo.changeYn === 'Y' &&
           tbCoMetaTblClmnInfo.chgDtpCd === 'timestamp' &&
           tbCoMetaTblClmnInfo.baseTimeYn !== 'Y' ? (
@@ -334,11 +343,11 @@ const CstmrMetaColumnList: React.FC<VerticalTableProps> = ({
               ))}
             </Select>
           ) : (
-            <Typography variant="h5"></Typography>
+            <Typography variant="h5">{tbCoMetaTblClmnInfo.dataFormat}</Typography>
           )}
         </TD>
       </TR>
     </>
   );
 };
-export default React.memo(CstmrMetaColumnList);
+export default React.memo(CstmrMetaColumnListEdit);

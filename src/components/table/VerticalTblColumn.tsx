@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
-import CstmrMetaColumnList from '../self-feature-adm/CstmrMetaColumnList';
+import CstmrMetaColumnListPost from '../self-feature-adm/CstmrMetaColumnListPost';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -240,7 +240,6 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
                   key={`header-${index}`}
                   required={column.require}
                   colSpan={column.colSpan ? column.colSpan : undefined}
-                  // enableSort={column.field.length > 0 && enableSort}
                   onChangeSortDirection={(order = SortDirectionCode.ASC) => handleChangeSortDirection(order, index)}
                 >
                   {column.headerName}
@@ -252,7 +251,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         {tbCoMetaTblClmnInfoList?.length > 0 ? (
           <TBody clickable={clickable}>
             {tbCoMetaTblClmnInfoList.map((row, rowIndex) => (
-              <CstmrMetaColumnList
+              <CstmrMetaColumnListPost
                 columns={columns}
                 rows={row}
                 rowIndex={rowIndex}

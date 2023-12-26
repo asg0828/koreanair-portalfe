@@ -161,18 +161,12 @@ export const callAuthenticationApi = async (oauthApiRequest: OAuthApiRequest): P
   const isAccessTokenRefreshToken = oauthApiRequest.config?.isAccessTokenRefreshToken || false;
   const isAccessToken = oauthApiRequest.config?.isAccessToken || false;
   const isLogout = oauthApiRequest.config?.isLogout || false;
-  let response: CommonResponse = {
-    successOrNot: 'N',
-    statusCode: StatusCode.UNKNOWN_ERROR,
-    data: {},
-  };
 
   switch (oauthApiRequest.method) {
     case OAuthMethod.GET:
-      response = await getInstance(oauthApiRequest.service, isLoading, {}, isOAuth, isAccessTokenRefreshToken).get(url);
-      break;
+      return await getInstance(oauthApiRequest.service, isLoading, {}, isOAuth, isAccessTokenRefreshToken).get(url);
     case OAuthMethod.POST:
-      response = await getInstance(
+      return await getInstance(
         oauthApiRequest.service,
         isLoading,
         {},
@@ -181,9 +175,7 @@ export const callAuthenticationApi = async (oauthApiRequest: OAuthApiRequest): P
         isAccessToken,
         isLogout
       ).post(url, oauthApiRequest.params?.bodyParams);
-      break;
     default:
       throw Error('Not Supported Method');
   }
-  return response;
 };

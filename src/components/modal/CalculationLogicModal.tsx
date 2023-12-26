@@ -33,8 +33,8 @@ const CalculationLogicModal = ({
     autoClose && handleClose();
   };
 
-  const handleChange = (value: string) => {
-    setValue(value);
+  const handleChange = (nValue: string) => {
+    setValue(nValue);
   };
 
   const handleInputTab = (e: any) => {

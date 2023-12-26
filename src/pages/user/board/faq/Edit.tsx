@@ -19,7 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-const Reg = () => {
+const Edit = () => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -253,4 +253,4 @@ const Reg = () => {
     </form>
   );
 };
-export default Reg;
+export default Edit;

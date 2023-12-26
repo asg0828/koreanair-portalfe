@@ -74,36 +74,36 @@ const List = () => {
     }));
   };
 
-  const handleDeleteFaqId = (faqId: string) => {
-    setDFaqId(faqId);
+  const handleDeleteFaqId = (nFaqId: string) => {
+    setDFaqId(nFaqId);
   };
 
-  const goToEdit = (faqId: string) => {
+  const goToEdit = (nFaqId: string) => {
     navigate('./edit', {
       state: {
-        faqId: faqId,
+        faqId: nFaqId,
         params: params,
       },
     });
   };
 
-  const handleDelete = (faqId: string) => {
+  const handleDelete = (nFaqId: string) => {
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.delete'),
         content: t('common.modal.message.deleteConfirm'),
-        onConfirm: () => handleDeleteFaqId(faqId),
+        onConfirm: () => handleDeleteFaqId(nFaqId),
       })
     );
   };
 
-  const handlePage = (page: PageModel) => {
-    setPage(page);
+  const handlePage = (nPage: PageModel) => {
+    setPage(nPage);
   };
 
-  const handleClick = (faqId: string) => {
-    setFaqId(faqId);
+  const handleClick = (nFaqId: string) => {
+    setFaqId(nFaqId);
   };
 
   useDidMountEffect(() => {

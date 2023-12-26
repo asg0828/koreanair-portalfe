@@ -99,34 +99,34 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
         const sessionResponse: CommonResponse = await sessionApis.login(sessionRequestInfo);
 
         if (sessionResponse.successOrNot === 'Y') {
-          const sessionInfo: SessionInfo = sessionResponse.data as SessionInfo;
-          sessionUtil.setSessionInfo(sessionInfo);
+          const nSessionInfo: SessionInfo = sessionResponse.data as SessionInfo;
+          sessionUtil.setSessionInfo(nSessionInfo);
 
           let baseMenuList: Array<any> = [];
           let myMenuList: Array<any> = [];
           let routerFileName;
 
           if (contextPath === ContextPath.ADMIN) {
-            if (!sessionInfo.apldMgrAuthId) {
+            if (!nSessionInfo.apldMgrAuthId) {
               setUnauthorized(true);
               return;
             }
             baseMenuList = adminMenulist;
-            myMenuList = sessionInfo.menuByAuthMgr?.menus || [];
+            myMenuList = nSessionInfo.menuByAuthMgr?.menus || [];
             routerFileName = 'adminRouter';
           } else if (contextPath === ContextPath.POPUP) {
-            if (!sessionInfo.apldUserAuthId) {
+            if (!nSessionInfo.apldUserAuthId) {
               setUnauthorized(true);
               return;
             }
             transferLocalStorage();
           } else {
-            if (!sessionInfo.apldUserAuthId) {
+            if (!nSessionInfo.apldUserAuthId) {
               setUnauthorized(true);
               return;
             }
             baseMenuList = userMenuList;
-            myMenuList = sessionInfo.menuByAuthUser?.menus || [];
+            myMenuList = nSessionInfo.menuByAuthUser?.menus || [];
             routerFileName = 'userRouter';
           }
 
@@ -171,7 +171,7 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
           // 메뉴 순서대로 정렬
           sortChildrenRecursive(hierarchyMenuList);
 
-          const router = [
+          const nRouter = [
             {
               path: contextPath,
               loader: useMainLoader,
@@ -181,10 +181,10 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
             },
           ];
 
-          dispatch(login(sessionInfo));
+          dispatch(login(nSessionInfo));
           dispatch(setBaseMenuList(baseMenuList));
           dispatch(setMenuList(hierarchyMenuList));
-          setRouter(createBrowserRouter(router));
+          setRouter(createBrowserRouter(nRouter));
         } else {
           setIsError(true);
         }

@@ -1,17 +1,15 @@
 import {
   AccessTokenRefrehTokenEnum,
   AccessTokenRefreshTokenInfo,
-  SessionRequestTokenEnum,
-  SessionRequest,
   Session,
   SessionInfo,
+  SessionRequest,
+  SessionRequestTokenEnum,
 } from '@models/common/Session';
 
 export default class SessionUtil {
   public getSessionInfo = (): SessionInfo => {
-    let sessionInfo: SessionInfo = {} as SessionInfo;
-
-    sessionInfo = {
+    return {
       sessionId: this.getSessionStorageValue(Session.SESSION_ID),
       apldMgrAuthId: this.getSessionStorageValue('apldMgrAuthId'),
       apldMgrAuthNm: this.getSessionStorageValue('apldMgrAuthNm'),
@@ -23,20 +21,14 @@ export default class SessionUtil {
       userId: this.getSessionStorageValue('userId'),
       userNm: this.getSessionStorageValue('userNm'),
     };
-
-    return sessionInfo;
   };
 
   public getAccessTokenRefreshTokenInfo = (): AccessTokenRefreshTokenInfo => {
-    let accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo = {} as AccessTokenRefreshTokenInfo;
-
-    accessTokenRefreshTokenInfo = {
+    return {
       refreshToken: this.getSessionStorageValue(AccessTokenRefrehTokenEnum.REFRESH_TOKEN),
       accessToken: this.getSessionStorageValue(AccessTokenRefrehTokenEnum.ACCESS_TOKEN),
       clientName: this.getSessionStorageValue(AccessTokenRefrehTokenEnum.CLIENT_NAME),
     };
-
-    return accessTokenRefreshTokenInfo;
   };
 
   public setSessionInfo = (sessionInfo: SessionInfo): void => {
@@ -52,25 +44,17 @@ export default class SessionUtil {
   };
 
   public getSessionRequestInfo = (): SessionRequest => {
-    let sessionRequestInfo: SessionRequest = {} as SessionRequest;
-
-    sessionRequestInfo = {
+    return {
       googleAccessToken: this.getSessionStorageValue(SessionRequestTokenEnum.GOOGLE_ACCESS_TOKEN),
       googleIdToken: this.getSessionStorageValue(SessionRequestTokenEnum.GOOGLE_ID_TOKEN),
     };
-
-    return sessionRequestInfo;
   };
 
   public getLocalSessionRequestInfo = (): SessionRequest => {
-    let sessionRequestInfo: SessionRequest = {} as SessionRequest;
-
-    sessionRequestInfo = {
+    return {
       googleAccessToken: this.getLocalStorageValue(SessionRequestTokenEnum.GOOGLE_ACCESS_TOKEN),
       googleIdToken: this.getLocalStorageValue(SessionRequestTokenEnum.GOOGLE_ID_TOKEN),
     };
-
-    return sessionRequestInfo;
   };
 
   public setSessionRequestInfo = (sessionRequestInfo: SessionRequest): void => {
@@ -148,34 +132,26 @@ export default class SessionUtil {
 
   /* localStorage */
   public getLocalAccessTokenRefreshTokenInfo = (): AccessTokenRefreshTokenInfo => {
-    let accessTokenRefreshTokenInfo: AccessTokenRefreshTokenInfo = {} as AccessTokenRefreshTokenInfo;
-
-    accessTokenRefreshTokenInfo = {
+    return {
       refreshToken: this.getLocalStorageValue(AccessTokenRefrehTokenEnum.REFRESH_TOKEN),
       accessToken: this.getLocalStorageValue(AccessTokenRefrehTokenEnum.ACCESS_TOKEN),
       clientName: this.getLocalStorageValue(AccessTokenRefrehTokenEnum.CLIENT_NAME),
     };
-
-    return accessTokenRefreshTokenInfo;
   };
 
   public getLocalSessionInfo = (): SessionInfo => {
-    let sessionInfo: SessionInfo = {} as SessionInfo;
-
-    sessionInfo = {
-      sessionId: this.getSessionStorageValue(Session.SESSION_ID),
-      apldMgrAuthId: this.getSessionStorageValue('apldMgrAuthId'),
-      apldMgrAuthNm: this.getSessionStorageValue('apldMgrAuthNm'),
-      apldUserAuthId: this.getSessionStorageValue('apldUserAuthId'),
-      apldUserAuthNm: this.getSessionStorageValue('apldUserAuthNm'),
-      deptCode: this.getSessionStorageValue('deptCode'),
-      deptNm: this.getSessionStorageValue('deptNm'),
-      userEmail: this.getSessionStorageValue('userEmail'),
-      userId: this.getSessionStorageValue('userId'),
-      userNm: this.getSessionStorageValue('userNm'),
+    return {
+      sessionId: this.getLocalStorageValue(Session.SESSION_ID),
+      apldMgrAuthId: this.getLocalStorageValue('apldMgrAuthId'),
+      apldMgrAuthNm: this.getLocalStorageValue('apldMgrAuthNm'),
+      apldUserAuthId: this.getLocalStorageValue('apldUserAuthId'),
+      apldUserAuthNm: this.getLocalStorageValue('apldUserAuthNm'),
+      deptCode: this.getLocalStorageValue('deptCode'),
+      deptNm: this.getLocalStorageValue('deptNm'),
+      userEmail: this.getLocalStorageValue('userEmail'),
+      userId: this.getLocalStorageValue('userId'),
+      userNm: this.getLocalStorageValue('userNm'),
     };
-
-    return sessionInfo;
   };
 
   public getRefreshLocalToken = (): string => {

@@ -3,7 +3,7 @@ import ErrorAppBoundary from '@/components/error/ErrorAppBoundary';
 import ErrorPage from '@/components/error/ErrorPage';
 import Unauthorized from '@/components/error/Unauthorized';
 import Fallback from '@/components/fallback/Fallback';
-import ModalContainer from '@/components/modal/ModalContainter';
+import ModalContainer from '@/components/modal/ModalContainer';
 import useAuth from '@/hooks/useAuth';
 import useOAuth from '@/hooks/useOAuth';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';

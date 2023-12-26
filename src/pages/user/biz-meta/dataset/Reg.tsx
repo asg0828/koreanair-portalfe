@@ -54,7 +54,7 @@ const Reg = () => {
       columnSpecs: [{ ...initRows }],
     },
   });
-  const { fields, append, remove, update } = useFieldArray({
+  const { fields, update } = useFieldArray({
     control,
     name: 'columnSpecs',
   });

@@ -78,8 +78,8 @@ const List = () => {
     setParams(initParams);
   };
 
-  const handlePage = (page: PageModel) => {
-    setPage(page);
+  const handlePage = (nPage: PageModel) => {
+    setPage(nPage);
   };
 
   const handleChangeParams = (name: string, value: any) => {

@@ -24,11 +24,11 @@ export default class SessionApis {
 
   public oauthLogin() {
     const apiUrl = process.env.REACT_APP_API_URL ? JSON.parse(process.env.REACT_APP_API_URL) : {};
-    const PortalApiURL: string = apiUrl['APIGEE_BE'] || '';
+    const apigeeApiURL: string = apiUrl['APIGEE_BE'] || '';
     const redirectUri: string = encodeURIComponent(process.env.REACT_APP_AUTHORIZATION_REDIRECT_URL || '');
     const clientId = process.env.REACT_APP_CLIENT_ID || '';
 
-    const googleOAuthUrl = PortalApiURL + `/oauth2/v1/auth?redirect_uri=${redirectUri}&client_id=${clientId}`;
+    const googleOAuthUrl = apigeeApiURL + `/oauth2/v1/auth?redirect_uri=${redirectUri}&client_id=${clientId}`;
 
     fetch(googleOAuthUrl, {
       redirect: 'manual',
@@ -54,13 +54,7 @@ export default class SessionApis {
       encodeURIComponent(`${redirectUri}`);
     const sessionUtil = new SessionUtil();
 
-    let accessTokenRefreshTokenResponse: CommonResponse = {
-      successOrNot: 'N',
-      statusCode: 'N',
-      data: {},
-    };
-
-    accessTokenRefreshTokenResponse = await callAuthenticationApi({
+    const accessTokenRefreshTokenResponse = await callAuthenticationApi({
       service: Service.APIGEE_AUTH,
       url: '/oauth2/v1/token',
       method: OAuthMethod.POST,
@@ -116,13 +110,8 @@ export default class SessionApis {
   public revokeToken = async (isLoading = true, isLogout = true) => {
     const sessionUtil = new SessionUtil();
     const logoutParameter = `client_id=${process.env.REACT_APP_CLIENT_ID || ''}&grant_type=revoke_token`;
-    let logoutResponse: CommonResponse = {
-      successOrNot: 'N',
-      statusCode: 'N',
-      data: {},
-    };
 
-    logoutResponse = await callAuthenticationApi({
+    const logoutResponse = await callAuthenticationApi({
       service: Service.APIGEE_AUTH,
       url: '/oauth2/v1/revoketoken',
       method: OAuthMethod.POST,

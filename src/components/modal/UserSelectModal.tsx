@@ -46,8 +46,8 @@ const UserSelectModal = ({
   const [prevCheckedList, setPrevCheckedList] = useState<Array<UserModel>>([]);
   const [nextRows, setNextRows] = useState<Array<UserModel>>([]);
   const [nextCheckedList, setNextCheckedList] = useState<Array<UserModel>>([]);
-  const { data: response, isError, refetch } = useDeptAllList();
-  const { data: uResponse, isError: uIsError, refetch: uRefetch } = useUserAllList();
+  const { data: response, isError } = useDeptAllList();
+  const { data: uResponse, isError: uIsError } = useUserAllList();
 
   const columns = [
     { headerName: t('management:label.userNm'), field: 'userNm', colSpan: 4 },

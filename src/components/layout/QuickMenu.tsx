@@ -2,11 +2,11 @@ import { useAppSelector } from '@/hooks/useRedux';
 import { selectQuickMenuList } from '@/reducers/menuSlice';
 import { Stack, Typography } from '@components/ui';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import './QuickMenu.scss';
-import { useTranslation } from 'react-i18next';
 
-const QuickLink = () => {
+const QuickMenu = () => {
   const { t } = useTranslation();
   const quickMenuList = useAppSelector(selectQuickMenuList());
   const [isToggleOpen, setIsToggleOpen] = useState('open');
@@ -42,4 +42,4 @@ const QuickLink = () => {
     </aside>
   );
 };
-export default QuickLink;
+export default QuickMenu;

@@ -69,7 +69,7 @@ const Reg = () => {
   const [featureAllKey, setFeatureAllKey] = useState<FeatureKeyType>('featureKoNm');
   const [duplicationError, setDuplicationError] = useState<any>(initFeatureAllParams);
   const { data: response, mutate, isSuccess, isError } = useCreateFeature(values);
-  const { data: tResponse, isError: tIsError, refetch: tRefetch } = useFeatureTypList();
+  const { data: tResponse, isError: tIsError } = useFeatureTypList();
   const { refetch: sRefetch, data: sResponse, isError: sIsError } = useFeatureSeList(values.featureSeGrp);
   const {
     data: faResponse,
