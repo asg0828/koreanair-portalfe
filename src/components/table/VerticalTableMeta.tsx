@@ -1,36 +1,17 @@
 import NoResult from '@/components/emptyState/NoData';
 import { useUpdateMetaTable } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
-import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalType, View } from '@/models/common/Constants';
-import { AlignCode, CheckedState, SortDirection, SortDirectionCode } from '@/models/common/Design';
-import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
-import { openModal } from '@/reducers/modalSlice';
-import '@components/table/VerticalTable.scss';
-import {
-  Button,
-  Modal,
-  Checkbox,
-  Radio,
-  TBody,
-  TD,
-  TH,
-  THead,
-  TR,
-  Table,
-  TextField,
-  Typography,
-  Stack,
-  Select,
-  SelectOption,
-  useToast,
-} from '@components/ui';
-import React, { ReactNode, useEffect, useState } from 'react';
-import { SelectValue } from '@mui/base/useSelect';
-import { useNavigate } from 'react-router-dom';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
+import { useAppDispatch } from '@/hooks/useRedux';
+import { ModalType } from '@/models/common/Constants';
+import { SortDirection, SortDirectionCode } from '@/models/common/Design';
+import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
+import { openModal } from '@/reducers/modalSlice';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
-import CstmrMetaColumnList from '../self-feature-adm/CstmrMetaColumnListPost';
+import '@components/table/VerticalTable.scss';
+import { Button, Modal, Stack, TBody, TH, THead, TR, Table, useToast } from '@components/ui';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CstmrMetaColumnListEdit from '../self-feature-adm/CstmrMetaColumnListEdit';
 
 export interface VerticalTableProps {
@@ -245,9 +226,9 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
         checkValidation = '사용여부가 Y인 것중 Key 여부를 하나 선택해주세요';
       else if (!colList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.baseTimeYn === 'Y'))
         checkValidation = '사용여부가 Y인 것중 수집 기준 시간 여부를 하나 선택해주세요';
-      else if (colList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.metaTblClmnLogiNm === '')) {
+      else if (colList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.metaTblClmnLogiNm === ''))
         checkValidation = '사용여부가 Y인 경우 논리명을 입력해주세요';
-      } else if (colList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ('' || 'null' || null)))
+      else if (colList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ('' || 'null' || null)))
         checkValidation = '변경 데이터 타입을 입력해주세요.';
       else if (
         colList

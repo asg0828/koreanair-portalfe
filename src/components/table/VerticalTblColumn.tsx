@@ -1,18 +1,18 @@
 import NoResult from '@/components/emptyState/NoData';
 import { useCreateMetaTableInfo } from '@/hooks/mutations/self-feature/useSelfFeatureAdmMutations';
+import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType } from '@/models/common/Constants';
 import { SortDirection, SortDirectionCode } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
+import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { openModal } from '@/reducers/modalSlice';
-import { cloneDeep } from 'lodash';
+import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import '@components/table/VerticalTable.scss';
-import { Button, Modal, TBody, TH, THead, TR, Table, Stack, useToast } from '@components/ui';
+import { Button, Modal, Stack, TBody, TH, THead, TR, Table, useToast } from '@components/ui';
+import { cloneDeep } from 'lodash';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
-import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
-import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import CstmrMetaColumnListPost from '../self-feature-adm/CstmrMetaColumnListPost';
 
 export interface VerticalTableProps {
@@ -187,15 +187,14 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
       else if (validationTool(props.metaTblDvCd)) checkValidation = '메타테이블구분을 입력해주세요';
       else if (validationTool(props.metaTblUseYn)) checkValidation = '사용여부을 입력해주세요';
       else if (validationTool(props.rtmTblYn)) checkValidation = '실시간여부을 입력해주세요';
-      /* 컬럼 validation */ else if (!colList.find((e) => e.clmnUseYn === 'Y'))
-        checkValidation = '사용여부가 1개이상 체크되어야 합니다.';
+      else if (!colList.find((e) => e.clmnUseYn === 'Y')) checkValidation = '사용여부가 1개이상 체크되어야 합니다.';
       else if (!colList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.pkYn === 'Y'))
         checkValidation = '사용여부가 Y인 것중 Key 여부를 하나 선택해주세요';
       else if (!colList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.baseTimeYn === 'Y'))
         checkValidation = '사용여부가 Y인 것중 수집 기준 시간 여부를 하나 선택해주세요';
-      else if (colList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.metaTblClmnLogiNm === '')) {
+      else if (colList.filter((e) => e.clmnUseYn === 'Y').find((e) => e.metaTblClmnLogiNm === ''))
         checkValidation = '사용여부가 Y인 경우 논리명을 입력해주세요';
-      } else if (colList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ('' || 'null' || null)))
+      else if (colList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ('' || 'null' || null)))
         checkValidation = '변경 데이터 타입을 입력해주세요.';
       else if (
         colList
