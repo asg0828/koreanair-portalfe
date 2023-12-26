@@ -5,7 +5,6 @@ import DataGrid from '@components/grid/DataGrid';
 import { Button, Stack, TD, TH, TR, useToast } from '@components/ui';
 import { ValidType } from '@models/common/Constants';
 import { ColumnsInfo } from '@models/components/Table';
-import { PageModel, initPage } from '@models/model/PageModel';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
@@ -45,7 +44,7 @@ const List = () => {
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
   const { data: response, isError, refetch } = useTotalMileageTop100List(criteria);
 
-  const createPeriodButton = (period: any, text: string, handlePeriodSelect: any) => {
+  const createPeriodButton = (period: any, text: string, periodSelect: any) => {
     const isSelected = period === criteria;
 
     const buttonStyle = isSelected
@@ -58,7 +57,7 @@ const List = () => {
         appearance="Contained"
         size="LG"
         style={buttonStyle}
-        onClick={() => handlePeriodSelect(period)}
+        onClick={() => periodSelect(period)}
       >
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <span style={{ fontWeight: 'bold', marginBottom: '-5px' }}>{text}</span>
