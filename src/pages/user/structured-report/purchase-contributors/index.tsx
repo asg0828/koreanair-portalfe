@@ -48,7 +48,7 @@ const List = () => {
     setShowPopup(!showPopup);
   };
 
-  const createPeriodButton = (period: any, text: string, handlePeriodSelect: any) => {
+  const createPeriodButton = (period: any, text: string, periodSelect: any) => {
     const isSelected = period === criteria;
 
     const buttonStyle = isSelected
@@ -61,7 +61,7 @@ const List = () => {
         appearance="Contained"
         size="LG"
         style={buttonStyle}
-        onClick={() => handlePeriodSelect(period)}
+        onClick={() => periodSelect(period)}
       >
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <span style={{ fontWeight: 'bold', marginBottom: '-5px' }}>{text}</span>
@@ -128,14 +128,14 @@ const List = () => {
     }
   };
 
-  const sortRows = (rows: Array<any>, sortedColumn: string, sortedDirection: SortDirection) => {
-    const aValue = sortedDirection === 'asc' ? 1 : -1;
-    return rows.sort(
-      (a: any, b: any) =>
-        aValue *
-        (typeof a[sortedColumn] === 'string'
-          ? a[sortedColumn].localeCompare(b[sortedColumn])
-          : a[sortedColumn] - b[sortedColumn])
+  const sortRows = (row: Array<any>, sortColumn: string, sortDirection: SortDirection) => {
+    const aValue = sortDirection === 'asc' ? 1 : -1;
+    return row.sort(
+        (a: any, b: any) =>
+            aValue *
+            (typeof a[sortColumn] === 'string'
+                ? a[sortColumn].localeCompare(b[sortColumn])
+                : a[sortColumn] - b[sortColumn])
     );
   };
 

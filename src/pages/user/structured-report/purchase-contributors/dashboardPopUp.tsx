@@ -2,7 +2,6 @@ import { FamilyMember, Skypass } from '@/models/model/CustomerInfoModel';
 import { Stack, Typography, SelectOption, Select, Button, Modal } from '@ke-design/components';
 import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import { familyMemberData, skypassData2 } from '../../customer-info/dashboard/data';
 
@@ -32,7 +31,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
   const onchangeSelectHandler = (
     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
     value: SelectValue<{}, false>,
-    id?: String
+    id?: string
   ) => {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
     if (value === '112315856573') {

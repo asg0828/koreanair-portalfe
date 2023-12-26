@@ -30,7 +30,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
   const onchangeSelectHandler = (
     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
     value: SelectValue<{}, false>,
-    id?: String
+    id?: string
   ) => {
     setSearchInfo({ ...searchInfo, [`${id}`]: value });
     if (value === '112423935550') {

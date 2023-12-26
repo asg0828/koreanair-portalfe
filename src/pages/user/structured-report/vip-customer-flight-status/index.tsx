@@ -49,8 +49,8 @@ const List = () => {
     setShowPopup(!showPopup);
   };
 
-  const handlePage = (page: PageModel) => {
-    setPage(page);
+  const handlePage = (pageInfo: PageModel) => {
+    setPage(pageInfo);
   };
 
   const handleSearch = useCallback(() => {
