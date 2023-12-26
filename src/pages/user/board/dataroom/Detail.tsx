@@ -6,10 +6,10 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ModalType, ValidType } from '@/models/common/Constants';
+import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { DataroomModel, DataroomParams } from '@/models/model/DataroomModel';
 import { FileModel } from '@/models/model/FileModel';
-import { selectSessionInfo } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -23,6 +23,7 @@ const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
   const dataId: string = location?.state?.dataId || '';
@@ -186,23 +187,25 @@ const Detail = () => {
 
       <Stack gap="SM" justifyContent="End">
         {(() => {
-          if (sessionInfo.userId === dataroomModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
-            return (
-              <>
-                <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-                  {t('common.button.edit')}
-                </Button>
+          if (contextPath === ContextPath.ADMIN) {
+            if (sessionInfo.userId === dataroomModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+              return (
+                <>
+                  <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+                    {t('common.button.edit')}
+                  </Button>
+                  <Button priority="Normal" size="LG" onClick={handleDelete}>
+                    {t('common.button.delete')}
+                  </Button>
+                </>
+              );
+            } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+              return (
                 <Button priority="Normal" size="LG" onClick={handleDelete}>
                   {t('common.button.delete')}
                 </Button>
-              </>
-            );
-          } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
-            return (
-              <Button priority="Normal" size="LG" onClick={handleDelete}>
-                {t('common.button.delete')}
-              </Button>
-            );
+              );
+            }
           }
           return null;
         })()}

@@ -74,6 +74,7 @@ const Edit = () => {
   const onSubmit = (data: UpdatedFaqModel) => {
     dispatch(
       openModal({
+        type: ModalType.CONFIRM,
         title: t('common.modal.title.create'),
         content: t('common.modal.message.createConfirm'),
         onConfirm: mutate,
