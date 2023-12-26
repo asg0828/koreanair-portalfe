@@ -151,8 +151,14 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       };
       // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
-        // APIGEE 응답 errorCode
-        if (error.response.status.toString() === '403') {
+        if (error.response.status.toString() === '401') {
+          //INVALID_GOOGLE_ID_TOKEN
+          if (error.response.data.message === 'INVALID_GOOGLE_ID_TOKEN') {
+            sessionUtil.deleteSessionInfo();
+            window.location.reload();
+          }
+          // APIGEE 응답 errorCode
+        } else if (error.response.status.toString() === '403') {
           if (error.response.data.errorCode.toString() === '301') {
             return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
               const originalRequest = error.config;
