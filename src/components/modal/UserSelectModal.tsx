@@ -1,5 +1,5 @@
 import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
-import DataTree from '@/components/Tree/DataTree';
+import DataTree from '@/components/tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useUserAllList } from '@/hooks/queries/useUserQueries';
 import { useAppDispatch } from '@/hooks/useRedux';

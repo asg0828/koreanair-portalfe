@@ -1,4 +1,4 @@
-import DataTree from '@/components/Tree/DataTree';
+import DataTree from '@/components/tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ValidType } from '@/models/common/Constants';
