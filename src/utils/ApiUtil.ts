@@ -152,28 +152,23 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
         // APIGEE 응답 errorCode
-        const errorCode = error.response?.data?.errorCode?.toString();
-
-        if (errorCode) {
-          return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
-            const originalRequest = error.config;
-            originalRequest.headers['authorization'] = `Bearer ${
-              JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
-            }`;
-            return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
-              return retryResponse.data as CommonResponse;
+        if (error.response.status.toString() === '403') {
+          if (error.response.data.errorCode.toString() === '301') {
+            return sessionApis.accessTokenRequest().then((newAccessTokenResponse) => {
+              const originalRequest = error.config;
+              originalRequest.headers['authorization'] = `Bearer ${
+                JSON.parse(newAccessTokenResponse.data as string).data.access_token as string
+              }`;
+              return axios.request(originalRequest as AxiosRequestConfig).then((retryResponse) => {
+                return retryResponse.data as CommonResponse;
+              });
             });
-          });
-        } else if (error.response.status.toString() === '401') {
-          //INVALID_GOOGLE_ID_TOKEN
-          if (error.response.data.message === 'INVALID_GOOGLE_ID_TOKEN') {
-            sessionUtil.deleteSessionInfo();
-            window.location.reload();
-          }
-        } else if (error.response.status.toString() === '403') {
-          // 포탈 세션 만료
-          if (error.response.data.message === 'SESSION_EXPIRE') {
+            // 포탈 세션 만료
+          } else if (error.response.data.message === 'SESSION_EXPIRE') {
             sessionStorage.removeItem('sessionId');
+            window.location.reload();
+          } else {
+            sessionUtil.deleteSessionInfo();
             window.location.reload();
           }
         }
