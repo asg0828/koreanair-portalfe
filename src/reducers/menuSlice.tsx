@@ -7,6 +7,7 @@ export interface MenuState {
   baseMenuList: Array<any>;
   menuList: Array<HierarchyInfo>;
   quickMenuList: Array<any>;
+  cLevelModal: boolean;
 }
 
 const initialState: MenuState = {
@@ -14,6 +15,7 @@ const initialState: MenuState = {
   baseMenuList: [],
   menuList: [],
   quickMenuList: [],
+  cLevelModal: false,
 };
 
 const menuSlice = createSlice({
@@ -32,10 +34,13 @@ const menuSlice = createSlice({
     setQuickMenuList(state: MenuState, action) {
       state.quickMenuList = action.payload;
     },
+    setCLevelModal(state: MenuState, action) {
+      state.cLevelModal = action.payload;
+    },
   },
 });
 
-export const { setIsDropMenu, setBaseMenuList, setMenuList, setQuickMenuList } = menuSlice.actions;
+export const { setIsDropMenu, setBaseMenuList, setMenuList, setQuickMenuList, setCLevelModal } = menuSlice.actions;
 
 export const selectMenuState = (state: RootState) => state.menu;
 
@@ -47,4 +52,5 @@ export const selectMenuList = () => createSelector([selectMenuState], (menu) => 
 
 export const selectQuickMenuList = () => createSelector([selectMenuState], (menu) => menu.quickMenuList);
 
+export const selectCLevelModal = () => createSelector([selectMenuState], (menu) => menu.cLevelModal);
 export default menuSlice.reducer;
