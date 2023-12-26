@@ -39,6 +39,8 @@ import {
   Sns,
   Email,
 } from '@/models/model/CustomerInfoModel';
+import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 
 export default function List() {
   const today = new Date();
@@ -176,6 +178,7 @@ export default function List() {
     const bodyElement: HTMLElement | null = document.getElementById('body');
     if (bodyElement) {
       bodyElement.style.backgroundColor = '#f8f9fc';
+
       return () => {
         bodyElement.style.backgroundColor = '';
       };
@@ -250,19 +253,23 @@ export default function List() {
     }
   }, [response, isError, toast]);
 
-  const [cLevelModalOpen, setcLevelModalOpen] = useState(false);
+  {
+    /* CLevel 모달 */
+  }
+  const dispatch = useAppDispatch();
+  const cLevelModal = useAppSelector(selectCLevelModal());
   const toggleDropMenu = (e: React.MouseEvent<Element>) => {
-    e.stopPropagation(); // 이벤트 캡쳐링 방지
-    setcLevelModalOpen((prevState) => !prevState);
+    e.stopPropagation();
+    dispatch(setCLevelModal(!cLevelModal));
   };
+  {
+    /* CLevel 모달 */
+  }
 
   return (
     <Stack
-      onClick={(e: React.MouseEvent<HTMLElement>) => {
-        const { id } = e.target as HTMLElement;
-        console.log(id);
-        // if (id.slice(0, -1) !== 'skypassSearch' || id !== 'searchBar') setcLevelModalOpen(false);
-        if (id === '') setcLevelModalOpen(false);
+      onClick={() => {
+        dispatch(setCLevelModal(false));
       }}
       direction="Vertical"
       justifyContent="Start"
@@ -1138,17 +1145,20 @@ export default function List() {
             </div>
           </Stack>
 
-          <div id="skypassSearch" className={'c_level_right_modal_wrap ' + (cLevelModalOpen ? 'panel_opened' : '')}>
-            <Stack id="skypassSearch0">
-              <div id="skypassSearch1" className="right_modal_btn_wrap" onClick={(e) => toggleDropMenu(e)}>
-                <div id="skypassSearch2" className="btn_modal_icon"></div>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className={'c_level_right_modal_wrap ' + (cLevelModal ? 'panel_opened' : '')}
+          >
+            <Stack>
+              <div className="right_modal_btn_wrap" onClick={(e) => toggleDropMenu(e)}>
+                <div className="btn_modal_icon"></div>
               </div>
-              <div id="skypassSearch3" className="right_modal_content_wrap height-100">
-                <div id="skypassSearch4" className="right_modal_content height-100">
-                  <div id="skypassSearch5" className="right_modal_content_inner height-100">
-                    <Stack id="skypassSearch6" direction="Vertical">
-                      <div id="skypassSearch7" className="right_modal_search_wrap">
-                        <Stack id="skypassSearch8">
+              <div className="right_modal_content_wrap height-100">
+                <div className="right_modal_content height-100">
+                  <div className="right_modal_content_inner height-100">
+                    <Stack direction="Vertical">
+                      <div className="right_modal_search_wrap">
+                        <Stack>
                           <TextField
                             id="searchBar"
                             name="searchBar"
@@ -1163,21 +1173,20 @@ export default function List() {
                           </Button>
                         </Stack>
                       </div>
-                      <div id="skypassSearch9" className="right_modal_box_wrap">
-                        <div id="skypassSearch10" className="box_inner_txt">
-                          <span id="skypassSearch11" className="point_txt">
-                            100명
-                          </span>
-                          을 초과하는 데이터입니다.
+                      {/* {skyPassList.length > 100 && ( */}
+                      <div className="right_modal_box_wrap">
+                        <div className="box_inner_txt">
+                          <span className="point_txt">100명</span>을 초과하는 데이터입니다.
                         </div>
-                        <div id="skypassSearch12" className="box_inner_sub">
+                        <div className="box_inner_sub">
                           (추가 데이터 조회는 모달을 닫으신 후 Skypass Number 혹은
                           <br />
                           핸드폰번호로 조회해주시기 바랍니다.)
                         </div>
                       </div>
-                      <div id="skypassSearch13" className="right_modal_table_wrap">
-                        <div id="skypassSearch14" className="right_modal_table_inner height-100">
+                      {/* )} */}
+                      <div className="right_modal_table_wrap">
+                        <div className="right_modal_table_inner height-100">
                           <table id="skypassSearch15">
                             <colgroup>
                               <col width="80px" />
@@ -1186,78 +1195,68 @@ export default function List() {
                               <col width="100px" />
                               <col width="*" />
                             </colgroup>
-                            <thead id="skypassSearch16">
-                              <tr id="skypassSearch17">
-                                <th id="skypassSearch18">
-                                  <div id="skypassSearch19" className="ellipsis1">
+                            <thead>
+                              <tr>
+                                <th>
+                                  <div className="ellipsis1">
                                     이름
-                                    <span id="skypassSearch28" className="subtxt">
-                                      (KOR)
-                                    </span>
+                                    <span className="subtxt">(KOR)</span>
                                   </div>
                                 </th>
-                                <th id="skypassSearch20">
-                                  <div id="skypassSearch21" className="ellipsis1">
+                                <th>
+                                  <div className="ellipsis1">
                                     이름
-                                    <span id="skypassSearch29" className="subtxt">
-                                      (ENG)
-                                    </span>
+                                    <span className="subtxt">(ENG)</span>
                                   </div>
                                 </th>
-                                <th id="skypassSearch22">
-                                  <div id="skypassSearch23" className="ellipsis1">
-                                    성별
-                                  </div>
+                                <th>
+                                  <div className="ellipsis1">성별</div>
                                 </th>
-                                <th id="skypassSearch24">
-                                  <div id="skypassSearch25" className="ellipsis1">
-                                    생년월일
-                                  </div>
+                                <th>
+                                  <div className="ellipsis1">생년월일</div>
                                 </th>
-                                <th id="skypassSearch26">
-                                  <div id="skypassSearch27" className="ellipsis1">
-                                    Skypass No.
-                                  </div>
+                                <th>
+                                  <div className="ellipsis1">Skypass No.</div>
                                 </th>
                               </tr>
                             </thead>
-                            <tbody id="skypassSearch30">
+                            <tbody>
                               {skyPassList.map((list) => (
-                                <tr id="skypassSearch31">
-                                  <td id="skypassSearch32">
-                                    <div id="skypassSearch33" className="ellipsis1">
+                                <tr>
+                                  <td>
+                                    <div className="ellipsis1">
                                       {' '}
                                       {searchText && list.korName.toLowerCase().includes(searchText.toLowerCase())
                                         ? searchHighlight(list.korName, searchText)
                                         : list.korName}
                                     </div>
                                   </td>
-                                  <td id="skypassSearch34">
-                                    <div id="skypassSearch35" className="ellipsis1">
+                                  <td>
+                                    <div className="ellipsis1">
                                       {' '}
                                       {searchText && list.engName.toLowerCase().includes(searchText.toLowerCase())
                                         ? searchHighlight(list.engName, searchText)
                                         : list.engName}
                                     </div>
                                   </td>
-                                  <td id="skypassSearch36">
-                                    <div id="skypassSearch37" className="ellipsis1">
+                                  <td>
+                                    <div className="ellipsis1">
                                       {' '}
                                       {searchText && list.sexCode.toLowerCase().includes(searchText.toLowerCase())
                                         ? searchHighlight(list.sexCode, searchText)
                                         : list.sexCode}
                                     </div>
                                   </td>
-                                  <td id="skypassSearch38">
-                                    <div id="skypassSearch39" className="ellipsis1">
+                                  <td>
+                                    <div className="ellipsis1">
                                       {' '}
                                       {searchText && list.birthV.toLowerCase().includes(searchText.toLowerCase())
                                         ? searchHighlight(list.birthV, searchText)
                                         : list.birthV}
                                     </div>
                                   </td>
-                                  <td id="skypassSearch40">
-                                    <div id="skypassSearch41" className="ellipsis1">
+                                  <td>
+                                    <div className="ellipsis1">
                                       {' '}
                                       {searchText && list.skypassNo
                                         ? searchHighlight(list.skypassNo, searchText)

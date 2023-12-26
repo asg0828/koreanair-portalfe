@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { selectMenuList, setIsDropMenu } from '@/reducers/menuSlice';
+import { selectMenuList, setCLevelModal, setIsDropMenu } from '@/reducers/menuSlice';
 import { findMenuRecursive } from '@/utils/ArrayUtil';
 import Body from '@components/layout/Body';
 import Footer from '@components/layout/Footer';
@@ -17,6 +17,7 @@ const RootLayout = () => {
 
   const handleCloseDropMenu = useCallback(() => {
     dispatch(setIsDropMenu(false));
+    dispatch(setCLevelModal(false));
   }, [dispatch]);
 
   useEffect(() => {
@@ -25,16 +26,18 @@ const RootLayout = () => {
 
   return (
     <>
-      {menu?.children?.length > 0 && !menu.children[0].isCrudPage && (
-        <Navigate to={menu.children[0].menuUrl} />
-      )}
+      {menu?.children?.length > 0 && !menu.children[0].isCrudPage && <Navigate to={menu.children[0].menuUrl} />}
 
       {isPopup ? (
         <Outlet />
       ) : (
         <>
           <Header />
-          <Body onClick={handleCloseDropMenu} />
+          <Body
+            onClick={() => {
+              handleCloseDropMenu();
+            }}
+          />
           <Footer />
         </>
       )}

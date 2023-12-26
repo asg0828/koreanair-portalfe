@@ -36,7 +36,7 @@ const Body = ({ onClick }: Props) => {
       className={isHome ? 'is-home' : ''}
       direction="Horizontal"
       alignItems="Start"
-      onClick={(e) => onClick()}
+      onClick={(e) => onClick(e)}
     >
       <Page style={{ padding: '0 1rem' }} fixedSize={true}>
         <Stack alignItems="Start" style={{ position: 'relative' }}>
