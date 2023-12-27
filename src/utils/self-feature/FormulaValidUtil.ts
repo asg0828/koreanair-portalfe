@@ -84,8 +84,8 @@ export const ValidationFormula = ({
         inptTrgtList = inptTrgtList.map((v) => "T" + v)
 
         if (inptTrgtList.length === 1) return true
-
-        let notNumDtpTrgtList = formulaTrgtList.filter((ft: FormulaTrgtListProps) => ft.dataType !== ColDataType.NUM)
+        
+        let notNumDtpTrgtList = formulaTrgtList.filter((ft: FormulaTrgtListProps) => (ft.dataType === ColDataType.STR || ft.dataType === ColDataType.TIME || ft.dataType === "date"))
 
         let inptTrgtNotNumList = notNumDtpTrgtList.filter((ft: FormulaTrgtListProps) => {
             return inptTrgtList.some(target => ft.targetId === target)

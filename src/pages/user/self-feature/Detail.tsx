@@ -858,9 +858,13 @@ const SelfFeatureDetail = () => {
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
 					</Button>
-					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_CANCEL)}>
-						요청 취소
-					</Button>
+					{isShowUpdtBtn &&
+						<>
+							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_CANCEL)}>
+								요청 취소
+							</Button>
+						</>
+					}
 				</Stack>
 			)
 		} else if (location.state.submissionStatus === SubFeatStatus.IN_APRV) {
