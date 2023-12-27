@@ -206,10 +206,10 @@ const SelfFeatureDetail = () => {
 
 		if (location.state.sqlDirectInputYn === "N") {
 			mstrSgmtTbandColRefetch()
-			setFeatureRuleInfoParams({ 
-				...featureRuleInfoParams, 
-				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
-				["submissionStatus"]: SubFeatStatus.APRV, 
+			setFeatureRuleInfoParams({
+				...featureRuleInfoParams,
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam,
+				["submissionStatus"]: SubFeatStatus.APRV,
 			})
 		}
 
@@ -817,6 +817,14 @@ const SelfFeatureDetail = () => {
 	}, [featureDeleteRes, featureDeleteSucc, featureDeleteErr])
 	// feature 승인 상태에 따른 버튼 노출
 	const DetailBtnComponent = () => {
+		let isShowUpdtBtn: Boolean = false
+		/*
+			노출 조건
+			1. 현재 로그인한 사용자와 등록자가 일치하는 경우
+			2. 관리자의 경우(관리자 판별 flag 미정)
+		*/
+		if (sessionInfo.userId === featureInfo.tbRsCustFeatRule.frstRegUserId) isShowUpdtBtn = true
+
 		if (
 			!location.state.submissionStatus
 			|| location.state.submissionStatus === ""
@@ -828,15 +836,19 @@ const SelfFeatureDetail = () => {
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
 					</Button>
-					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
-						삭제
-					</Button>
-					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
-						수정
-					</Button>
-					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_ISRT_REQ)}>
-						승인 요청
-					</Button>
+					{isShowUpdtBtn &&
+						<>
+							<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
+								삭제
+							</Button>
+							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
+								수정
+							</Button>
+							<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_ISRT_REQ)}>
+								승인 요청
+							</Button>
+						</>
+					}
 				</Stack>
 			)
 		} else if (location.state.submissionStatus === SubFeatStatus.REQ) {
@@ -846,12 +858,6 @@ const SelfFeatureDetail = () => {
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
 					</Button>
-					{/* <Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
-						삭제
-					</Button>
-					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
-						수정
-					</Button> */}
 					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_CANCEL)}>
 						요청 취소
 					</Button>
@@ -864,9 +870,6 @@ const SelfFeatureDetail = () => {
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
 					</Button>
-					{/* <Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_CANCEL)}>
-            요청 취소
-          </Button> */}
 				</Stack>
 			)
 		} else if (location.state.submissionStatus === SubFeatStatus.APRV) {
@@ -885,12 +888,16 @@ const SelfFeatureDetail = () => {
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
 					</Button>
-					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
-						삭제
-					</Button>
-					<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
-						수정
-					</Button>
+					{isShowUpdtBtn &&
+						<>
+							<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DELETE)}>
+								삭제
+							</Button>
+							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.EDIT)}>
+								수정
+							</Button>
+						</>
+					}
 				</Stack>
 			)
 		} else {

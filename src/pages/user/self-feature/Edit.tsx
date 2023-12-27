@@ -255,10 +255,10 @@ const SelfFeatureEdit = () => {
 
 		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
 			mstrSgmtTbandColRefetch()
-			setFeatureRuleInfoParams({ 
-				...featureRuleInfoParams, 
-				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
-				["submissionStatus"]: SubFeatStatus.APRV, 
+			setFeatureRuleInfoParams({
+				...featureRuleInfoParams,
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam,
+				["submissionStatus"]: SubFeatStatus.APRV,
 			})
 		}
 
@@ -1335,9 +1335,16 @@ const SelfFeatureEdit = () => {
 			{/* 버튼 영역 */}
 			<Stack direction="Vertical" gap="MD" justifyContent="End">
 				<Stack justifyContent="End" gap="SM" className="width-100">
-					<Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitUpdateHandler}>
-						수정
-					</Button>
+					{/* 
+						노출 조건
+						1. 현재 로그인한 사용자와 등록자가 일치하는 경우
+						2. 관리자의 경우(관리자 판별 flag 미정)
+					*/}
+					{sessionInfo.userId === location.state.featureInfo.tbRsCustFeatRule.frstRegUserId &&
+						<Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitUpdateHandler}>
+							수정
+						</Button>
+					}
 					<Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						취소
 					</Button>
