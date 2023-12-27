@@ -104,31 +104,38 @@ export interface ErrLogData {
 }
 
 export interface oneidHistorySearch {
-  oneidNum: string;
-  oneidChgRsnCd: string;
+  oneidNo: string;
   criteria: string;
+  oneidChgRsnCd: string;
   bfChgKorLname: string;
   bfChgKorFname: string;
   bfChgEngLname: string;
   bfChgEngFname: string;
   bfChgMobilePhoneNoInfo: string;
+  bfChgMblfonNoInfoHashVlu: string;
   bfChgEmailAdrs: string;
+  bfChgEmailAdrsHashValue: string;
   bfChgBirthDtv: string;
   creationStartDate: string;
   creationEndDate: string;
-  homePhoneNumberInfo: string;
 }
 export interface oneidMasterSearch {
-  oneidNum: string;
-  korLname: string;
+  oneidNo: string;
   korFname: string;
-  engLname: string;
+  korLname: string;
   engFname: string;
+  engLname: string;
   mobilePhoneNumberInfo: string;
+  mobilePhoneNoInfoHashVlu: string;
   homePhoneNumberInfo: string;
+  homePhoneNoInfoHashValue: string;
   officePhoneNumberInfo: string;
+  officePhoneNoInfoHashVlu: string;
   emailAddress: string;
+  emailAdrsHashValue: string;
   birthDatev: string;
+  creationStartDate: string;
+  creationEndDate: string;
 }
 export interface paxMappingSearch {
   oneidNum: string;

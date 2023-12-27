@@ -1,16 +1,12 @@
 import {
   getBoardingCnt,
-  getCustomerInfo,
   getEmailHis,
-  getEngname,
   getEtktHis,
   getInternetHis,
-  getKorname,
-  getMobile,
   getPetCnt,
   getPnrHis,
-  getProfileOneId,
-  getProfileSkypassNo,
+  getProfile,
+  getProfileCLevel,
   getSmsHis,
   getSnsHis,
   getTelephoneHis,
@@ -18,34 +14,16 @@ import {
 } from '@/api/CustomerInfoAPI';
 import { useQuery } from '@tanstack/react-query';
 
-// CDP-360
-export const useCustomerInfo = (searchInfo: any) => {
-  return useQuery(['/customerInfo'], () => getCustomerInfo(searchInfo), { enabled: false });
-};
-
 // OneId로 Profile 조회
-export const useProfileOneId = (oneId: string) => {
-  return useQuery(['/customerInfo/oneId'], () => getProfileOneId(oneId), { enabled: false });
-};
-
-// skypassNo로 Profile 조회
-export const useProfileSkypassNo = (skypassNo: number) => {
-  return useQuery(['/customerInfo/skypassNumber'], () => getProfileSkypassNo(skypassNo), { enabled: false });
-};
-
-// 모바일 번호로 맴버 조회(C-Level)
-export const useMobile = (mobile: string) => {
-  return useQuery(['/customerInfo/mobile'], () => getMobile(mobile), { enabled: false });
-};
-
-// 한글명으로 맴버 조회(C-Level)
-export const useKorname = (first: string, last: string) => {
-  return useQuery(['/customerInfo/korname'], () => getKorname(first, last), { enabled: false });
+export const useProfile = (searchInfo: any) => {
+  return useQuery(['/customerInfo/oneId'], () => getProfile(searchInfo), {
+    enabled: false,
+  });
 };
 
 // 영문명으로 맴버 조회(C-Level)
-export const useEngname = (first: string, last: string) => {
-  return useQuery(['/customerInfo/engname'], () => getEngname(first, last), { enabled: false });
+export const useProfileCLevel = (searchInfo: any) => {
+  return useQuery(['/customerInfo/engname'], () => getProfileCLevel(searchInfo), { enabled: false });
 };
 
 export const useTelephoneHis = () => {

@@ -1,4 +1,4 @@
-import { useCustomerInfo, useProfileOneId, useProfileSkypassNo } from '@/hooks/queries/useCustomerInfoQueires';
+import { useProfile } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -62,27 +62,25 @@ export default function List() {
   const [emails, setEmails] = useState<Array<Email>>([]);
   const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({
-    skypassNum: '',
-    oneId: '',
+    skypassMemberNumber: '',
+    oneidNo: '',
+    searchType: 'A',
   });
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   // const [skypassList, setSkypassList] = useState<Array<any>>([]);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
-  const { refetch, data: response, isError } = useCustomerInfo(searchInfo);
   const { toast } = useToast();
 
-  // oneId로 profile 조회 api
-  const { refetch: refetchOneId, data: responseOneId, isError: isErrorOneId } = useProfileOneId('S200003049125482');
-  // skypassNo로 profile 조회 api
-  const { refetch: refetchSkypassNo, data: responseSkypassNo, isError: isErrorSkypassNo } = useProfileSkypassNo(0);
+  // profile 조회 api
+  const { refetch: refetchProfile, data: responseProfile, isError: isErrorProfile } = useProfile(searchInfo);
 
   const validation = () => {
     // 검색 조건 자체는 두개다 들어가도 가능
     // 회원당 skypass는 일대다 관계이므로 phoneNumber로 검색할 경우 skypass list를
     let searchError = false;
     if (
-      searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-      searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
+      searchInfo.skypassMemberNumber.replace(htmlTagReg, '').trim() === '' &&
+      searchInfo.oneidNo.replace(htmlTagReg, '').trim() === ''
     ) {
       setOpen(true);
       searchError = true;
@@ -102,8 +100,8 @@ export default function List() {
     const validation = () => {
       let searchError = false;
       if (
-        searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.oneId.replace(htmlTagReg, '').trim() === ''
+        searchInfo.skypassMemberNumber.replace(htmlTagReg, '').trim() === '' &&
+        searchInfo.oneidNo.replace(htmlTagReg, '').trim() === ''
       ) {
         setOpen(true);
         searchError = true;
@@ -112,7 +110,7 @@ export default function List() {
     };
 
     if (validation()) return;
-    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.oneidNo === 'S199206239090026' || searchInfo.skypassMemberNumber === '112423935550') {
       setProfile(profileData[0]);
       setSkypass(skypassData1);
       setFamily(familyMemberData[0]);
@@ -130,7 +128,7 @@ export default function List() {
       setEmails(emailData);
       setSnss(snsData);
       setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.oneidNo === 'S198701167474407' || searchInfo.skypassMemberNumber === '112315856573') {
       setProfile(profileData[1]);
       setSkypass(skypassData2);
       setFamily(familyMemberData[3]);
@@ -150,8 +148,8 @@ export default function List() {
       setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
     }
     // refetch();
-    refetchOneId();
-  }, [refetch, searchInfo, validation]);
+    refetchProfile();
+  }, [refetchProfile, searchInfo, validation]);
 
   // style > 배경색 변경
   useEffect(() => {
@@ -194,7 +192,7 @@ export default function List() {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    if (searchInfo.oneId === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.oneidNo === 'S199206239090026' || searchInfo.skypassMemberNumber === '112423935550') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112423935550') {
         setFamily(familyMemberData[0]);
@@ -203,7 +201,7 @@ export default function List() {
       } else if (value === '112617209394') {
         setFamily(familyMemberData[2]);
       }
-    } else if (searchInfo.oneId === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.oneidNo === 'S198701167474407' || searchInfo.skypassMemberNumber === '112315856573') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112315856573') {
         setFamily(familyMemberData[3]);
@@ -215,22 +213,8 @@ export default function List() {
     }
   };
   useEffect(() => {
-    setSelectedSkypass(skypass?.find((item) => item.skypassNum === searchInfo.skypassSelect));
+    setSelectedSkypass(skypass?.find((item) => item.skypassMemberNumber === searchInfo.skypassSelect));
   }, [searchInfo.skypassSelect]);
-
-  useEffect(() => {
-    if (isError || response?.successOrNot === 'N') {
-      toast({
-        type: 'Error',
-        content: '조회 중 에러가 발생했습1니다.',
-      });
-    } else {
-      if (response?.data) {
-        // response.data.contents.forEach(() => {});
-        // setRows(response.data.contents);
-      }
-    }
-  }, [response, isError, toast]);
 
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
@@ -239,8 +223,8 @@ export default function List() {
       <Stack className={'width-100'}>
         <div className="componentWrapper" style={{ width: '100%' }}>
           <TextField
-            id="skypassNum"
-            value={searchInfo.skypassNum}
+            id="skypassMemberNumber"
+            value={searchInfo.skypassMemberNumber}
             appearance="Outline"
             placeholder="Skypass Number"
             size="LG"
@@ -251,8 +235,8 @@ export default function List() {
         </div>
         <div className="componentWrapper" style={{ width: '100%' }}>
           <TextField
-            value={searchInfo.oneId}
-            id="oneId"
+            value={searchInfo.oneidNo}
+            id="oneidNo"
             appearance="Outline"
             placeholder="One ID NO."
             size="LG"

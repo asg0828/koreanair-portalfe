@@ -158,14 +158,14 @@ const onIdPaxData: PaxData[] = [
   },
 ];
 const reason = [
-  { value: '0', text: '전체' },
-  { value: '1', text: 'KOM' },
-  { value: '2', text: 'ENM' },
-  { value: '3', text: 'DOB' },
-  { value: '4', text: 'MOB' },
-  { value: '5', text: 'EML' },
-  { value: '6', text: 'REU' },
-  { value: '7', text: 'PSP' },
+  { value: '', text: '전체' },
+  { value: 'KOM', text: 'KOM' },
+  { value: 'ENM', text: 'ENM' },
+  { value: 'DOB', text: 'DOB' },
+  { value: 'MOB', text: 'MOB' },
+  { value: 'EML', text: 'EML' },
+  { value: 'REU', text: 'REU' },
+  { value: 'PSP', text: 'PSP' },
 ];
 
 const historyColumn: Column[] = [

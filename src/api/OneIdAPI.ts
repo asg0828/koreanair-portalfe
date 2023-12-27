@@ -19,12 +19,13 @@ import { callApi, Method } from '@utils/ApiUtil';
 export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master-for-history`,
     method: Method.GET,
     params: {
       queryParams: {
         ...searchInfo,
-        ...page,
+        perSize: page.pageSize,
+        page: page.page,
       },
     },
   });
@@ -34,12 +35,13 @@ export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel
 export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master-history`,
     method: Method.GET,
     params: {
       queryParams: {
         ...searchInfo,
-        ...page,
+        perSize: page.pageSize,
+        page: page.page,
       },
     },
   });
@@ -49,7 +51,7 @@ export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
 export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/pax-mapping`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -64,7 +66,7 @@ export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => 
 export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -79,7 +81,7 @@ export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel)
 export const getMobile = (searchInfo: mobileSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/agt-contact`,
     method: Method.GET,
     params: {
       queryParams: {
