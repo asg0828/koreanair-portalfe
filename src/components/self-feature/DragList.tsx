@@ -11,21 +11,26 @@ import {
     Attribute,
     TrgtDragAttrType,
     AttributeAccordian,
+    TbRsCustFeatRule,
 } from '@/models/selfFeature/FeatureModel';
 import AttrAccordionDrag from "./dragItem/AttrAccordionDrag";
+import FeatDragItem from "./dragItem/FeatDragItem";
 
 export interface Props {
     attributes: Array<Attribute>
+    featureRules: Array<TbRsCustFeatRule>
     behaviors: Array<Behavior>
 }
 
 const DragList = ({
     attributes,
+    featureRules,
     behaviors
 }: Props) => {
 
     const [keyword, setKeyword] = useState<string>('')
     const [srchAttrRsltList, setSrchAttrRsltList] = useState<Array<Attribute>>([])
+    const [srchFeatRsltList, setSrchFeatRsltList] = useState<Array<TbRsCustFeatRule>>([])
     const [srchBehvRsltList, setSrchBehvRsltList] = useState<Array<Behavior>>([])
     // 속성정보 구분 ori list
     const [oriAttrAccordian, setOriAttrAccordian] = useState<Array<AttributeAccordian>>([])
@@ -33,6 +38,10 @@ const DragList = ({
     const [attrAccordian, setAttrAccordian] = useState<Array<AttributeAccordian>>([])
     // 속성정보 아코디언
     const [defaultAttr, setDefaultAttr] = useState<Array<string>>([])
+    // Feat정보 구분 list
+    const [featAccordian, setFeatAccordian] = useState<Array<TbRsCustFeatRule>>([])
+    // Feat정보 아코디언
+    const [defaultFeat, setDefaultFeat] = useState<Array<string>>([])
     // 행동정보 아코디언
     const [defaultBehv, setDefaultBehv] = useState<Array<string>>([])
 
@@ -57,6 +66,16 @@ const DragList = ({
     }, [attributes])
 
     useEffect(() => {
+        if (featureRules.length < 1) return
+
+        setSrchFeatRsltList(cloneDeep(featureRules))
+
+        if (featureRules.length > 0) setDefaultFeat(["Feature 정보"])
+        else setDefaultFeat([])
+
+    }, [featureRules])
+
+    useEffect(() => {
         if (behaviors.length < 1) return
 
         let behvList: Array<Behavior> = cloneDeep(behaviors)
@@ -76,7 +95,8 @@ const DragList = ({
     }, [srchAttrRsltList])
 
     useEffect(() => {
-    }, [srchBehvRsltList])
+        setFeatAccordian(srchFeatRsltList)
+    }, [srchFeatRsltList])
 
     const searchAttrList = (keyword: string) => {
         let attrList: Array<Attribute> = cloneDeep(attributes)
@@ -103,8 +123,19 @@ const DragList = ({
         setSrchBehvRsltList(behvList)
     }
 
+    const searchFeatList = (keyword: string) => {
+        let featList: Array<TbRsCustFeatRule> = cloneDeep(featureRules)
+        if (keyword.trim() === '') {
+            setSrchFeatRsltList(featList)
+            return
+        }
+        featList = featList.filter((featRule: TbRsCustFeatRule) => featRule.name.indexOf(keyword) > -1 ? true : false)
+        setSrchFeatRsltList(featList)
+    }
+
     const onClickTrgtSrchHandler = () => {
         searchAttrList(keyword)
+        searchFeatList(keyword)
         searchBehvList(keyword)
     }
 
@@ -137,6 +168,7 @@ const DragList = ({
                     <span className="searchIcon"></span>
                 </Button>
             </Stack>
+            {/* Fact 정보 */}
             <Accordion
                 align="Right"
                 size="MD"
@@ -167,11 +199,46 @@ const DragList = ({
                     })}
                 </AccordionItem>
             </Accordion>
-            {/* Feature 정보
-            {features.map(() => {
-
-            })}
-            */}
+            {/* Fact 정보 */}
+            {/* Feature 정보 */}
+            <Accordion
+                align="Right"
+                size="MD"
+                type="multiple"
+                style={{ marginTop: "10px" }}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setDefaultFeat((prevState: Array<string>) => {
+                        if (prevState.length > 0) return []
+                        else return ["Feature 정보"]
+                    })
+                }}
+                value={defaultFeat}
+            >
+                <AccordionItem
+                    title='Feature 정보'
+                    value='Feature 정보'
+                >
+                    <Stack
+                        direction="Vertical"
+                        justifyContent="Center"
+                        gap="SM"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {featAccordian.map((featRule: TbRsCustFeatRule, featIdx: number) => {
+                            return (
+                                <FeatDragItem
+                                    key={featIdx}
+                                    metaTblLogiNm={featRule.name}
+                                    featTblClmnInfo={featRule}
+                                />
+                            )
+                        })}
+                    </Stack>
+                </AccordionItem>
+            </Accordion>
+            {/* Feature 정보 */}
+            {/* Base Fact 정보 */}
             <Accordion
                 align="Right"
                 size="MD"
@@ -199,6 +266,7 @@ const DragList = ({
                     ))}
                 </AccordionItem>
             </Accordion>
+            {/* Base Fact 정보 */}
         </Page>
     )
 }

@@ -11,7 +11,7 @@ import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { SelectValue } from '@mui/base/useSelect';
 import { ModalType, } from '@/models/common/Constants'
-import { useAppDispatch } from '@/hooks/useRedux'
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux'
 import { openModal } from '@/reducers/modalSlice'
 
 import HorizontalTable from "@/components/table/HorizontalTable"
@@ -46,6 +46,7 @@ import {
 	TbRsCustFeatRuleSql,
 	FormulaTrgtListProps,
 	CustFeatureFormData,
+	FeatListSrchProps,
 } from '@/models/selfFeature/FeatureModel';
 import {
 	initSelfFeatureInfo,
@@ -56,6 +57,7 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 	initCustFeatureFormDataSql,
+	initFeatListSrchProps,
 } from './data'
 import {
 	SubFeatStatus,
@@ -68,7 +70,7 @@ import {
 } from '@/models/selfFeature/FeatureCommon';
 import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
-import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
+import { useApproverCandidate, useCustFeatRules, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import {
 	//GroupCodeType, 
 	ValidType,
@@ -87,6 +89,7 @@ import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
 import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
 import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
+import { selectSessionInfo } from "@/reducers/authSlice";
 
 const initFeatureAllParams: FeatureAllParams = {
 	featureKoNm: undefined,
@@ -98,6 +101,7 @@ const SelfFeatureEdit = () => {
 	const { toast } = useToast()
 	const navigate = useNavigate()
 	const location = useLocation()
+	const sessionInfo = useAppSelector(selectSessionInfo())
 	const dispatch = useAppDispatch()
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
 	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
@@ -107,6 +111,10 @@ const SelfFeatureEdit = () => {
 	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
 	// 속성, 행동정보
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
+	// Feature 정보 조회
+	const [featureRuleInfoParams, setFeatureRuleInfoParams] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
+	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(featureRuleInfoParams)
+	const [featureRuleList, setFeatureRuleList] = useState<Array<TbRsCustFeatRule>>([])
 	// 부서 조회
 	//const [deptOption, setDeptOption] = useState<Array<any>>([])
 	const { data: deptAllListRes, isError: deptAllListErr } = useDeptAllList()
@@ -245,9 +253,41 @@ const SelfFeatureEdit = () => {
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
 
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") mstrSgmtTbandColRefetch()
+		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+			mstrSgmtTbandColRefetch()
+			setFeatureRuleInfoParams({ 
+				...featureRuleInfoParams, 
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
+				["submissionStatus"]: SubFeatStatus.APRV, 
+			})
+		}
 
 	}, [mstrSgmtRuleIdParam, location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
+	useEffect(() => {
+		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+		featureListRefetch()
+	}, [featureRuleInfoParams])
+	// customer feature 목록 API callback
+	useEffect(() => {
+		if (featureListErr || featureListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (featureListRes) {
+				let rtn = cloneDeep(featureListRes.result)
+				rtn = rtn.map((item: TbRsCustFeatRule) => {
+					if (item.dataType === "string") item.dataTypeCategory = "string"
+					else if (item.dataType === "timestamp") item.dataTypeCategory = "timestamp"
+					else item.dataTypeCategory = "number"
+
+					return item
+				})
+				setFeatureRuleList(rtn)
+			}
+		}
+	}, [featureListRes, featureListErr, featureListRefetch])
 	// 부서 목록 setting
 	useEffect(() => {
 		if (deptAllListErr || deptAllListRes?.successOrNot === 'N') {
@@ -496,6 +536,8 @@ const SelfFeatureEdit = () => {
 	}, [formulaTrgtList, location.state?.featureInfo.tbRsCustFeatRuleCalc?.formula])
 	// 수정 API 호출(Rule-Design)
 	const updateCustFeatRule = () => {
+		// 수정자와 등록자가 동일하면 수정불가
+
 		if (!isValidFormula) {
 			toast({
 				type: ValidType.ERROR,
@@ -536,10 +578,17 @@ const SelfFeatureEdit = () => {
 	// 수정 API 호출 Callback (Rule-Design)
 	useEffect(() => {
 		if (updtRuleDesignErr || updtRuleDesignRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: updtRuleDesignRes?.message ? updtRuleDesignRes?.message : '수정 중 에러가 발생했습니다.',
-			})
+			if (updtRuleDesignRes?.status?.toString() === "403") {
+				toast({
+					type: ValidType.ERROR,
+					content: '수정 권한이 없습니다.',
+				})
+			} else {
+				toast({
+					type: ValidType.ERROR,
+					content: updtRuleDesignRes?.message ? updtRuleDesignRes?.message : '수정 중 에러가 발생했습니다.',
+				})
+			}
 		} else if (updtRuleDesignSucc) {
 			toast({
 				type: ValidType.CONFIRM,
@@ -564,6 +613,7 @@ const SelfFeatureEdit = () => {
 	}, [updtRuleDesignRes, updtRuleDesignSucc, updtRuleDesignErr, toast])
 	// 수정 API 호출(SQL)
 	const updateCustFeatSQL = () => {
+		// 수정자와 등록자가 동일하면 수정불가
 		let param: any = cloneDeep(initCustFeatureFormDataSql)
 		param.customerFeatureSql = updtFeatureInfo
 		delete param.customerFeatureSql.tbRsCustFeatRuleCalc
@@ -586,10 +636,17 @@ const SelfFeatureEdit = () => {
 	// 수정 API 호출 Callback (SQL)
 	useEffect(() => {
 		if (updtSQLErr || updtSQLRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: updtSQLRes?.message ? updtSQLRes?.message : '수정 중 에러가 발생했습니다.',
-			})
+			if (updtSQLRes?.status?.toString() === "403") {
+				toast({
+					type: ValidType.ERROR,
+					content: '수정 권한이 없습니다.',
+				})
+			} else {
+				toast({
+					type: ValidType.ERROR,
+					content: updtSQLRes?.message ? updtSQLRes?.message : '수정 중 에러가 발생했습니다.',
+				})
+			}
 		} else if (updtSQLSucc) {
 			toast({
 				type: ValidType.CONFIRM,
@@ -1174,6 +1231,7 @@ const SelfFeatureEdit = () => {
 										setTargetList={setTargetList}
 										setTrgtFilterList={setTrgtFilterList}
 										attributes={mstrSgmtTableandColMetaInfo.attributes}
+										featureRules={featureRuleList}
 										behaviors={mstrSgmtTableandColMetaInfo.behaviors}
 										setFormulaTrgtList={setFormulaTrgtList}
 									/>
@@ -1183,6 +1241,7 @@ const SelfFeatureEdit = () => {
 									{(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) &&
 										<DragList
 											attributes={mstrSgmtTableandColMetaInfo.attributes}
+											featureRules={featureRuleList}
 											behaviors={mstrSgmtTableandColMetaInfo.behaviors}
 										/>}
 									{/* drag 영역 */}

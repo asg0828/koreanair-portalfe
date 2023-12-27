@@ -49,8 +49,11 @@ import {
     TbRsCustFeatRuleSql,
     TbRsCustFeatRuleTrgt,
     TbRsCustFeatRuleTrgtFilter,
+    FeatListSrchProps,
+    TbRsCustFeatRule,
 } from "@/models/selfFeature/FeatureModel";
 import {
+    initFeatListSrchProps,
     initFeatureTemp,
     initMstrSgmtTableandColMetaInfo,
     initSelfFeatureInfo,
@@ -72,7 +75,7 @@ import { QueryParams } from "@/utils/ApiUtil";
 import ConfirmModal from "@/components/modal/ConfirmModal";
 import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import SubRejectModal from "@/components/self-feature-submission/modal/SubRejectModal";
-import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatSQLInfos, useDirectSQLYn, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
+import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useDirectSQLYn, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { GroupCodeType, ValidType } from "@/models/common/Constants";
 import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
@@ -102,6 +105,11 @@ const SfSubmissionRequestDetail = () => {
     // mstrSgmtRuleId parameter
     const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
     const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
+	// Feature 정보 조회
+	const [featureRuleInfoParams, setFeatureRuleInfoParams] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
+	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(featureRuleInfoParams)
+	const [featureRuleList, setFeatureRuleList] = useState<Array<TbRsCustFeatRule>>([])
+
     const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
     const [categoryOption, setCategoryOption] = useState<Array<any>>([])
     const { data: cmmCodeCateRes } = useCommCodes(CommonCode.CATEGORY)
@@ -200,8 +208,40 @@ const SfSubmissionRequestDetail = () => {
     }, [mstrProfListRes, mstrProfListErr, toast])
     useEffect(() => {
         if (mstrSgmtRuleIdParam === "") return
-        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") mstrSgmtTbandColRefetch()
+        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+            mstrSgmtTbandColRefetch()
+			setFeatureRuleInfoParams({ 
+				...featureRuleInfoParams, 
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
+				["submissionStatus"]: SubFeatStatus.APRV, 
+			})
+        }
     }, [mstrSgmtRuleIdParam, featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
+	useEffect(() => {
+		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+		featureListRefetch()
+	}, [featureRuleInfoParams])
+	// customer feature 목록 API callback
+	useEffect(() => {
+		if (featureListErr || featureListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (featureListRes) {
+				let rtn = cloneDeep(featureListRes.result)
+				rtn = rtn.map((item: TbRsCustFeatRule) => {
+					if (item.dataType === "string") item.dataTypeCategory = "string"
+					else if (item.dataType === "timestamp") item.dataTypeCategory = "timestamp"
+					else item.dataTypeCategory = "number"
+
+					return item
+				})
+				setFeatureRuleList(rtn)
+			}
+		}
+	}, [featureListRes, featureListErr, featureListRefetch])
     // feature 정보 초기화
     const initCustFeatRule = () => {
         setFeatureInfo((state: FeatureInfo) => {
@@ -1099,6 +1139,7 @@ const SfSubmissionRequestDetail = () => {
                                             setTargetList={setTargetList}
                                             setTrgtFilterList={setTrgtFilterList}
                                             attributes={mstrSgmtTableandColMetaInfo.attributes}
+                                            featureRules={featureRuleList}
                                             behaviors={mstrSgmtTableandColMetaInfo.behaviors}
                                             setFormulaTrgtList={setFormulaTrgtList}
                                         />

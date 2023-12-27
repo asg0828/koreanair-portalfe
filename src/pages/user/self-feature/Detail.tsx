@@ -33,8 +33,11 @@ import {
 	TbRsCustFeatRuleSql,
 	TbRsCustFeatRuleTrgt,
 	TbRsCustFeatRuleTrgtFilter,
+	FeatListSrchProps,
+	TbRsCustFeatRule,
 } from '@/models/selfFeature/FeatureModel';
 import {
+	initFeatListSrchProps,
 	initFeatureTemp,
 	initMstrSgmtTableandColMetaInfo,
 	initSelfFeatureInfo,
@@ -65,7 +68,7 @@ import {
 import { QueryParams } from '@/utils/ApiUtil';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
-import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatSQLInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
+import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { GroupCodeType, ValidType } from '@/models/common/Constants';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
@@ -87,14 +90,18 @@ const SelfFeatureDetail = () => {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const sessionInfo = useAppSelector(selectSessionInfo())
-	
-    // 사용될 rslnRuleId / mstrSgmtRuleId 조회
-    const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
-    // rslnRuleId parameter
+
+	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
+	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
+	// rslnRuleId parameter
 	const [rslnRuleIdParam, setRslnRuleIdParam] = useState<string>("")
-    // mstrSgmtRuleId parameter
+	// mstrSgmtRuleId parameter
 	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
+	// Feature 정보 조회
+	const [featureRuleInfoParams, setFeatureRuleInfoParams] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
+	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(featureRuleInfoParams)
+	const [featureRuleList, setFeatureRuleList] = useState<Array<TbRsCustFeatRule>>([])
 
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const [categoryOption, setCategoryOption] = useState<Array<any>>([])
@@ -169,37 +176,69 @@ const SelfFeatureDetail = () => {
 			custFeatSQLInfosRefetch()
 		}
 	}, [])
-    // master segement rule Id setting
-    useEffect(() => {
-        if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
-                content: '조회 중 에러가 발생했습니다.',
-            })
-        } else {
-            if (mstrProfListRes) {
+	// master segement rule Id setting
+	useEffect(() => {
+		if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (mstrProfListRes) {
 				// master profile id 설정값 변경
 				let useMstrProf = mstrProfListRes.result.filter((mstrProf: any) => mstrProf.mstrSgmtRuleUseYn === "Y")
-                let t = useMstrProf[mstrProfListRes.result.length - 1]
-                if (t) {
-                    // 속성 및 행동 테이블 정보 조회를 위해
-                    setRslnRuleIdParam(() => t.rslnRuleId)
-                    setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
-                } else {
-                    toast({
-                        type: ValidType.ERROR,
-                        content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
-                    })
-                }
-            }
-        }
-    }, [mstrProfListRes, mstrProfListErr, toast])
-    useEffect(() => {
-        if (mstrSgmtRuleIdParam === "") return
+				let t = useMstrProf[mstrProfListRes.result.length - 1]
+				if (t) {
+					// 속성 및 행동 테이블 정보 조회를 위해
+					setRslnRuleIdParam(() => t.rslnRuleId)
+					setMstrSgmtRuleIdParam(() => t.mstrSgmtRuleId)
+				} else {
+					toast({
+						type: ValidType.ERROR,
+						content: 'Resolution Rule, Master Profile Rule에 대해 관리자에게 문의 하세요.',
+					})
+				}
+			}
+		}
+	}, [mstrProfListRes, mstrProfListErr, toast])
+	useEffect(() => {
+		if (mstrSgmtRuleIdParam === "") return
 
-		if (location.state.sqlDirectInputYn === "N") mstrSgmtTbandColRefetch()
+		if (location.state.sqlDirectInputYn === "N") {
+			mstrSgmtTbandColRefetch()
+			setFeatureRuleInfoParams({ 
+				...featureRuleInfoParams, 
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
+				["submissionStatus"]: SubFeatStatus.APRV, 
+			})
+		}
 
-    }, [mstrSgmtRuleIdParam, location.state.sqlDirectInputYn])
+	}, [mstrSgmtRuleIdParam, location.state.sqlDirectInputYn])
+	useEffect(() => {
+		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+		featureListRefetch()
+	}, [featureRuleInfoParams])
+	// customer feature 목록 API callback
+	useEffect(() => {
+		if (featureListErr || featureListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (featureListRes) {
+				let rtn = cloneDeep(featureListRes.result)
+				rtn = rtn.map((item: TbRsCustFeatRule) => {
+					if (item.dataType === "string") item.dataTypeCategory = "string"
+					else if (item.dataType === "timestamp") item.dataTypeCategory = "timestamp"
+					else item.dataTypeCategory = "number"
+
+					return item
+				})
+				setFeatureRuleList(rtn)
+			}
+		}
+	}, [featureListRes, featureListErr, featureListRefetch])
 	// 카테고리 setting
 	useEffect(() => {
 		if (cmmCodeCateRes?.successOrNot === 'N') {
@@ -441,10 +480,10 @@ const SelfFeatureDetail = () => {
 				return option
 			})
 			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") {dataType = "number";t.dtpCd = "int"}
-			if (targetList[i].function === "LENGTH") {dataType = "number";t.dtpCd = "int"}
-			if (targetList[i].function === "TO_CHAR") {dataType = "string";t.dtpCd = "string"}
-			if (targetList[i].function === "DATEDIFF") {dataType = "number";t.dtpCd = "int"}
+			if (targetList[i].function === "TO_NUMBER") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "LENGTH") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "TO_CHAR") { dataType = "string"; t.dtpCd = "string" }
+			if (targetList[i].function === "DATEDIFF") { dataType = "number"; t.dtpCd = "int" }
 			t.dataType = dataType
 			fList.push(t)
 		}
@@ -454,12 +493,12 @@ const SelfFeatureDetail = () => {
 	const onClickPageMovHandler = (pageNm: string) => {
 		if (pageNm === SelfFeatPgPpNm.LIST) {
 			navigate(
-				'..', 
-				{ 
-					state: { 
-						srchInfo: location?.state?.srchInfo, 
+				'..',
+				{
+					state: {
+						srchInfo: location?.state?.srchInfo,
 						//pageInfo: location?.state?.pageInfo 
-					} 
+					}
 				}
 			)
 		} else if (pageNm === SelfFeatPgPpNm.EDIT) {
@@ -690,10 +729,17 @@ const SelfFeatureDetail = () => {
 	// 승인요청 API Callback
 	useEffect(() => {
 		if (insrtSubReqErr || insrtSubReqRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: insrtSubReqRes?.message ? insrtSubReqRes?.message : '승인 요청 중 에러가 발생했습니다.',
-			})
+			if (insrtSubReqRes?.status?.toString() === "403") {
+				toast({
+					type: ValidType.ERROR,
+					content: '승인 요청 권한이 없습니다.',
+				})
+			} else {
+				toast({
+					type: ValidType.ERROR,
+					content: insrtSubReqRes?.message ? insrtSubReqRes?.message : '승인 요청 중 에러가 발생했습니다.',
+				})
+			}
 		} else if (insrtSubReqSucc) {
 			toast({
 				type: ValidType.CONFIRM,
@@ -746,10 +792,17 @@ const SelfFeatureDetail = () => {
 	// 삭제 처리 API Callback
 	useEffect(() => {
 		if (featureDeleteErr || featureDeleteRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: featureDeleteRes?.message ? featureDeleteRes?.message : '삭제 중 에러가 발생했습니다.',
-			})
+			if (featureDeleteRes?.status?.toString() === "403") {
+				toast({
+					type: ValidType.ERROR,
+					content: '삭제 권한이 없습니다.',
+				})
+			} else {
+				toast({
+					type: ValidType.ERROR,
+					content: featureDeleteRes?.message ? featureDeleteRes?.message : '삭제 중 에러가 발생했습니다.',
+				})
+			}
 		} else if (featureDeleteSucc) {
 			toast({
 				type: ValidType.CONFIRM,
@@ -1151,6 +1204,7 @@ const SelfFeatureDetail = () => {
 										setTargetList={setTargetList}
 										setTrgtFilterList={setTrgtFilterList}
 										attributes={mstrSgmtTableandColMetaInfo.attributes}
+										featureRules={featureRuleList}
 										behaviors={mstrSgmtTableandColMetaInfo.behaviors}
 										setFormulaTrgtList={setFormulaTrgtList}
 									/>
