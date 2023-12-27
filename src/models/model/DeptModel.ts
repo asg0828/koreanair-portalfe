@@ -9,9 +9,9 @@ export interface CreatedDeptModel {
   upDeptCode: string;
   upDeptNm?: string;
   companyCode: string;
-  userAuthId: string;
+  userAuthId: string | null;
   userAuthNm?: string;
-  mgrAuthId: string;
+  mgrAuthId: string | null;
   mgrAuthNm?: string;
   useYn: string;
   ordSeq: number;
