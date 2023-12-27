@@ -20,7 +20,7 @@ export default function SamePnrUcild() {
 
   const handleSearch = useCallback(() => {
     refetch();
-  }, [refetch]);
+  }, [page]);
 
   useEffect(() => {
     isChanged && handleSearch();
@@ -38,9 +38,8 @@ export default function SamePnrUcild() {
       });
     } else {
       if (response?.data) {
-        // response.data.contents.forEach(() => {});
         setRows(response.data.contents);
-        setPage(response.data.page);
+        setPage(response.data.pagination);
       }
     }
   }, [response, isError, toast]);
@@ -49,8 +48,7 @@ export default function SamePnrUcild() {
     <>
       <DataGrid
         columns={oneIdSameColumn}
-        // rows ={row}
-        rows={oneIdSameData}
+        rows={row}
         enableSort={false}
         clickable={true}
         page={page}

@@ -1,4 +1,4 @@
-import { useState, ReactNode } from 'react';
+import { useState, ReactNode, useEffect } from 'react';
 import { RowsInfo } from '@/models/components/Table';
 import { CheckedState, SortDirection, SortDirectionCode, AlignCode } from '@/models/common/Design';
 import { Typography, Checkbox, Table, THead, TBody, TR, TH, TD, Stack } from '@components/ui';
@@ -16,7 +16,7 @@ export interface VerticalTableChildProps {
   onClick?: Function;
   children?: ReactNode;
   index?: number;
-  totals?: Array<any>;
+  totals?: any;
 }
 
 export interface ChildColumnProps {
@@ -33,7 +33,7 @@ export interface ChildRowProps {
 const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
   columns = [],
   rows = [],
-  totals = [],
+  totals = {},
   showHeader = true,
   enableSort = false,
   clickable = false,
@@ -155,6 +155,16 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
     );
   };
 
+  const TotalRow = () => {
+    const totalRow = Object.values(totals);
+    return (
+      <>
+        {totalRow.map((key: any) => {
+          return <TH>{key}</TH>;
+        })}
+      </>
+    );
+  };
   return (
     <Table variant="vertical" size="normal" align="center" className="verticalTable">
       <div className="verticalTableDiv">
@@ -185,17 +195,14 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
                 <ChildRowGird columns={columns} row={row} index={index} totals={totals} />
               </TR>
             ))}
-            {totals?.length > 0 ? (
+            {rows?.length > 0 && Object.values(totals).length > 15 && (
               <THead>
                 <TR>
-                  <TH colSpan={totals.length > 20 ? 2.01 : 1}>total</TH> {/*dilay일때 2 ctiVoc일때 1 */}
-                  {totals.map((total, index) => (
-                    <TH>{total.value}</TH>
-                  ))}
+                  <TH colSpan={Object.values(totals).length > 20 ? 2.01 : 1}>total</TH>
+
+                  <TotalRow />
                 </TR>
               </THead>
-            ) : (
-              <></>
             )}
           </TBody>
         ) : (

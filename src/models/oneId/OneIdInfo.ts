@@ -183,9 +183,10 @@ export interface DailyReportData {
   pnrUci: string;
 }
 export interface ctiVocSearch {
-  searchCri: string;
-  startDate: string;
-  endDate: string;
+  criteria: string;
+  channel: string;
+  aggrStartDate: string;
+  aggrEndDate: string;
 }
 export interface CtiVocData {}
 export interface OneIdSameData {

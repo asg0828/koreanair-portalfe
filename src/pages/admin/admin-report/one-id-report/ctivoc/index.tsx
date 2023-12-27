@@ -1,25 +1,29 @@
 import { Button, DatePicker, Radio, Stack, TD, TH, TR, useToast } from '@ke-design/components';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { ctiVocColumn, ctiVocData, ctiVocTotal } from '../../one-id-main/data';
+import { ctiVocColumn, ctiVocTotal } from '../../one-id-main/data';
 import { CtiVocData, ctiVocSearch } from '@/models/oneId/OneIdInfo';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useCtiVoc } from '@/hooks/queries/useOneIdQueries';
 import { useCallback, useEffect, useState } from 'react';
 import DataGridChild from '@/components/grid/DataGridChild';
+import { RowsInfo } from '@/models/components/Table';
 
 export default function Ctivoc() {
   const today = new Date();
+  const endDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  let startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
   const [searchInfo, setSearchInfo] = useState<ctiVocSearch>({
-    searchCri: 'tow',
-    startDate: '',
-    endDate: '',
+    criteria: 'daily',
+    channel: 'CTI',
+    aggrStartDate: startDate,
+    aggrEndDate: endDate,
   });
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
   const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<CtiVocData>>([]);
   const { refetch, data: response, isError } = useCtiVoc(searchInfo, page);
-
+  const [total, setTotal] = useState({});
   const handleSearch = useCallback(() => {
     refetch();
   }, [refetch]);
@@ -28,7 +32,7 @@ export default function Ctivoc() {
     setPage(page);
     setIsChanged(true);
   };
-
+  useEffect(() => {}, [total]);
   useEffect(() => {
     isChanged && handleSearch();
 
@@ -45,8 +49,20 @@ export default function Ctivoc() {
       });
     } else {
       if (response?.data) {
-        // response.data.contents.forEach(() => {});
         setRows(response.data.contents);
+
+        // 각 컬럼 합
+        const columnSums: RowsInfo = {};
+        response.data.contents.forEach((row: RowsInfo) => {
+          for (const key in row) {
+            if (typeof row[key] === 'number' || (row[key] === null && key in columnSums)) {
+              columnSums[key] = (columnSums[key] || 0) + (row[key] || 0);
+            } else if (row[key] === null && !(key in columnSums)) {
+              columnSums[key] = 0;
+            }
+          }
+        });
+        setTotal((prevState) => ({ ...prevState, ...columnSums }));
         setPage(response.data.page);
       }
     }
@@ -68,26 +84,25 @@ export default function Ctivoc() {
   function onClear() {
     setSearchInfo({
       ...searchInfo,
-      searchCri: 'one',
-      startDate: '',
-      endDate: '',
+      criteria: 'daily',
+      channel: 'CTI',
+      aggrStartDate: '',
+      aggrEndDate: '',
     });
   }
 
   /* 기간 별 버튼 */
   function duration(flag: string) {
-    let enddate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    let startdate = '';
-    if (flag === 'today') {
-      startdate = enddate;
+    if (flag === 'thisWeek') {
+      startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
     } else if (flag === 'oneMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
     } else if (flag === 'sixMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
     } else if (flag === 'oneYear') {
-      startdate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
     }
-    setSearchInfo({ ...searchInfo, endDate: enddate, startDate: startdate });
+    setSearchInfo({ ...searchInfo, aggrEndDate: endDate, aggrStartDate: startDate });
   }
 
   return (
@@ -107,9 +122,9 @@ export default function Ctivoc() {
                 shape="Square"
                 size="MD"
                 id="startDate"
-                value={searchInfo.startDate}
+                value={searchInfo.aggrStartDate}
                 onValueChange={(nextVal) => {
-                  setSearchInfo({ ...searchInfo, startDate: nextVal });
+                  setSearchInfo({ ...searchInfo, aggrStartDate: nextVal });
                 }}
               />
               -
@@ -120,37 +135,31 @@ export default function Ctivoc() {
                 shape="Square"
                 size="MD"
                 id="endDate"
-                value={searchInfo.endDate}
+                value={searchInfo.aggrEndDate}
                 onValueChange={(nextVal) => {
-                  setSearchInfo({ ...searchInfo, endDate: nextVal });
+                  setSearchInfo({ ...searchInfo, aggrEndDate: nextVal });
                 }}
               />
-              <Button onClick={() => duration('today')}>당일</Button>
+              <Button onClick={() => duration('thisWeek')}>1주일</Button>
               <Button onClick={() => duration('oneMonth')}>1개월</Button>
               <Button onClick={() => duration('sixMonth')}>6개월</Button>
               <Button onClick={() => duration('oneYear')}>1년</Button>
             </TD>
 
             <TH colSpan={2} align="right">
-              조회기준
+              채널
             </TH>
 
             <TD colSpan={4}>
               <Radio
-                id="searchCri"
-                name="searchCri"
+                id="channel"
+                name="channel"
                 onChange={(e) => radioHandler(e)}
-                label="History단건"
-                value="one"
+                label="CTI"
+                value="CTI"
                 defaultChecked
               />
-              <Radio
-                id="searchCri"
-                name="searchCri"
-                onChange={(e) => radioHandler(e)}
-                label="해당History전체"
-                value="all"
-              />
+              <Radio id="channel" name="channel" onChange={(e) => radioHandler(e)} label="VOC" value="VOC" />
             </TD>
           </TR>
         </HorizontalTable>
@@ -169,9 +178,8 @@ export default function Ctivoc() {
       <DataGridChild
         page={page}
         columns={ctiVocColumn}
-        //row   = {row}
-        rows={ctiVocData}
-        totals={ctiVocTotal}
+        rows={row}
+        totals={total}
         enableSort={false}
         clickable={true}
         onChange={handlePage}
