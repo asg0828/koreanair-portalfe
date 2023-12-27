@@ -151,7 +151,7 @@ const getInstance = (serviceName: string, isLoading: boolean, params?: any, isFi
       };
       // eslint-disable-next-line
       if (error.response && error.response.status.toString().indexOf('40') === 0) {
-        const errorCode = error.response.data.errorCode.toString();
+        const errorCode = error?.response?.data?.errorCode?.toString();
 
         if (errorCode) {
           if (errorCode === '301') {
