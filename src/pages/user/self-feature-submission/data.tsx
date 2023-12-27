@@ -95,6 +95,7 @@ export const initSfSubmissionApproval: SfSubmissionApproval = {
     status: '',//[ requested, canceled, approved, rejected ]
     statusNm: '',
     approver: '',
+    approverName: '',
     approverNm: '',
     comment: '',
     requestDate: '',
