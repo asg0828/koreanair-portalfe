@@ -109,12 +109,13 @@ export const getRelation = (searchInfo: relationSearch, page: PageModel) => {
 export const getErrorLog = (searchInfo: errorSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/error-log`,
     method: Method.GET,
     params: {
       queryParams: {
+        perPage: page?.pageSize,
+        page: page?.page,
         ...searchInfo,
-        ...page,
       },
     },
   });
@@ -124,12 +125,13 @@ export const getErrorLog = (searchInfo: errorSearch, page: PageModel) => {
 export const getDaily = (searchInfo: dailySearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/daily-report`,
     method: Method.GET,
     params: {
       queryParams: {
+        perPage: page?.pageSize,
+        page: page?.page,
         ...searchInfo,
-        ...page,
       },
     },
   });
@@ -139,12 +141,13 @@ export const getDaily = (searchInfo: dailySearch, page: PageModel) => {
 export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/cti-voc-report`,
     method: Method.GET,
     params: {
       queryParams: {
+        perPage: page?.pageSize,
+        page: page?.page,
         ...searchInfo,
-        ...page,
       },
     },
   });
@@ -154,11 +157,13 @@ export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
 export const getSamePnr = (page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/same-pnr`,
     method: Method.GET,
     params: {
       queryParams: {
-        ...page,
+        // perPage: page.perPage,
+        perPage: page.pageSize,
+        page: page.page,
       },
     },
   });
@@ -168,7 +173,7 @@ export const getSamePnr = (page: PageModel) => {
 export const getConversionCleansingHash = (searchInfo: ConversionCleansingHashSearch) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/cleansing-hash-results`,
     method: Method.GET,
     params: {
       queryParams: { ...searchInfo },

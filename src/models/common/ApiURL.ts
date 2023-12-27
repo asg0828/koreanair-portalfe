@@ -22,7 +22,7 @@ export enum PortalApiURL {
   REPORT_INTL_BOARDING_TOP100 = '/report/v1/intl-boarding',
   REPORT_DOMESTIC_BOARDING_TOP100 = '/report/v1/domestic-boarding',
   REPORT_TOTAL_MILEAGE_TOP100 = '/report/v1/total-mileage',
-  ONEID = '/admin/v1/oneId',
+  ONEID = '/oneid/v1',
   FEATURE = '/biz-meta/v1/features',
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',
   POPULAR_FEATURE = '/user-mgmt/v1/user-popular-features',

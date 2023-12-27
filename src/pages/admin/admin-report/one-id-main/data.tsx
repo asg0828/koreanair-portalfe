@@ -508,24 +508,25 @@ const ctiVocData: CtiVocData[] = [
     oneidHitNonSkypassRate: 71,
   },
 ];
-const ctiVocTotal: any = [
-  { total: 'totalCntLastUpd', value: 1 },
-  { total: 'totalCntCaseClose', value: 2 },
-  { total: 'oneidConnectSkypassCnt', value: 3 },
-  { total: 'oneidConnectNonSkypassCnt', value: 4 },
-  { total: 'oneidConnectTotalCnt', value: 5 },
-  { total: 'oneidConnectRate', value: 6 },
-  { total: 'oneidCtiSearchTotalRate', value: 7 },
-  { total: 'oneidCtiConnectReturnRate', value: 8 },
-  { total: 'oneidSearchSkypassCnt', value: 9 },
-  { total: 'oneidSearchNonSkypassCnt', value: 10 },
-  { total: 'oneidSearchTotalCnt', value: 11 },
-  { total: 'oneidHitTotalRate', value: 12 },
-  { total: 'oneidHitNonSkypassRate', value: 13 },
-  { total: 'oneidNonHitCnt', value: 14 },
-  { total: 'oneidMultiHitCnt', value: 15 },
-  { total: 'oneidOverHitCnt', value: 16 },
-];
+const ctiVocTotal = {
+  totalCntLastUpd: 1,
+  totalCntCaseClose: 2,
+  oneidConnectSkypassCnt: 3,
+  oneidConnectNonSkypassCnt: 4,
+  oneidConnectTotalCnt: 5,
+  oneidConnectRate: 6,
+  oneidCtiSearchTotalRate: 7,
+  oneidCtiConnectReturnRate: 8,
+  oneidSearchSkypassCnt: 9,
+  oneidSearchNonSkypassCnt: 10,
+  oneidSearchTotalCnt: 11,
+  oneidHitTotalRate: 12,
+  oneidHitNonSkypassRate: 13,
+  oneidNonHitCnt: 14,
+  oneidMultiHitCnt: 15,
+  oneidOverHitCnt: 16,
+};
+
 const errLogData: ErrLogData[] = [
   {
     no: '1',

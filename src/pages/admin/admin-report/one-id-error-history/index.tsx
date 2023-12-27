@@ -9,17 +9,20 @@ import { useErrorLog } from '@/hooks/queries/useOneIdQueries';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function OneIdErrorHistory() {
+  const today = new Date();
+  const endDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  let startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
   const [searchInfo, setSearchInfo] = useState<errorSearch>({
     errorNm: '',
     detailErrorNm: '',
     oneidRegisChnlCd: 'total',
     oneidFinalChgRelateNo: '',
-    creationStartDate: '',
-    creationEndDate: '',
+    creationStartDate: startDate,
+    creationEndDate: endDate,
     uciId: '',
     pnrNumber: '',
   });
-  const today = new Date();
+
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
   const [page, setPage] = useState<PageModel>(initPage);
@@ -45,7 +48,6 @@ export default function OneIdErrorHistory() {
       });
     } else {
       if (response?.data) {
-        // response.data.contents.forEach(() => {});
         setRows(response.data.contents);
         setPage(response.data.page);
       }
@@ -93,18 +95,16 @@ export default function OneIdErrorHistory() {
 
   /* 기간 별 버튼 */
   function duration(flag: string) {
-    let enddate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    let startdate = '';
-    if (flag === 'today') {
-      startdate = enddate;
+    if (flag === 'thisWeek') {
+      startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
     } else if (flag === 'oneMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
     } else if (flag === 'sixMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
     } else if (flag === 'oneYear') {
-      startdate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
     }
-    setSearchInfo({ ...searchInfo, creationEndDate: enddate, creationStartDate: startdate });
+    setSearchInfo({ ...searchInfo, creationEndDate: endDate, creationStartDate: startDate });
   }
 
   return (
@@ -213,6 +213,7 @@ export default function OneIdErrorHistory() {
 
             <TD colSpan={8}>
               <DatePicker
+                id="startDate"
                 value={searchInfo.creationStartDate}
                 appearance="Outline"
                 calendarViewMode="days"
@@ -231,11 +232,12 @@ export default function OneIdErrorHistory() {
                 mode="single"
                 shape="Square"
                 size="MD"
+                id="endDate"
                 onValueChange={(nextVal) => {
                   setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
                 }}
               />
-              <Button onClick={() => duration('today')}>당일</Button>
+              <Button onClick={() => duration('thisWeek')}>1주일</Button>
               <Button onClick={() => duration('oneMonth')}>1개월</Button>
               <Button onClick={() => duration('sixMonth')}>6개월</Button>
               <Button onClick={() => duration('oneYear')}>1년</Button>
@@ -256,8 +258,8 @@ export default function OneIdErrorHistory() {
 
       <DataGrid
         columns={errLogColumn}
-        //rows = {row}
-        rows={errLogData}
+        rows={row}
+        // rows={errLogData}
         enableSort={false}
         clickable={true}
         page={page}
