@@ -14,14 +14,14 @@ import {
 } from '@/api/CustomerInfoAPI';
 import { useQuery } from '@tanstack/react-query';
 
-// OneId로 Profile 조회
+// Profile 조회
 export const useProfile = (searchInfo: any) => {
   return useQuery(['/customerInfo/oneId'], () => getProfile(searchInfo), {
     enabled: false,
   });
 };
 
-// 영문명으로 맴버 조회(C-Level)
+// Profile 조회(C-Level)
 export const useProfileCLevel = (searchInfo: any) => {
   return useQuery(['/customerInfo/engname'], () => getProfileCLevel(searchInfo), { enabled: false });
 };

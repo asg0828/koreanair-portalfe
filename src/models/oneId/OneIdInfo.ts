@@ -39,24 +39,27 @@ export interface OneIdHistoryData {
   homePhoneNumberInfo: string;
 }
 export interface MobileData {
+  [agtEstMblfonNoInfoHshVlu: string]: string;
+  agtEstimatedMblfonNoInfo: string;
+  creationDate: string;
+  disuseConvsDt: string;
+  lastUpdateDate: string;
   no: string;
-  presumeNum: string;
-  [presumeNumHash: string]: string;
   useYn: string;
 }
 
 export interface MobMasterData {
   no: string;
-  [oneId: string]: string;
-  firstNameE: string;
-  lastNameE: string;
-  phoneNum: string;
-  eMailAdr: string;
-  birth: string;
-  firstNameK: string;
-  lastNameK: string;
-  gender: string;
-  presumeCode: string;
+  [oneidNo: string]: string;
+  engFname: string;
+  engLname: string;
+  korFname: string;
+  korLname: string;
+  mobilePhoneNumberInfo: string;
+  emailAddress: string;
+  birthDatev: string;
+  sexCode: string;
+  agtEstimatedContactTypeCd: string;
 }
 
 export interface RelationData {

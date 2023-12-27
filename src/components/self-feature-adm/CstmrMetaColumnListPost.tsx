@@ -303,7 +303,7 @@ const CstmrMetaColumnListPost: React.FC<VerticalTableProps> = ({
               key={`select-chgDtpCd-${rowIndex}`}
               appearance="Outline"
               placeholder="전체"
-              style={{ maxWidth: '75px' }}
+              style={{ minWidth: '75px' }}
               onChange={(e, value) => value && onchangeSelectHandler(e, value, 'chgDtpCd', rowIndex)}
             >
               <SelectOption value={'timestamp'}>timestamp</SelectOption>

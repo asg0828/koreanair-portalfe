@@ -15,7 +15,7 @@ export default function OneIdErrorHistory() {
   const [searchInfo, setSearchInfo] = useState<errorSearch>({
     errorNm: '',
     detailErrorNm: '',
-    oneidRegisChnlCd: 'total',
+    oneidRegisChnlCd: '',
     oneidFinalChgRelateNo: '',
     creationStartDate: startDate,
     creationEndDate: endDate,
@@ -148,9 +148,9 @@ export default function OneIdErrorHistory() {
                 id="oneidRegisChnlCd"
                 name="oneidRegisChnlCd"
                 label="전체"
-                checked={searchInfo.oneidRegisChnlCd === 'total'}
+                checked={searchInfo.oneidRegisChnlCd === ''}
                 onClick={(e) => radioVal(e)}
-                value="total"
+                value=""
                 defaultChecked
               />
               <Radio
@@ -158,14 +158,14 @@ export default function OneIdErrorHistory() {
                 name="oneidRegisChnlCd"
                 label="ODS"
                 onClick={(e) => radioVal(e)}
-                value="ods"
+                value="ODS"
               />
               <Radio
                 id="oneidRegisChnlCd"
                 name="oneidRegisChnlCd"
                 label="SKYPASS"
                 onClick={(e) => radioVal(e)}
-                value="skypass"
+                value="SKYPASS"
               />
             </TD>
             <TH colSpan={1.01} align="right">
@@ -177,7 +177,7 @@ export default function OneIdErrorHistory() {
                 placeholder="검색어를 입력하세요."
                 onChange={onSearchChangeHandler}
                 value={searchInfo.pnrNumber}
-                disabled={searchInfo.oneidRegisChnlCd === 'ods' ? false : true}
+                disabled={searchInfo.oneidRegisChnlCd === 'ODS' ? false : true}
               />
             </TD>
             <TH colSpan={1} align="right">
@@ -189,7 +189,7 @@ export default function OneIdErrorHistory() {
                 placeholder="검색어를 입력하세요."
                 value={searchInfo.uciId}
                 onChange={onSearchChangeHandler}
-                disabled={searchInfo.oneidRegisChnlCd === 'ods' ? false : true}
+                disabled={searchInfo.oneidRegisChnlCd === 'ODS' ? false : true}
               />
             </TD>
             <TH colSpan={1} align="right">
@@ -201,7 +201,7 @@ export default function OneIdErrorHistory() {
                 placeholder="검색어를 입력하세요."
                 value={searchInfo.oneidFinalChgRelateNo}
                 onChange={onSearchChangeHandler}
-                disabled={searchInfo.oneidRegisChnlCd === 'skypass' ? false : true}
+                disabled={searchInfo.oneidRegisChnlCd === 'SKYPASS' ? false : true}
               />
             </TD>
           </TR>

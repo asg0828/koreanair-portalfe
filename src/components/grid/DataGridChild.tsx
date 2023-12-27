@@ -25,7 +25,6 @@ const DataGridChild: React.FC<DatagridProps> = ({
 }) => {
   const { t } = useTranslation();
   const [pages, setPages] = useState<PageModel>(initPage);
-
   useEffect(() => {
     page && setPages(page);
   }, [page]);

@@ -21,7 +21,7 @@ import { SelectValue } from '@mui/base/useSelect';
 import { Typography } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { historyColumn, masterColumn, onIdPaxData, reason } from '../data';
-
+import useDidMountEffect from '@/hooks/useDidMountEffect';
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(2개)
 export default function OneIdMasterHistory() {
   const { toast } = useToast();
@@ -62,6 +62,9 @@ export default function OneIdMasterHistory() {
     }
   };
 
+  useDidMountEffect(() => {
+    handleSearch();
+  }, [page.page, page.pageSize, handleSearch]);
   // master 정보 useEffect
   useEffect(() => {
     if (isError1 || response1?.successOrNot === 'N') {
@@ -73,7 +76,7 @@ export default function OneIdMasterHistory() {
       if (response1?.data) {
         // response.data.contents.forEach(() => {});
         setRows(response1.data.contents);
-        setPage(response1.data.pagination);
+        setPage(response1.data.page);
       }
     }
   }, [response1, isError1, toast]);
@@ -89,7 +92,7 @@ export default function OneIdMasterHistory() {
       if (response2?.data) {
         // response.data.contents.forEach(() => {});
         setRows2(response2.data.contents);
-        setPage2(response2.data.pagination);
+        setPage2(response2.data.page);
       }
     }
   }, [response2, isError2, toast]);

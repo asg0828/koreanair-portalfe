@@ -20,6 +20,10 @@ export default function SamePnrUcild() {
     refetch();
   }, [page]);
 
+  useDidMountEffect(() => {
+    handleSearch();
+  }, [page.page, page.pageSize, handleSearch]);
+
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
@@ -29,7 +33,7 @@ export default function SamePnrUcild() {
     } else {
       if (response?.data) {
         setRows(response.data.contents);
-        setPage(response.data.pagination);
+        setPage(response.data.page);
       }
     }
   }, [response, isError, toast]);
