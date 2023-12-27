@@ -21,7 +21,7 @@ const useOAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis) => {
     };
 
     (async () => {
-      const response: CommonResponse = await sessionApis.accessTokenRefreshTokenRequset(accessTokenRefreshTokenRequest);
+      const response: CommonResponse = await sessionApis.accessTokenRefreshTokenRequest(accessTokenRefreshTokenRequest);
 
       if (response.successOrNot === 'Y' && response.statusCode === StatusCode.SUCCESS) {
         const data = JSON.parse(response.data);
