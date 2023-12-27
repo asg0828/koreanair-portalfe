@@ -28,6 +28,7 @@ import {
 	TbRsCustFeatRuleSql,
 	FormulaTrgtListProps,
 	CustFeatureFormData,
+	FeatListSrchProps,
 } from '@/models/selfFeature/FeatureModel'
 import {
 	initSelfFeatureInfo,
@@ -38,6 +39,7 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 	initCustFeatureFormDataSql,
+	initFeatListSrchProps,
 } from './data'
 import {
 	SubFeatStatus,
@@ -57,7 +59,7 @@ import {
 import { FeatureAllParams, FeatureKeyType, FeatureSeparatesModel } from '@/models/model/FeatureModel'
 
 //import { selectCodeList } from '@/reducers/codeSlice'
-import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
+import { useApproverCandidate, useCustFeatRules, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 import { useFeatureAllList, useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries'
 import { useCreateCustFeatRule, useCreateCustFeatSQL } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
@@ -88,6 +90,10 @@ const SelfFeatureReg = () => {
 	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
 	// 속성, 행동정보
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
+	// Feature 정보 조회
+	const [featureRuleInfoParams, setFeatureRuleInfoParams] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
+	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(featureRuleInfoParams)
+	const [featureRuleList, setFeatureRuleList] = useState<Array<TbRsCustFeatRule>>([])
 
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { data: cmmCodeDtpCdRes } = useCommCodes(CommonCode.DATA_TYPE_CATEGORY)
@@ -206,8 +212,42 @@ const SelfFeatureReg = () => {
 	}, [cmmCodeDtpCdRes])
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
-		if (location.state.regType === SelfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
+		if (location.state.regType === SelfFeatPgPpNm.RULE_REG) {
+			mstrSgmtTbandColRefetch()
+			setFeatureRuleInfoParams({ 
+				...featureRuleInfoParams, 
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
+				["submissionStatus"]: SubFeatStatus.APRV, 
+			})
+		}
 	}, [mstrSgmtRuleIdParam, location.state.regType])
+	useEffect(() => {
+		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+		featureListRefetch()
+	}, [featureRuleInfoParams])
+	// customer feature 목록 API callback
+	useEffect(() => {
+		if (featureListErr || featureListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (featureListRes) {
+				let rtn = cloneDeep(featureListRes.result)
+				rtn = rtn.map((item: TbRsCustFeatRule) => {
+					if (item.dataType === "string") item.dataTypeCategory = "string"
+					else if (item.dataType === "timestamp") item.dataTypeCategory = "timestamp"
+					else item.dataTypeCategory = "number"
+
+					item.dtpCd = item.dataType
+
+					return item
+				})
+				setFeatureRuleList(rtn)
+			}
+		}
+	}, [featureListRes, featureListErr, featureListRefetch])
 	// location값으로 Rule Design / SQL 구분(default :: Rule Design)
 	useEffect(() => {
 		if (!location.state || !location.state.regType || location.state.regType === "") {
@@ -499,6 +539,7 @@ const SelfFeatureReg = () => {
 		delete param.customerFeature.tbRsCustFeatRuleSql
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
+		console.log(param)
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({
@@ -1065,6 +1106,7 @@ const SelfFeatureReg = () => {
 										setTargetList={setTargetList}
 										setTrgtFilterList={setTrgtFilterList}
 										attributes={mstrSgmtTableandColMetaInfo.attributes}
+										featureRules={featureRuleList}
 										behaviors={mstrSgmtTableandColMetaInfo.behaviors}
 										setFormulaTrgtList={setFormulaTrgtList}
 									/>
@@ -1074,6 +1116,7 @@ const SelfFeatureReg = () => {
 									{(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) &&
 										<DragList
 											attributes={mstrSgmtTableandColMetaInfo.attributes}
+											featureRules={featureRuleList}
 											behaviors={mstrSgmtTableandColMetaInfo.behaviors}
 										/>}
 									{/* drag 영역 */}

@@ -38,6 +38,7 @@ export interface TargetDropListProps {
     setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     attributes: Array<Attribute>
+    featureRules: Array<TbRsCustFeatRule>
     behaviors: Array<Behavior>
     setFormulaTrgtList: React.Dispatch<React.SetStateAction<Array<FormulaTrgtListProps>>>
 }
@@ -69,6 +70,7 @@ export interface TargetDragProps {
     attrTblClmnInfo?: Attribute
     metaTblLogiNm?: string
     behvTblClmnInfo?: TbCoMetaTblClmnInfo
+    featTblClmnInfo?: TbRsCustFeatRule
 }
 
 export interface FeatCalcValidProps {
