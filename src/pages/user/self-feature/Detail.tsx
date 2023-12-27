@@ -648,17 +648,20 @@ const SelfFeatureDetail = () => {
 						if (subAprv.approvalSequence === 1) {
 							let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
 							subAprv.approvalSequenceNm = AprvSeqNm.FIRST
-							subAprv.approverNm = type1 ? type1.userNm : ""
+							subAprv.approverNm = subAprv.approverName
+							if (!subAprv.approverNm || subAprv.approverNm === "") subAprv.approverNm = type1 ? type1.userNm : ""
 						}
 						if (subAprv.approvalSequence === 2) {
 							let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
 							subAprv.approvalSequenceNm = AprvSeqNm.SECOND
-							subAprv.approverNm = type2 ? type2.userNm : ""
+							subAprv.approverNm = subAprv.approverName
+							if (!subAprv.approverNm || subAprv.approverNm === "") subAprv.approverNm = type2 ? type2.userNm : ""
 						}
 						if (subAprv.approvalSequence === 3) {
 							let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
 							subAprv.approvalSequenceNm = AprvSeqNm.LAST
-							subAprv.approverNm = type3 ? type3.userNm : ""
+							subAprv.approverNm = subAprv.approverName
+							if (!subAprv.approverNm || subAprv.approverNm === "") subAprv.approverNm = type3 ? type3.userNm : ""
 						}
 						if (
 							!subAprv.status

@@ -68,7 +68,7 @@ const SfSubmissionRequest = () => {
         if (!location || !location.state) return
 		setSearch((prevState) => {
 			let rtn = cloneDeep(prevState)
-			if (location.state) rtn = location.state.srchInfo
+			if (location.state && location.state.srchInfo) rtn = location.state.srchInfo
 			return rtn
 		})
     }, [location])

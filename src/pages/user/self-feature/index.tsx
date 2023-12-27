@@ -71,7 +71,7 @@ const SelfFeature = () => {
 		if (!sessionInfo.deptCode) return
 		setSearchInfo((prevState) => {
 			let rtn = cloneDeep(prevState)
-			if (location.state) rtn = location.state.srchInfo
+			if (location.state && location.state.srchInfo) rtn = location.state.srchInfo
 			if (sessionInfo.deptCode) rtn.team = sessionInfo.deptCode
 			return rtn
 		})
