@@ -1,5 +1,5 @@
-import { Stack, Loader } from '@components/ui';
 import '@/assets/styles/Fallback.scss';
+import { Loader, Stack } from '@components/ui';
 import { useTranslation } from 'react-i18next';
 
 const MainFallback = () => {

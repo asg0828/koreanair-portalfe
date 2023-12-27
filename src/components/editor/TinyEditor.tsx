@@ -4,8 +4,8 @@ import { getFileDownloadPath } from '@/utils/ApiUtil';
 import { useToast } from '@ke-design/components';
 import { Editor } from '@tinymce/tinymce-react';
 import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react';
-import './TinyEditor.scss';
 import { useTranslation } from 'react-i18next';
+import './TinyEditor.scss';
 
 export interface TinyEditorProps {
   content?: string;

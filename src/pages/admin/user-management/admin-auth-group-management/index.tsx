@@ -17,18 +17,17 @@ import { useTranslation } from 'react-i18next';
 
 const List = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<AuthModel>>([]);
   const {
     register,
     handleSubmit,
-    getValues,
     setValue,
     setFocus,
     reset,
-    control,
+    watch,
     formState: { errors },
   } = useForm<UpdatedAuthModel>({
     mode: 'onChange',
@@ -38,7 +37,6 @@ const List = () => {
       authDsc: '',
     },
   });
-  const values = getValues();
   const { data: response, isError, refetch } = useAdminAuthAllList();
   const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMuate } = useCreateAdminAuth();
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMuate } = useUpdateAdminAuth();
@@ -62,13 +60,15 @@ const List = () => {
   };
 
   const handleDelete = () => {
-    if (values.authId) {
+    const nAuthId = watch().authId;
+
+    if (nAuthId) {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
           title: t('common.modal.title.delete'),
           content: t('common.modal.message.deleteConfirm'),
-          onConfirm: () => dMutate(values.authId),
+          onConfirm: () => dMutate(nAuthId),
         })
       );
     } else {
@@ -175,7 +175,7 @@ const List = () => {
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <DataGrid
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         isMultiSelected={false}
         columns={columns}

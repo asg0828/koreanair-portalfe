@@ -9,8 +9,8 @@ export interface CreatedEGroupModel {
   groupNm: string;
   upGroupCode: string | null;
   upGroupNm?: string;
-  userAuthId: string;
-  mgrAuthId: string;
+  userAuthId: string | null;
+  mgrAuthId: string | null;
   useYn: string;
   ordSeq: number;
   oprtrSe: 'C' | 'U' | 'D';

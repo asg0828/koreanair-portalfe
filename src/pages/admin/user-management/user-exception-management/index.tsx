@@ -194,6 +194,9 @@ const List = () => {
   };
 
   const onSubmit = (formData: UpdatedEGroupModel) => {
+    formData.userAuthId = formData.userAuthId === 'nonAuth' ? null : formData.userAuthId;
+    formData.mgrAuthId = formData.mgrAuthId === 'nonAuth' ? null : formData.mgrAuthId;
+
     if (findCreatedItem()) {
       dispatch(
         openModal({
@@ -340,7 +343,12 @@ const List = () => {
       });
     } else {
       if (uaResponse?.data) {
-        setUserAuthList(uaResponse.data);
+        const nonAuth = {
+          authId: 'nonAuth',
+          authNm: t('management:label.nonAuth'),
+          authDsc: t('management:label.nonAuth'),
+        };
+        setUserAuthList([nonAuth, ...uaResponse.data]);
       }
     }
   }, [uaResponse, uaIsError, toast]);
@@ -353,7 +361,12 @@ const List = () => {
       });
     } else {
       if (aaResponse?.data) {
-        setAdminAuthList(aaResponse.data);
+        const nonAuth = {
+          authId: 'nonAuth',
+          authNm: t('management:label.nonAuth'),
+          authDsc: t('management:label.nonAuth'),
+        };
+        setAdminAuthList([nonAuth, ...aaResponse.data]);
       }
     }
   }, [aaResponse, aaIsError, toast]);
@@ -448,7 +461,7 @@ const List = () => {
                 </TD>
               </TR>
               <TR>
-                <TH required colSpan={1} align="right">
+                <TH colSpan={1} align="right">
                   {t('management:label.userAuthId')}
                 </TH>
                 <TD colSpan={2}>
@@ -456,9 +469,6 @@ const List = () => {
                     <Controller
                       name="userAuthId"
                       control={control}
-                      rules={{
-                        required: t('common.validate.required'),
-                      }}
                       render={({ field }) => (
                         <Select
                           appearance="Outline"
@@ -467,7 +477,7 @@ const List = () => {
                           ref={field.ref}
                           onChange={(e, value) => value && field.onChange(value)}
                           status={errors?.userAuthId?.message ? 'error' : undefined}
-                          value={field.value}
+                          value={field.value || 'nonAuth'}
                         >
                           {userAuthList?.map((item) => (
                             <SelectOption value={item.authId}>{item.authNm}</SelectOption>
@@ -480,7 +490,7 @@ const List = () => {
                 </TD>
               </TR>
               <TR>
-                <TH required colSpan={1} align="right">
+                <TH colSpan={1} align="right">
                   {t('management:label.mgrAuthId')}
                 </TH>
                 <TD colSpan={2}>
@@ -488,9 +498,6 @@ const List = () => {
                     <Controller
                       name="mgrAuthId"
                       control={control}
-                      rules={{
-                        required: t('common.validate.required'),
-                      }}
                       render={({ field }) => (
                         <Select
                           appearance="Outline"
@@ -499,7 +506,7 @@ const List = () => {
                           ref={field.ref}
                           onChange={(e, value) => value && field.onChange(value)}
                           status={errors?.mgrAuthId?.message ? 'error' : undefined}
-                          value={field.value}
+                          value={field.value || 'nonAuth'}
                         >
                           {adminAuthList?.map((item) => (
                             <SelectOption value={item.authId}>{item.authNm}</SelectOption>

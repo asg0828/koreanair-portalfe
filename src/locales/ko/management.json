@@ -39,7 +39,8 @@
     "upMenuNm": "상위메뉴명",
     "menuNm": "메뉴명",
     "menuUrl": "메뉴 URL",
-    "menuDsc": "메뉴 설명"
+    "menuDsc": "메뉴 설명",
+    "nonAuth": "권한없음"
   },
   "toast": {
     "info": {
