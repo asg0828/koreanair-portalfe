@@ -40,9 +40,10 @@ const List = () => {
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const beforeParams: DatasetParams = location?.state?.params;
+  const beforePage: PageModel = location?.state?.page;
   const codeList = useAppSelector(selectCodeList(GroupCodeType.DBMS));
   const [params, setParams] = useState<DatasetParams>(beforeParams || initParams);
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<DatasetModel>>([]);
   const { data: response, isError, refetch } = useDatasetList(params, page);
 
@@ -57,6 +58,7 @@ const List = () => {
     navigate(View.REG, {
       state: {
         params: params,
+        page: page,
       },
     });
   };
@@ -66,6 +68,7 @@ const List = () => {
       state: {
         mtsId: row.mtsId,
         params: params,
+        page: page,
       },
     });
   };
@@ -114,7 +117,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: t('common.toast.list'),
+        content: t('common.toast.error.list'),
       });
     } else {
       if (response?.data) {

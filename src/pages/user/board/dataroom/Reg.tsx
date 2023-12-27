@@ -6,6 +6,7 @@ import { useCreateDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedDataroomModel, DataroomParams } from '@/models/model/DataroomModel';
+import { PageModel } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -21,6 +22,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: DataroomParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -45,9 +47,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

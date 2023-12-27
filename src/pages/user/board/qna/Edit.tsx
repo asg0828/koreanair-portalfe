@@ -8,6 +8,7 @@ import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
+import { PageModel } from '@/models/model/PageModel';
 import { QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -27,6 +28,7 @@ const Edit = () => {
   const location = useLocation();
   const qnaId = location?.state?.qnaId;
   const params: QnaParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -58,9 +60,10 @@ const Edit = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

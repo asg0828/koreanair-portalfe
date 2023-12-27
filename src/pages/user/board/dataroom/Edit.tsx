@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { DataroomParams, UpdatedDataroomModel } from '@/models/model/DataroomModel';
 import { FileModel } from '@/models/model/FileModel';
+import { PageModel } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -26,6 +27,7 @@ const Edit = () => {
   const location = useLocation();
   const dataId = location?.state?.dataId;
   const params: DataroomParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -58,9 +60,10 @@ const Edit = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

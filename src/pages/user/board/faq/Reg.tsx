@@ -6,6 +6,7 @@ import { useCreateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedFaqModel, FaqParams } from '@/models/model/FaqModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -22,6 +23,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: FaqParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -48,9 +50,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

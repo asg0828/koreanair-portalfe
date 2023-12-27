@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetParams, UpdatedDatasetModel } from '@/models/model/DatasetModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -37,6 +38,7 @@ const Edit = () => {
   const location = useLocation();
   const mtsId = location?.state?.mtsId;
   const params: DatasetParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -186,9 +188,10 @@ const Edit = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

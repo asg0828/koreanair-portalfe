@@ -12,6 +12,7 @@ import {
   FeatureParams,
   FeatureSeparatesModel,
 } from '@/models/model/FeatureModel';
+import { PageModel } from '@/models/model/PageModel';
 import { UserModel } from '@/models/model/UserModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -34,6 +35,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: FeatureParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -81,9 +83,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

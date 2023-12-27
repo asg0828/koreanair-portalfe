@@ -6,6 +6,7 @@ import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { CreatedNoticeModel, NoticeParams } from '@/models/model/NoticeModel';
+import { PageModel } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
@@ -21,6 +22,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: NoticeParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -49,9 +51,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(
@@ -65,7 +68,6 @@ const Reg = () => {
   };
 
   const onSubmit = (data: CreatedNoticeModel) => {
-    console.log('data: ', data);
     dispatch(
       openModal({
         type: ModalType.CONFIRM,

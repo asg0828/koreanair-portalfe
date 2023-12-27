@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { NoticeParams, UpdatedNoticeModel } from '@/models/model/NoticeModel';
+import { PageModel } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -26,6 +27,7 @@ const Edit = () => {
   const location = useLocation();
   const noticeId = location?.state?.noticeId;
   const params: NoticeParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -62,9 +64,10 @@ const Edit = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

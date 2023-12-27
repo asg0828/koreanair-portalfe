@@ -31,8 +31,9 @@ const List = () => {
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const beforeParams: FaqParams = location?.state?.params;
+  const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initFaqParams);
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<FaqModel>>([]);
   const [faqId, setFaqId] = useState<string>('');
   const [dFaqId, setDFaqId] = useState<string>('');
@@ -49,6 +50,7 @@ const List = () => {
     navigate(View.REG, {
       state: {
         params: params,
+        page: page,
       },
     });
   };

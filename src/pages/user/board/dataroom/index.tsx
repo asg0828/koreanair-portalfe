@@ -28,8 +28,9 @@ const List = () => {
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const beforeParams: DataroomParams = location?.state?.params;
+  const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initParams);
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<DataroomModel>>([]);
   const { data: response, isError, refetch } = useDataroomList(params, page);
 
@@ -50,6 +51,7 @@ const List = () => {
     navigate(View.REG, {
       state: {
         params: params,
+        page: page,
       },
     });
   };
@@ -59,6 +61,7 @@ const List = () => {
       state: {
         dataId: row.dataId,
         params: params,
+        page: page,
       },
     });
   };

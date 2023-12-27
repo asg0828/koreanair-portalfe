@@ -26,10 +26,11 @@ const List = () => {
   const { toast } = useToast();
   const location = useLocation();
   const beforeParams: UserParams = location?.state?.params;
-  const [params, setParams] = useState<UserParams>(beforeParams || initParams);
+  const beforePage: PageModel = location?.state?.page;
   const [userAuthList, setUserAuthList] = useState<Array<AuthModel>>();
   const [adminAuthList, setAdminAuthList] = useState<Array<AuthModel>>();
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [params, setParams] = useState<UserParams>(beforeParams || initParams);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<UserModel>>([]);
   const { data: response, isError, refetch } = useUserList(params, page);
   const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
@@ -52,6 +53,7 @@ const List = () => {
       state: {
         userId: row.userId,
         params: params,
+        page: page,
       },
     });
   };
