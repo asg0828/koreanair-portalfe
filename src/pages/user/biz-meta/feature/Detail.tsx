@@ -5,6 +5,7 @@ import { useFeatureById } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { FeatureModel, FeatureParams } from '@/models/model/FeatureModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -22,6 +23,7 @@ const Detail = () => {
   const location = useLocation();
   const featureId: string = location?.state?.featureId || '';
   const params: FeatureParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [featureModel, setFeatureModel] = useState<FeatureModel>();
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFeature(featureId);
@@ -30,15 +32,17 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         featureId: featureId,
         params: params,
+        page: page,
       },
     });
   };

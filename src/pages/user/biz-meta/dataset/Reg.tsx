@@ -7,14 +7,15 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { CreatedDatasetModel, DatasetColumnModel, DatasetParams } from '@/models/model/DatasetModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const initRows: DatasetColumnModel = {
   index: 0,
@@ -34,6 +35,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: DatasetParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -182,9 +184,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

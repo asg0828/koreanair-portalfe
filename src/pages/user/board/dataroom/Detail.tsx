@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { DataroomModel, DataroomParams } from '@/models/model/DataroomModel';
 import { FileModel } from '@/models/model/FileModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
@@ -28,6 +29,7 @@ const Detail = () => {
   const location = useLocation();
   const dataId: string = location?.state?.dataId || '';
   const params: DataroomParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [dataroomModel, setDataroomModel] = useState<DataroomModel>();
   const { data: response, isSuccess, isError } = useDataroomById(dataId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteDataroom(dataId);
@@ -36,15 +38,17 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         dataId: dataId,
         params: params,
+        page: page,
       },
     });
   };
@@ -54,6 +58,7 @@ const Detail = () => {
       state: {
         dataId: nDataId,
         params: params,
+        page: page,
       },
     });
   };

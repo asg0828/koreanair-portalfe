@@ -2,6 +2,7 @@ import '@/assets/styles/Board.scss';
 import EmptyState from '@/components/emptyState/EmptyState';
 import { useUserById } from '@/hooks/queries/useUserQueries';
 import { ValidType } from '@/models/common/Constants';
+import { PageModel } from '@/models/model/PageModel';
 import { UserModel, UserParams } from '@/models/model/UserModel';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
@@ -15,6 +16,7 @@ const Detail = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: UserParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [userModel, setUserModel] = useState<UserModel>();
   const userId: string = location?.state?.userId || '';
   const { data: response, isSuccess, isError } = useUserById(userId);
@@ -23,9 +25,10 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

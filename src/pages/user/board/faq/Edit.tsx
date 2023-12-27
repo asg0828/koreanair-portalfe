@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FaqParams, UpdatedFaqModel } from '@/models/model/FaqModel';
 import { FileModel } from '@/models/model/FileModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
@@ -27,6 +28,7 @@ const Edit = () => {
   const location = useLocation();
   const faqId = location?.state?.faqId;
   const params: FaqParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -56,9 +58,10 @@ const Edit = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(

@@ -4,11 +4,12 @@ import VerticalTable from '@/components/table/VerticalTable';
 import { useDeleteDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useDatasetById } from '@/hooks/queries/useDatasetQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetModel, DatasetParams } from '@/models/model/DatasetModel';
+import { PageModel } from '@/models/model/PageModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
-import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
+import { selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
@@ -21,11 +22,11 @@ const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
   const mtsId = location?.state?.mtsId;
   const params: DatasetParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [datasetModel, setDatasetModel] = useState<DatasetModel>();
   const columns: Array<ColumnsInfo> = [
     {
@@ -96,15 +97,17 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         mtsId: mtsId,
         params: params,
+        page: page,
       },
     });
   };
