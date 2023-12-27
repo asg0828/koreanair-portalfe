@@ -1,7 +1,7 @@
 import { TextSnippetOutlinedIcon } from '@/assets/icons';
 import { Stack, Typography } from '@components/ui';
-import './NoData.scss';
 import { useTranslation } from 'react-i18next';
+import './NoData.scss';
 
 export interface NoDataProps {
   className?: string;

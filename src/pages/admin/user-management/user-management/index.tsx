@@ -214,7 +214,7 @@ const List = () => {
       </SearchForm>
 
       <DataGrid
-        enableSort={true}
+        enableSort={false}
         clickable={true}
         columns={columns}
         rows={rows}
