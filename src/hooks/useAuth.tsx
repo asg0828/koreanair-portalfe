@@ -14,11 +14,13 @@ import CommonResponse from '@models/common/CommonResponse';
 import { SessionInfo, SessionRequest } from '@models/common/Session';
 import SessionUtil from '@utils/SessionUtil';
 import { useCallback, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createBrowserRouter } from 'react-router-dom';
 
 const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequestInfo?: SessionRequest) => {
-  const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const sessionInfo = useAppSelector(selectSessionInfo());
   const contextPath = useAppSelector(selectContextPath());
   const [router, setRouter] = useState<any>();
@@ -72,7 +74,7 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
     if (qmError || qmResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '퀵 메뉴 조회 중 에러가 발생했습니다.',
+        content: t('common.quickMenu.toast.error'),
       });
     } else if (qmIsSuccess) {
       if (qmResponse?.data) {
