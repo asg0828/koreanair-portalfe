@@ -230,7 +230,7 @@ const SelfFeatureDetail = () => {
 				let rtn = cloneDeep(featureListRes.result)
 				rtn = rtn.map((item: TbRsCustFeatRule) => {
 					if (item.dataType === "string") item.dataTypeCategory = "string"
-					else if (item.dataType === "timestamp") item.dataTypeCategory = "timestamp"
+					else if (item.dataType === "timestamp" || item.dataType === "date") item.dataTypeCategory = "timestamp"
 					else item.dataTypeCategory = "number"
 
 					return item
