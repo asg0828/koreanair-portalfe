@@ -198,17 +198,17 @@ const Edit = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              {t('board:label.openYn')}
+              {t('board:label.useYn')}
             </TH>
             <TD colSpan={2} align="left">
               <Radio
-                label={t('board:label.open')}
+                label={t('board:label.useY')}
                 value="Y"
                 defaultChecked={values.openYn === 'Y'}
                 {...register('openYn')}
               />
               <Radio
-                label={t('board:label.unopen')}
+                label={t('board:label.useN')}
                 value="N"
                 defaultChecked={values.openYn === 'N'}
                 {...register('openYn')}
