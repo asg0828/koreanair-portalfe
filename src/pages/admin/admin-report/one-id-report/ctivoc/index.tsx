@@ -55,7 +55,9 @@ export default function Ctivoc() {
         const columnSums: RowsInfo = {};
         response.data.contents.forEach((row: RowsInfo) => {
           for (const key in row) {
-            if (typeof row[key] === 'number' || (row[key] === null && key in columnSums)) {
+            if (key.includes('Rate')) {
+              columnSums[key] = '0%';
+            } else if (typeof row[key] === 'number' || (row[key] === null && key in columnSums)) {
               columnSums[key] = (columnSums[key] || 0) + (row[key] || 0);
             } else if (row[key] === null && !(key in columnSums)) {
               columnSums[key] = 0;

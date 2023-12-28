@@ -42,7 +42,7 @@ export default class SessionApis {
       .catch(function (err) {});
   }
 
-  public accessTokenRefreshTokenRequset = async (
+  public accessTokenRefreshTokenRequest = async (
     accessTokenRefreshTokenReqeust: AccessTokenRefreshTokenRequest,
     isLoading = true,
     isAccessTokenRefreshToken = true

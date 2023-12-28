@@ -19,7 +19,7 @@ import { callApi, Method } from '@utils/ApiUtil';
 export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master-for-history`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -34,7 +34,7 @@ export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel
 export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master-history`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -49,7 +49,7 @@ export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
 export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/pax-mapping`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -64,7 +64,7 @@ export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => 
 export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -79,7 +79,7 @@ export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel)
 export const getMobile = (searchInfo: mobileSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/agt-contact`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -94,7 +94,7 @@ export const getMobile = (searchInfo: mobileSearch, page: PageModel) => {
 export const getRelation = (searchInfo: relationSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/merge-history`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -113,8 +113,7 @@ export const getErrorLog = (searchInfo: errorSearch, page: PageModel) => {
     method: Method.GET,
     params: {
       queryParams: {
-        perPage: page?.pageSize,
-        page: page?.page,
+        ...page,
         ...searchInfo,
       },
     },
@@ -129,8 +128,7 @@ export const getDaily = (searchInfo: dailySearch, page: PageModel) => {
     method: Method.GET,
     params: {
       queryParams: {
-        perPage: page?.pageSize,
-        page: page?.page,
+        ...page,
         ...searchInfo,
       },
     },
@@ -145,8 +143,7 @@ export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
     method: Method.GET,
     params: {
       queryParams: {
-        perPage: page?.pageSize,
-        page: page?.page,
+        ...page,
         ...searchInfo,
       },
     },
@@ -161,9 +158,7 @@ export const getSamePnr = (page: PageModel) => {
     method: Method.GET,
     params: {
       queryParams: {
-        // perPage: page.perPage,
-        perPage: page.pageSize,
-        page: page.page,
+        ...page,
       },
     },
   });

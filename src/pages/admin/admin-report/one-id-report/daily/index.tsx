@@ -78,7 +78,7 @@ export default function Daily() {
           }
         });
         setTotal((prevState) => ({ ...prevState, ...columnSums }));
-        setPage(response.data.pagination);
+        setPage(response.data.page);
       }
     }
   }, [response, isError, toast]);

@@ -155,8 +155,8 @@ export default function RelationshipHistoryTable() {
 
       <DataGrid
         columns={relationColumn}
-        //row   = {row}
-        rows={relationData}
+        rows={row}
+        // rows={relationData}
         enableSort={false}
         clickable={true}
         page={page}

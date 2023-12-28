@@ -21,14 +21,14 @@ import { SelectValue } from '@mui/base/useSelect';
 import { Typography } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { historyColumn, masterColumn, onIdPaxData, reason } from '../data';
-
+import useDidMountEffect from '@/hooks/useDidMountEffect';
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(2개)
 export default function OneIdMasterHistory() {
   const { toast } = useToast();
   const [searchInfo, setSearchInfo] = useState<oneidHistorySearch>({
-    oneidNum: '',
-    oneidChgRsnCd: 'one',
-    criteria: 'one',
+    oneidNo: '',
+    oneidChgRsnCd: '',
+    criteria: 'equal',
     bfChgKorLname: '',
     bfChgKorFname: '',
     bfChgEngLname: '',
@@ -38,7 +38,8 @@ export default function OneIdMasterHistory() {
     bfChgBirthDtv: '',
     creationStartDate: '',
     creationEndDate: '',
-    homePhoneNumberInfo: '',
+    bfChgEmailAdrsHashValue: '',
+    bfChgMblfonNoInfoHashVlu: '',
   });
   const [page, setPage] = useState<PageModel>(initPage);
   const [page2, setPage2] = useState<PageModel>(initPage);
@@ -61,6 +62,9 @@ export default function OneIdMasterHistory() {
     }
   };
 
+  useDidMountEffect(() => {
+    handleSearch();
+  }, [page.page, page.pageSize, handleSearch]);
   // master 정보 useEffect
   useEffect(() => {
     if (isError1 || response1?.successOrNot === 'N') {
@@ -120,9 +124,9 @@ export default function OneIdMasterHistory() {
   function onClear() {
     setSearchInfo({
       ...searchInfo,
-      oneidNum: '',
-      oneidChgRsnCd: 'one',
-      criteria: 'one',
+      oneidNo: '',
+      oneidChgRsnCd: '',
+      criteria: 'equal',
       bfChgKorLname: '',
       bfChgKorFname: '',
       bfChgEngLname: '',
@@ -132,7 +136,8 @@ export default function OneIdMasterHistory() {
       bfChgBirthDtv: '',
       creationStartDate: '',
       creationEndDate: '',
-      homePhoneNumberInfo: '',
+      bfChgEmailAdrsHashValue: '',
+      bfChgMblfonNoInfoHashVlu: '',
     });
   }
 
@@ -166,9 +171,9 @@ export default function OneIdMasterHistory() {
                   <TextField
                     className="width-100"
                     onChange={onSearchChangeHandler}
-                    value={searchInfo.oneidNum}
+                    value={searchInfo.oneidNo}
                     placeholder="검색어를 입력하세요."
-                    id="oneidNum"
+                    id="oneidNo"
                   />
                 </TD>
                 <TH colSpan={1} align="right">
@@ -203,7 +208,7 @@ export default function OneIdMasterHistory() {
                     name="criteria"
                     onChange={(e) => radioHandler(e)}
                     label="History단건"
-                    value="one"
+                    value="equal"
                     defaultChecked
                   />
                   <Radio
@@ -211,7 +216,7 @@ export default function OneIdMasterHistory() {
                     name="criteria"
                     onChange={(e) => radioHandler(e)}
                     label="해당History전체"
-                    value="all"
+                    value="oneid"
                   />
                 </TD>
               </TR>
@@ -279,7 +284,7 @@ export default function OneIdMasterHistory() {
                     className="width-100"
                     onChange={onSearchChangeHandler}
                     placeholder="성을 입력하세요."
-                    value={searchInfo.homePhoneNumberInfo}
+                    // value={searchInfo.}
                   />
                 </TD>
               </TR>
@@ -346,7 +351,7 @@ export default function OneIdMasterHistory() {
                       setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
                     }}
                   />
-                  <Button onClick={() => duration('today')}>당일</Button>
+                  <Button onClick={() => duration('thisWeek')}>1주일</Button>
                   <Button onClick={() => duration('oneMonth')}>1개월</Button>
                   <Button onClick={() => duration('sixMonth')}>6개월</Button>
                   <Button onClick={() => duration('oneYear')}>1년</Button>
@@ -360,7 +365,7 @@ export default function OneIdMasterHistory() {
       <Typography variant="h4">마스터 </Typography>
       <DataGrid
         columns={masterColumn}
-        rows={onIdPaxData}
+        rows={row}
         enableSort={false}
         page={page}
         onChange={(flag: 'master') => handlePage(page, flag)}
@@ -369,9 +374,9 @@ export default function OneIdMasterHistory() {
       <Typography variant="h4">히스토리 </Typography>
       <DataGrid
         columns={historyColumn}
-        rows={onIdPaxData}
+        rows={row2}
         enableSort={false}
-        page={page}
+        page={page2}
         onChange={(flag: 'history') => handlePage(page2, flag)}
       />
     </>
