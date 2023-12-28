@@ -204,14 +204,14 @@ const Edit = () => {
               <Radio
                 label={t('board:label.useY')}
                 value="Y"
-                defaultChecked={values.openYn === 'Y'}
-                {...register('openYn')}
+                defaultChecked={values.useYn === 'Y'}
+                {...register('useYn')}
               />
               <Radio
                 label={t('board:label.useN')}
                 value="N"
-                defaultChecked={values.openYn === 'N'}
-                {...register('openYn')}
+                defaultChecked={values.useYn === 'N'}
+                {...register('useYn')}
               />
             </TD>
             <TH colSpan={1} align="right" required>
