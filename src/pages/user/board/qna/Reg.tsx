@@ -156,36 +156,17 @@ const Reg = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              {t('board:label.openYn')}
+              {t('board:label.useYn')}
             </TH>
             <TD colSpan={5} align="left">
               <Radio
-                label={t('board:label.open')}
-                value="Y"
-                defaultChecked={values.openYn === 'Y'}
-                {...register('openYn')}
-              />
-              <Radio
-                label={t('board:label.unopen')}
-                value="N"
-                defaultChecked={values.openYn === 'N'}
-                {...register('openYn')}
-              />
-            </TD>
-          </TR>
-          <TR>
-            <TH colSpan={1} align="right">
-              {t('board:label.postYn')}
-            </TH>
-            <TD colSpan={5} align="left">
-              <Radio
-                label={t('board:label.post')}
+                label={t('board:label.useY')}
                 value="Y"
                 defaultChecked={values.useYn === 'Y'}
                 {...register('useYn')}
               />
               <Radio
-                label={t('board:label.unpost')}
+                label={t('board:label.useN')}
                 value="N"
                 defaultChecked={values.useYn === 'N'}
                 {...register('useYn')}

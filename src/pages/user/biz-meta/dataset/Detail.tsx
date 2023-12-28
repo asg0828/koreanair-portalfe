@@ -4,12 +4,12 @@ import VerticalTable from '@/components/table/VerticalTable';
 import { useDeleteDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useDatasetById } from '@/hooks/queries/useDatasetQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ModalType, ValidType } from '@/models/common/Constants';
+import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetModel, DatasetParams } from '@/models/model/DatasetModel';
 import { PageModel } from '@/models/model/PageModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
-import { selectSessionInfo } from '@/reducers/authSlice';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
@@ -22,6 +22,7 @@ const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
   const mtsId = location?.state?.mtsId;
@@ -241,23 +242,25 @@ const Detail = () => {
 
       <Stack gap="SM" justifyContent="End">
         {(() => {
-          if (sessionInfo.userId === datasetModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
-            return (
-              <>
-                <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-                  {t('common.button.edit')}
-                </Button>
+          if (contextPath === ContextPath.ADMIN) {
+            if (sessionInfo.userId === datasetModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+              return (
+                <>
+                  <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+                    {t('common.button.edit')}
+                  </Button>
+                  <Button priority="Normal" size="LG" onClick={handleDelete}>
+                    {t('common.button.delete')}
+                  </Button>
+                </>
+              );
+            } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+              return (
                 <Button priority="Normal" size="LG" onClick={handleDelete}>
                   {t('common.button.delete')}
                 </Button>
-              </>
-            );
-          } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
-            return (
-              <Button priority="Normal" size="LG" onClick={handleDelete}>
-                {t('common.button.delete')}
-              </Button>
-            );
+              );
+            }
           }
           return null;
         })()}
