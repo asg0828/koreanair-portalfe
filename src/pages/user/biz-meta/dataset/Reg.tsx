@@ -69,8 +69,8 @@ const Reg = () => {
       colSpan: 2,
       maxLength: 100,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.enNm'),
@@ -78,33 +78,33 @@ const Reg = () => {
       colSpan: 2,
       maxLength: 100,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.srcClNm'),
       field: 'srcClNm',
       colSpan: 2,
       maxLength: 300,
-      require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      require: false,
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.def'),
       field: 'mcsDef',
       colSpan: 2.9,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.featureFm'),
       field: 'clFm',
       colSpan: 1.1,
-      require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        CalculationLogicItem(rowIndex, fieldName, maxLength),
+      require: false,
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        CalculationLogicItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: '',
@@ -123,7 +123,7 @@ const Reg = () => {
   ];
   const { data: response, mutate, isSuccess, isError } = useCreateDataset(values);
 
-  const EditableColumnItem = (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
+  const EditableColumnItem = (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) => {
     return (
       <Stack gap="SM" className="width-100" direction="Vertical">
         <TextField
@@ -131,7 +131,7 @@ const Reg = () => {
           {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
             pattern:
               fieldName === 'mcsEnNm' ? { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') } : undefined,
-            required: { value: true, message: t('common.validate.required') },
+            required: require ? { value: true, message: t('common.validate.required') } : undefined,
             maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
             validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
           })}
@@ -142,7 +142,7 @@ const Reg = () => {
     );
   };
 
-  const CalculationLogicItem = (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
+  const CalculationLogicItem = (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) => {
     return (
       <Stack gap="SM" className="width-100" direction="Vertical">
         <Stack>
@@ -150,7 +150,7 @@ const Reg = () => {
             multiline
             className="hidden"
             {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
-              required: { value: true, message: t('common.validate.required') },
+              required: require ? { value: true, message: t('common.validate.required') } : undefined,
               maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
               validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
             })}
