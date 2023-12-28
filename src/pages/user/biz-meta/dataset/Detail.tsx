@@ -49,7 +49,7 @@ const Detail = () => {
       headerName: t('bizMeta:label.srcClNm'),
       field: 'srcClNm',
       colSpan: 2,
-      require: true,
+      require: false,
       align: 'left',
     },
     {
@@ -63,7 +63,7 @@ const Detail = () => {
       headerName: t('bizMeta:label.featureFm'),
       field: 'clFm',
       colSpan: 1.1,
-      require: true,
+      require: false,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
         return (
           <Stack gap="SM" className="width-100" direction="Vertical">

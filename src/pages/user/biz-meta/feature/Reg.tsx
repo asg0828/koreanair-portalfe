@@ -16,6 +16,7 @@ import { PageModel } from '@/models/model/PageModel';
 import { UserModel } from '@/models/model/UserModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { tbColReg } from '@/utils/RegularExpression';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -404,7 +405,7 @@ const Reg = () => {
                     <TextField
                       className="width-100"
                       {...register('featureEnNm', {
-                        pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
+                        pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
                         validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),

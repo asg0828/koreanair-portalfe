@@ -10,6 +10,7 @@ import { CreatedDatasetModel, DatasetColumnModel, DatasetParams } from '@/models
 import { PageModel } from '@/models/model/PageModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { tbColReg } from '@/utils/RegularExpression';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect } from 'react';
@@ -130,7 +131,7 @@ const Reg = () => {
           className="width-100"
           {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
             pattern:
-              fieldName === 'mcsEnNm' ? { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') } : undefined,
+              fieldName === 'mcsEnNm' ? { value: tbColReg, message: t('common.validate.requiredEn') } : undefined,
             required: require ? { value: true, message: t('common.validate.required') } : undefined,
             maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
             validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
@@ -282,7 +283,7 @@ const Reg = () => {
                   <TextField
                     className="width-100"
                     {...register('mtsEnNm', {
-                      pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
+                      pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
                       required: { value: true, message: t('common.validate.required') },
                       maxLength: { value: 100, message: t('common.validate.maxLength') },
                       validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
