@@ -166,7 +166,8 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                           return columns[columnIndex].render?.(
                             rowIndex,
                             columns[columnIndex].field,
-                            columns[columnIndex].maxLength
+                            columns[columnIndex].maxLength,
+                            columns[columnIndex].require
                           );
                         } else {
                           const columnData = columns[columnIndex];
