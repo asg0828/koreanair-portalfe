@@ -359,7 +359,7 @@ const Reg = () => {
                   <TextField
                     className="width-100"
                     {...register('srcTbNm', {
-                      maxLength: { value: 300, message: t('common.validate.maxLength') },
+                      maxLength: { value: 1000, message: t('common.validate.maxLength') },
                       validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.srcTbNm?.message ? 'Error' : undefined}
