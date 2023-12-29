@@ -54,11 +54,10 @@ const List = () => {
     },
     { headerName: t('bizMeta:label.featureSeGrp'), field: 'featureSeGrpNm', colSpan: 1 },
     { headerName: t('bizMeta:label.featureSe'), field: 'featureSeNm', colSpan: 1 },
-    { headerName: t('bizMeta:label.featureEnNm'), field: 'featureEnNm', colSpan: 1.8, align: 'left' },
-    { headerName: t('bizMeta:label.featureKoNm'), field: 'featureKoNm', colSpan: 1.8, align: 'left' },
-    { headerName: t('bizMeta:label.def'), field: 'featureDef', colSpan: 1.9, align: 'left' },
-    { headerName: t('bizMeta:label.enrUserNm'), field: 'enrUserNm', colSpan: 1 },
-    { headerName: t('bizMeta:label.enrDeptNm'), field: 'enrDeptNm', colSpan: 1 },
+    { headerName: t('bizMeta:label.featureEnNm'), field: 'featureEnNm', colSpan: 2.4, align: 'left' },
+    { headerName: t('bizMeta:label.featureKoNm'), field: 'featureKoNm', colSpan: 2.4, align: 'left' },
+    { headerName: t('bizMeta:label.def'), field: 'featureDef', colSpan: 2.4, align: 'left' },
+    { headerName: t('bizMeta:label.userFeatureCnt'), field: 'userFeatureCnt', colSpan: 0.8 },
   ];
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = usePopularFeatureList();
