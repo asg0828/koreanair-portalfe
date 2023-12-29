@@ -83,7 +83,11 @@ export enum RuleId {
 }
 // 권한 코드
 export enum SfAuthType {
-    MGR_APRV_AUTH = 'sf_mgr_aprv_auth1' // SF 관리자
+    MGR_APRV_AUTH_FIRST = 'sf_mgr_aprv_auth1', // SF 관리자
+    USR_APRV_AUTH_FIRST = 'sf_usr_aprv_auth1', // SF 1차 승인자
+    SF_APRV_EGROUP_FIRST = "sf_aprv_egroup1", // Self-Feature 1차승인(운영)
+    SF_APRV_EGROUP_SCND = "sf_aprv_egroup2", // Self-Feature 2차승인(품질-메타)
+    SF_APRV_EGROUP_THIRD = "sf_aprv_egroup3", // Self-Feature 3차승인(최종생성승인)
 }
 
 export const useYn = [

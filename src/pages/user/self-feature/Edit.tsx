@@ -67,6 +67,7 @@ import {
 	//	ColDataType,
 	CommonCode,
 	CommonCodeInfo,
+	SfAuthType,
 } from '@/models/selfFeature/FeatureCommon';
 import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
@@ -90,6 +91,7 @@ import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQ
 import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
 import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { selectSessionInfo } from "@/reducers/authSlice";
+import { useTranslation } from "react-i18next";
 
 const initFeatureAllParams: FeatureAllParams = {
 	featureKoNm: undefined,
@@ -98,6 +100,7 @@ const initFeatureAllParams: FeatureAllParams = {
 
 const SelfFeatureEdit = () => {
 
+	const { t } = useTranslation()
 	const { toast } = useToast()
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -675,12 +678,12 @@ const SelfFeatureEdit = () => {
 		let inputValue = cloneDeep(value)
 		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+영문+숫자만 / 영문 - 영문+숫자만)
 		if (id === "featureKoNm") {
-			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|\s|_]/g, "")
+			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|_]/g, "")
 			setNeedDupCheckKo(true)
 			setFeatureKoNmInput(inputValue)
 		}
 		if (id === "featureEnNm") {
-			inputValue = value.replace(/[^a-z|A-Z|0-9|\s|_]/g, "")
+			inputValue = value.replace(/[^a-z|A-Z|0-9|_]/g, "")
 			setNeedDupCheckEn(true)
 			setFeatureEnNmInput(inputValue)
 		}
@@ -855,6 +858,12 @@ const SelfFeatureEdit = () => {
 				})
 				return
 			}
+			if (runScheduleByManuallyRes?.status !== 200) {
+				toast({
+					type: ValidType.INFO,
+					content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
+				})
+			}
 			runScheduleByManuallyMutate()
 		} else {
 			console.log("no custFeatRuleId! please check custFeatRuleId")
@@ -872,29 +881,34 @@ const SelfFeatureEdit = () => {
 				content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
 			})
 		} else if (runScheduleByManuallySucc) {
-			toast({
-				type: ValidType.CONFIRM,
-				content: '수동 실행이 완료되었습니다.',
-			})
 			if (runScheduleByManuallyRes.status === 200) {
-				//custFeatRuleInfosRefetch()
-				updtFeatureInfo.tbRsCustFeatRuleTrgtList = targetList
-				updtFeatureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
-				updtFeatureInfo.featureTemp.featureSeGrp = ""
-				updtFeatureInfo.tbRsCustFeatRule.batManualExecTestCnt += 1
-				navigate(
-					`../${SelfFeatPgPpNm.EDIT}`,
-					{
-						state: {
-							featureInfo: updtFeatureInfo,
-							sfSubmissionRequestData: sfSubmissionRequestData,
-							sfSubmissionApprovalList: sfSubmissionApprovalList,
-							srchInfo: location?.state?.srchInfo,
-							//pageInfo: location?.state?.pageInfo
-						}
-					}
-				)
+				toast({
+					type: ValidType.CONFIRM,
+					content: '수동 실행이 완료되었습니다.',
+				})
 			}
+			if (runScheduleByManuallyRes.status === 202) {
+				toast({
+					type: ValidType.INFO,
+					content: t(runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.'),
+				})
+			}
+			updtFeatureInfo.tbRsCustFeatRuleTrgtList = targetList
+			updtFeatureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
+			updtFeatureInfo.featureTemp.featureSeGrp = ""
+			updtFeatureInfo.tbRsCustFeatRule.batManualExecTestCnt += 1
+			navigate(
+				`../${SelfFeatPgPpNm.EDIT}`,
+				{
+					state: {
+						featureInfo: updtFeatureInfo,
+						sfSubmissionRequestData: sfSubmissionRequestData,
+						sfSubmissionApprovalList: sfSubmissionApprovalList,
+						srchInfo: location?.state?.srchInfo,
+						//pageInfo: location?.state?.pageInfo
+					}
+				}
+			)
 		}
 	}, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
 	const handleUserSelectModal = () => {
@@ -979,8 +993,8 @@ const SelfFeatureEdit = () => {
 					</Button>
 					<FeatQueryRsltButton
 						rslnRuleId={rslnRuleIdParam}
-						mstrSgmtRuleId={mstrSgmtRuleIdParam}
 						custFeatRuleId={location.state?.featureInfo.tbRsCustFeatRule.id}
+						runScheduleCnt={location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
 					/>
 				</Stack>
 
@@ -1338,9 +1352,12 @@ const SelfFeatureEdit = () => {
 					{/* 
 						노출 조건
 						1. 현재 로그인한 사용자와 등록자가 일치하는 경우
-						2. 관리자의 경우(관리자 판별 flag 미정)
+						2. 관리자의 경우
 					*/}
-					{sessionInfo.userId === location.state.featureInfo.tbRsCustFeatRule.frstRegUserId &&
+					{(
+						sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST
+						|| sessionInfo.userId === location.state.featureInfo.tbRsCustFeatRule.frstRegUserId
+					) &&
 						<Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitUpdateHandler}>
 							수정
 						</Button>

@@ -68,6 +68,7 @@ import {
     ModalTitCont,
     ModalType,
     SelfFeatPgPpNm,
+    SfAuthType,
     SubFeatStatus,
     SubFeatStatusNm,
 } from "@/models/selfFeature/FeatureCommon";
@@ -90,9 +91,11 @@ import { getDateFormat } from "@/utils/DateUtil";
 import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
 import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
 import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
+import { useTranslation } from "react-i18next";
 
 const SfSubmissionRequestDetail = () => {
 
+	const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
     const sessionInfo = useAppSelector(selectSessionInfo())
@@ -713,7 +716,7 @@ const SfSubmissionRequestDetail = () => {
             return
         }
         // 1차 승인자의 경우 카테고리 validation check
-        if (sessionInfo.apldUserAuthId === "sf_usr_aprv_auth1") {
+        if (sessionInfo.apldUserAuthId === SfAuthType.USR_APRV_AUTH_FIRST) {
             // 설정하지 않은 경우 return -> 설정 api callback으로 flag setting 후 flag로 판단하기
             if (!updateFeatureCategoryRes || updateFeatureCategoryRes.successOrNot === 'N') {
                 toast({
@@ -769,6 +772,12 @@ const SfSubmissionRequestDetail = () => {
                 })
                 return
             }
+			if (runScheduleByManuallyRes?.status !== 200) {
+				toast({
+					type: ValidType.INFO,
+					content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
+				})
+			}
             runScheduleByManuallyMutate()
         } else {
             console.log("no custFeatRuleId! please check custFeatRuleId")
@@ -786,17 +795,23 @@ const SfSubmissionRequestDetail = () => {
                 content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
             })
         } else if (runScheduleByManuallySucc) {
-            toast({
-                type: ValidType.CONFIRM,
-                content: '수동 실행이 완료되었습니다.',
-            })
             if (runScheduleByManuallyRes.status === 200) {
-                if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
-                    custFeatRuleInfosRefetch()
-                }
-                if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
-                    custFeatSQLInfosRefetch()
-                }
+                toast({
+                    type: ValidType.CONFIRM,
+                    content: '수동 실행이 완료되었습니다.',
+                })
+            }
+			if (runScheduleByManuallyRes.status === 202) {
+				toast({
+					type: ValidType.INFO,
+					content: t(runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.'),
+				})
+			}
+            if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+                custFeatRuleInfosRefetch()
+            }
+            if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
+                custFeatSQLInfosRefetch()
             }
         }
     }, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
@@ -846,8 +861,8 @@ const SfSubmissionRequestDetail = () => {
                     </Button>
                     <FeatQueryRsltButton
                         rslnRuleId={rslnRuleIdParam}
-                        mstrSgmtRuleId={mstrSgmtRuleIdParam}
                         custFeatRuleId={location.state.referenceNo}
+                        runScheduleCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
                     />
                 </Stack>
                 {/* 정보 영역 */}
@@ -1020,7 +1035,7 @@ const SfSubmissionRequestDetail = () => {
                     </HorizontalTable>
                     {/* 기본 정보 */}
                     {/* 1차 승인자의 경우 카테고리 설정 */}
-                    {sessionInfo.apldUserAuthId === "sf_usr_aprv_auth1" &&
+                    {sessionInfo.apldUserAuthId === SfAuthType.USR_APRV_AUTH_FIRST &&
                         <Stack
                             style={{
                                 marginBottom: "2%"
