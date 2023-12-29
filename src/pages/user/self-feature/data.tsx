@@ -69,6 +69,7 @@ export const featListColumns = [
     { headerName: 'Feature 명(영문)', field: 'featureEnNm', colSpan: 7 },
     { headerName: '진행 상태', field: 'submissionStatusNm', colSpan: 3 },
     { headerName: '부서', field: 'deptNm', colSpan: 4 },
+    { headerName: '등록자', field: 'frstRegUserNm', colSpan: 2 },
 ]
 // Feature 선후행 관계 table header
 export const featPrntClidListColumns = [

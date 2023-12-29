@@ -58,6 +58,7 @@ import {
 	CommonCode,
 	FeatureType,
 	SubFeatStatusNm,
+	SfAuthType,
 } from '@/models/selfFeature/FeatureCommon';
 import {
 	AprvSeqNm,
@@ -83,9 +84,11 @@ import { getDateFormat } from '@/utils/DateUtil';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useMstrProfList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { initMstrProfSearchInfoProps } from '@/pages/admin/self-feature-meta-management/master-profile-management/data';
+import { useTranslation } from 'react-i18next';
 
 const SelfFeatureDetail = () => {
 
+	const { t } = useTranslation()
 	const { toast } = useToast()
 	const location = useLocation()
 	const navigate = useNavigate()
@@ -166,6 +169,7 @@ const SelfFeatureDetail = () => {
 	// feature 승인요청 취소 API
 	const { data: cnclReqSubRes, isSuccess: cnclReqSubSucc, isError: cnclReqSubErr, mutate: cnclReqSubMutate } = useCancelRequestSubmission(userEmail, submissionId)
 	// 수동실행 API
+	//const [isRunScheduleByManuallyWait, setIsRunScheduleByManuallyWait] = useState<Boolean>(false)
 	const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state.id)
 	// component mount
 	useEffect(() => {
@@ -818,12 +822,17 @@ const SelfFeatureDetail = () => {
 	// feature 승인 상태에 따른 버튼 노출
 	const DetailBtnComponent = () => {
 		let isShowUpdtBtn: Boolean = false
+		let isShowSubMisnBtn: Boolean = false
 		/*
 			노출 조건
 			1. 현재 로그인한 사용자와 등록자가 일치하는 경우
-			2. 관리자의 경우(관리자 판별 flag 미정)
+			2. 관리자의 경우
 		*/
-		if (sessionInfo.userId === featureInfo.tbRsCustFeatRule.frstRegUserId) isShowUpdtBtn = true
+		if (sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST) isShowUpdtBtn = true
+		if (sessionInfo.userId === featureInfo.tbRsCustFeatRule.frstRegUserId) {
+			isShowUpdtBtn = true
+			isShowSubMisnBtn = true
+		}
 
 		if (
 			!location.state.submissionStatus
@@ -858,7 +867,7 @@ const SelfFeatureDetail = () => {
 					<Button priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
 						목록
 					</Button>
-					{isShowUpdtBtn &&
+					{isShowSubMisnBtn &&
 						<>
 							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SUB_CANCEL)}>
 								요청 취소
@@ -924,6 +933,19 @@ const SelfFeatureDetail = () => {
 				})
 				return
 			}
+			// if (isRunScheduleByManuallyWait) {
+			// 	setModalType(ModalType.ALERT)
+			// 	setConfirmModalTit("Feature 수동 실행")
+			// 	setConfirmModalCont("'Feature Dag 생성 전' 이거나 'Dag Running 중' 입니다.")
+			// 	setIsOpenConfirmModal(true)
+			// 	return
+			// }
+			if (runScheduleByManuallyRes?.status !== 200) {
+				toast({
+					type: ValidType.INFO,
+					content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
+				})
+			}
 			runScheduleByManuallyMutate()
 		} else {
 			console.log("no custFeatRuleId! please check custFeatRuleId")
@@ -941,16 +963,22 @@ const SelfFeatureDetail = () => {
 				content: runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.',
 			})
 		} else if (runScheduleByManuallySucc) {
-			toast({
-				type: ValidType.CONFIRM,
-				content: '수동 실행이 완료되었습니다.',
-			})
 			if (runScheduleByManuallyRes.status === 200) {
-				if (location.state.sqlDirectInputYn !== "Y") {
-					custFeatRuleInfosRefetch()
-				} else if (location.state.sqlDirectInputYn === "Y") {
-					custFeatSQLInfosRefetch()
-				}
+				toast({
+					type: ValidType.CONFIRM,
+					content: '수동 실행이 완료되었습니다.',
+				})
+			}
+			if (runScheduleByManuallyRes.status === 202) {
+				toast({
+					type: ValidType.INFO,
+					content: t(runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.'),
+				})
+			}
+			if (location.state.sqlDirectInputYn !== "Y") {
+				custFeatRuleInfosRefetch()
+			} else if (location.state.sqlDirectInputYn === "Y") {
+				custFeatSQLInfosRefetch()
 			}
 		}
 	}, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
@@ -964,8 +992,8 @@ const SelfFeatureDetail = () => {
 				</Button>
 				<FeatQueryRsltButton
 					rslnRuleId={rslnRuleIdParam}
-					mstrSgmtRuleId={mstrSgmtRuleIdParam}
 					custFeatRuleId={location.state.id}
+					runScheduleCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
 				/>
 			</Stack>
 
