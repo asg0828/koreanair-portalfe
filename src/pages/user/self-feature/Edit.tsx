@@ -903,6 +903,7 @@ const SelfFeatureEdit = () => {
 					type: ValidType.CONFIRM,
 					content: '수동 실행이 완료되었습니다.',
 				})
+				updtFeatureInfo.tbRsCustFeatRule.batManualExecTestCnt += 1
 			}
 			if (runScheduleByManuallyRes.status === 202) {
 				toast({
@@ -913,7 +914,6 @@ const SelfFeatureEdit = () => {
 			updtFeatureInfo.tbRsCustFeatRuleTrgtList = targetList
 			updtFeatureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
 			updtFeatureInfo.featureTemp.featureSeGrp = ""
-			updtFeatureInfo.tbRsCustFeatRule.batManualExecTestCnt += 1
 			navigate(
 				`../${SelfFeatPgPpNm.EDIT}`,
 				{
