@@ -173,7 +173,7 @@ const List = () => {
               <Select
                 appearance="Outline"
                 placeholder={t('common.placeholder.all')}
-                className="select-basic"
+                className="width-240"
                 onChange={(e, value) => value && handleChangeParams('srcDbCd', value)}
                 value={params.srcDbCd}
               >
