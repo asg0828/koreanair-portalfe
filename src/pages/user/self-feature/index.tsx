@@ -27,7 +27,8 @@ import {
 	submissionStatus,
 } from "./data";
 import {
-	SelfFeatPgPpNm, SfAuthType, SubFeatStatus, SubFeatStatusNm,
+	CommonCode,
+	SelfFeatPgPpNm, SubFeatStatus, SubFeatStatusNm,
 } from '@/models/selfFeature/FeatureCommon';
 import { useCustFeatRules } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { ValidType } from "@/models/common/Constants";
@@ -38,13 +39,21 @@ import { selectSessionInfo } from "@/reducers/authSlice";
 import { useAppSelector } from "@/hooks/useRedux";
 import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
 import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
+import { useUserById } from "@/hooks/queries/useUserQueries";
+import { useAuthCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
+import { useTranslation } from "react-i18next";
 
 const SelfFeature = () => {
 
+	const { t } = useTranslation()
 	const navigate = useNavigate()
 	const location = useLocation()
 	const { toast } = useToast()
 	const sessionInfo = useAppSelector(selectSessionInfo())
+	const userId = useAppSelector(selectSessionInfo()).userId || ''
+	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
+	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
+	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
 	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
 	// rslnRuleId parameter
@@ -79,6 +88,17 @@ const SelfFeature = () => {
 		// 	setPage(location.state.pageInfo)
 		// }
 	}, [location, sessionInfo])
+	useEffect(() => {
+	  if (userInfoErr || userInfoRes?.successOrNot === 'N') {
+		toast({
+		  type: ValidType.ERROR,
+		  content: t('common.toast.error.read'),
+		});
+	  } else if (userInfoSucc) {
+		let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
+		if (t.length > 0) setIsAllAuth(true)
+	  }
+	}, [userInfoRes, userInfoSucc, userInfoErr])
 	// master segement rule Id setting
 	useEffect(() => {
 		if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
@@ -245,7 +265,7 @@ const SelfFeature = () => {
 		<Stack direction="Vertical" gap="LG" className="height-100">
 			{/* 관리자인 경우만 노출 */}
 			{/* 
-				sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST &&
+				isAllAuth &&
 				<Stack direction="Horizontal" gap="MD" justifyContent="End">
 					<Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.PRNTCHLD)}>
 					Feature 연결 관계
@@ -368,7 +388,7 @@ const SelfFeature = () => {
 							신규 등록
 						</Button>
 						{/* 관리자인 경우만 노출 */}
-						{sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST &&
+						{isAllAuth &&
 							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
 								<AddIcon />
 								SQL 신규 등록

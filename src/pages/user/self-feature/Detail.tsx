@@ -58,7 +58,6 @@ import {
 	CommonCode,
 	FeatureType,
 	SubFeatStatusNm,
-	SfAuthType,
 } from '@/models/selfFeature/FeatureCommon';
 import {
 	AprvSeqNm,
@@ -71,7 +70,7 @@ import ConfirmModal from '@/components/modal/ConfirmModal';
 import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
 import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { GroupCodeType, ValidType } from '@/models/common/Constants';
-import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
+import { useAuthCommCodes, useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
 import { FeatureSeparatesModel } from '@/models/model/FeatureModel';
 import { useAppSelector } from '@/hooks/useRedux';
@@ -85,6 +84,7 @@ import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useMstrProfList } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { initMstrProfSearchInfoProps } from '@/pages/admin/self-feature-meta-management/master-profile-management/data';
 import { useTranslation } from 'react-i18next';
+import { useUserById } from '@/hooks/queries/useUserQueries';
 
 const SelfFeatureDetail = () => {
 
@@ -93,6 +93,10 @@ const SelfFeatureDetail = () => {
 	const location = useLocation()
 	const navigate = useNavigate()
 	const sessionInfo = useAppSelector(selectSessionInfo())
+	const userId = useAppSelector(selectSessionInfo()).userId || ''
+	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
+	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
+	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
 
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
 	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
@@ -180,6 +184,17 @@ const SelfFeatureDetail = () => {
 			custFeatSQLInfosRefetch()
 		}
 	}, [])
+	useEffect(() => {
+	  if (userInfoErr || userInfoRes?.successOrNot === 'N') {
+		toast({
+		  type: ValidType.ERROR,
+		  content: t('common.toast.error.read'),
+		});
+	  } else if (userInfoSucc) {
+		let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
+		if (t.length > 0) setIsAllAuth(true)
+	  }
+	}, [userInfoRes, userInfoSucc, userInfoErr])
 	// master segement rule Id setting
 	useEffect(() => {
 		if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
@@ -824,13 +839,12 @@ const SelfFeatureDetail = () => {
 		let isShowUpdtBtn: Boolean = false
 		let isShowSubMisnBtn: Boolean = false
 		/*
-			API 호출 값으로 처리 필요
 			노출 조건
 			1. 현재 로그인한 사용자와 등록자가 일치하는 경우
 			2. 관리자의 경우
 		*/
-		if (sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST) isShowUpdtBtn = true
-		if (sessionInfo.userId === featureInfo.tbRsCustFeatRule.frstRegUserId) {
+		if (isAllAuth) isShowUpdtBtn = true
+		if (userId === featureInfo.tbRsCustFeatRule.frstRegUserId) {
 			isShowUpdtBtn = true
 			isShowSubMisnBtn = true
 		}

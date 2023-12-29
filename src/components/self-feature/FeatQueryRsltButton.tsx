@@ -47,6 +47,7 @@ const FeatQueryRsltButton = ({
     const onClickFeatQueryRsltHandler = (type: number) => {
         if (type === 1) {
             if (runScheduleCnt > 0) {
+                // 수동실행 API 결과에 따라 모달 show 판단
                 setIsOpenQuerySampleDataModal((prevState) => !prevState)
             } else {
                 setModalType(ModalType.ALERT)
@@ -55,7 +56,15 @@ const FeatQueryRsltButton = ({
                 setIsOpenConfirmModal(true)
             }
         } else if (type === 2) {
-            setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
+            if (runScheduleCnt > 0) {
+                // 수동실행 API 결과에 따라 모달 show 판단
+                setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
+            } else {
+                setModalType(ModalType.ALERT)
+                setConfirmModalTit("실행내역")
+                setConfirmModalCont("수동실행을 최소 1번 이상 수행 해주세요.")
+                setIsOpenConfirmModal(true)
+            }
         } else if (type === 3) {
             setIsOpenReadSqlModal((prevState) => !prevState)
         }

@@ -68,7 +68,6 @@ import {
     ModalTitCont,
     ModalType,
     SelfFeatPgPpNm,
-    SfAuthType,
     SubFeatStatus,
     SubFeatStatusNm,
 } from "@/models/selfFeature/FeatureCommon";
@@ -78,7 +77,7 @@ import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import SubRejectModal from "@/components/self-feature-submission/modal/SubRejectModal";
 import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useDirectSQLYn, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { GroupCodeType, ValidType } from "@/models/common/Constants";
-import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
+import { useAuthCommCodes, useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
 import { CodeModel } from "@/models/model/CodeModel";
 import { useAppSelector } from "@/hooks/useRedux";
@@ -92,6 +91,7 @@ import { useDeptAllList } from "@/hooks/queries/useDeptQueries";
 import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
 import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
 import { useTranslation } from "react-i18next";
+import { useUserById } from "@/hooks/queries/useUserQueries";
 
 const SfSubmissionRequestDetail = () => {
 
@@ -99,6 +99,10 @@ const SfSubmissionRequestDetail = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const sessionInfo = useAppSelector(selectSessionInfo())
+	const userId = useAppSelector(selectSessionInfo()).userId || ''
+	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
+	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.EDIT_AUTH)
+	const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
     const { toast } = useToast()
     const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(location.state.referenceNo)
     // 사용될 rslnRuleId / mstrSgmtRuleId 조회
@@ -184,6 +188,17 @@ const SfSubmissionRequestDetail = () => {
     useEffect(() => {
         initCustFeatRule()
     }, [])
+	useEffect(() => {
+	  if (userInfoErr || userInfoRes?.successOrNot === 'N') {
+		toast({
+		  type: ValidType.ERROR,
+		  content: t('common.toast.error.read'),
+		});
+	  } else if (userInfoSucc) {
+		let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
+		if (t.length > 0) setIsEditAuth(true)
+	  }
+	}, [userInfoRes, userInfoSucc, userInfoErr])
     // master segement rule Id setting
     useEffect(() => {
         if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
@@ -715,10 +730,13 @@ const SfSubmissionRequestDetail = () => {
             })
             return
         }
-        // API 호출 값으로 처리 필요 1차 승인자의 경우 카테고리 validation check
-        if (sessionInfo.apldUserAuthId === SfAuthType.USR_APRV_AUTH_FIRST) {
+        // 1차 승인자의 경우 카테고리 validation check
+        if (isEditAuth) {
             // 설정하지 않은 경우 return -> 설정 api callback으로 flag setting 후 flag로 판단하기
-            if (!updateFeatureCategoryRes || updateFeatureCategoryRes.successOrNot === 'N') {
+            if (
+                !featureInfo.tbRsCustFeatRule.categoryNm
+                && (!updateFeatureCategoryRes || updateFeatureCategoryRes.successOrNot === 'N')
+            ) {
                 toast({
                     type: ValidType.ERROR,
                     content: '카테고리를 설정 해주세요.',
@@ -1040,8 +1058,8 @@ const SfSubmissionRequestDetail = () => {
                         </TR>
                     </HorizontalTable>
                     {/* 기본 정보 */}
-                    {/* API 호출 값으로 처리 필요 1차 승인자의 경우 카테고리 설정 */}
-                    {sessionInfo.apldUserAuthId === SfAuthType.USR_APRV_AUTH_FIRST &&
+                    {/* 1차 승인자의 경우 카테고리 설정 */}
+                    {isEditAuth &&
                         <Stack
                             style={{
                                 marginBottom: "2%"
@@ -1089,7 +1107,7 @@ const SfSubmissionRequestDetail = () => {
                             </HorizontalTable>
                         </Stack>
                     }
-                    {/* API 호출 값으로 처리 필요 1차 승인자의 경우 카테고리 설정 */}
+                    {/* 1차 승인자의 경우 카테고리 설정 */}
                     {/* 신청 정보 SQL 등록 */}
                     {featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
                         <Stack

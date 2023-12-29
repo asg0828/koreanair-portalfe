@@ -36,6 +36,7 @@ export enum PortalApiURL {
 
 export enum SelfFeatureCmmApiURL {
   CODE = '/api/v1/commCode/retrieveCommCodes',
+  AUTH_CODE = '/api/v1/commCode',
 }
 
 export enum SelfFeatureUserApiURL {
