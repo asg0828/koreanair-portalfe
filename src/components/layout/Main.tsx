@@ -5,12 +5,13 @@ import { ValidType } from '@/models/common/Constants';
 import { selectSessionInfo } from '@/reducers/authSlice';
 import { selectMenuList, selectQuickMenuList, setQuickMenuList } from '@/reducers/menuSlice';
 import { findMenuRecursive } from '@/utils/ArrayUtil';
+import { getRealMenuId } from '@/utils/StringUtil';
 import MainNavigation from '@components/layout/MainNavigation';
 import { Loader, Stack, Typography, useToast } from '@components/ui';
 import { Suspense, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router-dom';
 import './Main.scss';
-import { useTranslation } from 'react-i18next';
 
 const Main = () => {
   const { t } = useTranslation();
@@ -35,18 +36,18 @@ const Main = () => {
     if (active) {
       dqMutate({
         userId: sessionInfo.userId,
-        menuId: menuObj.menuId,
+        menuId: getRealMenuId(menuObj.menuId),
       });
     } else {
       cqMutate({
         userId: sessionInfo.userId,
-        menuId: menuObj.menuId,
+        menuId: getRealMenuId(menuObj.menuId),
       });
     }
   };
 
   useEffect(() => {
-    setActive(quickMenuList.find((item) => item.menuId === menuObj?.menuId));
+    setActive(quickMenuList.find((item) => item.menuId === getRealMenuId(menuObj?.menuId)));
   }, [quickMenuList, menuObj]);
 
   useEffect(() => {

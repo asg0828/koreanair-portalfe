@@ -9,6 +9,7 @@ import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
+import { PageModel } from '@/models/model/PageModel';
 import { CreatedQnaModel, QnaModel, QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
@@ -31,6 +32,7 @@ const Detail = () => {
   const sessionInfo = useAppSelector(selectSessionInfo());
   const qnaId: string = location?.state?.qnaId || '';
   const params: QnaParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [qnaModel, setQnaModel] = useState<QnaModel>();
   const [cQnaId, setCQnaId] = useState<string>('');
   const {
@@ -84,15 +86,17 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         qnaId: qnaId,
         params: params,
+        page: page,
       },
     });
   };
@@ -102,6 +106,7 @@ const Detail = () => {
       state: {
         qnaId: nQnaId,
         params: params,
+        page: page,
       },
     });
   };
@@ -315,7 +320,7 @@ const Detail = () => {
                       />
                     </Stack>
                     <Button type="submit" size="LG" className="btn-reg">
-                      {t('common.button.reg')}
+                      {t('common.button.save')}
                     </Button>
                   </Stack>
                   <ErrorLabel message={errors?.answ?.message} />

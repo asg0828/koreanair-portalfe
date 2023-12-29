@@ -41,7 +41,8 @@ export interface SfSubmissionApproval extends RowsInfo {
     status: string//[ requested, canceled, approved, rejected ]
     statusNm: string//[ requested, canceled, approved, rejected ]
     approver: string
-    approverNm: string
+    approverName: string // DB 저장 불러온 용
+    approverNm: string // 화면용
     comment: string
     requestDate: string
     approvedDate: string

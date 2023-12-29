@@ -22,13 +22,14 @@ import {
   mobileMasterSearch,
   mobileSearch,
   oneidHistorySearch,
+  oneidMasterSearch,
   paxMappingSearch,
   relationSearch,
 } from '@/models/oneId/OneIdInfo';
 import { useQuery } from '@tanstack/react-query';
 
 // oneid 마스터
-export const useMasterHistoryList = (searchInfo: oneidHistorySearch, page: PageModel) => {
+export const useMasterHistoryList = (searchInfo: oneidMasterSearch, page: PageModel) => {
   return useQuery(['/one-id-main/master-history'], () => getMasterHistory(searchInfo, page), { enabled: false });
 };
 

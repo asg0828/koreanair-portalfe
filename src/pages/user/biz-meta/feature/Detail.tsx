@@ -3,9 +3,10 @@ import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteFeature } from '@/hooks/mutations/useFeatureMutations';
 import { useFeatureById } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ModalType, ValidType } from '@/models/common/Constants';
+import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { FeatureModel, FeatureParams } from '@/models/model/FeatureModel';
-import { selectSessionInfo } from '@/reducers/authSlice';
+import { PageModel } from '@/models/model/PageModel';
+import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
@@ -18,10 +19,12 @@ const Detail = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
   const featureId: string = location?.state?.featureId || '';
   const params: FeatureParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [featureModel, setFeatureModel] = useState<FeatureModel>();
   const { data: response, isSuccess, isError } = useFeatureById(featureId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFeature(featureId);
@@ -30,15 +33,17 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         featureId: featureId,
         params: params,
+        page: page,
       },
     });
   };
@@ -203,23 +208,25 @@ const Detail = () => {
 
       <Stack gap="SM" justifyContent="End">
         {(() => {
-          if (sessionInfo.userId === featureModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
-            return (
-              <>
-                <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-                  {t('common.button.edit')}
-                </Button>
+          if (contextPath === ContextPath.ADMIN) {
+            if (sessionInfo.userId === featureModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+              return (
+                <>
+                  <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+                    {t('common.button.edit')}
+                  </Button>
+                  <Button priority="Normal" size="LG" onClick={handleDelete}>
+                    {t('common.button.delete')}
+                  </Button>
+                </>
+              );
+            } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+              return (
                 <Button priority="Normal" size="LG" onClick={handleDelete}>
                   {t('common.button.delete')}
                 </Button>
-              </>
-            );
-          } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
-            return (
-              <Button priority="Normal" size="LG" onClick={handleDelete}>
-                {t('common.button.delete')}
-              </Button>
-            );
+              );
+            }
           }
           return null;
         })()}

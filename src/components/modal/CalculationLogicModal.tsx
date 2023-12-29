@@ -71,7 +71,7 @@ const CalculationLogicModal = ({
           ) : (
             <>
               <Button priority="Primary" appearance="Contained" size="LG" onClick={handleConfirm}>
-                {t('common.button.reg')}
+                {t('common.button.save')}
               </Button>
               <Button priority="Normal" appearance="Outline" size="LG" onClick={handleCancle}>
                 {t('common.button.cancel')}

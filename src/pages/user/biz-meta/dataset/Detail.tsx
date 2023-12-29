@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetModel, DatasetParams } from '@/models/model/DatasetModel';
+import { PageModel } from '@/models/model/PageModel';
 import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -26,6 +27,7 @@ const Detail = () => {
   const location = useLocation();
   const mtsId = location?.state?.mtsId;
   const params: DatasetParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [datasetModel, setDatasetModel] = useState<DatasetModel>();
   const columns: Array<ColumnsInfo> = [
     {
@@ -47,7 +49,7 @@ const Detail = () => {
       headerName: t('bizMeta:label.srcClNm'),
       field: 'srcClNm',
       colSpan: 2,
-      require: true,
+      require: false,
       align: 'left',
     },
     {
@@ -61,7 +63,7 @@ const Detail = () => {
       headerName: t('bizMeta:label.featureFm'),
       field: 'clFm',
       colSpan: 1.1,
-      require: true,
+      require: false,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
         return (
           <Stack gap="SM" className="width-100" direction="Vertical">
@@ -96,15 +98,17 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         mtsId: mtsId,
         params: params,
+        page: page,
       },
     });
   };
@@ -238,23 +242,25 @@ const Detail = () => {
 
       <Stack gap="SM" justifyContent="End">
         {(() => {
-          if (sessionInfo.userId === datasetModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
-            return (
-              <>
-                <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
-                  {t('common.button.edit')}
-                </Button>
+          if (contextPath === ContextPath.ADMIN) {
+            if (sessionInfo.userId === datasetModel?.rgstId || sessionInfo.apldMgrAuthId === 'ma23000000001') {
+              return (
+                <>
+                  <Button priority="Primary" appearance="Contained" size="LG" onClick={goToEdit}>
+                    {t('common.button.edit')}
+                  </Button>
+                  <Button priority="Normal" size="LG" onClick={handleDelete}>
+                    {t('common.button.delete')}
+                  </Button>
+                </>
+              );
+            } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
+              return (
                 <Button priority="Normal" size="LG" onClick={handleDelete}>
                   {t('common.button.delete')}
                 </Button>
-              </>
-            );
-          } else if (sessionInfo.apldMgrAuthId === 'ma23000000002') {
-            return (
-              <Button priority="Normal" size="LG" onClick={handleDelete}>
-                {t('common.button.delete')}
-              </Button>
-            );
+              );
+            }
           }
           return null;
         })()}

@@ -187,8 +187,7 @@ export default function PaxMapping() {
 
       <DataGrid
         columns={oneIdPaxColumn}
-        // rows = {row}
-        rows={onIdPaxData}
+        rows={row}
         enableSort={false}
         clickable={true}
         page={page}

@@ -12,9 +12,11 @@ import {
   FeatureParams,
   FeatureSeparatesModel,
 } from '@/models/model/FeatureModel';
+import { PageModel } from '@/models/model/PageModel';
 import { UserModel } from '@/models/model/UserModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { tbColReg } from '@/utils/RegularExpression';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -34,6 +36,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: FeatureParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -81,9 +84,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(
@@ -401,7 +405,7 @@ const Reg = () => {
                     <TextField
                       className="width-100"
                       {...register('featureEnNm', {
-                        pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
+                        pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
                         validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
@@ -567,10 +571,7 @@ const Reg = () => {
 
         <Stack gap="SM" justifyContent="End">
           <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="currentColor"></path>
-            </svg>
-            {t('common.button.reg')}
+            {t('common.button.save')}
           </Button>
           <Button size="LG" onClick={handleList}>
             {t('common.button.list')}

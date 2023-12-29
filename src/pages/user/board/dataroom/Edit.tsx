@@ -9,6 +9,7 @@ import { useAppDispatch } from '@/hooks/useRedux';
 import { ModalType, ValidType } from '@/models/common/Constants';
 import { DataroomParams, UpdatedDataroomModel } from '@/models/model/DataroomModel';
 import { FileModel } from '@/models/model/FileModel';
+import { PageModel } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -26,6 +27,7 @@ const Edit = () => {
   const location = useLocation();
   const dataId = location?.state?.dataId;
   const params: DataroomParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -58,9 +60,10 @@ const Edit = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(
@@ -162,17 +165,17 @@ const Edit = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              {t('board:label.postYn')}
+              {t('board:label.useYn')}
             </TH>
             <TD colSpan={5} align="left">
               <Radio
-                label={t('board:label.post')}
+                label={t('board:label.useY')}
                 value="Y"
                 defaultChecked={values.useYn === 'Y'}
                 {...register('useYn')}
               />
               <Radio
-                label={t('board:label.unpost')}
+                label={t('board:label.useN')}
                 value="N"
                 defaultChecked={values.useYn === 'N'}
                 {...register('useYn')}
@@ -217,7 +220,7 @@ const Edit = () => {
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-          {t('common.button.reg')}
+          {t('common.button.save')}
         </Button>
         <Button size="LG" onClick={handleList}>
           {t('common.button.list')}

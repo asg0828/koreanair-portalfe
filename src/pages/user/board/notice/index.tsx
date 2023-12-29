@@ -27,8 +27,9 @@ const List = () => {
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const beforeParams: NoticeParams = location?.state?.params;
+  const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initNoticeParams);
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<NoticeModel>>([]);
   const { data: response, isError, refetch } = useNoticeList(params, page);
 
@@ -48,6 +49,7 @@ const List = () => {
     navigate(View.REG, {
       state: {
         params: params,
+        page: page,
       },
     });
   };
@@ -57,6 +59,7 @@ const List = () => {
       state: {
         noticeId: row.noticeId,
         params: params,
+        page: page,
       },
     });
   };
@@ -124,6 +127,7 @@ const List = () => {
                 onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
               >
+                <SelectOption value="all">{t('common.label.all')}</SelectOption>
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}

@@ -6,21 +6,24 @@ import { PageModel, initPage } from '@/models/model/PageModel';
 import { useDaily } from '@/hooks/queries/useOneIdQueries';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import DataGridChild from '@/components/grid/DataGridChild';
+import { RowsInfo } from '@/models/components/Table';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function Daily() {
   const today = new Date();
+  const endDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+  let startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
   const [searchInfo, setSearchInfo] = useState<dailySearch>({
     criteria: 'daily',
-    aggrStartDate: '',
-    aggrEndDate: '',
+    aggrStartDate: startDate,
+    aggrEndDate: endDate,
   });
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
   const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<DailyReportData>>([]);
   const { refetch, data: response, isError } = useDaily(searchInfo, page);
-
+  const [total, setTotal] = useState({});
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
@@ -58,8 +61,23 @@ export default function Daily() {
       });
     } else {
       if (response?.data) {
-        // response.data.contents.forEach(() => {});
         setRows(response.data.contents);
+
+        // 각 컬럼 합
+        const columnSums: RowsInfo = {};
+        response.data.contents.forEach((row: RowsInfo) => {
+          for (const key in row) {
+            if (key !== 'no' && (typeof row[key] === 'number' || (row[key] === null && key in columnSums))) {
+              columnSums[key] = (columnSums[key] || 0) + (row[key] || 0);
+            } else if (key !== 'no' && row[key] === null && !(key in columnSums)) {
+              columnSums[key] = 0;
+            }
+            // else if(typeof row[key] === 'string'){
+            //   columnSums[key] = 'NaN'
+            // }
+          }
+        });
+        setTotal((prevState) => ({ ...prevState, ...columnSums }));
         setPage(response.data.page);
       }
     }
@@ -78,18 +96,16 @@ export default function Daily() {
 
   /* 기간 별 버튼 */
   function duration(flag: string) {
-    let enddate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    let startdate = '';
-    if (flag === 'today') {
-      startdate = enddate;
+    if (flag === 'thisWeek') {
+      startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
     } else if (flag === 'oneMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
     } else if (flag === 'sixMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
     } else if (flag === 'oneYear') {
-      startdate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+      startDate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
     }
-    setSearchInfo({ ...searchInfo, aggrEndDate: enddate, aggrStartDate: startdate });
+    setSearchInfo({ ...searchInfo, aggrEndDate: endDate, aggrStartDate: startDate });
   }
 
   return (
@@ -126,7 +142,7 @@ export default function Daily() {
                   setSearchInfo({ ...searchInfo, aggrEndDate: nextVal });
                 }}
               />
-              <Button onClick={() => duration('today')}>당일</Button>
+              <Button onClick={() => duration('thisWeek')}>1주일</Button>
               <Button onClick={() => duration('oneMonth')}>1개월</Button>
               <Button onClick={() => duration('sixMonth')}>6개월</Button>
               <Button onClick={() => duration('oneYear')}>1년</Button>
@@ -168,9 +184,9 @@ export default function Daily() {
 
       <DataGridChild
         columns={oneIdDailyColumn}
-        // rows={row}
-        rows={oneIdDailyData}
-        totals={dailyTotal}
+        rows={row}
+        // rows={oneIdDailyData}
+        totals={total}
         enableSort={false}
         clickable={true}
         page={page}

@@ -60,6 +60,10 @@ export default function DataConversion() {
       });
     } else {
       if (response1?.data) {
+        setEmailCR(response1.data.emailCleansingResult);
+        setEmailHash(response1.data.emailHashValue);
+        setPhoneNumCR(response1.data.phoneCleansingResult);
+        setPhoneNumHash(response1.data.phoneHashValue);
       }
     }
   }, [response1, isError1, toast]);
@@ -73,7 +77,7 @@ export default function DataConversion() {
       });
     } else {
       if (response2?.data) {
-        setAfConvertDoubleMetaphone(response2.data.contents);
+        setAfConvertDoubleMetaphone(response2.data);
       }
     }
   }, [response2, isError2, toast]);

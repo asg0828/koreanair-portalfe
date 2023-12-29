@@ -1,4 +1,4 @@
-import DataTree from '@/components/Tree/DataTree';
+import DataTree from '@/components/tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
 import { ValidType } from '@/models/common/Constants';
@@ -90,7 +90,9 @@ const DeptSelectModal = ({
           name: item.deptNm,
           parentId: item.upDeptCode || 'root',
         }));
-        setDeptData(response.data.contents);
+        const deptList = response.data.contents;
+        setDeptData(deptList);
+        setPrevRows(deptList);
         setDeptTreeData(convertToHierarchyInfo(list));
       }
     }
@@ -129,7 +131,7 @@ const DeptSelectModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button size="LG" priority="Primary" appearance="Contained" onClick={handleConfirm}>
-          {t('common.button.reg')}
+          {t('common.button.confirm')}
         </Button>
       </Modal.Footer>
     </Modal>

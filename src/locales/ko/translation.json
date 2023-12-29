@@ -5,6 +5,8 @@
       "authGroupList": "권한그룹 목록"
     },
     "label": {
+      "all": "전체",
+      "nonAuth": "권한없음",
       "home": "Home",
       "quickLink": "Quick Link",
       "countingUnit": {
@@ -17,13 +19,14 @@
       "all": "전체"
     },
     "validate": {
-      "requiredEn": "영문, _만 입력 가능합니다.",
+      "requiredEn": "영문, 숫자, '_'만 입력 가능합니다.",
       "required": "필수값입니다.",
       "maxLength": "최대 길이가 초과되었습니다.",
       "trim": "앞뒤 공백을 제거해주세요."
     },
     "button": {
       "confirm": "확인",
+      "save": "저장",
       "list": "목록",
       "reg": "등록",
       "detail": "상세",

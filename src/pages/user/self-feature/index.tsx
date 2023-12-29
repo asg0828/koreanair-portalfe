@@ -71,7 +71,7 @@ const SelfFeature = () => {
 		if (!sessionInfo.deptCode) return
 		setSearchInfo((prevState) => {
 			let rtn = cloneDeep(prevState)
-			if (location.state) rtn = location.state.srchInfo
+			if (location.state && location.state.srchInfo) rtn = location.state.srchInfo
 			if (sessionInfo.deptCode) rtn.team = sessionInfo.deptCode
 			return rtn
 		})
@@ -243,8 +243,9 @@ const SelfFeature = () => {
 
 	return (
 		<Stack direction="Vertical" gap="LG" className="height-100">
-			{/* 관리자(1차)인 경우만 노출 */}
+			{/* 관리자인 경우만 노출 */}
 			{/* 
+				sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST &&
 				<Stack direction="Horizontal" gap="MD" justifyContent="End">
 					<Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.PRNTCHLD)}>
 					Feature 연결 관계
@@ -366,8 +367,8 @@ const SelfFeature = () => {
 							<AddIcon />
 							신규 등록
 						</Button>
-						{/* 관리자(1차)인 경우만 노출 */}
-						{sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH &&
+						{/* 관리자인 경우만 노출 */}
+						{sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST &&
 							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
 								<AddIcon />
 								SQL 신규 등록

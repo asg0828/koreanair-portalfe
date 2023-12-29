@@ -1,5 +1,5 @@
 import { KeyboardDoubleArrowDownIcon, KeyboardDoubleArrowUpIcon } from '@/assets/icons';
-import DataTree from '@/components/Tree/DataTree';
+import DataTree from '@/components/tree/DataTree';
 import { useDeptAllList } from '@/hooks/queries/useDeptQueries';
 import { useUserAllList } from '@/hooks/queries/useUserQueries';
 import { useAppDispatch } from '@/hooks/useRedux';
@@ -150,6 +150,7 @@ const UserSelectModal = ({
       if (uResponse?.data) {
         const userList = uResponse.data.contents;
         setUserData(userList);
+        setPrevRows(userList);
         setNextRows(userList.filter((item: UserModel) => userIdList.includes(item.userId)));
       }
     }
@@ -207,7 +208,7 @@ const UserSelectModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button size="LG" priority="Primary" appearance="Contained" onClick={handleConfirm}>
-          {t('common.button.reg')}
+          {t('common.button.confirm')}
         </Button>
       </Modal.Footer>
     </Modal>

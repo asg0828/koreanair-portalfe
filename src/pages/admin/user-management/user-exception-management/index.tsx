@@ -448,7 +448,7 @@ const List = () => {
                 </TD>
               </TR>
               <TR>
-                <TH required colSpan={1} align="right">
+                <TH colSpan={1} align="right">
                   {t('management:label.userAuthId')}
                 </TH>
                 <TD colSpan={2}>
@@ -456,19 +456,17 @@ const List = () => {
                     <Controller
                       name="userAuthId"
                       control={control}
-                      rules={{
-                        required: t('common.validate.required'),
-                      }}
                       render={({ field }) => (
                         <Select
                           appearance="Outline"
                           placeholder={t('common.placeholder.all')}
                           className="width-100"
                           ref={field.ref}
-                          onChange={(e, value) => value && field.onChange(value)}
                           status={errors?.userAuthId?.message ? 'error' : undefined}
-                          value={field.value}
+                          onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
+                          value={field.value || 'nonAuth'}
                         >
+                          <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
                           {userAuthList?.map((item) => (
                             <SelectOption value={item.authId}>{item.authNm}</SelectOption>
                           ))}
@@ -480,7 +478,7 @@ const List = () => {
                 </TD>
               </TR>
               <TR>
-                <TH required colSpan={1} align="right">
+                <TH colSpan={1} align="right">
                   {t('management:label.mgrAuthId')}
                 </TH>
                 <TD colSpan={2}>
@@ -488,19 +486,17 @@ const List = () => {
                     <Controller
                       name="mgrAuthId"
                       control={control}
-                      rules={{
-                        required: t('common.validate.required'),
-                      }}
                       render={({ field }) => (
                         <Select
                           appearance="Outline"
                           placeholder={t('common.placeholder.all')}
                           className="width-100"
                           ref={field.ref}
-                          onChange={(e, value) => value && field.onChange(value)}
                           status={errors?.mgrAuthId?.message ? 'error' : undefined}
-                          value={field.value}
+                          onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
+                          value={field.value || 'nonAuth'}
                         >
+                          <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
                           {adminAuthList?.map((item) => (
                             <SelectOption value={item.authId}>{item.authNm}</SelectOption>
                           ))}

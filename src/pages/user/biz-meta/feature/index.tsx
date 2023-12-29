@@ -38,10 +38,11 @@ const List = () => {
   const userId = useAppSelector(selectSessionInfo()).userId || '';
   const location = useLocation();
   const beforeParams: FeatureParams = location?.state?.params;
+  const beforePage: PageModel = location?.state?.page;
   const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
   const [params, setParams] = useState<FeatureParams>(beforeParams || initFeatureParams);
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<FeatureModel>>([]);
   const { data: response, isError, refetch } = useFeatureList(params, page);
   const { data: tResponse, isError: tIsError } = useFeatureTypList();
@@ -94,6 +95,7 @@ const List = () => {
     navigate(View.REG, {
       state: {
         params: params,
+        page: page,
       },
     });
   };
@@ -103,6 +105,7 @@ const List = () => {
       state: {
         featureId: row.featureId,
         params: params,
+        page: page,
       },
     });
   };
@@ -190,7 +193,7 @@ const List = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: t('common.toast.list'),
+        content: t('common.toast.error.list'),
       });
     } else {
       if (response?.data) {
@@ -268,9 +271,10 @@ const List = () => {
               appearance="Outline"
               placeholder={t('common.placeholder.all')}
               className="width-100"
-              onChange={(e, value) => value && handleChangeParams('featureSeGrp', value)}
-              value={params.featureSeGrp}
+              onChange={(e, value) => value && handleChangeParams('featureSeGrp', value === 'all' ? null : value)}
+              value={params.featureSeGrp || 'all'}
             >
+              <SelectOption value="all">{t('common.label.all')}</SelectOption>
               {featureTypList?.map((item) => (
                 <SelectOption value={item.seId}>{item.seNm}</SelectOption>
               ))}
@@ -284,9 +288,10 @@ const List = () => {
               appearance="Outline"
               placeholder={t('common.placeholder.all')}
               className="width-100"
-              onChange={(e, value) => value && handleChangeParams('featureSe', value)}
-              value={params.featureSe}
+              onChange={(e, value) => value && handleChangeParams('featureSe', value === 'all' ? null : value)}
+              value={params.featureSe || 'all'}
             >
+              <SelectOption value="all">{t('common.label.all')}</SelectOption>
               {featureSeList.map((item) => (
                 <SelectOption value={item.seId}>{item.seNm}</SelectOption>
               ))}

@@ -28,6 +28,7 @@ import {
 	TbRsCustFeatRuleSql,
 	FormulaTrgtListProps,
 	CustFeatureFormData,
+	FeatListSrchProps,
 } from '@/models/selfFeature/FeatureModel'
 import {
 	initSelfFeatureInfo,
@@ -38,6 +39,7 @@ import {
 	initTbRsCustFeatRuleSql,
 	initCustFeatureFormData,
 	initCustFeatureFormDataSql,
+	initFeatListSrchProps,
 } from './data'
 import {
 	SubFeatStatus,
@@ -57,7 +59,7 @@ import {
 import { FeatureAllParams, FeatureKeyType, FeatureSeparatesModel } from '@/models/model/FeatureModel'
 
 //import { selectCodeList } from '@/reducers/codeSlice'
-import { useApproverCandidate, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
+import { useApproverCandidate, useCustFeatRules, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries'
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries'
 import { useFeatureAllList, useFeatureSeList, useFeatureTypList } from '@/hooks/queries/useFeatureQueries'
 import { useCreateCustFeatRule, useCreateCustFeatSQL } from '@/hooks/mutations/self-feature/useSelfFeatureUserMutations'
@@ -88,6 +90,10 @@ const SelfFeatureReg = () => {
 	const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
 	// 속성, 행동정보
 	const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
+	// Feature 정보 조회
+	const [featureRuleInfoParams, setFeatureRuleInfoParams] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
+	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(featureRuleInfoParams)
+	const [featureRuleList, setFeatureRuleList] = useState<Array<TbRsCustFeatRule>>([])
 
 	const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
 	const { data: cmmCodeDtpCdRes } = useCommCodes(CommonCode.DATA_TYPE_CATEGORY)
@@ -206,8 +212,53 @@ const SelfFeatureReg = () => {
 	}, [cmmCodeDtpCdRes])
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
-		if (location.state.regType === SelfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
+		if (location.state.regType === SelfFeatPgPpNm.RULE_REG) {
+			mstrSgmtTbandColRefetch()
+			setFeatureRuleInfoParams({
+				...featureRuleInfoParams,
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam,
+				["submissionStatus"]: SubFeatStatus.APRV,
+			})
+		}
 	}, [mstrSgmtRuleIdParam, location.state.regType])
+	useEffect(() => {
+		if (mstrSgmtRuleIdParam === "") return
+		setFeatureRuleInfoParams({
+			...featureRuleInfoParams,
+			["mstrSgmtRuleId"]: mstrSgmtRuleIdParam,
+			["submissionStatus"]: SubFeatStatus.APRV,
+		})
+	}, [mstrSgmtRuleIdParam])
+	useEffect(() => {
+		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+		featureListRefetch()
+	}, [featureRuleInfoParams])
+	// customer feature 목록 API callback
+	useEffect(() => {
+		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+
+		if (featureListErr || featureListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			});
+		} else {
+			if (featureListRes) {
+				let rtn = cloneDeep(featureListRes.result)
+				rtn = rtn.map((item: TbRsCustFeatRule) => {
+					if (item.dataType === "string") item.dataTypeCategory = "string"
+					else if (item.dataType === "timestamp" || item.dataType === "date") item.dataTypeCategory = "timestamp"
+					else item.dataTypeCategory = "number"
+
+					item.dtpCd = item.dataType
+
+					return item
+				})
+				rtn = rtn.filter((item: TbRsCustFeatRule) => item.categoryNm)
+				setFeatureRuleList(rtn)
+			}
+		}
+	}, [featureListRes, featureListErr, featureListRefetch])
 	// location값으로 Rule Design / SQL 구분(default :: Rule Design)
 	useEffect(() => {
 		if (!location.state || !location.state.regType || location.state.regType === "") {
@@ -396,10 +447,10 @@ const SelfFeatureReg = () => {
 				return option
 			})
 			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") {dataType = "number";t.dtpCd = "int"}
-			if (targetList[i].function === "LENGTH") {dataType = "number";t.dtpCd = "int"}
-			if (targetList[i].function === "TO_CHAR") {dataType = "string";t.dtpCd = "string"}
-			if (targetList[i].function === "DATEDIFF") {dataType = "number";t.dtpCd = "int"}
+			if (targetList[i].function === "TO_NUMBER") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "LENGTH") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "TO_CHAR") { dataType = "string"; t.dtpCd = "string" }
+			if (targetList[i].function === "DATEDIFF") { dataType = "number"; t.dtpCd = "int" }
 			t.dataType = dataType
 			fList.push(t)
 		}
@@ -613,11 +664,11 @@ const SelfFeatureReg = () => {
 		let inputValue = cloneDeep(value)
 		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+영문+숫자만 / 영문 - 영문+숫자만)
 		if (id === "featureKoNm") {
-			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|\s|_]/g, "")
+			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|_]/g, "").toUpperCase()
 			setFeatureKoNmInput(inputValue)
 		}
 		if (id === "featureEnNm") {
-			inputValue = value.replace(/[^a-z|A-Z|0-9|\s|_]/g, "")
+			inputValue = value.replace(/[^a-z|A-Z|0-9|_]/g, "").toUpperCase()
 			setFeatureEnNmInput(inputValue)
 		}
 
@@ -1065,6 +1116,7 @@ const SelfFeatureReg = () => {
 										setTargetList={setTargetList}
 										setTrgtFilterList={setTrgtFilterList}
 										attributes={mstrSgmtTableandColMetaInfo.attributes}
+										featureRules={featureRuleList}
 										behaviors={mstrSgmtTableandColMetaInfo.behaviors}
 										setFormulaTrgtList={setFormulaTrgtList}
 									/>
@@ -1074,6 +1126,7 @@ const SelfFeatureReg = () => {
 									{(mstrSgmtTableandColMetaInfo && !isSelectAggregateTop) &&
 										<DragList
 											attributes={mstrSgmtTableandColMetaInfo.attributes}
+											featureRules={featureRuleList}
 											behaviors={mstrSgmtTableandColMetaInfo.behaviors}
 										/>}
 									{/* drag 영역 */}

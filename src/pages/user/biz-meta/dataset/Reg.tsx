@@ -7,14 +7,16 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { CreatedDatasetModel, DatasetColumnModel, DatasetParams } from '@/models/model/DatasetModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { tbColReg } from '@/utils/RegularExpression';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const initRows: DatasetColumnModel = {
   index: 0,
@@ -34,6 +36,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: DatasetParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -67,8 +70,8 @@ const Reg = () => {
       colSpan: 2,
       maxLength: 100,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.enNm'),
@@ -76,33 +79,33 @@ const Reg = () => {
       colSpan: 2,
       maxLength: 100,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.srcClNm'),
       field: 'srcClNm',
       colSpan: 2,
       maxLength: 300,
-      require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      require: false,
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.def'),
       field: 'mcsDef',
       colSpan: 2.9,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength),
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: t('bizMeta:label.featureFm'),
       field: 'clFm',
       colSpan: 1.1,
-      require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) =>
-        CalculationLogicItem(rowIndex, fieldName, maxLength),
+      require: false,
+      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+        CalculationLogicItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: '',
@@ -121,15 +124,15 @@ const Reg = () => {
   ];
   const { data: response, mutate, isSuccess, isError } = useCreateDataset(values);
 
-  const EditableColumnItem = (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
+  const EditableColumnItem = (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) => {
     return (
       <Stack gap="SM" className="width-100" direction="Vertical">
         <TextField
           className="width-100"
           {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
             pattern:
-              fieldName === 'mcsEnNm' ? { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') } : undefined,
-            required: { value: true, message: t('common.validate.required') },
+              fieldName === 'mcsEnNm' ? { value: tbColReg, message: t('common.validate.requiredEn') } : undefined,
+            required: require ? { value: true, message: t('common.validate.required') } : undefined,
             maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
             validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
           })}
@@ -140,7 +143,7 @@ const Reg = () => {
     );
   };
 
-  const CalculationLogicItem = (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
+  const CalculationLogicItem = (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) => {
     return (
       <Stack gap="SM" className="width-100" direction="Vertical">
         <Stack>
@@ -148,10 +151,11 @@ const Reg = () => {
             multiline
             className="hidden"
             {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
-              required: { value: true, message: t('common.validate.required') },
+              required: require ? { value: true, message: t('common.validate.required') } : undefined,
               maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
               validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
             })}
+            onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
           />
           <Button
             className="width-100"
@@ -182,9 +186,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(
@@ -279,7 +284,7 @@ const Reg = () => {
                   <TextField
                     className="width-100"
                     {...register('mtsEnNm', {
-                      pattern: { value: /^[a-zA-Z_]*$/, message: t('common.validate.requiredEn') },
+                      pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
                       required: { value: true, message: t('common.validate.required') },
                       maxLength: { value: 100, message: t('common.validate.maxLength') },
                       validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
@@ -355,7 +360,7 @@ const Reg = () => {
                   <TextField
                     className="width-100"
                     {...register('srcTbNm', {
-                      maxLength: { value: 300, message: t('common.validate.maxLength') },
+                      maxLength: { value: 1000, message: t('common.validate.maxLength') },
                       validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                     })}
                     validation={errors?.srcTbNm?.message ? 'Error' : undefined}
@@ -422,7 +427,7 @@ const Reg = () => {
 
         <Stack gap="SM" justifyContent="End">
           <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-            {t('common.button.reg')}
+            {t('common.button.save')}
           </Button>
           <Button size="LG" onClick={handleList}>
             {t('common.button.list')}

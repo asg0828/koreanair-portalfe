@@ -7,7 +7,7 @@ export interface ColumnsInfo {
   maxLength?: number;
   require?: boolean;
   align?: Align;
-  render?: (rowIndex: number, field: any, maxLength?: number) => any;
+  render?: (rowIndex: number, field: any, maxLength?: number, require?: boolean) => any;
 }
 
 export interface RowsInfo {

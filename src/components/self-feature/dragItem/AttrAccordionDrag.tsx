@@ -5,8 +5,6 @@ import {
 import {
     Attribute,
     AttributeAccordian,
-    Behavior,
-    TbCoMetaTblClmnInfo
 } from '@/models/selfFeature/FeatureModel'
 
 import {
@@ -17,11 +15,13 @@ import {
 import AttrDragItem from './AttrDragItem'
 
 export interface AttrAccordionDragProps {
+    isInitComponent: Boolean,
     oriAttrbute: AttributeAccordian | null,
     attrbute: AttributeAccordian,
 }
 
 const AttrAccordionDrag = ({
+    isInitComponent,
     oriAttrbute,
     attrbute,
 }: AttrAccordionDragProps) => {
@@ -31,7 +31,8 @@ const AttrAccordionDrag = ({
     useEffect(() => {
         if (!oriAttrbute) return
         if (
-            (oriAttrbute.attributes.length > attrbute.attributes.length)
+            !isInitComponent
+            || (oriAttrbute.attributes.length > attrbute.attributes.length)
             && attrbute.attributes.length > 0
         ) setDefaultAttrCol([attrbute.metaTblLogiNm])
         else setDefaultAttrCol([])

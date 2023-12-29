@@ -1,7 +1,7 @@
 import { Button, Stack, TD, TH, TR, TextField, useToast } from '@ke-design/components';
 import { useCallback, useEffect, useState } from 'react';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { mobMasterColumn, mobMasterData, mobileColumn, mobileData } from '../data';
+import { mobMasterColumn, mobileColumn } from '../data';
 import { MobMasterData, MobileData, mobileMasterSearch, mobileSearch } from '@/models/oneId/OneIdInfo';
 import DataGrid from '@/components/grid/DataGrid';
 import { PageModel, initPage } from '@/models/model/PageModel';
@@ -11,9 +11,11 @@ import { useMobileMasterNumber, useMobileNumber } from '@/hooks/queries/useOneId
 export default function MobileNumber() {
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
+  const [isChanged2, setIsChanged2] = useState(false);
   const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<MobileData>>([]);
-  const [rowMaster, setRowMaster] = useState<Array<MobMasterData>>([]);
+  const [page2, setPage2] = useState<PageModel>(initPage);
+  const [row2, setRows2] = useState<Array<MobMasterData>>([]);
   const [searchInfo1, setSearchInfo] = useState<mobileSearch>({
     agtEstimatedMblfonNoInfo: '',
     agtEstMblfonNoInfoHshVlu: '',
@@ -23,7 +25,7 @@ export default function MobileNumber() {
   });
 
   const { refetch: refetch1, data: response1, isError: isError1 } = useMobileNumber(searchInfo1, page);
-  const { refetch: refetch2, data: response2, isError: isError2 } = useMobileMasterNumber(searchInfo2, page);
+  const { refetch: refetch2, data: response2, isError: isError2 } = useMobileMasterNumber(searchInfo2, page2);
 
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
@@ -38,12 +40,20 @@ export default function MobileNumber() {
   };
   const handleSearch = useCallback(() => {
     refetch1();
-    refetch2();
-  }, [refetch1, refetch2]);
+  }, [refetch1]);
 
   const handlePage = (page: PageModel) => {
     setPage(page);
     setIsChanged(true);
+  };
+
+  const handleSearch2 = useCallback(() => {
+    refetch2();
+  }, [refetch2]);
+
+  const handlePage2 = (page2: PageModel) => {
+    setPage2(page2);
+    setIsChanged2(true);
   };
 
   /* 초기화 버튼 */
@@ -58,6 +68,14 @@ export default function MobileNumber() {
       setIsChanged(false);
     };
   }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    isChanged2 && handleSearch2();
+
+    return () => {
+      setIsChanged2(false);
+    };
+  }, [isChanged2, handleSearch2]);
 
   useEffect(() => {
     if (isError1 || response1?.successOrNot === 'N') {
@@ -83,17 +101,20 @@ export default function MobileNumber() {
     } else {
       if (response2?.data) {
         // response.data.contents.forEach(() => {});
-        setRows(response2.data.contents);
-        setPage(response2.data.page);
+        setRows2(response2.data.contents);
+        setPage2(response2.data.page);
       }
     }
   }, [response2, isError2, toast]);
 
   // 행 클릭 조회 함수
   const getClickRow = (rowData: any) => {
-    setSearchInfo2({ ...searchInfo2, mobilePhoneNumberInfo: rowData.presumeNum });
-    refetch2();
+    setSearchInfo2({ ...searchInfo2, mobilePhoneNumberInfo: rowData.agtEstimatedMblfonNoInfo });
   };
+
+  useEffect(() => {
+    if (searchInfo2.mobilePhoneNumberInfo !== '') refetch2();
+  }, [searchInfo2]);
 
   return (
     <Stack direction="Vertical">
@@ -101,7 +122,7 @@ export default function MobileNumber() {
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
-              OneId 번호
+              대리점추정 휴대전화번호정보
             </TH>
             <TD colSpan={2}>
               <TextField
@@ -113,7 +134,7 @@ export default function MobileNumber() {
               />
             </TD>
             <TH colSpan={1} align="right">
-              PNR 번호
+              대리점추정 휴대전화번호정보 Hash값
             </TH>
             <TD colSpan={2}>
               <TextField
@@ -140,22 +161,14 @@ export default function MobileNumber() {
 
       <DataGrid
         columns={mobileColumn}
-        rows={mobileData}
+        rows={row}
         enableSort={false}
         clickable={true}
         page={page}
         onChange={handlePage}
         onClick={getClickRow}
       />
-      <DataGrid
-        columns={mobMasterColumn}
-        //rows = {row}
-        rows={mobMasterData}
-        enableSort={false}
-        clickable={true}
-        page={page}
-        onChange={handlePage}
-      />
+      <DataGrid columns={mobMasterColumn} rows={row2} enableSort={false} page={page2} onChange={handlePage2} />
     </Stack>
   );
 }

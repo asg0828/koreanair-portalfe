@@ -1,4 +1,3 @@
-import { useCustomerInfo } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -41,6 +40,7 @@ import {
 } from '@/models/model/CustomerInfoModel';
 import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+import { useProfileCLevel } from '@/hooks/queries/useCustomerInfoQueires';
 
 export default function List() {
   const today = new Date();
@@ -75,9 +75,9 @@ export default function List() {
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   // const [skypassList, setSkypassList] = useState<Array<any>>([]);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
-  const { refetch, data: response, isError } = useCustomerInfo(searchInfo);
   const { toast } = useToast();
-
+  // profile 조회 api
+  const { refetch: refetchProfile, data: responseProfile, isError: isErrorProfile } = useProfileCLevel(searchInfo);
   const [searchText, setSearchText] = useState<any>();
 
   const searchHighlight = (text: any, search: any) => {
@@ -171,7 +171,8 @@ export default function List() {
       setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
     }
     // refetch();
-  }, [refetch, searchInfo, validation]);
+    refetchProfile();
+  }, [refetchProfile, searchInfo, validation]);
 
   // style > 배경색 변경
   useEffect(() => {
@@ -238,20 +239,6 @@ export default function List() {
   useEffect(() => {
     setSelectedSkypass(skypass?.find((item) => item.skypassNum === searchInfo.skypassSelect));
   }, [searchInfo.skypassSelect]);
-
-  useEffect(() => {
-    if (isError || response?.successOrNot === 'N') {
-      toast({
-        type: 'Error',
-        content: '조회 중 에러가 발생했습1니다.',
-      });
-    } else {
-      if (response?.data) {
-        // response.data.contents.forEach(() => {});
-        // setRows(response.data.contents);
-      }
-    }
-  }, [response, isError, toast]);
 
   {
     /* CLevel 모달 */

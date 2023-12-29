@@ -15,11 +15,13 @@ import {
 import BehvDragItem from './BehvDragItem'
 
 export interface BehvAccordionDragProps {
+    isInitComponent: Boolean,
     oriBehavior: Behavior,
     behavior: Behavior,
 }
 
 const BehvAccordionDrag = ({
+    isInitComponent,
     oriBehavior,
     behavior,
 }: BehvAccordionDragProps) => {
@@ -29,7 +31,8 @@ const BehvAccordionDrag = ({
     useEffect(() => {
 
         if (
-            (oriBehavior.tbCoMetaTblClmnInfoList.length > behavior.tbCoMetaTblClmnInfoList.length) 
+            !isInitComponent
+            || (oriBehavior.tbCoMetaTblClmnInfoList.length > behavior.tbCoMetaTblClmnInfoList.length) 
             && behavior.tbCoMetaTblClmnInfoList.length > 0
         ) setDefaultBehvCol([behavior.metaTblLogiNm])
         else setDefaultBehvCol([])

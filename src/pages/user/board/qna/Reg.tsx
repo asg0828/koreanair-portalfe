@@ -5,6 +5,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { PageModel } from '@/models/model/PageModel';
 import { CreatedQnaModel, QnaParams } from '@/models/model/QnaModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -22,6 +23,7 @@ const Reg = () => {
   const { toast } = useToast();
   const location = useLocation();
   const params: QnaParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -49,9 +51,10 @@ const Reg = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(
@@ -153,36 +156,17 @@ const Reg = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              {t('board:label.openYn')}
+              {t('board:label.useYn')}
             </TH>
             <TD colSpan={5} align="left">
               <Radio
-                label={t('board:label.open')}
-                value="Y"
-                defaultChecked={values.openYn === 'Y'}
-                {...register('openYn')}
-              />
-              <Radio
-                label={t('board:label.unopen')}
-                value="N"
-                defaultChecked={values.openYn === 'N'}
-                {...register('openYn')}
-              />
-            </TD>
-          </TR>
-          <TR>
-            <TH colSpan={1} align="right">
-              {t('board:label.postYn')}
-            </TH>
-            <TD colSpan={5} align="left">
-              <Radio
-                label={t('board:label.post')}
+                label={t('board:label.useY')}
                 value="Y"
                 defaultChecked={values.useYn === 'Y'}
                 {...register('useYn')}
               />
               <Radio
-                label={t('board:label.unpost')}
+                label={t('board:label.useN')}
                 value="N"
                 defaultChecked={values.useYn === 'N'}
                 {...register('useYn')}
@@ -227,7 +211,7 @@ const Reg = () => {
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-          {t('common.button.reg')}
+          {t('common.button.save')}
         </Button>
         <Button size="LG" onClick={handleList}>
           {t('common.button.list')}

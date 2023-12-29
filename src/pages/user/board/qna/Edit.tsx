@@ -8,6 +8,7 @@ import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
+import { PageModel } from '@/models/model/PageModel';
 import { QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
@@ -27,6 +28,7 @@ const Edit = () => {
   const location = useLocation();
   const qnaId = location?.state?.qnaId;
   const params: QnaParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -58,9 +60,10 @@ const Edit = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const handleList = () => {
     dispatch(
@@ -195,20 +198,20 @@ const Edit = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              {t('board:label.openYn')}
+              {t('board:label.useYn')}
             </TH>
             <TD colSpan={2} align="left">
               <Radio
-                label={t('board:label.open')}
+                label={t('board:label.useY')}
                 value="Y"
-                defaultChecked={values.openYn === 'Y'}
-                {...register('openYn')}
+                defaultChecked={values.useYn === 'Y'}
+                {...register('useYn')}
               />
               <Radio
-                label={t('board:label.unopen')}
+                label={t('board:label.useN')}
                 value="N"
-                defaultChecked={values.openYn === 'N'}
-                {...register('openYn')}
+                defaultChecked={values.useYn === 'N'}
+                {...register('useYn')}
               />
             </TD>
             <TH colSpan={1} align="right" required>
@@ -278,7 +281,7 @@ const Edit = () => {
 
       <Stack gap="SM" justifyContent="End" className="margin-top-8">
         <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-          {t('common.button.reg')}
+          {t('common.button.save')}
         </Button>
         <Button size="LG" onClick={handleList}>
           {t('common.button.list')}

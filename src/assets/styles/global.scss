@@ -44,6 +44,9 @@ a {
 .width-100 {
   width: 100%;
 }
+.width-240 {
+  width: 240px;
+}
 .height-100 {
   height: 100%;
 }
@@ -1210,4 +1213,12 @@ svg {
       background-image: url(./../images/icon_modal_arrow_right.png);
     }
   }
+}
+
+
+
+.tableTdScrollFix .verticalTableDivHeader {
+  position: sticky;
+  z-index: 9;
+  top: 0;
 }

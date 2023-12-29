@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { NoticeModel, NoticeParams } from '@/models/model/NoticeModel';
+import { PageModel } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
@@ -28,6 +29,7 @@ const Detail = () => {
   const location = useLocation();
   const noticeId = location?.state?.noticeId;
   const params: NoticeParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const [noticeModel, setNoticeModel] = useState<NoticeModel>();
   const { data: response, isSuccess, isError } = useNoticeById(noticeId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteNotice(noticeId);
@@ -36,15 +38,17 @@ const Detail = () => {
     navigate('..', {
       state: {
         params: params,
+        page: page,
       },
     });
-  }, [params, navigate]);
+  }, [params, page, navigate]);
 
   const goToEdit = () => {
     navigate('../edit', {
       state: {
         noticeId: noticeId,
         params: params,
+        page: page,
       },
     });
   };
@@ -54,6 +58,7 @@ const Detail = () => {
       state: {
         noticeId: nNoticeId,
         params: params,
+        page: page,
       },
     });
   };

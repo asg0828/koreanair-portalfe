@@ -38,6 +38,7 @@ export interface TargetDropListProps {
     setTargetList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgt>>>
     setTrgtFilterList: React.Dispatch<React.SetStateAction<Array<TbRsCustFeatRuleTrgtFilter>>>
     attributes: Array<Attribute>
+    featureRules: Array<TbRsCustFeatRule>
     behaviors: Array<Behavior>
     setFormulaTrgtList: React.Dispatch<React.SetStateAction<Array<FormulaTrgtListProps>>>
 }
@@ -69,6 +70,7 @@ export interface TargetDragProps {
     attrTblClmnInfo?: Attribute
     metaTblLogiNm?: string
     behvTblClmnInfo?: TbCoMetaTblClmnInfo
+    featTblClmnInfo?: TbRsCustFeatRule
 }
 
 export interface FeatCalcValidProps {
@@ -245,6 +247,11 @@ export interface AttributeAccordian {
     metaTblLogiNm: string,
     attributes: Array<Attribute>,
 }
+export interface FeatAccordian {
+    [key: string]: string | Array<TbRsCustFeatRule>
+    metaTblLogiNm: string,
+    featureList: Array<TbRsCustFeatRule>,
+}
 
 export interface Attribute {
     [key: string]: string | number
@@ -357,6 +364,7 @@ export interface TbRsCustFeatRule extends RowsInfo {
     lastUpdUserId: string,
     //example: 카테고리
     category: string,
+    categoryNm: string,
     //example: 데이터 유형
     dataType: string,
     sqlDirectInputYn: string,

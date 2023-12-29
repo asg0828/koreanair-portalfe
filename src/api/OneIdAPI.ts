@@ -10,16 +10,17 @@ import {
   mobileMasterSearch,
   mobileSearch,
   oneidHistorySearch,
+  oneidMasterSearch,
   paxMappingSearch,
   relationSearch,
 } from '@/models/oneId/OneIdInfo';
 import { callApi, Method } from '@utils/ApiUtil';
 
 // oneid 마스터
-export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
+export const getMasterHistory = (searchInfo: oneidMasterSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master-for-history`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -34,7 +35,7 @@ export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel
 export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master-history`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -49,7 +50,7 @@ export const getHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
 export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/pax-mapping`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -64,7 +65,7 @@ export const getPaxMapping = (searchInfo: paxMappingSearch, page: PageModel) => 
 export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/master`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -79,7 +80,7 @@ export const getMobileMaster = (searchInfo: mobileMasterSearch, page: PageModel)
 export const getMobile = (searchInfo: mobileSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/agt-contact`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -94,7 +95,7 @@ export const getMobile = (searchInfo: mobileSearch, page: PageModel) => {
 export const getRelation = (searchInfo: relationSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/merge-history`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -109,12 +110,12 @@ export const getRelation = (searchInfo: relationSearch, page: PageModel) => {
 export const getErrorLog = (searchInfo: errorSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/error-log`,
     method: Method.GET,
     params: {
       queryParams: {
-        ...searchInfo,
         ...page,
+        ...searchInfo,
       },
     },
   });
@@ -124,12 +125,12 @@ export const getErrorLog = (searchInfo: errorSearch, page: PageModel) => {
 export const getDaily = (searchInfo: dailySearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/daily-report`,
     method: Method.GET,
     params: {
       queryParams: {
-        ...searchInfo,
         ...page,
+        ...searchInfo,
       },
     },
   });
@@ -139,12 +140,12 @@ export const getDaily = (searchInfo: dailySearch, page: PageModel) => {
 export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/cti-voc-report`,
     method: Method.GET,
     params: {
       queryParams: {
-        ...searchInfo,
         ...page,
+        ...searchInfo,
       },
     },
   });
@@ -154,7 +155,7 @@ export const getCtiVoc = (searchInfo: ctiVocSearch, page: PageModel) => {
 export const getSamePnr = (page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/same-pnr`,
     method: Method.GET,
     params: {
       queryParams: {
@@ -168,7 +169,7 @@ export const getSamePnr = (page: PageModel) => {
 export const getConversionCleansingHash = (searchInfo: ConversionCleansingHashSearch) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/cleansing-hash-results`,
     method: Method.GET,
     params: {
       queryParams: { ...searchInfo },
@@ -180,7 +181,7 @@ export const getConversionCleansingHash = (searchInfo: ConversionCleansingHashSe
 export const getConversionMetaphone = (searchInfo: ConversionMetaphoneSearch) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/double-metaphone`,
     method: Method.GET,
     params: {
       queryParams: { ...searchInfo },

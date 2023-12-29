@@ -15,11 +15,13 @@ import {
     TargetDropListProps,
     Behavior,
     AggregateCol,
-    DivisionTypes, 
+    DivisionTypes,
+    TbRsCustFeatRule, 
 } from '@/models/selfFeature/FeatureModel'
 import { 
     initAttribute, 
     initTbCoMetaTblClmnInfo, 
+    initTbRsCustFeatRule, 
     initTbRsCustFeatRuleTrgt, 
     initTbRsCustFeatRuleTrgtFilter,
 } from '@/pages/user/self-feature/data'
@@ -36,6 +38,7 @@ const DropList = ({
     setTargetList,
     setTrgtFilterList,
     attributes,
+    featureRules,
     behaviors,
     setFormulaTrgtList,
 }: TargetDropListProps) => {
@@ -74,6 +77,21 @@ const DropList = ({
         setColumnList(colList)
     }, [attributes])
 
+    // 속성 테이블의 해당 컬럼 리스트 set
+    useEffect(()=> {
+        let colList: Array<AggregateCol> = []
+        featureRules?.map((colInfo: TbRsCustFeatRule) => {
+            let col = { value: "", text: "", dataType: "", dtpCd: "" }
+            col.value = colInfo.featureEnNm
+            col.text  = colInfo.name
+            col.dataType = colInfo.dataTypeCategory.toString()
+            col.dtpCd = colInfo.dataType
+            colList.push(col)
+            return colInfo
+        })
+        setColumnList(colList)
+    }, [featureRules])
+
     const [, drop] = useDrop(() => ({
         accept: Object.values(DivisionTypes),
         drop(item, monitor) {
@@ -81,9 +99,11 @@ const DropList = ({
             const targetType = monitor.getItemType()
 
             if (!didDrop) {
-                let targetObj: TbCoMetaTblClmnInfo | Attribute
+                let targetObj: TbCoMetaTblClmnInfo | Attribute | TbRsCustFeatRule
                 if (targetType === DivisionTypes.ATTR) {
                     targetObj = Object.assign(cloneDeep(initAttribute), item)
+                } else if (targetType === DivisionTypes.FEAT) {
+                    targetObj = Object.assign(cloneDeep(initTbRsCustFeatRule), item)
                 } else if (targetType === DivisionTypes.BEHV) {
                     targetObj = Object.assign(cloneDeep(initTbCoMetaTblClmnInfo), item)
                 } else {
@@ -103,9 +123,13 @@ const DropList = ({
                         target.columnName = String(targetObj.metaTblClmnPhysNm)
                         target.columnLogiName = String(targetObj.metaTblClmnLogiNm)
                     }
+                    if (targetType === DivisionTypes.FEAT) {
+                        target.columnName = String(targetObj.featureEnNm)
+                        target.columnLogiName = String(targetObj.name)
+                    }
                     target.divisionCode = String(targetType)
-                    target.targetDataType = targetObj.dataTypeCategory//targetObj.dtpCd
-                    target.dtpCd = targetObj.dtpCd
+                    target.targetDataType = targetObj.dataTypeCategory.toString()//targetObj.dtpCd
+                    target.dtpCd = targetObj.dtpCd.toString()
                     tl.push(target)
                     return tl
                 })
@@ -119,7 +143,7 @@ const DropList = ({
                         target.targetId  = `T${t+1}`
                         target.columnName = String(targetObj.metaTblClmnPhysNm)
                         target.columnLogiName = String(targetObj.metaTblClmnLogiNm)
-                        target.columnDataTypeCode = targetObj.dataTypeCategory//targetObj.dtpCd
+                        target.columnDataTypeCode = targetObj.dataTypeCategory.toString()//targetObj.dtpCd
                         tl.push(target)
                         return tl
                     })
@@ -198,7 +222,9 @@ const DropList = ({
                             itemIdx={index}
                             isPossibleEdit={isPossibleEdit}
                             targetItem={targetItem}
+                            setTargetList={setTargetList}
                             delTargetInfo={deleteInfo}
+                            columnList={columnList}
                         />
                     } else if (targetItem.divisionCode === DivisionTypes.BEHV) {
                         let bs = behaviors.find((behavior: Behavior) => (behavior.metaTblId === targetItem.tableName))

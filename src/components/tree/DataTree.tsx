@@ -10,6 +10,7 @@ import { fileSx, folderSx } from '@/models/common/Constants';
 import { CheckedState } from '@/models/common/Design';
 import { Checkbox, Stack, Typography } from '@components/ui';
 import { MoveHandler, NodeApi, NodeRendererProps, Tree } from 'react-arborist';
+import './DataTree.scss';
 
 export interface DataTreeProps {
   enableChecked?: boolean;
@@ -96,15 +97,6 @@ const DataTree = ({
     }
   };
 
-  // 선택한 트리가 있는지 체크
-  const checkHasSelected = (node: NodeApi): boolean => {
-    if (node.children) {
-      return node.data.isSelected || node.children.some((n: any) => checkHasSelected(n));
-    } else {
-      return node.data.isSelected || false;
-    }
-  };
-
   // 트리 필터
   const handleSearchMatch = (node: NodeApi, termStr: string) => {
     return node.data.name.toLowerCase().includes(termStr.toLowerCase());
@@ -118,18 +110,12 @@ const DataTree = ({
     const isChecked = node.data.isChecked;
     // 선택 여부
     const isSelected = node.data.isSelected;
-    // 변경 여부 (초기 데이터와 비교 시 변경되었는지 여부)
-    const isChanged = node.data.isChanged;
+    // 파일 여부
+    const isFile = node.children?.length === 0;
     // 드랍 시 대상 여부
     node.data.willReceiveDrop = node.willReceiveDrop;
 
-    // 파일인 경우 폴더 보다 1뎁스 더 margin-left
-    let paddingLeft;
-    if (node.children?.length === 0) {
-      paddingLeft = `24px`;
-    }
-
-    if (node.children?.length === 0) {
+    if (isFile) {
       content.push(
         <>
           {enableChecked && <Checkbox checked={isChecked} onCheckedChange={(checked) => handleCheck(node, checked)} />}
@@ -156,7 +142,7 @@ const DataTree = ({
       } else {
         content.push(
           <>
-            <KeyboardArrowRightOutlinedIcon onClick={() => handleToggle(node)} color="disabled" />
+            <KeyboardArrowRightOutlinedIcon color="disabled" onClick={() => handleToggle(node)} />
             {enableChecked && (
               <Checkbox checked={isChecked} onCheckedChange={(checked) => handleCheck(node, checked)} />
             )}
@@ -171,9 +157,9 @@ const DataTree = ({
 
     return (
       <Stack
+        key={node.data.id}
         id={node.data.id}
-        className={`tree-item width-100 ${isSelected ? 'primary-200' : ''} ${isChanged ? 'error-200' : ''}`}
-        style={{ paddingLeft }}
+        className={`tree-item width-100 ${isSelected ? 'primary-200' : ''} ${isFile ? 'file' : ''}`}
         ref={dragHandle}
       >
         <Stack className="width-100" style={style}>
@@ -189,10 +175,10 @@ const DataTree = ({
         width="100%"
         height={treeHeight}
         data={treeData}
-        onMove={handleMove}
         searchTerm={term}
-        searchMatch={handleSearchMatch}
         renderDragPreview={(dragPreviewProps) => null}
+        onMove={handleMove}
+        searchMatch={handleSearchMatch}
       >
         {NodeRenderer}
       </Tree>

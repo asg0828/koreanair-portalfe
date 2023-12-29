@@ -7,17 +7,19 @@ import ReadSqlModal from "@/components/self-feature/modal/ReadSqlModal";
 import {
     Button,
 } from '@components/ui'
+import ConfirmModal from '../modal/ConfirmModal';
+import { ModalType } from '@/models/selfFeature/FeatureCommon';
 
 export interface Props {
     [key: string]: string | number | undefined
     rslnRuleId: string
-    mstrSgmtRuleId: string
+    runScheduleCnt: number
     custFeatRuleId: string
 }
 
 const FeatQueryRsltButton = ({
     rslnRuleId,
-    mstrSgmtRuleId,
+    runScheduleCnt,
     custFeatRuleId,
 }: Props) => {
 
@@ -25,11 +27,33 @@ const FeatQueryRsltButton = ({
     const [isOpenQuerySampleDataModal, setIsOpenQuerySampleDataModal] = useState<boolean>(false)
     const [isOpenBatchExecuteLogsModal, setIsOpenBatchExecuteLogsModal] = useState<boolean>(false)
     const [isOpenReadSqlModal, setIsOpenReadSqlModal] = useState<boolean>(false)
+    // 모달
+    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
+    const [confirmModalTit, setConfirmModalTit] = useState<string>('')
+    const [confirmModalCont, setConfirmModalCont] = useState<string>('')
+    const [modalType, setModalType] = useState<string>('')
+
+    // modal 확인/취소 이벤트
+    const onConfirm = () => {
+        if (modalType === ModalType.CONFIRM) {
+        }
+        setIsOpenConfirmModal(false)
+    }
+    const onCancel = () => {
+        setIsOpenConfirmModal(false)
+    }
 
     // 버튼 이벤트
     const onClickFeatQueryRsltHandler = (type: number) => {
         if (type === 1) {
-            setIsOpenQuerySampleDataModal((prevState) => !prevState)
+            if (runScheduleCnt > 0) {
+                setIsOpenQuerySampleDataModal((prevState) => !prevState)
+            } else {
+                setModalType(ModalType.ALERT)
+                setConfirmModalTit("샘플확인")
+                setConfirmModalCont("수동실행을 최소 1번 이상 수행 해주세요.")
+                setIsOpenConfirmModal(true)
+            }
         } else if (type === 2) {
             setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
         } else if (type === 3) {
@@ -68,6 +92,18 @@ const FeatQueryRsltButton = ({
                 onClose={(isOpen) => setIsOpenReadSqlModal(isOpen)}
                 custFeatRuleId={custFeatRuleId}
             />
+
+            {/* Confirm 모달 */}
+            <ConfirmModal
+                isOpen={isOpenConfirmModal}
+                onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+                title={confirmModalTit}
+                content={confirmModalCont}
+                onConfirm={onConfirm}
+                onCancle={onCancel}
+                btnType={modalType}
+            />
+            {/* Confirm 모달 */}
         </>
     )
 }

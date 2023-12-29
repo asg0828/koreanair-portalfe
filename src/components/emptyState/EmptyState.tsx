@@ -1,5 +1,5 @@
+import { Button, Stack, Typography } from '@components/ui';
 import { lazy } from 'react';
-import { Stack, Typography, Button } from '@components/ui';
 import './EmptyState.scss';
 
 const CheckCircleOutlineIcon = lazy(() =>

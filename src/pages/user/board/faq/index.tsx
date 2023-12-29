@@ -31,8 +31,9 @@ const List = () => {
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const beforeParams: FaqParams = location?.state?.params;
+  const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initFaqParams);
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<FaqModel>>([]);
   const [faqId, setFaqId] = useState<string>('');
   const [dFaqId, setDFaqId] = useState<string>('');
@@ -41,14 +42,15 @@ const List = () => {
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(faqId);
 
   const searchInfoList = [
-    { key: 'sj', value: t('board:label.sj') },
-    { key: 'cn', value: t('board:label.cn') },
+    { key: 'qstn', value: t('board:label.sj') },
+    { key: 'answ', value: t('board:label.cn') },
   ];
 
   const goToReg = () => {
     navigate(View.REG, {
       state: {
         params: params,
+        page: page,
       },
     });
   };
@@ -183,6 +185,7 @@ const List = () => {
                 onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
               >
+                <SelectOption value="all">{t('common.label.all')}</SelectOption>
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}

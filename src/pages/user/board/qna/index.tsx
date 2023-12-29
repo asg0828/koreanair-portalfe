@@ -25,8 +25,9 @@ const List = () => {
   const { toast } = useToast();
   const location = useLocation();
   const beforeParams: QnaParams = location?.state?.params;
+  const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initQnaParams);
-  const [page, setPage] = useState<PageModel>(initPage);
+  const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<QnaModel>>([]);
   const { data: response, isError, refetch } = useQnaList(params, page);
 
@@ -49,6 +50,7 @@ const List = () => {
     navigate(View.REG, {
       state: {
         params: params,
+        page: page,
       },
     });
   };
@@ -58,6 +60,7 @@ const List = () => {
       state: {
         qnaId: row.qnaId,
         params: params,
+        page: page,
       },
     });
   };
@@ -128,6 +131,7 @@ const List = () => {
                 onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
               >
+                <SelectOption value="all">{t('common.label.all')}</SelectOption>
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}
