@@ -68,7 +68,7 @@ const FeatQueryRsltButton = ({
                 runStateValidRefetch()
                 if (runStateValidRes?.status === 202) {
                     setModalType(ModalType.ALERT)
-                    setConfirmModalTit("Feature 정보")
+                    setConfirmModalTit("샘플확인")
                     setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
                     setIsOpenConfirmModal(true)
                 }
@@ -85,7 +85,7 @@ const FeatQueryRsltButton = ({
                 runStateValidRefetch()
                 if (runStateValidRes?.status === 202) {
                     setModalType(ModalType.ALERT)
-                    setConfirmModalTit("Feature 정보")
+                    setConfirmModalTit("실행내역")
                     setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
                     setIsOpenConfirmModal(true)
                 }
