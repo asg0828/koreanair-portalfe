@@ -42,8 +42,8 @@ const List = () => {
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(faqId);
 
   const searchInfoList = [
-    { key: 'sj', value: t('board:label.sj') },
-    { key: 'cn', value: t('board:label.cn') },
+    { key: 'qstn', value: t('board:label.sj') },
+    { key: 'answ', value: t('board:label.cn') },
   ];
 
   const goToReg = () => {
