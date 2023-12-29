@@ -174,9 +174,10 @@ const List = () => {
                 appearance="Outline"
                 placeholder={t('common.placeholder.all')}
                 className="width-240"
-                onChange={(e, value) => value && handleChangeParams('srcDbCd', value)}
-                value={params.srcDbCd}
+                onChange={(e, value) => value && handleChangeParams('srcDbCd', value === 'all' ? null : value)}
+                value={params.srcDbCd || 'all'}
               >
+                <SelectOption value="all">{t('common.label.all')}</SelectOption>
                 {codeList.map((codeItem: any) => (
                   <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
                 ))}

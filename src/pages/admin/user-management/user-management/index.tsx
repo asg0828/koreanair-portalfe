@@ -157,9 +157,10 @@ const List = () => {
               appearance="Outline"
               placeholder="전체"
               className="width-100"
-              onChange={(e, value) => value && handleChangeParams('mgrAuthId', value)}
-              value={params.mgrAuthId}
+              onChange={(e, value) => value && handleChangeParams('mgrAuthId', value === 'all' ? null : value)}
+              value={params.mgrAuthId || 'all'}
             >
+              <SelectOption value="all">{t('common.label.all')}</SelectOption>
               {adminAuthList?.map((item, index) => (
                 <SelectOption key={index} value={item.authId}>
                   {item.authNm}
@@ -175,9 +176,10 @@ const List = () => {
               appearance="Outline"
               placeholder={t('common.placeholder.all')}
               className="width-100"
-              onChange={(e, value) => value && handleChangeParams('userAuthId', value)}
-              value={params.userAuthId}
+              onChange={(e, value) => value && handleChangeParams('userAuthId', value === 'all' ? null : value)}
+              value={params.userAuthId || 'all'}
             >
+              <SelectOption value="all">{t('common.label.all')}</SelectOption>
               {userAuthList?.map((item, index) => (
                 <SelectOption key={index} value={item.authId}>
                   {item.authNm}

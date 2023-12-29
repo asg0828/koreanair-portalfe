@@ -189,9 +189,6 @@ const List = () => {
   };
 
   const onSubmit = (formData: UpdatedDeptModel) => {
-    formData.userAuthId = formData.userAuthId === 'nonAuth' ? null : formData.userAuthId;
-    formData.mgrAuthId = formData.mgrAuthId === 'nonAuth' ? null : formData.mgrAuthId;
-
     if (findCreatedItem()) {
       dispatch(
         openModal({
@@ -274,12 +271,7 @@ const List = () => {
       });
     } else {
       if (uaResponse?.data) {
-        const nonAuth = {
-          authId: 'nonAuth',
-          authNm: t('management:label.nonAuth'),
-          authDsc: t('management:label.nonAuth'),
-        };
-        setUserAuthList([nonAuth, ...uaResponse.data]);
+        setUserAuthList(uaResponse.data);
       }
     }
   }, [uaResponse, uaIsError, toast]);
@@ -292,12 +284,7 @@ const List = () => {
       });
     } else {
       if (aaResponse?.data) {
-        const nonAuth = {
-          authId: 'nonAuth',
-          authNm: t('management:label.nonAuth'),
-          authDsc: t('management:label.nonAuth'),
-        };
-        setAdminAuthList([nonAuth, ...aaResponse.data]);
+        setAdminAuthList(aaResponse.data);
       }
     }
   }, [aaResponse, aaIsError, toast]);
@@ -406,10 +393,11 @@ const List = () => {
                           placeholder={t('common.placeholder.all')}
                           className="width-100"
                           ref={field.ref}
-                          onChange={(e, value) => value && field.onChange(value)}
                           status={errors?.userAuthId?.message ? 'error' : undefined}
+                          onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
                           value={field.value || 'nonAuth'}
                         >
+                          <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
                           {userAuthList?.map((item) => (
                             <SelectOption value={item.authId}>{item.authNm}</SelectOption>
                           ))}
@@ -435,10 +423,11 @@ const List = () => {
                           placeholder={t('common.placeholder.all')}
                           className="width-100"
                           ref={field.ref}
-                          onChange={(e, value) => value && field.onChange(value)}
                           status={errors?.mgrAuthId?.message ? 'error' : undefined}
+                          onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
                           value={field.value || 'nonAuth'}
                         >
+                          <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
                           {adminAuthList?.map((item) => (
                             <SelectOption value={item.authId}>{item.authNm}</SelectOption>
                           ))}
