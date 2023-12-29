@@ -159,6 +159,7 @@ const Edit = () => {
               maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
               validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
             })}
+            onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
           />
           <Button
             className="width-100"
@@ -469,7 +470,7 @@ const Edit = () => {
 
         <Stack gap="SM" justifyContent="End">
           <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-            {t('common.button.reg')}
+            {t('common.button.save')}
           </Button>
           <Button size="LG" onClick={handleList}>
             {t('common.button.list')}

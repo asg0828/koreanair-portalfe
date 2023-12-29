@@ -138,15 +138,27 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
       <>
         {columns.map((column: ColumnChild, index2) =>
           !column.childName ? (
-            <TD
-              className="verticalTableTD"
-              key={`child-column-${index}-${index2}`}
-              colSpan={column.colSpan ? column.colSpan : undefined}
-              align={column.align ? column.align : AlignCode.CENTER}
-              onClick={() => handleClick(row, index)}
-            >
-              <Typography variant="body2">{row[column.field]}</Typography>
-            </TD>
+            column.field.includes('Rate') && row[column.field] !== null ? (
+              <TD
+                className="verticalTableTD"
+                key={`child-column-${index}-${index2}`}
+                colSpan={column.colSpan ? column.colSpan : undefined}
+                align={column.align ? column.align : AlignCode.CENTER}
+                onClick={() => handleClick(row, index)}
+              >
+                <Typography variant="body2">{row[column.field]}%</Typography>
+              </TD>
+            ) : (
+              <TD
+                className="verticalTableTD"
+                key={`child-column-${index}-${index2}`}
+                colSpan={column.colSpan ? column.colSpan : undefined}
+                align={column.align ? column.align : AlignCode.CENTER}
+                onClick={() => handleClick(row, index)}
+              >
+                <Typography variant="body2">{row[column.field]}</Typography>
+              </TD>
+            )
           ) : (
             <ChildRowGird columns={column.childName} row={row} index={index} totals={totals} />
           )
