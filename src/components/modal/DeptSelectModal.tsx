@@ -129,7 +129,7 @@ const DeptSelectModal = ({
       </Modal.Body>
       <Modal.Footer>
         <Button size="LG" priority="Primary" appearance="Contained" onClick={handleConfirm}>
-          {t('common.button.reg')}
+          {t('common.button.confirm')}
         </Button>
       </Modal.Footer>
     </Modal>

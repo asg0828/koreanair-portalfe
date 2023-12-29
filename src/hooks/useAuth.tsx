@@ -142,14 +142,14 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
               if (myMenuItem.menuUrl === getMenuParentId(baseMenuItem.menuUrl) && baseMenuItem.isCrudPage) {
                 baseMenuItem.upMenuId = myMenuItem.menuId;
                 if (baseMenuItem.menuUrl.endsWith('/reg')) {
-                  baseMenuItem.menuId = `${myMenuItem.menuId}reg`;
-                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 등록`;
+                  baseMenuItem.menuId = `${myMenuItem.menuId}-reg`;
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} ${t('common.button.reg')}`;
                 } else if (baseMenuItem.menuUrl.endsWith('/detail')) {
-                  baseMenuItem.menuId = `${myMenuItem.menuId}detail`;
-                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 상세`;
+                  baseMenuItem.menuId = `${myMenuItem.menuId}-detail`;
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} ${t('common.button.detail')}`;
                 } else if (baseMenuItem.menuUrl.endsWith('/edit')) {
-                  baseMenuItem.menuId = `${myMenuItem.menuId}edit`;
-                  baseMenuItem.menuNm = `${myMenuItem.menuNm} 수정`;
+                  baseMenuItem.menuId = `${myMenuItem.menuId}-edit`;
+                  baseMenuItem.menuNm = `${myMenuItem.menuNm} ${t('common.button.edit')}`;
                 }
                 return true;
               }

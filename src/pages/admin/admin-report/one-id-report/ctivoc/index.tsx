@@ -55,9 +55,11 @@ export default function Ctivoc() {
         const columnSums: RowsInfo = {};
         response.data.contents.forEach((row: RowsInfo, index: number) => {
           for (const key in row) {
+            // 비율인 경우 평균값 계산 후 정수로 노출
             if (key.includes('Rate')) {
               if (index === response.data.contents.length - 1) {
-                columnSums[key] = (((columnSums[key] || 0) + (row[key] || 0)) / (index + 1)).toFixed(2) + '%';
+                columnSums[key] = Math.floor(((columnSums[key] || 0) + (row[key] || 0)) / (index + 1)) + '%';
+                // 건수인 경우는 누적 합
               } else {
                 columnSums[key] = (columnSums[key] || 0) + (row[key] || 0);
               }

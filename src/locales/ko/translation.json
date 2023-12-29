@@ -24,6 +24,7 @@
     },
     "button": {
       "confirm": "확인",
+      "save": "저장",
       "list": "목록",
       "reg": "등록",
       "detail": "상세",

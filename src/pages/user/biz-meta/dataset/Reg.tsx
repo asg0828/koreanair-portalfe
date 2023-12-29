@@ -155,6 +155,7 @@ const Reg = () => {
               maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
               validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
             })}
+            onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
           />
           <Button
             className="width-100"
