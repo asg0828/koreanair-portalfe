@@ -25,8 +25,9 @@ const FeatQueryRsltButton = ({
 }: Props) => {
 
     // 수동실행 validation check 조회
+    const [isValidCheck, setIsValidCheck] = useState<Boolean>(false)
 	const { data: runStateValidRes, isError: runStateValidErr, refetch: runStateValidRefetch } = useRunStateValid(custFeatRuleId)
-
+    const [btnType, setBtnType] = useState<string>("")
     // 팝업
     const [isOpenQuerySampleDataModal, setIsOpenQuerySampleDataModal] = useState<boolean>(false)
     const [isOpenBatchExecuteLogsModal, setIsOpenBatchExecuteLogsModal] = useState<boolean>(false)
@@ -49,30 +50,49 @@ const FeatQueryRsltButton = ({
 
     // 수동실행 validation check 조회 API Call back
 	useEffect(() => {
+        let title: string = ""
+        if (btnType === "sample") title = "샘플확인"
+        else if (btnType === "log") title = "실행내역"
+
 		if (runStateValidErr || runStateValidRes?.successOrNot === 'N') {
             setModalType(ModalType.ALERT)
-            setConfirmModalTit("Feature 정보")
+            setConfirmModalTit(title)
             setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
             setIsOpenConfirmModal(true)
 		} else {
 			if (runStateValidRes) {
+                if (isValidCheck) {
+                    if (runStateValidRes?.status === 202) {
+                        setModalType(ModalType.ALERT)
+                        setConfirmModalTit(title)
+                        setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
+                        setIsOpenConfirmModal(() => true)
+                    }
+                    if (runStateValidRes?.status === 200) {
+                        if (btnType === "sample") setIsOpenQuerySampleDataModal((prevState) => !prevState)
+                        else if (btnType === "log") setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
+                    }
+                }
+                setIsValidCheck(false)
             }
 		}
-	}, [runStateValidRes, runStateValidErr])
+	}, [runStateValidRes, runStateValidErr, btnType])
 
     // 버튼 이벤트
     const onClickFeatQueryRsltHandler = (type: number) => {
         if (type === 1) {
             if (runScheduleCnt > 0) {
                 // 수동실행 API 결과에 따라 모달 show 판단
+                setBtnType("sample")
+                setIsValidCheck(true)
                 runStateValidRefetch()
-                if (runStateValidRes?.status === 202) {
-                    setModalType(ModalType.ALERT)
-                    setConfirmModalTit("샘플확인")
-                    setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
-                    setIsOpenConfirmModal(true)
-                }
-                if (runStateValidRes?.status === 200) setIsOpenQuerySampleDataModal((prevState) => !prevState)
+                // if (runStateValidRes?.status === 202) {
+                //     setModalType(ModalType.ALERT)
+                //     setConfirmModalTit("샘플확인")
+                //     setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
+                //     setIsOpenConfirmModal(true)
+                // }
+                // if (runStateValidRes?.status === 200) setIsOpenQuerySampleDataModal((prevState) => !prevState)
             } else {
                 setModalType(ModalType.ALERT)
                 setConfirmModalTit("샘플확인")
@@ -82,14 +102,16 @@ const FeatQueryRsltButton = ({
         } else if (type === 2) {
             if (runScheduleCnt > 0) {
                 // 수동실행 API 결과에 따라 모달 show 판단
+                setBtnType("log")
+                setIsValidCheck(true)
                 runStateValidRefetch()
-                if (runStateValidRes?.status === 202) {
-                    setModalType(ModalType.ALERT)
-                    setConfirmModalTit("실행내역")
-                    setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
-                    setIsOpenConfirmModal(true)
-                }
-                if (runStateValidRes?.status === 200) setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
+                // if (runStateValidRes?.status === 202) {
+                //     setModalType(ModalType.ALERT)
+                //     setConfirmModalTit("실행내역")
+                //     setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
+                //     setIsOpenConfirmModal(true)
+                // }
+                // if (runStateValidRes?.status === 200) setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
             } else {
                 setModalType(ModalType.ALERT)
                 setConfirmModalTit("실행내역")
