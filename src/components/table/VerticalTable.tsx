@@ -101,7 +101,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     <Table variant="vertical" size="normal" align="center" className={`verticalTable ${className}`}>
       <div className="verticalTableDiv">
         {showHeader && columns?.length > 0 && (
-          <THead>
+          <THead className='verticalTableDivHeader'>
             <TR>
               {isCheckbox && (
                 <TH colSpan={0.5}>

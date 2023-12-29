@@ -1211,3 +1211,11 @@ svg {
     }
   }
 }
+
+
+
+.tableTdScrollFix .verticalTableDivHeader {
+  position: sticky;
+  z-index: 9;
+  top: 0;
+}
