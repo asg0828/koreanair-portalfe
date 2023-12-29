@@ -1,18 +1,6 @@
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
-import {
-  Checkbox,
-  Radio,
-  Select,
-  SelectOption,
-  Stack,
-  TD,
-  TR,
-  TextField,
-  Typography,
-  useToast,
-} from '@ke-design/components';
-import { Component, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { cloneDeep } from 'lodash';
+import { Checkbox, Radio, Select, SelectOption, TD, TR, TextField, Typography, useToast } from '@ke-design/components';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
@@ -47,8 +35,35 @@ const CstmrMetaColumnListPost: React.FC<VerticalTableProps> = ({
 }) => {
   const { toast } = useToast();
   const [timeFormat, setTimeFormat] = useState<Array<CommonCodeInfo>>([]);
+  const [chgDataType, setChgDataType] = useState<Array<CommonCodeInfo>>([]);
+  const [chgDataTypeList, setChgDataTypeList] = useState<Array<any>>([]);
   const [tbCoMetaTblClmnInfo, setTbCoMetaTblClmnInfo] = useState<RowsInfo>(rows);
   const { data: responseTime, isError: isErrorTime, refetch: refetchTime } = useCommCodes(CommonCode.FORMAT);
+  const {
+    data: responseDataType,
+    isError: isErrorDataType,
+    refetch: refetchDataType,
+  } = useCommCodes(CommonCode.DATA_TYPE_CONV_CD);
+
+  // 데이터 타입 세팅
+  useEffect(() => {
+    if (isErrorDataType || responseDataType?.successOrNot === 'N') {
+      toast({
+        type: 'Error',
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (responseDataType?.result) {
+        setChgDataType(responseDataType.result);
+      }
+    }
+  }, [responseDataType, isErrorDataType, toast]);
+
+  // 변경 가능 데이터 타입 리스트 세팅(selectOption)
+  useEffect(() => {
+    setChgDataTypeList(chgDataType.filter((e) => e.attr1 === tbCoMetaTblClmnInfo.dataType).map((type) => type.attr2));
+  }, [chgDataType, tbCoMetaTblClmnInfo]);
+
   // timeFormat 세팅
   useEffect(() => {
     if (isErrorTime || responseTime?.successOrNot === 'N') {
@@ -296,19 +311,19 @@ const CstmrMetaColumnListPost: React.FC<VerticalTableProps> = ({
         </TD>
 
         {/* 변경 데이터 타입 */}
-        <TD colSpan={columns[8].colSpan} key={`td-chgDtpCd-${rowIndex}`}>
+        <TD className="verticalTableTD" colSpan={columns[8].colSpan} key={`td-chgDtpCd-${rowIndex}`}>
           {/* 변경여부가 Y이면서 수집기준시간이 Y가 아닌 경우 Select*/}
           {tbCoMetaTblClmnInfo.changeYn === 'Y' && tbCoMetaTblClmnInfo.baseTimeYn !== 'Y' ? (
             <Select
               key={`select-chgDtpCd-${rowIndex}`}
               appearance="Outline"
               placeholder="전체"
-              style={{ minWidth: '75px' }}
+              style={{ minWidth: '78px' }}
               onChange={(e, value) => value && onchangeSelectHandler(e, value, 'chgDtpCd', rowIndex)}
             >
-              <SelectOption value={'timestamp'}>timestamp</SelectOption>
-              <SelectOption value={'int'}>int</SelectOption>
-              <SelectOption value={'double'}>double</SelectOption>
+              {chgDataTypeList?.map((item) => (
+                <SelectOption value={item}>{item}</SelectOption>
+              ))}
             </Select>
           ) : (
             <Typography variant="h5">{tbCoMetaTblClmnInfo.chgDtpCd} </Typography>
