@@ -678,12 +678,12 @@ const SelfFeatureEdit = () => {
 		let inputValue = cloneDeep(value)
 		// 한글명 영문명 입력시 value 값 수정(한글 - 한글+영문+숫자만 / 영문 - 영문+숫자만)
 		if (id === "featureKoNm") {
-			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|_]/g, "")
+			inputValue = value.replace(/[^ㄱ-ㅎ|ㅏ-ㅣ|가-힣|0-9|a-z|A-Z|_]/g, "").toUpperCase()
 			setNeedDupCheckKo(true)
 			setFeatureKoNmInput(inputValue)
 		}
 		if (id === "featureEnNm") {
-			inputValue = value.replace(/[^a-z|A-Z|0-9|_]/g, "")
+			inputValue = value.replace(/[^a-z|A-Z|0-9|_]/g, "").toUpperCase()
 			setNeedDupCheckEn(true)
 			setFeatureEnNmInput(inputValue)
 		}
@@ -1350,6 +1350,7 @@ const SelfFeatureEdit = () => {
 			<Stack direction="Vertical" gap="MD" justifyContent="End">
 				<Stack justifyContent="End" gap="SM" className="width-100">
 					{/* 
+						API 호출 값으로 처리 필요
 						노출 조건
 						1. 현재 로그인한 사용자와 등록자가 일치하는 경우
 						2. 관리자의 경우

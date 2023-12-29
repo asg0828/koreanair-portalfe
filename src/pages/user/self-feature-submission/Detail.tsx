@@ -95,7 +95,7 @@ import { useTranslation } from "react-i18next";
 
 const SfSubmissionRequestDetail = () => {
 
-	const { t } = useTranslation()
+    const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
     const sessionInfo = useAppSelector(selectSessionInfo())
@@ -108,10 +108,10 @@ const SfSubmissionRequestDetail = () => {
     // mstrSgmtRuleId parameter
     const [mstrSgmtRuleIdParam, setMstrSgmtRuleIdParam] = useState<string>("")
     const { data: mstrSgmtTbandColRes, isError: mstrSgmtTbandColErr, refetch: mstrSgmtTbandColRefetch } = useGetTableandColumnMetaInfoByMstrSgmtRuleId(mstrSgmtRuleIdParam)
-	// Feature 정보 조회
-	const [featureRuleInfoParams, setFeatureRuleInfoParams] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
-	const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(featureRuleInfoParams)
-	const [featureRuleList, setFeatureRuleList] = useState<Array<TbRsCustFeatRule>>([])
+    // Feature 정보 조회
+    const [featureRuleInfoParams, setFeatureRuleInfoParams] = useState<FeatListSrchProps>(cloneDeep(initFeatListSrchProps))
+    const { data: featureListRes, isError: featureListErr, refetch: featureListRefetch } = useCustFeatRules(featureRuleInfoParams)
+    const [featureRuleList, setFeatureRuleList] = useState<Array<TbRsCustFeatRule>>([])
 
     const { data: cmmCodeAggrRes } = useCommCodes(CommonCode.STAC_CALC_TYPE)
     const [categoryOption, setCategoryOption] = useState<Array<any>>([])
@@ -213,38 +213,38 @@ const SfSubmissionRequestDetail = () => {
         if (mstrSgmtRuleIdParam === "") return
         if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
             mstrSgmtTbandColRefetch()
-			setFeatureRuleInfoParams({ 
-				...featureRuleInfoParams, 
-				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
-				["submissionStatus"]: SubFeatStatus.APRV, 
-			})
+            setFeatureRuleInfoParams({
+                ...featureRuleInfoParams,
+                ["mstrSgmtRuleId"]: mstrSgmtRuleIdParam,
+                ["submissionStatus"]: SubFeatStatus.APRV,
+            })
         }
     }, [mstrSgmtRuleIdParam, featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
-	useEffect(() => {
-		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
-		featureListRefetch()
-	}, [featureRuleInfoParams])
-	// customer feature 목록 API callback
-	useEffect(() => {
-		if (featureListErr || featureListRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: '조회 중 에러가 발생했습니다.',
-			});
-		} else {
-			if (featureListRes) {
-				let rtn = cloneDeep(featureListRes.result)
-				rtn = rtn.map((item: TbRsCustFeatRule) => {
-					if (item.dataType === "string") item.dataTypeCategory = "string"
-					else if (item.dataType === "timestamp" || item.dataType === "date") item.dataTypeCategory = "timestamp"
-					else item.dataTypeCategory = "number"
+    useEffect(() => {
+        if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+        featureListRefetch()
+    }, [featureRuleInfoParams])
+    // customer feature 목록 API callback
+    useEffect(() => {
+        if (featureListErr || featureListRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: '조회 중 에러가 발생했습니다.',
+            });
+        } else {
+            if (featureListRes) {
+                let rtn = cloneDeep(featureListRes.result)
+                rtn = rtn.map((item: TbRsCustFeatRule) => {
+                    if (item.dataType === "string") item.dataTypeCategory = "string"
+                    else if (item.dataType === "timestamp" || item.dataType === "date") item.dataTypeCategory = "timestamp"
+                    else item.dataTypeCategory = "number"
 
-					return item
-				})
-				setFeatureRuleList(rtn)
-			}
-		}
-	}, [featureListRes, featureListErr, featureListRefetch])
+                    return item
+                })
+                setFeatureRuleList(rtn)
+            }
+        }
+    }, [featureListRes, featureListErr, featureListRefetch])
     // feature 정보 초기화
     const initCustFeatRule = () => {
         setFeatureInfo((state: FeatureInfo) => {
@@ -715,7 +715,7 @@ const SfSubmissionRequestDetail = () => {
             })
             return
         }
-        // 1차 승인자의 경우 카테고리 validation check
+        // API 호출 값으로 처리 필요 1차 승인자의 경우 카테고리 validation check
         if (sessionInfo.apldUserAuthId === SfAuthType.USR_APRV_AUTH_FIRST) {
             // 설정하지 않은 경우 return -> 설정 api callback으로 flag setting 후 flag로 판단하기
             if (!updateFeatureCategoryRes || updateFeatureCategoryRes.successOrNot === 'N') {
@@ -772,12 +772,12 @@ const SfSubmissionRequestDetail = () => {
                 })
                 return
             }
-			if (runScheduleByManuallyRes?.status !== 200) {
-				toast({
-					type: ValidType.INFO,
-					content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
-				})
-			}
+            if (runScheduleByManuallyRes?.status !== 200) {
+                toast({
+                    type: ValidType.INFO,
+                    content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
+                })
+            }
             runScheduleByManuallyMutate()
         } else {
             console.log("no custFeatRuleId! please check custFeatRuleId")
@@ -801,12 +801,12 @@ const SfSubmissionRequestDetail = () => {
                     content: '수동 실행이 완료되었습니다.',
                 })
             }
-			if (runScheduleByManuallyRes.status === 202) {
-				toast({
-					type: ValidType.INFO,
-					content: t(runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.'),
-				})
-			}
+            if (runScheduleByManuallyRes.status === 202) {
+                toast({
+                    type: ValidType.INFO,
+                    content: t(runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.'),
+                })
+            }
             if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
                 custFeatRuleInfosRefetch()
             }
@@ -1027,6 +1027,12 @@ const SfSubmissionRequestDetail = () => {
                             </TD>
                         </TR>
                         <TR>
+                            <TH colSpan={1} align="right">연관테이블</TH>
+                            <TD colSpan={5} align='left'>
+                                {featureInfo.featureTemp && featureInfo.featureTemp.featureRelTb}
+                            </TD>
+                        </TR>
+                        <TR>
                             <TH colSpan={1} align="right">비고</TH>
                             <TD colSpan={5} align='left'>
                                 {featureInfo.featureTemp && featureInfo.featureTemp.featureDsc}
@@ -1034,7 +1040,7 @@ const SfSubmissionRequestDetail = () => {
                         </TR>
                     </HorizontalTable>
                     {/* 기본 정보 */}
-                    {/* 1차 승인자의 경우 카테고리 설정 */}
+                    {/* API 호출 값으로 처리 필요 1차 승인자의 경우 카테고리 설정 */}
                     {sessionInfo.apldUserAuthId === SfAuthType.USR_APRV_AUTH_FIRST &&
                         <Stack
                             style={{
@@ -1083,7 +1089,7 @@ const SfSubmissionRequestDetail = () => {
                             </HorizontalTable>
                         </Stack>
                     }
-                    {/* 1차 승인자의 경우 카테고리 설정 */}
+                    {/* API 호출 값으로 처리 필요 1차 승인자의 경우 카테고리 설정 */}
                     {/* 신청 정보 SQL 등록 */}
                     {featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y" &&
                         <Stack
