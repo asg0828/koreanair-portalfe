@@ -4,9 +4,10 @@ import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateQna } from '@/hooks/mutations/useQnaMutations';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { ContextPath, GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { PageModel } from '@/models/model/PageModel';
 import { CreatedQnaModel, QnaParams } from '@/models/model/QnaModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -21,6 +22,7 @@ const Reg = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const params: QnaParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
@@ -154,25 +156,27 @@ const Reg = () => {
               </Stack>
             </TD>
           </TR>
-          <TR>
-            <TH colSpan={1} align="right">
-              {t('board:label.useYn')}
-            </TH>
-            <TD colSpan={5} align="left">
-              <Radio
-                label={t('board:label.useY')}
-                value="Y"
-                defaultChecked={values.useYn === 'Y'}
-                {...register('useYn')}
-              />
-              <Radio
-                label={t('board:label.useN')}
-                value="N"
-                defaultChecked={values.useYn === 'N'}
-                {...register('useYn')}
-              />
-            </TD>
-          </TR>
+          {contextPath === ContextPath.ADMIN && (
+            <TR>
+              <TH colSpan={1} align="right">
+                {t('board:label.useYn')}
+              </TH>
+              <TD colSpan={5} align="left">
+                <Radio
+                  label={t('board:label.useY')}
+                  value="Y"
+                  defaultChecked={values.useYn === 'Y'}
+                  {...register('useYn')}
+                />
+                <Radio
+                  label={t('board:label.useN')}
+                  value="N"
+                  defaultChecked={values.useYn === 'N'}
+                  {...register('useYn')}
+                />
+              </TD>
+            </TR>
+          )}
           <TR className="height-100">
             <TH colSpan={1} align="right" required>
               {t('board:label.cn')}
