@@ -6,10 +6,11 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { ContextPath, GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { PageModel } from '@/models/model/PageModel';
 import { QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
+import { selectContextPath } from '@/reducers/authSlice';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
@@ -25,6 +26,7 @@ const Edit = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const qnaId = location?.state?.qnaId;
   const params: QnaParams = location?.state?.params;
@@ -42,6 +44,7 @@ const Edit = () => {
     defaultValues: {
       qnaId: qnaId,
       clCode: '',
+      qnaStat: '',
       sj: '',
       cn: '',
       openYn: 'Y',
@@ -98,7 +101,7 @@ const Edit = () => {
     if (isSuccess && response.data) {
       response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
       setValue('clCode', response.data.clCode);
-      setValue('qnaStat', response.data.qnaStat);
+      setValue('qnaStat', response.data.qnaStat === 'UNREAD' ? 'READ' : response.data.qnaStat);
       setValue('sj', response.data.sj);
       setValue('cn', response.data.cn);
       setValue('openYn', response.data.openYn);
@@ -196,53 +199,59 @@ const Edit = () => {
               </Stack>
             </TD>
           </TR>
-          <TR>
-            <TH colSpan={1} align="right">
-              {t('board:label.useYn')}
-            </TH>
-            <TD colSpan={2} align="left">
-              <Radio
-                label={t('board:label.useY')}
-                value="Y"
-                defaultChecked={values.useYn === 'Y'}
-                {...register('useYn')}
-              />
-              <Radio
-                label={t('board:label.useN')}
-                value="N"
-                defaultChecked={values.useYn === 'N'}
-                {...register('useYn')}
-              />
-            </TD>
-            <TH colSpan={1} align="right" required>
-              {t('board:label.qnaStatNm')}
-            </TH>
-            <TD colSpan={2} align="left">
-              <Stack gap="SM" className="width-100" direction="Vertical">
-                <Controller
-                  name="qnaStat"
-                  control={control}
-                  rules={{ required: t('common.validate.required') }}
-                  render={({ field }) => (
-                    <Select
-                      appearance="Outline"
-                      placeholder={t('common.placeholder.all')}
-                      className="width-100"
-                      ref={field.ref}
-                      onChange={(e, value) => value && field.onChange(value)}
-                      status={errors?.clCode?.message ? 'error' : undefined}
-                      value={field.value}
-                    >
-                      {statCodeList.map((codeItem: any) => (
-                        <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
-                      ))}
-                    </Select>
-                  )}
-                />
-                <ErrorLabel message={errors?.clCode?.message} />
-              </Stack>
-            </TD>
-          </TR>
+          {contextPath === ContextPath.ADMIN && (
+            <>
+              <TR>
+                <TH colSpan={1} align="right" required>
+                  {t('board:label.qnaStatNm')}
+                </TH>
+                <TD colSpan={5} align="left">
+                  <Stack gap="SM" className="width-100" direction="Vertical">
+                    <Controller
+                      name="qnaStat"
+                      control={control}
+                      rules={{ required: t('common.validate.required') }}
+                      render={({ field }) => (
+                        <Select
+                          appearance="Outline"
+                          placeholder={t('common.placeholder.all')}
+                          className="width-100"
+                          ref={field.ref}
+                          onChange={(e, value) => value && field.onChange(value)}
+                          status={errors?.clCode?.message ? 'error' : undefined}
+                          value={field.value}
+                        >
+                          {statCodeList.map((codeItem: any) => (
+                            <SelectOption value={codeItem.codeId}>{codeItem.codeNm}</SelectOption>
+                          ))}
+                        </Select>
+                      )}
+                    />
+                    <ErrorLabel message={errors?.clCode?.message} />
+                  </Stack>
+                </TD>
+              </TR>
+              <TR>
+                <TH colSpan={1} align="right">
+                  {t('board:label.useYn')}
+                </TH>
+                <TD colSpan={5} align="left">
+                  <Radio
+                    label={t('board:label.useY')}
+                    value="Y"
+                    defaultChecked={values.useYn === 'Y'}
+                    {...register('useYn')}
+                  />
+                  <Radio
+                    label={t('board:label.useN')}
+                    value="N"
+                    defaultChecked={values.useYn === 'N'}
+                    {...register('useYn')}
+                  />
+                </TD>
+              </TR>
+            </>
+          )}
           <TR className="height-100">
             <TH colSpan={1} align="right" required>
               {t('board:label.cn')}
