@@ -131,6 +131,7 @@ const List = () => {
                 onChange={(e, value) => value && handleChangeParams('searchConditions', value || 'all')}
                 value={params.searchConditions}
               >
+                <SelectOption value="all">{t('common.label.all')}</SelectOption>
                 {searchInfoList.map((searchInfo) => (
                   <SelectOption value={searchInfo.key}>{searchInfo.value}</SelectOption>
                 ))}

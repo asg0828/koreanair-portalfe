@@ -150,6 +150,7 @@ const UserSelectModal = ({
       if (uResponse?.data) {
         const userList = uResponse.data.contents;
         setUserData(userList);
+        setPrevRows(userList);
         setNextRows(userList.filter((item: UserModel) => userIdList.includes(item.userId)));
       }
     }

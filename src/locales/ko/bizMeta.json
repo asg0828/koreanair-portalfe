@@ -30,7 +30,8 @@
     "dbNm": "DB명",
     "columnDef": "컬럼 정의",
     "srcSys": "원천시스템",
-    "srcClNm": "원천 컬럼명"
+    "srcClNm": "원천 컬럼명",
+    "userFeatureCnt": "관심지정"
   },
   "message": {
     "validCheck": "중복확인을 해주세요.",

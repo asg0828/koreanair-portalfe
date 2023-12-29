@@ -5,6 +5,8 @@
       "authGroupList": "권한그룹 목록"
     },
     "label": {
+      "all": "전체",
+      "nonAuth": "권한없음",
       "home": "Home",
       "quickLink": "Quick Link",
       "countingUnit": {

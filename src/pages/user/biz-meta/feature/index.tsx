@@ -271,9 +271,10 @@ const List = () => {
               appearance="Outline"
               placeholder={t('common.placeholder.all')}
               className="width-100"
-              onChange={(e, value) => value && handleChangeParams('featureSeGrp', value)}
-              value={params.featureSeGrp}
+              onChange={(e, value) => value && handleChangeParams('featureSeGrp', value === 'all' ? null : value)}
+              value={params.featureSeGrp || 'all'}
             >
+              <SelectOption value="all">{t('common.label.all')}</SelectOption>
               {featureTypList?.map((item) => (
                 <SelectOption value={item.seId}>{item.seNm}</SelectOption>
               ))}
@@ -287,9 +288,10 @@ const List = () => {
               appearance="Outline"
               placeholder={t('common.placeholder.all')}
               className="width-100"
-              onChange={(e, value) => value && handleChangeParams('featureSe', value)}
-              value={params.featureSe}
+              onChange={(e, value) => value && handleChangeParams('featureSe', value === 'all' ? null : value)}
+              value={params.featureSe || 'all'}
             >
+              <SelectOption value="all">{t('common.label.all')}</SelectOption>
               {featureSeList.map((item) => (
                 <SelectOption value={item.seId}>{item.seNm}</SelectOption>
               ))}

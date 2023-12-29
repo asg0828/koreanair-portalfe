@@ -90,7 +90,9 @@ const DeptSelectModal = ({
           name: item.deptNm,
           parentId: item.upDeptCode || 'root',
         }));
-        setDeptData(response.data.contents);
+        const deptList = response.data.contents;
+        setDeptData(deptList);
+        setPrevRows(deptList);
         setDeptTreeData(convertToHierarchyInfo(list));
       }
     }
