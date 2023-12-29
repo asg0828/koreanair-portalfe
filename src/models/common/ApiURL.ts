@@ -55,6 +55,7 @@ export enum SelfFeatureUserApiURL {
   APRV_USER_POST = '/approver-candidate',
   SUB_REQ_BASE_PRE = '/api/v1/users',
   SUB_REQ_BASE_POST = '/submissions',
+  RUN_STATE = '/api/v1/airflow/runState',
 }
 
 export enum SelfFeatureAdmApiURL {
