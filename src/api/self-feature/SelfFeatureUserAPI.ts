@@ -129,6 +129,14 @@ export const retrieveDirectSQLYn = (custFeatRuleId: string) => {
         method: Method.GET
     })
 }
+// Self-feature 수동실행 validation 조회
+export const retrieveRunStateValid = (custFeatRuleId: string) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureUserApiURL.RUN_STATE}/${custFeatRuleId}`,
+        method: Method.GET
+    })    
+}
 
 // mutations
 // Self-feature 등록(Rule-Design)

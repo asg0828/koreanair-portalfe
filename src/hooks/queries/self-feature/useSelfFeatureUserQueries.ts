@@ -9,6 +9,7 @@ import {
     retrieveCustFeatSQLInfos, 
     retrieveDirectSQLYn, 
     retrieveReadSql, 
+    retrieveRunStateValid, 
     retrieveSampleData,
     retrieveSubmissionInfo,
     retrieveSubmissionList,
@@ -68,4 +69,8 @@ export const useApproverCandidate = () => {
 // Self-feature SQL 직접입력 여부 조회
 export const useDirectSQLYn = (custFeatRuleId: string) => {
     return useQuery(['/direct-sql-yn', custFeatRuleId], () => retrieveDirectSQLYn(custFeatRuleId))
+}
+// Self-feature 수동실행 validation 조회
+export const useRunStateValid = (custFeatRuleId: string) => {
+    return useQuery(['/run-state-valid', custFeatRuleId], () => retrieveRunStateValid(custFeatRuleId), { enabled: false })
 }

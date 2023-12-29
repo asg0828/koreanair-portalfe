@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import QuerySampleDataModal from "@/components/self-feature/modal/QuerySampleDataModal";
 import BatchExecuteLogsModal from "@/components/self-feature/modal/BatchExecuteLogsModal";
@@ -9,6 +9,7 @@ import {
 } from '@components/ui'
 import ConfirmModal from '../modal/ConfirmModal';
 import { ModalType } from '@/models/selfFeature/FeatureCommon';
+import { useRunStateValid } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 
 export interface Props {
     [key: string]: string | number | undefined
@@ -22,6 +23,9 @@ const FeatQueryRsltButton = ({
     runScheduleCnt,
     custFeatRuleId,
 }: Props) => {
+
+    // 수동실행 validation check 조회
+	const { data: runStateValidRes, isError: runStateValidErr, refetch: runStateValidRefetch } = useRunStateValid(custFeatRuleId)
 
     // 팝업
     const [isOpenQuerySampleDataModal, setIsOpenQuerySampleDataModal] = useState<boolean>(false)
@@ -43,12 +47,32 @@ const FeatQueryRsltButton = ({
         setIsOpenConfirmModal(false)
     }
 
+    // 수동실행 validation check 조회 API Call back
+	useEffect(() => {
+		if (runStateValidErr || runStateValidRes?.successOrNot === 'N') {
+            setModalType(ModalType.ALERT)
+            setConfirmModalTit("Feature 정보")
+            setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
+            setIsOpenConfirmModal(true)
+		} else {
+			if (runStateValidRes) {
+            }
+		}
+	}, [runStateValidRes, runStateValidErr])
+
     // 버튼 이벤트
     const onClickFeatQueryRsltHandler = (type: number) => {
         if (type === 1) {
             if (runScheduleCnt > 0) {
                 // 수동실행 API 결과에 따라 모달 show 판단
-                setIsOpenQuerySampleDataModal((prevState) => !prevState)
+                runStateValidRefetch()
+                if (runStateValidRes?.status === 202) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("Feature 정보")
+                    setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
+                    setIsOpenConfirmModal(true)
+                }
+                if (runStateValidRes?.status === 200) setIsOpenQuerySampleDataModal((prevState) => !prevState)
             } else {
                 setModalType(ModalType.ALERT)
                 setConfirmModalTit("샘플확인")
@@ -58,7 +82,14 @@ const FeatQueryRsltButton = ({
         } else if (type === 2) {
             if (runScheduleCnt > 0) {
                 // 수동실행 API 결과에 따라 모달 show 판단
-                setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
+                runStateValidRefetch()
+                if (runStateValidRes?.status === 202) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit("Feature 정보")
+                    setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
+                    setIsOpenConfirmModal(true)
+                }
+                if (runStateValidRes?.status === 200) setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
             } else {
                 setModalType(ModalType.ALERT)
                 setConfirmModalTit("실행내역")
