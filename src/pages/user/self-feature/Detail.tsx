@@ -824,6 +824,7 @@ const SelfFeatureDetail = () => {
 		let isShowUpdtBtn: Boolean = false
 		let isShowSubMisnBtn: Boolean = false
 		/*
+			API 호출 값으로 처리 필요
 			노출 조건
 			1. 현재 로그인한 사용자와 등록자가 일치하는 경우
 			2. 관리자의 경우
@@ -1159,12 +1160,12 @@ const SelfFeatureDetail = () => {
 							/>
 						</TD>
 					</TR>
-					{/* <TR>
+					<TR>
 						<TH colSpan={1} align="right">연관테이블</TH>
 						<TD colSpan={5} align='left'>
 							{featureInfo.featureTemp && featureInfo.featureTemp.featureRelTb}
 						</TD>
-					</TR> */}
+					</TR>
 					<TR>
 						<TH colSpan={1} align="right">비고</TH>
 						<TD colSpan={5} align='left'>
