@@ -247,6 +247,11 @@ export interface AttributeAccordian {
     metaTblLogiNm: string,
     attributes: Array<Attribute>,
 }
+export interface FeatAccordian {
+    [key: string]: string | Array<TbRsCustFeatRule>
+    metaTblLogiNm: string,
+    featureList: Array<TbRsCustFeatRule>,
+}
 
 export interface Attribute {
     [key: string]: string | number
@@ -359,6 +364,7 @@ export interface TbRsCustFeatRule extends RowsInfo {
     lastUpdUserId: string,
     //example: 카테고리
     category: string,
+    categoryNm: string,
     //example: 데이터 유형
     dataType: string,
     sqlDirectInputYn: string,

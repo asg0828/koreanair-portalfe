@@ -287,6 +287,7 @@ const SelfFeatureEdit = () => {
 
 					return item
 				})
+				rtn = rtn.filter((item: TbRsCustFeatRule) => item.categoryNm)
 				setFeatureRuleList(rtn)
 			}
 		}
@@ -859,10 +860,10 @@ const SelfFeatureEdit = () => {
 				return
 			}
 			if (runScheduleByManuallyRes?.status !== 200) {
-				toast({
-					type: ValidType.INFO,
-					content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
-				})
+				// toast({
+				// 	type: ValidType.INFO,
+				// 	content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
+				// })
 			}
 			runScheduleByManuallyMutate()
 		} else {

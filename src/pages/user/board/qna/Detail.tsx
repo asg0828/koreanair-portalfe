@@ -320,7 +320,7 @@ const Detail = () => {
                       />
                     </Stack>
                     <Button type="submit" size="LG" className="btn-reg">
-                      {t('common.button.reg')}
+                      {t('common.button.save')}
                     </Button>
                   </Stack>
                   <ErrorLabel message={errors?.answ?.message} />

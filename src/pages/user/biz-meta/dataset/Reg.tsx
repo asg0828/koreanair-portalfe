@@ -427,7 +427,7 @@ const Reg = () => {
 
         <Stack gap="SM" justifyContent="End">
           <Button priority="Primary" appearance="Contained" size="LG" type="submit">
-            {t('common.button.reg')}
+            {t('common.button.save')}
           </Button>
           <Button size="LG" onClick={handleList}>
             {t('common.button.list')}
