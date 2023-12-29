@@ -265,7 +265,7 @@ const SelfFeature = () => {
 		<Stack direction="Vertical" gap="LG" className="height-100">
 			{/* 관리자인 경우만 노출 */}
 			{/* 
-				sessionInfo.apldMgrAuthId === SfAuthType.MGR_APRV_AUTH_FIRST &&
+				isAllAuth &&
 				<Stack direction="Horizontal" gap="MD" justifyContent="End">
 					<Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.PRNTCHLD)}>
 					Feature 연결 관계
