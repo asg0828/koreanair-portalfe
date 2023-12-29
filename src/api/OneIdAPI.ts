@@ -10,13 +10,14 @@ import {
   mobileMasterSearch,
   mobileSearch,
   oneidHistorySearch,
+  oneidMasterSearch,
   paxMappingSearch,
   relationSearch,
 } from '@/models/oneId/OneIdInfo';
 import { callApi, Method } from '@utils/ApiUtil';
 
 // oneid 마스터
-export const getMasterHistory = (searchInfo: oneidHistorySearch, page: PageModel) => {
+export const getMasterHistory = (searchInfo: oneidMasterSearch, page: PageModel) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.ONEID}/master-for-history`,
@@ -180,7 +181,7 @@ export const getConversionCleansingHash = (searchInfo: ConversionCleansingHashSe
 export const getConversionMetaphone = (searchInfo: ConversionMetaphoneSearch) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.ONEID}/double-metaphone`,
     method: Method.GET,
     params: {
       queryParams: { ...searchInfo },

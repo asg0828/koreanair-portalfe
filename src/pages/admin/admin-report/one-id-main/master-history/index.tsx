@@ -3,7 +3,7 @@ import DataGrid from '@/components/grid/DataGrid';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { useHistoryList, useMasterHistoryList } from '@/hooks/queries/useOneIdQueries';
 import { PageModel, initPage } from '@/models/model/PageModel';
-import { OneIdHistoryData, oneidHistorySearch } from '@/models/oneId/OneIdInfo';
+import { OneIdHistoryData, oneidHistorySearch, oneidMasterSearch } from '@/models/oneId/OneIdInfo';
 import {
   Button,
   DatePicker,
@@ -22,7 +22,7 @@ import { Typography } from '@mui/material';
 import { useCallback, useEffect, useState } from 'react';
 import { historyColumn, masterColumn, onIdPaxData, reason } from '../data';
 import useDidMountEffect from '@/hooks/useDidMountEffect';
-//남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(2개)
+
 export default function OneIdMasterHistory() {
   const { toast } = useToast();
   const [searchInfo, setSearchInfo] = useState<oneidHistorySearch>({
@@ -41,13 +41,46 @@ export default function OneIdMasterHistory() {
     bfChgEmailAdrsHashValue: '',
     bfChgMblfonNoInfoHashVlu: '',
   });
+  const [searchInfo2, setSearchInfo2] = useState<oneidMasterSearch>({
+    oneidNo: '',
+    korFname: '',
+    korLname: '',
+    engFname: '',
+    engLname: '',
+    mobilePhoneNumberInfo: '',
+    mobilePhoneNoInfoHashVlu: '',
+    homePhoneNumberInfo: '',
+    homePhoneNoInfoHashValue: '',
+    officePhoneNumberInfo: '',
+    officePhoneNoInfoHashVlu: '',
+    emailAddress: '',
+    emailAdrsHashValue: '',
+    birthDatev: '',
+    creationStartDate: '',
+    creationEndDate: '',
+  });
   const [page, setPage] = useState<PageModel>(initPage);
   const [page2, setPage2] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<OneIdHistoryData>>([]);
   const [row2, setRows2] = useState<Array<OneIdHistoryData>>([]);
-  const { refetch: refetch1, data: response1, isError: isError1 } = useMasterHistoryList(searchInfo, page);
-  const { refetch: refetch2, data: response2, isError: isError2 } = useHistoryList(searchInfo, page);
+  const { refetch: refetch1, data: response1, isError: isError1 } = useMasterHistoryList(searchInfo2, page);
+  const { refetch: refetch2, data: response2, isError: isError2 } = useHistoryList(searchInfo, page2);
 
+  useEffect(() => {
+    setSearchInfo2({
+      ...searchInfo2,
+      oneidNo: searchInfo.oneidNo,
+      korFname: searchInfo.bfChgKorFname,
+      korLname: searchInfo.bfChgKorLname,
+      engFname: searchInfo.bfChgEngFname,
+      engLname: searchInfo.bfChgEngLname,
+      mobilePhoneNumberInfo: searchInfo.bfChgMobilePhoneNoInfo,
+      emailAddress: searchInfo.bfChgEmailAdrs,
+      birthDatev: searchInfo.bfChgBirthDtv,
+      creationStartDate: searchInfo.creationStartDate,
+      creationEndDate: searchInfo.creationEndDate,
+    });
+  }, [searchInfo]);
   // refetch
   const handleSearch = useCallback(() => {
     refetch1();
@@ -90,7 +123,6 @@ export default function OneIdMasterHistory() {
       });
     } else {
       if (response2?.data) {
-        // response.data.contents.forEach(() => {});
         setRows2(response2.data.contents);
         setPage2(response2.data.page);
       }
@@ -102,7 +134,11 @@ export default function OneIdMasterHistory() {
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
-    setSearchInfo({ ...searchInfo, [id]: value });
+    if (id === 'homePhoneNumberInfo') {
+      setSearchInfo2({ ...searchInfo2, [id]: value, officePhoneNumberInfo: value });
+    } else {
+      setSearchInfo({ ...searchInfo, [id]: value });
+    }
   }
 
   /* select 입력 함수 */
@@ -284,7 +320,7 @@ export default function OneIdMasterHistory() {
                     className="width-100"
                     onChange={onSearchChangeHandler}
                     placeholder="성을 입력하세요."
-                    // value={searchInfo.}
+                    value={searchInfo2.homePhoneNumberInfo}
                   />
                 </TD>
               </TR>

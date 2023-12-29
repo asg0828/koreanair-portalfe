@@ -157,6 +157,7 @@ const VerticalTableChildNode: React.FC<VerticalTableChildProps> = ({
 
   const TotalRow = () => {
     const totalRow = Object.values(totals);
+
     return (
       <>
         {totalRow.map((key: any) => {

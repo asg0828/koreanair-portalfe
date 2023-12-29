@@ -53,10 +53,14 @@ export default function Ctivoc() {
 
         // 각 컬럼 합
         const columnSums: RowsInfo = {};
-        response.data.contents.forEach((row: RowsInfo) => {
+        response.data.contents.forEach((row: RowsInfo, index: number) => {
           for (const key in row) {
             if (key.includes('Rate')) {
-              columnSums[key] = '0%';
+              if (index === response.data.contents.length - 1) {
+                columnSums[key] = (((columnSums[key] || 0) + (row[key] || 0)) / (index + 1)).toFixed(2) + '%';
+              } else {
+                columnSums[key] = (columnSums[key] || 0) + (row[key] || 0);
+              }
             } else if (typeof row[key] === 'number' || (row[key] === null && key in columnSums)) {
               columnSums[key] = (columnSums[key] || 0) + (row[key] || 0);
             } else if (row[key] === null && !(key in columnSums)) {
