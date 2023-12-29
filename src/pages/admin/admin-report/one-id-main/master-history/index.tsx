@@ -107,7 +107,6 @@ export default function OneIdMasterHistory() {
       });
     } else {
       if (response1?.data) {
-        // response.data.contents.forEach(() => {});
         setRows(response1.data.contents);
         setPage(response1.data.page);
       }
