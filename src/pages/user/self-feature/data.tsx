@@ -117,6 +117,7 @@ export const initTbRsCustFeatRule: TbRsCustFeatRule = {
     lastUpdDttm: '',
     lastUpdUserId: '',
     category: ' ',
+    categoryNm: '',
     dataType: '',
     sqlDirectInputYn: '',
     frstRegUserNm: '',

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { cloneDeep } from "lodash";
 
-import AttrDragItem from "./dragItem/AttrDragItem"
 import BehvAccordionDrag from "./dragItem/BehvAccordionDrag";
 import { Accordion, AccordionItem, Button, Page, Stack, TextField } from "@components/ui"
 
@@ -9,12 +8,13 @@ import {
     Behavior,
     TbCoMetaTblClmnInfo,
     Attribute,
-    TrgtDragAttrType,
     AttributeAccordian,
     TbRsCustFeatRule,
+    FeatAccordian,
 } from '@/models/selfFeature/FeatureModel';
 import AttrAccordionDrag from "./dragItem/AttrAccordionDrag";
 import FeatDragItem from "./dragItem/FeatDragItem";
+import FeatAccordionDrag from "./dragItem/FeatAccordionDrag";
 
 export interface Props {
     attributes: Array<Attribute>
@@ -32,23 +32,36 @@ const DragList = ({
     const [srchAttrRsltList, setSrchAttrRsltList] = useState<Array<Attribute>>([])
     const [srchFeatRsltList, setSrchFeatRsltList] = useState<Array<TbRsCustFeatRule>>([])
     const [srchBehvRsltList, setSrchBehvRsltList] = useState<Array<Behavior>>([])
+    // 최초 진입 구분
+    const [isInitComponent, setIsInitComponent] = useState<Boolean>(false)
     // 속성정보 구분 ori list
     const [oriAttrAccordian, setOriAttrAccordian] = useState<Array<AttributeAccordian>>([])
     // 속성정보 구분 list
     const [attrAccordian, setAttrAccordian] = useState<Array<AttributeAccordian>>([])
     // 속성정보 아코디언
     const [defaultAttr, setDefaultAttr] = useState<Array<string>>([])
+    // 속성정보 구분 ori list
+    const [oriFeatAccordian, setOriFeatAccordian] = useState<Array<FeatAccordian>>([])
     // Feat정보 구분 list
-    const [featAccordian, setFeatAccordian] = useState<Array<TbRsCustFeatRule>>([])
+    const [featAccordian, setFeatAccordian] = useState<Array<FeatAccordian>>([])
     // Feat정보 아코디언
     const [defaultFeat, setDefaultFeat] = useState<Array<string>>([])
     // 행동정보 아코디언
     const [defaultBehv, setDefaultBehv] = useState<Array<string>>([])
 
+    useEffect(() => {
+        setIsInitComponent(true)
+    }, [])
+
     const distinctAttrList = (result: Array<AttributeAccordian>, arr: Array<Attribute>, tblNm: string) => {
         let pushItem: AttributeAccordian = { metaTblLogiNm: tblNm, attributes: arr.filter((item) => item.metaTblLogiNm === tblNm) }
         result.push(pushItem)
         return arr.filter((item) => item.metaTblLogiNm !== tblNm)
+    }
+    const distinctFeatList = (result: Array<FeatAccordian>, arr: Array<TbRsCustFeatRule>, tblNm: string) => {
+        let pushItem: FeatAccordian = { metaTblLogiNm: arr[0].categoryNm, featureList: arr.filter((item) => item.category === tblNm) }
+        result.push(pushItem)
+        return arr.filter((item) => item.category !== tblNm)
     }
     useEffect(() => {
         if (attributes.length < 1 || attributes[0].metaTblId === "") return
@@ -66,7 +79,12 @@ const DragList = ({
     }, [attributes])
 
     useEffect(() => {
-        if (featureRules.length < 1) return
+        if (featureRules.length < 1 || featureRules[0].category === "") return
+
+        let featList: Array<TbRsCustFeatRule> = cloneDeep(featureRules)
+        let tempFeatList: Array<FeatAccordian> = []
+        while (featList.length !== 0) featList = distinctFeatList(tempFeatList, featList, featList[0].category)
+        setOriFeatAccordian(tempFeatList)
 
         setSrchFeatRsltList(cloneDeep(featureRules))
 
@@ -95,12 +113,16 @@ const DragList = ({
     }, [srchAttrRsltList])
 
     useEffect(() => {
-        setFeatAccordian(srchFeatRsltList)
+        let featList: Array<TbRsCustFeatRule> = cloneDeep(srchFeatRsltList)
+        let tempFeatList: Array<FeatAccordian> = []
+        while (featList.length !== 0) featList = distinctFeatList(tempFeatList, featList, featList[0].category)
+        setFeatAccordian(tempFeatList)
     }, [srchFeatRsltList])
 
     const searchAttrList = (keyword: string) => {
         let attrList: Array<Attribute> = cloneDeep(attributes)
         if (keyword.trim() === '') {
+            setIsInitComponent(true)
             setSrchAttrRsltList(attrList)
             return
         }
@@ -111,6 +133,7 @@ const DragList = ({
     const searchBehvList = (keyword: string) => {
         let behvList: Array<Behavior> = cloneDeep(behaviors)
         if (keyword.trim() === '') {
+            setIsInitComponent(true)
             setSrchBehvRsltList(behvList)
             return
         }
@@ -126,6 +149,7 @@ const DragList = ({
     const searchFeatList = (keyword: string) => {
         let featList: Array<TbRsCustFeatRule> = cloneDeep(featureRules)
         if (keyword.trim() === '') {
+            setIsInitComponent(true)
             setSrchFeatRsltList(featList)
             return
         }
@@ -134,6 +158,7 @@ const DragList = ({
     }
 
     const onClickTrgtSrchHandler = () => {
+        setIsInitComponent(false)
         searchAttrList(keyword)
         searchFeatList(keyword)
         searchBehvList(keyword)
@@ -192,6 +217,7 @@ const DragList = ({
                         return (
                             <AttrAccordionDrag
                                 key={attrIdx}
+                                isInitComponent={isInitComponent}
                                 oriAttrbute={ori ? ori : null}
                                 attrbute={attribute}
                             />
@@ -219,22 +245,17 @@ const DragList = ({
                     title='Feature 정보'
                     value='Feature 정보'
                 >
-                    <Stack
-                        direction="Vertical"
-                        justifyContent="Center"
-                        gap="SM"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {featAccordian.map((featRule: TbRsCustFeatRule, featIdx: number) => {
-                            return (
-                                <FeatDragItem
-                                    key={featIdx}
-                                    metaTblLogiNm={featRule.name}
-                                    featTblClmnInfo={featRule}
-                                />
-                            )
-                        })}
-                    </Stack>
+                {featAccordian.map((feature: FeatAccordian, featIdx: number) => {
+                    let ori = oriFeatAccordian.find((item) => item.metaTblLogiNm === feature.metaTblLogiNm)
+                    return (
+                        <FeatAccordionDrag
+                            key={featIdx}
+                            isInitComponent={isInitComponent}
+                            oriFeat={ori ? ori : null}
+                            feature={feature}
+                        />
+                    )
+                })}
                 </AccordionItem>
             </Accordion>
             {/* Feature 정보 */}
@@ -260,6 +281,7 @@ const DragList = ({
                     {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
                         <BehvAccordionDrag
                             key={behvIdx}
+                            isInitComponent={isInitComponent}
                             oriBehavior={behaviors[behvIdx]}
                             behavior={behavior}
                         />

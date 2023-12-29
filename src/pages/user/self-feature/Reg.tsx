@@ -214,19 +214,29 @@ const SelfFeatureReg = () => {
 		if (mstrSgmtRuleIdParam === "") return
 		if (location.state.regType === SelfFeatPgPpNm.RULE_REG) {
 			mstrSgmtTbandColRefetch()
-			setFeatureRuleInfoParams({ 
-				...featureRuleInfoParams, 
-				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam, 
-				["submissionStatus"]: SubFeatStatus.APRV, 
+			setFeatureRuleInfoParams({
+				...featureRuleInfoParams,
+				["mstrSgmtRuleId"]: mstrSgmtRuleIdParam,
+				["submissionStatus"]: SubFeatStatus.APRV,
 			})
 		}
 	}, [mstrSgmtRuleIdParam, location.state.regType])
+	useEffect(() => {
+		if (mstrSgmtRuleIdParam === "") return
+		setFeatureRuleInfoParams({
+			...featureRuleInfoParams,
+			["mstrSgmtRuleId"]: mstrSgmtRuleIdParam,
+			["submissionStatus"]: SubFeatStatus.APRV,
+		})
+	}, [mstrSgmtRuleIdParam])
 	useEffect(() => {
 		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
 		featureListRefetch()
 	}, [featureRuleInfoParams])
 	// customer feature 목록 API callback
 	useEffect(() => {
+		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
+
 		if (featureListErr || featureListRes?.successOrNot === 'N') {
 			toast({
 				type: ValidType.ERROR,
@@ -244,6 +254,7 @@ const SelfFeatureReg = () => {
 
 					return item
 				})
+				rtn = rtn.filter((item: TbRsCustFeatRule) => item.categoryNm)
 				setFeatureRuleList(rtn)
 			}
 		}
@@ -436,10 +447,10 @@ const SelfFeatureReg = () => {
 				return option
 			})
 			// 변환식(속성데이터의 경우)
-			if (targetList[i].function === "TO_NUMBER") {dataType = "number";t.dtpCd = "int"}
-			if (targetList[i].function === "LENGTH") {dataType = "number";t.dtpCd = "int"}
-			if (targetList[i].function === "TO_CHAR") {dataType = "string";t.dtpCd = "string"}
-			if (targetList[i].function === "DATEDIFF") {dataType = "number";t.dtpCd = "int"}
+			if (targetList[i].function === "TO_NUMBER") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "LENGTH") { dataType = "number"; t.dtpCd = "int" }
+			if (targetList[i].function === "TO_CHAR") { dataType = "string"; t.dtpCd = "string" }
+			if (targetList[i].function === "DATEDIFF") { dataType = "number"; t.dtpCd = "int" }
 			t.dataType = dataType
 			fList.push(t)
 		}
