@@ -9,3 +9,11 @@ export const retrieveCommCodes = (params: string) => {
         method: Method.GET,
     });
 }
+
+export const retrieveAuthCommCodes = (params: string) => {
+    return callApi({
+        service: Service.KAL_SF_BE,
+        url: `${SelfFeatureCmmApiURL.AUTH_CODE}/${params}/ComCdvs`,
+        method: Method.GET,
+    });
+}
