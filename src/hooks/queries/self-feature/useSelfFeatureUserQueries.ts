@@ -72,5 +72,5 @@ export const useDirectSQLYn = (custFeatRuleId: string) => {
 }
 // Self-feature 수동실행 validation 조회
 export const useRunStateValid = (custFeatRuleId: string) => {
-    return useQuery(['/run-state-valid', custFeatRuleId], () => retrieveRunStateValid(custFeatRuleId), { enabled: false })
+    return useQuery(['/run-state-valid', custFeatRuleId], () => retrieveRunStateValid(custFeatRuleId), { enabled: false, suspense: false })
 }

@@ -23,6 +23,7 @@ import ConfirmModal from "@/components/modal/ConfirmModal";
 import ApprovalList from "@/components/self-feature/ApprovalList";
 import {
 	Button,
+	Loader,
 	Select,
 	SelectOption,
 	Stack,
@@ -184,7 +185,13 @@ const SelfFeatureEdit = () => {
 	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	// 수동실행 API
-	const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state?.featureInfo.tbRsCustFeatRule.id)
+	const { 
+		data: runScheduleByManuallyRes, 
+		isSuccess: runScheduleByManuallySucc, 
+		isError: runScheduleByManuallyErr, 
+		mutate: runScheduleByManuallyMutate,
+		isLoading: runScheduleByManuallyLoading,
+	} = useRunScheduleByManually(location.state?.featureInfo.tbRsCustFeatRule.id)
 	// 중복 확인 API
 	const [featureAllParams, setFeatureAllParams] = useState<FeatureAllParams>(initFeatureAllParams);
 	const [featureAllKey, setFeatureAllKey] = useState<FeatureKeyType>('featureKoNm');
@@ -227,15 +234,15 @@ const SelfFeatureEdit = () => {
 		// 	mstrSgmtTbandColRefetch()
 	}, [])
 	useEffect(() => {
-	  if (userInfoErr || userInfoRes?.successOrNot === 'N') {
-		toast({
-		  type: ValidType.ERROR,
-		  content: t('common.toast.error.read'),
-		});
-	  } else if (userInfoSucc) {
-		let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
-		if (t.length > 0) setIsAllAuth(true)
-	  }
+		if (userInfoErr || userInfoRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: t('common.toast.error.read'),
+			});
+		} else if (userInfoSucc) {
+			let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
+			if (t.length > 0) setIsAllAuth(true)
+		}
 	}, [userInfoRes, userInfoSucc, userInfoErr])
 	// master segement rule Id setting
 	useEffect(() => {
@@ -1005,8 +1012,26 @@ const SelfFeatureEdit = () => {
 			<Stack direction="Vertical" gap="MD" >
 				{/* 상단 버튼 영역 */}
 				<Stack direction="Horizontal" gap="MD" justifyContent="End">
-					<Button size="LG" onClick={runScheduleByManually}>
-						수동 실행
+					<Button
+						disabled={runScheduleByManuallyLoading}
+						style={{ width: "7%" }}
+						size="LG"
+						onClick={runScheduleByManually}
+					>
+						{runScheduleByManuallyLoading
+							?
+							<Loader
+								style={{
+									backgroundColor: "rgb(235, 235, 235)",
+									color: "rgb(185, 185, 185)",
+									borderColor: "rgb(218, 218, 218)",
+									width: "100%",
+									height: "100%"
+								}}
+								type="Bubble"
+							/>
+							:
+							<div style={{ width: "100%", height: "100%" }}>수동 실행</div>}
 					</Button>
 					<FeatQueryRsltButton
 						rslnRuleId={rslnRuleIdParam}

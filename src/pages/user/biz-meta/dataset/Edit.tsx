@@ -45,6 +45,7 @@ const Edit = () => {
     handleSubmit,
     getValues,
     setValue,
+    watch,
     control,
     formState: { errors },
   } = useForm<UpdatedDatasetModel>({
@@ -83,7 +84,11 @@ const Edit = () => {
       maxLength: 100,
       require: true,
       render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
-        EditableColumnItem(rowIndex, fieldName, maxLength, require),
+        EditableColumnItem(rowIndex, fieldName, maxLength, require, {
+          pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
+          setValueAs: (value: string) => value.toUpperCase().trim(),
+          onChange: (e: any) => handleChangeRows(rowIndex, fieldName, e.target.value.toUpperCase().trim()),
+        }),
     },
     {
       headerName: t('bizMeta:label.srcClNm'),
@@ -128,19 +133,25 @@ const Edit = () => {
   const { data: response, isSuccess, isError } = useDatasetById(mtsId);
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateDataset(mtsId, values);
 
-  const EditableColumnItem = (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) => {
+  const EditableColumnItem = (
+    rowIndex: number,
+    fieldName: fieldType,
+    maxLength?: number,
+    require?: boolean,
+    option?: any
+  ) => {
     return (
       <Stack gap="SM" className="width-100" direction="Vertical">
         <TextField
           className="width-100"
           {...register(`columnSpecs.${rowIndex}.${fieldName}`, {
-            pattern:
-              fieldName === 'mcsEnNm' ? { value: tbColReg, message: t('common.validate.requiredEn') } : undefined,
             required: require ? { value: true, message: t('common.validate.required') } : undefined,
             maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
             validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+            onChange: (e: any) => handleChangeRows(rowIndex, fieldName, e.target.value),
+            ...option,
           })}
-          onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
+          value={values.columnSpecs[rowIndex][fieldName]}
         />
         <ErrorLabel message={errors?.columnSpecs?.[rowIndex]?.[fieldName]?.message} />
       </Stack>
@@ -158,8 +169,8 @@ const Edit = () => {
               required: require ? { value: true, message: t('common.validate.required') } : undefined,
               maxLength: maxLength && { value: maxLength, message: t('common.validate.maxLength') },
               validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+              onChange: (e: any) => handleChangeRows(rowIndex, fieldName, e.target.value),
             })}
-            onChange={(e) => handleChangeRows(rowIndex, fieldName, e.target.value)}
           />
           <Button
             className="width-100"
@@ -325,15 +336,17 @@ const Edit = () => {
               <TD colSpan={2}>
                 <Stack gap="SM" className="width-100" direction="Vertical">
                   <TextField
+                    autoFocus
                     className="width-100"
                     {...register('mtsEnNm', {
                       pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
                       required: { value: true, message: t('common.validate.required') },
                       maxLength: { value: 100, message: t('common.validate.maxLength') },
                       validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                      setValueAs: (value: string) => value.toUpperCase().trim(),
                     })}
                     validation={errors?.mtsEnNm?.message ? 'Error' : undefined}
-                    autoFocus
+                    value={watch().mtsEnNm}
                   />
                   <ErrorLabel message={errors?.mtsEnNm?.message} />
                 </Stack>
@@ -403,9 +416,12 @@ const Edit = () => {
                   <TextField
                     className="width-100"
                     {...register('srcTbNm', {
+                      pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
                       maxLength: { value: 1000, message: t('common.validate.maxLength') },
                       validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                      setValueAs: (value: string) => value.toUpperCase().trim(),
                     })}
+                    value={watch().srcTbNm}
                     validation={errors?.srcTbNm?.message ? 'Error' : undefined}
                     autoFocus
                   />

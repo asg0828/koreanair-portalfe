@@ -5,7 +5,7 @@ import BatchExecuteLogsModal from "@/components/self-feature/modal/BatchExecuteL
 import ReadSqlModal from "@/components/self-feature/modal/ReadSqlModal";
 
 import {
-    Button,
+    Button, Loader,
 } from '@components/ui'
 import ConfirmModal from '../modal/ConfirmModal';
 import { ModalType } from '@/models/selfFeature/FeatureCommon';
@@ -26,7 +26,16 @@ const FeatQueryRsltButton = ({
 
     // 수동실행 validation check 조회
     const [isValidCheck, setIsValidCheck] = useState<Boolean>(false)
-	const { data: runStateValidRes, isError: runStateValidErr, refetch: runStateValidRefetch } = useRunStateValid(custFeatRuleId)
+	const { 
+        data: runStateValidRes, 
+        isError: runStateValidErr, 
+        isLoading: runStateValidLoading, 
+        refetch: runStateValidRefetch, 
+        isRefetching: runStateValidRefetching,
+        isFetchedAfterMount: runStateValidFetchedAfterMount,
+        isFetching: runStateValidFetching,
+        isFetched: runStateValidFetched,
+    } = useRunStateValid(custFeatRuleId)
     const [btnType, setBtnType] = useState<string>("")
     // 팝업
     const [isOpenQuerySampleDataModal, setIsOpenQuerySampleDataModal] = useState<boolean>(false)
@@ -47,7 +56,29 @@ const FeatQueryRsltButton = ({
     const onCancel = () => {
         setIsOpenConfirmModal(false)
     }
+    // 실행 내역 로딩바 노출을 위한 fetching
+    useEffect(() => {
+        let title: string = ""
+        if (btnType === "sample") title = "샘플확인"
+        else if (btnType === "log") title = "실행내역"
 
+        if (runStateValidFetching) {
+        } else {
+            if (isValidCheck) {
+                if (runStateValidRes?.status === 202) {
+                    setModalType(ModalType.ALERT)
+                    setConfirmModalTit(title)
+                    setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
+                    setIsOpenConfirmModal(() => true)
+                }
+                if (runStateValidRes?.status === 200) {
+                    if (btnType === "sample") setIsOpenQuerySampleDataModal((prevState) => !prevState)
+                    else if (btnType === "log") setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
+                }
+            }
+            setIsValidCheck(false)
+        }
+    }, [runStateValidFetching, isValidCheck])
     // 수동실행 validation check 조회 API Call back
 	useEffect(() => {
         let title: string = ""
@@ -61,22 +92,9 @@ const FeatQueryRsltButton = ({
             setIsOpenConfirmModal(true)
 		} else {
 			if (runStateValidRes) {
-                if (isValidCheck) {
-                    if (runStateValidRes?.status === 202) {
-                        setModalType(ModalType.ALERT)
-                        setConfirmModalTit(title)
-                        setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
-                        setIsOpenConfirmModal(() => true)
-                    }
-                    if (runStateValidRes?.status === 200) {
-                        if (btnType === "sample") setIsOpenQuerySampleDataModal((prevState) => !prevState)
-                        else if (btnType === "log") setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
-                    }
-                }
-                setIsValidCheck(false)
             }
 		}
-	}, [runStateValidRes, runStateValidErr, btnType])
+	}, [runStateValidRes, runStateValidErr])
 
     // 버튼 이벤트
     const onClickFeatQueryRsltHandler = (type: number) => {
@@ -86,13 +104,6 @@ const FeatQueryRsltButton = ({
                 setBtnType("sample")
                 setIsValidCheck(true)
                 runStateValidRefetch()
-                // if (runStateValidRes?.status === 202) {
-                //     setModalType(ModalType.ALERT)
-                //     setConfirmModalTit("샘플확인")
-                //     setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
-                //     setIsOpenConfirmModal(true)
-                // }
-                // if (runStateValidRes?.status === 200) setIsOpenQuerySampleDataModal((prevState) => !prevState)
             } else {
                 setModalType(ModalType.ALERT)
                 setConfirmModalTit("샘플확인")
@@ -105,13 +116,6 @@ const FeatQueryRsltButton = ({
                 setBtnType("log")
                 setIsValidCheck(true)
                 runStateValidRefetch()
-                // if (runStateValidRes?.status === 202) {
-                //     setModalType(ModalType.ALERT)
-                //     setConfirmModalTit("실행내역")
-                //     setConfirmModalCont(runStateValidRes?.message ? runStateValidRes?.message : '수동실행을 진행 해주세요.')
-                //     setIsOpenConfirmModal(true)
-                // }
-                // if (runStateValidRes?.status === 200) setIsOpenBatchExecuteLogsModal((prevState) => !prevState)
             } else {
                 setModalType(ModalType.ALERT)
                 setConfirmModalTit("실행내역")
@@ -126,13 +130,51 @@ const FeatQueryRsltButton = ({
     return (
         <>
             {/* 버튼 */}
-            <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(1)}>
-                샘플 확인
+            <Button 
+                disabled={runStateValidFetching && btnType === "sample"}
+                style={{width: "7%"}} 
+                size="LG" 
+                onClick={() => onClickFeatQueryRsltHandler(1)}
+            >
+                {(runStateValidFetching && btnType === "sample") 
+                    ? 
+                    <Loader 
+                        style={{
+                            backgroundColor: "rgb(235, 235, 235)", 
+                            color: "rgb(185, 185, 185)", 
+                            borderColor: "rgb(218, 218, 218)", 
+                            width: "100%", 
+                            height: "100%",
+                        }} 
+                        type="Bubble" 
+                    /> 
+                    : 
+                    <div style={{width: "100%", height: "100%"}}>샘플 확인</div>
+                }
             </Button>
-            <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(2)}>
-                실행 내역
+            <Button 
+                disabled={runStateValidFetching && btnType === "log"}
+                style={{width: "7%"}} 
+                size="LG"
+                onClick={() => onClickFeatQueryRsltHandler(2)}
+            >
+                {(runStateValidFetching && btnType === "log") 
+                    ? 
+                    <Loader 
+                        style={{
+                            backgroundColor: "rgb(235, 235, 235)", 
+                            color: "rgb(185, 185, 185)", 
+                            borderColor: "rgb(218, 218, 218)", 
+                            width: "100%", 
+                            height: "100%",
+                        }} 
+                        type="Bubble" 
+                    /> 
+                    : 
+                    <div style={{width: "100%", height: "100%"}}>실행 내역</div>
+                }
             </Button>
-            <Button size="LG" onClick={() => onClickFeatQueryRsltHandler(3)}>
+            <Button style={{width: "7%"}} size="LG" onClick={() => onClickFeatQueryRsltHandler(3)}>
                 쿼리 확인
             </Button>
             {/* 버튼 */}
