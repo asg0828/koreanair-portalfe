@@ -174,7 +174,7 @@ const SelfFeatureDetail = () => {
 	// feature 승인요청 취소 API
 	const { data: cnclReqSubRes, isSuccess: cnclReqSubSucc, isError: cnclReqSubErr, mutate: cnclReqSubMutate } = useCancelRequestSubmission(userEmail, submissionId)
 	// 수동실행 API
-	//const [isRunScheduleByManuallyWait, setIsRunScheduleByManuallyWait] = useState<Boolean>(false)
+    const [isRunValidFetching, setIsRunValidFetching] = useState<boolean>(false)
 	const { 
 		data: runScheduleByManuallyRes, 
 		isSuccess: runScheduleByManuallySucc, 
@@ -1005,12 +1005,16 @@ const SelfFeatureDetail = () => {
 		}
 	}, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
 
+	const getIsRunValidFetching = (isFetching: boolean) => {
+		setIsRunValidFetching(isFetching)
+	}
+
 	return (
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 상단 버튼 영역 */}
 			<Stack direction="Horizontal" gap="MD" justifyContent="End">
 				<Button 
-					disabled={runScheduleByManuallyLoading}
+					disabled={runScheduleByManuallyLoading || isRunValidFetching}
 					style={{width: "7%"}} 
 					size="LG" 
 					onClick={runScheduleByManually}
@@ -1030,9 +1034,11 @@ const SelfFeatureDetail = () => {
 					<div style={{width: "100%", height: "100%"}}>수동 실행</div>}
 				</Button>
 				<FeatQueryRsltButton
+                    isLoadingRunSchedule={runScheduleByManuallyLoading}
 					rslnRuleId={rslnRuleIdParam}
 					custFeatRuleId={location.state.id}
 					runScheduleCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
+					sendIsRunValidFetching={getIsRunValidFetching}
 				/>
 			</Stack>
 

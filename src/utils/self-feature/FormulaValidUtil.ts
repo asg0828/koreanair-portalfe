@@ -283,6 +283,9 @@ export const validationCustReatRule = (formData: any) => {
             if (featureInfo.tbRsCustFeatRuleTrgtList.length < 1) {
                 validInfo.text = `Feature 로직의 대상을 1개 이상 설정 해주세요.`
                 validInfo.valid = false
+            } else if (featureInfo.tbRsCustFeatRuleTrgtList.length > 5) {
+                validInfo.text = `Feature 로직의 대상을 5개 이하로 설정 해주세요.`
+                validInfo.valid = false
             } else if (featureInfo.tbRsCustFeatRuleCalc.formula === "") {
                 validInfo.text = `2. 생성 Feature 항목을 입력해주세요.`
                 validInfo.valid = false

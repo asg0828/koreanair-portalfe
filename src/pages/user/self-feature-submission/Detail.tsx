@@ -189,6 +189,7 @@ const SfSubmissionRequestDetail = () => {
 		mutate: runScheduleByManuallyMutate,
 		isLoading: runScheduleByManuallyLoading,
 	} = useRunScheduleByManually(location.state.referenceNo)
+    const [isRunValidFetching, setIsRunValidFetching] = useState<boolean>(false)
     // 카테고리 update API
     const { data: updateFeatureCategoryRes, isSuccess: updateFeatureCategorySucc, isError: updateFeatureCategoryErr, mutate: updateFeatureCategoryMutate } = useFeatureCategory(location.state.referenceNo, { category: category })
     // component mount
@@ -876,13 +877,17 @@ const SfSubmissionRequestDetail = () => {
         }
     }, [updateFeatureCategoryRes, updateFeatureCategorySucc, updateFeatureCategoryErr, toast])
 
+	const getIsRunValidFetching = (isFetching: boolean) => {
+		setIsRunValidFetching(isFetching)
+	}
+
     return (
         <>
             <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
                 {/* 상단 버튼 영역 */}
                 <Stack direction="Horizontal" gap="MD" justifyContent="End">
                     <Button
-                        disabled={runScheduleByManuallyLoading}
+                        disabled={runScheduleByManuallyLoading || isRunValidFetching}
                         style={{ width: "7%" }}
                         size="LG"
                         onClick={runScheduleByManually}
@@ -903,9 +908,11 @@ const SfSubmissionRequestDetail = () => {
                             <div style={{ width: "100%", height: "100%" }}>수동 실행</div>}
                     </Button>
                     <FeatQueryRsltButton
+                        isLoadingRunSchedule={runScheduleByManuallyLoading}
                         rslnRuleId={rslnRuleIdParam}
                         custFeatRuleId={location.state.referenceNo}
                         runScheduleCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
+                        sendIsRunValidFetching={getIsRunValidFetching}
                     />
                 </Stack>
                 {/* 정보 영역 */}

@@ -12,16 +12,19 @@ import { ModalType } from '@/models/selfFeature/FeatureCommon';
 import { useRunStateValid } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 
 export interface Props {
-    [key: string]: string | number | undefined
+    isLoadingRunSchedule: boolean
     rslnRuleId: string
     runScheduleCnt: number
     custFeatRuleId: string
+    sendIsRunValidFetching: (isFetching: boolean) => void
 }
 
 const FeatQueryRsltButton = ({
+    isLoadingRunSchedule,
     rslnRuleId,
     runScheduleCnt,
     custFeatRuleId,
+    sendIsRunValidFetching,
 }: Props) => {
 
     // 수동실행 validation check 조회
@@ -29,12 +32,8 @@ const FeatQueryRsltButton = ({
 	const { 
         data: runStateValidRes, 
         isError: runStateValidErr, 
-        isLoading: runStateValidLoading, 
         refetch: runStateValidRefetch, 
-        isRefetching: runStateValidRefetching,
-        isFetchedAfterMount: runStateValidFetchedAfterMount,
         isFetching: runStateValidFetching,
-        isFetched: runStateValidFetched,
     } = useRunStateValid(custFeatRuleId)
     const [btnType, setBtnType] = useState<string>("")
     // 팝업
@@ -63,7 +62,9 @@ const FeatQueryRsltButton = ({
         else if (btnType === "log") title = "실행내역"
 
         if (runStateValidFetching) {
+            sendIsRunValidFetching(true)
         } else {
+            sendIsRunValidFetching(false)
             if (isValidCheck) {
                 if (runStateValidRes?.status === 202) {
                     setModalType(ModalType.ALERT)
@@ -131,7 +132,7 @@ const FeatQueryRsltButton = ({
         <>
             {/* 버튼 */}
             <Button 
-                disabled={runStateValidFetching && btnType === "sample"}
+                disabled={runStateValidFetching || isLoadingRunSchedule}
                 style={{width: "7%"}} 
                 size="LG" 
                 onClick={() => onClickFeatQueryRsltHandler(1)}
@@ -153,7 +154,7 @@ const FeatQueryRsltButton = ({
                 }
             </Button>
             <Button 
-                disabled={runStateValidFetching && btnType === "log"}
+                disabled={runStateValidFetching || isLoadingRunSchedule}
                 style={{width: "7%"}} 
                 size="LG"
                 onClick={() => onClickFeatQueryRsltHandler(2)}

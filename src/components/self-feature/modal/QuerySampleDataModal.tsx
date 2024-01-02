@@ -14,6 +14,7 @@ import {
     TH,
     TD,
     TextField,
+    Loader,
 } from '@components/ui';
 import '@/assets/styles/SelfFeature.scss'
 
@@ -27,6 +28,7 @@ import { PageModel, initPage } from '@/models/model/PageModel';
 import { PagingUtil, setPageList } from '@/utils/self-feature/PagingUtil';
 import DataGrid from '@/components/grid/DataGrid';
 import HorizontalTable from '@/components/table/HorizontalTable';
+import { useTranslation } from 'react-i18next';
 
 export interface Props {
     isOpen?: boolean
@@ -43,6 +45,7 @@ const QuerySampleDataModal = ({
 }: Props) => {
 
     const { toast } = useToast()
+    const { t } = useTranslation()
 
     const [isOpenQuerySampleDataModal, setIsOpenQuerySampleDataModal] = useState<boolean>(false)
 
@@ -52,7 +55,7 @@ const QuerySampleDataModal = ({
     const [querySampleDataList, setQuerySampleDatadList] = useState<Array<FeatSampleData>>([])
     const [rslnId, setRslnId] = useState<string>("")
 
-    const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch } = useSampleData(rslnId, custFeatRuleId)
+    const { data: sampleDataRes, isError: sampleDataErr, refetch: sampleDataRefetch, isFetching: sampleDataFetching } = useSampleData(rslnId, custFeatRuleId)
 
     useEffect(() => {
         setIsOpenQuerySampleDataModal(isOpen)
@@ -150,25 +153,34 @@ const QuerySampleDataModal = ({
                 </form>
                 {/* 검색 영역 */}
                 {/* 목록 영역 */}
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                    //enableSort={true}
-                    //clickable={true}
-                    showPagination={false}
-                    showPageSizeSelect={false}
-                    page={page}
-                    onChange={handlePage}
-                    //onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
-                    //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
-                    buttonChildren={
-                        <>
-                            <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
-                                닫기
-                            </Button>
-                        </>
-                    }
-                />
+                {sampleDataFetching 
+                    ?
+                    <Loader 
+                        style={{
+                            width: "100%", 
+                            height: "100%",
+                        }} 
+                        type="Bubble" 
+                        title={t('common.message.proceeding')} 
+                        description={"데이터를 불러오고 있습니다."}
+                    /> 
+                    :
+                    <DataGrid
+                        columns={columns}
+                        rows={rows}
+                        showPagination={false}
+                        showPageSizeSelect={false}
+                        page={page}
+                        onChange={handlePage}
+                        buttonChildren={
+                            <>
+                                <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
+                                    닫기
+                                </Button>
+                            </>
+                        }
+                    />
+                }
                 {/* 목록 영역 */}
             </Modal.Body>
         </Modal>
