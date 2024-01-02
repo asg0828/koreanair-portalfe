@@ -409,8 +409,10 @@ const Reg = () => {
                         required: { value: true, message: t('common.validate.required') },
                         maxLength: { value: 100, message: t('common.validate.maxLength') },
                         validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
+                        setValueAs: (value: string) => value.toUpperCase().trim(),
                       })}
                       validation={errors?.featureEnNm?.message ? 'Error' : undefined}
+                      value={watch().featureEnNm}
                     />
                     <Button
                       appearance="Contained"
