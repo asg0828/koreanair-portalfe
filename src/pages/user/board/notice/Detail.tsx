@@ -14,7 +14,7 @@ import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
+import { Button, Link, Stack, TD, TH, TR, Typography, useToast, Tag } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -134,7 +134,7 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3">{noticeModel?.sj}</Typography>
+              <Typography variant="h3"><Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">중요</Tag>{noticeModel?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">
