@@ -5,7 +5,7 @@ import { callApi, Method } from '@utils/ApiUtil';
 // Oneid로 Profile 조회
 export const getProfile = (searchInfo: any) => {
   return callApi({
-    service: Service.KAL_CSTMR_BE,
+    service: Service.KAL_BE,
     url: `${PortalApiURL.CUSTOMER}/profile`,
     method: Method.GET,
     params: {
@@ -19,7 +19,7 @@ export const getProfile = (searchInfo: any) => {
 // 영문명으로 맴버 조회(C-Level)
 export const getProfileCLevel = (searchInfo: any) => {
   return callApi({
-    service: Service.KAL_CSTMR_BE,
+    service: Service.KAL_BE,
     url: `${PortalApiURL.CUSTOMER}/members`,
     method: Method.GET,
     params: {
@@ -33,7 +33,7 @@ export const getProfileCLevel = (searchInfo: any) => {
 // 스카이패스
 export const getSkypass = (searchInfo: any) => {
   return callApi({
-    service: Service.KAL_CSTMR_BE,
+    service: Service.KAL_BE,
     url: `${PortalApiURL.CUSTOMER}/skypass`,
     method: Method.GET,
     params: {

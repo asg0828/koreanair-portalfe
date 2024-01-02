@@ -47,7 +47,7 @@ import { menuIconSx } from '@/models/common/Constants';
 export default function List() {
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
-  const batchDate = `${yesterday.getFullYear()}-${(`0` + yesterday.getMonth() + 2).slice(-2)}-${(
+  const batchDate = `${yesterday.getFullYear()}-${(`0` + (yesterday.getMonth() + 1)).slice(-2)}-${(
     `0` + yesterday.getDate()
   ).slice(-2)}`;
   const [profile, setProfile] = useState<Profile>();
@@ -125,7 +125,7 @@ export default function List() {
     const validation = () => {
       let searchError = false;
       if (
-        searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' ||
+        searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
         searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === ''
       ) {
         setOpen(true);
