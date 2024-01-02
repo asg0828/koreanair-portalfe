@@ -129,15 +129,19 @@ const DropList = ({
                 }
                 let target: TbRsCustFeatRuleTrgt | TbRsCustFeatRuleTrgtFilter
                 let t = 0
+                let isAlert = false
                 setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
                     if (tl.length > 4) {
+                        isAlert = true
                         setModalType(ModalType.ALERT)
                         setConfirmModalTit("Feature 로직")
                         setConfirmModalCont("대상 선택 가능 개수는 최대 5개 입니다. 5개 이하로 설정 해주세요.")
                         setIsOpenConfirmModal(true)
                         return tl
+                    } else {
+                        isAlert = false
                     }
                     t = tl.length
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
@@ -159,7 +163,7 @@ const DropList = ({
                     return tl
                 })
                 // 행동 데이터의 경우에만
-                if (targetType === DivisionTypes.BEHV) {
+                if (!isAlert && targetType === DivisionTypes.BEHV) {
                     setTrgtFilterList((state: Array<TbRsCustFeatRuleTrgtFilter>) => {
                         // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                         let tl = cloneDeep(state)
