@@ -7,33 +7,35 @@ import BehvDropItem from './dropItem/BehvDropItem'
 import FeatDropItem from './dropItem/FeatDropItem'
 import { Page, Stack, TextField, Typography } from '@components/ui'
 
-import { 
-    TbRsCustFeatRuleTrgt, 
-    TbRsCustFeatRuleTrgtFilter, 
-    TbCoMetaTblClmnInfo, 
+import {
+    TbRsCustFeatRuleTrgt,
+    TbRsCustFeatRuleTrgtFilter,
+    TbCoMetaTblClmnInfo,
     Attribute,
     TargetDropListProps,
     Behavior,
     AggregateCol,
     DivisionTypes,
-    TbRsCustFeatRule, 
+    TbRsCustFeatRule,
 } from '@/models/selfFeature/FeatureModel'
-import { 
-    initAttribute, 
-    initTbCoMetaTblClmnInfo, 
-    initTbRsCustFeatRule, 
-    initTbRsCustFeatRuleTrgt, 
+import {
+    initAttribute,
+    initTbCoMetaTblClmnInfo,
+    initTbRsCustFeatRule,
+    initTbRsCustFeatRuleTrgt,
     initTbRsCustFeatRuleTrgtFilter,
 } from '@/pages/user/self-feature/data'
 import {
-    SubFeatStatus, 
+    SubFeatStatus,
     SelfFeatPgPpNm,
+    ModalType,
 } from '@/models/selfFeature/FeatureCommon';
+import ConfirmModal from '../modal/ConfirmModal'
 
 const DropList = ({
     featStatus,
     setIsSelectAggregateTop,
-    targetList, 
+    targetList,
     trgtFilterList,
     setTargetList,
     setTrgtFilterList,
@@ -43,8 +45,23 @@ const DropList = ({
     setFormulaTrgtList,
 }: TargetDropListProps) => {
 
-    const [ isPossibleEdit, setIsPossibleEdit ] = useState<Boolean>(false)
-    const [ columnList, setColumnList ] = useState<Array<AggregateCol>>([])
+    const [isPossibleEdit, setIsPossibleEdit] = useState<Boolean>(false)
+    const [columnList, setColumnList] = useState<Array<AggregateCol>>([])
+
+    const [isOpenConfirmModal, setIsOpenConfirmModal] = useState<boolean>(false)
+    const [modalType, setModalType] = useState<string>("")
+    const [confirmModalTit, setConfirmModalTit] = useState<string>('')
+    const [confirmModalCont, setConfirmModalCont] = useState<string>('')
+
+    const onConfirm = () => {
+        if (modalType === ModalType.CONFIRM) {
+        }
+        setIsOpenConfirmModal(false)
+    }
+
+    const onCancel = () => {
+        setIsOpenConfirmModal(false)
+    }
 
     // 수정가능 여부 판단
     useEffect(() => {
@@ -63,12 +80,12 @@ const DropList = ({
     }, [featStatus])
 
     // 속성 테이블의 해당 컬럼 리스트 set
-    useEffect(()=> {
+    useEffect(() => {
         let colList: Array<AggregateCol> = []
         attributes?.map((colInfo: Attribute) => {
             let col = { value: "", text: "", dataType: "", dtpCd: "" }
             col.value = colInfo.metaTblClmnPhysNm
-            col.text  = colInfo.metaTblClmnLogiNm
+            col.text = colInfo.metaTblClmnLogiNm
             col.dataType = colInfo.dataTypeCategory
             col.dtpCd = colInfo.dtpCd
             colList.push(col)
@@ -78,12 +95,12 @@ const DropList = ({
     }, [attributes])
 
     // 속성 테이블의 해당 컬럼 리스트 set
-    useEffect(()=> {
+    useEffect(() => {
         let colList: Array<AggregateCol> = []
         featureRules?.map((colInfo: TbRsCustFeatRule) => {
             let col = { value: "", text: "", dataType: "", dtpCd: "" }
             col.value = colInfo.featureEnNm
-            col.text  = colInfo.name
+            col.text = colInfo.name
             col.dataType = colInfo.dataTypeCategory.toString()
             col.dtpCd = colInfo.dataType
             colList.push(col)
@@ -99,6 +116,7 @@ const DropList = ({
             const targetType = monitor.getItemType()
 
             if (!didDrop) {
+
                 let targetObj: TbCoMetaTblClmnInfo | Attribute | TbRsCustFeatRule
                 if (targetType === DivisionTypes.ATTR) {
                     targetObj = Object.assign(cloneDeep(initAttribute), item)
@@ -114,11 +132,18 @@ const DropList = ({
                 setTargetList((state: Array<TbRsCustFeatRuleTrgt>) => {
                     // tableName(metaTblId),targetId(metaTblClmnId),divisionCode(ATTR|BEHV|FEAT)
                     let tl = cloneDeep(state)
+                    if (tl.length > 4) {
+                        setModalType(ModalType.ALERT)
+                        setConfirmModalTit("Feature 로직")
+                        setConfirmModalCont("대상 선택 가능 개수는 최대 5개 입니다. 5개 이하로 설정 해주세요.")
+                        setIsOpenConfirmModal(true)
+                        return tl
+                    }
                     t = tl.length
                     target = cloneDeep(initTbRsCustFeatRuleTrgt)
                     target.tableName = String(targetObj.metaTblId)
                     target.tableLogiName = String(targetObj.tableLogiName)
-                    target.targetId  = `T${t+1}`
+                    target.targetId = `T${t + 1}`
                     if (targetType === DivisionTypes.ATTR) {
                         target.columnName = String(targetObj.metaTblClmnPhysNm)
                         target.columnLogiName = String(targetObj.metaTblClmnLogiNm)
@@ -140,7 +165,7 @@ const DropList = ({
                         let tl = cloneDeep(state)
                         target = cloneDeep(initTbRsCustFeatRuleTrgtFilter)
                         //target.tableName = String(targetObj.metaTblLogiNm)
-                        target.targetId  = `T${t+1}`
+                        target.targetId = `T${t + 1}`
                         target.columnName = String(targetObj.metaTblClmnPhysNm)
                         target.columnLogiName = String(targetObj.metaTblClmnLogiNm)
                         target.columnDataTypeCode = targetObj.dataTypeCategory.toString()//targetObj.dtpCd
@@ -153,7 +178,7 @@ const DropList = ({
         },
         collect(monitor) {
         },
-        
+
     }), [])
 
     // Feature 로직 정보 삭제시
@@ -163,7 +188,7 @@ const DropList = ({
             newTargetList.splice(delIdx, 1)
             newTargetList = newTargetList.map((target: TbRsCustFeatRuleTrgt, idx: number) => {
                 let rtn = cloneDeep(target)
-                rtn.targetId = `T${idx+1}`
+                rtn.targetId = `T${idx + 1}`
                 return rtn
             })
             return newTargetList
@@ -193,68 +218,79 @@ const DropList = ({
                 height: '100%',
                 border: '1px solid rgb(218, 218, 218)',
                 borderRadius: '5px',
-                padding:"1rem"
+                padding: "1rem"
             }}
             className='dropList'
         >
-            <Stack 
+            <Stack
                 direction="Vertical"
                 gap="MD"
                 justifyContent="Start"
             >
-            {targetList.length > 0 &&
-                targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
-                    let targetId = targetItem.targetId
-                    let tfList = trgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetId)
-                    if (targetItem.divisionCode === DivisionTypes.ATTR) {
-                        return <AttrDropItem 
-                            key={`dropItem-${index}`}
-                            itemIdx={index}
-                            isPossibleEdit={isPossibleEdit}
-                            targetItem={targetItem} 
-                            setTargetList={setTargetList}
-                            delTargetInfo={deleteInfo}
-                            columnList={columnList}
-                        />
-                    } else if (targetItem.divisionCode === DivisionTypes.FEAT) {
-                        return <FeatDropItem
-                            key={`dropItem-${index}`}
-                            itemIdx={index}
-                            isPossibleEdit={isPossibleEdit}
-                            targetItem={targetItem}
-                            setTargetList={setTargetList}
-                            delTargetInfo={deleteInfo}
-                            columnList={columnList}
-                        />
-                    } else if (targetItem.divisionCode === DivisionTypes.BEHV) {
-                        let bs = behaviors.find((behavior: Behavior) => (behavior.metaTblId === targetItem.tableName))
-                        return <BehvDropItem 
-                            key={`dropItem-${index}`}
-                            itemIdx={index}
-                            isPossibleEdit={isPossibleEdit}
-                            setIsSelectAggregateTop={setIsSelectAggregateTop}
-                            targetItem={targetItem}
-                            trgtFilterList={tfList}
-                            setTargetList={setTargetList} 
-                            setTrgtFilterList={setTrgtFilterList} 
-                            delTargetInfo={deleteInfo}
-                            aggregateColList={bs?.tbCoMetaTblClmnInfoList}
-                            setFormulaTrgtList={setFormulaTrgtList}
-                        />
-                    }
-                })
-            }
-            {targetList.length === 0 &&
-                <TextField 
-                    size='LG' 
-                    shape='Round' 
-                    appearance='Filled'
-                    readOnly
-                    value={'오른쪽 Fact/BaseFact 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
-                >
-                </TextField>
-            }
+                {targetList.length > 0 &&
+                    targetList.map((targetItem: TbRsCustFeatRuleTrgt, index: number) => {
+                        let targetId = targetItem.targetId
+                        let tfList = trgtFilterList.filter((trgtFilter: TbRsCustFeatRuleTrgtFilter) => trgtFilter.targetId === targetId)
+                        if (targetItem.divisionCode === DivisionTypes.ATTR) {
+                            return <AttrDropItem
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                isPossibleEdit={isPossibleEdit}
+                                targetItem={targetItem}
+                                setTargetList={setTargetList}
+                                delTargetInfo={deleteInfo}
+                                columnList={columnList}
+                            />
+                        } else if (targetItem.divisionCode === DivisionTypes.FEAT) {
+                            return <FeatDropItem
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                isPossibleEdit={isPossibleEdit}
+                                targetItem={targetItem}
+                                setTargetList={setTargetList}
+                                delTargetInfo={deleteInfo}
+                                columnList={columnList}
+                            />
+                        } else if (targetItem.divisionCode === DivisionTypes.BEHV) {
+                            let bs = behaviors.find((behavior: Behavior) => (behavior.metaTblId === targetItem.tableName))
+                            return <BehvDropItem
+                                key={`dropItem-${index}`}
+                                itemIdx={index}
+                                isPossibleEdit={isPossibleEdit}
+                                setIsSelectAggregateTop={setIsSelectAggregateTop}
+                                targetItem={targetItem}
+                                trgtFilterList={tfList}
+                                setTargetList={setTargetList}
+                                setTrgtFilterList={setTrgtFilterList}
+                                delTargetInfo={deleteInfo}
+                                aggregateColList={bs?.tbCoMetaTblClmnInfoList}
+                                setFormulaTrgtList={setFormulaTrgtList}
+                            />
+                        }
+                    })
+                }
+                {targetList.length === 0 &&
+                    <TextField
+                        size='LG'
+                        shape='Round'
+                        appearance='Filled'
+                        readOnly
+                        value={'오른쪽 Fact/BaseFact 정보의 컬럼을 해당 영역으로 Drag&Drop하여 대상을 선택해주세요.'}
+                    >
+                    </TextField>
+                }
             </Stack>
+
+            {/* 확인 모달 */}
+            <ConfirmModal
+                isOpen={isOpenConfirmModal}
+                onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
+                title={confirmModalTit}
+                content={confirmModalCont}
+                onConfirm={onConfirm}
+                onCancle={onCancel}
+                btnType={modalType}
+            />
         </Page>
     )
 

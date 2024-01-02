@@ -185,6 +185,7 @@ const SelfFeatureEdit = () => {
 	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
 	// 수동실행 API
+    const [isRunValidFetching, setIsRunValidFetching] = useState<boolean>(false)
 	const { 
 		data: runScheduleByManuallyRes, 
 		isSuccess: runScheduleByManuallySucc, 
@@ -1006,6 +1007,10 @@ const SelfFeatureEdit = () => {
 		}
 	}, [faResponse, faIsError, featureAllKey, featureAllParams])
 
+	const getIsRunValidFetching = (isFetching: boolean) => {
+		setIsRunValidFetching(isFetching)
+	}
+
 	return (
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 정보 영역 */}
@@ -1013,7 +1018,7 @@ const SelfFeatureEdit = () => {
 				{/* 상단 버튼 영역 */}
 				<Stack direction="Horizontal" gap="MD" justifyContent="End">
 					<Button
-						disabled={runScheduleByManuallyLoading}
+						disabled={runScheduleByManuallyLoading || isRunValidFetching}
 						style={{ width: "7%" }}
 						size="LG"
 						onClick={runScheduleByManually}
@@ -1034,9 +1039,11 @@ const SelfFeatureEdit = () => {
 							<div style={{ width: "100%", height: "100%" }}>수동 실행</div>}
 					</Button>
 					<FeatQueryRsltButton
+                        isLoadingRunSchedule={runScheduleByManuallyLoading}
 						rslnRuleId={rslnRuleIdParam}
 						custFeatRuleId={location.state?.featureInfo.tbRsCustFeatRule.id}
 						runScheduleCnt={location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
+						sendIsRunValidFetching={getIsRunValidFetching}
 					/>
 				</Stack>
 

@@ -8,6 +8,7 @@ import {
     Modal,
     Button,
     useToast,
+    Loader,
 } from '@components/ui';
 import '@/assets/styles/SelfFeature.scss'
 
@@ -22,6 +23,7 @@ import { PageModel, initPage } from '@/models/model/PageModel';
 import { PagingUtil, setPageList } from '@/utils/self-feature/PagingUtil';
 import { cloneDeep } from 'lodash';
 import { DateUnitType, getDateDiff, getDateFormat } from '@/utils/DateUtil';
+import { useTranslation } from 'react-i18next';
 
 export interface Props {
     isOpen?: boolean
@@ -36,6 +38,7 @@ const BatchExecuteLogsModal = ({
 }: Props) => {
 
     const { toast } = useToast()
+    const { t } = useTranslation()
     const [isOpenBatchExecuteLogsModal, setIsOpenBatchExecuteLogsModal] = useState<boolean>(false)
 
     // 페이징(page: 페이지정보, rows: 페이지에 보여질 list)
@@ -43,7 +46,7 @@ const BatchExecuteLogsModal = ({
     const [rows, setRows] = useState<Array<BatchExecuteLog>>([])
     const [batchExecuteLogList, setBatchExecuteLogList] = useState<Array<BatchExecuteLog>>([])
 
-    const { data: batchExecuteLogsRes, isError: batchExecuteLogsErr, refetch: batchExecuteLogsRefetch } = useBatchExecuteLogs(custFeatRuleId)
+    const { data: batchExecuteLogsRes, isError: batchExecuteLogsErr, refetch: batchExecuteLogsRefetch, isFetching: batchExecuteLogsFetching } = useBatchExecuteLogs(custFeatRuleId)
 
     useEffect(() => {
         setIsOpenBatchExecuteLogsModal(isOpen)
@@ -77,13 +80,13 @@ const BatchExecuteLogsModal = ({
             if (batchExecuteLogsRes) {
                 let rtn = cloneDeep(batchExecuteLogsRes.result)
                 rtn = rtn.map((batchExecuteLog: BatchExecuteLog) => {
-                    batchExecuteLog.execTme  = getDateDiff(batchExecuteLog.startTme, batchExecuteLog.endTme, DateUnitType.MILLISECOND)
+                    batchExecuteLog.execTme = getDateDiff(batchExecuteLog.startTme, batchExecuteLog.endTme, DateUnitType.MILLISECOND)
                     batchExecuteLog.startTme = getDateFormat(batchExecuteLog.startTme, "YYYY-MM-DD HH:mm:ss")
-                    batchExecuteLog.endTme   = getDateFormat(batchExecuteLog.endTme, "YYYY-MM-DD HH:mm:ss")
+                    batchExecuteLog.endTme = getDateFormat(batchExecuteLog.endTme, "YYYY-MM-DD HH:mm:ss")
                     return batchExecuteLog
                 })
                 setBatchExecuteLogList(rtn)
-				PagingUtil(rtn, page)
+                PagingUtil(rtn, page)
             }
         }
     }, [batchExecuteLogsRes, batchExecuteLogsErr, toast])
@@ -101,23 +104,32 @@ const BatchExecuteLogsModal = ({
             <Modal.Header>실행 내역</Modal.Header>
             <Modal.Body>
                 {/* 목록 영역 */}
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                    //enableSort={true}
-                    //clickable={true}
-                    page={page}
-                    onChange={handlePage}
-                    //onClick={(rows: RowsInfo) => onClickPageMovHandler(selfFeatPgPpNm.DETL, rows)}
-                    //rowSelection={(checkedList: Array<number>) => getCheckList(checkedList)}
-                    buttonChildren={
-                        <>
-                            <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
-                                닫기
-                            </Button>
-                        </>
-                    }
-                />
+                {batchExecuteLogsFetching
+                    ?
+                    <Loader
+                        style={{
+                            width: "100%",
+                            height: "100%",
+                        }}
+                        type="Bubble"
+                        title={t('common.message.proceeding')}
+                        description={"데이터를 불러오고 있습니다."}
+                    />
+                    :
+                    <DataGrid
+                        columns={columns}
+                        rows={rows}
+                        page={page}
+                        onChange={handlePage}
+                        buttonChildren={
+                            <>
+                                <Button priority="Normal" appearance="Contained" onClick={handleConfirm}>
+                                    닫기
+                                </Button>
+                            </>
+                        }
+                    />
+                }
                 {/* 목록 영역 */}
             </Modal.Body>
         </Modal>
