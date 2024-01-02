@@ -171,69 +171,6 @@ const Edit = () => {
               </Stack>
             </TD>
           </TR>
-          {/* <TR>
-            <TH>팝업공지여부</TH>
-            <TD align="left">
-              <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
-              <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
-            </TD>
-            <TH>팝업공지일자</TH>
-            <TD>
-              <Stack gap="SM" className="width-100" direction="Vertical">
-                <Stack gap="SM" className="width-100">
-                  <Controller
-                    name="startDt"
-                    control={control}
-                    rules={{
-                      required: { value: true, message: 'start date is required.' },
-                      pattern: {
-                        value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
-                        message: 'start date is invalid.',
-                      },
-                    }}
-                    render={({ field }) => (
-                      <DatePicker
-                        ref={(el) => {
-                          const input = el?.querySelector('input');
-                          input && field.ref(input);
-                        }}
-                        value={field.value}
-                        onValueChange={(value) => field.onChange(value)}
-                        validation={errors?.startDt?.message ? 'Error' : undefined}
-                      />
-                    )}
-                  />
-                  <Label>~</Label>
-                  <Controller
-                    name="endDt"
-                    control={control}
-                    rules={{
-                      required: { value: true, message: 'end date is required.' },
-                      pattern: {
-                        value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
-                        message: 'end date is invalid.',
-                      },
-                    }}
-                    render={({ field }) => (
-                      <DatePicker
-                        ref={(el) => {
-                          const input = el?.querySelector('input');
-                          input && field.ref(input);
-                        }}
-                        value={field.value}
-                        onValueChange={(value) => field.onChange(value)}
-                        validation={errors?.endDt?.message ? 'Error' : undefined}
-                      />
-                    )}
-                  />
-                </Stack>
-                <Stack justifyContent="Between">
-                  <ErrorLabel message={errors?.startDt?.message} />
-                  <ErrorLabel message={errors?.endDt?.message} />
-                </Stack>
-              </Stack>
-            </TD>
-          </TR> */}
           <TR>
             <TH colSpan={1} align="right">
               {t('board:label.useYn')}

@@ -134,7 +134,7 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3"><Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">중요</Tag>{noticeModel?.sj}</Typography>
+              <Typography variant="h3"><Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">{t('common.label.important')}</Tag>{noticeModel?.sj}</Typography>
             </TH>
           </TR>
           <TR className="height-100">

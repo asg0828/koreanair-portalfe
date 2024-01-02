@@ -8,7 +8,7 @@ import { ContextPath, ModalType, ValidType } from '@/models/common/Constants';
 import { ColumnsInfo } from '@/models/components/Table';
 import { DatasetColumnModel, DatasetModel, DatasetParams } from '@/models/model/DatasetModel';
 import { PageModel } from '@/models/model/PageModel';
-import { fieldType } from '@/pages/user/biz-meta/dataset/Reg';
+import { FieldType } from '@/pages/user/biz-meta/dataset/Reg';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import HorizontalTable from '@components/table/HorizontalTable';
@@ -64,7 +64,7 @@ const Detail = () => {
       field: 'clFm',
       colSpan: 1.1,
       require: false,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
+      render: (rowIndex: number, fieldName: FieldType, maxLength?: number) => {
         return (
           <Stack gap="SM" className="width-100" direction="Vertical">
             <Button
@@ -83,7 +83,7 @@ const Detail = () => {
   const { data: response, isSuccess, isError } = useDatasetById(mtsId);
   const { mutate, data: dResponse, isSuccess: dIsSuccess, isError: dIsError } = useDeleteDataset(mtsId);
 
-  const openCalculationLogicModal = (rowIndex: number, fieldName: fieldType) => {
+  const openCalculationLogicModal = (rowIndex: number, fieldName: FieldType) => {
     dispatch(
       openModal({
         type: ModalType.CALCULATION_LOGIC,

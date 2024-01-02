@@ -227,7 +227,7 @@ const Home = () => {
             ) : (
               noticeList.map((item) => (
                 <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">중요</Tag>
+                  <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">{t('common.label.important')}</Tag>
                   <Link className="ellipsis1" to={`${MainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
                     {item.sj}
                   </Link>

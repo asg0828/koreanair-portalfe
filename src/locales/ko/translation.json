@@ -5,6 +5,7 @@
       "authGroupList": "권한그룹 목록"
     },
     "label": {
+      "important": "중요",
       "all": "전체",
       "nonAuth": "권한없음",
       "home": "Home",
