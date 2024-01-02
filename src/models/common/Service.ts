@@ -3,7 +3,6 @@ export enum Service {
   // 2023-11-02 김태훈A Self-Feature BE API case 추가
   KAL_SF_BE = 'kal-sf-be',
   APIGEE_AUTH = 'apigee-auth',
-  KAL_CSTMR_BE = 'customer-be',
 }
 export enum ServicePort {
   KAL_BE = 8080,
