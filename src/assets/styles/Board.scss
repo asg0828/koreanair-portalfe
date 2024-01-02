@@ -42,3 +42,12 @@
 .nextContent > div, .prevContent > div{
   justify-content: flex-start !important;
 }
+.headerName h3 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  line-height: 1.375rem;
+}
+.headerName .tag_point {
+  margin-right: 6px;
+}
