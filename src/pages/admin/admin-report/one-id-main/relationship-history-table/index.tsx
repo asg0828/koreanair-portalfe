@@ -46,7 +46,6 @@ export default function RelationshipHistoryTable() {
       });
     } else {
       if (response?.data) {
-        // response.data.contents.forEach(() => {});
         setRows(response.data.contents);
         setPage(response.data.page);
       }
@@ -67,18 +66,26 @@ export default function RelationshipHistoryTable() {
 
   /* 기간 별 버튼 */
   function duration(flag: string) {
-    let enddate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    let startdate = '';
+    let startDate;
+    let startDay = today;
+    let endDate = `${today.getFullYear()}-${(`0` + today.getMonth() + 1).slice(-2)}-${(`0` + today.getDate()).slice(
+      -2
+    )}`;
+
     if (flag === 'today') {
-      startdate = enddate;
+      startDate = endDate;
     } else if (flag === 'oneMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+      startDay = new Date(today.setMonth(today.getMonth() - 1));
     } else if (flag === 'sixMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+      startDay = new Date(today.setMonth(today.getMonth() - 6));
     } else if (flag === 'oneYear') {
-      startdate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+      startDay = new Date(today.setFullYear(today.getFullYear() - 1));
     }
-    setSearchInfo({ ...searchInfo, creationEndDate: enddate, creationStartDate: startdate });
+    startDate = `${startDay?.getFullYear()}-${('0' + (startDay?.getMonth() + 1)).slice(-2)}-${(
+      '0' + startDay?.getDate()
+    ).slice(-2)}`;
+
+    setSearchInfo({ ...searchInfo, creationEndDate: endDate, creationStartDate: startDate });
   }
 
   /* 초기화 버튼 */
@@ -156,7 +163,6 @@ export default function RelationshipHistoryTable() {
       <DataGrid
         columns={relationColumn}
         rows={row}
-        // rows={relationData}
         enableSort={false}
         clickable={true}
         page={page}

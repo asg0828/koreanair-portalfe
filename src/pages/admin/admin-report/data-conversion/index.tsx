@@ -167,12 +167,20 @@ export default function DataConversion() {
               </Stack>
             </TH>
 
-            <TD style={{ borderLeft: '0.1px solid #F5F5F5 ' }}>
+            <TD className="verticalTableTD" style={{ borderLeft: '0.1px solid #F5F5F5 ', minWidth: '40%' }}>
               <Stack direction="Vertical">
-                <TD style={{ border: 'none' }}>{phoneNumCR}</TD>
-                <TD style={{ border: 'none' }}>{phoneNumHash}</TD>
-                <TD style={{ border: 'none' }}>{eMailCR}</TD>
-                <TD style={{ border: 'none' }}>{eMailHash}</TD>
+                <TD className="verticalTableTD" style={{ border: 'none' }}>
+                  {phoneNumCR}
+                </TD>
+                <TD className="verticalTableTD" style={{ border: 'none' }}>
+                  {phoneNumHash}
+                </TD>
+                <TD className="verticalTableTD" style={{ border: 'none' }}>
+                  {eMailCR}
+                </TD>
+                <TD className="verticalTableTD" style={{ border: 'none' }}>
+                  {eMailHash}
+                </TD>
               </Stack>
             </TD>
           </TR>
@@ -202,7 +210,7 @@ export default function DataConversion() {
               </Button>
             </TD>
             <TH>Double Metaphone 변환 결과</TH>
-            <TD>{afConvertDoubleMetaphone}</TD>
+            <TD style={{ width: '40%' }}>{afConvertDoubleMetaphone}</TD>
           </TR>
         </HorizontalTable>
         <Modal open={isOpen} onClose={() => setOpen(false)}>

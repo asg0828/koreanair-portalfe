@@ -178,18 +178,26 @@ export default function OneIdMasterHistory() {
 
   /* 기간 별 버튼 */
   function duration(flag: string) {
-    let enddate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    let startdate = '';
-    if (flag === 'today') {
-      startdate = enddate;
+    let startDate;
+    let startDay = today;
+    let endDate = `${today.getFullYear()}-${(`0` + today.getMonth() + 1).slice(-2)}-${(`0` + today.getDate()).slice(
+      -2
+    )}`;
+
+    if (flag === 'thisWeek') {
+      startDay = new Date(today.setDate(today.getDate() - 7));
     } else if (flag === 'oneMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+      startDay = new Date(today.setMonth(today.getMonth() - 1));
     } else if (flag === 'sixMonth') {
-      startdate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+      startDay = new Date(today.setMonth(today.getMonth() - 6));
     } else if (flag === 'oneYear') {
-      startdate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+      startDay = new Date(today.setFullYear(today.getFullYear() - 1));
     }
-    setSearchInfo({ ...searchInfo, creationEndDate: enddate, creationStartDate: startdate });
+    startDate = `${startDay?.getFullYear()}-${('0' + (startDay?.getMonth() + 1)).slice(-2)}-${(
+      '0' + startDay?.getDate()
+    ).slice(-2)}`;
+
+    setSearchInfo({ ...searchInfo, creationEndDate: endDate, creationStartDate: startDate });
   }
 
   return (

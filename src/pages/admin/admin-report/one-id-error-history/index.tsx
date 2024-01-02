@@ -95,15 +95,25 @@ export default function OneIdErrorHistory() {
 
   /* 기간 별 버튼 */
   function duration(flag: string) {
+    let startDate;
+    let startDay = today;
+    let endDate = `${today.getFullYear()}-${(`0` + today.getMonth() + 1).slice(-2)}-${(`0` + today.getDate()).slice(
+      -2
+    )}`;
+
     if (flag === 'thisWeek') {
-      startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
+      startDay = new Date(today.setDate(today.getDate() - 7));
     } else if (flag === 'oneMonth') {
-      startDate = `${today.getFullYear()}-${today.getMonth()}-${today.getDate() - 1}`;
+      startDay = new Date(today.setMonth(today.getMonth() - 1));
     } else if (flag === 'sixMonth') {
-      startDate = `${today.getFullYear()}-${today.getMonth() - 5}-${today.getDate() - 1}`;
+      startDay = new Date(today.setMonth(today.getMonth() - 6));
     } else if (flag === 'oneYear') {
-      startDate = `${today.getFullYear() - 1}-${today.getMonth() + 1}-${today.getDate() - 1}`;
+      startDay = new Date(today.setFullYear(today.getFullYear() - 1));
     }
+    startDate = `${startDay?.getFullYear()}-${('0' + (startDay?.getMonth() + 1)).slice(-2)}-${(
+      '0' + startDay?.getDate()
+    ).slice(-2)}`;
+
     setSearchInfo({ ...searchInfo, creationEndDate: endDate, creationStartDate: startDate });
   }
 

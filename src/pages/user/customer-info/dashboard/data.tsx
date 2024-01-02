@@ -450,14 +450,14 @@ const emailData: Email[] = [
   { date: '21AUG23', useCnt: 6, counselor: '안중근', content: '' },
 ];
 const skyPassList: SkypassList[] = [
-  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '1999.01.01', skypassNo: '123455555522' },
-  { korName: '김대한', engName: 'Alex-Kim', sexCode: 'M', birthV: '1985.08.19', skypassNo: '113455555533' },
-  { korName: '김대한', engName: 'Jennie-Kim', sexCode: 'F', birthV: '1988.08.08', skypassNo: '153455555506' },
-  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '2000.01.01', skypassNo: '123455555509' },
-  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '2002.02.02', skypassNo: '123455555522' },
-  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '1945.08.05', skypassNo: '113455555533' },
-  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'F', birthV: '1988.08.08', skypassNo: '153455555506' },
-  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'F', birthV: '2000.01.01', skypassNo: '123455555509' },
+  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '1999', skypassNo: '123455555522' },
+  { korName: '김대한', engName: 'Alex-Kim', sexCode: 'M', birthV: '1985', skypassNo: '113455555533' },
+  { korName: '김대한', engName: 'Jennie-Kim', sexCode: 'F', birthV: '1988', skypassNo: '153455555506' },
+  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '2000', skypassNo: '123455555509' },
+  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '2002', skypassNo: '123455555522' },
+  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'M', birthV: '1945', skypassNo: '113455555533' },
+  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'F', birthV: '1988', skypassNo: '153455555506' },
+  { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'F', birthV: '2000', skypassNo: '123455555509' },
 ];
 export {
   analysisIndexList,
