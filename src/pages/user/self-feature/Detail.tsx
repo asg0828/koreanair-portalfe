@@ -17,6 +17,7 @@ import {
 	Typography,
 	TextField,
 	useToast,
+	Loader,
 } from '@components/ui';
 
 import {
@@ -174,7 +175,13 @@ const SelfFeatureDetail = () => {
 	const { data: cnclReqSubRes, isSuccess: cnclReqSubSucc, isError: cnclReqSubErr, mutate: cnclReqSubMutate } = useCancelRequestSubmission(userEmail, submissionId)
 	// 수동실행 API
 	//const [isRunScheduleByManuallyWait, setIsRunScheduleByManuallyWait] = useState<Boolean>(false)
-	const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state.id)
+	const { 
+		data: runScheduleByManuallyRes, 
+		isSuccess: runScheduleByManuallySucc, 
+		isError: runScheduleByManuallyErr, 
+		mutate: runScheduleByManuallyMutate,
+		isLoading: runScheduleByManuallyLoading,
+	} = useRunScheduleByManually(location.state.id)
 	// component mount
 	useEffect(() => {
 		initCustFeatRule()
@@ -1002,8 +1009,25 @@ const SelfFeatureDetail = () => {
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 상단 버튼 영역 */}
 			<Stack direction="Horizontal" gap="MD" justifyContent="End">
-				<Button size="LG" onClick={runScheduleByManually}>
-					수동 실행
+				<Button 
+					disabled={runScheduleByManuallyLoading}
+					style={{width: "7%"}} 
+					size="LG" 
+					onClick={runScheduleByManually}
+				>
+					{runScheduleByManuallyLoading 
+					? 
+					<Loader 
+						style={{
+							backgroundColor: "rgb(235, 235, 235)", 
+							color: "rgb(185, 185, 185)", 
+							borderColor: "rgb(218, 218, 218)", 
+							width: "100%", 
+							height: "100%"}} 
+						type="Bubble" 
+					/> 
+					: 
+					<div style={{width: "100%", height: "100%"}}>수동 실행</div>}
 				</Button>
 				<FeatQueryRsltButton
 					rslnRuleId={rslnRuleIdParam}

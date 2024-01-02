@@ -20,6 +20,7 @@ import {
     useToast,
     Select,
     SelectOption,
+    Loader,
 } from '@components/ui'
 
 import {
@@ -99,10 +100,10 @@ const SfSubmissionRequestDetail = () => {
     const navigate = useNavigate()
     const location = useLocation()
     const sessionInfo = useAppSelector(selectSessionInfo())
-	const userId = useAppSelector(selectSessionInfo()).userId || ''
-	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
-	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.EDIT_AUTH)
-	const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
+    const userId = useAppSelector(selectSessionInfo()).userId || ''
+    const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
+    const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.EDIT_AUTH)
+    const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
     const { toast } = useToast()
     const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(location.state.referenceNo)
     // 사용될 rslnRuleId / mstrSgmtRuleId 조회
@@ -181,24 +182,30 @@ const SfSubmissionRequestDetail = () => {
     const [aprvSubComment, setAprvSubComment] = useState<AprvSubCommentProps>(initAprvSubCommentProps)
     const { data: aprvSubAprvalRes, isSuccess: aprvSubAprvalSucc, isError: aprvSubAprvalErr, mutate: aprvSubAprvalMutate } = useApproveSubmissionApproval(userEmail, approvalId, aprvSubComment)
     // 수동실행 API
-    const { data: runScheduleByManuallyRes, isSuccess: runScheduleByManuallySucc, isError: runScheduleByManuallyErr, mutate: runScheduleByManuallyMutate } = useRunScheduleByManually(location.state.referenceNo)
+    const { 
+		data: runScheduleByManuallyRes, 
+		isSuccess: runScheduleByManuallySucc, 
+		isError: runScheduleByManuallyErr, 
+		mutate: runScheduleByManuallyMutate,
+		isLoading: runScheduleByManuallyLoading,
+	} = useRunScheduleByManually(location.state.referenceNo)
     // 카테고리 update API
     const { data: updateFeatureCategoryRes, isSuccess: updateFeatureCategorySucc, isError: updateFeatureCategoryErr, mutate: updateFeatureCategoryMutate } = useFeatureCategory(location.state.referenceNo, { category: category })
     // component mount
     useEffect(() => {
         initCustFeatRule()
     }, [])
-	useEffect(() => {
-	  if (userInfoErr || userInfoRes?.successOrNot === 'N') {
-		toast({
-		  type: ValidType.ERROR,
-		  content: t('common.toast.error.read'),
-		});
-	  } else if (userInfoSucc) {
-		let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
-		if (t.length > 0) setIsEditAuth(true)
-	  }
-	}, [userInfoRes, userInfoSucc, userInfoErr])
+    useEffect(() => {
+        if (userInfoErr || userInfoRes?.successOrNot === 'N') {
+            toast({
+                type: ValidType.ERROR,
+                content: t('common.toast.error.read'),
+            });
+        } else if (userInfoSucc) {
+            let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
+            if (t.length > 0) setIsEditAuth(true)
+        }
+    }, [userInfoRes, userInfoSucc, userInfoErr])
     // master segement rule Id setting
     useEffect(() => {
         if (mstrProfListErr || mstrProfListRes?.successOrNot === 'N') {
@@ -874,8 +881,26 @@ const SfSubmissionRequestDetail = () => {
             <Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
                 {/* 상단 버튼 영역 */}
                 <Stack direction="Horizontal" gap="MD" justifyContent="End">
-                    <Button size="LG" onClick={runScheduleByManually}>
-                        수동 실행
+                    <Button
+                        disabled={runScheduleByManuallyLoading}
+                        style={{ width: "7%" }}
+                        size="LG"
+                        onClick={runScheduleByManually}
+                    >
+                        {runScheduleByManuallyLoading
+                            ?
+                            <Loader
+                                style={{
+                                    backgroundColor: "rgb(235, 235, 235)",
+                                    color: "rgb(185, 185, 185)",
+                                    borderColor: "rgb(218, 218, 218)",
+                                    width: "100%",
+                                    height: "100%"
+                                }}
+                                type="Bubble"
+                            />
+                            :
+                            <div style={{ width: "100%", height: "100%" }}>수동 실행</div>}
                     </Button>
                     <FeatQueryRsltButton
                         rslnRuleId={rslnRuleIdParam}
