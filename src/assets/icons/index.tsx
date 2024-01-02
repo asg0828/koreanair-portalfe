@@ -31,6 +31,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
+import Close from '@mui/icons-material/Close';
 
 export {
   SettingsOutlinedIcon,
@@ -66,4 +67,5 @@ export {
   FavoriteBorderIcon,
   ExpandLessIcon,
   AttachFileIcon,
+  Close,
 };

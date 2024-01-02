@@ -41,6 +41,8 @@ import {
 import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { useProfileCLevel } from '@/hooks/queries/useCustomerInfoQueires';
+import Close from '@mui/icons-material/Close';
+import { menuIconSx } from '@/models/common/Constants';
 
 export default function List() {
   const today = new Date();
@@ -65,8 +67,9 @@ export default function List() {
   const [emails, setEmails] = useState<Array<Email>>([]);
   const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({
+    searchType: 'A',
     skypassNum: '',
-    phoneNumber: '',
+    mobilePhoneNumber: '',
     korFname: '',
     korLname: '',
     engLname: '',
@@ -99,11 +102,11 @@ export default function List() {
   };
   const validation = () => {
     // 검색 조건 자체는 두개다 들어가도 가능
-    // 회원당 skypass는 일대다 관계이므로 phoneNumber로 검색할 경우 skypass list를
+    // 회원당 skypass는 일대다 관계이므로 mobilePhoneNumber로 검색할 경우 skypass list를
     let searchError = false;
     if (
       searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-      searchInfo.phoneNumber.replace(htmlTagReg, '').trim() === ''
+      searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === ''
     ) {
       setOpen(true);
       searchError = true;
@@ -117,14 +120,13 @@ export default function List() {
   };
 
   const handleSearch = useCallback(() => {
-    setSkypass([]);
-
+    // setSkypass([]);
     // 유효성 검사 실패 시 종료
     const validation = () => {
       let searchError = false;
       if (
-        searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.phoneNumber.replace(htmlTagReg, '').trim() === ''
+        searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' ||
+        searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === ''
       ) {
         setOpen(true);
         searchError = true;
@@ -133,7 +135,7 @@ export default function List() {
     };
 
     if (validation()) return;
-    if (searchInfo.phoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.mobilePhoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setProfile(profileData[0]);
       setSkypass(skypassData1);
       setFamily(familyMemberData[0]);
@@ -151,7 +153,7 @@ export default function List() {
       setEmails(emailData);
       setSnss(snsData);
       setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    } else if (searchInfo.phoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.mobilePhoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setProfile(profileData[1]);
       setSkypass(skypassData2);
       setFamily(familyMemberData[3]);
@@ -195,7 +197,15 @@ export default function List() {
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
     const { id, value } = e.target;
-    setSearchInfo({ ...searchInfo, [id]: value });
+    if (id === 'skypassNum') {
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'D' });
+    } else if (id === 'korFname' || id === 'korLname') {
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'A' });
+    } else if (id === 'engFname' || id === 'engLname') {
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'B' });
+    } else if (id === 'mobilePhoneNumber') {
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'C' });
+    }
   };
 
   const [isListView1, setIsListView1] = useState({ open: false, contents: '' });
@@ -216,7 +226,7 @@ export default function List() {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    if (searchInfo.phoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
+    if (searchInfo.mobilePhoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112423935550') {
         setFamily(familyMemberData[0]);
@@ -225,7 +235,7 @@ export default function List() {
       } else if (value === '112617209394') {
         setFamily(familyMemberData[2]);
       }
-    } else if (searchInfo.phoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
+    } else if (searchInfo.mobilePhoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
       setSearchInfo({ ...searchInfo, [`${id}`]: value });
       if (value === '112315856573') {
         setFamily(familyMemberData[3]);
@@ -282,8 +292,8 @@ export default function List() {
               </div>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.phoneNumber}
-                  id="phoneNumber"
+                  value={searchInfo.mobilePhoneNumber}
+                  id="mobilePhoneNumber"
                   appearance="Outline"
                   placeholder="핸드폰번호"
                   size="LG"
@@ -738,6 +748,18 @@ export default function List() {
                     <div className="value">{preference?.meal}</div>
                   </Stack>
                 </div>
+                <div className="item middle">
+                  <Stack justifyContent="Between" alignItems={'cencter'}>
+                    <div className="key">골프여행 선호지수</div>
+                    <div className="value">{preference?.meal}</div>
+                  </Stack>
+                </div>
+                <div className="item middle">
+                  <Stack justifyContent="Between" alignItems={'cencter'}>
+                    <div className="key">High Class 선호지수</div>
+                    <div className="value">{preference?.meal}</div>
+                  </Stack>
+                </div>
               </div>
             </Stack>
           </Stack>
@@ -1144,6 +1166,9 @@ export default function List() {
                 <div className="right_modal_content height-100">
                   <div className="right_modal_content_inner height-100">
                     <Stack direction="Vertical">
+                      <div style={{ paddingBottom: '10px' }}>
+                        <Close sx={menuIconSx} onClick={(e) => toggleDropMenu(e)} style={{ float: 'right' }} />
+                      </div>
                       <div className="right_modal_search_wrap">
                         <Stack>
                           <TextField
@@ -1200,7 +1225,7 @@ export default function List() {
                                   <div className="ellipsis1">성별</div>
                                 </th>
                                 <th>
-                                  <div className="ellipsis1">생년월일</div>
+                                  <div className="ellipsis1">출생년도</div>
                                 </th>
                                 <th>
                                   <div className="ellipsis1">Skypass No.</div>

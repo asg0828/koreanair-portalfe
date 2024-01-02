@@ -67,7 +67,6 @@ export default function List() {
     searchType: 'A',
   });
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
-  // const [skypassList, setSkypassList] = useState<Array<any>>([]);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { toast } = useToast();
 
@@ -171,7 +170,11 @@ export default function List() {
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
     const { id, value } = e.target;
-    setSearchInfo({ ...searchInfo, [id]: value });
+    if (id === 'skypassMemberNumber') {
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'A' });
+    } else {
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'B' });
+    }
   };
 
   const [isListView1, setIsListView1] = useState({ open: false, contents: '' });

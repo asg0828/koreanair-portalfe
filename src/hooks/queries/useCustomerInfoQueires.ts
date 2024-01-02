@@ -7,6 +7,7 @@ import {
   getPnrHis,
   getProfile,
   getProfileCLevel,
+  getSkypass,
   getSmsHis,
   getSnsHis,
   getTelephoneHis,
@@ -24,6 +25,10 @@ export const useProfile = (searchInfo: any) => {
 // Profile 조회(C-Level)
 export const useProfileCLevel = (searchInfo: any) => {
   return useQuery(['/customerInfo/engname'], () => getProfileCLevel(searchInfo), { enabled: false });
+};
+
+export const useSkypass = (searchInfo: any) => {
+  return useQuery(['/customerInfo/skypassNumber'], () => getSkypass(searchInfo), { enabled: false });
 };
 
 export const useTelephoneHis = () => {
