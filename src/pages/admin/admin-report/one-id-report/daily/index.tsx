@@ -11,12 +11,11 @@ import { RowsInfo } from '@/models/components/Table';
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function Daily() {
   const today = new Date();
-  const endDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-  let startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
+
   const [searchInfo, setSearchInfo] = useState<dailySearch>({
     criteria: 'daily',
-    aggrStartDate: startDate,
-    aggrEndDate: endDate,
+    aggrStartDate: '',
+    aggrEndDate: '',
   });
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
