@@ -31,6 +31,7 @@ export default function PaxMapping() {
     setPage(page);
     setIsChanged(true);
   };
+  
   useEffect(() => {
     isChanged && handleSearch();
 

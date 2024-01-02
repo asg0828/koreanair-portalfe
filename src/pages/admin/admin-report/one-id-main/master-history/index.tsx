@@ -65,7 +65,8 @@ export default function OneIdMasterHistory() {
   const [row2, setRows2] = useState<Array<OneIdHistoryData>>([]);
   const { refetch: refetch1, data: response1, isError: isError1 } = useMasterHistoryList(searchInfo2, page);
   const { refetch: refetch2, data: response2, isError: isError2 } = useHistoryList(searchInfo, page2);
-
+  const [isChanged, setIsChanged] = useState(false);
+  const [isChanged2, setIsChanged2] = useState(false);
   useEffect(() => {
     setSearchInfo2({
       ...searchInfo2,
@@ -81,23 +82,40 @@ export default function OneIdMasterHistory() {
       creationEndDate: searchInfo.creationEndDate,
     });
   }, [searchInfo]);
+
   // refetch
   const handleSearch = useCallback(() => {
     refetch1();
-    refetch2();
-  }, [refetch1, refetch2]);
+  }, [refetch1]);
 
-  const handlePage = (page: PageModel, flag: string) => {
-    if (flag === 'master') {
+  const handleSearch2 = useCallback(() => {
+    refetch2();
+  }, [ refetch2]);
+
+  const handlePage = (page: PageModel) => {
       setPage(page);
-    } else {
-      setPage2(page);
-    }
+      setIsChanged(true);   
   };
 
-  useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+  const handlePage2 = (page: PageModel) => {
+    setPage2(page);
+    setIsChanged2(true);
+  }
+
+  useEffect(() => {
+    isChanged && handleSearch();
+    return () => {
+      setIsChanged(false);
+    };
+  }, [isChanged, handleSearch]);
+
+  useEffect(() => {
+    isChanged2 && handleSearch2();
+    return () => {
+      setIsChanged2(false);
+    };
+  }, [isChanged2, handleSearch2]);
+
   // master 정보 useEffect
   useEffect(() => {
     if (isError1 || response1?.successOrNot === 'N') {
@@ -203,7 +221,7 @@ export default function OneIdMasterHistory() {
   return (
     <>
       <Stack direction="Vertical" gap="LG" className="width-100">
-        <SearchForm onSearch={handleSearch} onClear={onClear}>
+        <SearchForm onSearch={() => {handleSearch(); handleSearch2();}} onClear={onClear}>
           <form>
             <HorizontalTable>
               <TR>
@@ -215,7 +233,7 @@ export default function OneIdMasterHistory() {
                     className="width-100"
                     onChange={onSearchChangeHandler}
                     value={searchInfo.oneidNo}
-                    placeholder="검색어를 입력하세요."
+                    placeholder="OneId 번호를 입력하세요."
                     id="oneidNo"
                   />
                 </TD>
@@ -326,7 +344,7 @@ export default function OneIdMasterHistory() {
                     id="homePhoneNumberInfo"
                     className="width-100"
                     onChange={onSearchChangeHandler}
-                    placeholder="성을 입력하세요."
+                    placeholder="01011112222"
                     value={searchInfo2.homePhoneNumberInfo}
                   />
                 </TD>
@@ -411,7 +429,7 @@ export default function OneIdMasterHistory() {
         rows={row}
         enableSort={false}
         page={page}
-        onChange={(flag: 'master') => handlePage(page, flag)}
+        onChange={handlePage}
       />
 
       <Typography variant="h4">히스토리 </Typography>
@@ -419,8 +437,9 @@ export default function OneIdMasterHistory() {
         columns={historyColumn}
         rows={row2}
         enableSort={false}
+        clickable={false}
         page={page2}
-        onChange={(flag: 'history') => handlePage(page2, flag)}
+        onChange={handlePage2}
       />
     </>
   );

@@ -57,7 +57,7 @@ const AdminHome = () => {
       });
     } else {
       if (nResponse?.data) {
-        setNoticeList(nResponse.data.contents.filter((item: NoticeModel, index: number) => index < 5));
+        setNoticeList(nResponse.data.contents.filter((item: NoticeModel, index: number) => index < 4));
       }
     }
   }, [nResponse, nIsError, toast]);
@@ -251,6 +251,7 @@ const AdminHome = () => {
             ) : (
               noticeList.map((item) => (
                 <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">{t('common.label.important')}</Tag>
                   <Link className="ellipsis1" to={`${AdminMainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
                     {item.sj}
                   </Link>
@@ -291,7 +292,7 @@ const AdminHome = () => {
               {t('home:label.more')}
             </Link>
           </Stack>
-          <div className="boardListWrap ">
+          <div className="boardListWrap qnaBoardListWrap">
             {qnaList.length === 0 ? (
               <NoData className="board-nodata" />
             ) : (
@@ -302,7 +303,8 @@ const AdminHome = () => {
                     size="MD"
                     shape="Round"
                     type={item.qnaStat === 'ANSWER' ? 'Strong' : undefined}
-                    style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '5px' }}
+                    className="tag_point"
+                    style={{ display: 'inline-block', width: 'auto', lineHeight: '1.375rem', marginRight: '8px' }}
                   >
                     {item.qnaStatNm}
                   </Tag>

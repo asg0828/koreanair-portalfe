@@ -31,7 +31,7 @@ export const useMetaTableList = (params: CustMetaListSrchInfo) => {
   return useQuery(['/meta-table/list'], () => retrieveMetaTableLists(params));
 };
 
-// 스키마 조회 (retrieveSchema)
+// 스키마(데이터베이스명) 조회 (retrieveSchema)
 export const useSchemaList = () => {
   return useQuery(['/schema/list'], () => retrieveSchemaList());
 };
@@ -43,7 +43,7 @@ export const useMetaTableDetail = (params: string) => {
   });
 };
 
-// 테이블 조회 (retrieveTableInfo)
+// 테이블(테이블물리명) 조회 (retrieveTableInfo)
 export const useTableInfo = (schemaName: string, ifUpdate: string) => {
   return useQuery([`/batchdb/tables/${schemaName}?ifupdate=`], () => retrieveTableInfo(schemaName, ifUpdate), {
     enabled: false,

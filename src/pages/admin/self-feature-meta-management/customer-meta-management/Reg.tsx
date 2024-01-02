@@ -3,24 +3,19 @@ import HorizontalTable from '@/components/table/HorizontalTable';
 import { Select, SelectOption, TD, TH, TR, TextField, useToast, Stack, Modal, Button } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { customerMetaInfoColumn, customerMetaTableColumn, initTbCoMetaTblInfo } from './data';
-import DataGrid from '@/components/grid/DataGrid';
+import {  customerMetaTableColumn, initTbCoMetaTblInfo } from './data';
 import {
   useMetaTableDetail,
   useSchemaList,
   useTableColumns,
   useTableInfo,
 } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
-import DataGridMeta from '@/components/grid/DataGridMeta';
 import DataGridTblColumn from '@/components/grid/DataGridTblColumn';
-import { TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
 import { ModalType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
 import { useAppDispatch } from '@/hooks/useRedux';
 
 const CustomerMetaManagementReg = () => {
-  // 테이블 정보
-  const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<TbCoMetaTbInfo>(initTbCoMetaTblInfo);
   const [searchInfo, setSearchInfo] = useState<any>({
     metaTblPhysNm: '',
     dbNm: '',
@@ -31,7 +26,6 @@ const CustomerMetaManagementReg = () => {
     rtmTblYn: 'N',
   });
   const { toast } = useToast();
-  const [rows, setRows] = useState<any>([]);
   const [dbNames, setDbNames] = useState<any>([]);
   const [tablePhyList, setTablePhyList] = useState<Array<any>>([]);
   const [isOpen, setOpen] = useState(false);
@@ -39,27 +33,28 @@ const CustomerMetaManagementReg = () => {
 
   // 메타 테이블 컬럼 검색 조회
   const { data: response, isError, refetch } = useMetaTableDetail(dbNames);
-
-  //
+  // 스키마 조회(데이터베이스명)
   const { data: responseSchema, isError: isErrorSchema, refetch: refetchSchema } = useSchemaList();
-
-  const {
-    data: responseTblInfo,
-    isError: isErrorTblInfo,
-    refetch: refetchTblInfo,
-  } = useTableInfo(searchInfo.dbNm, 'Y');
-
+  // 테이블 조회(테이블물리명)
+  const {data: responseTblInfo,isError: isErrorTblInfo,refetch: refetchTblInfo,} = useTableInfo(searchInfo.dbNm, 'Y');
   // 메타 테이블 컬럼 조회
-  const {
-    data: responseTblColumn,
-    isError: isErrorTblColumn,
-    refetch: refetchTblColumn,
-  } = useTableColumns(searchInfo.dbNm, searchInfo.metaTblPhysNm);
-
+  const {data: responseTblColumn,isError: isErrorTblColumn,refetch: refetchTblColumn,} = useTableColumns(searchInfo.dbNm, searchInfo.metaTblPhysNm);
   // 메타 테이블 컬럼 리스트
   const [tblColumns, setTblColumns] = useState<Array<any>>([]);
 
+  // 테이블 컬럼 검색 콜백 조회
+  const metaDetail = useCallback(() => refetch(), response?.result);
+  // 테이블 리스트 콜백 조회
+  const tblList = useCallback(() => refetchTblInfo(), responseTblInfo?.result);
+  // 테이블 컬럼 콜백 조회 
   const tblLogicList = useCallback(() => refetchTblColumn(), responseTblColumn?.result);
+
+  // 검색 버튼 
+  const searchTblColumns = () => {
+    tblLogicList();
+    metaDetail();
+  };
+
   // 초기화 버튼
   const onClear = () => {
     setSearchInfo({
@@ -74,7 +69,7 @@ const CustomerMetaManagementReg = () => {
     });
   };
 
-  // select state 관리
+  /* select state 관리 */
   const onchangeSelectHandler = (
     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
     value: SelectValue<{}, false>,
@@ -114,17 +109,8 @@ const CustomerMetaManagementReg = () => {
     const { id, value } = e.target;
     setSearchInfo({ ...searchInfo, [id]: value });
   }
-  const metaDetail = useCallback(() => refetch(), response?.result);
-  const searchTblColumns = () => {
-    // refetchTblColumn();
-    // refetch();
-    tblLogicList();
-    metaDetail();
-  };
 
-  // 테이블 리스트 조회
-  const tblList = useCallback(() => refetchTblInfo(), responseTblInfo?.result);
-
+  // 데이터베이스명 변경 시 사용가능 테이블리스트 재조회
   useEffect(() => {
     if (searchInfo.dbNm !== (null || '')) {
       tblList();
@@ -173,19 +159,7 @@ const CustomerMetaManagementReg = () => {
     }
   }, [responseTblColumn?.result, isErrorTblColumn, toast]);
 
-  useEffect(() => {
-    if (isError || response?.successOrNot === 'N') {
-      toast({
-        type: 'Error',
-        content: '조회 중 에러가 발생했습니다.',
-      });
-    } else {
-      if (response?.result) {
-        // setRows(response?.result.tbCoMetaTblClmnInfoList);
-        // setTbCoMetaTbInfo(response?.result.tbCoMetaTbInfo);
-      }
-    }
-  }, [response, isError, toast]);
+
 
   return (
     <Stack direction="Vertical">
@@ -343,7 +317,6 @@ const CustomerMetaManagementReg = () => {
       </SearchForm>
       <DataGridTblColumn
         props={searchInfo}
-        list={tbCoMetaTbInfo}
         columns={customerMetaTableColumn}
         rows={tblColumns}
       ></DataGridTblColumn>

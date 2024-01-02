@@ -26,7 +26,6 @@ export interface VerticalTableProps {
   children?: ReactNode;
   onChange?: Function;
   props?: any;
-  list: RowsInfo;
 }
 // customerMeta 등록용 grid
 const VerticalTblColumn: React.FC<VerticalTableProps> = ({

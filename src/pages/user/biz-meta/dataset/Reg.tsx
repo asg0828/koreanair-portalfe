@@ -27,7 +27,7 @@ const initRows: DatasetColumnModel = {
   clFm: '',
 };
 
-export type fieldType = 'mcsKoNm' | 'mcsEnNm' | 'mcsDef' | 'srcClNm' | 'clFm';
+export type FieldType = 'mcsKoNm' | 'mcsEnNm' | 'mcsDef' | 'srcClNm' | 'clFm';
 
 const Reg = () => {
   const { t } = useTranslation();
@@ -71,7 +71,7 @@ const Reg = () => {
       colSpan: 2,
       maxLength: 100,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+      render: (rowIndex: number, fieldName: FieldType, maxLength?: number, require?: boolean) =>
         EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
@@ -80,7 +80,7 @@ const Reg = () => {
       colSpan: 2,
       maxLength: 100,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+      render: (rowIndex: number, fieldName: FieldType, maxLength?: number, require?: boolean) =>
         EditableColumnItem(rowIndex, fieldName, maxLength, require, {
           pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
           setValueAs: (value: string) => value.toUpperCase().trim(),
@@ -93,7 +93,7 @@ const Reg = () => {
       colSpan: 2,
       maxLength: 300,
       require: false,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+      render: (rowIndex: number, fieldName: FieldType, maxLength?: number, require?: boolean) =>
         EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
@@ -101,7 +101,7 @@ const Reg = () => {
       field: 'mcsDef',
       colSpan: 2.9,
       require: true,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+      render: (rowIndex: number, fieldName: FieldType, maxLength?: number, require?: boolean) =>
         EditableColumnItem(rowIndex, fieldName, maxLength, require),
     },
     {
@@ -109,14 +109,14 @@ const Reg = () => {
       field: 'clFm',
       colSpan: 1.1,
       require: false,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) =>
+      render: (rowIndex: number, fieldName: FieldType, maxLength?: number, require?: boolean) =>
         CalculationLogicItem(rowIndex, fieldName, maxLength, require),
     },
     {
       headerName: '',
       field: '',
       colSpan: 0.5,
-      render: (rowIndex: number, fieldName: fieldType, maxLength?: number) => {
+      render: (rowIndex: number, fieldName: FieldType, maxLength?: number) => {
         return (
           fields.length > 1 && (
             <Stack onClick={() => handleRemove(rowIndex)}>
@@ -131,7 +131,7 @@ const Reg = () => {
 
   const EditableColumnItem = (
     rowIndex: number,
-    fieldName: fieldType,
+    fieldName: FieldType,
     maxLength?: number,
     require?: boolean,
     option?: any
@@ -154,7 +154,7 @@ const Reg = () => {
     );
   };
 
-  const CalculationLogicItem = (rowIndex: number, fieldName: fieldType, maxLength?: number, require?: boolean) => {
+  const CalculationLogicItem = (rowIndex: number, fieldName: FieldType, maxLength?: number, require?: boolean) => {
     return (
       <Stack gap="SM" className="width-100" direction="Vertical">
         <Stack>
@@ -181,7 +181,7 @@ const Reg = () => {
     );
   };
 
-  const openCalculationLogicModal = (rowIndex: number, fieldName: fieldType) => {
+  const openCalculationLogicModal = (rowIndex: number, fieldName: FieldType) => {
     dispatch(
       openModal({
         type: ModalType.CALCULATION_LOGIC,

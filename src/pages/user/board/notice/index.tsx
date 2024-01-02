@@ -10,7 +10,7 @@ import { NoticeModel, NoticeParams } from '@/models/model/NoticeModel';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { selectContextPath } from '@/reducers/authSlice';
 import { getDateString } from '@/utils/DateUtil';
-import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
+import { Button, Select, SelectOption, Stack, TD, TH, TR, Tag, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -35,7 +35,26 @@ const List = () => {
 
   const columns: Array<ColumnsInfo> = [
     { headerName: 'No', field: 'rownum', colSpan: 0.5 },
-    { headerName: t('board:label.sj'), field: 'sj', colSpan: 7.5, align: 'left' },
+    {
+      headerName: t('board:label.sj'),
+      field: 'sj',
+      colSpan: 7.5,
+      align: 'left',
+      render: (rowIndex: number) => {
+        if (rows[rowIndex].importantYn === 'Y') {
+          return (
+            <Stack gap="MD">
+              <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">
+                {t('common.label.important')}
+              </Tag>
+              {rows[rowIndex].sj}
+            </Stack>
+          );
+        }
+
+        return rows[rowIndex].sj;
+      },
+    },
     { headerName: t('board:label.rgstDt'), field: 'rgstDt', colSpan: 1 },
     { headerName: t('board:label.viewCnt'), field: 'viewCnt', colSpan: 1 },
   ];
