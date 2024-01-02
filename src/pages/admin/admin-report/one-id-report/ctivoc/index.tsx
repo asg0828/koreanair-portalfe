@@ -10,13 +10,11 @@ import { RowsInfo } from '@/models/components/Table';
 
 export default function Ctivoc() {
   const today = new Date();
-  const endDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-  let startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
   const [searchInfo, setSearchInfo] = useState<ctiVocSearch>({
     criteria: 'daily',
     channel: 'CTI',
-    aggrStartDate: startDate,
-    aggrEndDate: endDate,
+    aggrStartDate: '',
+    aggrEndDate: '',
   });
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);

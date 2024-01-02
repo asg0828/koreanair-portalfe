@@ -10,15 +10,13 @@ import { useErrorLog } from '@/hooks/queries/useOneIdQueries';
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function OneIdErrorHistory() {
   const today = new Date();
-  const endDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-  let startDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate() - 7}`;
   const [searchInfo, setSearchInfo] = useState<errorSearch>({
     errorNm: '',
     detailErrorNm: '',
     oneidRegisChnlCd: '',
     oneidFinalChgRelateNo: '',
-    creationStartDate: startDate,
-    creationEndDate: endDate,
+    creationStartDate: '',
+    creationEndDate: '',
     uciId: '',
     pnrNumber: '',
   });
@@ -101,8 +99,8 @@ export default function OneIdErrorHistory() {
       -2
     )}`;
 
-    if (flag === 'thisWeek') {
-      startDay = new Date(today.setDate(today.getDate() - 7));
+    if (flag === 'today') {
+      startDate = endDate;
     } else if (flag === 'oneMonth') {
       startDay = new Date(today.setMonth(today.getMonth() - 1));
     } else if (flag === 'sixMonth') {
@@ -247,7 +245,7 @@ export default function OneIdErrorHistory() {
                   setSearchInfo({ ...searchInfo, creationEndDate: nextVal });
                 }}
               />
-              <Button onClick={() => duration('thisWeek')}>1주일</Button>
+              <Button onClick={() => duration('today')}>당일</Button>
               <Button onClick={() => duration('oneMonth')}>1개월</Button>
               <Button onClick={() => duration('sixMonth')}>6개월</Button>
               <Button onClick={() => duration('oneYear')}>1년</Button>
