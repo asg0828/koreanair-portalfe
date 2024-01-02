@@ -15,6 +15,8 @@ import {
 import AttrAccordionDrag from "./dragItem/AttrAccordionDrag";
 import FeatDragItem from "./dragItem/FeatDragItem";
 import FeatAccordionDrag from "./dragItem/FeatAccordionDrag";
+import { CommonCode } from "@/models/selfFeature/FeatureCommon";
+import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 
 export interface Props {
     attributes: Array<Attribute>
@@ -28,6 +30,8 @@ const DragList = ({
     behaviors
 }: Props) => {
 
+	const { data: cmmCodeCateRes } = useCommCodes(CommonCode.CATEGORY)
+	const [categoryOption, setCategoryOption] = useState<Array<any>>([])
     const [keyword, setKeyword] = useState<string>('')
     const [srchAttrRsltList, setSrchAttrRsltList] = useState<Array<Attribute>>([])
     const [srchFeatRsltList, setSrchFeatRsltList] = useState<Array<TbRsCustFeatRule>>([])
@@ -52,6 +56,24 @@ const DragList = ({
     useEffect(() => {
         setIsInitComponent(true)
     }, [])
+	// 카테고리 setting
+	useEffect(() => {
+		if (cmmCodeCateRes?.successOrNot === 'N') {
+            
+		} else {
+			if (cmmCodeCateRes?.result) {
+				setCategoryOption(() => {
+                    let rtn = [...cmmCodeCateRes?.result]
+                    rtn.sort((a, b) => {
+                        if (a.sortRank > b.sortRank) return 1
+                        if (a.sortRank < b.sortRank) return -1
+                        return 0
+                    })
+					return rtn
+				})
+			}
+		}
+	}, [cmmCodeCateRes])
 
     const distinctAttrList = (result: Array<AttributeAccordian>, arr: Array<Attribute>, tblNm: string) => {
         let pushItem: AttributeAccordian = { metaTblLogiNm: tblNm, attributes: arr.filter((item) => item.metaTblLogiNm === tblNm) }
@@ -59,7 +81,8 @@ const DragList = ({
         return arr.filter((item) => item.metaTblLogiNm !== tblNm)
     }
     const distinctFeatList = (result: Array<FeatAccordian>, arr: Array<TbRsCustFeatRule>, tblNm: string) => {
-        let pushItem: FeatAccordian = { metaTblLogiNm: arr[0].categoryNm, featureList: arr.filter((item) => item.category === tblNm) }
+        let tempfl = arr.filter((item) => item.category === tblNm)
+        let pushItem: FeatAccordian = { metaTblLogiNm: tempfl[0].categoryNm, featureList: tempfl }
         result.push(pushItem)
         return arr.filter((item) => item.category !== tblNm)
     }
@@ -83,7 +106,13 @@ const DragList = ({
 
         let featList: Array<TbRsCustFeatRule> = cloneDeep(featureRules)
         let tempFeatList: Array<FeatAccordian> = []
-        while (featList.length !== 0) featList = distinctFeatList(tempFeatList, featList, featList[0].category)
+        // while (featList.length !== 0) {
+        //     console.log(categoryOption)
+        categoryOption.map((category: any) => {
+            featList = distinctFeatList(tempFeatList, featList, category.cdv)
+            return category
+        })
+        //}
         setOriFeatAccordian(tempFeatList)
 
         setSrchFeatRsltList(cloneDeep(featureRules))
@@ -115,7 +144,13 @@ const DragList = ({
     useEffect(() => {
         let featList: Array<TbRsCustFeatRule> = cloneDeep(srchFeatRsltList)
         let tempFeatList: Array<FeatAccordian> = []
-        while (featList.length !== 0) featList = distinctFeatList(tempFeatList, featList, featList[0].category)
+        // while (featList.length !== 0) {
+        //     console.log(categoryOption)
+        categoryOption.map((category: any) => {
+            featList = distinctFeatList(tempFeatList, featList, category.cdv)
+            return category
+        })
+        //}
         setFeatAccordian(tempFeatList)
     }, [srchFeatRsltList])
 

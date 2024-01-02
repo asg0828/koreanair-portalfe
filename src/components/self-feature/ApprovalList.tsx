@@ -89,6 +89,11 @@ const ApprovalList = ({
                 <TR key={`row-${index}`}>
                 {Object.keys(columns).map((column, index2) => (
                     <TD
+                        style={{
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            overflowX: "hidden",
+                        }}
                         colSpan={columns[index2].colSpan ? columns[index2].colSpan : undefined}
                         key={`row-body-${index2}`}
                     >

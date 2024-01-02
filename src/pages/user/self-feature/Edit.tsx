@@ -1036,7 +1036,8 @@ const SelfFeatureEdit = () => {
 								type="Bubble"
 							/>
 							:
-							<div style={{ width: "100%", height: "100%" }}>수동 실행</div>}
+							"수동 실행"
+						}
 					</Button>
 					<FeatQueryRsltButton
                         isLoadingRunSchedule={runScheduleByManuallyLoading}

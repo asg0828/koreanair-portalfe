@@ -150,7 +150,7 @@ const FeatQueryRsltButton = ({
                         type="Bubble" 
                     /> 
                     : 
-                    <div style={{width: "100%", height: "100%"}}>샘플 확인</div>
+                    "샘플 확인"
                 }
             </Button>
             <Button 
@@ -172,7 +172,7 @@ const FeatQueryRsltButton = ({
                         type="Bubble" 
                     /> 
                     : 
-                    <div style={{width: "100%", height: "100%"}}>실행 내역</div>
+                    "실행 내역"
                 }
             </Button>
             <Button style={{width: "7%"}} size="LG" onClick={() => onClickFeatQueryRsltHandler(3)}>
