@@ -117,7 +117,7 @@ const DragList = ({
 
         setSrchFeatRsltList(cloneDeep(featureRules))
 
-        if (featureRules.length > 0) setDefaultFeat(["Feature 정보"])
+        if (featureRules.length > 0) setDefaultFeat(["SelfFeature 정보"])
         else setDefaultFeat([])
 
     }, [featureRules])
@@ -228,6 +228,36 @@ const DragList = ({
                     <span className="searchIcon"></span>
                 </Button>
             </Stack>
+            {/* Base Fact 정보 */}
+            <Accordion
+                align="Right"
+                size="MD"
+                type="multiple"
+                style={{ marginTop: "10px" }}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setDefaultBehv((prevState: Array<string>) => {
+                        if (prevState.length > 0) return []
+                        else return ["BaseFact 정보"]
+                    })
+                }}
+                value={defaultBehv}
+            >
+                <AccordionItem
+                    title='BaseFact 정보'
+                    value='BaseFact 정보'
+                >
+                    {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
+                        <BehvAccordionDrag
+                            key={behvIdx}
+                            isInitComponent={isInitComponent}
+                            oriBehavior={behaviors[behvIdx]}
+                            behavior={behavior}
+                        />
+                    ))}
+                </AccordionItem>
+            </Accordion>
+            {/* Base Fact 정보 */}
             {/* Fact 정보 */}
             <Accordion
                 align="Right"
@@ -261,7 +291,7 @@ const DragList = ({
                 </AccordionItem>
             </Accordion>
             {/* Fact 정보 */}
-            {/* Feature 정보 */}
+            {/* SelfFeature 정보 */}
             <Accordion
                 align="Right"
                 size="MD"
@@ -271,14 +301,14 @@ const DragList = ({
                     e.stopPropagation()
                     setDefaultFeat((prevState: Array<string>) => {
                         if (prevState.length > 0) return []
-                        else return ["Feature 정보"]
+                        else return ["SelfFeature 정보"]
                     })
                 }}
                 value={defaultFeat}
             >
                 <AccordionItem
-                    title='Feature 정보'
-                    value='Feature 정보'
+                    title='SelfFeature 정보'
+                    value='SelfFeature 정보'
                 >
                 {featAccordian.map((feature: FeatAccordian, featIdx: number) => {
                     let ori = oriFeatAccordian.find((item) => item.metaTblLogiNm === feature.metaTblLogiNm)
@@ -293,37 +323,7 @@ const DragList = ({
                 })}
                 </AccordionItem>
             </Accordion>
-            {/* Feature 정보 */}
-            {/* Base Fact 정보 */}
-            <Accordion
-                align="Right"
-                size="MD"
-                type="multiple"
-                style={{ marginTop: "10px" }}
-                onClick={(e) => {
-                    e.stopPropagation()
-                    setDefaultBehv((prevState: Array<string>) => {
-                        if (prevState.length > 0) return []
-                        else return ["BaseFact 정보"]
-                    })
-                }}
-                value={defaultBehv}
-            >
-                <AccordionItem
-                    title='BaseFact 정보'
-                    value='BaseFact 정보'
-                >
-                    {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
-                        <BehvAccordionDrag
-                            key={behvIdx}
-                            isInitComponent={isInitComponent}
-                            oriBehavior={behaviors[behvIdx]}
-                            behavior={behavior}
-                        />
-                    ))}
-                </AccordionItem>
-            </Accordion>
-            {/* Base Fact 정보 */}
+            {/* SelfFeature 정보 */}
         </Page>
     )
 }

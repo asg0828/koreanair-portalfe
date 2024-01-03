@@ -1,4 +1,5 @@
 export enum PortalApiURL {
+  HOME = '/main/v1',
   LOG_IN = '/session/v1/login',
   LOG_OUT = '/session/v1/logout',
   USER_MGMT = '/user-mgmt/v1/users',

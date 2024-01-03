@@ -140,10 +140,10 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                     <Typography variant="body1" className="answer"></Typography>
                     <Stack direction="Vertical" className="width-100">
                       <TinyEditor content={row.answ} disabled />
-                      <Stack gap="MD" direction="Vertical">
+                      <Stack gap="MD" direction="Vertical" className="attach_file_list_wrap">
                         {row.fileLinks?.length > 0 && (
-                          <Stack direction="Vertical">
-                            <Typography variant="body2">파일 링크</Typography>
+                          <Stack direction="Vertical" className="attach_file_list_item">
+                            <Typography variant="body2" className="attach_file_title">파일 링크</Typography>
                             <ul className="attachFileList">
                               {row.fileLinks.map((fileLink: string) => (
                                 <li>
@@ -154,8 +154,8 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                           </Stack>
                         )}
                         {row.fileList?.length > 0 && (
-                          <Stack direction="Vertical">
-                            <Typography variant="body2">첨부파일</Typography>
+                          <Stack direction="Vertical" className="attach_file_list_item">
+                            <Typography variant="body2" className="attach_file_title">첨부파일</Typography>
                             <ul className="attachFileList">
                               {row.fileList.map((file: FileModel) => (
                                 <li>

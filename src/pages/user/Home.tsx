@@ -2,12 +2,14 @@ import '@/assets/styles/Home.scss';
 import NoData from '@/components/emptyState/NoData';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import { useFeatureList, usePopularFeatureList } from '@/hooks/queries/useFeatureQueries';
+import { useBizMeta, useFeatureMyDept } from '@/hooks/queries/useHomeQueries';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import { useQnaList } from '@/hooks/queries/useQnaQueries';
 import { useAppSelector } from '@/hooks/useRedux';
 import { GroupCodeType, MainLink, ValidType } from '@/models/common/Constants';
 import { FaqModel } from '@/models/model/FaqModel';
 import { FeatureModel } from '@/models/model/FeatureModel';
+import { BizMetaModel, FeatureMyDeptModel } from '@/models/model/HomeModel';
 import { NoticeModel } from '@/models/model/NoticeModel';
 import { initPage } from '@/models/model/PageModel';
 import { QnaModel } from '@/models/model/QnaModel';
@@ -30,6 +32,10 @@ const Home = () => {
   const [qnaList, setQnaList] = useState<Array<QnaModel>>([]);
   const [featureList, setFeatureList] = useState<Array<FeatureModel>>([]);
   const [popularFeatureList, setPopularFeatureList] = useState<Array<FeatureModel>>([]);
+  const [bizMeta, setBizMeta] = useState<BizMetaModel>();
+  const [featuresMydept, setFeaturesMydept] = useState<FeatureMyDeptModel>();
+  const { data: bizResponse, isError: bizIsError } = useBizMeta();
+  const { data: featureMyDeptResponse, isError: featureMyDeptIsError } = useFeatureMyDept(sessionInfo.userId);
   const { data: nResponse, isError: nIsError } = useNoticeList(
     initNoticeParams,
     { ...initPage, pageSize: 5 },
@@ -51,6 +57,32 @@ const Home = () => {
     { suspense: false }
   );
   const { data: pfResponse, isError: pfIsError } = usePopularFeatureList({ suspense: false });
+
+  useEffect(() => {
+    if (bizIsError || bizResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('home:toast.error.bizMeta'),
+      });
+    } else {
+      if (bizResponse?.data) {
+        setBizMeta(bizResponse.data);
+      }
+    }
+  }, [bizResponse, bizIsError, toast]);
+
+  useEffect(() => {
+    if (featureMyDeptIsError || featureMyDeptResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('home:toast.error.featureMyDept'),
+      });
+    } else {
+      if (featureMyDeptResponse?.data) {
+        setFeaturesMydept(featureMyDeptResponse.data);
+      }
+    }
+  }, [featureMyDeptResponse, featureMyDeptIsError, toast]);
 
   useEffect(() => {
     if (nIsError || nResponse?.successOrNot === 'N') {
@@ -150,7 +182,7 @@ const Home = () => {
                 <div className="home_icon_01"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number n1">126</span>
+                <span className="number n1">{bizMeta?.featureCount}</span>
                 <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>
@@ -161,18 +193,18 @@ const Home = () => {
                 <div className="home_icon_02"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number n2">126</span>
+                <span className="number n2">{bizMeta?.tableSpecCount}</span>
                 <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>
 
-            <Link to="/" className="box5">
+            <Link to="." className="box5">
               <Typography variant="h3">{t('home:label.averageDailyUsers')}</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_03"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number n3">14,226</span>
+                <span className="number n3">{bizMeta?.avgUserCount}</span>
                 <span className="count">{t('common.label.countingUnit.person')}</span>
               </Stack>
             </Link>
@@ -180,16 +212,14 @@ const Home = () => {
         </Stack>
         <Stack direction={'Vertical'} className="box2 shadowBox1">
           <div>
-            {sessionInfo.deptNm && (
-              <Tag
-                variety="01"
-                size="LG"
-                shape="Round"
-                style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
-              >
-                {sessionInfo.deptNm}
-              </Tag>
-            )}
+            <Tag
+              variety="01"
+              size="LG"
+              shape="Round"
+              style={{ display: 'inline-block', width: 'auto', lineHeight: '1.75rem' }}
+            >
+              {sessionInfo.deptNm || t('common.label.notFoundDept')}
+            </Tag>
           </div>
           <Typography variant="h2" style={{ lineHeight: '50px', marginBottom: '12px' }}>
             {t('home:label.myDepartment')}
@@ -198,7 +228,7 @@ const Home = () => {
             <Typography variant="h3">{t('home:label.applyRegistFeature')}</Typography>
             <span className="smallBox_title"></span>
             <Stack justifyContent="End" alignItems="Center">
-              <span className="number">226</span>
+              <span className="number">{featuresMydept?.featureDeptCount}</span>
               <span className="count">{t('common.label.countingUnit.thing')}</span>
             </Stack>
           </Link>
@@ -206,7 +236,7 @@ const Home = () => {
             <Link to="/feature/interest" className="box6 leftIconBox n2">
               <Typography variant="h3">{t('home:label.interestFeature')}</Typography>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number">55</span>
+                <span className="number">{featuresMydept?.featureInterestDeptCount}</span>
                 <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>

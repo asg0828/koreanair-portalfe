@@ -2,17 +2,21 @@ import '@/assets/styles/Home.scss';
 import NoData from '@/components/emptyState/NoData';
 import { useFaqList } from '@/hooks/queries/useFaqQueries';
 import { useFeatureList, usePopularFeatureList } from '@/hooks/queries/useFeatureQueries';
+import { useBizMeta, useLoginInfo, useLoginUserDept } from '@/hooks/queries/useHomeQueries';
 import { useNoticeList } from '@/hooks/queries/useNoticeQueries';
 import { useQnaList } from '@/hooks/queries/useQnaQueries';
+import { useAppSelector } from '@/hooks/useRedux';
 import { AdminMainLink, GroupCodeType, ValidType } from '@/models/common/Constants';
 import { FaqModel } from '@/models/model/FaqModel';
 import { FeatureModel } from '@/models/model/FeatureModel';
+import { BizMetaModel, LoginInfoModel, LoginUserDeptModel } from '@/models/model/HomeModel';
 import { NoticeModel } from '@/models/model/NoticeModel';
 import { initPage } from '@/models/model/PageModel';
 import { QnaModel } from '@/models/model/QnaModel';
 import { initFeatureParams } from '@/pages/user/biz-meta/feature';
 import { initFaqParams } from '@/pages/user/board/faq';
 import { initNoticeParams } from '@/pages/user/board/notice';
+import { selectSessionInfo } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { Stack, Tag, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
@@ -22,11 +26,18 @@ import { Link } from 'react-router-dom';
 const AdminHome = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
+  const sessionInfo = useAppSelector(selectSessionInfo());
   const [noticeList, setNoticeList] = useState<Array<NoticeModel>>([]);
   const [faqList, setFaqList] = useState<Array<FaqModel>>([]);
   const [qnaList, setQnaList] = useState<Array<QnaModel>>([]);
   const [featureList, setFeatureList] = useState<Array<FeatureModel>>([]);
   const [popularFeatureList, setPopularFeatureList] = useState<Array<FeatureModel>>([]);
+  const [loginInfo, setLoginInfo] = useState<LoginInfoModel>();
+  const [loginUserDept, setLoginUserDept] = useState<Array<LoginUserDeptModel>>();
+  const [bizMeta, setBizMeta] = useState<BizMetaModel>();
+  const { data: loginInfoResponse, isError: loginInfoIsError } = useLoginInfo(sessionInfo.userId);
+  const { data: loginUserDeptResponse, isError: loginUserDeptIsError } = useLoginUserDept();
+  const { data: bizResponse, isError: bizIsError } = useBizMeta();
   const { data: nResponse, isError: nIsError } = useNoticeList(
     initNoticeParams,
     { ...initPage, pageSize: 5 },
@@ -48,6 +59,45 @@ const AdminHome = () => {
     { suspense: false }
   );
   const { data: pfResponse, isError: pfIsError } = usePopularFeatureList({ suspense: false });
+
+  useEffect(() => {
+    if (loginInfoIsError || loginInfoResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('home:toast.error.loginInfo'),
+      });
+    } else {
+      if (loginInfoResponse?.data) {
+        setLoginInfo(loginInfoResponse.data);
+      }
+    }
+  }, [loginInfoResponse, loginInfoIsError, toast]);
+
+  useEffect(() => {
+    if (loginUserDeptIsError || loginUserDeptResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('home:toast.error.loginUserDept'),
+      });
+    } else {
+      if (loginUserDeptResponse?.data) {
+        setLoginUserDept(loginUserDeptResponse.data.slice(0, 4));
+      }
+    }
+  }, [loginUserDeptResponse, loginUserDeptIsError, toast]);
+
+  useEffect(() => {
+    if (bizIsError || bizResponse?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('home:toast.error.bizMeta'),
+      });
+    } else {
+      if (bizResponse?.data) {
+        setBizMeta(bizResponse.data);
+      }
+    }
+  }, [bizResponse, bizIsError, toast]);
 
   useEffect(() => {
     if (nIsError || nResponse?.successOrNot === 'N') {
@@ -133,13 +183,13 @@ const AdminHome = () => {
               <li>
                 <dl>
                   <dt>{t('home:label.loginTime')}</dt>
-                  <dd>2023-10-27 11:23</dd>
+                  <dd>{loginInfo?.logDt}</dd>
                 </dl>
               </li>
               <li>
                 <dl>
                   <dt>{t('home:label.ipAddress')}</dt>
-                  <dd>10.111.48.144</dd>
+                  <dd>{loginInfo?.clientIp}</dd>
                 </dl>
               </li>
             </ul>
@@ -149,40 +199,21 @@ const AdminHome = () => {
               {t('home:label.usersByDepartment')}{' '}
               <span style={{ fontSize: '12px', color: '#333', fontWeight: 'normal' }}>{t('home:label.oneWeek')}</span>
             </Typography>
-            <ol>
-              <li className="item01">
-                <dl>
-                  <dt>여객마케팅부</dt>
-                  <dd>
-                    5,542<span>명</span>
-                  </dd>
-                </dl>
-              </li>
-              <li className="item02">
-                <dl>
-                  <dt>고객서비스부</dt>
-                  <dd>
-                    3,300<span>명</span>
-                  </dd>
-                </dl>
-              </li>
-              <li className="item03">
-                <dl>
-                  <dt>고객승무본부</dt>
-                  <dd>
-                    1,600<span>명</span>
-                  </dd>
-                </dl>
-              </li>
-              <li className="item04">
-                <dl>
-                  <dt>기내식사업본부</dt>
-                  <dd>
-                    470<span>명</span>
-                  </dd>
-                </dl>
-              </li>
-            </ol>
+            {loginUserDept && (
+              <ol>
+                {loginUserDept.map((item) => (
+                  <li className={`item0${item.rank}`}>
+                    <dl>
+                      <dt>{item.deptNm || t('common.label.notFoundDept')}</dt>
+                      <dd>
+                        {item.loginCount}
+                        <span>{t('common.label.countingUnit.person')}</span>
+                      </dd>
+                    </dl>
+                  </li>
+                ))}
+              </ol>
+            )}
           </Stack>
         </Stack>
         <Stack direction="Vertical" className="box1 shadowBox1">
@@ -208,7 +239,7 @@ const AdminHome = () => {
                 <div className="home_icon_01"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number n1">126</span>
+                <span className="number n1">{bizMeta?.featureCount}</span>
                 <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>
@@ -219,18 +250,18 @@ const AdminHome = () => {
                 <div className="home_icon_02"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number n2">126</span>
+                <span className="number n2">{bizMeta?.tableSpecCount}</span>
                 <span className="count">{t('common.label.countingUnit.thing')}</span>
               </Stack>
             </Link>
 
-            <Link to="/" className="box5">
+            <Link to="." className="box5">
               <Typography variant="h3">{t('home:label.averageDailyUsers')}</Typography>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_03"></div>
               </Stack>
               <Stack justifyContent="End" alignItems="Center">
-                <span className="number n3">14,226</span>
+                <span className="number n3">{bizMeta?.avgUserCount}</span>
                 <span className="count">{t('common.label.countingUnit.person')}</span>
               </Stack>
             </Link>
@@ -251,7 +282,9 @@ const AdminHome = () => {
             ) : (
               noticeList.map((item) => (
                 <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">{t('common.label.important')}</Tag>
+                  <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">
+                    {t('common.label.important')}
+                  </Tag>
                   <Link className="ellipsis1" to={`${AdminMainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
                     {item.sj}
                   </Link>
