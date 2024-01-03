@@ -19,6 +19,7 @@ import {
   emailData,
   snsData,
   skyPassList,
+  initProfile,
 } from '../dashboard/data';
 import {
   FamilyMember,
@@ -36,6 +37,7 @@ import {
   Sms,
   Sns,
   Email,
+  ProfileList,
 } from '@/models/model/CustomerInfoModel';
 import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
@@ -49,7 +51,8 @@ export default function List() {
   const batchDate = `${yesterday.getFullYear()}-${(`0` + (yesterday.getMonth() + 1)).slice(-2)}-${(
     `0` + yesterday.getDate()
   ).slice(-2)}`;
-  const [profile, setProfile] = useState<Profile>();
+  const [profile, setProfile] = useState<Profile>(initProfile);
+  const [profileList, setProfileList] = useState<Array<ProfileList>>([]);
   const [skypass, setSkypass] = useState<Array<Skypass>>();
   const [family, setFamily] = useState<FamilyMember>();
   const [wallet, setWallet] = useState<Wallet>();
@@ -134,44 +137,8 @@ export default function List() {
     // };
 
     // if (validation()) return;
-    // if (searchInfo.mobilePhoneNumber === 'S199206239090026' || searchInfo.skypassMemberNumber === '112423935550') {
-    //   setProfile(profileData[0]);
-    //   setSkypass(skypassData1);
-    //   setFamily(familyMemberData[0]);
-    //   setSelectedSkypass(skypassData1[0]);
-    //   setWallet(walletData);
-    //   setPreference(preferenceData[0]);
-    //   setCnt(cntData[0]);
-    //   setPnr(pnrData);
-    //   setEtkt(eTktData);
-    //   setBoardingLists(boardingListData);
-    //   setVocs(vocData);
-    //   setInternets(internetData);
-    //   setCalls(callData);
-    //   setSmss(smsData);
-    //   setEmails(emailData);
-    //   setSnss(snsData);
-    //   setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    // } else if (searchInfo.mobilePhoneNumber === 'S198701167474407' || searchInfo.skypassMemberNumber === '112315856573') {
-    //   setProfile(profileData[1]);
-    //   setSkypass(skypassData2);
-    //   setFamily(familyMemberData[3]);
-    //   setSelectedSkypass(skypassData2[0]);
-    //   setWallet(walletData);
-    //   setPreference(preferenceData[1]);
-    //   setCnt(cntData[1]);
-    //   setPnr(pnrData);
-    //   setEtkt(eTktData);
-    //   setBoardingLists(boardingListData);
-    //   setVocs(vocData);
-    //   setInternets(internetData);
-    //   setCalls(callData);
-    //   setSmss(smsData);
-    //   setEmails(emailData);
-    //   setSnss(snsData);
-    //   setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
-    // }
-    // refetch();
+ 
+    //  refetch();
     refetchProfile();
   }, [refetchProfile, searchInfo, validation]);
 
@@ -268,11 +235,27 @@ export default function List() {
       });
     } else {
       if (responseProfile) {
-        setProfile(responseProfile?.data);
+        if(searchInfo.searchType === ('A' || 'B') && responseProfile?.data.length > 1){ 
+          dispatch(setCLevelModal(!cLevelModal));
+          setProfileList(responseProfile?.data)
+        } else{ 
+          setProfile(responseProfile?.data[0]);
+          setProfileList([])
+        }
       }
     }
   }, [responseProfile, isErrorProfile]);
 
+  const searchProfile = (skypassMemberNumber: string) => {
+    setSearchInfo({...searchInfo,searchType: 'D', skypassMemberNumber: skypassMemberNumber})
+    dispatch(setCLevelModal(false));
+  }
+
+  useEffect(() => {
+    if(profileList.length > 1 && searchInfo.searchType === 'D'){
+      refetchProfile()
+    }
+  }, [ searchInfo, profileList])
   return (
     <Stack
       onClick={() => {
@@ -399,7 +382,7 @@ export default function List() {
             </h5>
             <div className="dashBoardBox n1">
               <div className="name">
-                {/* {profile?.name} */}
+                  {profile?.korLname}{profile?.korFname}
                 <span className="en">
                   {profile?.engLname}
                   &nbsp;
@@ -1244,22 +1227,23 @@ export default function List() {
                               </tr>
                             </thead>
                             <tbody>
-                              {skyPassList.map((list) => (
-                                <tr>
+                              {profileList?.map((list: ProfileList) => (
+                                <tr style={{cursor: 'pointer'}} onClick={()=>searchProfile(list.skypassMemberNumber)}>
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.korName.toLowerCase().includes(searchText.toLowerCase())
-                                        ? searchHighlight(list.korName, searchText)
-                                        : list.korName}
+                                      {searchText && (list.korLname+list.korFname).toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight((list.korLname+list.korFname), searchText)
+                                        : (list.korLname+list.korFname)}
+                       
                                     </div>
                                   </td>
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.engName.toLowerCase().includes(searchText.toLowerCase())
-                                        ? searchHighlight(list.engName, searchText)
-                                        : list.engName}
+                                      {searchText && (list.engLname + list.engFname).toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight((list.engLname + list.engFname), searchText)
+                                        : (list.engLname + list.engFname)}
                                     </div>
                                   </td>
                                   <td>
@@ -1273,17 +1257,17 @@ export default function List() {
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.birthV.toLowerCase().includes(searchText.toLowerCase())
-                                        ? searchHighlight(list.birthV, searchText)
-                                        : list.birthV}
+                                      {/* {searchText && list..toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight(list.birthDatev, searchText)
+                                        : list.birthDatev} */}
                                     </div>
                                   </td>
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.skypassNo
-                                        ? searchHighlight(list.skypassNo, searchText)
-                                        : list.skypassNo}
+                                      {searchText && list.skypassMemberNumber
+                                        ? searchHighlight(list.skypassMemberNumber, searchText)
+                                        : list.skypassMemberNumber}
                                     </div>
                                   </td>
                                 </tr>

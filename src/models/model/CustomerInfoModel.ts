@@ -49,6 +49,16 @@ export interface Profile {
   skypassInfos : SkypassInfo[]
 }
 
+export interface ProfileList{
+  korFname: string;
+  korLname: string;
+  engFname: string;
+  engLname: string;
+  membershipLevel: string;
+  oneidNo: string;
+  sexCode: string;
+  skypassMemberNumber :string;
+}
 export interface SkypassInfo {
   oneidNo: string;
   skypassMemberNumber: string
