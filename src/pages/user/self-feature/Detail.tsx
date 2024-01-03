@@ -382,15 +382,20 @@ const SelfFeatureDetail = () => {
 			if (btnClickType === "reqInsert") {
 				// 승인 요청
 				insertSubmissionRequest()
+				setIsOpenConfirmModal(false)
 			} else if (btnClickType === "cancel") {
 				// 승인 요청 취소
 				cancelRequestSubmission()
+				setIsOpenConfirmModal(false)
 			} else if (btnClickType === "delete") {
 				// 삭제 처리
 				deleteCustFeatRule()
+				setIsOpenConfirmModal(false)
 			}
 		}
-		setIsOpenConfirmModal(false)
+		if (modalType === ModalType.ALERT) {
+			setIsOpenConfirmModal(false)
+		}
 	}
 	const onCancel = () => {
 		setIsOpenConfirmModal(false)
@@ -718,30 +723,6 @@ const SelfFeatureDetail = () => {
 			}
 		}
 	}, [submissionInfoRes, submissionInfoErr, toast])
-	// 결재선 이름 setting
-	// useEffect(() => {
-	// 	if (isEmpty(aprvType1)) return
-
-	// 	setSfSubmissionApprovalList((prevState: Array<SfSubmissionApproval>) => {
-	// 		let rtn = cloneDeep(prevState)
-	// 		rtn = rtn.map((approval: SfSubmissionApproval) => {
-	// 			if (approval.approvalSequence === 1) {
-	// 				let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-	// 				approval.approverNm = type1 ? type1.userNm : ""
-	// 			}
-	// 			if (approval.approvalSequence === 2) {
-	// 				let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-	// 				approval.approverNm = type2 ? type2.userNm : ""
-	// 			}
-	// 			if (approval.approvalSequence === 3) {
-	// 				let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === approval.approver)
-	// 				approval.approverNm = type3 ? type3.userNm : ""
-	// 			}
-	// 			return approval
-	// 		})
-	// 		return rtn
-	// 	})
-	// }, [aprvType1, aprvType2, aprvType3])
 	// 승인요청 API 호출
 	const insertSubmissionRequest = () => {
 		if (!sessionInfo.userEmail) {
@@ -753,7 +734,22 @@ const SelfFeatureDetail = () => {
 			return
 		}
 		setUserEmail(sessionInfo.userEmail)
-		insrtSubReqMutate()
+		// Rule-Design의 경우만 수동실행 1회 validation check
+		if (
+			location.state.sqlDirectInputYn === "N"
+			&& featureInfo.tbRsCustFeatRule.batManualExecTestCnt < 1
+		) {
+			toast({
+				type: ValidType.ERROR,
+				content: '수동실행을 최소 1번 이상 수행 해주세요.',
+			})
+			// setModalType(ModalType.ALERT)
+			// setConfirmModalTit("승인요청")
+			// setConfirmModalCont("수동실행을 최소 1번 이상 수행 해주세요.")
+			// setIsOpenConfirmModal(true)
+		} else {
+			insrtSubReqMutate()
+		}
 	}
 	// 승인요청 API Callback
 	useEffect(() => {
