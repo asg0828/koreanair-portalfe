@@ -420,6 +420,9 @@
       p:first-child {
         display: block;
       }
+      p * {
+        display: none;
+      }
     }
     a::before{
       content: "Q";
