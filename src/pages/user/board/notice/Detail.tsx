@@ -13,8 +13,9 @@ import { PageModel } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
+import { openPopup } from '@/utils/FuncUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
-import { Button, Link, Stack, TD, TH, TR, Typography, useToast, Tag } from '@components/ui';
+import { Button, Link, Stack, TD, TH, TR, Tag, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -134,12 +135,33 @@ const Detail = () => {
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
-              <Typography variant="h3"><Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">{t('common.label.important')}</Tag>{noticeModel?.sj}</Typography>
+              <Typography variant="h3">
+                {noticeModel?.importantYn === 'Y' && (
+                  <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">
+                    {t('common.label.important')}
+                  </Tag>
+                )}
+                {noticeModel?.sj}
+              </Typography>
             </TH>
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
               <TinyEditor content={noticeModel?.cn} disabled />
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              {t('board:label.fileLink')}
+            </TH>
+            <TD colSpan={5}>
+              <ul className="attachFileList">
+                {noticeModel?.fileLinks.map((fileLink: string) => (
+                  <li>
+                    <Link linkType="External" children={fileLink} onClick={() => openPopup(fileLink)} />
+                  </li>
+                ))}
+              </ul>
             </TD>
           </TR>
           <TR>

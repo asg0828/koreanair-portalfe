@@ -292,12 +292,12 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
         <TD
           onClick={() => handleClick(tbCoMetaTblClmnInfo, rowIndex)}
           colSpan={columns[6].colSpan}
-          key={`td-metaTblDesc-${rowIndex}`}
+          key={`td-metaTblClmnDesc-${rowIndex}`}
         >
           <TextField
-            key={`textField-metaTblDesc-${rowIndex}`}
-            onChange={(e) => onChangeHandler(e, 'metaTblDesc')}
-            value={tbCoMetaTblClmnInfo.metaTblDesc}
+            key={`textField-metaTblClmnDesc-${rowIndex}`}
+            onChange={(e) => onChangeHandler(e, 'metaTblClmnDesc')}
+            value={tbCoMetaTblClmnInfo.metaTblClmnDesc}
           />
         </TD>
 

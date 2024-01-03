@@ -10,7 +10,6 @@ import './DataGrid.scss';
 export interface DatagridProps extends VerticalTableProps, PageProps {
   buttonChildren?: ReactNode;
   props: any;
-  list: RowsInfo;
 }
 
 const DataGridTblColumn: React.FC<DatagridProps> = ({
@@ -22,7 +21,6 @@ const DataGridTblColumn: React.FC<DatagridProps> = ({
   onChange,
   rowSelection,
   props,
-  list,
 }) => {
   const { t } = useTranslation();
 
@@ -38,7 +36,6 @@ const DataGridTblColumn: React.FC<DatagridProps> = ({
       <VerticalTblColumn
         columns={columns}
         props={props}
-        list={list}
         rows={rows}
         enableSort={enableSort}
         clickable={clickable}

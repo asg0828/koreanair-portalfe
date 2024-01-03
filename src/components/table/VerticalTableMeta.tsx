@@ -119,42 +119,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     );
   };
 
-  // setTbCoMetaTblClmnInfoListPost(() => {
-  //   const updatedRows = tbCoMetaTblClmnInfoList.map((row) => {
-  //     const { isNullable, remarks, dataType, ...rest } = row;
 
-  //     return {
-  //       baseTimeYn: rest.baseTimeYn === undefined ? 'N' : rest.baseTimeYn,
-  //       chgDtpCd: rest.chgDtpCd,
-  //       clmnUseYn: rest.clmnUseYn === undefined ? 'N' : rest.clmnUseYn,
-  //       dataFormat: rest.dataFormat,
-  //       dtpCd: rest.dtpCd,
-  //       metaTblClmnLogiNm: rest.metaTblClmnLogiNm,
-  //       metaTblClmnPhysNm: rest.metaTblClmnPhysNm,
-  //       metaTblClmnDesc: rest.metaTblClmnDesc,
-  //       pkYn: rest.pkYn === undefined ? 'N' : rest.pkYn,
-  //     };
-  //   });
-  //   return updatedRows;
-  // });
-
-  // setTbCoMetaTbInfoPost(() => {
-  //   const {
-  //     dataClaCd,
-  //     dataSrcDvCd,
-  //     frstRegDttm,
-  //     frstRegUserId,
-  //     keepCylcCd,
-  //     lastUpdDttm,
-  //     lastUpdUserId,
-  //     metaTblId,
-  //     ...rest
-  //   } = tbCoMetaTbInfo;
-
-  //   return {
-  //     ...rest,
-  //   };
-  // });
 
   // 목록 버튼
   const goToList = () => {
@@ -199,7 +164,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       metaTblClmnLogiNm: rest.metaTblClmnLogiNm,
       metaTblClmnPhysNm: rest.metaTblClmnPhysNm,
       pkYn: rest.pkYn === null ? 'N' : rest.pkYn,
-      metaTblClmnDesc: rest.metaTblDesc,
+      metaTblClmnDesc: rest.metaTblClmnDesc,
       chgDtpCd: rest.chgDtpCd,
       dataFormat: rest.dataFormat,
     };

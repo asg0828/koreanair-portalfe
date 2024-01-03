@@ -82,8 +82,10 @@ const DragList = ({
     }
     const distinctFeatList = (result: Array<FeatAccordian>, arr: Array<TbRsCustFeatRule>, tblNm: string) => {
         let tempfl = arr.filter((item) => item.category === tblNm)
-        let pushItem: FeatAccordian = { metaTblLogiNm: tempfl[0].categoryNm, featureList: tempfl }
-        result.push(pushItem)
+        if (tempfl.length > 0) {
+            let pushItem: FeatAccordian = { metaTblLogiNm: tempfl[0].categoryNm, featureList: tempfl }
+            result.push(pushItem)
+        }
         return arr.filter((item) => item.category !== tblNm)
     }
     useEffect(() => {

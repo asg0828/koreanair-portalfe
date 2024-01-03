@@ -21,7 +21,8 @@
     "viewCnt": "조회수",
     "comment": "Comment",
     "notice": "공지사항",
-    "noView": "오늘 하루 보지 않음"
+    "noView": "오늘 하루 보지 않음",
+    "fileLink": "파일 링크"
   },
   "modal": {
     "message": {
@@ -33,6 +34,11 @@
       "createAnswer": "답글이 등록되었습니다.",
       "updateAnswer": "답글이 수정되었습니다.",
       "deleteAnswer": "답글이 삭제되었습니다."
+    },
+    "info": {
+      "fileLinkEmpty": "URL을 입력해주세요.",
+      "notCorrect": "올바른 URL이 아닙니다.",
+      "fileLink": "이미 추가된 파일 링크입니다."
     },
     "error": {
       "createAnswer": "답글 등록 중 에러가 발생했습니다.",

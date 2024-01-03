@@ -29,9 +29,15 @@ export default function DataConversion() {
     if (Object.values({ ...searchInfo }).every((value) => value === '')) {
       setOpen(true);
     } else {
-      refetch1();
+      if(searchInfo.inptEmail === '' && searchInfo.inptPhone !== '') {setSearchInfo({...searchInfo, inptEmail: ' '})
+    } else if (searchInfo.inptPhone === '' && searchInfo.inptEmail !== ''){ setSearchInfo({...searchInfo, inptPhone: ' '})}
+      searchFetch()
     }
   };
+
+  const searchFetch = useCallback(() => {
+    refetch1();
+  }, [searchInfo])
 
   // refetch2
   const handleSearch2 = () => {
@@ -110,6 +116,7 @@ export default function DataConversion() {
                         onChange={onSearchChangeHandler}
                         size="LG"
                         style={{ marginBottom: '2px' }}
+
                       />
 
                       <TextField
@@ -117,6 +124,7 @@ export default function DataConversion() {
                         placeholder="검색어를 입력하세요."
                         onChange={onSearchChangeHandler}
                         size="LG"
+       
                       />
                     </div>
                   </Stack>
