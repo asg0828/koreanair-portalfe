@@ -8,6 +8,7 @@ import { RowsInfo } from '@/models/components/Table';
 import { FileModel } from '@/models/model/FileModel';
 import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
+import { openPopup } from '@/utils/FuncUtil';
 import {
   Accordion,
   AccordionItem,
@@ -137,20 +138,41 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                   </Stack>
                   <Stack className="width-100">
                     <Typography variant="body1" className="answer"></Typography>
-                    <TinyEditor content={row.answ} disabled />
-                  </Stack>
-                  <ul className="attachFileList">
-                    {row.fileList?.map((file: FileModel) => (
-                      <li>
-                        <Link onClick={() => handleFileDownload(file.fileId, file.fileNm)}>
-                          <Stack>
-                            <AttachFileIcon />
-                            {`${file.fileNm} (${file.fileSizeNm})`}
+                    <Stack direction="Vertical" className="width-100">
+                      <TinyEditor content={row.answ} disabled />
+                      <Stack gap="MD" direction="Vertical">
+                        {row.fileLinks?.length > 0 && (
+                          <Stack direction="Vertical">
+                            <Typography variant="body2">파일 링크</Typography>
+                            <ul className="attachFileList">
+                              {row.fileLinks.map((fileLink: string) => (
+                                <li>
+                                  <Link linkType="External" children={fileLink} onClick={() => openPopup(fileLink)} />
+                                </li>
+                              ))}
+                            </ul>
                           </Stack>
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
+                        )}
+                        {row.fileList?.length > 0 && (
+                          <Stack direction="Vertical">
+                            <Typography variant="body2">첨부파일</Typography>
+                            <ul className="attachFileList">
+                              {row.fileList.map((file: FileModel) => (
+                                <li>
+                                  <Link onClick={() => handleFileDownload(file.fileId, file.fileNm)}>
+                                    <Stack>
+                                      <AttachFileIcon />
+                                      {`${file.fileNm} (${file.fileSizeNm})`}
+                                    </Stack>
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </Stack>
+                        )}
+                      </Stack>
+                    </Stack>
+                  </Stack>
                 </AccordionItem>
               </div>
             ))

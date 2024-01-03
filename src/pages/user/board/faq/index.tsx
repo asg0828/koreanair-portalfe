@@ -39,7 +39,7 @@ const List = () => {
   const [dFaqId, setDFaqId] = useState<string>('');
   const { data: response, isSuccess, isError, refetch } = useFaqList(params, page);
   const { data: gResponse, isSuccess: gIsSuccess, isError: gIsError, refetch: gRefetch } = useFaqById(faqId);
-  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(faqId);
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(dFaqId);
 
   const searchInfoList = [
     { key: 'qstn', value: t('board:label.sj') },
@@ -51,6 +51,16 @@ const List = () => {
       state: {
         params: params,
         page: page,
+        faqId: faqId,
+      },
+    });
+  };
+
+  const goToEdit = (nFaqId: string) => {
+    navigate('./edit', {
+      state: {
+        faqId: nFaqId,
+        params: params,
       },
     });
   };
@@ -78,15 +88,6 @@ const List = () => {
 
   const handleDeleteFaqId = (nFaqId: string) => {
     setDFaqId(nFaqId);
-  };
-
-  const goToEdit = (nFaqId: string) => {
-    navigate('./edit', {
-      state: {
-        faqId: nFaqId,
-        params: params,
-      },
-    });
   };
 
   const handleDelete = (nFaqId: string) => {
@@ -133,6 +134,10 @@ const List = () => {
         );
         setRows(response.data.contents);
         setPage(response.data.page);
+
+        if (location?.state?.faqId) {
+          setFaqId(location?.state?.faqId);
+        }
       }
     }
   }, [response, isSuccess, isError, toast]);
@@ -150,7 +155,7 @@ const List = () => {
       const index = newRows.findIndex((item) => item.faqId === data.faqId);
       data.codeNm = getCode(GroupCodeType.FAQ_TYPE, data.clCode)?.codeNm || '';
       newRows.splice(index, 1, data);
-      setRows(newRows);
+      setRows(newRows); 
     }
   }, [gResponse, gIsSuccess, gIsError, toast]);
 
