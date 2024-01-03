@@ -414,6 +414,12 @@
     .answer .ellipsis1{
       border-bottom: 1px solid transparent;
       width: calc(100% - 28px);
+      p {
+       display: none; 
+      }
+      p:first-child {
+        display: block;
+      }
     }
     a::before{
       content: "Q";
@@ -432,9 +438,8 @@
       }
     }
     .question{
-      display: flex;
-      flex-shrink: 0;
       border-bottom: 1px solid transparent;
+      width: calc(100% - 17px);
     }
     .answer{
       display: flex;
