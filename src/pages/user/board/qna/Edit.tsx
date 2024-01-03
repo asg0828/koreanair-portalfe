@@ -1,3 +1,4 @@
+import { AddCircleOutlineOutlinedIcon, RemoveCircleOutlineOutlinedIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
@@ -6,7 +7,7 @@ import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { ContextPath, GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { ContextPath, GroupCodeType, ModalType, UrlType, ValidType } from '@/models/common/Constants';
 import { FileModel } from '@/models/model/FileModel';
 import { PageModel } from '@/models/model/PageModel';
 import { QnaParams, UpdatedQnaModel } from '@/models/model/QnaModel';
@@ -14,9 +15,10 @@ import { selectContextPath } from '@/reducers/authSlice';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
+import { httpReg, httpUrlReg } from '@/utils/RegularExpression';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -31,6 +33,7 @@ const Edit = () => {
   const qnaId = location?.state?.qnaId;
   const params: QnaParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
+  const [fileLink, setFileLink] = useState<string>('');
   const {
     register,
     handleSubmit,
@@ -51,6 +54,7 @@ const Edit = () => {
       useYn: 'Y',
       fileIds: [],
       fileList: [],
+      fileLinks: [],
     },
   });
   const values = getValues();
@@ -97,6 +101,57 @@ const Edit = () => {
     );
   };
 
+  const handleChangeFileLink = (newFileLink: string) => {
+    setFileLink(newFileLink);
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddFileLink(e.target.value);
+    }
+  };
+
+  const handleAddFileLink = (newFileLink: string) => {
+    if (!newFileLink) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.fileLinkEmpty'),
+      });
+      return;
+    }
+
+    if (!newFileLink.match(httpReg)) {
+      newFileLink = `${UrlType.HTTPS}${newFileLink}`;
+    }
+
+    if (!newFileLink.match(httpUrlReg)) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.notCorrect'),
+      });
+      return;
+    }
+
+    if (values.fileLinks.includes(newFileLink)) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.fileLink'),
+      });
+      return;
+    }
+
+    setValue('fileLinks', values.fileLinks.concat(newFileLink));
+    setFileLink('');
+  };
+
+  const handleRemoveFileLink = (newFileLink: string) => {
+    setValue(
+      'fileLinks',
+      values.fileLinks.filter((fileLink) => fileLink !== newFileLink)
+    );
+  };
+
   useEffect(() => {
     if (isSuccess && response.data) {
       response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
@@ -107,6 +162,7 @@ const Edit = () => {
       setValue('openYn', response.data.openYn);
       setValue('useYn', response.data.useYn);
       setValue('fileList', response.data.fileList);
+      setValue('fileLinks', response.data.fileLinks);
     }
   }, [isSuccess, response?.data, setValue]);
 
@@ -274,6 +330,34 @@ const Edit = () => {
                   )}
                 />
                 <ErrorLabel message={errors?.cn?.message} />
+              </Stack>
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              {t('board:label.fileLink')}
+            </TH>
+            <TD colSpan={5}>
+              <Stack gap="XS" direction="Vertical" className="width-100">
+                <Stack className="width-100" gap="SM">
+                  <TextField
+                    className="width-100"
+                    onKeyDown={handleKeyDown}
+                    onChange={(e) => handleChangeFileLink(e.target.value)}
+                    value={fileLink}
+                  />
+                  <Button iconOnly onClick={() => handleAddFileLink(fileLink)}>
+                    <AddCircleOutlineOutlinedIcon color="action" />
+                  </Button>
+                </Stack>
+                {watch().fileLinks.map((fileLink: string) => (
+                  <Stack className="width-100" gap="SM">
+                    <TextField disabled className="width-100" value={fileLink} />
+                    <Button iconOnly onClick={() => handleRemoveFileLink(fileLink)}>
+                      <RemoveCircleOutlineOutlinedIcon color="action" />
+                    </Button>
+                  </Stack>
+                ))}
               </Stack>
             </TD>
           </TR>

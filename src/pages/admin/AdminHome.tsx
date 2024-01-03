@@ -275,7 +275,7 @@ const AdminHome = () => {
               faqList.map((item) => (
                 <div>
                   <Link to={AdminMainLink.FAQ} state={{ faqId: item.faqId }}>
-                    <div className="question">{item.qstn}</div>
+                    <div className="question ellipsis1">{item.qstn}</div>
                     <div className="answer">
                       <div className="ellipsis1" dangerouslySetInnerHTML={{ __html: item.answ }}></div>
                     </div>
