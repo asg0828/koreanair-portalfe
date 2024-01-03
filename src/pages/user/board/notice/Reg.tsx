@@ -1,16 +1,18 @@
+import { AddCircleOutlineOutlinedIcon, RemoveCircleOutlineOutlinedIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useCreateNotice } from '@/hooks/mutations/useNoticeMutations';
 import { useAppDispatch } from '@/hooks/useRedux';
-import { ModalType, ValidType } from '@/models/common/Constants';
+import { ModalType, UrlType, ValidType } from '@/models/common/Constants';
 import { CreatedNoticeModel, NoticeParams } from '@/models/model/NoticeModel';
 import { PageModel } from '@/models/model/PageModel';
 import { openModal } from '@/reducers/modalSlice';
+import { httpReg, httpUrlReg } from '@/utils/RegularExpression';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -21,14 +23,16 @@ const Reg = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
+  const [fileLink, setFileLink] = useState<string>('');
   const params: NoticeParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
-    control,
     getValues,
     setValue,
+    watch,
+    control,
     formState: { errors },
   } = useForm<CreatedNoticeModel>({
     mode: 'onChange',
@@ -42,6 +46,7 @@ const Reg = () => {
       importantYn: 'Y',
       fileIds: [],
       fileList: [],
+      fileLinks: [],
     },
   });
   const values = getValues();
@@ -85,6 +90,57 @@ const Reg = () => {
     );
   };
 
+  const handleChangeFileLink = (newFileLink: string) => {
+    setFileLink(newFileLink);
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddFileLink(e.target.value);
+    }
+  };
+
+  const handleAddFileLink = (newFileLink: string) => {
+    if (!newFileLink) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.fileLinkEmpty'),
+      });
+      return;
+    }
+
+    if (!newFileLink.match(httpReg)) {
+      newFileLink = `${UrlType.HTTPS}${newFileLink}`;
+    }
+
+    if (!newFileLink.match(httpUrlReg)) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.notCorrect'),
+      });
+      return;
+    }
+
+    if (values.fileLinks.includes(newFileLink)) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.fileLink'),
+      });
+      return;
+    }
+
+    setValue('fileLinks', values.fileLinks.concat(newFileLink));
+    setFileLink('');
+  };
+
+  const handleRemoveFileLink = (newFileLink: string) => {
+    setValue(
+      'fileLinks',
+      values.fileLinks.filter((fileLink) => fileLink !== newFileLink)
+    );
+  };
+
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
@@ -124,69 +180,6 @@ const Reg = () => {
               </Stack>
             </TD>
           </TR>
-          {/* <TR>
-            <TH>팝업공지여부</TH>
-            <TD align="left">
-              <Radio label="사용" value="Y" defaultChecked={values.popupYn === 'Y'} {...register('popupYn')} />
-              <Radio label="미사용" value="N" defaultChecked={values.popupYn === 'N'} {...register('popupYn')} />
-            </TD>
-            <TH required>팝업공지일자</TH>
-            <TD>
-              <Stack gap="SM" className="width-100" direction="Vertical">
-                <Stack gap="SM" className="width-100">
-                  <Controller
-                    name="startDt"
-                    control={control}
-                    rules={{
-                      required: { value: true, message: 'start date is required.' },
-                      pattern: {
-                        value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
-                        message: 'start date is invalid.',
-                      },
-                    }}
-                    render={({ field }) => (
-                      <DatePicker
-                        ref={(el) => {
-                          const input = el?.querySelector('input');
-                          input && field.ref(input);
-                        }}
-                        value={field.value}
-                        onValueChange={(value) => field.onChange(value)}
-                        validation={errors?.startDt?.message ? 'Error' : undefined}
-                      />
-                    )}
-                  />
-                  <Label>~</Label>
-                  <Controller
-                    name="endDt"
-                    control={control}
-                    rules={{
-                      required: { value: true, message: 'end date is required.' },
-                      pattern: {
-                        value: /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/,
-                        message: 'end date is invalid.',
-                      },
-                    }}
-                    render={({ field }) => (
-                      <DatePicker
-                        ref={(el) => {
-                          const input = el?.querySelector('input');
-                          input && field.ref(input);
-                        }}
-                        value={field.value}
-                        onValueChange={(value) => field.onChange(value)}
-                        validation={errors?.endDt?.message ? 'Error' : undefined}
-                      />
-                    )}
-                  />
-                </Stack>
-                <Stack justifyContent="Between">
-                  <ErrorLabel message={errors?.startDt?.message} />
-                  <ErrorLabel message={errors?.endDt?.message} />
-                </Stack>
-              </Stack>
-            </TD>
-          </TR> */}
           <TR>
             <TH colSpan={1} align="right">
               {t('board:label.useYn')}
@@ -245,6 +238,34 @@ const Reg = () => {
                   )}
                 />
                 <ErrorLabel message={errors?.cn?.message} />
+              </Stack>
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              {t('board:label.fileLink')}
+            </TH>
+            <TD colSpan={5}>
+              <Stack gap="XS" direction="Vertical" className="width-100">
+                <Stack className="width-100" gap="SM">
+                  <TextField
+                    className="width-100"
+                    onKeyDown={handleKeyDown}
+                    onChange={(e) => handleChangeFileLink(e.target.value)}
+                    value={fileLink}
+                  />
+                  <Button iconOnly onClick={() => handleAddFileLink(fileLink)}>
+                    <AddCircleOutlineOutlinedIcon color="action" />
+                  </Button>
+                </Stack>
+                {watch().fileLinks.map((fileLink: string) => (
+                  <Stack className="width-100" gap="SM">
+                    <TextField disabled className="width-100" value={fileLink} />
+                    <Button iconOnly onClick={() => handleRemoveFileLink(fileLink)}>
+                      <RemoveCircleOutlineOutlinedIcon color="action" />
+                    </Button>
+                  </Stack>
+                ))}
               </Stack>
             </TD>
           </TR>
