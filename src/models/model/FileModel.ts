@@ -4,6 +4,7 @@ export type FileCl = '' | 'notice' | 'faq' | 'qna' | 'dataroom';
 export interface FileInfo {
   fileIds: Array<string>;
   fileList: Array<any>;
+  fileLinks: Array<string>;
 }
 
 export interface FileModel extends CommonModel {
