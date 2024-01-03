@@ -36,18 +36,23 @@ export interface ColumnChild {
 }
 
 export interface Profile {
-  name: string;
+  korFname: string;
+  korLname: string;
   engFname: string;
   engLname: string;
-  birth: string;
+  birthDatev: string;
   age: string;
-  gender: string;
-  homePhoneNumberInfo: string;
-  mobilePhoneNumberInfone: string;
+  sexCode: string;
+  mobilePhoneNumber: string;
   emailAddress: string;
-  significant: string;
+  oneidNo: string;
+  skypassInfos : SkypassInfo[]
 }
 
+export interface SkypassInfo {
+  oneidNo: string;
+  skypassMemberNumber: string
+}
 export interface Skypass {
   [skypassNum: string]: string;
   skypassGrade: string;
