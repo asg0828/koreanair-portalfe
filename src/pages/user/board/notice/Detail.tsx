@@ -1,5 +1,5 @@
 import { downloadFile } from '@/api/FileAPI';
-import { AttachFileIcon, ExpandLessIcon } from '@/assets/icons';
+import { AttachFileIcon, ExpandLessIcon, ExpandMoreIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
 import EmptyState from '@/components/emptyState/EmptyState';
@@ -199,7 +199,7 @@ const Detail = () => {
           <TR>
             <TH colSpan={1} align="right">
               {t('board:label.prev')}
-              <ExpandLessIcon fontSize="small" />
+              <ExpandMoreIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
               {noticeModel?.preSj && (

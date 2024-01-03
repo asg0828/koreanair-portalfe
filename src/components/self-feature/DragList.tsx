@@ -80,13 +80,11 @@ const DragList = ({
         result.push(pushItem)
         return arr.filter((item) => item.metaTblLogiNm !== tblNm)
     }
-    const distinctFeatList = (result: Array<FeatAccordian>, arr: Array<TbRsCustFeatRule>, tblNm: string) => {
-        let tempfl = arr.filter((item) => item.category === tblNm)
-        if (tempfl.length > 0) {
-            let pushItem: FeatAccordian = { metaTblLogiNm: tempfl[0].categoryNm, featureList: tempfl }
-            result.push(pushItem)
-        }
-        return arr.filter((item) => item.category !== tblNm)
+    const distinctFeatList = (result: Array<FeatAccordian>, arr: Array<TbRsCustFeatRule>, tblNm: string, cateCd: string) => {
+        let tempfl = arr.filter((item) => item.category === cateCd)
+        let pushItem: FeatAccordian = { metaTblLogiNm: tblNm, featureList: tempfl }
+        result.push(pushItem)
+        return arr.filter((item) => item.category !== cateCd)
     }
     useEffect(() => {
         if (attributes.length < 1 || attributes[0].metaTblId === "") return
@@ -111,7 +109,7 @@ const DragList = ({
         // while (featList.length !== 0) {
         //     console.log(categoryOption)
         categoryOption.map((category: any) => {
-            featList = distinctFeatList(tempFeatList, featList, category.cdv)
+            featList = distinctFeatList(tempFeatList, featList, category.cdvNm, category.cdv)
             return category
         })
         //}
@@ -149,7 +147,7 @@ const DragList = ({
         // while (featList.length !== 0) {
         //     console.log(categoryOption)
         categoryOption.map((category: any) => {
-            featList = distinctFeatList(tempFeatList, featList, category.cdv)
+            featList = distinctFeatList(tempFeatList, featList, category.cdvNm, category.cdv)
             return category
         })
         //}
