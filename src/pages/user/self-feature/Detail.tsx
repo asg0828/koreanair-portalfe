@@ -382,7 +382,6 @@ const SelfFeatureDetail = () => {
 			if (btnClickType === "reqInsert") {
 				// 승인 요청
 				insertSubmissionRequest()
-				setIsOpenConfirmModal(false)
 			} else if (btnClickType === "cancel") {
 				// 승인 요청 취소
 				cancelRequestSubmission()
@@ -739,14 +738,10 @@ const SelfFeatureDetail = () => {
 			location.state.sqlDirectInputYn === "N"
 			&& featureInfo.tbRsCustFeatRule.batManualExecTestCnt < 1
 		) {
-			toast({
-				type: ValidType.ERROR,
-				content: '수동실행을 최소 1번 이상 수행 해주세요.',
-			})
-			// setModalType(ModalType.ALERT)
-			// setConfirmModalTit("승인요청")
-			// setConfirmModalCont("수동실행을 최소 1번 이상 수행 해주세요.")
-			// setIsOpenConfirmModal(true)
+			setModalType(ModalType.ALERT)
+			setConfirmModalTit("승인요청")
+			setConfirmModalCont("수동실행을 최소 1번 이상 수행 해주세요.")
+			setIsOpenConfirmModal(true)
 		} else {
 			insrtSubReqMutate()
 		}
@@ -1375,6 +1370,7 @@ const SelfFeatureDetail = () => {
 			{/* Confirm 모달 */}
 			<ConfirmModal
 				isOpen={isOpenConfirmModal}
+				autoClose={false}
 				onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
 				title={confirmModalTit}
 				content={confirmModalCont}

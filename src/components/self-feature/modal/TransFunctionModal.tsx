@@ -938,6 +938,7 @@ const TransFunctionModal = ({
             {/* Confirm 모달 */}
             <ConfirmModal
                 isOpen={isOpenConfirmModal}
+				autoClose={false}
                 onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
                 title={confirmModalTit}
                 content={confirmModalCont}
