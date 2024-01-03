@@ -744,6 +744,7 @@ const SelfFeatureDetail = () => {
 			setIsOpenConfirmModal(true)
 		} else {
 			insrtSubReqMutate()
+			setIsOpenConfirmModal(false)
 		}
 	}
 	// 승인요청 API Callback
