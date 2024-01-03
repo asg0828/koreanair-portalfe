@@ -100,7 +100,7 @@ const App = () => {
             return <Unauthorized />;
           } else if (sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router) {
             return (
-              <Watermark content={sessionInfo.userEmail} className="width-100 height-100">
+              <Watermark content={sessionInfo.userEmail} className="width-100">
                 <RouterProvider router={router} />
               </Watermark>
             );
