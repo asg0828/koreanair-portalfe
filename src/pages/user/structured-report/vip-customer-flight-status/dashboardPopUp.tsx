@@ -54,7 +54,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
   }, [skypass]);
 
   return (
-    <Watermark content={sessionInfo.userEmail} className="width-100 height-100">
+    <Watermark content={sessionInfo.userEmail} className="width-100">
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       <div className="dashBoardWrap">
         <Stack direction="Vertical">

@@ -26,6 +26,7 @@ const Reg = () => {
   const location = useLocation();
   const params: FaqParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
+  const faqId: string = location?.state?.faqId;
   const [fileLink, setFileLink] = useState<string>('');
   const {
     register,
@@ -56,9 +57,10 @@ const Reg = () => {
       state: {
         params: params,
         page: page,
+        faqId: faqId,
       },
     });
-  }, [params, page, navigate]);
+  }, [params, page, faqId, navigate]);
 
   const handleList = () => {
     dispatch(

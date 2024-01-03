@@ -14,12 +14,11 @@ const ErrorRouteBoundary = () => {
     return <Navigate to={localStorage.getItem('accessPathname') || ''} />;
   }
 
-  if (baseMenuList.find((item) => item.menuUrl === location.pathname)) {
-    return <MenuUnauthorized />;
-  }
-
   if (isRouteErrorResponse(error)) {
     if (error.status === 404) {
+      if (baseMenuList.find((item) => item.menuUrl === location.pathname)) {
+        return <MenuUnauthorized />;
+      }
       return <NotFound />;
     }
   }

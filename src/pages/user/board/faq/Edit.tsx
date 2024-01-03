@@ -63,9 +63,10 @@ const Edit = () => {
       state: {
         params: params,
         page: page,
+        faqId: faqId,
       },
     });
-  }, [params, page, navigate]);
+  }, [params, page, faqId, navigate]);
 
   const handleList = () => {
     dispatch(
