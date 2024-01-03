@@ -13,6 +13,7 @@ import { PageModel } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
+import { openPopup } from '@/utils/FuncUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -140,6 +141,20 @@ const Detail = () => {
           <TR className="height-100">
             <TD colSpan={4} className="content">
               <TinyEditor content={dataroomModel?.cn} disabled />
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              {t('board:label.fileLink')}
+            </TH>
+            <TD colSpan={5}>
+              <ul className="attachFileList">
+                {dataroomModel?.fileLinks.map((fileLink: string) => (
+                  <li>
+                    <Link linkType="External" children={fileLink} onClick={() => openPopup(fileLink)} />
+                  </li>
+                ))}
+              </ul>
             </TD>
           </TR>
           <TR>

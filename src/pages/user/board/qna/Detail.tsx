@@ -15,6 +15,7 @@ import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
+import { openPopup } from '@/utils/FuncUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
@@ -278,10 +279,24 @@ const Detail = () => {
             </TD>
           </TR>
           <TR>
-            <TH colSpan={1} className="attachFile">
+            <TH colSpan={1} align="right">
+              {t('board:label.fileLink')}
+            </TH>
+            <TD colSpan={5}>
+              <ul className="attachFileList">
+                {qnaModel?.fileLinks.map((fileLink: string) => (
+                  <li>
+                    <Link linkType="External" children={fileLink} onClick={() => openPopup(fileLink)} />
+                  </li>
+                ))}
+              </ul>
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right" className="attachFile">
               {t('board:label.attachedFile')}
             </TH>
-            <TD colSpan={3}>
+            <TD colSpan={5}>
               <ul className="attachFileList">
                 {qnaModel?.fileList.map((file: FileModel) => (
                   <li>

@@ -23,9 +23,9 @@ const Reg = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  const [fileLink, setFileLink] = useState<string>('');
   const params: NoticeParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
+  const [fileLink, setFileLink] = useState<string>('');
   const {
     register,
     handleSubmit,
