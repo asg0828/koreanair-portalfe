@@ -32,7 +32,7 @@ const EmptyState: React.FC<EmptyStateProps> = ({ type, description, confirmText,
   };
 
   return (
-    <Stack direction="Vertical" gap="LG" justifyContent="Center" alignItems="Center" className="width-100 height-100">
+    <Stack direction="Vertical" gap="LG" justifyContent="Center" alignItems="Center" className="width-100 height-100" style={{minHeight:'100vh'}}>
       {(() => {
         let IConComponent;
 
