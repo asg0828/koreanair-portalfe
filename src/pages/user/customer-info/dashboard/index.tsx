@@ -4,9 +4,7 @@ import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOp
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import {
-  profileData,
-  skypassData1,
-  skypassData2,
+
   familyMemberData,
   walletData,
   preferenceData,
@@ -20,6 +18,7 @@ import {
   smsData,
   emailData,
   snsData,
+  initProfile,
 } from './data';
 import {
   FamilyMember,
@@ -38,12 +37,14 @@ import {
   Sns,
   Email,
 } from '@/models/model/CustomerInfoModel';
+import { ValidType } from '@/models/common/Constants';
+import { initMasterProfileInfo } from '@/pages/admin/self-feature-meta-management/master-profile-management/data';
 
 export default function List() {
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
   const batchDate = `${yesterday.getFullYear()}-${(`0` + (yesterday.getMonth() + 1)).slice(-2)}-${(`0` + yesterday.getDate()).slice(-2)}`;
-  const [profile, setProfile] = useState<Profile>();
+  const [profile, setProfile] = useState<Profile>(initProfile);
   const [skypass, setSkypass] = useState<Array<Skypass>>();
   const [family, setFamily] = useState<FamilyMember>();
   const [wallet, setWallet] = useState<Wallet>();
@@ -62,7 +63,7 @@ export default function List() {
   const [searchInfo, setSearchInfo] = useState<any>({
     skypassMemberNumber: '',
     oneidNo: '',
-    searchType: 'A',
+    searchType: 'B',
   });
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
@@ -107,43 +108,43 @@ export default function List() {
     };
 
     if (validation()) return;
-    if (searchInfo.oneidNo === 'S199206239090026' || searchInfo.skypassMemberNumber === '112423935550') {
-      setProfile(profileData[0]);
-      setSkypass(skypassData1);
-      setFamily(familyMemberData[0]);
-      setSelectedSkypass(skypassData1[0]);
-      setWallet(walletData);
-      setPreference(preferenceData[0]);
-      setCnt(cntData[0]);
-      setPnr(pnrData);
-      setEtkt(eTktData);
-      setBoardingLists(boardingListData);
-      setVocs(vocData);
-      setInternets(internetData);
-      setCalls(callData);
-      setSmss(smsData);
-      setEmails(emailData);
-      setSnss(snsData);
-      setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    } else if (searchInfo.oneidNo === 'S198701167474407' || searchInfo.skypassMemberNumber === '112315856573') {
-      setProfile(profileData[1]);
-      setSkypass(skypassData2);
-      setFamily(familyMemberData[3]);
-      setSelectedSkypass(skypassData2[0]);
-      setWallet(walletData);
-      setPreference(preferenceData[1]);
-      setCnt(cntData[1]);
-      setPnr(pnrData);
-      setEtkt(eTktData);
-      setBoardingLists(boardingListData);
-      setVocs(vocData);
-      setInternets(internetData);
-      setCalls(callData);
-      setSmss(smsData);
-      setEmails(emailData);
-      setSnss(snsData);
-      setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
-    }
+    // if (searchInfo.oneidNo === 'S199206239090026' || searchInfo.skypassMemberNumber === '112423935550') {
+    //   setProfile(profileData[0]);
+    //   setSkypass(skypassData1);
+    //   setFamily(familyMemberData[0]);
+    //   setSelectedSkypass(skypassData1[0]);
+    //   setWallet(walletData);
+    //   setPreference(preferenceData[0]);
+    //   setCnt(cntData[0]);
+    //   setPnr(pnrData);
+    //   setEtkt(eTktData);
+    //   setBoardingLists(boardingListData);
+    //   setVocs(vocData);
+    //   setInternets(internetData);
+    //   setCalls(callData);
+    //   setSmss(smsData);
+    //   setEmails(emailData);
+    //   setSnss(snsData);
+    //   setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
+    // } else if (searchInfo.oneidNo === 'S198701167474407' || searchInfo.skypassMemberNumber === '112315856573') {
+    //   setProfile(profileData[1]);
+    //   setSkypass(skypassData2);
+    //   setFamily(familyMemberData[3]);
+    //   setSelectedSkypass(skypassData2[0]);
+    //   setWallet(walletData);
+    //   setPreference(preferenceData[1]);
+    //   setCnt(cntData[1]);
+    //   setPnr(pnrData);
+    //   setEtkt(eTktData);
+    //   setBoardingLists(boardingListData);
+    //   setVocs(vocData);
+    //   setInternets(internetData);
+    //   setCalls(callData);
+    //   setSmss(smsData);
+    //   setEmails(emailData);
+    //   setSnss(snsData);
+    //   setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
+    // }
     // refetch();
     refetchProfile();
   }, [refetchProfile, searchInfo, validation]);
@@ -169,9 +170,9 @@ export default function List() {
     clearInterval(intervalId.current as number);
     const { id, value } = e.target;
     if (id === 'skypassMemberNumber') {
-      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'A' });
-    } else {
       setSearchInfo({ ...searchInfo, [id]: value, searchType: 'B' });
+    } else {
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'A' });
     }
   };
 
@@ -216,6 +217,20 @@ export default function List() {
   useEffect(() => {
     setSelectedSkypass(skypass?.find((item) => item.skypassMemberNumber === searchInfo.skypassSelect));
   }, [searchInfo.skypassSelect]);
+
+  // 프로필 조회
+  useEffect(() => {
+    if (isErrorProfile || responseProfile?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (responseProfile) {
+        setProfile(responseProfile?.data);
+      }
+    }
+  }, [responseProfile, isErrorProfile]);
 
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
@@ -287,7 +302,7 @@ export default function List() {
             </h5>
             <div className="dashBoardBox n1">
               <div className="name">
-                {profile?.name}
+                  {profile?.korLname}{profile?.korFname}
                 <span className="en">
                   {profile?.engLname}
                   &nbsp;
@@ -301,7 +316,7 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">생년월일</div>
-                  <div className="value">{profile?.birth}</div>
+                  <div className="value">{profile?.birthDatev}</div>
                 </div>
                 <div className="item">
                   <div className="key">만나이</div>
@@ -309,16 +324,17 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">성별</div>
-                  <div className="value">{profile?.gender}</div>
+                  <div className="value">{profile?.sexCode}</div>
                 </div>
 
                 <div className="item">
                   <div className="key">휴대폰번호</div>
                   <div className="value">
-                    {profile?.mobilePhoneNumberInfone
-                      .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
-                      .split('-')
-                      .reduce((pre, cur, idx) => (idx === 1 ? pre + '-****-' : pre + cur), '')}
+                    {profile?.mobilePhoneNumber
+                      // .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+                      // .split('-')
+                      // .reduce((pre, cur, idx) => (idx === 1 ? pre + '-****-' : pre + cur), '')
+                      }
                   </div>{' '}
                   {/* 가운데 번호 마스킹(*) 필요 */}
                 </div>
@@ -333,7 +349,7 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">특이사항</div>
-                  <div className="value">{profile?.significant}</div>
+                  {/* <div className="value">{profile?.}</div> */}
                   {/* 특이사항 컬럼 필요 (ex. VIP) */}
                 </div>
               </div>
@@ -342,10 +358,10 @@ export default function List() {
               <div className="top" style={{ position: 'relative' }}>
                 SKYPASS
                 <div className="kr">스카이패스</div>
-                {skypass && skypass.length > 0 && (
+                {profile.skypassInfos && profile.skypassInfos.length > 0 && (
                   <Select
                     id="skypassSelect"
-                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : ''}
+                    defaultValue={profile.skypassInfos.length > 0 ? profile.skypassInfos[0].skypassMemberNumber : ''}
                     appearance="Outline"
                     placeholder="스카이패스선택"
                     style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}
@@ -357,9 +373,9 @@ export default function List() {
                       onchangeSelectHandler(e, value, 'skypassSelect');
                     }}
                   >
-                    {skypass.map((item: any, index: number) => (
-                      <SelectOption key={index} value={item.skypassNum} style={{ maxHeight: '70%', fontSize: '13px' }}>
-                        {item.skypassNum}
+                    {profile.skypassInfos.map((item: any, index: number) => (
+                      <SelectOption key={index} value={item.skypassMemberNumber} style={{ maxHeight: '70%', fontSize: '13px' }}>
+                        {item.skypassMemberNumber}
                       </SelectOption>
                     ))}
                   </Select>

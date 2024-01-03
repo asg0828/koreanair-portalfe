@@ -26,6 +26,19 @@ import {
   Wallet,
 } from '@/models/model/CustomerInfoModel';
 
+const initProfile : Profile = {
+  korFname: '',
+  korLname: '',
+  engFname: '',
+  engLname: '',
+  birthDatev: '',
+  age: '',
+  sexCode: '',
+  mobilePhoneNumber: '',
+  emailAddress: '',
+  oneidNo: '',
+  skypassInfos: [],
+}
 const matchedProfile: any[] = [
   { name: '홍홍동', skypassNm: '11122' },
   { name: '이순신', skypassNm: '33344' },
@@ -68,32 +81,32 @@ const pnrTickerColumn: Column[] = [
   { headerName: 'Baggage Wgt', field: 'baggageWgt' },
 ];
 
-const profileData: Profile[] = [
-  {
-    name: '홍길동',
-    engFname: 'hong',
-    engLname: 'gildong',
-    birth: '1939-10-07',
-    age: '84',
-    gender: '여',
-    homePhoneNumberInfo: '02-123-4124',
-    mobilePhoneNumberInfone: '010-0101-0101',
-    emailAddress: 'exemail.exe@naver.com',
-    significant: 'VIP',
-  },
-  {
-    name: '이순신',
-    engFname: 'lee',
-    engLname: 'soonshin',
-    birth: '1958-03-05',
-    age: '65',
-    gender: '남',
-    homePhoneNumberInfo: '02-123-4124',
-    mobilePhoneNumberInfone: '010-0101-0101',
-    emailAddress: 'exemail.exe@naver.com',
-    significant: 'VIP',
-  },
-];
+// const profileData: Profile[] = [
+//   {
+//     name: '홍길동',
+//     engFname: 'hong',
+//     engLname: 'gildong',
+//     birth: '1939-10-07',
+//     age: '84',
+//     gender: '여',
+//     homePhoneNumberInfo: '02-123-4124',
+//     mobilePhoneNumberInfone: '010-0101-0101',
+//     emailAddress: 'exemail.exe@naver.com',
+//     significant: 'VIP',
+//   },
+//   {
+//     name: '이순신',
+//     engFname: 'lee',
+//     engLname: 'soonshin',
+//     birth: '1958-03-05',
+//     age: '65',
+//     gender: '남',
+//     homePhoneNumberInfo: '02-123-4124',
+//     mobilePhoneNumberInfone: '010-0101-0101',
+//     emailAddress: 'exemail.exe@naver.com',
+//     significant: 'VIP',
+//   },
+// ];
 // {
 //   name: '이순신',
 //   engFname: 'lee',
@@ -463,7 +476,7 @@ export {
   analysisIndexList,
   analysisResultData,
   pnrTickerColumn,
-  profileData,
+  // profileData,
   skypassData1,
   skypassData2,
   familyMemberData,
@@ -481,4 +494,5 @@ export {
   smsData,
   matchedProfile,
   skyPassList,
+  initProfile
 };

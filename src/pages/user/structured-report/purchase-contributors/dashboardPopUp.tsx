@@ -4,8 +4,12 @@ import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import CloseIcon from '@mui/icons-material/Close';
 import { familyMemberData, skypassData2 } from '../../customer-info/dashboard/data';
+import Watermark from '@uiw/react-watermark';
+import { useAppSelector } from '@/hooks/useRedux';
+import { selectSessionInfo } from '@/reducers/authSlice';
 
 export default function DashBoardPopUp({ closeModal }: any) {
+  const sessionInfo = useAppSelector(selectSessionInfo())
   const [isListView1, setIsListView1] = useState(false);
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState(false);
@@ -51,6 +55,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
   }, [skypass]);
 
   return (
+    <Watermark content={sessionInfo.userEmail} className="width-100 height-100">
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
@@ -684,5 +689,6 @@ export default function DashBoardPopUp({ closeModal }: any) {
         </Stack>
       </div>
     </Stack>
+    </Watermark>
   );
 }
