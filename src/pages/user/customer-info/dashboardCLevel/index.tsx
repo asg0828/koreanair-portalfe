@@ -62,7 +62,7 @@ export default function List() {
   // profileList 조회(CLevel) api
   const { refetch: refetchProfileCLvl, data: responseProfileCLvl, isError: isErrorProfileCLvl, isFetching: isFetchingCLvl} = useProfileCLevel(searchInfo);
   // skypass 조회 api
-  const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass} = useSkypass(skypassNmSearch.skypassMemberNumber);
+  const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass, isFetching: isFetchingSkypass} = useSkypass(skypassNmSearch.skypassMemberNumber);
   
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
@@ -117,7 +117,6 @@ export default function List() {
 
   /* 검색 버튼 */
   const handleSearch = useCallback(() => {
-    setSkypass([]);
 
     // 유효성 검사 실패 시 종료
     const validation = () => {
@@ -153,6 +152,10 @@ export default function List() {
       refetchProfileCLvl() 
     } else if(skypassNmSearch.searchType !== ''){
       refetchProfile()
+      setSkypassNmSearch({...skypassNmSearch, searchType: '' })
+
+      // setProfileList([])
+      
     }
   }, [searchInfo, skypassNmSearch])
   
@@ -180,10 +183,9 @@ export default function List() {
     if(id === 'skypassMemberNumber'){
       setSkypassNmSearch({ searchType: '' , [id] : value })
     } else {
-      // if(skypassNmSearch.skypassMemberNumber === ''){
-
-      //   setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
-      // }
+      if(skypassNmSearch.skypassMemberNumber !== ''){
+        setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
+      }
       setSearchInfo({ ...searchInfo, [id]: value, searchType: '' });
     }
   };
@@ -236,10 +238,18 @@ export default function List() {
         type: ValidType.ERROR,
         content: responseProfileCLvl?.message
       });
+      setProfile(initProfile)
+      setSkypass([])
+      setSelectedSkypass(initSkypass)
+      setFamily([])
     } else {
       if (responseProfileCLvl) {
-          dispatch(setCLevelModal(!cLevelModal));
-          setProfileList(responseProfileCLvl?.data)
+        setProfile(initProfile)
+        setSkypass([])
+        setSelectedSkypass(initSkypass)
+        setFamily([])
+        dispatch(setCLevelModal(!cLevelModal));
+        setProfileList(responseProfileCLvl?.data)
       }
     }
   }, [responseProfileCLvl, isErrorProfileCLvl]);
@@ -255,10 +265,11 @@ export default function List() {
       setSkypass([])
       setFamily([])
     } else {
-      if (responseProfile) {
+      if (responseProfile?.data) {
         setProfile(responseProfile?.data);
-        // dispatch(setCLevelModal(!cLevelModal));
-        // setProfileList([responseProfile?.data])
+        if(profileList.length > 1 ){
+          //  setProfileList([])
+        }
       }
     }
   }, [responseProfile, isErrorProfile]);
@@ -429,7 +440,7 @@ export default function List() {
       {/* searchBar 영역 */}
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
-        {isFetchingCLvl ? 
+        {isFetchingCLvl || isFetchingSkypass ? 
          <Loader
          style={{
              width: "100%",
