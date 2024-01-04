@@ -93,7 +93,6 @@ export default function List() {
     };
 
     if (validation()) return;
-
     setSkypass([]);
     if(searchInfo.skypassMemberNumber !== '' ){
       setSearchInfo({...searchInfo, searchType: 'B'})
@@ -104,8 +103,8 @@ export default function List() {
 
   useEffect(() => {
     if(searchInfo.searchType !== ''){
-    refetchProfile();
-
+      refetchProfile();
+      setSearchInfo({...searchInfo, searchType: ''})
     }
   }, [searchInfo.searchType])
 
@@ -166,8 +165,11 @@ export default function List() {
     if (isErrorProfile || responseProfile?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: responseProfile?.message,
       });
+      setProfile(initProfile)
+      setSkypass([])
+      setFamily([])
     } else {
       if (responseProfile) {
         setProfile(responseProfile?.data);
@@ -190,7 +192,7 @@ export default function List() {
       setFamily(initFamily)
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: responseSkypass?.message,
       });
     } else {
       if (responseSkypass) {

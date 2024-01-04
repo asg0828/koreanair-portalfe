@@ -172,6 +172,7 @@ const Edit = () => {
       if (response.data) {
         response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
         reset(response.data);
+        setValue('qnaStat', response.data.qnaStat === 'UNREAD' ? 'READ' : response.data.qnaStat);
       } else {
         toast({
           type: ValidType.INFO,
