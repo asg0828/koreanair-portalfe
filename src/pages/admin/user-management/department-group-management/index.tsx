@@ -38,8 +38,8 @@ const initItem: UpdatedDeptModel = {
 
 const List = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const [userAuthList, setUserAuthList] = useState<Array<AuthModel>>([]);
   const [adminAuthList, setAdminAuthList] = useState<Array<AuthModel>>([]);
   const [initData, setInitData] = useState<Array<DeptModel>>([]);
@@ -48,11 +48,10 @@ const List = () => {
   const {
     register,
     handleSubmit,
-    control,
     getValues,
-    setValue,
     reset,
     watch,
+    control,
     formState: { errors },
   } = useForm<UpdatedDeptModel>({
     mode: 'onChange',
@@ -60,8 +59,8 @@ const List = () => {
   });
   const values = getValues();
   const { data: response, isSuccess, isError, isFetching, refetch } = useDeptAllList();
-  const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
-  const { data: aaResponse, isError: aaIsError, refetch: aaUreftch } = useAdminAuthAllList();
+  const { data: uaResponse, isError: uaIsError } = useUserAuthAllList();
+  const { data: aaResponse, isError: aaIsError } = useAdminAuthAllList();
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate: uMutate } = useUpdateDept();
 
   const findCreatedItem = () => {
@@ -378,66 +377,70 @@ const List = () => {
                   </Stack>
                 </TD>
               </TR>
-              <TR>
-                <TH colSpan={1} align="right">
-                  {t('management:label.userAuthId')}
-                </TH>
-                <TD colSpan={2}>
-                  <Stack gap="SM" className="width-100" direction="Vertical">
-                    <Controller
-                      name="userAuthId"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          appearance="Outline"
-                          placeholder={t('common.placeholder.all')}
-                          className="width-100"
-                          ref={field.ref}
-                          status={errors?.userAuthId?.message ? 'error' : undefined}
-                          onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
-                          value={field.value || 'nonAuth'}
-                        >
-                          <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
-                          {userAuthList?.map((item) => (
-                            <SelectOption value={item.authId}>{item.authNm}</SelectOption>
-                          ))}
-                        </Select>
-                      )}
-                    />
-                    <ErrorLabel message={errors?.userAuthId?.message} />
-                  </Stack>
-                </TD>
-              </TR>
-              <TR>
-                <TH colSpan={1} align="right">
-                  {t('management:label.mgrAuthId')}
-                </TH>
-                <TD colSpan={2}>
-                  <Stack gap="SM" className="width-100" direction="Vertical">
-                    <Controller
-                      name="mgrAuthId"
-                      control={control}
-                      render={({ field }) => (
-                        <Select
-                          appearance="Outline"
-                          placeholder={t('common.placeholder.all')}
-                          className="width-100"
-                          ref={field.ref}
-                          status={errors?.mgrAuthId?.message ? 'error' : undefined}
-                          onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
-                          value={field.value || 'nonAuth'}
-                        >
-                          <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
-                          {adminAuthList?.map((item) => (
-                            <SelectOption value={item.authId}>{item.authNm}</SelectOption>
-                          ))}
-                        </Select>
-                      )}
-                    />
-                    <ErrorLabel message={errors?.mgrAuthId?.message} />
-                  </Stack>
-                </TD>
-              </TR>
+              {values.children?.length === 0 && (
+                <>
+                  <TR>
+                    <TH colSpan={1} align="right">
+                      {t('management:label.userAuthId')}
+                    </TH>
+                    <TD colSpan={2}>
+                      <Stack gap="SM" className="width-100" direction="Vertical">
+                        <Controller
+                          name="userAuthId"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              appearance="Outline"
+                              placeholder={t('common.placeholder.all')}
+                              className="width-100"
+                              ref={field.ref}
+                              status={errors?.userAuthId?.message ? 'error' : undefined}
+                              onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
+                              value={field.value || 'nonAuth'}
+                            >
+                              <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
+                              {userAuthList?.map((item) => (
+                                <SelectOption value={item.authId}>{item.authNm}</SelectOption>
+                              ))}
+                            </Select>
+                          )}
+                        />
+                        <ErrorLabel message={errors?.userAuthId?.message} />
+                      </Stack>
+                    </TD>
+                  </TR>
+                  <TR>
+                    <TH colSpan={1} align="right">
+                      {t('management:label.mgrAuthId')}
+                    </TH>
+                    <TD colSpan={2}>
+                      <Stack gap="SM" className="width-100" direction="Vertical">
+                        <Controller
+                          name="mgrAuthId"
+                          control={control}
+                          render={({ field }) => (
+                            <Select
+                              appearance="Outline"
+                              placeholder={t('common.placeholder.all')}
+                              className="width-100"
+                              ref={field.ref}
+                              status={errors?.mgrAuthId?.message ? 'error' : undefined}
+                              onChange={(e, value) => value && field.onChange(value === 'nonAuth' ? null : value)}
+                              value={field.value || 'nonAuth'}
+                            >
+                              <SelectOption value="nonAuth">{t('common.label.nonAuth')}</SelectOption>
+                              {adminAuthList?.map((item) => (
+                                <SelectOption value={item.authId}>{item.authNm}</SelectOption>
+                              ))}
+                            </Select>
+                          )}
+                        />
+                        <ErrorLabel message={errors?.mgrAuthId?.message} />
+                      </Stack>
+                    </TD>
+                  </TR>
+                </>
+              )}
             </HorizontalTable>
           </Stack>
         </form>
