@@ -109,11 +109,13 @@ const MasterProfileManagement = () => {
     });
   };
   const goToDetail = (row: MstrProfSearchInfoProps) => {
-    navigate(View.DETAIL, {
-      state: {
-        row,
-      },
-    });
+    navigate(
+      `${View.DETAIL}?rslnRuleId=${row.rslnRuleId}&mstrSgmtRuleId=${row.mstrSgmtRuleId}`,
+      {
+        state: {
+          //row,
+        },
+      });
   };
   // 메타테이블 컬럼 신규 등록 페이지 이동버튼
   const goToReg = () => {

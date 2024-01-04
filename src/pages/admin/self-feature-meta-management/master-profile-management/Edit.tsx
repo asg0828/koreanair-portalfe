@@ -4,7 +4,7 @@ import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@com
 import MstrProfInfo from '@/components/self-feature-adm/MstrProfInfo';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { ModalType, SelfFeatPgPpNm } from '@/models/selfFeature/FeatureCommon';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import {
   MasterProfileInfo,
@@ -30,6 +30,7 @@ import { useUpdateMstrProfInfo } from '@/hooks/mutations/self-feature/useSelfFea
 import { ValidType } from '@/models/common/Constants';
 import {
   useMetaInfo,
+  useMstrProfInfo,
   useMstrProfList,
   useResolutionKeyList,
   useResolutionRuleId,
@@ -40,6 +41,7 @@ import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 
 const MasterProfileManagementEdit = () => {
   const location = useLocation();
+  const [queryParam] = useSearchParams()
   const navigate = useNavigate();
   const { toast } = useToast();
   // 사용될 rslnRuleId 조회
@@ -64,6 +66,8 @@ const MasterProfileManagementEdit = () => {
     isError: rslnKeyListErr,
     refetch: rslnKeyListRefetch,
   } = useResolutionKeyList(rslnRuleId);
+  const [mstrSgmtRuleId, setMstrSgmtRuleId] = useState<string>(queryParam.get("mstrSgmtRuleId") || "")
+  const { data: mstrProfInfoRes, isError: mstrProfInfoErr, refetch: mstrProfInfoRefetch } = useMstrProfInfo(mstrSgmtRuleId)
   // 수정 body param
   const [mstrSgmtFormData, setMstrSgmtFormData] = useState<MasterProfileInfo>(cloneDeep(initMasterProfileInfo));
   // 기본 정보
@@ -127,21 +131,56 @@ const MasterProfileManagementEdit = () => {
     setRslnRuleId(rslnRuleIdParam);
   }, [rslnRuleIdParam]);
   useEffect(() => {
-    if (!location || !location.state) return;
-    setMstrSgmtRule(location.state.masterProfileInfo.tbRsMstrSgmtRule);
-    setAttrMstrSgmtRuleAttrTblList(
-      location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter(
-        (info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.ATTR
-      )
-    );
-    setBehvMstrSgmtRuleAttrTblList(
-      location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter(
-        (info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.BEHV
-      )
-    );
-    setMstrSgmtRuleAttrClmnList(location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrClmn);
-    setRslnRuleRelList(location.state.masterProfileInfo.tbRsRslnRuleRel);
-  }, [location]);
+    // if (!location || !location.state) return;
+    // setMstrSgmtRule(location.state.masterProfileInfo.tbRsMstrSgmtRule);
+    // setAttrMstrSgmtRuleAttrTblList(
+    //   location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter(
+    //     (info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.ATTR
+    //   )
+    // );
+    // setBehvMstrSgmtRuleAttrTblList(
+    //   location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrTbl.filter(
+    //     (info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.BEHV
+    //   )
+    // );
+    // setMstrSgmtRuleAttrClmnList(location.state.masterProfileInfo.tbRsMstrSgmtRuleAttrClmn);
+    // setRslnRuleRelList(location.state.masterProfileInfo.tbRsRslnRuleRel);
+
+    if (mstrSgmtRuleId === "") return
+    mstrProfInfoRefetch()
+  }, [mstrSgmtRuleId]);
+  // 상세 조회 call back
+  useEffect(() => {
+    if (mstrProfInfoErr || mstrProfInfoRes?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: '조회 중 에러가 발생했습니다.',
+      });
+    } else {
+      if (mstrProfInfoRes) {
+        if (!mstrProfInfoRes.result.tbRsMstrSgmtRule) {
+          toast({
+            type: ValidType.ERROR,
+            content: '조회 된 MasterProfile 정보가 없습니다. 목록으로 이동합니다.',
+          })
+          navigate('..')
+        }
+        setMstrSgmtRule(mstrProfInfoRes.result.tbRsMstrSgmtRule);
+        setAttrMstrSgmtRuleAttrTblList(
+          mstrProfInfoRes.result.tbRsMstrSgmtRuleAttrTbl.filter(
+            (info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.ATTR
+          )
+        );
+        setBehvMstrSgmtRuleAttrTblList(
+          mstrProfInfoRes.result.tbRsMstrSgmtRuleAttrTbl.filter(
+            (info: TbRsMstrSgmtRuleAttrTbl) => info.sgmtDvCd === DivisionTypes.BEHV
+          )
+        );
+        setMstrSgmtRuleAttrClmnList(mstrProfInfoRes.result.tbRsMstrSgmtRuleAttrClmn);
+        setRslnRuleRelList(mstrProfInfoRes.result.tbRsRslnRuleRel);
+      }
+    }
+  }, [mstrProfInfoRes, mstrProfInfoErr])
   // 메타테이블 전체조회 테이블 선택 콤보박스 조회 API 호출
   useEffect(() => {
     if (!metaInfoSrchInfo || metaInfoSrchInfo.type === '' || metaInfoSrchInfo.rslnRuleId === '') return;
