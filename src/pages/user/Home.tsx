@@ -318,7 +318,7 @@ const Home = () => {
                   >
                     {item.qnaStatNm}
                   </Tag>
-                  <Link className="ellipsis1" to={`${MainLink.QNA}/detai?qnaId=${item.qnaId}`}>
+                  <Link className="ellipsis1" to={`${MainLink.QNA}/detail?qnaId=${item.qnaId}`}>
                     {item.sj}
                   </Link>
                   <span className="date">{item.rgstDt}</span>
