@@ -57,9 +57,8 @@ const List = () => {
   };
 
   const goToDetail = (row: DataroomModel) => {
-    navigate(View.DETAIL, {
+    navigate(`${View.DETAIL}?dataId=${row.dataId}`, {
       state: {
-        dataId: row.dataId,
         params: params,
         page: page,
       },

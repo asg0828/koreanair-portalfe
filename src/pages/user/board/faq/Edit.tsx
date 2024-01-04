@@ -20,7 +20,7 @@ import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useT
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Edit = () => {
   const { t } = useTranslation();
@@ -28,7 +28,8 @@ const Edit = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  const faqId = location?.state?.faqId;
+  const [searchParams] = useSearchParams();
+  const faqId: string = searchParams.get('faqId') || '';
   const params: FaqParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [fileLink, setFileLink] = useState<string>('');
@@ -38,6 +39,7 @@ const Edit = () => {
     getValues,
     setValue,
     watch,
+    reset,
     control,
     formState: { errors },
   } = useForm<UpdatedFaqModel>({
@@ -149,17 +151,25 @@ const Edit = () => {
   };
 
   useEffect(() => {
-    if (isSuccess && response.data) {
-      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
-      setValue('faqId', response.data.faqId);
-      setValue('clCode', response.data.clCode);
-      setValue('qstn', response.data.qstn);
-      setValue('answ', response.data.answ);
-      setValue('useYn', response.data.useYn);
-      setValue('fileList', response.data.fileList);
-      setValue('fileLinks', response.data.fileLinks);
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('common.toast.error.read'),
+      });
+    } else if (isSuccess) {
+      if (response.data) {
+        response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+        reset(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
-  }, [isSuccess, response?.data, setValue]);
+  }, [response, isSuccess, isError, toast]);
+
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -184,17 +194,6 @@ const Edit = () => {
       goToList();
     }
   }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
-
-  if (!faqId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

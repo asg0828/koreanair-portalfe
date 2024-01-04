@@ -22,8 +22,8 @@ export const initNoticeParams: NoticeParams = {
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const beforeParams: NoticeParams = location?.state?.params;
@@ -74,9 +74,8 @@ const List = () => {
   };
 
   const goToDetail = (row: RowsInfo) => {
-    navigate(View.DETAIL, {
+    navigate(`${View.DETAIL}?noticeId=${row.noticeId}`, {
       state: {
-        noticeId: row.noticeId,
         params: params,
         page: page,
       },
