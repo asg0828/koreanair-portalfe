@@ -67,16 +67,17 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handlePage = (page: PageModel) => {
     setPage(page);
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
