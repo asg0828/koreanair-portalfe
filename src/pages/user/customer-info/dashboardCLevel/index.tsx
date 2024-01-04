@@ -171,8 +171,6 @@ export default function List() {
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
     const { id, value } = e.target;
-    console.log("dsdsads")
-    console.log(value)
     if(id === 'skypassMemberNumber'){
       setSkypassNmSearch({ searchType: '' , [id] : value })
     } else {
@@ -185,7 +183,6 @@ export default function List() {
       refetchSkypass()
       setSearchInfo({...searchInfo, searchType: ''})
     }
-    console.log(skypassNmSearch)
   }, [skypassNmSearch])
   const [isListView1, setIsListView1] = useState({ open: false, contents: '' });
   const [isListView2, setIsListView2] = useState(false);
@@ -247,10 +244,8 @@ export default function List() {
     } else {
       if (responseProfile) {
         setProfile(responseProfile?.data);
-        // 행클릭한 경우가 아니면 profileList 비우기
-        // if(searchInfo.searchType === ''){
-        //   setProfileList([])
-        // }
+        // dispatch(setCLevelModal(!cLevelModal));
+        // setProfileList([responseProfile?.data])
       }
     }
   }, [responseProfile, isErrorProfile]);
@@ -278,7 +273,6 @@ export default function List() {
   /* profileList(중복된 검색 결과가 있는 경우)가 존재하는 경우 profile api 조회*/
   useEffect(() => {
     if(searchInfo.skypassMemberNumber !== '' && !cLevelModal && searchInfo.searchType !== '' ){
-      console.log("?")
       refetchProfile()
       refetchSkypass()
       // profileList가 있으면 searchType 비워주기 => 조건으로 사용하려고 

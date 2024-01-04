@@ -79,7 +79,6 @@ export default function List() {
   };
 
   const handleSearch = useCallback(() => {
-console.log("searchInfo: ", searchInfo)
     // 유효성 검사 실패 시 종료
     const validation = () => {
       let searchError = false;
