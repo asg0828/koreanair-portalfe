@@ -128,13 +128,15 @@ const CustomerMetaManagement = () => {
   };
 
   const goToDetail = (row: CustMetaTableData, index: number) => {
-    navigate(View.DETAIL, {
-      state: {
-        metaTblId: row.metaTblId,
-        metaTblLogiNm: row.metaTblLogiNm,
-        rtmTblYn: row.rtmTblYn,
-      },
-    });
+    navigate(
+      `${View.DETAIL}?metaTblId=${row.metaTblId}`,
+      {
+        state: {
+          // metaTblId: row.metaTblId,
+          // metaTblLogiNm: row.metaTblLogiNm,
+          // rtmTblYn: row.rtmTblYn,
+        },
+      });
   };
 
   // 메타테이블 컬럼 신규 등록 페이지 이동버튼

@@ -30,6 +30,7 @@ import { useProfile, useProfileCLevel, useSkypass } from '@/hooks/queries/useCus
 import Close from '@mui/icons-material/Close';
 import { ValidType, menuIconSx } from '@/models/common/Constants';
 import { useTranslation } from 'react-i18next';
+import { cloneDeep } from 'lodash'
 
 export default function List() {
   /* 수집기준시간 */
@@ -247,7 +248,7 @@ export default function List() {
           setSkypass([])
           setSelectedSkypass(initSkypass)
           setFamily([])
-          dispatch(setCLevelModal(!cLevelModal));
+          dispatch(setCLevelModal(true));
           setProfileList(responseProfileCLvl?.data)
         }
       }
@@ -269,9 +270,6 @@ export default function List() {
     } else {
       if (responseProfile?.data) {
         setProfile(responseProfile?.data);
-        if(profileList.length > 1 ){
-          //  setProfileList([])
-        }
       }
     }
   }, [responseProfile, isErrorProfile]);
@@ -301,8 +299,6 @@ export default function List() {
     if(searchInfo.skypassMemberNumber !== '' && !cLevelModal && searchInfo.searchType !== '' ){
       refetchProfile()
       refetchSkypass()
-      // profileList가 있으면 searchType 비워주기 => 조건으로 사용하려고 
-      // setSearchInfo({...searchInfo, searchType: ''})
     }
   }, [cLevelModal, searchInfo, profileList])
 
@@ -325,6 +321,29 @@ export default function List() {
   
   /* 로딩바 */
   const { t } = useTranslation()
+
+  useEffect(() => {
+		reset()
+
+	}, [])
+  const reset = () => {
+		setProfile((state: Profile) => {
+			let rtn = cloneDeep(state)
+			rtn = cloneDeep(initProfile)
+			return rtn
+		})
+    setSkypass((prevState) => {
+			return cloneDeep([])
+		})
+    setFamily((prevState) => {
+			return cloneDeep([])	
+		})
+    setSelectedSkypass((state: Skypass) => {
+			let rtn = cloneDeep(state)
+			rtn = cloneDeep(initSkypass)
+			return rtn
+		})
+  }
 
   return (
     <Stack
