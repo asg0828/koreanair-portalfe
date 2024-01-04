@@ -17,7 +17,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography,
 import { useCallback, useEffect } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const initRows: DatasetColumnModel = {
   index: 0,
@@ -36,8 +36,7 @@ const Edit = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const mtsId: string = searchParams.get('mtsId') || '';
+  const mtsId = location?.state?.mtsId;
   const params: DatasetParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const {
@@ -251,6 +250,16 @@ const Edit = () => {
       })
     );
   };
+
+  useEffect(() => {
+    if (!mtsId) {
+      toast({
+        type: ValidType.INFO,
+        content: t('common.toast.info.noReadInfo'),
+      });
+      goToList();
+    }
+  }, []);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

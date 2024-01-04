@@ -1,7 +1,6 @@
 import { AddCircleOutlineOutlinedIcon, RemoveCircleOutlineOutlinedIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
-import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
@@ -20,16 +19,15 @@ import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useT
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const faqId: string = searchParams.get('faqId') || '';
+  const faqId: string = location?.state?.faqId;
   const params: FaqParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [fileLink, setFileLink] = useState<string>('');
@@ -151,6 +149,16 @@ const Edit = () => {
   };
 
   useEffect(() => {
+    if (!faqId) {
+      toast({
+        type: ValidType.INFO,
+        content: t('common.toast.info.noReadInfo'),
+      });
+      goToList();
+    }
+  }, []);
+
+  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
@@ -169,7 +177,6 @@ const Edit = () => {
       }
     }
   }, [response, isSuccess, isError, toast]);
-
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

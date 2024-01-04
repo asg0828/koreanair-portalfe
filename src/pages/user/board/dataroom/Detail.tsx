@@ -45,8 +45,9 @@ const Detail = () => {
   }, [params, page, navigate]);
 
   const goToEdit = () => {
-    navigate(`../edit?dataId=${dataId}`, {
+    navigate(`../edit`, {
       state: {
+        dataId: dataId,
         params: params,
         page: page,
       },

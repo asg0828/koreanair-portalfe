@@ -51,16 +51,17 @@ const List = () => {
   const goToReg = () => {
     navigate(View.REG, {
       state: {
+        faqId: faqId,
         params: params,
         page: page,
-        faqId: faqId,
       },
     });
   };
 
   const goToEdit = (nFaqId: string) => {
-    navigate(`./edit?faqId=${nFaqId}`, {
+    navigate(`./edit`, {
       state: {
+        faqId: faqId,
         params: params,
       },
     });
@@ -157,7 +158,7 @@ const List = () => {
       const index = newRows.findIndex((item) => item.faqId === data.faqId);
       data.codeNm = getCode(GroupCodeType.FAQ_TYPE, data.clCode)?.codeNm || '';
       newRows.splice(index, 1, data);
-      setRows(newRows); 
+      setRows(newRows);
     }
   }, [gResponse, gIsSuccess, gIsError, toast]);
 
