@@ -195,7 +195,7 @@ const Reg = () => {
                   render={({ field }) => (
                     <Select
                       appearance="Outline"
-                      placeholder={t('common.placeholder.all')}
+                      placeholder={t('common.placeholder.select')}
                       className="width-100"
                       ref={field.ref}
                       onChange={(e, value) => value && field.onChange(value)}

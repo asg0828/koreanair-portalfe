@@ -18,7 +18,8 @@
       }
     },
     "placeholder": {
-      "all": "전체"
+      "all": "전체",
+      "select": "선택"
     },
     "validate": {
       "requiredEn": "영문, 숫자, '_'만 입력 가능합니다.",
