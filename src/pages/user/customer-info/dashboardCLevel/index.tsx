@@ -116,7 +116,7 @@ export default function List() {
   };
 
   /* 검색 버튼 */
-  const handleSearch = useCallback(() => {
+  const handleSearch =() => {
 
     // 유효성 검사 실패 시 종료
     const validation = () => {
@@ -138,6 +138,7 @@ export default function List() {
 
     if(skypassNmSearch.skypassMemberNumber !== ''){
       setSkypassNmSearch({...skypassNmSearch, searchType: 'B'})
+      setProfileList([])
     } else if(searchInfo.mobilePhoneNumber !== ''){
       setSearchInfo({...searchInfo, searchType: 'C'})
     } else if(searchInfo.engFname !== ''){
@@ -145,17 +146,14 @@ export default function List() {
     } else if(searchInfo.korFname !== ''){
       setSearchInfo({...searchInfo, searchType: 'A'})
     } 
-  }, [searchInfo, skypassNmSearch]);
+  };
   
   useEffect(() => {
     if(searchInfo.searchType !== '') {
       refetchProfileCLvl() 
     } else if(skypassNmSearch.searchType !== ''){
       refetchProfile()
-      setSkypassNmSearch({...skypassNmSearch, searchType: '' })
-
-      // setProfileList([])
-      
+      setSkypassNmSearch({...skypassNmSearch, searchType: '' })      
     }
   }, [searchInfo, skypassNmSearch])
   
@@ -232,27 +230,30 @@ export default function List() {
 
 
   // 프로필 조회(핸드폰번호, 이름)
-  useEffect(() => {
-    if (isErrorProfileCLvl || responseProfileCLvl?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseProfileCLvl?.message
-      });
-      setProfile(initProfile)
-      setSkypass([])
-      setSelectedSkypass(initSkypass)
-      setFamily([])
-    } else {
-      if (responseProfileCLvl) {
+  useEffect(() => { 
+    if( searchInfo.searchType !== '')   {
+      if (isErrorProfileCLvl || responseProfileCLvl?.successOrNot === 'N') {
+        toast({
+          type: ValidType.ERROR,
+          content: responseProfileCLvl?.message
+        });
         setProfile(initProfile)
         setSkypass([])
         setSelectedSkypass(initSkypass)
         setFamily([])
-        dispatch(setCLevelModal(!cLevelModal));
-        setProfileList(responseProfileCLvl?.data)
+      } else {
+        if (responseProfileCLvl) {
+          setProfile(initProfile)
+          setSkypass([])
+          setSelectedSkypass(initSkypass)
+          setFamily([])
+          dispatch(setCLevelModal(!cLevelModal));
+          setProfileList(responseProfileCLvl?.data)
+        }
       }
+
     }
-  }, [responseProfileCLvl, isErrorProfileCLvl]);
+  }, [responseProfileCLvl, isErrorProfileCLvl, searchInfo.searchType]);
 
   // 프로필 조회(skypassNumber)
   useEffect(() => {
@@ -264,6 +265,7 @@ export default function List() {
       setProfile(initProfile)
       setSkypass([])
       setFamily([])
+      setSelectedSkypass(initSkypass)
     } else {
       if (responseProfile?.data) {
         setProfile(responseProfile?.data);
