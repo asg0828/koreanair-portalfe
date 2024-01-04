@@ -62,7 +62,7 @@ export default function List() {
   // profileList 조회(CLevel) api
   const { refetch: refetchProfileCLvl, data: responseProfileCLvl, isError: isErrorProfileCLvl, isFetching: isFetchingCLvl} = useProfileCLevel(searchInfo);
   // skypass 조회 api
-  const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass} = useSkypass(skypassNmSearch.skypassMemberNumber);
+  const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass, isFetching: isFetchingSkypass} = useSkypass(skypassNmSearch.skypassMemberNumber);
   
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
@@ -98,6 +98,12 @@ export default function List() {
       )
     );
   };
+  
+// useEffect(()=> {
+//   if(skypassNmSearch.skypassMemberNumber !== '' && skypassNmSearch.searchType === ''){
+//     setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
+//   }
+// }, [skypassNmSearch.searchType]) 
 
   const onchangeModalInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -110,8 +116,7 @@ export default function List() {
   };
 
   /* 검색 버튼 */
-  const handleSearch = useCallback(() => {
-    setSkypass([]);
+  const handleSearch =() => {
 
     // 유효성 검사 실패 시 종료
     const validation = () => {
@@ -133,6 +138,7 @@ export default function List() {
 
     if(skypassNmSearch.skypassMemberNumber !== ''){
       setSkypassNmSearch({...skypassNmSearch, searchType: 'B'})
+      setProfileList([])
     } else if(searchInfo.mobilePhoneNumber !== ''){
       setSearchInfo({...searchInfo, searchType: 'C'})
     } else if(searchInfo.engFname !== ''){
@@ -140,13 +146,14 @@ export default function List() {
     } else if(searchInfo.korFname !== ''){
       setSearchInfo({...searchInfo, searchType: 'A'})
     } 
-  }, [searchInfo, skypassNmSearch]);
+  };
   
   useEffect(() => {
     if(searchInfo.searchType !== '') {
       refetchProfileCLvl() 
     } else if(skypassNmSearch.searchType !== ''){
       refetchProfile()
+      setSkypassNmSearch({...skypassNmSearch, searchType: '' })      
     }
   }, [searchInfo, skypassNmSearch])
   
@@ -174,6 +181,9 @@ export default function List() {
     if(id === 'skypassMemberNumber'){
       setSkypassNmSearch({ searchType: '' , [id] : value })
     } else {
+      if(skypassNmSearch.skypassMemberNumber !== ''){
+        setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
+      }
       setSearchInfo({ ...searchInfo, [id]: value, searchType: '' });
     }
   };
@@ -220,19 +230,30 @@ export default function List() {
 
 
   // 프로필 조회(핸드폰번호, 이름)
-  useEffect(() => {
-    if (isErrorProfileCLvl || responseProfileCLvl?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseProfileCLvl?.message
-      });
-    } else {
-      if (responseProfileCLvl) {
+  useEffect(() => { 
+    if( searchInfo.searchType !== '')   {
+      if (isErrorProfileCLvl || responseProfileCLvl?.successOrNot === 'N') {
+        toast({
+          type: ValidType.ERROR,
+          content: responseProfileCLvl?.message
+        });
+        setProfile(initProfile)
+        setSkypass([])
+        setSelectedSkypass(initSkypass)
+        setFamily([])
+      } else {
+        if (responseProfileCLvl) {
+          setProfile(initProfile)
+          setSkypass([])
+          setSelectedSkypass(initSkypass)
+          setFamily([])
           dispatch(setCLevelModal(!cLevelModal));
           setProfileList(responseProfileCLvl?.data)
+        }
       }
+
     }
-  }, [responseProfileCLvl, isErrorProfileCLvl]);
+  }, [responseProfileCLvl, isErrorProfileCLvl, searchInfo.searchType]);
 
   // 프로필 조회(skypassNumber)
   useEffect(() => {
@@ -244,11 +265,13 @@ export default function List() {
       setProfile(initProfile)
       setSkypass([])
       setFamily([])
+      setSelectedSkypass(initSkypass)
     } else {
-      if (responseProfile) {
+      if (responseProfile?.data) {
         setProfile(responseProfile?.data);
-        // dispatch(setCLevelModal(!cLevelModal));
-        // setProfileList([responseProfile?.data])
+        if(profileList.length > 1 ){
+          //  setProfileList([])
+        }
       }
     }
   }, [responseProfile, isErrorProfile]);
@@ -345,19 +368,19 @@ export default function List() {
             <Stack>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.korLname}
-                  id="korLname"
+                  value={searchInfo.korFname}
+                  id="korFname"
                   appearance="Outline"
                   placeholder="KOR. - Last Name"
                   size="LG"
                   textAlign="left"
                   onChange={onchangeInputHandler}
                 />
-              </div>{' '}
+              </div>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.korFname}
-                  id="korFname"
+                  value={searchInfo.korLname}
+                  id="korLname"
                   appearance="Outline"
                   placeholder="KOR. - First Name"
                   size="LG"
@@ -419,11 +442,12 @@ export default function List() {
       {/* searchBar 영역 */}
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
-        {isFetchingCLvl ? 
+        {isFetchingCLvl || isFetchingSkypass ? 
          <Loader
          style={{
              width: "100%",
              height: "100%",
+             backgroundColor : '#f8f9fc'
          }}
          type="Bubble"
          title={t('common.message.proceeding')}
