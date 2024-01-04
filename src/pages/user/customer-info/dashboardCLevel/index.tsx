@@ -224,7 +224,7 @@ export default function List() {
     if (isErrorProfileCLvl || responseProfileCLvl?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: responseProfileCLvl?.message
       });
     } else {
       if (responseProfileCLvl) {
@@ -239,8 +239,11 @@ export default function List() {
     if (isErrorProfile || responseProfile?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: responseProfile?.message,
       });
+      setProfile(initProfile)
+      setSkypass([])
+      setFamily([])
     } else {
       if (responseProfile) {
         setProfile(responseProfile?.data);
@@ -255,7 +258,7 @@ export default function List() {
       if (isErrorSkypass || responseSkypass?.successOrNot === 'N') {
         toast({
           type: ValidType.ERROR,
-          content: '조회 중 에러가 발생했습니다.',
+          content: responseSkypass?.message,
         });
       } else {
         if (responseSkypass) {
@@ -287,7 +290,7 @@ export default function List() {
       setFamily(initFamily)
       toast({
         type: ValidType.ERROR,
-        content: '조회 중 에러가 발생했습니다.',
+        content: responseSkypass?.message,
       });
     } else {
       if (responseSkypass) {
