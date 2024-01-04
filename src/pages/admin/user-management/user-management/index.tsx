@@ -22,8 +22,8 @@ const initParams: UserParams = {
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const location = useLocation();
   const beforeParams: UserParams = location?.state?.params;
   const beforePage: PageModel = location?.state?.page;
@@ -59,8 +59,9 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handleClear = () => {
     setParams(initParams);
@@ -78,8 +79,8 @@ const List = () => {
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

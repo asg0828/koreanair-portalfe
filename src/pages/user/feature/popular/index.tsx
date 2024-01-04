@@ -15,8 +15,8 @@ import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [page, setPage] = useState<PageModel>(initPage);

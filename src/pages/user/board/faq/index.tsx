@@ -25,9 +25,9 @@ export const initFaqParams: FaqParams = {
 
 const List = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -67,8 +67,9 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handleClear = () => {
     setParams(initFaqParams);
@@ -111,8 +112,8 @@ const List = () => {
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     faqId && gRefetch();

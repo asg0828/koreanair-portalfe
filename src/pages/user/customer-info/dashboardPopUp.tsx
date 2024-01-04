@@ -85,7 +85,7 @@ export default function DashBoardPopUp() {
                 {skypass && skypass.length > 0 && (
                   <Select
                     id="skypassSelect"
-                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : undefined}
+                    defaultValue={skypass.length > 0 ? skypass[0].skypassMemberNumber : undefined}
                     appearance="Outline"
                     placeholder="스카이패스선택"
                     style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}
