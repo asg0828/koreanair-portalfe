@@ -27,7 +27,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography,
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const initFeatureAllParams: FeatureAllParams = {
   featureKoNm: undefined,
@@ -69,8 +69,7 @@ const Edit = () => {
     },
   });
   const values = getValues();
-  const [searchParams] = useSearchParams();
-  const featureId: string = searchParams.get('featureId') || '';
+  const featureId: string = location?.state?.featureId;
   const params: FeatureParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE));
@@ -187,6 +186,16 @@ const Edit = () => {
   useDidMountEffect(() => {
     faRefetch();
   }, [featureAllParams]);
+
+  useEffect(() => {
+    if (!featureId) {
+      toast({
+        type: ValidType.INFO,
+        content: t('common.toast.info.noReadInfo'),
+      });
+      goToList();
+    }
+  }, []);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

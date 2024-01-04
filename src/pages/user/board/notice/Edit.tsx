@@ -1,7 +1,6 @@
 import { AddCircleOutlineOutlinedIcon, RemoveCircleOutlineOutlinedIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
-import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateNotice } from '@/hooks/mutations/useNoticeMutations';
@@ -19,7 +18,7 @@ import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@componen
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
   const { t } = useTranslation();
@@ -27,8 +26,7 @@ const Edit = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
-  const noticeId: string = searchParams.get('noticeId') || '';
+  const noticeId = location?.state?.noticeId;
   const params: NoticeParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [fileLink, setFileLink] = useState<string>('');
@@ -156,6 +154,16 @@ const Edit = () => {
   };
 
   useEffect(() => {
+    if (!noticeId) {
+      toast({
+        type: ValidType.INFO,
+        content: t('common.toast.info.noReadInfo'),
+      });
+      goToList();
+    }
+  }, []);
+
+  useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
@@ -198,17 +206,6 @@ const Edit = () => {
       goToList();
     }
   }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
-
-  if (!noticeId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
