@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom'
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { cloneDeep, isEmpty } from 'lodash'
@@ -79,6 +79,7 @@ const SelfFeatureReg = () => {
 
 	const navigate = useNavigate()
 	const location = useLocation()
+	const [queryParam] = useSearchParams()
 	const { toast } = useToast()
 	const sessionInfo = useAppSelector(selectSessionInfo())
 	const dispatch = useAppDispatch()
@@ -112,7 +113,7 @@ const SelfFeatureReg = () => {
 	// 픽처타입
 	//const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
 	// 등록 구분(RuleDesign / SQL)
-	const [regType, setRegType] = useState<string>("")
+	const [regType, setRegType] = useState<string>(queryParam.get("regType") || "")
 	// 한글 및 영문 입력시 입력값
 	const [featureKoNmInput, setFeatureKoNmInput] = useState<string>("")
 	const [featureEnNmInput, setFeatureEnNmInput] = useState<string>("")
@@ -171,12 +172,32 @@ const SelfFeatureReg = () => {
 	useEffect(() => {
 		initCustFeatRule()
 		// if (regType === SelfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
-		let qParam = location.search.replace("?", "")
+		// let qParam = location.search.replace("?", "")
 
-		if (qParam.split("=")[0] === "regType")
-			setRegType(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
+		// if (qParam.split("=")[0] === "regType")
+		// 	setRegType(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
 
 	}, [])
+	useEffect(() => {
+		if (
+			!regType 
+			|| !(regType === SelfFeatPgPpNm.RULE_REG || regType === SelfFeatPgPpNm.SQL_REG)
+		) {
+			toast({
+			  type: ValidType.ERROR,
+			  content: "Feature 등록 타입이 불명확합니다. 목록으로 이동합니다.",
+			})
+			navigate(
+				'..',
+				{
+					state: {
+						srchInfo: location?.state?.srchInfo,
+						//pageInfo: location?.state?.pageInfo 
+					}
+				}
+			)
+		}
+	}, [regType])
 	// session 값 setting
 	useEffect(() => {
 		if (!sessionInfo.deptCode) return
