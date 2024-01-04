@@ -22,7 +22,7 @@ import {
   FamilyMembers,
 } from '@/models/model/CustomerInfoModel';
 import { ValidType } from '@/models/common/Constants';
-
+import { cloneDeep } from 'lodash'
 export default function List() {
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -151,14 +151,6 @@ export default function List() {
     setSearchSkypassNm(String(value))
   };
   
-  useEffect(() => {
-    if(profile.skypassInfos.length > 0){
-      // setSelectedSkypass
-      // setSelectedSkypass((profile.skypassInfos).find((item: any) => item.skypassMemberNumber === searchInfo.skypassSelect));
-    }
-    // 뭘 넣어줘야될까
-
-  }, []);
 
   // 프로필 조회
   useEffect(() => {
@@ -202,6 +194,28 @@ export default function List() {
     }
   }, [isErrorSkypass, responseSkypass]);
 
+	useEffect(() => {
+		reset()
+
+	}, [])
+  const reset = () => {
+		setProfile((state: Profile) => {
+			let rtn = cloneDeep(state)
+			rtn = cloneDeep(initProfile)
+			return rtn
+		})
+    setSkypass((prevState) => {
+			return cloneDeep([])
+		})
+    setFamily((prevState) => {
+			return cloneDeep([])	
+		})
+    setSelectedSkypass((state: Skypass) => {
+			let rtn = cloneDeep(state)
+			rtn = cloneDeep(initSkypass)
+			return rtn
+		})
+  }
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       {/* searchBar 영역 */}
@@ -1044,3 +1058,5 @@ export default function List() {
     </Stack>
   );
 }
+
+
