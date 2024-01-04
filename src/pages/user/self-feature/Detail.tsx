@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { cloneDeep, isEmpty } from "lodash";
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -93,13 +93,14 @@ const SelfFeatureDetail = () => {
 	const { toast } = useToast()
 	const location = useLocation()
 	const navigate = useNavigate()
+	const [queryParam] = useSearchParams()
 	const sessionInfo = useAppSelector(selectSessionInfo())
 	const userId = useAppSelector(selectSessionInfo()).userId || ''
 	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
 	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
 	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
 
-	const [custFeatRuleId, setCustFeatRuleId] = useState<string>("")
+	const [custFeatRuleId, setCustFeatRuleId] = useState<string>(queryParam.get("custFeatRuleId") || "")
 	const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(custFeatRuleId)
 	const [sqlDirectInputYn, setSqlDirectInputYn] = useState<string>("")
 	const [submissionStatus, setSubmissionStatus] = useState<string>("")
@@ -190,23 +191,54 @@ const SelfFeatureDetail = () => {
 	// component mount
 	useEffect(() => {
 		initCustFeatRule()
-		let qParam = location.search.replace("?", "")
-		
-		if (qParam.split("=")[0] === "custFeatRuleId")
-			setCustFeatRuleId(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
+		// let qParam = location.search.replace("?", "")
+
+		// if (qParam.split("=")[0] === "custFeatRuleId")
+		// 	setCustFeatRuleId(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
 
 	}, [])
 	useEffect(() => {
-		if (custFeatRuleId === "") return
+		if (custFeatRuleId === "") {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회된 데이터가 없습니다. 목록으로 이동합니다.',
+			})
+			navigate(
+				'..',
+				{
+					state: {
+						srchInfo: location?.state?.srchInfo,
+						//pageInfo: location?.state?.pageInfo 
+					}
+				}
+			)
+			return
+		}
 		directSQLYnRefetch()
 	}, [custFeatRuleId])
 	// SQL 등록 여부 API response callback
 	useEffect(() => {
 		if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: '조회 중 에러가 발생했습니다.',
-			})
+			if (directSQLYnRes?.status === 404) {
+				toast({
+					type: ValidType.ERROR,
+					content: '조회된 데이터가 없습니다. 목록으로 이동합니다.',
+				})
+				navigate(
+					'..',
+					{
+						state: {
+							srchInfo: location?.state?.srchInfo,
+							//pageInfo: location?.state?.pageInfo 
+						}
+					}
+				)
+			} else {
+				toast({
+					type: ValidType.ERROR,
+					content: '조회 중 에러가 발생했습니다.',
+				})
+			}
 		} else {
 			if (directSQLYnRes) {
 				setSqlDirectInputYn(directSQLYnRes.result)
@@ -475,7 +507,7 @@ const SelfFeatureDetail = () => {
 						logiFeat = featureRuleList.filter((featRule: TbRsCustFeatRule) => {
 							return metaTblId === featRule.metaTblId
 						})
-						
+
 						if (logiFeat.length > 0) {
 							target.columnLogiName = logiFeat[0].name
 							target.targetDataType = logiFeat[0].dataTypeCategory.toString()
@@ -629,7 +661,7 @@ const SelfFeatureDetail = () => {
 			if (custFeatRuleInfosRes?.result) {
 				setFeatureInfo(cloneDeep(custFeatRuleInfosRes.result))
 				if (
-					custFeatRuleInfosRes.result.tbRsCustFeatRule 
+					custFeatRuleInfosRes.result.tbRsCustFeatRule
 					&& custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus
 				) {
 					setSubmissionStatus(custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus)
@@ -650,7 +682,7 @@ const SelfFeatureDetail = () => {
 			if (custFeatSQLInfosRes?.result) {
 				setFeatureInfo(cloneDeep(custFeatSQLInfosRes.result))
 				if (
-					custFeatSQLInfosRes.result.tbRsCustFeatRule 
+					custFeatSQLInfosRes.result.tbRsCustFeatRule
 					&& custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus
 				) {
 					setSubmissionStatus(custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus)

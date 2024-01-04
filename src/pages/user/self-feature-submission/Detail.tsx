@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { cloneDeep, isEmpty } from 'lodash'
@@ -99,6 +99,7 @@ const SfSubmissionRequestDetail = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
+	const [queryParam] = useSearchParams()
     const sessionInfo = useAppSelector(selectSessionInfo())
     const userId = useAppSelector(selectSessionInfo()).userId || ''
     const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
@@ -106,7 +107,7 @@ const SfSubmissionRequestDetail = () => {
     const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
     const { toast } = useToast()
 
-	const [custFeatRuleId, setCustFeatRuleId] = useState<string>("")
+	const [custFeatRuleId, setCustFeatRuleId] = useState<string>(queryParam.get("custFeatRuleId") || "")
 	const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(custFeatRuleId)
 	const [sqlDirectInputYn, setSqlDirectInputYn] = useState<string>("")
 	const [submissionStatus, setSubmissionStatus] = useState<string>("")
@@ -200,23 +201,54 @@ const SfSubmissionRequestDetail = () => {
     // component mount
 	useEffect(() => {
 		initCustFeatRule()
-		let qParam = location.search.replace("?", "")
+		// let qParam = location.search.replace("?", "")
 
-		if (qParam.split("=")[0] === "custFeatRuleId")
-			setCustFeatRuleId(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
+		// if (qParam.split("=")[0] === "custFeatRuleId")
+		// 	setCustFeatRuleId(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
 
 	}, [])
 	useEffect(() => {
-		if (custFeatRuleId === "") return
+		if (custFeatRuleId === "") {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회된 데이터가 없습니다. 목록으로 이동합니다.',
+			})
+			navigate(
+				'..',
+				{
+					state: {
+						srchInfo: location?.state?.srchInfo,
+						//pageInfo: location?.state?.pageInfo 
+					}
+				}
+			)
+			return
+        }
 		directSQLYnRefetch()
 	}, [custFeatRuleId])
 	// SQL 등록 여부 API response callback
 	useEffect(() => {
 		if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
-			toast({
-				type: ValidType.ERROR,
-				content: '조회 중 에러가 발생했습니다.',
-			})
+			if (directSQLYnRes?.status === 404) {
+				toast({
+					type: ValidType.ERROR,
+					content: '조회된 데이터가 없습니다. 목록으로 이동합니다.',
+				})
+				navigate(
+					'..',
+					{
+						state: {
+							srchInfo: location?.state?.srchInfo,
+							//pageInfo: location?.state?.pageInfo 
+						}
+					}
+				)
+			} else {
+				toast({
+					type: ValidType.ERROR,
+					content: '조회 중 에러가 발생했습니다.',
+				})
+			}
 		} else {
 			if (directSQLYnRes) {
 				setSqlDirectInputYn(directSQLYnRes.result)

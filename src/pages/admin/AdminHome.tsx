@@ -174,7 +174,7 @@ const AdminHome = () => {
   return (
     <Stack id="home" direction="Vertical" gap="LG" justifyContent="Between" className="single-page">
       <Stack direction="Horizontal" gap="LG" className="width-100" alignItems="Start">
-        <Stack direction={'Vertical'} className="box2 none">
+        <Stack direction={'Vertical'} className="box2 none width-45">
           <Stack direction="Vertical" className="box2-1 shadowBox1">
             <Typography variant="h3" style={{ marginBottom: '12px' }}>
               {t('home:label.loginInfo')}
@@ -216,7 +216,7 @@ const AdminHome = () => {
             )}
           </Stack>
         </Stack>
-        <Stack direction="Vertical" className="box1 shadowBox1">
+        <Stack direction="Vertical" className="box1 shadowBox1 width-55">
           <div>
             <>
               <Tag
