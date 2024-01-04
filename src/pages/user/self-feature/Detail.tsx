@@ -69,7 +69,7 @@ import {
 import { QueryParams } from '@/utils/ApiUtil';
 import ConfirmModal from '@/components/modal/ConfirmModal';
 import FeatQueryRsltButton from '@/components/self-feature/FeatQueryRsltButton';
-import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
+import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useDirectSQLYn, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from '@/hooks/queries/self-feature/useSelfFeatureUserQueries';
 import { GroupCodeType, ValidType } from '@/models/common/Constants';
 import { useAuthCommCodes, useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import { useFeatureTypList } from '@/hooks/queries/useFeatureQueries';
@@ -99,6 +99,11 @@ const SelfFeatureDetail = () => {
 	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
 	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
 
+	const [custFeatRuleId, setCustFeatRuleId] = useState<string>("")
+	const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(custFeatRuleId)
+	const [sqlDirectInputYn, setSqlDirectInputYn] = useState<string>("")
+	const [submissionStatus, setSubmissionStatus] = useState<string>("")
+
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
 	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
 	// rslnRuleId parameter
@@ -120,8 +125,8 @@ const SelfFeatureDetail = () => {
 	const { } = useCommCodes(CommonCode.SGMT_DELIMITER)
 
 	// 상세 조회 API(Rule-Design / SQL)
-	const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(location.state.id)
-	const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.id)
+	const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(custFeatRuleId)
+	const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(custFeatRuleId)
 	const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
 	const [submissionId, setSubmissionId] = useState<number>(0)
 	const { data: submissionListRes, isError: submissionListErr, refetch: submissionListRefetch } = useSubmissionList(subListQueryParams)
@@ -181,16 +186,38 @@ const SelfFeatureDetail = () => {
 		isError: runScheduleByManuallyErr,
 		mutate: runScheduleByManuallyMutate,
 		isLoading: runScheduleByManuallyLoading,
-	} = useRunScheduleByManually(location.state.id)
+	} = useRunScheduleByManually(custFeatRuleId)
 	// component mount
 	useEffect(() => {
 		initCustFeatRule()
-		if (location.state.sqlDirectInputYn === "N") {
-			custFeatRuleInfosRefetch()
-		} else if (location.state.sqlDirectInputYn === "Y") {
-			custFeatSQLInfosRefetch()
-		}
+		let qParam = location.search.replace("?", "")
+		
+		if (qParam.split("=")[0] === "custFeatRuleId")
+			setCustFeatRuleId(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
+
 	}, [])
+	useEffect(() => {
+		if (custFeatRuleId === "") return
+		directSQLYnRefetch()
+	}, [custFeatRuleId])
+	// SQL 등록 여부 API response callback
+	useEffect(() => {
+		if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (directSQLYnRes) {
+				setSqlDirectInputYn(directSQLYnRes.result)
+				if (directSQLYnRes.result === "N") {
+					custFeatRuleInfosRefetch()
+				} else if (directSQLYnRes.result === "Y") {
+					custFeatSQLInfosRefetch()
+				}
+			}
+		}
+	}, [directSQLYnRes, directSQLYnErr])
 	useEffect(() => {
 		if (userInfoErr || userInfoRes?.successOrNot === 'N') {
 			toast({
@@ -228,9 +255,9 @@ const SelfFeatureDetail = () => {
 		}
 	}, [mstrProfListRes, mstrProfListErr, toast])
 	useEffect(() => {
-		if (mstrSgmtRuleIdParam === "") return
+		if (mstrSgmtRuleIdParam === "" || sqlDirectInputYn === "") return
 
-		if (location.state.sqlDirectInputYn === "N") {
+		if (sqlDirectInputYn === "N") {
 			mstrSgmtTbandColRefetch()
 			setFeatureRuleInfoParams({
 				...featureRuleInfoParams,
@@ -239,7 +266,7 @@ const SelfFeatureDetail = () => {
 			})
 		}
 
-	}, [mstrSgmtRuleIdParam, location.state.sqlDirectInputYn])
+	}, [mstrSgmtRuleIdParam, sqlDirectInputYn])
 	useEffect(() => {
 		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
 		featureListRefetch()
@@ -275,7 +302,7 @@ const SelfFeatureDetail = () => {
 		} else {
 			if (cmmCodeCateRes?.result) {
 				setCategoryOption(() => {
-					return [...[{ cdv: "", cdvNm: "선택" }], ...cmmCodeCateRes?.result]
+					return [...cmmCodeCateRes?.result]
 				})
 			}
 		}
@@ -304,12 +331,12 @@ const SelfFeatureDetail = () => {
 			})
 		} else {
 			if (mstrSgmtTbandColRes) {
-				if (location.state.sqlDirectInputYn === "N") {
+				if (sqlDirectInputYn === "N") {
 					setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
 				}
 			}
 		}
-	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, mstrSgmtTbandColRefetch, toast])
+	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, mstrSgmtTbandColRefetch, sqlDirectInputYn])
 	// 대구분 API response callback
 	useEffect(() => {
 		if (seGroupErr || seGroupRes?.successOrNot === 'N') {
@@ -401,17 +428,19 @@ const SelfFeatureDetail = () => {
 	}
 	// 상세 정보 조회 후 값 setting
 	useEffect(() => {
+		if (sqlDirectInputYn === "") return
+
 		setFeatureTempInfo(cloneDeep(featureInfo.featureTemp))
-		if (location.state.sqlDirectInputYn === "N") {
+		if (sqlDirectInputYn === "N") {
 			setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
 			setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
 			setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
 			//setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
 		}
-		if (location.state.sqlDirectInputYn === "Y") {
+		if (sqlDirectInputYn === "Y") {
 			setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
 		}
-	}, [featureInfo])
+	}, [featureInfo, sqlDirectInputYn])
 	// 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
 	useEffect(() => {
 		if (isEmpty(mstrSgmtTableandColMetaInfo) || mstrSgmtTableandColMetaInfo.rslnRuleId === "") return
@@ -438,6 +467,21 @@ const SelfFeatureDetail = () => {
 							target.columnLogiName = colNm
 						}
 
+					} else if (target.divisionCode === DivisionTypes.FEAT) {
+						/* 
+							self-feature 데이터
+						*/
+						let logiFeat: Array<TbRsCustFeatRule> = []
+						logiFeat = featureRuleList.filter((featRule: TbRsCustFeatRule) => {
+							return metaTblId === featRule.metaTblId
+						})
+						
+						if (logiFeat.length > 0) {
+							target.columnLogiName = logiFeat[0].name
+							target.targetDataType = logiFeat[0].dataTypeCategory.toString()
+						} else {
+							target.columnLogiName = ""
+						}
 					} else if (target.divisionCode === DivisionTypes.BEHV) {
 						/* 
 							행동 데이터면  동일한 테이블 ID를 가진 behavior의
@@ -493,7 +537,7 @@ const SelfFeatureDetail = () => {
 	}, [mstrSgmtTableandColMetaInfo, featureInfo])
 	// 계산식 validation을 위한 대상 list 추출
 	useEffect(() => {
-		if (location.state.sqlDirectInputYn === "Y") return
+		if (sqlDirectInputYn === "Y" || sqlDirectInputYn === "") return
 		let fList = []
 		for (let i = 0; i < targetList.length; i++) {
 			let t = { targetId: `T${i + 1}`, dataType: "", dtpCd: "" }
@@ -532,13 +576,13 @@ const SelfFeatureDetail = () => {
 				}
 			)
 		} else if (pageNm === SelfFeatPgPpNm.EDIT) {
-			if (location.state.sqlDirectInputYn !== "Y") {
+			if (sqlDirectInputYn === "N") {
 				featureInfo.tbRsCustFeatRuleTrgtList = targetList
 				featureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
 			}
 			featureInfo.featureTemp.featureSeGrp = ""
 			navigate(
-				`../${pageNm}`,
+				`../${pageNm}?custFeatRuleId=${custFeatRuleId}`,
 				{
 					state: {
 						featureInfo: featureInfo,
@@ -584,11 +628,17 @@ const SelfFeatureDetail = () => {
 		} else {
 			if (custFeatRuleInfosRes?.result) {
 				setFeatureInfo(cloneDeep(custFeatRuleInfosRes.result))
+				if (
+					custFeatRuleInfosRes.result.tbRsCustFeatRule 
+					&& custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus
+				) {
+					setSubmissionStatus(custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus)
+				}
 				// 승인 정보 호출 API parameter setting
-				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.id })
+				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: custFeatRuleId })
 			}
 		}
-	}, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
+	}, [custFeatRuleInfosRes, custFeatRuleInfosErr])
 	// 정보 조회 API callback (SQL)
 	useEffect(() => {
 		if (custFeatSQLInfosErr || custFeatSQLInfosRes?.successOrNot === 'N') {
@@ -599,16 +649,22 @@ const SelfFeatureDetail = () => {
 		} else {
 			if (custFeatSQLInfosRes?.result) {
 				setFeatureInfo(cloneDeep(custFeatSQLInfosRes.result))
+				if (
+					custFeatSQLInfosRes.result.tbRsCustFeatRule 
+					&& custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus
+				) {
+					setSubmissionStatus(custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus)
+				}
 				// 승인 정보 호출 API parameter setting
-				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.id })
+				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: custFeatRuleId })
 			}
 		}
-	}, [custFeatSQLInfosRes, custFeatSQLInfosErr, toast])
+	}, [custFeatSQLInfosRes, custFeatSQLInfosErr])
 	// 승인정보 호출을 위한 승인 list API refetch
 	useEffect(() => {
-		if (isEmpty(subListQueryParams)) return
+		if (isEmpty(subListQueryParams) || submissionStatus === "") return
 		submissionListRefetch()
-	}, [subListQueryParams, location.state.submissionStatus])
+	}, [subListQueryParams, submissionStatus])
 	// 승인 정보 리스트 호출 API Callback
 	useEffect(() => {
 		if (submissionListErr || submissionListRes?.successOrNot === 'N') {
@@ -654,9 +710,9 @@ const SelfFeatureDetail = () => {
 	}, [submissionListRes, submissionListErr, toast])
 	// 승인정보 상세 API refetch
 	useEffect(() => {
-		if (submissionId === 0) return
+		if (submissionId === 0 || submissionStatus === "") return
 		submissionInfoRefetch()
-	}, [submissionId, location.state.submissionStatus])
+	}, [submissionId, submissionStatus])
 	// 승인정보 상세 API Callback
 	useEffect(() => {
 		if (submissionInfoErr || submissionInfoRes?.successOrNot === 'N') {
@@ -735,7 +791,7 @@ const SelfFeatureDetail = () => {
 		setUserEmail(sessionInfo.userEmail)
 		// Rule-Design의 경우만 수동실행 1회 validation check
 		if (
-			location.state.sqlDirectInputYn === "N"
+			sqlDirectInputYn === "N"
 			&& featureInfo.tbRsCustFeatRule.batManualExecTestCnt < 1
 		) {
 			setModalType(ModalType.ALERT)
@@ -766,10 +822,7 @@ const SelfFeatureDetail = () => {
 				type: ValidType.CONFIRM,
 				content: '승인 요청 되었습니다.',
 			})
-			featureInfo.tbRsCustFeatRule.id = insrtSubReqRes.result.referenceNo
-			featureInfo.tbRsCustFeatRule.submissionStatus = insrtSubReqRes.result.status
-			// 상세로 redirect
-			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
+			setSubmissionStatus(insrtSubReqRes.result.status)
 		}
 	}, [insrtSubReqRes, insrtSubReqSucc, insrtSubReqErr])
 	// 승인요청 취소 API 호출
@@ -797,10 +850,7 @@ const SelfFeatureDetail = () => {
 				type: ValidType.CONFIRM,
 				content: '승인요청이 취소 되었습니다.',
 			})
-			featureInfo.tbRsCustFeatRule.id = cnclReqSubRes.result.referenceNo
-			featureInfo.tbRsCustFeatRule.submissionStatus = cnclReqSubRes.result.status
-			// 상세로 redirect
-			navigate(`../${SelfFeatPgPpNm.DETL}`, { state: featureInfo.tbRsCustFeatRule })
+			setSubmissionStatus(cnclReqSubRes.result.status)
 		}
 	}, [cnclReqSubRes, cnclReqSubSucc, cnclReqSubErr])
 	// 삭제 param setting & mutate
@@ -834,7 +884,7 @@ const SelfFeatureDetail = () => {
 		}
 	}, [featureDeleteRes, featureDeleteSucc, featureDeleteErr])
 	// feature 승인 상태에 따른 버튼 노출
-	const DetailBtnComponent = () => {
+	const DetailBtnComponent = (props: any) => {
 		let isShowUpdtBtn: Boolean = false
 		let isShowSubMisnBtn: Boolean = false
 		/*
@@ -849,9 +899,10 @@ const SelfFeatureDetail = () => {
 		}
 
 		if (
-			!location.state.submissionStatus
-			|| location.state.submissionStatus === ""
-			|| location.state.submissionStatus === SubFeatStatus.SAVE
+			// !props.submissionStatus
+			// || props.submissionStatus === ""
+			// || 
+			props.submissionStatus === SubFeatStatus.SAVE
 		) {
 			// 등록
 			return (
@@ -874,7 +925,7 @@ const SelfFeatureDetail = () => {
 					}
 				</Stack>
 			)
-		} else if (location.state.submissionStatus === SubFeatStatus.REQ) {
+		} else if (props.submissionStatus === SubFeatStatus.REQ) {
 			// 승인 요청
 			return (
 				<Stack justifyContent="End" gap="SM" className="width-100">
@@ -890,7 +941,7 @@ const SelfFeatureDetail = () => {
 					}
 				</Stack>
 			)
-		} else if (location.state.submissionStatus === SubFeatStatus.IN_APRV) {
+		} else if (props.submissionStatus === SubFeatStatus.IN_APRV) {
 			// 결재 진행이지만 1차 승인 이전의 상태인 경우만 요청 취소 버튼 노출
 			return (
 				<Stack justifyContent="End" gap="SM" className="width-100">
@@ -899,7 +950,7 @@ const SelfFeatureDetail = () => {
 					</Button>
 				</Stack>
 			)
-		} else if (location.state.submissionStatus === SubFeatStatus.APRV) {
+		} else if (props.submissionStatus === SubFeatStatus.APRV) {
 			// 승인 완료
 			return (
 				<Stack justifyContent="End" gap="SM" className="width-100">
@@ -908,7 +959,7 @@ const SelfFeatureDetail = () => {
 					</Button>
 				</Stack>
 			)
-		} else if (location.state.submissionStatus === SubFeatStatus.REJT) {
+		} else if (props.submissionStatus === SubFeatStatus.REJT) {
 			// 반려
 			return (
 				<Stack justifyContent="End" gap="SM" className="width-100">
@@ -939,7 +990,7 @@ const SelfFeatureDetail = () => {
 	}
 	// 수동실행 API 호출
 	const runScheduleByManually = () => {
-		if (location.state.id && location.state.id !== "") {
+		if (custFeatRuleId && custFeatRuleId !== "") {
 			if (featureInfo.tbRsCustFeatRule.batManualExecTestCnt > 5) {
 				toast({
 					type: ValidType.ERROR,
@@ -989,9 +1040,9 @@ const SelfFeatureDetail = () => {
 					content: t(runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.'),
 				})
 			}
-			if (location.state.sqlDirectInputYn !== "Y") {
+			if (sqlDirectInputYn === "N") {
 				custFeatRuleInfosRefetch()
-			} else if (location.state.sqlDirectInputYn === "Y") {
+			} else if (sqlDirectInputYn === "Y") {
 				custFeatSQLInfosRefetch()
 			}
 		}
@@ -1004,37 +1055,39 @@ const SelfFeatureDetail = () => {
 	return (
 		<Stack direction="Vertical" gap="MD" justifyContent="Between" className='height-100'>
 			{/* 상단 버튼 영역 */}
-			<Stack direction="Horizontal" gap="MD" justifyContent="End">
-				<Button
-					disabled={runScheduleByManuallyLoading || isRunValidFetching}
-					style={{ width: "7%" }}
-					size="LG"
-					onClick={runScheduleByManually}
-				>
-					{runScheduleByManuallyLoading
-						?
-						<Loader
-							style={{
-								backgroundColor: "rgb(235, 235, 235)",
-								color: "rgb(185, 185, 185)",
-								borderColor: "rgb(218, 218, 218)",
-								width: "100%",
-								height: "100%"
-							}}
-							type="Bubble"
-						/>
-						:
-						"수동 실행"
-					}
-				</Button>
-				<FeatQueryRsltButton
-					isLoadingRunSchedule={runScheduleByManuallyLoading}
-					rslnRuleId={rslnRuleIdParam}
-					custFeatRuleId={location.state.id}
-					runScheduleCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
-					sendIsRunValidFetching={getIsRunValidFetching}
-				/>
-			</Stack>
+			{(custFeatRuleId && custFeatRuleId !== "") &&
+				<Stack direction="Horizontal" gap="MD" justifyContent="End">
+					<Button
+						disabled={runScheduleByManuallyLoading || isRunValidFetching}
+						style={{ width: "7%" }}
+						size="LG"
+						onClick={runScheduleByManually}
+					>
+						{runScheduleByManuallyLoading
+							?
+							<Loader
+								style={{
+									backgroundColor: "rgb(235, 235, 235)",
+									color: "rgb(185, 185, 185)",
+									borderColor: "rgb(218, 218, 218)",
+									width: "100%",
+									height: "100%"
+								}}
+								type="Bubble"
+							/>
+							:
+							"수동 실행"
+						}
+					</Button>
+					<FeatQueryRsltButton
+						isLoadingRunSchedule={runScheduleByManuallyLoading}
+						rslnRuleId={rslnRuleIdParam}
+						custFeatRuleId={custFeatRuleId}
+						runScheduleCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
+						sendIsRunValidFetching={getIsRunValidFetching}
+					/>
+				</Stack>
+			}
 
 			{/* 정보 영역 */}
 			<Typography variant="h4">승인 정보</Typography>
@@ -1365,7 +1418,9 @@ const SelfFeatureDetail = () => {
 			{/* 정보 영역 */}
 			{/* 버튼 영역 */}
 			<Stack direction="Vertical" gap="MD" justifyContent="End">
-				<DetailBtnComponent />
+				<DetailBtnComponent
+					submissionStatus={submissionStatus}
+				/>
 			</Stack>
 			{/* 버튼 영역 */}
 			{/* Confirm 모달 */}

@@ -6,7 +6,7 @@ import {
 	useLocation,
 	useNavigate
 } from "react-router-dom"
-import { cloneDeep } from 'lodash'
+import { cloneDeep, isEmpty } from "lodash";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { SelectValue } from '@mui/base/useSelect';
@@ -48,6 +48,9 @@ import {
 	FormulaTrgtListProps,
 	CustFeatureFormData,
 	FeatListSrchProps,
+	DivisionTypes,
+	Attribute,
+	Behavior,
 } from '@/models/selfFeature/FeatureModel';
 import {
 	initSelfFeatureInfo,
@@ -63,26 +66,22 @@ import {
 import {
 	SubFeatStatus,
 	SelfFeatPgPpNm,
-	//ModalType,
 	ModalTitCont,
-	//	ColDataType,
 	CommonCode,
 	CommonCodeInfo,
+	FeatureType,
+	SubFeatStatusNm,
 } from '@/models/selfFeature/FeatureCommon';
-import { SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
+import { AprvSeqNm, SfSubmissionAppendApproval, SfSubmissionApproval, SfSubmissionRequestInfo } from "@/models/selfFeature/FeatureSubmissionModel";
 import { initSfSubmissionApproval, initSfSubmissionRequestInfo } from "../self-feature-submission/data";
-import { useApproverCandidate, useCustFeatRules, useGetTableandColumnMetaInfoByMstrSgmtRuleId } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
+import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useDirectSQLYn, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import {
-	//GroupCodeType, 
 	ValidType,
 } from "@/models/common/Constants";
 import { useAuthCommCodes, useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { useFeatureAllList, useFeatureSeList, useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
 import { FeatureAllParams, FeatureKeyType, FeatureSeparatesModel } from "@/models/model/FeatureModel";
-//import { selectCodeList } from "@/reducers/codeSlice";
-//import { useAppSelector } from "@/hooks/useRedux";
 import { getFeatureSeList } from "@/api/FeatureAPI";
-//import { CodeModel } from "@/models/model/CodeModel";
 import { validationCustReatRule } from "@/utils/self-feature/FormulaValidUtil";
 import { useRunScheduleByManually, useUpdateCustFeatRule, useUpdateCustFeatSQL } from "@/hooks/mutations/self-feature/useSelfFeatureUserMutations";
 import { UserModel } from "@/models/model/UserModel";
@@ -93,6 +92,9 @@ import useDidMountEffect from "@/hooks/useDidMountEffect";
 import { selectSessionInfo } from "@/reducers/authSlice";
 import { useTranslation } from "react-i18next";
 import { useUserById } from "@/hooks/queries/useUserQueries";
+import { QueryParams } from "@/utils/ApiUtil";
+import { getDateFormat } from "@/utils/DateUtil";
+import { TbCoMetaTblClmnInfo } from "@/models/selfFeature/FeatureAdmModel";
 
 const initFeatureAllParams: FeatureAllParams = {
 	featureKoNm: undefined,
@@ -111,6 +113,19 @@ const SelfFeatureEdit = () => {
 	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
 	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
 	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
+
+	const [custFeatRuleId, setCustFeatRuleId] = useState<string>("")
+	const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(custFeatRuleId)
+	const [sqlDirectInputYn, setSqlDirectInputYn] = useState<string>("")
+	const [submissionStatus, setSubmissionStatus] = useState<string>("")
+
+	// 상세 조회 API(Rule-Design / SQL)
+	const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(custFeatRuleId)
+	const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(custFeatRuleId)
+	const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
+	const [submissionId, setSubmissionId] = useState<number>(0)
+	const { data: submissionListRes, isError: submissionListErr, refetch: submissionListRefetch } = useSubmissionList(subListQueryParams)
+	const { data: submissionInfoRes, isError: submissionInfoErr, refetch: submissionInfoRefetch } = useSubmissionInfo(submissionId)
 
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
 	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
@@ -150,12 +165,15 @@ const SelfFeatureEdit = () => {
 	const [custFeatureFormData, setCustFeatureFormData] = useState<CustFeatureFormData>(cloneDeep(initCustFeatureFormData))
 	// 대상선택 초기화시 flag
 	const [targetClear, setTargetClear] = useState<string>("")//location.state.TargetClear
-	// 한글 및 영문 입력시 입력값
-	const [featureKoNmInput, setFeatureKoNmInput] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureKoNm))
-	const [featureEnNmInput, setFeatureEnNmInput] = useState<string>(cloneDeep(location.state?.featureInfo.featureTemp?.featureEnNm))
 	// 기본정보
 	const [featureTempInfo, setFeatureTempInfo] = useState<FeatureTemp>(cloneDeep(initFeatureTemp))
 	const [custFeatRule, setCustFeatRule] = useState<TbRsCustFeatRule>(cloneDeep(initTbRsCustFeatRule))
+	// 한글 및 영문 입력시 입력값
+	const [featureKoNmInit, setFeatureKoNmInit] = useState<string>("")
+	const [featureEnNmInit, setFeatureEnNmInit] = useState<string>("")
+	// 한글 및 영문 입력시 입력값
+	const [featureKoNmInput, setFeatureKoNmInput] = useState<string>(cloneDeep(featureTempInfo?.featureKoNm))
+	const [featureEnNmInput, setFeatureEnNmInput] = useState<string>(cloneDeep(featureTempInfo?.featureEnNm))
 	// 대상선택
 	const [targetList, setTargetList] = useState<Array<TbRsCustFeatRuleTrgt>>([])
 	const [trgtFilterList, setTrgtFilterList] = useState<Array<TbRsCustFeatRuleTrgtFilter>>([])
@@ -171,6 +189,9 @@ const SelfFeatureEdit = () => {
 	const [sfSubmissionApprovalList, setSfSubmissionApprovalList] = useState<Array<SfSubmissionApproval>>(cloneDeep([initSfSubmissionApproval]))
 	// 결재선
 	const [aprvList, setAprvList] = useState<Array<SfSubmissionAppendApproval>>([])
+	const [aprvType1, setAprvType1] = useState<Array<SfSubmissionAppendApproval>>([])
+	const [aprvType2, setAprvType2] = useState<Array<SfSubmissionAppendApproval>>([])
+	const [aprvType3, setAprvType3] = useState<Array<SfSubmissionAppendApproval>>([])
 	const { data: approverCandidateRes, isError: approverCandidateErr } = useApproverCandidate()
 	// 속성 및 행동 데이터
 	const [mstrSgmtTableandColMetaInfo, setMstrSgmtTableandColMetaInfo] = useState<MstrSgmtTableandColMetaInfo>(cloneDeep(initMstrSgmtTableandColMetaInfo))
@@ -182,17 +203,17 @@ const SelfFeatureEdit = () => {
 	const [confirmModalCont, setConfirmModalCont] = useState<string>('')
 	const [modalType, setModalType] = useState<string>('')
 	// 수정 API(Rule-Design / SQL)
-	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
-	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(updtFeatureInfo.tbRsCustFeatRule.id, custFeatureFormData)
+	const { data: updtRuleDesignRes, isSuccess: updtRuleDesignSucc, isError: updtRuleDesignErr, mutate: updtRuleDesignMutate } = useUpdateCustFeatRule(custFeatRuleId, custFeatureFormData)
+	const { data: updtSQLRes, isSuccess: updtSQLSucc, isError: updtSQLErr, mutate: updtSQLMutate } = useUpdateCustFeatSQL(custFeatRuleId, custFeatureFormData)
 	// 수동실행 API
-    const [isRunValidFetching, setIsRunValidFetching] = useState<boolean>(false)
-	const { 
-		data: runScheduleByManuallyRes, 
-		isSuccess: runScheduleByManuallySucc, 
-		isError: runScheduleByManuallyErr, 
+	const [isRunValidFetching, setIsRunValidFetching] = useState<boolean>(false)
+	const {
+		data: runScheduleByManuallyRes,
+		isSuccess: runScheduleByManuallySucc,
+		isError: runScheduleByManuallyErr,
 		mutate: runScheduleByManuallyMutate,
 		isLoading: runScheduleByManuallyLoading,
-	} = useRunScheduleByManually(location.state?.featureInfo.tbRsCustFeatRule.id)
+	} = useRunScheduleByManually(custFeatRuleId)
 	// 중복 확인 API
 	const [featureAllParams, setFeatureAllParams] = useState<FeatureAllParams>(initFeatureAllParams);
 	const [featureAllKey, setFeatureAllKey] = useState<FeatureKeyType>('featureKoNm');
@@ -211,10 +232,7 @@ const SelfFeatureEdit = () => {
 			if (targetClear === "updateInfo") {
 				if (custFeatRule.sqlDirectInputYn === 'Y') {
 					updateCustFeatSQL()
-				} else if (
-					custFeatRule.sqlDirectInputYn === ''
-					|| custFeatRule.sqlDirectInputYn === 'N'
-				) {
+				} else if (custFeatRule.sqlDirectInputYn === 'N') {
 					updateCustFeatRule()
 				}
 			}
@@ -231,9 +249,34 @@ const SelfFeatureEdit = () => {
 	}
 	// component mount
 	useEffect(() => {
-		// if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y")
-		// 	mstrSgmtTbandColRefetch()
+		let qParam = location.search.replace("?", "")
+
+		if (qParam.split("=")[0] === "custFeatRuleId")
+			setCustFeatRuleId(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
+		
 	}, [])
+	useEffect(() => {
+		if (custFeatRuleId === "") return
+		directSQLYnRefetch()
+	}, [custFeatRuleId])
+	// SQL 등록 여부 API response callback
+	useEffect(() => {
+		if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (directSQLYnRes) {
+				setSqlDirectInputYn(directSQLYnRes.result)
+				if (directSQLYnRes.result === "N") {
+					custFeatRuleInfosRefetch()
+				} else if (directSQLYnRes.result === "Y") {
+					custFeatSQLInfosRefetch()
+				}
+			}
+		}
+	}, [directSQLYnRes, directSQLYnErr])
 	useEffect(() => {
 		if (userInfoErr || userInfoRes?.successOrNot === 'N') {
 			toast({
@@ -278,9 +321,9 @@ const SelfFeatureEdit = () => {
 		}
 	}, [cmmCodeDtpCdRes])
 	useEffect(() => {
-		if (mstrSgmtRuleIdParam === "") return
+		if (mstrSgmtRuleIdParam === "" || sqlDirectInputYn === "") return
 
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+		if (sqlDirectInputYn === "N") {
 			mstrSgmtTbandColRefetch()
 			setFeatureRuleInfoParams({
 				...featureRuleInfoParams,
@@ -289,7 +332,7 @@ const SelfFeatureEdit = () => {
 			})
 		}
 
-	}, [mstrSgmtRuleIdParam, location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
+	}, [mstrSgmtRuleIdParam, sqlDirectInputYn])
 	useEffect(() => {
 		if (featureRuleInfoParams.mstrSgmtRuleId === "") return
 		featureListRefetch()
@@ -325,13 +368,17 @@ const SelfFeatureEdit = () => {
 			});
 		} else {
 			if (deptAllListRes?.data) {
-				if (location.state) {
-					let deptCd = location.state.featureInfo.featureTemp.enrDeptCode
-					location.state.featureInfo.featureTemp.enrDeptNm = deptAllListRes.data.contents.find((dept: any) => dept.deptCode === deptCd)?.deptNm
+				if (featureTempInfo && featureTempInfo.enrDeptCode) {
+					let deptCd = featureTempInfo.enrDeptCode
+					setFeatureTempInfo((prevState) => {
+						prevState.enrDeptNm = deptAllListRes.data.contents.find((dept: any) => dept.deptCode === deptCd)?.deptNm
+						return prevState
+					})
+					//location.state.featureInfo.featureTemp.enrDeptNm = deptAllListRes.data.contents.find((dept: any) => dept.deptCode === deptCd)?.deptNm
 				}
 			}
 		}
-	}, [deptAllListRes, deptAllListErr, toast])
+	}, [deptAllListRes, deptAllListErr, featureTempInfo])
 	// 속성,행동데이터 response callback
 	useEffect(() => {
 		if (mstrSgmtTbandColErr || mstrSgmtTbandColRes?.successOrNot === 'N') {
@@ -341,12 +388,12 @@ const SelfFeatureEdit = () => {
 			})
 		} else {
 			if (mstrSgmtTbandColRes) {
-				if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'N') {
+				if (sqlDirectInputYn === 'N') {
 					setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
 				}
 			}
 		}
-	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr])
+	}, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, sqlDirectInputYn])
 	// 결재선 default setting을 위해
 	useEffect(() => {
 		if (approverCandidateErr || approverCandidateRes?.successOrNot === 'N') {
@@ -357,25 +404,191 @@ const SelfFeatureEdit = () => {
 		} else {
 			if (approverCandidateRes) {
 				setAprvList(approverCandidateRes.result)
+				setAprvType1(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.FIRST))
+				setAprvType2(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.SECOND))
+				setAprvType3(approverCandidateRes.result.filter((aprroval: SfSubmissionAppendApproval) => aprroval.groupNm === AprvSeqNm.LAST))
 			}
 		}
 	}, [approverCandidateRes, approverCandidateErr, toast])
-
+	// 정보 조회 API callback (Rule-Design)
 	useEffect(() => {
-		if (!location.state) return
-		setFeatureTempInfo(cloneDeep(location.state.featureInfo.featureTemp))
-		setCustFeatRule(cloneDeep(location.state.featureInfo.tbRsCustFeatRule))
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'N') {
-			setTargetList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtList))
-			setTrgtFilterList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleTrgtFilterList))
-			setCustFeatRuleCalc(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCalc))
-			setCustFeatRuleCaseList(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleCaseList))
-		} else if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') {
-			setSqlQueryInfo(cloneDeep(location.state.featureInfo.tbRsCustFeatRuleSql))
+		if (custFeatRuleInfosErr || custFeatRuleInfosRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (custFeatRuleInfosRes?.result) {
+				if (
+					custFeatRuleInfosRes.result.tbRsCustFeatRule 
+					&& custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus
+				) {
+					setSubmissionStatus(custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus)
+				}
+
+				setFeatureKoNmInit(cloneDeep(custFeatRuleInfosRes.result.featureTemp.featureKoNm))
+				setFeatureEnNmInit(cloneDeep(custFeatRuleInfosRes.result.featureTemp.featureEnNm))
+				setFeatureKoNmInput(cloneDeep(custFeatRuleInfosRes.result.featureTemp.featureKoNm))
+				setFeatureEnNmInput(cloneDeep(custFeatRuleInfosRes.result.featureTemp.featureEnNm))
+
+				setFeatureTempInfo(cloneDeep(custFeatRuleInfosRes.result.featureTemp))
+				setCustFeatRule(cloneDeep(custFeatRuleInfosRes.result.tbRsCustFeatRule))
+				setTargetList(cloneDeep(custFeatRuleInfosRes.result.tbRsCustFeatRuleTrgtList))
+				setTrgtFilterList(cloneDeep(custFeatRuleInfosRes.result.tbRsCustFeatRuleTrgtFilterList))
+				setCustFeatRuleCalc(cloneDeep(custFeatRuleInfosRes.result.tbRsCustFeatRuleCalc))
+				setCustFeatRuleCaseList(cloneDeep(custFeatRuleInfosRes.result.tbRsCustFeatRuleCaseList))
+				// 승인 정보 호출 API parameter setting
+				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: custFeatRuleInfosRes.result.tbRsCustFeatRule.id })
+			}
 		}
-		setSfSubmissionRequestData(cloneDeep(location.state.sfSubmissionRequestData))
-		setSfSubmissionApprovalList(cloneDeep(location.state.sfSubmissionApprovalList))
-	}, [location.state])
+	}, [custFeatRuleInfosRes, custFeatRuleInfosErr])
+	// 정보 조회 API callback (SQL)
+	useEffect(() => {
+		if (custFeatSQLInfosErr || custFeatSQLInfosRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (custFeatSQLInfosRes?.result) {
+				if (
+					custFeatSQLInfosRes.result.tbRsCustFeatRule 
+					&& custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus
+				) {
+					setSubmissionStatus(custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus)
+				}
+
+				setFeatureKoNmInit(cloneDeep(custFeatSQLInfosRes.result.featureTemp.featureKoNm))
+				setFeatureEnNmInit(cloneDeep(custFeatSQLInfosRes.result.featureTemp.featureEnNm))
+				setFeatureKoNmInput(cloneDeep(custFeatSQLInfosRes.result.featureTemp.featureKoNm))
+				setFeatureEnNmInput(cloneDeep(custFeatSQLInfosRes.result.featureTemp.featureEnNm))
+
+				setFeatureTempInfo(cloneDeep(custFeatSQLInfosRes.result.featureTemp))
+				setCustFeatRule(cloneDeep(custFeatSQLInfosRes.result.tbRsCustFeatRule))
+				setSqlQueryInfo(cloneDeep(custFeatSQLInfosRes.result.tbRsCustFeatRuleSql))
+				// 승인 정보 호출 API parameter setting
+				setSubListQueryParams({ type: FeatureType.CUST, referenceNo: custFeatSQLInfosRes.result.tbRsCustFeatRule.id })
+			}
+		}
+	}, [custFeatSQLInfosRes, custFeatSQLInfosErr])
+	// 승인정보 호출을 위한 승인 list API refetch
+	useEffect(() => {
+		if (isEmpty(subListQueryParams) || submissionStatus === "") return
+		submissionListRefetch()
+	}, [subListQueryParams, submissionStatus])
+	// 승인 정보 리스트 호출 API Callback
+	useEffect(() => {
+		if (submissionListErr || submissionListRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (submissionListRes?.result) {
+				// 결재선 단계 및 결재자 이름 setting
+				// submission info가 없는 경우 default 결재선 설정을 위해 필요
+				setSfSubmissionApprovalList(() => {
+					let t: Array<SfSubmissionApproval> = []
+					for (let i = 0; i < 3; i++) {
+						let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+						subAprv.approvalSequence = i + 1
+						if (subAprv.approvalSequence === 1) {
+							let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = AprvSeqNm.FIRST
+							subAprv.approverNm = type1 ? type1.userNm : ""
+						}
+						if (subAprv.approvalSequence === 2) {
+							let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = AprvSeqNm.SECOND
+							subAprv.approverNm = type2 ? type2.userNm : ""
+						}
+						if (subAprv.approvalSequence === 3) {
+							let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = AprvSeqNm.LAST
+							subAprv.approverNm = type3 ? type3.userNm : ""
+						}
+						t.push(subAprv)
+					}
+					return t
+				})
+				// 승인 정보 list는 무조건 하나?
+				if (submissionListRes.result.length > 0) {
+					// 승인 정보 상세 API parameter setting
+					setSubmissionId(submissionListRes.result[0].id)
+				}
+			}
+		}
+	}, [submissionListRes, submissionListErr, toast])
+	// 승인정보 상세 API refetch
+	useEffect(() => {
+		if (submissionId === 0 || submissionStatus === "") return
+		submissionInfoRefetch()
+	}, [submissionId, submissionStatus])
+	// 승인정보 상세 API Callback
+	useEffect(() => {
+		if (submissionInfoErr || submissionInfoRes?.successOrNot === 'N') {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회 중 에러가 발생했습니다.',
+			})
+		} else {
+			if (submissionInfoRes?.result) {
+				if (submissionInfoRes.result.submission) setSfSubmissionRequestData(cloneDeep(submissionInfoRes.result.submission))
+				setSfSubmissionApprovalList(() => {
+					let rtn = cloneDeep(submissionInfoRes.result.approvals)
+					let t: Array<SfSubmissionApproval> = []
+					for (let i = 0; i < 3; i++) {
+						let subAprv: SfSubmissionApproval = cloneDeep(initSfSubmissionApproval)
+						if (rtn && rtn[i]) subAprv = cloneDeep(rtn[i])
+						subAprv.approvalSequence = i + 1
+						if (subAprv.approvedDate) subAprv.approvedDate = getDateFormat(subAprv.approvedDate, "YYYY-MM-DD HH:mm:ss")
+						if (subAprv.approvalSequence === 1) {
+							let type1 = aprvType1.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = AprvSeqNm.FIRST
+							subAprv.approverNm = subAprv.approverName
+							if (!subAprv.approverNm || subAprv.approverNm === "") subAprv.approverNm = type1 ? type1.userNm : ""
+						}
+						if (subAprv.approvalSequence === 2) {
+							let type2 = aprvType2.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = AprvSeqNm.SECOND
+							subAprv.approverNm = subAprv.approverName
+							if (!subAprv.approverNm || subAprv.approverNm === "") subAprv.approverNm = type2 ? type2.userNm : ""
+						}
+						if (subAprv.approvalSequence === 3) {
+							let type3 = aprvType3.find((item: SfSubmissionAppendApproval) => item.userEmail === subAprv.approver)
+							subAprv.approvalSequenceNm = AprvSeqNm.LAST
+							subAprv.approverNm = subAprv.approverName
+							if (!subAprv.approverNm || subAprv.approverNm === "") subAprv.approverNm = type3 ? type3.userNm : ""
+						}
+						if (
+							!subAprv.status
+							|| subAprv.status === ""
+							|| subAprv.status === SubFeatStatus.SAVE
+						) {
+							subAprv.statusNm = "결재 대기"
+						} else if (
+							subAprv.status === SubFeatStatus.REQ
+							|| subAprv.status === SubFeatStatus.IN_APRV
+						) {
+							subAprv.statusNm = SubFeatStatusNm.IN_APRV
+						} else if (subAprv.status === SubFeatStatus.APRV) {
+							subAprv.statusNm = SubFeatStatusNm.APRV
+						} else if (subAprv.status === SubFeatStatus.REJT) {
+							subAprv.statusNm = SubFeatStatusNm.REJT
+						} else if (subAprv.status === SubFeatStatus.CNCL) {
+							subAprv.statusNm = SubFeatStatusNm.CNCL
+						} else if (subAprv.status === SubFeatStatus.DLET) {
+							subAprv.statusNm = SubFeatStatusNm.DLET
+						} else {
+							subAprv.statusNm = subAprv.status
+						}
+						t.push(subAprv)
+					}
+					return t
+				})
+			}
+		}
+	}, [submissionInfoRes, submissionInfoErr, toast])
 	// 대구분 선택시 중구분 select option setting
 	useEffect(() => {
 		if (seGrpId) {
@@ -447,14 +660,14 @@ const SelfFeatureEdit = () => {
 		if (!featureSeAllList || featureSeAllList.length < 1) return
 
 		let seId = featureSeGrpList.find((grpItem: FeatureSeparatesModel) => {
-			return grpItem.seId === featureSeAllList.find((item: FeatureSeparatesModel) => location.state && (item.seId === location.state.featureInfo.featureTemp.featureSe))?.seGrpId
+			return grpItem.seId === featureSeAllList.find((item: FeatureSeparatesModel) => item.seId === featureTempInfo.featureSe)?.seGrpId
 		})?.seId
 
 		if (seId) {
 			setSeGrpId(seId)
 		}
 
-	}, [featureSeAllList])
+	}, [featureSeAllList, featureTempInfo])
 	// 기본 정보 입력시 formData setting
 	useEffect(() => {
 		setUpdtFeatureInfo((state: FeatureInfo) => {
@@ -472,7 +685,7 @@ const SelfFeatureEdit = () => {
 	}, [custFeatRule])
 	// 대상 선택시 formData setting
 	useEffect(() => {
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
+		if (sqlDirectInputYn === 'Y' || sqlDirectInputYn === "") return
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
 		if (targetList.length < 1) setIsSelectAggregateTop(false)
 		// 수정시 TOP 함수가 있는 경우 drag 영역 비노출
@@ -510,58 +723,129 @@ const SelfFeatureEdit = () => {
 			fList.push(t)
 		}
 		setFormulaTrgtList(fList)
-	}, [targetList])
+	}, [targetList, sqlDirectInputYn])
 	useEffect(() => {
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
+		if (sqlDirectInputYn === 'Y' || sqlDirectInputYn === "") return
 		setUpdtFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleTrgtFilterList = cloneDeep(trgtFilterList)
 			return rtn
 		})
-	}, [trgtFilterList])
+	}, [trgtFilterList, sqlDirectInputYn])
 	useEffect(() => {
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'N') return
+		if (sqlDirectInputYn === 'N' || sqlDirectInputYn === "") return
 		setUpdtFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleSql = cloneDeep(sqlQueryInfo)
 			return rtn
 		})
-	}, [sqlQueryInfo])
+	}, [sqlQueryInfo, sqlDirectInputYn])
 	// 계산식 입력시 formData setting
 	useEffect(() => {
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
+		if (sqlDirectInputYn === 'Y' || sqlDirectInputYn === "") return
 		setUpdtFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleCalc = cloneDeep(custFeatRuleCalc)
 			return rtn
 		})
-	}, [custFeatRuleCalc])
+	}, [custFeatRuleCalc, sqlDirectInputYn])
 	useEffect(() => {
-		//if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
-		// setUpdtFeatureInfo((state: FeatureInfo) => {
-		// 	let rtn = cloneDeep(state)
-		// 	rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
-		// 	return rtn
-		// })
+		
 	}, [custFeatRuleCaseList])
-	// 대상 선택 list가 없는 경우 formula reset
+	// 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
 	useEffect(() => {
-		if (location.state.featureInfo.tbRsCustFeatRule.sqlDirectInputYn === 'Y') return
-		if (formulaTrgtList.length > 0) return
+		if (isEmpty(mstrSgmtTableandColMetaInfo) || mstrSgmtTableandColMetaInfo.rslnRuleId === "" || !custFeatRuleInfosRes) return
 
-		if (
-			location.state
-			&& location.state.featureInfo.tbRsCustFeatRuleCalc
-			&& location.state.featureInfo.tbRsCustFeatRuleCalc.formula === ""
-		) {
-			setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
-				let rtn = cloneDeep(state)
-				rtn.formula = ''
-				return rtn
+		if (custFeatRule.sqlDirectInputYn === "N") {
+			setTargetList(() => {
+				let tempTargetList = cloneDeep(targetList).map((target: TbRsCustFeatRuleTrgt) => {
+					let metaTblId = target.tableName
+					let colNm = target.columnName
+					if (target.divisionCode === DivisionTypes.ATTR) {
+						/* 
+							속성 데이터면 동일한 테이블Id와 컬럼명을 가진 atrributes의 
+							metaTblClmnLogiNm 값을 columnLogiName항목으로 추가
+		
+							target.columnLogiName = attributes[].metaTblClmnLogiNm
+						*/
+						let logiAttr: Array<Attribute> = []
+						logiAttr = mstrSgmtTableandColMetaInfo.attributes.filter((attr: Attribute) => {
+							return (metaTblId === attr.metaTblId && colNm === attr.metaTblClmnPhysNm)
+						})
+						if (logiAttr.length > 0) {
+							target.columnLogiName = logiAttr[0].metaTblClmnLogiNm
+						} else {
+							target.columnLogiName = colNm
+						}
+
+					} else if (target.divisionCode === DivisionTypes.FEAT) {
+						/* 
+							self-feature 데이터
+						*/
+						let logiFeat: Array<TbRsCustFeatRule> = []
+						logiFeat = featureRuleList.filter((featRule: TbRsCustFeatRule) => {
+							return metaTblId === featRule.metaTblId
+						})
+
+						if (logiFeat.length > 0) {
+							target.columnLogiName = logiFeat[0].name
+							target.targetDataType = logiFeat[0].dataTypeCategory.toString()
+						} else {
+							target.columnLogiName = ""
+						}
+					} else if (target.divisionCode === DivisionTypes.BEHV) {
+						/* 
+							행동 데이터면  동일한 테이블 ID를 가진 behavior의
+							metaTblLogiNm 값을 tableLogiName항목에 추가
+						*/
+						let logiBehv: Array<Behavior> = []
+						logiBehv = mstrSgmtTableandColMetaInfo.behaviors.filter((behavior: Behavior) => {
+							return metaTblId === behavior.metaTblId
+						})
+
+						if (logiBehv.length > 0) {
+							target.tableLogiName = logiBehv[0].metaTblLogiNm
+						} else {
+							target.tableLogiName = metaTblId
+						}
+					}
+					return target
+				})
+				return tempTargetList
+			})
+			setTrgtFilterList(() => {
+				let tempTargetFilterList = cloneDeep(trgtFilterList).map((trgtFilter: TbRsCustFeatRuleTrgtFilter) => {
+					let metaTblId = ""
+					let targetId = trgtFilter.targetId
+					let colNm = trgtFilter.columnName
+					/* 
+						반드시 행동 데이터
+						동일한 targetId를 가진 targetList의 테이블 ID와 동일한 
+						behavior의 tbCoMetaTblClmnInfoList에서
+						colNm과 동일한 metaTblClmnPhysNm 의  metaTblClmnLogiNm을
+						columnLogiName항목에 추가				
+					*/
+					let trgtIdArr: Array<TbRsCustFeatRuleTrgt> = []
+					trgtIdArr = targetList.filter((target: TbRsCustFeatRuleTrgt) => targetId === target.targetId)
+					if (trgtIdArr.length > 0) metaTblId = trgtIdArr[0].tableName
+
+					let clmnBehv: Array<Behavior> = []
+					clmnBehv = mstrSgmtTableandColMetaInfo.behaviors.filter((behavior: Behavior) => {
+						return metaTblId === behavior.metaTblId
+					})
+					if (clmnBehv.length > 0) {
+						let clmnInfo: Array<TbCoMetaTblClmnInfo> = []
+						clmnInfo = clmnBehv[0].tbCoMetaTblClmnInfoList.filter((clnmInfo: TbCoMetaTblClmnInfo) => colNm === clnmInfo.metaTblClmnPhysNm)
+						trgtFilter.columnLogiName = clmnInfo[0] ? clmnInfo[0].metaTblClmnLogiNm : colNm
+					} else {
+						trgtFilter.columnLogiName = colNm
+					}
+					return trgtFilter
+				})
+				return tempTargetFilterList
 			})
 		}
-
-	}, [formulaTrgtList, location.state?.featureInfo.tbRsCustFeatRuleCalc?.formula])
+	}, [mstrSgmtTableandColMetaInfo, custFeatRuleInfosRes])
 	// 수정 API 호출(Rule-Design)
 	const updateCustFeatRule = () => {
 		// 수정자와 등록자가 동일하면 수정불가
@@ -579,6 +863,7 @@ const SelfFeatureEdit = () => {
 		delete param.customerFeature.tbRsCustFeatRuleSql
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
+		console.log(updtFeatureInfo)
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({
@@ -622,14 +907,11 @@ const SelfFeatureEdit = () => {
 				type: ValidType.CONFIRM,
 				content: '수정되었습니다.',
 			})
-			//navigate(-1)
 			// 상세로 redirect
-			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`,
+				`../${SelfFeatPgPpNm.DETL}?custFeatRuleId=${updtFeatureInfo.tbRsCustFeatRule.id}`,
 				{
 					state: {
-						...updtFeatureInfo.tbRsCustFeatRule,
 						...{
 							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo
@@ -680,14 +962,11 @@ const SelfFeatureEdit = () => {
 				type: ValidType.CONFIRM,
 				content: '수정되었습니다.',
 			})
-			//navigate(-1)
 			// 상세로 redirect
-			updtFeatureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`,
+				`../${SelfFeatPgPpNm.DETL}?custFeatRuleId=${updtFeatureInfo.tbRsCustFeatRule.id}`,
 				{
 					state: {
-						...updtFeatureInfo.tbRsCustFeatRule,
 						...{
 							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo
@@ -815,14 +1094,11 @@ const SelfFeatureEdit = () => {
 	}
 	// 페이지 이동
 	const onClickPageMovHandler = (pageNm: string) => {
-		if (pageNm === SelfFeatPgPpNm.LIST) {
-			//navigate('..') srchInfo: location?.state?.srchInfo 
-			//navigate(-1)
+		if (pageNm === SelfFeatPgPpNm.DETL) {
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`,
+				`../${SelfFeatPgPpNm.DETL}?custFeatRuleId=${updtFeatureInfo.tbRsCustFeatRule.id}`,
 				{
 					state: {
-						...updtFeatureInfo.tbRsCustFeatRule,
 						...{
 							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo
@@ -845,7 +1121,7 @@ const SelfFeatureEdit = () => {
 	// 수정 버튼 클릭시
 	const onSubmitUpdateHandler = () => {
 		// 중복확인 validation
-		if (location.state.featureInfo.featureTemp.featureKoNm !== updtFeatureInfo.featureTemp.featureKoNm) {
+		if (featureKoNmInit !== updtFeatureInfo.featureTemp.featureKoNm) {
 			if (needDupCheckKo && !isDupCheckKo) {
 				toast({
 					type: ValidType.ERROR,
@@ -856,7 +1132,7 @@ const SelfFeatureEdit = () => {
 		} else {
 			setNeedDupCheckKo(false)
 		}
-		if (location.state.featureInfo.featureTemp.featureEnNm !== updtFeatureInfo.featureTemp.featureEnNm) {
+		if (featureEnNmInit !== updtFeatureInfo.featureTemp.featureEnNm) {
 			if (needDupCheckEn && !isDupCheckEn) {
 				toast({
 					type: ValidType.ERROR,
@@ -875,19 +1151,13 @@ const SelfFeatureEdit = () => {
 	}
 	// 수동실행 API 호출
 	const runScheduleByManually = () => {
-		if (location.state?.featureInfo.tbRsCustFeatRule.id && location.state?.featureInfo.tbRsCustFeatRule.id !== "") {
-			if (location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt > 5) {
+		if (custFeatRuleId && custFeatRuleId !== "") {
+			if (custFeatRule.batManualExecTestCnt > 5) {
 				toast({
 					type: ValidType.ERROR,
 					content: '수동 가능한 횟수는 5회 입니다.',
 				})
 				return
-			}
-			if (runScheduleByManuallyRes?.status !== 200) {
-				// toast({
-				// 	type: ValidType.INFO,
-				// 	content: t('수동실행 진행중 입니다. 잠시만 기다려주세요.'),
-				// })
 			}
 			runScheduleByManuallyMutate()
 		} else {
@@ -911,7 +1181,6 @@ const SelfFeatureEdit = () => {
 					type: ValidType.CONFIRM,
 					content: '수동 실행이 완료되었습니다.',
 				})
-				updtFeatureInfo.tbRsCustFeatRule.batManualExecTestCnt += 1
 			}
 			if (runScheduleByManuallyRes.status === 202) {
 				toast({
@@ -919,23 +1188,13 @@ const SelfFeatureEdit = () => {
 					content: t(runScheduleByManuallyRes?.message ? runScheduleByManuallyRes?.message : '수동 실행 중 에러가 발생했습니다.'),
 				})
 			}
-			updtFeatureInfo.tbRsCustFeatRuleTrgtList = targetList
-			updtFeatureInfo.tbRsCustFeatRuleTrgtFilterList = trgtFilterList
-			updtFeatureInfo.featureTemp.featureSeGrp = ""
-			navigate(
-				`../${SelfFeatPgPpNm.EDIT}`,
-				{
-					state: {
-						featureInfo: updtFeatureInfo,
-						sfSubmissionRequestData: sfSubmissionRequestData,
-						sfSubmissionApprovalList: sfSubmissionApprovalList,
-						srchInfo: location?.state?.srchInfo,
-						//pageInfo: location?.state?.pageInfo
-					}
-				}
-			)
+			if (sqlDirectInputYn === "N") {
+				custFeatRuleInfosRefetch()
+			} else if (sqlDirectInputYn === "Y") {
+				custFeatSQLInfosRefetch()
+			}
 		}
-	}, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr, toast])
+	}, [runScheduleByManuallyRes, runScheduleByManuallySucc, runScheduleByManuallyErr])
 	const handleUserSelectModal = () => {
 		dispatch(
 			openModal({
@@ -1040,10 +1299,10 @@ const SelfFeatureEdit = () => {
 						}
 					</Button>
 					<FeatQueryRsltButton
-                        isLoadingRunSchedule={runScheduleByManuallyLoading}
+						isLoadingRunSchedule={runScheduleByManuallyLoading}
 						rslnRuleId={rslnRuleIdParam}
-						custFeatRuleId={location.state?.featureInfo.tbRsCustFeatRule.id}
-						runScheduleCnt={location.state?.featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
+						custFeatRuleId={custFeatRuleId}
+						runScheduleCnt={custFeatRule.batManualExecTestCnt}
 						sendIsRunValidFetching={getIsRunValidFetching}
 					/>
 				</Stack>
@@ -1074,7 +1333,7 @@ const SelfFeatureEdit = () => {
 						<TH colSpan={1} align="center" required>중구분</TH>
 						<TD colSpan={3}>
 							<Select
-								defaultValue={location.state?.featureInfo.featureTemp.featureSe}
+								value={featureTempInfo.featureSe}
 								appearance="Outline"
 								placeholder="중구분"
 								className="width-100"
@@ -1149,7 +1408,7 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="calcUnt"
-								defaultValue={location.state?.featureInfo.featureTemp?.calcUnt}
+								value={featureTempInfo?.calcUnt}
 								onChange={onchangeInputHandler}
 							/>
 						</TD>
@@ -1187,7 +1446,7 @@ const SelfFeatureEdit = () => {
 							<TextField
 								className="width-100"
 								id="featureDsc"
-								defaultValue={location.state?.featureInfo.featureTemp?.featureDsc}
+								value={featureTempInfo?.featureDsc}
 								onChange={onchangeInputHandler}
 							/>
 						</TD>
@@ -1406,13 +1665,13 @@ const SelfFeatureEdit = () => {
 					*/}
 					{(
 						isAllAuth
-						|| userId === location.state.featureInfo.tbRsCustFeatRule.frstRegUserId
+						|| userId === custFeatRule.frstRegUserId
 					) &&
 						<Button type="button" priority="Primary" appearance="Contained" size="LG" onClick={onSubmitUpdateHandler}>
 							수정
 						</Button>
 					}
-					<Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.LIST)}>
+					<Button type="button" priority="Normal" appearance="Outline" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.DETL)}>
 						취소
 					</Button>
 				</Stack>
