@@ -112,7 +112,7 @@ const SelfFeatureReg = () => {
 	// 픽처타입
 	//const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE))
 	// 등록 구분(RuleDesign / SQL)
-	const [regType, setRegType] = useState<string>(location.state ? location.state.regType : SelfFeatPgPpNm.RULE_REG)
+	const [regType, setRegType] = useState<string>("")
 	// 한글 및 영문 입력시 입력값
 	const [featureKoNmInput, setFeatureKoNmInput] = useState<string>("")
 	const [featureEnNmInput, setFeatureEnNmInput] = useState<string>("")
@@ -167,6 +167,16 @@ const SelfFeatureReg = () => {
 		refetch: faRefetch,
 	} = useFeatureAllList({ [featureAllKey]: featureAllParams[featureAllKey] }, { enabled: false, suspense: false });
 
+	// mount 시 수행
+	useEffect(() => {
+		initCustFeatRule()
+		// if (regType === SelfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
+		let qParam = location.search.replace("?", "")
+
+		if (qParam.split("=")[0] === "regType")
+			setRegType(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
+
+	}, [])
 	// session 값 setting
 	useEffect(() => {
 		if (!sessionInfo.deptCode) return
@@ -212,7 +222,7 @@ const SelfFeatureReg = () => {
 	}, [cmmCodeDtpCdRes])
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
-		if (location.state.regType === SelfFeatPgPpNm.RULE_REG) {
+		if (regType === SelfFeatPgPpNm.RULE_REG) {
 			mstrSgmtTbandColRefetch()
 			setFeatureRuleInfoParams({
 				...featureRuleInfoParams,
@@ -220,7 +230,7 @@ const SelfFeatureReg = () => {
 				["submissionStatus"]: SubFeatStatus.APRV,
 			})
 		}
-	}, [mstrSgmtRuleIdParam, location.state.regType])
+	}, [mstrSgmtRuleIdParam, regType])
 	useEffect(() => {
 		if (mstrSgmtRuleIdParam === "") return
 		setFeatureRuleInfoParams({
@@ -260,13 +270,13 @@ const SelfFeatureReg = () => {
 		}
 	}, [featureListRes, featureListErr, featureListRefetch])
 	// location값으로 Rule Design / SQL 구분(default :: Rule Design)
-	useEffect(() => {
-		if (!location.state || !location.state.regType || location.state.regType === "") {
-			setRegType(SelfFeatPgPpNm.RULE_REG)
-		} else {
-			setRegType(location.state.regType)
-		}
-	}, [location.state])
+	// useEffect(() => {
+	// 	if (!location.state || !location.state.regType || regType === "") {
+	// 		setRegType(SelfFeatPgPpNm.RULE_REG)
+	// 	} else {
+	// 		setRegType(regType)
+	// 	}
+	// }, [location.state])
 
 	// modal 확인/취소 이벤트
 	const onConfirm = () => {
@@ -289,11 +299,6 @@ const SelfFeatureReg = () => {
 	const onCancel = () => {
 		setIsOpenConfirmModal(false)
 	}
-	// mount 시 수행
-	useEffect(() => {
-		initCustFeatRule()
-		// if (regType === SelfFeatPgPpNm.RULE_REG) mstrSgmtTbandColRefetch()
-	}, [])
 	// 속성,행동데이터 response callback
 	useEffect(() => {
 		if (mstrSgmtTbandColErr || mstrSgmtTbandColRes?.successOrNot === 'N') {
@@ -303,7 +308,7 @@ const SelfFeatureReg = () => {
 			})
 		} else {
 			if (mstrSgmtTbandColRes) {
-				if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
+				if (regType === SelfFeatPgPpNm.SQL_REG) return
 				setMstrSgmtTableandColMetaInfo(cloneDeep(mstrSgmtTbandColRes.result))
 			}
 		}
@@ -420,7 +425,7 @@ const SelfFeatureReg = () => {
 	}, [featureTempInfo])
 	// 대상 선택시 formData setting
 	useEffect(() => {
-		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
+		if (regType === SelfFeatPgPpNm.SQL_REG) return
 		// 선택 대상이 없을 경우 우측 drag 영역 노출
 		if (targetList.length < 1) setIsSelectAggregateTop(false)
 
@@ -457,7 +462,7 @@ const SelfFeatureReg = () => {
 		setFormulaTrgtList(fList)
 	}, [targetList])
 	useEffect(() => {
-		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
+		if (regType === SelfFeatPgPpNm.SQL_REG) return
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleTrgtFilterList = cloneDeep(trgtFilterList)
@@ -474,7 +479,7 @@ const SelfFeatureReg = () => {
 	}, [sqlQueryInfo])
 	// 계산식 입력시 formData setting
 	useEffect(() => {
-		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
+		if (regType === SelfFeatPgPpNm.SQL_REG) return
 		setFeatureInfo((state: FeatureInfo) => {
 			let rtn = cloneDeep(state)
 			rtn.tbRsCustFeatRuleCalc = cloneDeep(custFeatRuleCalc)
@@ -483,7 +488,7 @@ const SelfFeatureReg = () => {
 	}, [custFeatRuleCalc])
 	// 계산식 case문 formData setting
 	useEffect(() => {
-		//if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
+		//if (regType === SelfFeatPgPpNm.SQL_REG) return
 		// setFeatureInfo((state: FeatureInfo) => {
 		// 	let rtn = cloneDeep(state)
 		// 	rtn.tbRsCustFeatRuleCaseList = cloneDeep(custFeatRuleCaseList)
@@ -492,7 +497,7 @@ const SelfFeatureReg = () => {
 	}, [custFeatRuleCaseList])
 	// 대상 선택 list가 없는 경우 formula reset
 	useEffect(() => {
-		if (location.state.regType === SelfFeatPgPpNm.SQL_REG) return
+		if (regType === SelfFeatPgPpNm.SQL_REG) return
 		if (formulaTrgtList.length > 0) return
 
 		setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
@@ -586,15 +591,11 @@ const SelfFeatureReg = () => {
 				type: ValidType.CONFIRM,
 				content: '등록되었습니다.',
 			})
-			featureInfo.tbRsCustFeatRule.id = createRuleDesignRes.result.customerFeatureId
-			featureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
-			featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "N"
 			// 상세로 redirect
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`,
+				`../${SelfFeatPgPpNm.DETL}?custFeatRuleId=${createRuleDesignRes.result.customerFeatureId}`,
 				{
 					state: {
-						...featureInfo.tbRsCustFeatRule,
 						...{
 							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo 
@@ -639,15 +640,11 @@ const SelfFeatureReg = () => {
 				type: ValidType.CONFIRM,
 				content: '등록되었습니다.',
 			})
-			featureInfo.tbRsCustFeatRule.id = createSQLRes.result.customerFeatureId
-			featureInfo.tbRsCustFeatRule.submissionStatus = SubFeatStatus.SAVE
-			featureInfo.tbRsCustFeatRule.sqlDirectInputYn = "Y"
 			// 상세로 redirect
 			navigate(
-				`../${SelfFeatPgPpNm.DETL}`,
+				`../${SelfFeatPgPpNm.DETL}?custFeatRuleId=${createSQLRes.result.customerFeatureId}`,
 				{
 					state: {
-						...featureInfo.tbRsCustFeatRule,
 						...{
 							srchInfo: location?.state?.srchInfo,
 							//pageInfo: location?.state?.pageInfo 

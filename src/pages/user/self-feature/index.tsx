@@ -204,10 +204,9 @@ const SelfFeature = () => {
 	const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
 		if (pageNm === SelfFeatPgPpNm.DETL) {
 			navigate(
-				pageNm,
+				`${pageNm}?custFeatRuleId=${rows?.id}`,
 				{
 					state: {
-						...rows,
 						...{
 							srchInfo: searchInfo,
 							//pageInfo: page 
@@ -219,7 +218,7 @@ const SelfFeature = () => {
 			setIsOpenFeatPrntChldModal((prevState) => !prevState)
 		} else if (pageNm === SelfFeatPgPpNm.RULE_REG || pageNm === SelfFeatPgPpNm.SQL_REG) {
 			navigate(
-				SelfFeatPgPpNm.REG,
+				`${SelfFeatPgPpNm.REG}?regType=${pageNm}`,
 				{
 					state: {
 						regType: pageNm,

@@ -165,10 +165,9 @@ const SfSubmissionRequest = () => {
     const onClickPageMovHandler = (pageNm: string, rows?: RowsInfo): void => {
         if (pageNm === SelfFeatPgPpNm.DETL) {
             navigate(
-                pageNm, 
+				`${pageNm}?custFeatRuleId=${rows?.referenceNo}`,
                 { 
                     state: {
-                        ...rows,
                         ...{
                             srchInfo: search
                         }
