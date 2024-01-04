@@ -98,6 +98,12 @@ export default function List() {
       )
     );
   };
+  
+// useEffect(()=> {
+//   if(skypassNmSearch.skypassMemberNumber !== '' && skypassNmSearch.searchType === ''){
+//     setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
+//   }
+// }, [skypassNmSearch.searchType]) 
 
   const onchangeModalInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -174,6 +180,10 @@ export default function List() {
     if(id === 'skypassMemberNumber'){
       setSkypassNmSearch({ searchType: '' , [id] : value })
     } else {
+      // if(skypassNmSearch.skypassMemberNumber === ''){
+
+      //   setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
+      // }
       setSearchInfo({ ...searchInfo, [id]: value, searchType: '' });
     }
   };
@@ -345,19 +355,19 @@ export default function List() {
             <Stack>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.korLname}
-                  id="korLname"
+                  value={searchInfo.korFname}
+                  id="korFname"
                   appearance="Outline"
                   placeholder="KOR. - Last Name"
                   size="LG"
                   textAlign="left"
                   onChange={onchangeInputHandler}
                 />
-              </div>{' '}
+              </div>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.korFname}
-                  id="korFname"
+                  value={searchInfo.korLname}
+                  id="korLname"
                   appearance="Outline"
                   placeholder="KOR. - First Name"
                   size="LG"
@@ -424,6 +434,7 @@ export default function List() {
          style={{
              width: "100%",
              height: "100%",
+             backgroundColor : '#f8f9fc'
          }}
          type="Bubble"
          title={t('common.message.proceeding')}
