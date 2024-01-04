@@ -60,7 +60,7 @@ export const useRelation = (searchInfo: relationSearch, page: PageModel) => {
 
 // 에러이력
 export const useErrorLog = (searchInfo: errorSearch, page: PageModel) => {
-  return useQuery(['/errorLog'], () => getErrorLog(searchInfo, page), { enabled: false });
+  return useQuery(['/errorLog'], () => getErrorLog(searchInfo, page), { enabled: false, suspense: false });
 };
 
 // 데일리 리포트

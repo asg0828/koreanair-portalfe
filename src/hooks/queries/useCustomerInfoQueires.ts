@@ -17,18 +17,19 @@ import { useQuery } from '@tanstack/react-query';
 
 // Profile 조회
 export const useProfile = (searchInfo: any) => {
-  return useQuery(['/customerInfo/oneId'], () => getProfile(searchInfo), {
+  return useQuery(['/customerInfo/profile'], () => getProfile(searchInfo), {
     enabled: false,
   });
 };
 
 // Profile 조회(C-Level)
 export const useProfileCLevel = (searchInfo: any) => {
-  return useQuery(['/customerInfo/engname'], () => getProfileCLevel(searchInfo), { enabled: false });
+  return useQuery(['/customerInfo/profileCLvl'], () => getProfileCLevel(searchInfo), { enabled: false, suspense: false });
 };
 
-export const useSkypass = (searchInfo: any) => {
-  return useQuery(['/customerInfo/skypassNumber'], () => getSkypass(searchInfo), { enabled: false });
+// skypass 조회
+export const useSkypass = (skypassMemberNumber: string) => {
+  return useQuery(['/customerInfo/skypassNumber'], () => getSkypass(skypassMemberNumber), { enabled: false });
 };
 
 export const useTelephoneHis = () => {
