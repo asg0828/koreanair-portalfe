@@ -24,7 +24,7 @@ const App = () => {
   const { toast } = useToast();
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
-  const pathname = window.location.pathname;
+  const pathname = window.location.pathname + window.location.search;
   const sessionUtil = new SessionUtil();
   const sessionApis = new SessionApis();
   const searchParameters = new URLSearchParams(window.location.search);
@@ -100,7 +100,7 @@ const App = () => {
             return <Unauthorized />;
           } else if (sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router) {
             return (
-              <Watermark content={sessionInfo.userEmail} className="width-100" style={{minHeight:'100vh'}}>
+              <Watermark content={sessionInfo.userEmail} className="width-100" style={{ minHeight: '100vh' }}>
                 <RouterProvider router={router} />
               </Watermark>
             );
