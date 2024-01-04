@@ -822,6 +822,7 @@ const SelfFeatureEdit = () => {
 
 						if (logiFeat.length > 0) {
 							target.columnLogiName = logiFeat[0].name
+							target.dtpCd = logiFeat[0].dataType
 							target.targetDataType = logiFeat[0].dataTypeCategory.toString()
 						} else {
 							target.columnLogiName = ""
@@ -896,7 +897,6 @@ const SelfFeatureEdit = () => {
 		delete param.customerFeature.tbRsCustFeatRuleSql
 		param.submissionInfo.submission = sfSubmissionRequestData
 		param.submissionInfo.approvals = sfSubmissionApprovalList
-		console.log(updtFeatureInfo)
 		let validRslt = validationCustReatRule(param)
 		if (!validRslt.valid) {
 			toast({
@@ -911,6 +911,7 @@ const SelfFeatureEdit = () => {
 		} else if (!trgtDtpCd && param.customerFeature.tbRsCustFeatRuleCalc.formula !== "") {
 			param.customerFeature.tbRsCustFeatRule.dataType = "int"
 		}
+		
 		param.customerFeature.tbRsCustFeatRuleTrgtList = param.customerFeature.tbRsCustFeatRuleTrgtList.map((item: TbRsCustFeatRuleTrgt) => {
 			let dtpCd = formulaTrgtList.find((trgt) => trgt.targetId === item.targetId)
 			if (dtpCd) {
