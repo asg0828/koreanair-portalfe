@@ -2,7 +2,6 @@ import { downloadFile } from '@/api/FileAPI';
 import { AttachFileIcon, ExpandLessIcon, ExpandMoreIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
-import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useCreateQna, useDeleteQna, useUpdateQna } from '@/hooks/mutations/useQnaMutations';
 import { useQnaById } from '@/hooks/queries/useQnaQueries';
@@ -21,7 +20,7 @@ import { Button, Label, Link, Stack, TD, TH, TR, TextField, Typography, useToast
 import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Detail = () => {
   const { t } = useTranslation();
@@ -31,7 +30,8 @@ const Detail = () => {
   const location = useLocation();
   const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
-  const qnaId: string = location?.state?.qnaId || '';
+  const [searchParams] = useSearchParams();
+  const qnaId: string = searchParams.get('qnaId') || '';
   const params: QnaParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [qnaModel, setQnaModel] = useState<QnaModel>();
@@ -93,9 +93,8 @@ const Detail = () => {
   }, [params, page, navigate]);
 
   const goToEdit = () => {
-    navigate('../edit', {
+    navigate(`../edit?qnaId=${qnaId}`, {
       state: {
-        qnaId: qnaId,
         params: params,
         page: page,
       },
@@ -103,9 +102,8 @@ const Detail = () => {
   };
 
   const handleMoveDetail = (nQnaId: string | undefined) => {
-    navigate('', {
+    navigate(`?qnaId=${nQnaId}`, {
       state: {
-        qnaId: nQnaId,
         params: params,
         page: page,
       },
@@ -222,11 +220,19 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: t('common.toast.error.list'),
+        content: t('common.toast.error.read'),
       });
-    } else if (isSuccess && response.data) {
-      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
-      setQnaModel(response.data);
+    } else if (isSuccess) {
+      if (response.data) {
+        response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+        setQnaModel(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -245,17 +251,6 @@ const Detail = () => {
     }
   }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
 
-  if (!qnaId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
-
   return (
     <>
       <Stack direction="Vertical" gap="MD" className="height-100 contentDeatilWrap">
@@ -268,7 +263,7 @@ const Detail = () => {
                   <li>{getCode(GroupCodeType.QNA_TYPE, qnaModel?.clCode || '')?.codeNm}</li>
                   <li>{`${qnaModel?.rgstDeptNm || ''} ${qnaModel?.rgstNm || ''}`}</li>
                   <li>{qnaModel?.modiDt}</li>
-                  <li>{`${t('board:label.viewCnt')} ${qnaModel?.viewCnt}`}</li>
+                  <li>{`${t('board:label.viewCnt')} ${qnaModel?.viewCnt || 0}`}</li>
                 </ul>
               </Stack>
             </TH>

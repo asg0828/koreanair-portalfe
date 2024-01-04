@@ -8,5 +8,5 @@ export const useFaqList = (params: FaqParams, page: PageModel, options?: Object)
 };
 
 export const useFaqById = (faqId: string) => {
-  return useQuery(['/faq', faqId], () => getFaqById(faqId), { enabled: false });
+  return useQuery(['/faq', faqId], () => getFaqById(faqId), { enabled: !!faqId, suspense: false });
 };

@@ -19,7 +19,7 @@ import { Button, Radio, Stack, TD, TH, TR, TextField, useToast } from '@componen
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Edit = () => {
   const { t } = useTranslation();
@@ -27,7 +27,8 @@ const Edit = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const location = useLocation();
-  const dataId = location?.state?.dataId;
+  const [searchParams] = useSearchParams();
+  const dataId: string = searchParams.get('dataId') || '';
   const params: DataroomParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [fileLink, setFileLink] = useState<string>('');
@@ -37,6 +38,7 @@ const Edit = () => {
     getValues,
     setValue,
     watch,
+    reset,
     control,
     formState: { errors },
   } = useForm<UpdatedDataroomModel>({
@@ -150,13 +152,22 @@ const Edit = () => {
   };
 
   useEffect(() => {
-    if (isSuccess && response.data) {
-      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
-      setValue('sj', response.data.sj);
-      setValue('cn', response.data.cn);
-      setValue('useYn', response.data.useYn);
-      setValue('fileList', response.data.fileList);
-      setValue('fileLinks', response.data.fileLinks);
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('common.toast.error.read'),
+      });
+    } else if (isSuccess) {
+      if (response.data) {
+        response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+        reset(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
   }, [isSuccess, response?.data, setValue]);
 

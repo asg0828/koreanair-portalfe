@@ -1,5 +1,4 @@
 import '@/assets/styles/Board.scss';
-import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import { useUpdateFeature } from '@/hooks/mutations/useFeatureMutations';
 import {
@@ -28,7 +27,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography,
 import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const initFeatureAllParams: FeatureAllParams = {
   featureKoNm: undefined,
@@ -37,12 +36,10 @@ const initFeatureAllParams: FeatureAllParams = {
 
 const Edit = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const location = useLocation();
-  const params: FeatureParams = location?.state?.params;
-  const page: PageModel = location?.state?.page;
   const {
     register,
     handleSubmit,
@@ -72,7 +69,10 @@ const Edit = () => {
     },
   });
   const values = getValues();
-  const featureId: string = location?.state?.featureId || '';
+  const [searchParams] = useSearchParams();
+  const featureId: string = searchParams.get('featureId') || '';
+  const params: FeatureParams = location?.state?.params;
+  const page: PageModel = location?.state?.page;
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FEATURE_TYPE));
   const [featureTypList, setFeatureTypList] = useState<Array<FeatureSeparatesModel>>();
   const [featureSeList, setFeatureSeList] = useState<Array<FeatureSeparatesModel>>([]);
@@ -189,11 +189,24 @@ const Edit = () => {
   }, [featureAllParams]);
 
   useEffect(() => {
-    if (isSuccess && response.data) {
-      setFeatureInfo(response.data);
-      reset(response.data);
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('common.toast.error.read'),
+      });
+    } else if (isSuccess) {
+      if (response.data) {
+        setFeatureInfo(response.data);
+        reset(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
-  }, [isSuccess, response?.data, reset]);
+  }, [response, isSuccess, isError, toast]);
 
   useEffect(() => {
     if (values.featureSeGrp) {
@@ -281,17 +294,6 @@ const Edit = () => {
       goToList();
     }
   }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
-
-  if (!featureId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

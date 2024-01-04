@@ -100,10 +100,9 @@ const List = () => {
     });
   };
 
-  const goToDetail = (row: FeatureModel, index: number) => {
-    navigate(View.DETAIL, {
+  const goToDetail = (row: FeatureModel) => {
+    navigate(`${View.DETAIL}?featureId=${row.featureId}`, {
       state: {
-        featureId: row.featureId,
         params: params,
         page: page,
       },

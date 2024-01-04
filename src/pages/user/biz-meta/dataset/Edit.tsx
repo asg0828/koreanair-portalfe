@@ -1,6 +1,5 @@
 import { AddCircleOutlineOutlinedIcon, RemoveCircleOutlineOutlinedIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
-import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import VerticalTable from '@/components/table/VerticalTable';
 import { useUpdateDataset } from '@/hooks/mutations/useDatasetMutations';
@@ -18,7 +17,7 @@ import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, Typography,
 import { useCallback, useEffect } from 'react';
 import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const initRows: DatasetColumnModel = {
   index: 0,
@@ -33,11 +32,12 @@ export type FieldType = 'mcsKoNm' | 'mcsEnNm' | 'mcsDef' | 'srcClNm' | 'clFm';
 
 const Edit = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const location = useLocation();
-  const mtsId = location?.state?.mtsId;
+  const [searchParams] = useSearchParams();
+  const mtsId: string = searchParams.get('mtsId') || '';
   const params: DatasetParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const {
@@ -46,6 +46,7 @@ const Edit = () => {
     getValues,
     setValue,
     watch,
+    reset,
     control,
     formState: { errors },
   } = useForm<UpdatedDatasetModel>({
@@ -257,25 +258,16 @@ const Edit = () => {
         type: ValidType.ERROR,
         content: t('common.toast.error.read'),
       });
-    } else if (isSuccess && response.data) {
-      setValue('mtsKoNm', response.data.mtsKoNm);
-      setValue('mtsEnNm', response.data.mtsEnNm);
-      setValue('mtsDef', response.data.mtsDef);
-      setValue('srcSys', response.data.srcSys);
-      setValue('srcTbNm', response.data.srcTbNm);
-      setValue('srcDbCd', response.data.srcDbCd);
-      setValue('mtsDsc', response.data.mtsDsc);
-
-      response.data?.columnSpecs?.forEach((item: DatasetColumnModel, index: number) => {
-        append({
-          index: index,
-          mcsEnNm: item.mcsEnNm,
-          mcsKoNm: item.mcsKoNm,
-          srcClNm: item.srcClNm,
-          mcsDef: item.mcsDef,
-          clFm: item.clFm,
+    } else if (isSuccess) {
+      if (response.data) {
+        reset(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
         });
-      });
+        goToList();
+      }
     }
   }, [response, isSuccess, isError, toast, append, setValue]);
 
@@ -293,17 +285,6 @@ const Edit = () => {
       goToList();
     }
   }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
-
-  if (!mtsId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>

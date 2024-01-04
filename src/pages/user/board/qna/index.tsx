@@ -56,9 +56,8 @@ const List = () => {
   };
 
   const goToDetail = (row: RowsInfo) => {
-    navigate(View.DETAIL, {
+    navigate(`${View.DETAIL}?qnaId=${row.qnaId}`, {
       state: {
-        qnaId: row.qnaId,
         params: params,
         page: page,
       },

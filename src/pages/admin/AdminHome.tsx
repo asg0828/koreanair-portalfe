@@ -285,7 +285,7 @@ const AdminHome = () => {
                   <Tag size="MD" shape="Round" variety="02" type="Strong" className="tag_point">
                     {t('common.label.important')}
                   </Tag>
-                  <Link className="ellipsis1" to={`${AdminMainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
+                  <Link className="ellipsis1" to={`${AdminMainLink.NOTICE}/detail?noticeId=${item.noticeId}`}>
                     {item.sj}
                   </Link>
                   <span className="date">{item.rgstDt}</span>
@@ -307,7 +307,7 @@ const AdminHome = () => {
             ) : (
               faqList.map((item) => (
                 <div>
-                  <Link to={AdminMainLink.FAQ} state={{ faqId: item.faqId }}>
+                  <Link to={`${AdminMainLink.FAQ}?faqId=${item.faqId}`}>
                     <div className="question ellipsis1">{item.qstn}</div>
                     <div className="answer">
                       <div className="ellipsis1" dangerouslySetInnerHTML={{ __html: item.answ }}></div>
@@ -341,7 +341,7 @@ const AdminHome = () => {
                   >
                     {item.qnaStatNm}
                   </Tag>
-                  <Link className="ellipsis1" to={`${AdminMainLink.QNA}/detail`} state={{ qnaId: item.qnaId }}>
+                  <Link className="ellipsis1" to={`${AdminMainLink.QNA}/detail?qnaId=${item.qnaId}`}>
                     {item.sj}
                   </Link>
                   <span className="date">{item.rgstDt}</span>
@@ -367,7 +367,7 @@ const AdminHome = () => {
             ) : (
               featureList.map((item) => (
                 <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Link to={`${AdminMainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
+                  <Link to={`${AdminMainLink.FEATURE}/detail?featureId=${item.featureId}`}>
                     <div className="listLocation">{`${item.featureTypNm} > ${item.featureSeGrpNm}`}</div>
                     <div className="listInfo">
                       <div className="item">{item.featureKoNm}</div>
@@ -395,7 +395,7 @@ const AdminHome = () => {
             ) : (
               popularFeatureList.map((item) => (
                 <div className="item">
-                  <Link to={`${AdminMainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
+                  <Link to={`${AdminMainLink.FEATURE}/detail?featureId=${item.featureId}`}>
                     <Stack>
                       <div className="exp">{item.featureKoNm}</div>
                       <div className="ellipsis1">{item.enrUserNm}</div>

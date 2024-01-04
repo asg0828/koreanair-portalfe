@@ -16,7 +16,7 @@ import { getFileSize } from '@/utils/FileUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export const initFaqParams: FaqParams = {
   searchConditions: 'all',
@@ -30,6 +30,8 @@ const List = () => {
   const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const paramFaqId: string = searchParams.get('faqId') || '';
   const beforeParams: FaqParams = location?.state?.params;
   const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initFaqParams);
@@ -57,9 +59,8 @@ const List = () => {
   };
 
   const goToEdit = (nFaqId: string) => {
-    navigate('./edit', {
+    navigate(`./edit?faqId=${nFaqId}`, {
       state: {
-        faqId: nFaqId,
         params: params,
       },
     });
@@ -135,8 +136,8 @@ const List = () => {
         setRows(response.data.contents);
         setPage(response.data.page);
 
-        if (location?.state?.faqId) {
-          setFaqId(location?.state?.faqId);
+        if (paramFaqId) {
+          setFaqId(paramFaqId);
         }
       }
     }
@@ -207,7 +208,7 @@ const List = () => {
       </SearchForm>
 
       <AccordionGrid
-        defaultValue={location?.state?.faqId}
+        defaultValue={paramFaqId}
         rows={rows}
         page={page}
         onClick={handleClick}

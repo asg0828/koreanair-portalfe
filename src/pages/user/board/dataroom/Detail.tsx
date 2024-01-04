@@ -2,7 +2,6 @@ import { downloadFile } from '@/api/FileAPI';
 import { AttachFileIcon, ExpandLessIcon, ExpandMoreIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
-import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
@@ -18,7 +17,7 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Detail = () => {
   const { t } = useTranslation();
@@ -28,7 +27,8 @@ const Detail = () => {
   const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
-  const dataId: string = location?.state?.dataId || '';
+  const [searchParams] = useSearchParams();
+  const dataId: string = searchParams.get('dataId') || '';
   const params: DataroomParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [dataroomModel, setDataroomModel] = useState<DataroomModel>();
@@ -45,9 +45,8 @@ const Detail = () => {
   }, [params, page, navigate]);
 
   const goToEdit = () => {
-    navigate('../edit', {
+    navigate(`../edit?dataId=${dataId}`, {
       state: {
-        dataId: dataId,
         params: params,
         page: page,
       },
@@ -55,9 +54,8 @@ const Detail = () => {
   };
 
   const handleMoveDetail = (nDataId: string) => {
-    navigate('', {
+    navigate(`?dataId=${nDataId}`, {
       state: {
-        dataId: nDataId,
         params: params,
         page: page,
       },
@@ -95,11 +93,19 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: t('common.toast.error.list'),
+        content: t('common.toast.error.read'),
       });
-    } else if (isSuccess && response.data) {
-      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
-      setDataroomModel(response.data);
+    } else if (isSuccess) {
+      if (response.data) {
+        response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+        setDataroomModel(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -117,17 +123,6 @@ const Detail = () => {
       goToList();
     }
   }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
-
-  if (!dataId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <>

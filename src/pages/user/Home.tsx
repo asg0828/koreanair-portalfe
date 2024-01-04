@@ -262,7 +262,7 @@ const Home = () => {
                       {t('common.label.important')}
                     </Tag>
                   )}
-                  <Link className="ellipsis1" to={`${MainLink.NOTICE}/detail`} state={{ noticeId: item.noticeId }}>
+                  <Link className="ellipsis1" to={`${MainLink.NOTICE}/detail?noticeId=${item.noticeId}`}>
                     {item.sj}
                   </Link>
                   <span className="date">{item.rgstDt}</span>
@@ -284,7 +284,7 @@ const Home = () => {
             ) : (
               faqList.map((item) => (
                 <div>
-                  <Link to={MainLink.FAQ} state={{ faqId: item.faqId }}>
+                  <Link to={`${MainLink.FAQ}?faqId=${item.faqId}`}>
                     <div className="question ellipsis1">{item.qstn}</div>
                     <div className="answer">
                       <div className="ellipsis1" dangerouslySetInnerHTML={{ __html: item.answ }}></div>
@@ -318,7 +318,7 @@ const Home = () => {
                   >
                     {item.qnaStatNm}
                   </Tag>
-                  <Link className="ellipsis1" to={`${MainLink.QNA}/detail`} state={{ qnaId: item.qnaId }}>
+                  <Link className="ellipsis1" to={`${MainLink.QNA}/detai?qnaId=${item.qnaId}`}>
                     {item.sj}
                   </Link>
                   <span className="date">{item.rgstDt}</span>
@@ -344,7 +344,7 @@ const Home = () => {
             ) : (
               featureList.map((item) => (
                 <Stack style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Link to={`${MainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
+                  <Link to={`${MainLink.FEATURE}/detail?featureId=${item.featureId}`}>
                     <div className="listLocation">{`${item.featureTypNm} > ${item.featureSeGrpNm}`}</div>
                     <div className="listInfo">
                       <div className="item">{item.featureKoNm}</div>
@@ -372,7 +372,7 @@ const Home = () => {
             ) : (
               popularFeatureList.map((item) => (
                 <div className="item">
-                  <Link to={`${MainLink.FEATURE}/detail`} state={{ featureId: item.featureId }}>
+                  <Link to={`${MainLink.FEATURE}/detail?featureId=${item.featureId}`}>
                     <Stack>
                       <div className="exp">{item.featureKoNm}</div>
                       <div className="ellipsis1">{item.enrUserNm}</div>

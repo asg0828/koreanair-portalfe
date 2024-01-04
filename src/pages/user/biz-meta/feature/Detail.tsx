@@ -1,5 +1,4 @@
 import '@/assets/styles/Board.scss';
-import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteFeature } from '@/hooks/mutations/useFeatureMutations';
 import { useFeatureById } from '@/hooks/queries/useFeatureQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
@@ -12,17 +11,18 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, TextField, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Detail = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
-  const featureId: string = location?.state?.featureId || '';
+  const [searchParams] = useSearchParams();
+  const featureId: string = searchParams.get('featureId') || '';
   const params: FeatureParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [featureModel, setFeatureModel] = useState<FeatureModel>();
@@ -39,9 +39,8 @@ const Detail = () => {
   }, [params, page, navigate]);
 
   const goToEdit = () => {
-    navigate('../edit', {
+    navigate(`../edit?featureId=${featureId}`, {
       state: {
-        featureId: featureId,
         params: params,
         page: page,
       },
@@ -66,7 +65,15 @@ const Detail = () => {
         content: t('common.toast.error.read'),
       });
     } else if (isSuccess) {
-      setFeatureModel(response.data);
+      if (response.data) {
+        setFeatureModel(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -84,17 +91,6 @@ const Detail = () => {
       goToList();
     }
   }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
-
-  if (!featureId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <>

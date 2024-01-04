@@ -1,5 +1,4 @@
 import '@/assets/styles/Board.scss';
-import EmptyState from '@/components/emptyState/EmptyState';
 import VerticalTable from '@/components/table/VerticalTable';
 import { useDeleteDataset } from '@/hooks/mutations/useDatasetMutations';
 import { useDatasetById } from '@/hooks/queries/useDatasetQueries';
@@ -15,17 +14,18 @@ import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Detail = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
-  const mtsId = location?.state?.mtsId;
+  const [searchParams] = useSearchParams();
+  const mtsId: string = searchParams.get('mtsId') || '';
   const params: DatasetParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [datasetModel, setDatasetModel] = useState<DatasetModel>();
@@ -104,9 +104,8 @@ const Detail = () => {
   }, [params, page, navigate]);
 
   const goToEdit = () => {
-    navigate('../edit', {
+    navigate(`../edit?mtsId=${mtsId}`, {
       state: {
-        mtsId: mtsId,
         params: params,
         page: page,
       },
@@ -131,8 +130,16 @@ const Detail = () => {
         content: t('common.toast.error.read'),
       });
     } else if (isSuccess) {
-      setDatasetModel(response.data);
-      setRows(response.data?.columnSpecs);
+      if (response.data) {
+        setDatasetModel(response.data);
+        setRows(response.data?.columnSpecs);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -150,17 +157,6 @@ const Detail = () => {
       goToList();
     }
   }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
-
-  if (!mtsId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">

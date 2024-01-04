@@ -64,9 +64,8 @@ const List = () => {
   };
 
   const goToDetail = (row: DatasetModel) => {
-    navigate(View.DETAIL, {
+    navigate(`${View.DETAIL}?mtsId=${row.mtsId}`, {
       state: {
-        mtsId: row.mtsId,
         params: params,
         page: page,
       },
