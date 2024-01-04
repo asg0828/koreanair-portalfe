@@ -177,7 +177,7 @@ export default function List() {
   }, [responseProfile, isErrorProfile]);
 
   useEffect(() => { 
-    if(searchSkypassNm !== '' && searchInfo.searchType !== '') {
+    if(searchSkypassNm !== '' && profile?.skypassInfos[0]?.skypassMemberNumber !== '') {
       refetchSkypass()
       setSearchInfo({...searchInfo, searchType: ''})
     }
