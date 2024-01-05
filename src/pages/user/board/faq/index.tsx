@@ -16,7 +16,7 @@ import { getFileSize } from '@/utils/FileUtil';
 import { Button, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 export const initFaqParams: FaqParams = {
   searchConditions: 'all',
@@ -25,11 +25,13 @@ export const initFaqParams: FaqParams = {
 
 const List = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const paramFaqId: string = searchParams.get('faqId') || '';
   const beforeParams: FaqParams = location?.state?.params;
   const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initFaqParams);
@@ -39,7 +41,7 @@ const List = () => {
   const [dFaqId, setDFaqId] = useState<string>('');
   const { data: response, isSuccess, isError, refetch } = useFaqList(params, page);
   const { data: gResponse, isSuccess: gIsSuccess, isError: gIsError, refetch: gRefetch } = useFaqById(faqId);
-  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(faqId);
+  const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(dFaqId);
 
   const searchInfoList = [
     { key: 'qstn', value: t('board:label.sj') },
@@ -49,15 +51,26 @@ const List = () => {
   const goToReg = () => {
     navigate(View.REG, {
       state: {
+        faqId: faqId,
         params: params,
         page: page,
       },
     });
   };
 
+  const goToEdit = (nFaqId: string) => {
+    navigate(`./edit`, {
+      state: {
+        faqId: faqId,
+        params: params,
+      },
+    });
+  };
+
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handleClear = () => {
     setParams(initFaqParams);
@@ -80,15 +93,6 @@ const List = () => {
     setDFaqId(nFaqId);
   };
 
-  const goToEdit = (nFaqId: string) => {
-    navigate('./edit', {
-      state: {
-        faqId: nFaqId,
-        params: params,
-      },
-    });
-  };
-
   const handleDelete = (nFaqId: string) => {
     dispatch(
       openModal({
@@ -109,8 +113,8 @@ const List = () => {
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     faqId && gRefetch();
@@ -133,6 +137,10 @@ const List = () => {
         );
         setRows(response.data.contents);
         setPage(response.data.page);
+
+        if (paramFaqId) {
+          setFaqId(paramFaqId);
+        }
       }
     }
   }, [response, isSuccess, isError, toast]);
@@ -202,7 +210,7 @@ const List = () => {
       </SearchForm>
 
       <AccordionGrid
-        defaultValue={location?.state?.faqId}
+        defaultValue={paramFaqId}
         rows={rows}
         page={page}
         onClick={handleClick}

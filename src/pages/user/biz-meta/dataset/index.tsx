@@ -35,8 +35,8 @@ const initParams: DatasetParams = {
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const beforeParams: DatasetParams = location?.state?.params;
@@ -64,9 +64,8 @@ const List = () => {
   };
 
   const goToDetail = (row: DatasetModel) => {
-    navigate(View.DETAIL, {
+    navigate(`${View.DETAIL}?mtsId=${row.mtsId}`, {
       state: {
-        mtsId: row.mtsId,
         params: params,
         page: page,
       },
@@ -74,8 +73,9 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handleClear = () => {
     setParams(initParams);
@@ -110,8 +110,8 @@ const List = () => {
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

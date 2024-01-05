@@ -6,11 +6,12 @@ import { SelectValue } from '@mui/base/useSelect';
 import { customerMetaInfoColumn, initTbCoMetaTblInfo } from './data';
 import DataGridMeta from '@/components/grid/DataGridMeta';
 import { useMetaTableDetail } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useSearchParams } from 'react-router-dom';
 import { TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
 
 const CustomerMetaManagementDetail = () => {
   const location = useLocation();
+  const [queryParam] = useSearchParams()
   const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<TbCoMetaTbInfo>(initTbCoMetaTblInfo);
   const [searchInfo, setSearchInfo] = useState<any>({
     metaTblId: location?.state?.metaTblId || '',
@@ -18,7 +19,8 @@ const CustomerMetaManagementDetail = () => {
     rtmTblYn: location?.state?.rtmTblYn || '',
   });
   const [rows, setRows] = useState<any>([]);
-  const { data: response, isError, refetch: dtlRefetch } = useMetaTableDetail(searchInfo.metaTblId);
+  const [metaTblId, setMetaTblId] = useState<string>(queryParam.get("metaTblId") || "")
+  const { data: response, isError, refetch: dtlRefetch } = useMetaTableDetail(metaTblId);
   const { toast } = useToast();
   const [isRefetch, setIsRefetch] = useState<number>(0);
   const [isOpen, setOpen] = useState(false);
@@ -27,11 +29,17 @@ const CustomerMetaManagementDetail = () => {
     // confirm(alert x)
     setOpen(true);
   };
-  useEffect(() => {
-    if (!location || !location.state) return;
-    dtlRefetch();
-  }, [location]);
+  // useEffect(() => {
+  //   if (!location || !location.state) return;
+  //   dtlRefetch();
+  // }, [location]);
 
+  useEffect(() => {
+    if (metaTblId === "") {
+      return
+    }
+    dtlRefetch();
+  }, [metaTblId])
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
@@ -58,7 +66,13 @@ const CustomerMetaManagementDetail = () => {
     } else {
       if (response?.result) {
         setRows(JSON.parse(JSON.stringify(response?.result.tbCoMetaTblClmnInfoList)));
-        setTbCoMetaTbInfo(JSON.parse(JSON.stringify(response?.result.tbCoMetaTbInfo)));
+        let tTemp = JSON.parse(JSON.stringify(response?.result.tbCoMetaTbInfo))
+        setTbCoMetaTbInfo(tTemp);
+        setSearchInfo({
+          metaTblId: tTemp.metaTblId || '',
+          metaTblLogiNm: tTemp.metaTblLogiNm || '',
+          rtmTblYn: tTemp.rtmTblYn || '',
+        })
       }
     }
   }, [response, isError, isRefetch, toast]);

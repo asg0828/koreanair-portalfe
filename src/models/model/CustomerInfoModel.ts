@@ -36,33 +36,66 @@ export interface ColumnChild {
 }
 
 export interface Profile {
-  name: string;
+  korFname: string;
+  korLname: string;
   engFname: string;
   engLname: string;
-  birth: string;
+  birthDatev: string;
   age: string;
-  gender: string;
-  homePhoneNumberInfo: string;
-  mobilePhoneNumberInfone: string;
+  sexCode: string;
+  mobilePhoneNumber: string;
   emailAddress: string;
-  significant: string;
+  oneidNo: string;
+  skypassInfos : SkypassInfo[]
 }
 
+export interface ProfileList{
+  korFname: string;
+  korLname: string;
+  engFname: string;
+  engLname: string;
+  membershipLevel: string;
+  oneidNo: string;
+  sexCode: string;
+  skypassMemberNumber :string;
+}
+export interface SkypassInfo {
+  oneidNo: string;
+  skypassMemberNumber: string
+}
 export interface Skypass {
-  [skypassNum: string]: string;
-  skypassGrade: string;
-  useYn: string;
-  gradeStartDate: string;
-  mileage: string;
-  expireMileage: string;
-  gradeCondtion: string;
-  upgradeCondition: string;
+  skypassMemberNumber: string
+  memberLevel: string
+  memberStatusNm: string
+  effectiveFrom: string
+  totalAccrued: string
+  remainMileage: string
+  isPlccCard: boolean
+  expiredMileages: ExpiredMileages[]
+  familyMembers: FamilyMembers[]
+}
+export interface ExpiredMileages {
+  expiration: string
+  accrualMileage: number
+  remainMileage: number
+  usedMileage: number
+  expiredMileage: number
+  accrualFrequency: number
 }
 
-export interface FamilyMember {
-  familyCnt: number;
-  mergeMileage: number;
-  familyList: FamilyList[];
+export interface FamilyMembers {
+  relationship: string
+  familyGroupName: string
+  engFName: string
+  engGName: string
+  korFName: string
+  korGName: string
+  memberStatus: string
+  memberStatusNm: string
+  dateOfBirth: string
+  skypassNumber: string
+  currentMileage: number
+  createdDate: string
 }
 export interface FamilyList {
   relationship: string;

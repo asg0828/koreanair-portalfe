@@ -16,8 +16,8 @@ import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
@@ -40,13 +40,12 @@ const List = () => {
     { headerName: t('bizMeta:label.def'), field: 'featureDef', colSpan: 2.5, align: 'left' },
   ];
 
-  const goToDetail = (row: FeatureModel, index: number) => {
-    const path = contextPath === ContextPath.ADMIN ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
-    navigate(`${contextPath}${path}`, {
-      state: {
-        featureId: row.featureId,
-      },
-    });
+  const goToDetail = (row: FeatureModel) => {
+    const path =
+      contextPath === ContextPath.ADMIN
+        ? `/biz-meta-management/feature/detail?featureId=${row.featureId}`
+        : `/biz-meta/feature/detail?featureId=${row.featureId}`;
+    navigate(`${contextPath}${path}`);
   };
 
   const handleRemoveInterestFeature = () => {
@@ -68,16 +67,17 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handlePage = (page: PageModel) => {
     setPage(page);
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

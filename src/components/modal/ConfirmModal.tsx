@@ -19,6 +19,7 @@ const ConfirmModal = ({
 
   const handleClose = () => {
     dispatch(closeModal());
+    onCancle && onCancle();
   };
 
   const handleConfirm = () => {

@@ -1,28 +1,12 @@
 import { htmlTagReg } from '@/utils/RegularExpression';
-import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
+import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, Loader } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import {
-  profileData,
-  skypassData1,
-  skypassData2,
-  familyMemberData,
-  walletData,
-  preferenceData,
-  cntData,
-  pnrData,
-  eTktData,
-  boardingListData,
-  vocData,
-  callData,
-  internetData,
-  smsData,
-  emailData,
-  snsData,
-  skyPassList,
+  initFamily,
+  initProfile, initSkypass,
 } from '../dashboard/data';
 import {
-  FamilyMember,
   Profile,
   Skypass,
   Wallet,
@@ -37,22 +21,52 @@ import {
   Sms,
   Sns,
   Email,
+  ProfileList,
+  FamilyMembers,
 } from '@/models/model/CustomerInfoModel';
 import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { useProfileCLevel } from '@/hooks/queries/useCustomerInfoQueires';
+import { useProfile, useProfileCLevel, useSkypass } from '@/hooks/queries/useCustomerInfoQueires';
 import Close from '@mui/icons-material/Close';
-import { menuIconSx } from '@/models/common/Constants';
+import { ValidType, menuIconSx } from '@/models/common/Constants';
+import { useTranslation } from 'react-i18next';
+import { cloneDeep } from 'lodash'
 
 export default function List() {
+  /* 수집기준시간 */
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
   const batchDate = `${yesterday.getFullYear()}-${(`0` + (yesterday.getMonth() + 1)).slice(-2)}-${(
     `0` + yesterday.getDate()
   ).slice(-2)}`;
-  const [profile, setProfile] = useState<Profile>();
-  const [skypass, setSkypass] = useState<Array<Skypass>>();
-  const [family, setFamily] = useState<FamilyMember>();
+  // skypass 조회용 변수 
+  const [skypassNmSearch, setSkypassNmSearch] = useState<any>({
+    searchType: '',
+    skypassMemberNumber: ''
+  })
+  /* 프로필 */
+  const [profile, setProfile] = useState<Profile>(initProfile);
+  /* 검색 결과가 많은 경우 모달에 뿌려줄 리스트 */
+  const [profileList, setProfileList] = useState<Array<ProfileList>>([]);
+  /* 검색 조건 */
+  const [searchInfo, setSearchInfo] = useState<any>({
+    searchType: '',
+    skypassMemberNumber: '',
+    mobilePhoneNumber: '',
+    korFname: '',
+    korLname: '',
+    engLname: '',
+    engFname: '',
+  });
+  // profile 조회 api
+  const { refetch: refetchProfile, data: responseProfile, isError: isErrorProfile } = useProfile(skypassNmSearch);
+  // profileList 조회(CLevel) api
+  const { refetch: refetchProfileCLvl, data: responseProfileCLvl, isError: isErrorProfileCLvl, isFetching: isFetchingCLvl} = useProfileCLevel(searchInfo);
+  // skypass 조회 api
+  const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass, isFetching: isFetchingSkypass} = useSkypass(skypassNmSearch.skypassMemberNumber);
+  
+  const [skypass, setSkypass] = useState<Array<Skypass>>([]);
+  const [family, setFamily] = useState<Array<FamilyMembers>>([]);
   const [wallet, setWallet] = useState<Wallet>();
   const [preference, setPreference] = useState<Preference>();
   const [cnt, setCnt] = useState<Cnt>();
@@ -66,21 +80,11 @@ export default function List() {
   const [snss, setSnss] = useState<Array<Sns>>([]);
   const [emails, setEmails] = useState<Array<Email>>([]);
   const [rows, setRows] = useState<Array<any>>([]);
-  const [searchInfo, setSearchInfo] = useState<any>({
-    searchType: 'A',
-    skypassNum: '',
-    mobilePhoneNumber: '',
-    korFname: '',
-    korLname: '',
-    engLname: '',
-    engFname: '',
-  });
-  const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
-  // const [skypassList, setSkypassList] = useState<Array<any>>([]);
+  
+  const [selectedSkypass, setSelectedSkypass] = useState<Skypass>(initSkypass);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { toast } = useToast();
-  // profile 조회 api
-  const { refetch: refetchProfile, data: responseProfile, isError: isErrorProfile } = useProfileCLevel(searchInfo);
+  
   const [searchText, setSearchText] = useState<any>();
 
   const searchHighlight = (text: any, search: any) => {
@@ -95,23 +99,16 @@ export default function List() {
       )
     );
   };
+  
+// useEffect(()=> {
+//   if(skypassNmSearch.skypassMemberNumber !== '' && skypassNmSearch.searchType === ''){
+//     setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
+//   }
+// }, [skypassNmSearch.searchType]) 
 
   const onchangeModalInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setSearchText(value);
-  };
-  const validation = () => {
-    // 검색 조건 자체는 두개다 들어가도 가능
-    // 회원당 skypass는 일대다 관계이므로 mobilePhoneNumber로 검색할 경우 skypass list를
-    let searchError = false;
-    if (
-      searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-      searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === ''
-    ) {
-      setOpen(true);
-      searchError = true;
-    }
-    return searchError;
   };
 
   // 등록가족 상세 모달 오픈 버튼
@@ -119,63 +116,48 @@ export default function List() {
     setOpenFamilyInfo(true);
   };
 
-  const handleSearch = useCallback(() => {
-    // setSkypass([]);
+  /* 검색 버튼 */
+  const handleSearch =() => {
+
     // 유효성 검사 실패 시 종료
     const validation = () => {
       let searchError = false;
       if (
-        searchInfo.skypassNum.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === ''
+        skypassNmSearch.skypassMemberNumber.replace(htmlTagReg, '').trim() === '' &&
+        searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === '' && 
+        searchInfo.engLname.replace(htmlTagReg, '').trim() === '' && 
+        searchInfo.engFname.replace(htmlTagReg, '').trim() === '' && 
+        searchInfo.korFname.replace(htmlTagReg, '').trim() === '' &&
+        searchInfo.korLname.replace(htmlTagReg, '').trim()
       ) {
         setOpen(true);
         searchError = true;
       }
       return searchError;
-    };
-
-    if (validation()) return;
-    if (searchInfo.mobilePhoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
-      setProfile(profileData[0]);
-      setSkypass(skypassData1);
-      setFamily(familyMemberData[0]);
-      setSelectedSkypass(skypassData1[0]);
-      setWallet(walletData);
-      setPreference(preferenceData[0]);
-      setCnt(cntData[0]);
-      setPnr(pnrData);
-      setEtkt(eTktData);
-      setBoardingLists(boardingListData);
-      setVocs(vocData);
-      setInternets(internetData);
-      setCalls(callData);
-      setSmss(smsData);
-      setEmails(emailData);
-      setSnss(snsData);
-      setSearchInfo({ ...searchInfo, skypassSelect: '112423935550' });
-    } else if (searchInfo.mobilePhoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
-      setProfile(profileData[1]);
-      setSkypass(skypassData2);
-      setFamily(familyMemberData[3]);
-      setSelectedSkypass(skypassData2[0]);
-      setWallet(walletData);
-      setPreference(preferenceData[1]);
-      setCnt(cntData[1]);
-      setPnr(pnrData);
-      setEtkt(eTktData);
-      setBoardingLists(boardingListData);
-      setVocs(vocData);
-      setInternets(internetData);
-      setCalls(callData);
-      setSmss(smsData);
-      setEmails(emailData);
-      setSnss(snsData);
-      setSearchInfo({ ...searchInfo, skypassSelect: '112315856573' });
     }
-    // refetch();
-    refetchProfile();
-  }, [refetchProfile, searchInfo, validation]);
+    if (validation()) return;
 
+    if(skypassNmSearch.skypassMemberNumber !== ''){
+      setSkypassNmSearch({...skypassNmSearch, searchType: 'B'})
+      setProfileList([])
+    } else if(searchInfo.mobilePhoneNumber !== ''){
+      setSearchInfo({...searchInfo, searchType: 'C'})
+    } else if(searchInfo.engFname !== ''){
+      setSearchInfo({...searchInfo, searchType: 'B'})
+    } else if(searchInfo.korFname !== ''){
+      setSearchInfo({...searchInfo, searchType: 'A'})
+    } 
+  };
+  
+  useEffect(() => {
+    if(searchInfo.searchType !== '') {
+      refetchProfileCLvl() 
+    } else if(skypassNmSearch.searchType !== ''){
+      refetchProfile()
+      setSkypassNmSearch({...skypassNmSearch, searchType: '' })      
+    }
+  }, [searchInfo, skypassNmSearch])
+  
   // style > 배경색 변경
   useEffect(() => {
     const bodyElement: HTMLElement | null = document.getElementById('body');
@@ -197,17 +179,22 @@ export default function List() {
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
     const { id, value } = e.target;
-    if (id === 'skypassNum') {
-      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'D' });
-    } else if (id === 'korFname' || id === 'korLname') {
-      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'A' });
-    } else if (id === 'engFname' || id === 'engLname') {
-      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'B' });
-    } else if (id === 'mobilePhoneNumber') {
-      setSearchInfo({ ...searchInfo, [id]: value, searchType: 'C' });
+    if(id === 'skypassMemberNumber'){
+      setSkypassNmSearch({ searchType: '' , [id] : value })
+    } else {
+      if(skypassNmSearch.skypassMemberNumber !== ''){
+        setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
+      }
+      setSearchInfo({ ...searchInfo, [id]: value, searchType: '' });
     }
   };
 
+  useEffect(() => { 
+    if(skypassNmSearch.skypassMemberNumber !== '' && skypassNmSearch.searchType !== '') {
+      refetchSkypass()
+      setSearchInfo({...searchInfo, searchType: ''})
+    }
+  }, [skypassNmSearch])
   const [isListView1, setIsListView1] = useState({ open: false, contents: '' });
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState({ open: false, contents: '' });
@@ -223,44 +210,139 @@ export default function List() {
   /* select 입력 함수 */
   const onchangeSelectHandler = (
     e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
-    value: SelectValue<{}, false>,
-    id?: String
+    value: SelectValue<{}, false>
   ) => {
-    if (searchInfo.mobilePhoneNumber === 'S199206239090026' || searchInfo.skypassNum === '112423935550') {
-      setSearchInfo({ ...searchInfo, [`${id}`]: value });
-      if (value === '112423935550') {
-        setFamily(familyMemberData[0]);
-      } else if (value === '112345789375') {
-        setFamily(familyMemberData[1]);
-      } else if (value === '112617209394') {
-        setFamily(familyMemberData[2]);
-      }
-    } else if (searchInfo.mobilePhoneNumber === 'S198701167474407' || searchInfo.skypassNum === '112315856573') {
-      setSearchInfo({ ...searchInfo, [`${id}`]: value });
-      if (value === '112315856573') {
-        setFamily(familyMemberData[3]);
-      } else if (value === '112557098776') {
-        setFamily(familyMemberData[4]);
-      } else if (value === '112111687088') {
-        setFamily(familyMemberData[5]);
-      }
-    }
+    setSkypassNmSearch({ searchType: 'B', skypassMemberNumber: String(value)})
   };
-  useEffect(() => {
-    setSelectedSkypass(skypass?.find((item) => item.skypassNum === searchInfo.skypassSelect));
-  }, [searchInfo.skypassSelect]);
 
-  {
-    /* CLevel 모달 */
-  }
+  /*  */
+  // useEffect(() => {
+  //   setSelectedSkypass(skypass?.find((item) => item.skypassMemberNumber === searchInfo.skypassSelect));
+  // }, [searchInfo.skypassSelect]);
+
+  {/* CLevel 모달 */}
   const dispatch = useAppDispatch();
   const cLevelModal = useAppSelector(selectCLevelModal());
   const toggleDropMenu = (e: React.MouseEvent<Element>) => {
     e.stopPropagation();
     dispatch(setCLevelModal(!cLevelModal));
   };
-  {
-    /* CLevel 모달 */
+  {/* CLevel 모달 */}
+
+
+  // 프로필 조회(핸드폰번호, 이름)
+  useEffect(() => { 
+    if( searchInfo.searchType !== '')   {
+      if (isErrorProfileCLvl || responseProfileCLvl?.successOrNot === 'N') {
+        toast({
+          type: ValidType.ERROR,
+          content: responseProfileCLvl?.message
+        });
+        setProfile(initProfile)
+        setSkypass([])
+        setSelectedSkypass(initSkypass)
+        setFamily([])
+      } else {
+        if (responseProfileCLvl) {
+          setProfile(initProfile)
+          setSkypass([])
+          setSelectedSkypass(initSkypass)
+          setFamily([])
+          dispatch(setCLevelModal(true));
+          setProfileList(responseProfileCLvl?.data)
+        }
+      }
+
+    }
+  }, [responseProfileCLvl, isErrorProfileCLvl, searchInfo.searchType]);
+
+  // 프로필 조회(skypassNumber)
+  useEffect(() => {
+    if (isErrorProfile || responseProfile?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseProfile?.message,
+      });
+      setProfile(initProfile)
+      setSkypass([])
+      setFamily([])
+      setSelectedSkypass(initSkypass)
+    } else {
+      if (responseProfile?.data) {
+        setProfile(responseProfile?.data);
+      }
+    }
+  }, [responseProfile, isErrorProfile]);
+
+    // skypass 조회
+    useEffect(() => {
+      if (isErrorSkypass || responseSkypass?.successOrNot === 'N') {
+        toast({
+          type: ValidType.ERROR,
+          content: responseSkypass?.message,
+        });
+      } else {
+        if (responseSkypass) {
+          setSkypass(responseSkypass?.data);
+        }
+      }
+    }, [isErrorSkypass, responseSkypass]);
+
+  /* 모달 행 클릭 함수(searchInfo 변경 후 profile 조회 api 호출 및 모달 닫기) */
+  const searchProfile = (skypassMemberNumber: string) => {
+    setSkypassNmSearch({skypassMemberNumber: skypassMemberNumber, searchType: 'B'})
+    dispatch(setCLevelModal(false));
+  }
+
+  /* profileList(중복된 검색 결과가 있는 경우)가 존재하는 경우 profile api 조회*/
+  useEffect(() => {
+    if(searchInfo.skypassMemberNumber !== '' && !cLevelModal && searchInfo.searchType !== '' ){
+      refetchProfile()
+      refetchSkypass()
+    }
+  }, [cLevelModal, searchInfo, profileList])
+
+  // skypass 조회
+  useEffect(() => {
+    if (isErrorSkypass || responseSkypass?.successOrNot === 'N') {
+      setSelectedSkypass(initSkypass)
+      setFamily(initFamily)
+      toast({
+        type: ValidType.ERROR,
+        content: responseSkypass?.message,
+      });
+    } else {
+      if (responseSkypass) {
+        setSelectedSkypass(responseSkypass.data)
+        setFamily(responseSkypass.data.familyMembers)
+      }
+    }
+  }, [isErrorSkypass, responseSkypass]);
+  
+  /* 로딩바 */
+  const { t } = useTranslation()
+
+  useEffect(() => {
+		reset()
+
+	}, [])
+  const reset = () => {
+		setProfile((state: Profile) => {
+			let rtn = cloneDeep(state)
+			rtn = cloneDeep(initProfile)
+			return rtn
+		})
+    setSkypass((prevState) => {
+			return cloneDeep([])
+		})
+    setFamily((prevState) => {
+			return cloneDeep([])	
+		})
+    setSelectedSkypass((state: Skypass) => {
+			let rtn = cloneDeep(state)
+			rtn = cloneDeep(initSkypass)
+			return rtn
+		})
   }
 
   return (
@@ -280,8 +362,8 @@ export default function List() {
             <Stack>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  id="skypassNum"
-                  value={searchInfo.skypassNum}
+                  id="skypassMemberNumber"
+                  value={skypassNmSearch.skypassMemberNumber}
                   appearance="Outline"
                   placeholder="Skypass Number"
                   size="LG"
@@ -305,19 +387,19 @@ export default function List() {
             <Stack>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.korLname}
-                  id="korLname"
+                  value={searchInfo.korFname}
+                  id="korFname"
                   appearance="Outline"
                   placeholder="KOR. - Last Name"
                   size="LG"
                   textAlign="left"
                   onChange={onchangeInputHandler}
                 />
-              </div>{' '}
+              </div>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.korFname}
-                  id="korFname"
+                  value={searchInfo.korLname}
+                  id="korLname"
                   appearance="Outline"
                   placeholder="KOR. - First Name"
                   size="LG"
@@ -358,6 +440,7 @@ export default function List() {
           >
             검색
           </Button>
+        
         </Stack>
         <Modal open={isOpen} onClose={() => setOpen(false)}>
           <Modal.Header>오류</Modal.Header>
@@ -378,6 +461,18 @@ export default function List() {
       {/* searchBar 영역 */}
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
+        {isFetchingCLvl || isFetchingSkypass ? 
+         <Loader
+         style={{
+             width: "100%",
+             height: "100%",
+             backgroundColor : '#f8f9fc'
+         }}
+         type="Bubble"
+         title={t('common.message.proceeding')}
+         description={"데이터를 불러오고 있습니다."}
+     /> : 
+     <>
           <Stack>
             <Typography variant="h3" className="dashboardTitle">
               Customer Info.
@@ -389,7 +484,7 @@ export default function List() {
             </h5>
             <div className="dashBoardBox n1">
               <div className="name">
-                {profile?.name}
+                  {profile?.korLname}{profile?.korFname}
                 <span className="en">
                   {profile?.engLname}
                   &nbsp;
@@ -403,7 +498,7 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">생년월일</div>
-                  <div className="value">{profile?.birth}</div>
+                  <div className="value">{profile?.birthDatev.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</div>
                 </div>
                 <div className="item">
                   <div className="key">만나이</div>
@@ -411,16 +506,17 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">성별</div>
-                  <div className="value">{profile?.gender}</div>
+                  <div className="value">{profile?.sexCode}</div>
                 </div>
 
                 <div className="item">
                   <div className="key">휴대폰번호</div>
                   <div className="value">
-                    {profile?.mobilePhoneNumberInfone
-                      .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
-                      .split('-')
-                      .reduce((pre, cur, idx) => (idx === 1 ? pre + '-****-' : pre + cur), '')}
+                    {profile?.mobilePhoneNumber
+                      // .replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3')
+                      // .split('-')
+                      // .reduce((pre, cur, idx) => (idx === 1 ? pre + '-****-' : pre + cur), '')
+                      }
                   </div>{' '}
                   {/* 가운데 번호 마스킹(*) 필요 */}
                 </div>
@@ -435,7 +531,7 @@ export default function List() {
                 </div>
                 <div className="item">
                   <div className="key">특이사항</div>
-                  <div className="value">{profile?.significant}</div>
+                  {/* <div className="value">{profile?.significant}</div> */}
                   {/* 특이사항 컬럼 필요 (ex. VIP) */}
                 </div>
               </div>
@@ -444,24 +540,24 @@ export default function List() {
               <div className="top" style={{ position: 'relative' }}>
                 SKYPASS
                 <div className="kr">스카이패스</div>
-                {skypass && skypass.length > 0 && (
+                {profile?.skypassInfos && profile?.skypassInfos.length > 1 && (
                   <Select
-                    id="skypassSelect"
-                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : ''}
+                    id="searchSkypassNm"
+                    defaultValue={profile.skypassInfos.length > 1 ? profile.skypassInfos[0].skypassMemberNumber : ''}
                     appearance="Outline"
                     placeholder="스카이패스선택"
                     style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}
-                    value={searchInfo.skypassSelect}
+                    value={skypassNmSearch.skypassMemberNumber}
                     onChange={(
                       e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
                       value: SelectValue<{}, false>
                     ) => {
-                      onchangeSelectHandler(e, value, 'skypassSelect');
+                      onchangeSelectHandler(e, value);
                     }}
                   >
-                    {skypass.map((item: any, index: number) => (
-                      <SelectOption key={index} value={item.skypassNum} style={{ maxHeight: '70%', fontSize: '13px' }}>
-                        {item.skypassNum}
+                    {profile?.skypassInfos?.map((item: any, index: number) => (
+                      <SelectOption key={index} value={item.skypassMemberNumber} style={{ maxHeight: '70%', fontSize: '13px' }}>
+                        {item.skypassMemberNumber}
                       </SelectOption>
                     ))}
                   </Select>
@@ -469,27 +565,27 @@ export default function List() {
               </div>
               <div className="item">
                 <div className="key">회원번호</div>
-                <div className="value">{selectedSkypass?.skypassNum}</div>
+                <div className="value">{selectedSkypass?.skypassMemberNumber}</div>
               </div>
               <div className="item">
                 <div className="key">회원등급</div>
-                <div className="value">{selectedSkypass?.skypassGrade}</div>
+                <div className="value">{selectedSkypass?.memberLevel}</div>
               </div>
               <div className="item">
                 <div className="key">휴면여부</div>
-                <div className="value">{selectedSkypass?.useYn}</div>
+                <div className="value">{selectedSkypass?.memberStatusNm}</div>
               </div>
               <div className="item">
                 <div className="key">현등급최초시작일</div>
-                <div className="value">{selectedSkypass?.gradeStartDate}</div>
+                <div className="value">{selectedSkypass?.effectiveFrom.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</div>
               </div>
               <div className="item">
                 <div className="key">잔여 마일리지</div>
-                <div className="value">{selectedSkypass?.mileage}</div>
+                <div className="value">{selectedSkypass?.remainMileage}</div>
               </div>
               <div className="item">
                 <div className="key">소멸예정 마일리지</div>
-                <div className="value">{selectedSkypass?.expireMileage}</div>
+                <div className="value">{selectedSkypass?.expiredMileages[0]?.expiredMileage}</div>
               </div>
             </div>
             <div style={{ position: 'relative' }} className="dashBoardBox n3">
@@ -526,12 +622,14 @@ export default function List() {
               </div>
               <div className="middle">
                 <div className="left">
-                  등록가족
-                  <span className="num">{family?.familyCnt}</span>명
+                  등록<br/>가족
+                  <span className="num">{family[0]?.skypassNumber !== '' ? family.length : 0}</span>명
                 </div>
                 <div className="right">
-                  합산가능마일리지
-                  <span className="num">{family?.mergeMileage}</span>
+                  합산가능<br/>마일리지
+                  <span className="num">
+                    {family.map((a)=> a.currentMileage).reduce(function add(sum, curVal) { return sum + curVal }, 0)}
+                  </span>
                 </div>
               </div>
               <div className="list" style={{ maxHeight: '200px', overflowY: 'auto' }}>
@@ -548,12 +646,12 @@ export default function List() {
                   </thead>
                   <tbody>
                     {family &&
-                      family.familyList.length > 0 &&
-                      family.familyList.map((list, index) => (
+                      family.length > 0 &&
+                      family.map((list: any) => (
                         <tr>
                           <td>{list.relationship}</td>
-                          <td>{list.code}</td>
-                          <td>{list.name}</td>
+                          <td>{list.skypassNumber}</td>
+                          <td>{list.engFName} &nbsp;{list.engGName}</td>
                         </tr>
                       ))}
                   </tbody>
@@ -1157,6 +1255,7 @@ export default function List() {
           <div
             onClick={(e) => e.stopPropagation()}
             className={'c_level_right_modal_wrap ' + (cLevelModal ? 'panel_opened' : '')}
+            style={{ zIndex: 90 }}
           >
             <Stack>
               <div className="right_modal_btn_wrap" onClick={(e) => toggleDropMenu(e)}>
@@ -1185,7 +1284,7 @@ export default function List() {
                           </Button>
                         </Stack>
                       </div>
-                      {/* {skyPassList.length > 100 && ( */}
+                      {profileList.length >= 100 && (
                       <div className="right_modal_box_wrap">
                         <div className="box_inner_txt">
                           <span className="point_txt">100명</span>을 초과하는 데이터입니다.
@@ -1196,7 +1295,7 @@ export default function List() {
                           핸드폰번호로 조회해주시기 바랍니다.)
                         </div>
                       </div>
-                      {/* )} */}
+                      )}
                       <div className="right_modal_table_wrap">
                         <div className="right_modal_table_inner height-100">
                           <table id="skypassSearch15">
@@ -1233,22 +1332,22 @@ export default function List() {
                               </tr>
                             </thead>
                             <tbody>
-                              {skyPassList.map((list) => (
-                                <tr>
+                              {profileList?.map((list: ProfileList) => (
+                                <tr style={{cursor: 'pointer'}} onClick={()=>searchProfile(list.skypassMemberNumber)}>
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.korName.toLowerCase().includes(searchText.toLowerCase())
-                                        ? searchHighlight(list.korName, searchText)
-                                        : list.korName}
+                                      {searchText && (list.korLname+list.korFname).toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight((list.korLname+list.korFname), searchText)
+                                        : (list.korLname+list.korFname)}
                                     </div>
                                   </td>
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.engName.toLowerCase().includes(searchText.toLowerCase())
-                                        ? searchHighlight(list.engName, searchText)
-                                        : list.engName}
+                                      {searchText && (list.engLname + list.engFname).toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight((list.engLname + list.engFname), searchText)
+                                        : (list.engLname + list.engFname)}
                                     </div>
                                   </td>
                                   <td>
@@ -1262,17 +1361,17 @@ export default function List() {
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.birthV.toLowerCase().includes(searchText.toLowerCase())
-                                        ? searchHighlight(list.birthV, searchText)
-                                        : list.birthV}
+                                      {/* {searchText && list..toLowerCase().includes(searchText.toLowerCase())
+                                        ? searchHighlight(list.birthDatev, searchText)
+                                        : list.birthDatev} */}
                                     </div>
                                   </td>
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && list.skypassNo
-                                        ? searchHighlight(list.skypassNo, searchText)
-                                        : list.skypassNo}
+                                      {searchText && list.skypassMemberNumber
+                                        ? searchHighlight(list.skypassMemberNumber, searchText)
+                                        : list.skypassMemberNumber}
                                     </div>
                                   </td>
                                 </tr>
@@ -1287,8 +1386,14 @@ export default function List() {
               </div>
             </Stack>
           </div>
+          </>
+          }
         </Stack>
       </div>
     </Stack>
   );
 }
+function setSelectedSkypass(initSkypass: Skypass) {
+  throw new Error('Function not implemented.');
+}
+

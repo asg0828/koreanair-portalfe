@@ -1,15 +1,18 @@
-import { FamilyMember, Skypass } from '@/models/model/CustomerInfoModel';
+import {  FamilyMembers, Skypass } from '@/models/model/CustomerInfoModel';
 import { Stack, Typography, SelectOption, Select, Button, Modal } from '@ke-design/components';
 import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import CloseIcon from '@mui/icons-material/Close';
-import { familyMemberData, skypassData1 } from '../../customer-info/dashboard/data';
+import Watermark from '@uiw/react-watermark';
+import { useAppSelector } from '@/hooks/useRedux';
+import { selectSessionInfo } from '@/reducers/authSlice';
 export default function DashBoardPopUp({ closeModal }: any) {
+  const sessionInfo = useAppSelector(selectSessionInfo())
   const [isListView1, setIsListView1] = useState(false);
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState(false);
-  const [skypass, setSkypass] = useState<Array<Skypass>>(skypassData1);
-  const [family, setFamily] = useState<FamilyMember>(familyMemberData[0]);
+  const [skypass, setSkypass] = useState<Array<Skypass>>([]);
+  const [family, setFamily] = useState<Array<FamilyMembers>>([]);
   const [selectedSkypass, setSelectedSkypass] = useState<any>([]);
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -32,17 +35,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
     value: SelectValue<{}, false>,
     id?: string
   ) => {
-    setSearchInfo({ ...searchInfo, [`${id}`]: value });
-    if (value === '112423935550') {
-      setFamily(familyMemberData[0]);
-      setSelectedSkypass(skypass[0]);
-    } else if (value === '112345789375') {
-      setFamily(familyMemberData[1]);
-      setSelectedSkypass(skypass[1]);
-    } else if (value === '112617209394') {
-      setFamily(familyMemberData[2]);
-      setSelectedSkypass(skypass[2]);
-    }
+
   };
 
   useEffect(() => {
@@ -50,6 +43,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
   }, [skypass]);
 
   return (
+    <Watermark content={sessionInfo.userEmail} className="width-100">
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       <div className="dashBoardWrap">
         <Stack direction="Vertical">
@@ -106,7 +100,7 @@ export default function DashBoardPopUp({ closeModal }: any) {
                 {skypass && skypass.length > 0 && (
                   <Select
                     id="skypassSelect"
-                    defaultValue={skypass.length > 0 ? skypass[0].skypassNum : ''}
+                    defaultValue={skypass.length > 0 ? skypass[0].skypassMemberNumber : ''}
                     appearance="Outline"
                     placeholder="스카이패스선택"
                     style={{ maxHeight: '80%', position: 'absolute', right: 0, fontSize: '80%', bottom: 2 }}
@@ -190,11 +184,11 @@ export default function DashBoardPopUp({ closeModal }: any) {
               <div className="middle">
                 <div className="left">
                   등록가족
-                  <span className="num">{family?.familyCnt}</span>명
+                  <span className="num">{family[0]?.memberStatusNm}</span>명
                 </div>
                 <div className="right">
                   합산가능마일리지
-                  <span className="num">{family?.mergeMileage}</span>
+                  <span className="num">{family[0]?.currentMileage}</span>
                 </div>
               </div>
               <div className="list" style={{ maxHeight: '200px', overflowY: 'auto' }}>
@@ -211,12 +205,12 @@ export default function DashBoardPopUp({ closeModal }: any) {
                   </thead>
                   <tbody>
                     {family &&
-                      family.familyList.length > 0 &&
-                      family.familyList.map((list, index) => (
+                      family?.length > 0 &&
+                      family?.map((list: any) => (
                         <tr>
-                          <td>{list.relationship}</td>
+                          {/* <td>{list.relationship}</td>
                           <td>{list.code}</td>
-                          <td>{list.name}</td>
+                          <td>{list.name}</td> */}
                         </tr>
                       ))}
                   </tbody>
@@ -635,5 +629,6 @@ export default function DashBoardPopUp({ closeModal }: any) {
         </Stack>
       </div>
     </Stack>
+    </Watermark>
   );
 }

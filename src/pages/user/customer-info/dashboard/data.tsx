@@ -9,7 +9,7 @@ import {
   ContributeData,
   Email,
   Etkt,
-  FamilyMember,
+  FamilyMembers,
   Ffp,
   HomepageData,
   Internet,
@@ -26,6 +26,48 @@ import {
   Wallet,
 } from '@/models/model/CustomerInfoModel';
 
+const initProfile : Profile = {
+  korFname: '',
+  korLname: '',
+  engFname: '',
+  engLname: '',
+  birthDatev: '',
+  age: '',
+  sexCode: '',
+  mobilePhoneNumber: '',
+  emailAddress: '',
+  oneidNo: '',
+  skypassInfos: [],
+}
+
+const initSkypass : Skypass = {
+  skypassMemberNumber: '',
+  memberLevel: '',
+  memberStatusNm: '',
+  effectiveFrom: '',
+  totalAccrued: '',
+  remainMileage: '',
+  isPlccCard: false,
+  expiredMileages: [],
+  familyMembers: []
+}
+
+const initFamily : FamilyMembers[] = [
+  {
+    relationship: '',
+    familyGroupName: '',
+    engFName: '',
+    engGName: '',
+    korFName: '',
+    korGName: '',
+    memberStatus: '',
+    memberStatusNm: '',
+    dateOfBirth: '',
+    skypassNumber: '',
+    currentMileage: 0,
+    createdDate: '',
+  }
+]
 const matchedProfile: any[] = [
   { name: '홍홍동', skypassNm: '11122' },
   { name: '이순신', skypassNm: '33344' },
@@ -68,272 +110,6 @@ const pnrTickerColumn: Column[] = [
   { headerName: 'Baggage Wgt', field: 'baggageWgt' },
 ];
 
-const profileData: Profile[] = [
-  {
-    name: '홍길동',
-    engFname: 'hong',
-    engLname: 'gildong',
-    birth: '1939-10-07',
-    age: '84',
-    gender: '여',
-    homePhoneNumberInfo: '02-123-4124',
-    mobilePhoneNumberInfone: '010-0101-0101',
-    emailAddress: 'exemail.exe@naver.com',
-    significant: 'VIP',
-  },
-  {
-    name: '이순신',
-    engFname: 'lee',
-    engLname: 'soonshin',
-    birth: '1958-03-05',
-    age: '65',
-    gender: '남',
-    homePhoneNumberInfo: '02-123-4124',
-    mobilePhoneNumberInfone: '010-0101-0101',
-    emailAddress: 'exemail.exe@naver.com',
-    significant: 'VIP',
-  },
-];
-// {
-//   name: '이순신',
-//   engFname: 'lee',
-//   engLname: 'soonshin',
-//   birth: '1945-04-28',
-//   age: '53',
-//   gender: '남',
-//   homePhoneNumberInfo: '061-2452-1143',
-//   mobilePhoneNumberInfone: '010-2589-1255',
-//   emailAddress: 'rjqnrtjs@kalmate.net',
-// },
-// {
-//   name: '유관순',
-//   engFname: 'yu',
-//   engLname: 'gwansun',
-//   birth: '2002-12-06',
-//   age: '20',
-//   gender: '여',
-//   homePhoneNumberInfo: '02-1919-0301',
-//   mobilePhoneNumberInfone: '010-2345-8888',
-//   emailAddress: 'ehrflqakstp@kalmate.net',
-// },
-const skypassList: any[] = [];
-
-const skypassData1: Skypass[] = [
-  {
-    skypassNum: '112423935550',
-    skypassGrade: 'MM',
-    useYn: 'N',
-    gradeStartDate: '2019-06-22',
-    mileage: '3944,415',
-    expireMileage: '0',
-    gradeCondtion: '',
-    upgradeCondition: '',
-  },
-  {
-    skypassNum: '112345789375',
-    skypassGrade: 'MP',
-    useYn: 'N',
-    gradeStartDate: '2016-07-28',
-    mileage: '142,560',
-    expireMileage: '0',
-    gradeCondtion: '',
-    upgradeCondition: '',
-  },
-  {
-    skypassNum: '112617209394',
-    skypassGrade: 'MP',
-    useYn: 'N',
-    gradeStartDate: '2009-12-30',
-    mileage: '15,132',
-    expireMileage: '800',
-    gradeCondtion: '',
-    upgradeCondition: '',
-  },
-];
-
-const skypassData2: Skypass[] = [
-  {
-    skypassNum: '112315856573',
-    skypassGrade: 'MM',
-    useYn: 'N',
-    gradeStartDate: '1958-03-05',
-    mileage: '3,944,415',
-    expireMileage: '0',
-    gradeCondtion: '',
-    upgradeCondition: '',
-  },
-  {
-    skypassNum: '112557098776',
-    skypassGrade: 'MM',
-    useYn: 'N',
-    gradeStartDate: '2012-08-03',
-    mileage: '56,531',
-    expireMileage: '0',
-    gradeCondtion: '',
-    upgradeCondition: '',
-  },
-  {
-    skypassNum: '112111687088',
-    skypassGrade: 'MP',
-    useYn: 'N',
-    gradeStartDate: '2009-12-30',
-    mileage: '15,132',
-    expireMileage: '800',
-    gradeCondtion: '',
-    upgradeCondition: '',
-  },
-];
-const familyMemberData: FamilyMember[] = [
-  {
-    familyCnt: 6,
-    mergeMileage: 930338,
-    familyList: [
-      {
-        relationship: 'Spouse',
-        code: '',
-        name: '홍길동1',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '홍길동2',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '홍길동3',
-      },
-      {
-        relationship: 'Grandchild',
-        code: '',
-        name: '홍길동4',
-      },
-      {
-        relationship: 'Grandchild',
-        code: '',
-        name: '홍길동5',
-      },
-      {
-        relationship: 'Daughter',
-        code: '',
-        name: '홍길동6',
-      },
-    ],
-  },
-  {
-    familyCnt: 4,
-    mergeMileage: 723338,
-    familyList: [
-      {
-        relationship: 'Spouse',
-        code: '',
-        name: '홍길동1',
-      },
-
-      {
-        relationship: 'Child',
-        code: '',
-        name: '홍길동3',
-      },
-      {
-        relationship: 'Grandchild',
-        code: '',
-        name: '홍길동4',
-      },
-
-      {
-        relationship: 'Daughter',
-        code: '',
-        name: '홍길동5',
-      },
-    ],
-  },
-  {
-    familyCnt: 2,
-    mergeMileage: 24465,
-    familyList: [
-      {
-        relationship: 'Spouse',
-        code: '',
-        name: '홍길동1',
-      },
-
-      {
-        relationship: 'Child',
-        code: '',
-        name: '홍길동3',
-      },
-    ],
-  },
-  {
-    familyCnt: 3,
-    mergeMileage: 4059329,
-    familyList: [
-      {
-        relationship: 'Spouse',
-        code: '',
-        name: '이순신1',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '이순신2',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '이순신3',
-      },
-    ],
-  },
-  {
-    familyCnt: 2,
-    mergeMileage: 11230,
-    familyList: [
-      {
-        relationship: 'Spouse',
-        code: '',
-        name: '이순신1',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '이순신2',
-      },
-    ],
-  },
-  {
-    familyCnt: 5,
-    mergeMileage: 245020,
-    familyList: [
-      {
-        relationship: 'Spouse',
-        code: '',
-        name: '이순신1',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '이순신2',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '이순신3',
-      },
-      {
-        relationship: 'Child',
-        code: '',
-        name: '이순신4',
-      },
-      {
-        relationship: 'Grandchild',
-        code: '',
-        name: '이순신5',
-      },
-    ],
-  },
-];
 const walletData: Wallet = {
   coupon: 5,
   promotion: 'Y',
@@ -463,10 +239,6 @@ export {
   analysisIndexList,
   analysisResultData,
   pnrTickerColumn,
-  profileData,
-  skypassData1,
-  skypassData2,
-  familyMemberData,
   walletData,
   preferenceData,
   cntData,
@@ -481,4 +253,7 @@ export {
   smsData,
   matchedProfile,
   skyPassList,
+  initProfile,
+  initSkypass,
+  initFamily
 };

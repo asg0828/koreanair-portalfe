@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { cloneDeep } from 'lodash'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 
 import MstrProfInfo from '@/components/self-feature-adm/MstrProfInfo'
 import HorizontalTable from '@/components/table/HorizontalTable'
@@ -44,8 +44,11 @@ import { DivisionTypes } from '@/models/selfFeature/FeatureModel'
 const MasterProfileManagementDetail = () => {
 
     const location = useLocation()
+    const [queryParam] = useSearchParams()
     const navigate = useNavigate()
     const { toast } = useToast()
+    const [rslnRuleId, setRslnRuleId] = useState<string>(queryParam.get("rslnRuleId") || "")
+    const [mstrSgmtRuleId, setMstrSgmtRuleId] = useState<string>(queryParam.get("mstrSgmtRuleId") || "")
     // 사용될 rslnRuleId 조회
     //const { data: rsltRuleIdRes, isError: rsltRuleIdErr, refetch: rsltRuleIdRefetch } = useResolutionRuleId();
     // rslnRuleId parameter
@@ -58,11 +61,11 @@ const MasterProfileManagementDetail = () => {
     const [behvMetaTbList, setBehvMetaTbList] = useState<Array<TbCoMetaTbInfo>>([])
     const { data: metaInfoRes, isError: metaInfoErr, refetch: metaInfoRefetch } = useMetaInfo(metaInfoSrchInfo)
     // 선택한 Resolution 룰에 따른 마스터 join key 후보 조회 API
-    const [rslnRuleId, setRslnRuleId] = useState<string>("")
+    //const [rslnRuleId, setRslnRuleId] = useState<string>("")
     const [rslnRuleKeyPrtyList, setRslnRuleKeyPrtyList] = useState<Array<TbRsRslnRuleKeyPrty>>(cloneDeep([initTbRsRslnRuleKeyPrty]))
     const { data: rslnKeyListRes, isError: rslnKeyListErr, refetch: rslnKeyListRefetch } = useResolutionKeyList(rslnRuleId)
     // 상세 조회 API
-    const [mstrSgmtRuleId, setMstrSgmtRuleId] = useState<string>("")
+    //const [mstrSgmtRuleId, setMstrSgmtRuleId] = useState<string>("")
     const [masterProfileInfo, setMasterProfileInfo] = useState<MasterProfileInfo>(cloneDeep(initMasterProfileInfo))
     const { data: mstrProfInfoRes, isError: mstrProfInfoErr, refetch: mstrProfInfoRefetch } = useMstrProfInfo(mstrSgmtRuleId)
     // 페이지 이동 및 버튼 처리
@@ -71,10 +74,10 @@ const MasterProfileManagementDetail = () => {
             navigate('..')
         } else if (pageNm === SelfFeatPgPpNm.EDIT) {
             navigate(
-                `../${pageNm}`,
+                `../${pageNm}?mstrSgmtRuleId=${mstrSgmtRuleId}`,
                 {
                     state: {
-                        masterProfileInfo: masterProfileInfo,
+                        //masterProfileInfo: masterProfileInfo,
                     }
                 }
             )
@@ -82,18 +85,6 @@ const MasterProfileManagementDetail = () => {
             navigate(`../${pageNm}`)
         }
     }
-    useEffect(() => {
-        if (!location || !location.state || !location.state.row) return
-
-        setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
-            let rtn = cloneDeep(prevState)
-            rtn.type = MetaType.MSTR_SGMT
-            rtn.rslnRuleId = location.state.row.rslnRuleId
-            return rtn
-        })
-        if (location.state.row.rslnRuleId) setRslnRuleId(location.state.row.rslnRuleId)
-        if (location.state.row.mstrSgmtRuleId) setMstrSgmtRuleId(location.state.row.mstrSgmtRuleId)
-    }, [location.state.row])
     // resolution rule Id setting
     /*
     useEffect(() => {
@@ -134,6 +125,13 @@ const MasterProfileManagementDetail = () => {
             });
         } else {
             if (mstrProfInfoRes) {
+                if (!mstrProfInfoRes.result.tbRsMstrSgmtRule) {
+                    toast({
+                        type: ValidType.ERROR,
+                        content: '조회 된 MasterProfile 정보가 없습니다. 목록으로 이동합니다.',
+                    })
+                    navigate('..')
+                }
                 setMasterProfileInfo(mstrProfInfoRes.result)
             }
         }
@@ -161,6 +159,12 @@ const MasterProfileManagementDetail = () => {
     useEffect(() => {
         if (!rslnRuleId || rslnRuleId === "") return
         rslnKeyListRefetch()
+        setMetaInfoSrchInfo((prevState: MetaInfoSearchProps) => {
+            let rtn = cloneDeep(prevState)
+            rtn.type = MetaType.MSTR_SGMT
+            rtn.rslnRuleId = rslnRuleId
+            return rtn
+        })
     }, [rslnRuleId])
     // 선택한 Resolution 룰에 따른 마스터 join key 후보 조회 call back
     useEffect(() => {
@@ -171,6 +175,13 @@ const MasterProfileManagementDetail = () => {
             });
         } else {
             if (rslnKeyListRes) {
+                if (rslnKeyListRes.result.length < 1) {
+                    toast({
+                        type: ValidType.ERROR,
+                        content: '조회 된 Join Key 정보가 없습니다. 목록으로 이동합니다.',
+                    })
+                    navigate('..')
+                }
                 setRslnRuleKeyPrtyList(rslnKeyListRes.result)
             }
         }

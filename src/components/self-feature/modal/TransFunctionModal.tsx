@@ -33,7 +33,6 @@ import { transFuncCalcStr } from '@/utils/self-feature/FormulaValidUtil';
 import { ColDataType, CommonCode, CommonCodeInfo, ModalType, initCommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { useCommCodes } from '@/hooks/queries/self-feature/useSelfFeatureCmmQueries';
 import ConfirmModal from '@/components/modal/ConfirmModal';
-import dayjs from 'dayjs';
 import '@/assets/styles/SelfFeature.scss'
 import { getDateFormat } from '@/utils/DateUtil';
 
@@ -938,6 +937,7 @@ const TransFunctionModal = ({
             {/* Confirm 모달 */}
             <ConfirmModal
                 isOpen={isOpenConfirmModal}
+				autoClose={false}
                 onClose={(isOpen) => setIsOpenConfirmModal(isOpen)}
                 title={confirmModalTit}
                 content={confirmModalCont}

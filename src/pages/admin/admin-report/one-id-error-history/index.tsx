@@ -1,4 +1,4 @@
-import { Button, DatePicker, Stack, TD, TH, TR, TextField, Radio, useToast } from '@ke-design/components';
+import { Button, DatePicker, Stack, TD, TH, TR, TextField, Radio, useToast, Loader } from '@ke-design/components';
 import { useCallback, useEffect, useState } from 'react';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { errLogColumn, errLogData } from '../one-id-main/data';
@@ -6,6 +6,7 @@ import { ErrLogData, errorSearch } from '@/models/oneId/OneIdInfo';
 import DataGrid from '@/components/grid/DataGrid';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useErrorLog } from '@/hooks/queries/useOneIdQueries';
+import { useTranslation } from 'react-i18next';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function OneIdErrorHistory() {
@@ -25,7 +26,7 @@ export default function OneIdErrorHistory() {
   const [isChanged, setIsChanged] = useState(false);
   const [page, setPage] = useState<PageModel>(initPage);
   const [row, setRows] = useState<Array<ErrLogData>>([]);
-  const { refetch, data: response, isError } = useErrorLog(searchInfo, page);
+  const { refetch, data: response, isError, isFetching } = useErrorLog(searchInfo, page);
 
   const handleSearch = useCallback(() => {
     refetch();
@@ -66,7 +67,7 @@ export default function OneIdErrorHistory() {
     let currVal = e.target.value;
     // 채널코드 변경 시 입력값 초기화
     if (currVal !== searchInfo.oneidRegisChnlCd) {
-      setSearchInfo({ ...searchInfo, uciId: '', oneidFinalChgRelateNo: '', oneidRegisChnlCd: currVal });
+      setSearchInfo({ ...searchInfo, uciId: '', oneidFinalChgRelateNo: '', pnrNumber:'', oneidRegisChnlCd: currVal });
     }
   }
 
@@ -114,6 +115,9 @@ export default function OneIdErrorHistory() {
 
     setSearchInfo({ ...searchInfo, creationEndDate: endDate, creationStartDate: startDate });
   }
+
+  /* 로딩바 */
+  const { t } = useTranslation()
 
   return (
     <Stack direction="Vertical" gap="LG" className="width-100">
@@ -263,7 +267,16 @@ export default function OneIdErrorHistory() {
           </Button>
         </Stack>
       </form>
-
+      {isFetching ? 
+         <Loader
+         style={{
+             width: "100%",
+             height: "100%",
+         }}
+         type="Bubble"
+         title={t('common.message.proceeding')}
+         description={"데이터를 불러오고 있습니다."}
+     /> : 
       <DataGrid
         columns={errLogColumn}
         rows={row}
@@ -273,6 +286,7 @@ export default function OneIdErrorHistory() {
         page={page}
         onChange={handlePage}
       />
+      }
     </Stack>
   );
 }

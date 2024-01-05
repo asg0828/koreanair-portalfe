@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { cloneDeep, isEmpty } from 'lodash'
@@ -99,13 +99,19 @@ const SfSubmissionRequestDetail = () => {
     const { t } = useTranslation()
     const navigate = useNavigate()
     const location = useLocation()
+	const [queryParam] = useSearchParams()
     const sessionInfo = useAppSelector(selectSessionInfo())
     const userId = useAppSelector(selectSessionInfo()).userId || ''
     const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
     const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.EDIT_AUTH)
     const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
     const { toast } = useToast()
-    const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(location.state.referenceNo)
+
+	const [custFeatRuleId, setCustFeatRuleId] = useState<string>(queryParam.get("custFeatRuleId") || "")
+	const { data: directSQLYnRes, isError: directSQLYnErr, refetch: directSQLYnRefetch } = useDirectSQLYn(custFeatRuleId)
+	const [sqlDirectInputYn, setSqlDirectInputYn] = useState<string>("")
+	const [submissionStatus, setSubmissionStatus] = useState<string>("")
+
     // 사용될 rslnRuleId / mstrSgmtRuleId 조회
     const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
     // rslnRuleId parameter
@@ -139,8 +145,8 @@ const SfSubmissionRequestDetail = () => {
     const [confirmModalCont, setConfirmModalCont] = useState<string>('')
     const [modalType, setModalType] = useState<string>('')
     // 상세 조회 API
-    const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(location.state.referenceNo)
-    const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(location.state.referenceNo)
+    const { data: custFeatRuleInfosRes, isError: custFeatRuleInfosErr, refetch: custFeatRuleInfosRefetch } = useCustFeatRuleInfos(custFeatRuleId)
+    const { data: custFeatSQLInfosRes, isError: custFeatSQLInfosErr, refetch: custFeatSQLInfosRefetch } = useCustFeatSQLInfos(custFeatRuleId)
     const [subListQueryParams, setSubListQueryParams] = useState<QueryParams>({})
     const [submissionId, setSubmissionId] = useState<number>(0)
     const { data: submissionListRes, isError: submissionListErr, refetch: submissionListRefetch } = useSubmissionList(subListQueryParams)
@@ -188,14 +194,72 @@ const SfSubmissionRequestDetail = () => {
 		isError: runScheduleByManuallyErr, 
 		mutate: runScheduleByManuallyMutate,
 		isLoading: runScheduleByManuallyLoading,
-	} = useRunScheduleByManually(location.state.referenceNo)
+	} = useRunScheduleByManually(custFeatRuleId)
     const [isRunValidFetching, setIsRunValidFetching] = useState<boolean>(false)
     // 카테고리 update API
-    const { data: updateFeatureCategoryRes, isSuccess: updateFeatureCategorySucc, isError: updateFeatureCategoryErr, mutate: updateFeatureCategoryMutate } = useFeatureCategory(location.state.referenceNo, { category: category })
+    const { data: updateFeatureCategoryRes, isSuccess: updateFeatureCategorySucc, isError: updateFeatureCategoryErr, mutate: updateFeatureCategoryMutate } = useFeatureCategory(custFeatRuleId, { category: category })
     // component mount
-    useEffect(() => {
-        initCustFeatRule()
-    }, [])
+	useEffect(() => {
+		initCustFeatRule()
+		// let qParam = location.search.replace("?", "")
+
+		// if (qParam.split("=")[0] === "custFeatRuleId")
+		// 	setCustFeatRuleId(() => qParam.split("=")[1] ? qParam.split("=")[1] : "")
+
+	}, [])
+	useEffect(() => {
+		if (custFeatRuleId === "") {
+			toast({
+				type: ValidType.ERROR,
+				content: '조회된 데이터가 없습니다. 목록으로 이동합니다.',
+			})
+			navigate(
+				'..',
+				{
+					state: {
+						srchInfo: location?.state?.srchInfo,
+						//pageInfo: location?.state?.pageInfo 
+					}
+				}
+			)
+			return
+        }
+		directSQLYnRefetch()
+	}, [custFeatRuleId])
+	// SQL 등록 여부 API response callback
+	useEffect(() => {
+		if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
+			if (directSQLYnRes?.status === 404) {
+				toast({
+					type: ValidType.ERROR,
+					content: '조회된 데이터가 없습니다. 목록으로 이동합니다.',
+				})
+				navigate(
+					'..',
+					{
+						state: {
+							srchInfo: location?.state?.srchInfo,
+							//pageInfo: location?.state?.pageInfo 
+						}
+					}
+				)
+			} else {
+				toast({
+					type: ValidType.ERROR,
+					content: '조회 중 에러가 발생했습니다.',
+				})
+			}
+		} else {
+			if (directSQLYnRes) {
+				setSqlDirectInputYn(directSQLYnRes.result)
+				if (directSQLYnRes.result === "N") {
+					custFeatRuleInfosRefetch()
+				} else if (directSQLYnRes.result === "Y") {
+					custFeatSQLInfosRefetch()
+				}
+			}
+		}
+	}, [directSQLYnRes, directSQLYnErr])
     useEffect(() => {
         if (userInfoErr || userInfoRes?.successOrNot === 'N') {
             toast({
@@ -234,7 +298,7 @@ const SfSubmissionRequestDetail = () => {
     }, [mstrProfListRes, mstrProfListErr, toast])
     useEffect(() => {
         if (mstrSgmtRuleIdParam === "") return
-        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+        if (sqlDirectInputYn === "N") {
             mstrSgmtTbandColRefetch()
             setFeatureRuleInfoParams({
                 ...featureRuleInfoParams,
@@ -242,7 +306,7 @@ const SfSubmissionRequestDetail = () => {
                 ["submissionStatus"]: SubFeatStatus.APRV,
             })
         }
-    }, [mstrSgmtRuleIdParam, featureInfo.tbRsCustFeatRule.sqlDirectInputYn])
+    }, [mstrSgmtRuleIdParam, sqlDirectInputYn])
     useEffect(() => {
         if (featureRuleInfoParams.mstrSgmtRuleId === "") return
         featureListRefetch()
@@ -286,7 +350,7 @@ const SfSubmissionRequestDetail = () => {
         } else {
             if (cmmCodeCateRes?.result) {
                 setCategoryOption(() => {
-                    return [...[{ cdv: "", cdvNm: "선택" }], ...cmmCodeCateRes?.result]
+                    return [...cmmCodeCateRes?.result]
                 })
             }
         }
@@ -319,23 +383,6 @@ const SfSubmissionRequestDetail = () => {
             }
         }
     }, [mstrSgmtTbandColRes, mstrSgmtTbandColErr, mstrSgmtRuleIdParam])
-    // SQL 등록 여부 API response callback
-    useEffect(() => {
-        if (directSQLYnErr || directSQLYnRes?.successOrNot === 'N') {
-            toast({
-                type: ValidType.ERROR,
-                content: '조회 중 에러가 발생했습니다.',
-            })
-        } else {
-            if (directSQLYnRes) {
-                if (directSQLYnRes.result === "N") {
-                    custFeatRuleInfosRefetch()
-                } else {
-                    custFeatSQLInfosRefetch()
-                }
-            }
-        }
-    }, [directSQLYnRes, directSQLYnErr, toast])
     // 대구분 API response callback
     useEffect(() => {
         if (seGroupErr || seGroupRes?.successOrNot === 'N') {
@@ -411,18 +458,20 @@ const SfSubmissionRequestDetail = () => {
     }
     // 상세 정보 조회 후 값 setting
     useEffect(() => {
+        if (sqlDirectInputYn === "") return
+
         setFeatureTempInfo(cloneDeep(featureInfo.featureTemp))
         setCategory(cloneDeep(featureInfo.tbRsCustFeatRule.category))
-        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "N") {
+        if (sqlDirectInputYn === "N") {
             setTargetList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtList))
             setTrgtFilterList(cloneDeep(featureInfo.tbRsCustFeatRuleTrgtFilterList))
             setCustFeatRuleCalc(cloneDeep(featureInfo.tbRsCustFeatRuleCalc))
             //setCustFeatRuleCaseList(cloneDeep(featureInfo.tbRsCustFeatRuleCaseList))
         }
-        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn === "Y") {
+        if (sqlDirectInputYn === "Y") {
             setSqlQueryInfo(cloneDeep(featureInfo.tbRsCustFeatRuleSql))
         }
-    }, [featureInfo])
+    }, [featureInfo, sqlDirectInputYn])
     // 대상선택 리스트에 화면에 보여줄 테이블논리명, 컬럼논리명 setting
     useEffect(() => {
         if (isEmpty(mstrSgmtTableandColMetaInfo) || mstrSgmtTableandColMetaInfo.rslnRuleId === "") return
@@ -449,7 +498,22 @@ const SfSubmissionRequestDetail = () => {
                             target.columnLogiName = colNm
                         }
 
-                    } else if (target.divisionCode === DivisionTypes.BEHV) {
+                    } else if (target.divisionCode === DivisionTypes.FEAT) {
+						/* 
+							self-feature 데이터
+						*/
+						let logiFeat: Array<TbRsCustFeatRule> = []
+						logiFeat = featureRuleList.filter((featRule: TbRsCustFeatRule) => {
+							return metaTblId === featRule.metaTblId
+						})
+
+						if (logiFeat.length > 0) {
+							target.columnLogiName = logiFeat[0].name
+							target.targetDataType = logiFeat[0].dataTypeCategory.toString()
+						} else {
+							target.columnLogiName = ""
+						}
+					} else if (target.divisionCode === DivisionTypes.BEHV) {
                         /* 
                             행동 데이터면  동일한 테이블 ID를 가진 behavior의
                             metaTblLogiNm 값을 tableLogiName항목에 추가
@@ -506,7 +570,7 @@ const SfSubmissionRequestDetail = () => {
     }, [mstrSgmtTableandColMetaInfo, featureInfo])
     // 계산식 validation을 위한 대상 list 추출
     useEffect(() => {
-        if (featureInfo.tbRsCustFeatRule.sqlDirectInputYn !== "Y") {
+        if (sqlDirectInputYn === "N") {
 
             let fList = []
             for (let i = 0; i < targetList.length; i++) {
@@ -544,8 +608,14 @@ const SfSubmissionRequestDetail = () => {
         } else {
             if (custFeatRuleInfosRes?.result) {
                 setFeatureInfo(cloneDeep(custFeatRuleInfosRes.result))
+				if (
+					custFeatRuleInfosRes.result.tbRsCustFeatRule 
+					&& custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus
+				) {
+					setSubmissionStatus(custFeatRuleInfosRes.result.tbRsCustFeatRule.submissionStatus)
+				}
                 // 승인 정보 호출 API parameter setting
-                setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.referenceNo })
+                setSubListQueryParams({ type: FeatureType.CUST, referenceNo: custFeatRuleId })
             }
         }
     }, [custFeatRuleInfosRes, custFeatRuleInfosErr, toast])
@@ -559,16 +629,22 @@ const SfSubmissionRequestDetail = () => {
         } else {
             if (custFeatSQLInfosRes?.result) {
                 setFeatureInfo(cloneDeep(custFeatSQLInfosRes.result))
+				if (
+					custFeatSQLInfosRes.result.tbRsCustFeatRule 
+					&& custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus
+				) {
+					setSubmissionStatus(custFeatSQLInfosRes.result.tbRsCustFeatRule.submissionStatus)
+				}
                 // 승인 정보 호출 API parameter setting
-                setSubListQueryParams({ type: FeatureType.CUST, referenceNo: location.state.referenceNo })
+                setSubListQueryParams({ type: FeatureType.CUST, referenceNo: custFeatRuleId })
             }
         }
     }, [custFeatSQLInfosRes, custFeatSQLInfosErr, toast])
     // 승인정보 호출을 위한 승인 list API refetch
     useEffect(() => {
-        if (isEmpty(subListQueryParams)) return
+        if (isEmpty(subListQueryParams) || submissionStatus === "") return
         submissionListRefetch()
-    }, [subListQueryParams, location.state.submissionStatus])
+    }, [subListQueryParams, submissionStatus])
     // 승인 정보 리스트 호출 API Callback
     useEffect(() => {
         if (submissionListErr || submissionListRes?.successOrNot === 'N') {
@@ -614,9 +690,9 @@ const SfSubmissionRequestDetail = () => {
     }, [submissionListRes, submissionListErr, toast])
     // 승인정보 상세 API refetch
     useEffect(() => {
-        if (submissionId === 0) return
+        if (submissionId === 0 || submissionStatus === "") return
         submissionInfoRefetch()
-    }, [submissionId, location.state.submissionStatus])
+    }, [submissionId, submissionStatus])
     // 승인정보 상세 API Callback
     useEffect(() => {
         if (submissionInfoErr || submissionInfoRes?.successOrNot === 'N') {
@@ -742,8 +818,8 @@ const SfSubmissionRequestDetail = () => {
         if (isEditAuth) {
             // 설정하지 않은 경우 return -> 설정 api callback으로 flag setting 후 flag로 판단하기
             if (
-                !featureInfo.tbRsCustFeatRule.categoryNm
-                && (!updateFeatureCategoryRes || updateFeatureCategoryRes.successOrNot === 'N')
+                featureInfo.tbRsCustFeatRule.category.trim() === ""
+                //&& (!updateFeatureCategoryRes || updateFeatureCategoryRes.successOrNot === 'N')
             ) {
                 toast({
                     type: ValidType.ERROR,
@@ -790,7 +866,7 @@ const SfSubmissionRequestDetail = () => {
     }, [aprvSubAprvalRes, aprvSubAprvalSucc, aprvSubAprvalErr])
     // 수동실행 API 호출
     const runScheduleByManually = () => {
-        if (location.state.referenceNo && location.state.referenceNo !== "") {
+        if (custFeatRuleId && custFeatRuleId !== "") {
             if (featureInfo.tbRsCustFeatRule.batManualExecTestCnt > 5) {
                 toast({
                     type: ValidType.ERROR,
@@ -911,7 +987,7 @@ const SfSubmissionRequestDetail = () => {
                     <FeatQueryRsltButton
                         isLoadingRunSchedule={runScheduleByManuallyLoading}
                         rslnRuleId={rslnRuleIdParam}
-                        custFeatRuleId={location.state.referenceNo}
+                        custFeatRuleId={custFeatRuleId}
                         runScheduleCnt={featureInfo.tbRsCustFeatRule.batManualExecTestCnt}
                         sendIsRunValidFetching={getIsRunValidFetching}
                     />

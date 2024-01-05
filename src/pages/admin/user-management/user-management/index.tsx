@@ -22,8 +22,8 @@ const initParams: UserParams = {
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const location = useLocation();
   const beforeParams: UserParams = location?.state?.params;
   const beforePage: PageModel = location?.state?.page;
@@ -33,8 +33,8 @@ const List = () => {
   const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<UserModel>>([]);
   const { data: response, isError, refetch } = useUserList(params, page);
-  const { data: uaResponse, isError: uaIsError, refetch: uaRefetch } = useUserAuthAllList();
-  const { data: aaResponse, isError: aaIsError, refetch: aaUreftch } = useAdminAuthAllList();
+  const { data: uaResponse, isError: uaIsError } = useUserAuthAllList();
+  const { data: aaResponse, isError: aaIsError } = useAdminAuthAllList();
 
   const columns = [
     { headerName: 'No', field: 'rownum', colSpan: 0.5 },
@@ -42,8 +42,8 @@ const List = () => {
     { headerName: t('management:label.userNm'), field: 'userNm', colSpan: 1 },
     { headerName: t('management:label.userId'), field: 'userId', colSpan: 1 },
     { headerName: t('management:label.deptNm'), field: 'deptNm', colSpan: 1 },
-    { headerName: t('management:label.userAuthNm'), field: 'euserAuthNm', colSpan: 1 },
-    { headerName: t('management:label.mgrAuthNm'), field: 'emgrAuthNm', colSpan: 1 },
+    { headerName: t('management:label.userAuthNm'), field: 'apldUserAuthNm', colSpan: 1 },
+    { headerName: t('management:label.mgrAuthNm'), field: 'apldMgrAuthNm', colSpan: 1 },
     { headerName: t('management:label.lastLogDt'), field: 'lastLogDt', colSpan: 1 },
     { headerName: t('management:label.employmentYn'), field: 'useYn', colSpan: 1 },
   ];
@@ -59,8 +59,9 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handleClear = () => {
     setParams(initParams);
@@ -78,8 +79,8 @@ const List = () => {
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

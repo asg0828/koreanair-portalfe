@@ -21,8 +21,8 @@ export const initQnaParams: QnaParams = {
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const location = useLocation();
   const beforeParams: QnaParams = location?.state?.params;
   const beforePage: PageModel = location?.state?.page;
@@ -56,9 +56,8 @@ const List = () => {
   };
 
   const goToDetail = (row: RowsInfo) => {
-    navigate(View.DETAIL, {
+    navigate(`${View.DETAIL}?qnaId=${row.qnaId}`, {
       state: {
-        qnaId: row.qnaId,
         params: params,
         page: page,
       },
@@ -66,8 +65,9 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handleClear = () => {
     setParams(initQnaParams);
@@ -91,8 +91,8 @@ const List = () => {
   };
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

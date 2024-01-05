@@ -543,9 +543,12 @@ svg {
     display: flex;
     width: 100%;
     flex-direction: column;
+    gap: 0.25rem 0;
     svg {
       font-size: 14px;
       vertical-align: middle;
+      width: 1em;
+      height: 1em;
     }
   }
 }
@@ -574,16 +577,35 @@ svg {
     }
     .answer {
       padding-left: 22px;
-      position: relative;
     }
     .answer::after {
       content: 'A.';
       display: inline-block;
       position: absolute;
       left: 1px;
-      top: -60px;
+      top: 14px;
       z-index: 1;
       font-size: 0.875rem;
+    }
+    .attachFileList {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1875rem 0;
+      svg {
+        font-size: 14px;
+        vertical-align: middle;
+        width: 1em;
+        height: 1em;
+      }
+    }
+    .attach_file_list_wrap {
+      gap: 1.125rem 0;
+      .attach_file_list_item {
+        .attach_file_title {
+          font-weight: 600;
+          margin-bottom: 4px;
+        }
+      }
     }
   }
 }

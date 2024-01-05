@@ -100,10 +100,9 @@ const List = () => {
     });
   };
 
-  const goToDetail = (row: FeatureModel, index: number) => {
-    navigate(View.DETAIL, {
+  const goToDetail = (row: FeatureModel) => {
+    navigate(`${View.DETAIL}?featureId=${row.featureId}`, {
       state: {
-        featureId: row.featureId,
         params: params,
         page: page,
       },
@@ -111,8 +110,9 @@ const List = () => {
   };
 
   const handleSearch = useCallback(() => {
+    page.page = 0;
     refetch();
-  }, [refetch]);
+  }, [page, refetch]);
 
   const handleClear = () => {
     setParams(initFeatureParams);
@@ -186,8 +186,8 @@ const List = () => {
   }, [params.featureSeGrp, sRefetch]);
 
   useDidMountEffect(() => {
-    handleSearch();
-  }, [page.page, page.pageSize, handleSearch]);
+    refetch();
+  }, [page.page, page.pageSize]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {

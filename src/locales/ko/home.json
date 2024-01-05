@@ -26,6 +26,10 @@
       "deletedInterestFeature": "관심 Feature에서 삭제되었습니다."
     },
     "error": {
+      "loginInfo": "접속 정보 조회 중 에러가 발생했습니다.",
+      "loginUserDept": "부서별 접속자수 조회 중 에러가 발생했습니다.",
+      "bizMeta": "BIZ 메타 정보 조회 중 에러가 발생했습니다.",
+      "featureMyDept": "내 부서 Feature 정보 조회 중 에러가 발생했습니다.",
       "noticeList": "공지사항 목록 조회 중 에러가 발생했습니다.",
       "faqList": "FAQ 목록 조회 중 에러가 발생했습니다.",
       "qnaList": "QNA 목록 조회 중 에러가 발생했습니다.",

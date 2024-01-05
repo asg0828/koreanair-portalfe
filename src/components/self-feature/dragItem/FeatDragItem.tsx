@@ -12,10 +12,10 @@ const FeatDragItem = ({
 
     const [{ isFeatDragging }, featDragItem] = useDrag(() => ({
         type: DivisionTypes.FEAT,
-        item: Object.assign({ divisionCode: DivisionTypes.FEAT, tableLogiName: metaTblLogiNm }, cloneDeep(featTblClmnInfo)),
+        item: Object.assign({ divisionCode: DivisionTypes.FEAT, tableLogiName: metaTblLogiNm, dtpCd: featTblClmnInfo?.dataType }, cloneDeep(featTblClmnInfo)),
         end(draggedItem, monitor) {
             const dropResult = monitor.getDropResult()
-
+            
             if (draggedItem && dropResult) {}
         },
         collect: (monitor) => ({

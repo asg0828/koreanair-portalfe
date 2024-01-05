@@ -30,6 +30,7 @@ import RemoveCircleOutlineOutlinedIcon from '@mui/icons-material/RemoveCircleOut
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import Close from '@mui/icons-material/Close';
 
@@ -66,6 +67,7 @@ export {
   FavoriteIcon,
   FavoriteBorderIcon,
   ExpandLessIcon,
+  ExpandMoreIcon,
   AttachFileIcon,
   Close,
 };

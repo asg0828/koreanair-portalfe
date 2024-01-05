@@ -68,7 +68,7 @@ export const useApproverCandidate = () => {
 }
 // Self-feature SQL 직접입력 여부 조회
 export const useDirectSQLYn = (custFeatRuleId: string) => {
-    return useQuery(['/direct-sql-yn', custFeatRuleId], () => retrieveDirectSQLYn(custFeatRuleId))
+    return useQuery(['/direct-sql-yn', custFeatRuleId], () => retrieveDirectSQLYn(custFeatRuleId), { enabled: false, suspense: false })
 }
 // Self-feature 수동실행 validation 조회
 export const useRunStateValid = (custFeatRuleId: string) => {

@@ -1,3 +1,8 @@
+export enum UrlType {
+  HTTP = 'http://',
+  HTTPS = 'https://',
+}
+
 export enum View {
   DETAIL = 'detail',
   REG = 'reg',

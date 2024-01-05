@@ -80,11 +80,11 @@ const DragList = ({
         result.push(pushItem)
         return arr.filter((item) => item.metaTblLogiNm !== tblNm)
     }
-    const distinctFeatList = (result: Array<FeatAccordian>, arr: Array<TbRsCustFeatRule>, tblNm: string) => {
-        let tempfl = arr.filter((item) => item.category === tblNm)
-        let pushItem: FeatAccordian = { metaTblLogiNm: tempfl[0].categoryNm, featureList: tempfl }
+    const distinctFeatList = (result: Array<FeatAccordian>, arr: Array<TbRsCustFeatRule>, tblNm: string, cateCd: string) => {
+        let tempfl = arr.filter((item) => item.category === cateCd)
+        let pushItem: FeatAccordian = { metaTblLogiNm: tblNm, featureList: tempfl }
         result.push(pushItem)
-        return arr.filter((item) => item.category !== tblNm)
+        return arr.filter((item) => item.category !== cateCd)
     }
     useEffect(() => {
         if (attributes.length < 1 || attributes[0].metaTblId === "") return
@@ -109,7 +109,7 @@ const DragList = ({
         // while (featList.length !== 0) {
         //     console.log(categoryOption)
         categoryOption.map((category: any) => {
-            featList = distinctFeatList(tempFeatList, featList, category.cdv)
+            featList = distinctFeatList(tempFeatList, featList, category.cdvNm, category.cdv)
             return category
         })
         //}
@@ -117,7 +117,7 @@ const DragList = ({
 
         setSrchFeatRsltList(cloneDeep(featureRules))
 
-        if (featureRules.length > 0) setDefaultFeat(["Feature 정보"])
+        if (featureRules.length > 0) setDefaultFeat(["SelfFeature 정보"])
         else setDefaultFeat([])
 
     }, [featureRules])
@@ -147,7 +147,7 @@ const DragList = ({
         // while (featList.length !== 0) {
         //     console.log(categoryOption)
         categoryOption.map((category: any) => {
-            featList = distinctFeatList(tempFeatList, featList, category.cdv)
+            featList = distinctFeatList(tempFeatList, featList, category.cdvNm, category.cdv)
             return category
         })
         //}
@@ -228,6 +228,36 @@ const DragList = ({
                     <span className="searchIcon"></span>
                 </Button>
             </Stack>
+            {/* Base Fact 정보 */}
+            <Accordion
+                align="Right"
+                size="MD"
+                type="multiple"
+                style={{ marginTop: "10px" }}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    setDefaultBehv((prevState: Array<string>) => {
+                        if (prevState.length > 0) return []
+                        else return ["BaseFact 정보"]
+                    })
+                }}
+                value={defaultBehv}
+            >
+                <AccordionItem
+                    title='BaseFact 정보'
+                    value='BaseFact 정보'
+                >
+                    {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
+                        <BehvAccordionDrag
+                            key={behvIdx}
+                            isInitComponent={isInitComponent}
+                            oriBehavior={behaviors[behvIdx]}
+                            behavior={behavior}
+                        />
+                    ))}
+                </AccordionItem>
+            </Accordion>
+            {/* Base Fact 정보 */}
             {/* Fact 정보 */}
             <Accordion
                 align="Right"
@@ -261,7 +291,7 @@ const DragList = ({
                 </AccordionItem>
             </Accordion>
             {/* Fact 정보 */}
-            {/* Feature 정보 */}
+            {/* SelfFeature 정보 */}
             <Accordion
                 align="Right"
                 size="MD"
@@ -271,14 +301,14 @@ const DragList = ({
                     e.stopPropagation()
                     setDefaultFeat((prevState: Array<string>) => {
                         if (prevState.length > 0) return []
-                        else return ["Feature 정보"]
+                        else return ["SelfFeature 정보"]
                     })
                 }}
                 value={defaultFeat}
             >
                 <AccordionItem
-                    title='Feature 정보'
-                    value='Feature 정보'
+                    title='SelfFeature 정보'
+                    value='SelfFeature 정보'
                 >
                 {featAccordian.map((feature: FeatAccordian, featIdx: number) => {
                     let ori = oriFeatAccordian.find((item) => item.metaTblLogiNm === feature.metaTblLogiNm)
@@ -293,37 +323,7 @@ const DragList = ({
                 })}
                 </AccordionItem>
             </Accordion>
-            {/* Feature 정보 */}
-            {/* Base Fact 정보 */}
-            <Accordion
-                align="Right"
-                size="MD"
-                type="multiple"
-                style={{ marginTop: "10px" }}
-                onClick={(e) => {
-                    e.stopPropagation()
-                    setDefaultBehv((prevState: Array<string>) => {
-                        if (prevState.length > 0) return []
-                        else return ["BaseFact 정보"]
-                    })
-                }}
-                value={defaultBehv}
-            >
-                <AccordionItem
-                    title='BaseFact 정보'
-                    value='BaseFact 정보'
-                >
-                    {srchBehvRsltList.map((behavior: Behavior, behvIdx: number) => (
-                        <BehvAccordionDrag
-                            key={behvIdx}
-                            isInitComponent={isInitComponent}
-                            oriBehavior={behaviors[behvIdx]}
-                            behavior={behavior}
-                        />
-                    ))}
-                </AccordionItem>
-            </Accordion>
-            {/* Base Fact 정보 */}
+            {/* SelfFeature 정보 */}
         </Page>
     )
 }

@@ -15,8 +15,8 @@ import { useNavigate } from 'react-router-dom';
 
 const List = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const contextPath = useAppSelector(selectContextPath());
   const userId = useAppSelector(selectSessionInfo()).userId || '';
   const [page, setPage] = useState<PageModel>(initPage);
@@ -64,13 +64,12 @@ const List = () => {
   const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateInterestFeature();
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate: dMutate } = useDeleteInterestFeature();
 
-  const goToDetail = (row: FeatureModel, index: number) => {
-    const path = contextPath === ContextPath.ADMIN ? '/biz-meta-management/feature/detail' : '/biz-meta/feature/detail';
-    navigate(`${contextPath}${path}`, {
-      state: {
-        featureId: row.featureId,
-      },
-    });
+  const goToDetail = (row: FeatureModel) => {
+    const path =
+      contextPath === ContextPath.ADMIN
+        ? `/biz-meta-management/feature/detail?featureId=${row.featureId}`
+        : `/biz-meta/feature/detail?featureId=${row.featureId}`;
+    navigate(`${contextPath}${path}`);
   };
 
   useEffect(() => {

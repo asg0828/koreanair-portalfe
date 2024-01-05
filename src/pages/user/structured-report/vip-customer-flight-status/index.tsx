@@ -9,6 +9,7 @@ import { PageModel, initPage } from '@models/model/PageModel';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import DashboardPopup from './dashboardPopUp';
+import Watermark from '@uiw/react-watermark';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 0.5 },

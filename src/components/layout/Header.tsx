@@ -5,12 +5,13 @@ import { ContextPath, ModalType } from '@/models/common/Constants';
 import { selectContextPath } from '@/reducers/authSlice';
 import { selectIsDropMenu, selectMenuList, setIsDropMenu } from '@/reducers/menuSlice';
 import { openModal } from '@/reducers/modalSlice';
+import { openPopup } from '@/utils/FuncUtil';
 import SessionApis from '@api/common/SessionApis';
 import SessionUtil from '@utils/SessionUtil';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import './Header.scss';
-import { useTranslation } from 'react-i18next';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -55,9 +56,9 @@ const Header = () => {
       sessionUtil.setLocalStorageInfo(sessionUtil.getSessionInfo());
 
       if (menu.menuUrl === '/popup/tableau') {
-        window.open(`https://ssbiprdap.koreanair.com/#/projects/180`, '_blank', 'noopener, noreferrer');
+        openPopup(`https://ssbiprdap.koreanair.com/#/projects/180`);
       } else {
-        window.open(`/popup${menu.menuUrl}`, '_blank', 'noopener, noreferrer');
+        openPopup(`/popup${menu.menuUrl}`);
       }
     }
   };

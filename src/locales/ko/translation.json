@@ -5,6 +5,7 @@
       "authGroupList": "권한그룹 목록"
     },
     "label": {
+      "notFoundDept": "부서없음",
       "important": "중요",
       "all": "전체",
       "nonAuth": "권한없음",
@@ -17,7 +18,8 @@
       }
     },
     "placeholder": {
-      "all": "전체"
+      "all": "전체",
+      "select": "선택"
     },
     "validate": {
       "requiredEn": "영문, 숫자, '_'만 입력 가능합니다.",
@@ -87,6 +89,8 @@
         "deleteFile": "파일이 삭제되었습니다."
       },
       "info": {
+        "noReadInfo": "조회에 필요한 데이터가 없습니다.",
+        "noData": "조회된 데이터가 없습니다.",
         "existsFile": "파일이 이미 존재합니다.",
         "uploadingFile": "업로드 중입니다. 잠시만 기다려주세요."
       },

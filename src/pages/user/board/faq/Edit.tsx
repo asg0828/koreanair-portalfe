@@ -1,40 +1,43 @@
+import { AddCircleOutlineOutlinedIcon, RemoveCircleOutlineOutlinedIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
-import EmptyState from '@/components/emptyState/EmptyState';
 import ErrorLabel from '@/components/error/ErrorLabel';
 import UploadDropzone from '@/components/upload/UploadDropzone';
 import { useUpdateFaq } from '@/hooks/mutations/useFaqMutations';
 import { useFaqById } from '@/hooks/queries/useFaqQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { GroupCodeType, ModalType, ValidType } from '@/models/common/Constants';
+import { GroupCodeType, ModalType, UrlType, ValidType } from '@/models/common/Constants';
 import { FaqParams, UpdatedFaqModel } from '@/models/model/FaqModel';
 import { FileModel } from '@/models/model/FileModel';
 import { PageModel } from '@/models/model/PageModel';
 import { selectCodeList } from '@/reducers/codeSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
+import { httpReg, httpUrlReg } from '@/utils/RegularExpression';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Radio, Select, SelectOption, Stack, TD, TH, TR, TextField, useToast } from '@components/ui';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const Edit = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const location = useLocation();
-  const faqId = location?.state?.faqId;
+  const faqId: string = location?.state?.faqId;
   const params: FaqParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
+  const [fileLink, setFileLink] = useState<string>('');
   const {
     register,
     handleSubmit,
     getValues,
     setValue,
     watch,
+    reset,
     control,
     formState: { errors },
   } = useForm<UpdatedFaqModel>({
@@ -47,6 +50,7 @@ const Edit = () => {
       useYn: 'Y',
       fileIds: [],
       fileList: [],
+      fileLinks: [],
     },
   });
   const values = getValues();
@@ -59,9 +63,10 @@ const Edit = () => {
       state: {
         params: params,
         page: page,
+        faqId: faqId,
       },
     });
-  }, [params, page, navigate]);
+  }, [params, page, faqId, navigate]);
 
   const handleList = () => {
     dispatch(
@@ -92,17 +97,86 @@ const Edit = () => {
     );
   };
 
-  useEffect(() => {
-    if (isSuccess && response.data) {
-      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
-      setValue('faqId', response.data.faqId);
-      setValue('clCode', response.data.clCode);
-      setValue('qstn', response.data.qstn);
-      setValue('answ', response.data.answ);
-      setValue('useYn', response.data.useYn);
-      setValue('fileList', response.data.fileList);
+  const handleChangeFileLink = (newFileLink: string) => {
+    setFileLink(newFileLink);
+  };
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddFileLink(e.target.value);
     }
-  }, [isSuccess, response?.data, setValue]);
+  };
+
+  const handleAddFileLink = (newFileLink: string) => {
+    if (!newFileLink) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.fileLinkEmpty'),
+      });
+      return;
+    }
+
+    if (!newFileLink.match(httpReg)) {
+      newFileLink = `${UrlType.HTTPS}${newFileLink}`;
+    }
+
+    if (!newFileLink.match(httpUrlReg)) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.notCorrect'),
+      });
+      return;
+    }
+
+    if (values.fileLinks.includes(newFileLink)) {
+      toast({
+        type: ValidType.INFO,
+        content: t('board:toast.info.fileLink'),
+      });
+      return;
+    }
+
+    setValue('fileLinks', values.fileLinks.concat(newFileLink));
+    setFileLink('');
+  };
+
+  const handleRemoveFileLink = (newFileLink: string) => {
+    setValue(
+      'fileLinks',
+      values.fileLinks.filter((fileLink) => fileLink !== newFileLink)
+    );
+  };
+
+  useEffect(() => {
+    if (!faqId) {
+      toast({
+        type: ValidType.INFO,
+        content: t('common.toast.info.noReadInfo'),
+      });
+      goToList();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isError || response?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: t('common.toast.error.read'),
+      });
+    } else if (isSuccess) {
+      if (response.data) {
+        response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+        reset(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
+    }
+  }, [response, isSuccess, isError, toast]);
 
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
@@ -127,17 +201,6 @@ const Edit = () => {
       goToList();
     }
   }, [uResponse, uIsSuccess, uIsError, goToList, navigate, toast]);
-
-  if (!faqId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -176,7 +239,7 @@ const Edit = () => {
                   render={({ field }) => (
                     <Select
                       appearance="Outline"
-                      placeholder={t('common.placeholder.all')}
+                      placeholder={t('common.placeholder.select')}
                       className="width-100"
                       ref={field.ref}
                       onChange={(e, value) => value && field.onChange(value)}
@@ -232,6 +295,34 @@ const Edit = () => {
                   )}
                 />
                 <ErrorLabel message={errors?.answ?.message} />
+              </Stack>
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              {t('board:label.fileLink')}
+            </TH>
+            <TD colSpan={5}>
+              <Stack gap="XS" direction="Vertical" className="width-100">
+                <Stack className="width-100" gap="SM">
+                  <TextField
+                    className="width-100"
+                    onKeyDown={handleKeyDown}
+                    onChange={(e) => handleChangeFileLink(e.target.value)}
+                    value={fileLink}
+                  />
+                  <Button iconOnly onClick={() => handleAddFileLink(fileLink)}>
+                    <AddCircleOutlineOutlinedIcon color="action" />
+                  </Button>
+                </Stack>
+                {watch().fileLinks.map((fileLink: string) => (
+                  <Stack className="width-100" gap="SM">
+                    <TextField disabled className="width-100" value={fileLink} />
+                    <Button iconOnly onClick={() => handleRemoveFileLink(fileLink)}>
+                      <RemoveCircleOutlineOutlinedIcon color="action" />
+                    </Button>
+                  </Stack>
+                ))}
               </Stack>
             </TD>
           </TR>

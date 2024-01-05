@@ -31,14 +31,14 @@ export const getProfileCLevel = (searchInfo: any) => {
 };
 
 // 스카이패스
-export const getSkypass = (searchInfo: any) => {
+export const getSkypass = (skypassMemberNumber : string) => {
   return callApi({
     service: Service.KAL_BE,
     url: `${PortalApiURL.CUSTOMER}/skypass`,
     method: Method.GET,
     params: {
       queryParams: {
-        ...searchInfo,
+        skypassMemberNumber
       },
     },
   });

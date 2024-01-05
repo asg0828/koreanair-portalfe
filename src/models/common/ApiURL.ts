@@ -1,4 +1,5 @@
 export enum PortalApiURL {
+  HOME = '/main/v1',
   LOG_IN = '/session/v1/login',
   LOG_OUT = '/session/v1/logout',
   USER_MGMT = '/user-mgmt/v1/users',
@@ -27,7 +28,7 @@ export enum PortalApiURL {
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',
   POPULAR_FEATURE = '/user-mgmt/v1/user-popular-features',
   DATASET = '/biz-meta/v1/table-specs',
-  CUSTOMER = '/api/v1/customer',
+  CUSTOMER = '/customer-info/v1/customer',
   SKYPASS_PROFILE = '/cdp360/v1/skypassno',
   MOBILE = '/cdp360/v1/mobile',
   ENGNAME = '/cdp360/v1/engname',

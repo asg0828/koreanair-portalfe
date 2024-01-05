@@ -1,8 +1,7 @@
 import { downloadFile } from '@/api/FileAPI';
-import { AttachFileIcon, ExpandLessIcon } from '@/assets/icons';
+import { AttachFileIcon, ExpandLessIcon, ExpandMoreIcon } from '@/assets/icons';
 import '@/assets/styles/Board.scss';
 import TinyEditor from '@/components/editor/TinyEditor';
-import EmptyState from '@/components/emptyState/EmptyState';
 import { useDeleteDataroom } from '@/hooks/mutations/useDataroomMutations';
 import { useDataroomById } from '@/hooks/queries/useDataroomQueries';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
@@ -13,11 +12,12 @@ import { PageModel } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openModal } from '@/reducers/modalSlice';
 import { getFileSize } from '@/utils/FileUtil';
+import { openPopup } from '@/utils/FuncUtil';
 import HorizontalTable from '@components/table/HorizontalTable';
 import { Button, Link, Stack, TD, TH, TR, Typography, useToast } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 
 const Detail = () => {
   const { t } = useTranslation();
@@ -27,7 +27,8 @@ const Detail = () => {
   const contextPath = useAppSelector(selectContextPath());
   const sessionInfo = useAppSelector(selectSessionInfo());
   const location = useLocation();
-  const dataId: string = location?.state?.dataId || '';
+  const [searchParams] = useSearchParams();
+  const dataId: string = searchParams.get('dataId') || '';
   const params: DataroomParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
   const [dataroomModel, setDataroomModel] = useState<DataroomModel>();
@@ -44,7 +45,7 @@ const Detail = () => {
   }, [params, page, navigate]);
 
   const goToEdit = () => {
-    navigate('../edit', {
+    navigate(`../edit`, {
       state: {
         dataId: dataId,
         params: params,
@@ -54,9 +55,8 @@ const Detail = () => {
   };
 
   const handleMoveDetail = (nDataId: string) => {
-    navigate('', {
+    navigate(`?dataId=${nDataId}`, {
       state: {
-        dataId: nDataId,
         params: params,
         page: page,
       },
@@ -94,11 +94,19 @@ const Detail = () => {
     if (isError || response?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: t('common.toast.error.list'),
+        content: t('common.toast.error.read'),
       });
-    } else if (isSuccess && response.data) {
-      response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
-      setDataroomModel(response.data);
+    } else if (isSuccess) {
+      if (response.data) {
+        response.data.fileList?.forEach((item: FileModel) => (item.fileSizeNm = getFileSize(item.fileSize)));
+        setDataroomModel(response.data);
+      } else {
+        toast({
+          type: ValidType.INFO,
+          content: t('common.toast.info.noData'),
+        });
+        goToList();
+      }
     }
   }, [response, isSuccess, isError, toast]);
 
@@ -117,17 +125,6 @@ const Detail = () => {
     }
   }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
 
-  if (!dataId) {
-    return (
-      <EmptyState
-        type="warning"
-        description={t('common.message.noRequireInfo')}
-        confirmText={t('common.message.goBack')}
-        onConfirm={goToList}
-      />
-    );
-  }
-
   return (
     <>
       <Stack direction="Vertical" gap="MD" className="height-100 contentDeatilWrap">
@@ -140,6 +137,20 @@ const Detail = () => {
           <TR className="height-100">
             <TD colSpan={4} className="content">
               <TinyEditor content={dataroomModel?.cn} disabled />
+            </TD>
+          </TR>
+          <TR>
+            <TH colSpan={1} align="right">
+              {t('board:label.fileLink')}
+            </TH>
+            <TD colSpan={5}>
+              <ul className="attachFileList">
+                {dataroomModel?.fileLinks.map((fileLink: string) => (
+                  <li>
+                    <Link linkType="External" children={fileLink} onClick={() => openPopup(fileLink)} />
+                  </li>
+                ))}
+              </ul>
             </TD>
           </TR>
           <TR>
@@ -177,7 +188,7 @@ const Detail = () => {
           <TR>
             <TH colSpan={1} align="right">
               {t('board:label.prev')}
-              <ExpandLessIcon fontSize="small" />
+              <ExpandMoreIcon fontSize="small" />
             </TH>
             <TD colSpan={5} align="left" className="nextContent">
               {dataroomModel?.preSj && (

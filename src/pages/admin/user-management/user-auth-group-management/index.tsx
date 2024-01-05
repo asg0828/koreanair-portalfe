@@ -17,8 +17,8 @@ import { useTranslation } from 'react-i18next';
 
 const List = () => {
   const { t } = useTranslation();
-  const dispatch = useAppDispatch();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const [page, setPage] = useState<PageModel>(initPage);
   const [rows, setRows] = useState<Array<AuthModel>>([]);
   const {
