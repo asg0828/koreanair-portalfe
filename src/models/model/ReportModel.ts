@@ -2,14 +2,14 @@ export interface ReportParams {
     sortedColumn:string;
     sortedDirection:string;
     rank:number;
-    oneId: string;
+    mergeTargetOneidNo: string;
     skypassNm:number;
     userNm:string;
     vipType:string;
 }
 
 export interface VipModel extends ReportParams {
-    confirmedPnrCount:number;
+    confirmPnrCount:number;
     scheduledIntlFlightDate : number;
     lastIntlFlightDate : number;
 }

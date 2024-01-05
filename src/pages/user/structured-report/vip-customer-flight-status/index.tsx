@@ -12,13 +12,13 @@ import DashboardPopup from './dashboardPopUp';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 0.5 },
-  { headerName: 'One ID', field: 'oneId', colSpan: 1 },
-  { headerName: '회원번호', field: 'skypassNm', colSpan: 1 },
+  { headerName: 'One ID', field: 'mergeTargetOneidNo', colSpan: 1 },
+  { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
   { headerName: '이름', field: 'userNm', colSpan: 0.7 },
-  { headerName: 'VIP 회원 분류', field: 'vipType', colSpan: 0.7 },
-  { headerName: '확약된 PNR수', field: 'confirmedPnrCount', colSpan: 0.7 },
+  { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 0.7 },
+  { headerName: '확약된 PNR수', field: 'confirmPnrCnt', colSpan: 0.7 },
   { headerName: '국제선 탑승 예정일', field: 'scheduledIntlFlightDate', colSpan: 0.7 },
-  { headerName: '국제선 최근 탑승일', field: 'lastIntlFlightDate', colSpan: 0.7 },
+  { headerName: '국제선 최근 탑승일', field: 'intLastBoardDatev', colSpan: 0.7 },
 ];
 
 const List = () => {

@@ -19,16 +19,16 @@ const periods = [
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 0.7 },
-  { headerName: 'One ID', field: 'oneId', colSpan: 1 },
-  { headerName: '회원번호', field: 'skypassNm', colSpan: 1 },
+  { headerName: 'One ID', field: 'mergeTargetOneidNo', colSpan: 1 },
+  { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
   { headerName: '이름', field: 'userNm', colSpan: 1 },
-  { headerName: 'VIP 회원 분류', field: 'vipType', colSpan: 1 },
-  { headerName: '구매금액', field: 'purchaseAmount', colSpan: 0.9 },
-  { headerName: '구매횟수', field: 'purchaseCount', colSpan: 0.7 },
-  { headerName: '국내선 구매금액', field: 'domesticPurchaseAmount', colSpan: 1 },
-  { headerName: '국제선 구매금액', field: 'intlPurchaseAmount', colSpan: 1 },
-  { headerName: 'FR 구매횟수', field: 'frCount', colSpan: 0.9 },
-  { headerName: 'PR 구매횟수', field: 'prCount', colSpan: 0.9 },
+  { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 1 },
+  { headerName: '구매금액', field: 'tktBuyKrwAmt', colSpan: 0.9 },
+  { headerName: '구매횟수', field: 'tktBuyCnt', colSpan: 0.7 },
+  { headerName: '국내선 구매금액', field: 'domTktNoFscBuyKrwAmt', colSpan: 1 },
+  { headerName: '국제선 구매금액', field: 'intTktNoFscBuyKrwAmt', colSpan: 1 },
+  { headerName: 'FR 구매횟수', field: 'frClsBuyCnt', colSpan: 0.9 },
+  { headerName: 'PR 구매횟수', field: 'prClsBuynt', colSpan: 0.9 },
 ];
 
 const initSortedColumn = 'purchaseAmount';
