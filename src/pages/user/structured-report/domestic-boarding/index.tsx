@@ -18,20 +18,19 @@ const periods = [
 ];
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'Rank', field: 'Rank', colSpan: 1 },
-  { headerName: 'One ID', field: 'oneId', colSpan: 1.3 },
-  { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
-  { headerName: '이름', field: 'name', colSpan: 2 },
-  { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-  { headerName: '국내선 수익금액', field: 'domesticIncomeAmount', colSpan: 1 },
-  { headerName: '국내선 탑승횟수', field: 'domesticBoardingCount', colSpan: 1 },
-  { headerName: '국내선 구매금액', field: 'domesticPurchaseAmount', colSpan: 1 },
-  { headerName: '국내선 보너스 항공권 탑승횟수', field: 'domesticBonusBoardingCount', colSpan: 1 },
-  { headerName: '국내선 PR 탑승횟수', field: 'domesticPrBoardingCount', colSpan: 1 },
-  { headerName: '국내선 평균 탑승주기', field: 'domesticAvgBoardingCycle', colSpan: 1 },
+  { headerName: 'Rank', field: 'rank', colSpan: 1 },
+  { headerName: 'One ID', field: 'mergeTargetOneidNo', colSpan: 1.3 },
+  { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
+  { headerName: '이름', field: 'userNm', colSpan: 2 },
+  { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 1 },
+  { headerName: '국내선 수익금액', field: 'domTktNoFscNettKrwAmt', colSpan: 1 },
+  { headerName: '국내선 탑승횟수', field: 'domBoardCnt', colSpan: 1 },
+  { headerName: '국내선 보너스 항공권 탑승횟수', field: 'domBonusTktBoardCnt', colSpan: 1 },
+  { headerName: '국내선 PR 탑승횟수', field: 'domPrClsBoardCnt', colSpan: 1 },
+  { headerName: '국내선 평균 탑승주기', field: 'domAvgBoardCycle', colSpan: 1 },
 ];
 
-const initSortedColumn = 'domesticBoardingCount';
+const initSortedColumn = 'domTktNoFscNettKrwAmt';
 const initSortedDirection = 'asc';
 
 const List = () => {

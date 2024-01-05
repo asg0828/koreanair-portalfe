@@ -31,7 +31,7 @@ const columns: Array<ColumnsInfo> = [
   { headerName: 'PR 구매횟수', field: 'prClsBuynt', colSpan: 0.9 },
 ];
 
-const initSortedColumn = 'purchaseAmount';
+const initSortedColumn = 'tktBuyKrwAmt';
 const initSortedDirection = 'desc';
 
 const List = () => {

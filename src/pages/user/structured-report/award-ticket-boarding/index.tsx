@@ -9,21 +9,21 @@ import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'Rank', field: 'Rank', colSpan: 1 },
-  { headerName: 'One ID', field: 'oneId', colSpan: 1 },
-  { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
-  { headerName: '이름', field: 'name', colSpan: 1 },
-  { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 0.8 },
-  { headerName: '보너스항공권 소진마일리지 (국제+국내)', field: 'totalMileageSpentForAwardTicket', colSpan: 1.0 },
-  { headerName: '국제선 보너스항공권 소진마일리지', field: 'mileageSpentForIntl', colSpan: 1.3 },
-  { headerName: '국내선 보너스항공권 소진마일리지', field: 'mileageSpentForDomestic', colSpan: 1 },
-  { headerName: '국제선 탑승횟수', field: 'intlBoardingCount', colSpan: 1 },
-  { headerName: '국내선 탑승횟수', field: 'domesticBoardingCount', colSpan: 1 },
-  { headerName: '국제선 보너스항공권 탑승횟수', field: 'intlBoaridngCountByAwardTicket', colSpan: 1 },
-  { headerName: '국내선 보너스항공권 탑승횟수', field: 'domesticBoardingCountByAwardTicket', colSpan: 1 },
+  { headerName: 'Rank', field: 'rank', colSpan: 1 },
+  { headerName: 'One ID', field: 'mergeTargetOneidNo', colSpan: 1 },
+  { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
+  { headerName: '이름', field: 'userNm', colSpan: 1 },
+  { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 0.8 },
+  { headerName: '보너스항공권 소진마일리지 (국제+국내)', field: 'bonusTktRdmMile', colSpan: 1.0 },
+  { headerName: '국제선 보너스항공권 소진마일리지', field: 'intBonusTktRdmMile', colSpan: 1.3 },
+  { headerName: '국내선 보너스항공권 소진마일리지', field: 'domBonusTktRdmMile', colSpan: 1 },
+  { headerName: '국제선 탑승횟수', field: 'intBoardCnt', colSpan: 1 },
+  { headerName: '국내선 탑승횟수', field: 'domBoardCnt', colSpan: 1 },
+  { headerName: '국제선 보너스항공권 탑승횟수', field: 'intBonusTktBoardCnt', colSpan: 1 },
+  { headerName: '국내선 보너스항공권 탑승횟수', field: 'domBonusTktBoardCnt', colSpan: 1 },
 ];
 
-const initSortedColumn = 'totalMileageSpentForAwardTicket';
+const initSortedColumn = 'bonusTktRdmMile';
 const initSortedDirection = 'asc';
 
 const List = () => {
