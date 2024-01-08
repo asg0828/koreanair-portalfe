@@ -22,6 +22,8 @@ export enum PortalApiURL {
   REPORT_INTL_BOARDING_TOP100 = '/report/v1/intl-boarding',
   REPORT_DOMESTIC_BOARDING_TOP100 = '/report/v1/domestic-boarding',
   REPORT_TOTAL_MILEAGE_TOP100 = '/report/v1/total-mileage',
+  REPORT_BONUS_TICKET_TOP100 = '/report/v1/award-ticket-boarding',
+  REPORT_INTL_UPGRADE_TOP100 = '/report/v1/intl-mileage-upgrade-boarding',
   ONEID = '/oneid/v1',
   FEATURE = '/biz-meta/v1/features',
   FEATURE_SEPARATES = '/biz-meta/v1/feature-separates',

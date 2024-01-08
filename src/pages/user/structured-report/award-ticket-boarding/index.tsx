@@ -1,4 +1,4 @@
-import { useDomesticBoardingTop100List } from '@/hooks/queries/useReportQueries';
+import {useBonusTicketTop100List, useDomesticBoardingTop100List} from '@/hooks/queries/useReportQueries';
 import { SortDirection } from '@/models/common/Design';
 import DataGrid from '@components/grid/DataGrid';
 import { Button, Stack, TD, TH, TR, useToast } from '@components/ui';
@@ -7,10 +7,13 @@ import { ColumnsInfo } from '@models/components/Table';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import {PageModel} from "@models/model/PageModel";
+
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 1 },
-  { headerName: 'One ID', field: 'mergeTargetOneidNo', colSpan: 1 },
+  { headerName: 'One ID', field: 'mergeSourceOneidNo', colSpan: 1 },
   { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
   { headerName: '이름', field: 'userNm', colSpan: 1 },
   { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 0.8 },
@@ -24,25 +27,21 @@ const columns: Array<ColumnsInfo> = [
 ];
 
 const initSortedColumn = 'bonusTktRdmMile';
-const initSortedDirection = 'asc';
+const initSortedDirection = 'desc';
 
 const List = () => {
   const { toast } = useToast();
   const [showPopup, setShowPopup] = useState(false);
-  const [criteria, setCriteria] = useState('0 year');
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
-  const { data: response, isError, refetch } = useDomesticBoardingTop100List(criteria);
+  const { data: response, isError, refetch } = useBonusTicketTop100List();
 
   const toggleModal = () => {
     setShowPopup(!showPopup);
   };
-
-  const handleSearch = useCallback(() => {
-    refetch();
-  }, [refetch]);
 
   const handleSortChange = (order: SortDirection, index: number) => {
     if (order) {
@@ -87,6 +86,7 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
+        page={page}
         enableSort={true}
         clickable={true}
         showPageSizeSelect={false}

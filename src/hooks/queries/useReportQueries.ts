@@ -1,6 +1,7 @@
 import {
+  getBonusTicketTop100List,
   getDomesticBoardingTop100List,
-  getIntlBoardingTop100List,
+  getIntlBoardingTop100List, getIntlUpgradeTop100List,
   getPurchaseContributionTop100List,
   getReportVipList,
   getTotalMileageTop100List,
@@ -26,4 +27,12 @@ export const useDomesticBoardingTop100List = (criteria: string) => {
 
 export const useTotalMileageTop100List = (criteria: string) => {
   return useQuery(['/report/total-mileage', criteria], () => getTotalMileageTop100List(criteria));
+};
+
+export const useBonusTicketTop100List = () => {
+  return useQuery(['/report/award-ticket-boarding'], () => getBonusTicketTop100List());
+};
+
+export const useIntlUpgradeTop100List = () => {
+  return useQuery(['/report/intl-mileage-upgrade-boarding'], () => getIntlUpgradeTop100List());
 };
