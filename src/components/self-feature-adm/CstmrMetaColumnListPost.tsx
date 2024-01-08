@@ -351,6 +351,11 @@ const CstmrMetaColumnListPost: React.FC<VerticalTableProps> = ({
             <Typography variant="h5"></Typography>
           )}
         </TD>
+
+        {/* 원천 변경 상태 */}
+        <TD>
+         <Typography variant="h5">{tbCoMetaTblClmnInfo.editStatus}</Typography>
+        </TD>
       </TR>
     </>
   );

@@ -46,6 +46,7 @@ const initSkypass : Skypass = {
   memberStatusNm: '',
   effectiveFrom: '',
   totalAccrued: '',
+  totalRedeemed: '',
   remainMileage: '',
   isPlccCard: false,
   expiredMileages: [],

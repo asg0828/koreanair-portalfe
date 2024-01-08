@@ -10,7 +10,7 @@ import { openModal } from '@/reducers/modalSlice';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import '@components/table/VerticalTable.scss';
 import { Button, Modal, Stack, TBody, TH, THead, TR, Table, useToast } from '@components/ui';
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CstmrMetaColumnListEdit from '../self-feature-adm/CstmrMetaColumnListEdit';
 
@@ -69,7 +69,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     isError: uIsError,
     mutate,
   } = useUpdateMetaTable(metaTblId, tbCoMetaTbInfo, tbCoMetaTblClmnInfoListPost);
-
+  const updateMutate = useCallback(() => mutate(), uResponse?.result)
   // timeFormat 세팅
   useEffect(() => {
     if (isErrorTime || responseTime?.successOrNot === 'N') {
@@ -106,6 +106,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     setTbCoMetaTblClmnInfoList(rows);
   }, [rows]);
 
+
   // 수정 버튼
   const editCustomerDetailInfo = () => {
     dispatch(
@@ -114,7 +115,6 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
         title: '수정',
         content: '수정하시겠습니까?',
         onConfirm: () => setSubmitFlag(true),
-        onCancle: () => setSubmitFlag(false),
       })
     );
   };
@@ -171,7 +171,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     colList.push(data);
 
     // formdata setting
-    if (tbCoMetaTblClmnInfoList.length === colList.length) {
+    if (tbCoMetaTblClmnInfoList.filter((item)=> item.editStatus !== 'deleted').length === colList.length) {
       const validationTool = (check: string) => {
         if (check.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '') return true;
         else return false;
@@ -202,6 +202,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
           .find((e) => e.dataFormat === ('' || null || 'null'))
       )
         checkValidation = '변경 데이터 형식을 입력해주세요.';
+
+
       if (checkValidation !== '') {
         setSubmitFlag(false);
         toast({
@@ -216,7 +218,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
 
   useEffect(() => {
     if (submitFlag) {
-      mutate();
+      setSubmitFlag(false);
+      updateMutate()
     }
   }, [tbCoMetaTblClmnInfoListPost]);
   return (

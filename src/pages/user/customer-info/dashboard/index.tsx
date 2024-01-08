@@ -101,6 +101,14 @@ export default function List() {
     }
   }, [refetchProfile, searchInfo, validation]);
 
+  // 초기화 버튼
+  const onClear = () => {
+    setSearchInfo({ 
+      skypassMemberNumber: '',
+      oneidNo: '',
+      searchType: ''})
+  }
+
   useEffect(() => {
     if(searchInfo.searchType !== ''){
       refetchProfile();
@@ -216,6 +224,7 @@ export default function List() {
 			return rtn
 		})
   }
+
   return (
     <Stack direction="Vertical" justifyContent="Start" className={'width-100'} wrap={true}>
       {/* searchBar 영역 */}
@@ -246,7 +255,11 @@ export default function List() {
         </div>
 
         <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSearch}>
+          <span className="searchIcon"></span>
           검색
+        </Button>
+        <Button size="LG" onClick={onClear}>
+          초기화
         </Button>
         <Modal open={isOpen} onClose={() => setOpen(false)}>
           <Modal.Header>오류</Modal.Header>
