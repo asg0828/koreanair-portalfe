@@ -174,7 +174,6 @@ export default function List() {
       setSkypass([])
       setFamily([])
     } else {
-      console.log("???")
       if (responseProfile) {
         setProfile(responseProfile?.data);
         setSearchSkypassNm(responseProfile?.data.skypassInfos[0]?.skypassMemberNumber)
