@@ -1,9 +1,9 @@
 import { useProfile, useSkypass } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
-import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption } from '@components/ui';
+import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, TR, TD, THead, TH, Table, Label } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { initFamily, initProfile, initSkypass } from './data';
+import { familyColumn, initFamily, initProfile, initSkypass } from './data';
 import {
   Profile,
   Skypass,
@@ -23,6 +23,7 @@ import {
 } from '@/models/model/CustomerInfoModel';
 import { ValidType } from '@/models/common/Constants';
 import { cloneDeep } from 'lodash'
+import { useTranslation } from 'react-i18next';
 export default function List() {
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -51,6 +52,8 @@ export default function List() {
   const [selectedSkypass, setSelectedSkypass] = useState<Skypass>(initSkypass);
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { toast } = useToast();
+  const { t } = useTranslation();
+
   // skypass 조회용 변수 
   const [searchSkypassNm, setSearchSkypassNm] = useState('')
   // profile 조회 api
@@ -171,6 +174,7 @@ export default function List() {
       setSkypass([])
       setFamily([])
     } else {
+      console.log("???")
       if (responseProfile) {
         setProfile(responseProfile?.data);
         setSearchSkypassNm(responseProfile?.data.skypassInfos[0]?.skypassMemberNumber)
@@ -419,9 +423,42 @@ export default function List() {
                 >
                   등록가족 상세
                 </Button>
-                <Modal open={isOpenFamilyInfo} onClose={() => setOpenFamilyInfo(false)}>
-                  <Modal.Header>등록가족 상세 페이지</Modal.Header>
-                  <Modal.Body>등록가족 상세 페이지</Modal.Body>
+                <Modal size={70} open={isOpenFamilyInfo} onClose={() => setOpenFamilyInfo(false)}>
+                  <Modal.Header>등록가족 상세</Modal.Header>
+                  <Modal.Body>
+                    <Label>
+                      {t('common.label.countingUnit.total')}
+                      <span className="total">{` ${family.length} `}</span>
+                      {t('common.label.countingUnit.thing')}
+                    </Label>
+                    <Table variant="vertical" size="normal" align="center" className={`verticalTable`}>
+                      <div className="verticalTableDiv">
+                      <THead className='verticalTableDivHeader'>
+                        <TR>
+                        {familyColumn.map((column, index) => (
+                          <TH 
+                            key={`header-${index}`}
+                            colSpan={column.colSpan ? column.colSpan : undefined}>
+                              {column.headerName}
+                            </TH>
+                        ))}
+                        </TR>
+                      </THead>
+                      {family.map((list) =>(
+                        <TR>
+                          <TD className='verticalTableTD'>{list.relationship}</TD>
+                          <TD className='verticalTableTD'>{list.korFName}{list.korGName}</TD>
+                          <TD className='verticalTableTD'>{list.engFName} {list.engGName}</TD>
+                          <TD className='verticalTableTD'>{list.memberStatus}</TD>
+                          <TD className='verticalTableTD'>{list.dateOfBirth}</TD>
+                          <TD className='verticalTableTD'>{list.skypassNumber}</TD>
+                          <TD className='verticalTableTD'>{list.memberStatusNm}</TD>
+                          <TD className='verticalTableTD'>{list.createdDate}</TD>
+                        </TR>
+                      ))}
+                      </div>
+                    </Table>
+                  </Modal.Body>
                   <Modal.Footer>
                     <Button
                       priority="Primary"
