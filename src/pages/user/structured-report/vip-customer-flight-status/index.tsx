@@ -74,7 +74,7 @@ const List = () => {
           setRows(
             response.data.contents.sort(
               (a: any, b: any) =>
-                a.scheduledIntlFlightDate - b.scheduledIntlFlightDate || b.lastIntlFlightDate - a.lastIntlFlightDate
+                a.scheduledIntlFlightDate - b.scheduledIntlFlightDate || b.intLastBoardDatev - a.intLastBoardDatev
             )
           );
         } else {

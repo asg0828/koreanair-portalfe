@@ -211,6 +211,13 @@ export interface OneIdSameData {
   sourcePaxMappingOneIdNo: string;
   sourcePaxMappingPnrNo: string;
   sourcePaxMappingUciIdNo: string;
+  birthDatev: string;
+  boardYn: string;
+  email: string;
+  mobile: string;
+  paxEngFirstName: string;
+  paxEngLastName: string;
+  pnrFqtv: string;
 }
 
 export interface ConversionCleansingHashSearch {

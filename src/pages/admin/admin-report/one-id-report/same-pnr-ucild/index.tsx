@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { oneIdSameColumn, oneIdSameData } from '../../one-id-main/data';
+import { oneIdSameColumn } from '../../one-id-main/data';
 import DataGrid from '@/components/grid/DataGrid';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useSamePnr } from '@/hooks/queries/useOneIdQueries';

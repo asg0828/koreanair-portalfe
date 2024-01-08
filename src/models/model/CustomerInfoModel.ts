@@ -58,6 +58,7 @@ export interface ProfileList{
   oneidNo: string;
   sexCode: string;
   skypassMemberNumber :string;
+  birthDatev: string;
 }
 export interface SkypassInfo {
   oneidNo: string;
@@ -69,6 +70,7 @@ export interface Skypass {
   memberStatusNm: string
   effectiveFrom: string
   totalAccrued: string
+  totalRedeemed: string
   remainMileage: string
   isPlccCard: boolean
   expiredMileages: ExpiredMileages[]

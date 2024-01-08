@@ -40,6 +40,7 @@ export const initTbCoMetaTbInfo: TbCoMetaTbInfo = {
   metaTblUseYn: '',
   rtmTblYn: '',
   topicId: '',
+  editStatus: ''
 };
 
 export const initTbRsMstrSgmtRule: TbRsMstrSgmtRule = {

@@ -5,22 +5,23 @@ import { useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import { customerMetaInfoColumn, initTbCoMetaTblInfo } from './data';
 import DataGridMeta from '@/components/grid/DataGridMeta';
-import { useMetaTableDetail } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import { useMetaTableDetail, useTableColumns } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { TbCoMetaTbInfo } from '@/models/selfFeature/FeatureAdmModel';
 
 const CustomerMetaManagementDetail = () => {
-  const location = useLocation();
   const [queryParam] = useSearchParams()
   const [tbCoMetaTbInfo, setTbCoMetaTbInfo] = useState<TbCoMetaTbInfo>(initTbCoMetaTblInfo);
   const [searchInfo, setSearchInfo] = useState<any>({
-    metaTblId: location?.state?.metaTblId || '',
-    metaTblLogiNm: location?.state?.metaTblLogiNm || '',
-    rtmTblYn: location?.state?.rtmTblYn || '',
+    metaTblId: '',
+    metaTblLogiNm: '',
+    rtmTblYn: '',
   });
   const [rows, setRows] = useState<any>([]);
   const [metaTblId, setMetaTblId] = useState<string>(queryParam.get("metaTblId") || "")
+  // 메타 테이블 컬럼 상세 조회(초기화면 용)
   const { data: response, isError, refetch: dtlRefetch } = useMetaTableDetail(metaTblId);
+  
   const { toast } = useToast();
   const [isRefetch, setIsRefetch] = useState<number>(0);
   const [isOpen, setOpen] = useState(false);
@@ -79,7 +80,7 @@ const CustomerMetaManagementDetail = () => {
 
   return (
     <Stack direction="Vertical">
-      <SearchForm onSearch={research} showClearButton={false}>
+      <SearchForm showSearchButton={false} showClearButton={false}>
         <HorizontalTable>
           <TR>
             <TH colSpan={0.11} align="right">
@@ -202,34 +203,6 @@ const CustomerMetaManagementDetail = () => {
         rows={rows}
       ></DataGridMeta>
 
-      <Modal open={isOpen} onClose={() => setOpen(false)}>
-        <Modal.Header>알림</Modal.Header>
-        <Modal.Body>작성중인 Data가 있습니다. 작성을 취소하고 다시 조회하시겠습니까? </Modal.Body>
-        <Modal.Footer>
-          <Button
-            priority="Primary"
-            appearance="Contained"
-            onClick={() => {
-              setIsRefetch((cnt) => cnt + 1);
-              dtlRefetch();
-              setOpen(false);
-              return false;
-            }}
-          >
-            확인
-          </Button>
-          <Button
-            priority="Normal"
-            appearance="Outline"
-            onClick={() => {
-              setOpen(false);
-              return true;
-            }}
-          >
-            취소
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </Stack>
   );
 };

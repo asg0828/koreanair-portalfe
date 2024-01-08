@@ -117,7 +117,6 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         title: '저장',
         content: '저장하시겠습니까?',
         onConfirm: () => setSubmitFlag(true),
-        onCancle: () => setSubmitFlag(false),
       })
     );
   };

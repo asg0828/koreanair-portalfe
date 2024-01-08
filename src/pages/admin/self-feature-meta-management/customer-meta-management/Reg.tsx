@@ -31,8 +31,6 @@ const CustomerMetaManagementReg = () => {
   const [isOpen, setOpen] = useState(false);
   const dispatch = useAppDispatch();
 
-  // 메타 테이블 컬럼 검색 조회
-  const { data: response, isError, refetch } = useMetaTableDetail(dbNames);
   // 스키마 조회(데이터베이스명)
   const { data: responseSchema, isError: isErrorSchema, refetch: refetchSchema } = useSchemaList();
   // 테이블 조회(테이블물리명)
@@ -42,8 +40,6 @@ const CustomerMetaManagementReg = () => {
   // 메타 테이블 컬럼 리스트
   const [tblColumns, setTblColumns] = useState<Array<any>>([]);
 
-  // 테이블 컬럼 검색 콜백 조회
-  const metaDetail = useCallback(() => refetch(), response?.result);
   // 테이블 리스트 콜백 조회
   const tblList = useCallback(() => refetchTblInfo(), responseTblInfo?.result);
   // 테이블 컬럼 콜백 조회 
@@ -52,7 +48,6 @@ const CustomerMetaManagementReg = () => {
   // 검색 버튼 
   const searchTblColumns = () => {
     tblLogicList();
-    metaDetail();
   };
 
   // 초기화 버튼

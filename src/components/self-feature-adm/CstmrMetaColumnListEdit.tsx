@@ -45,6 +45,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
     isError: isErrorDataType,
     refetch: refetchDataType,
   } = useCommCodes(CommonCode.DATA_TYPE_CONV_CD);
+  const backgroundClassName = tbCoMetaTblClmnInfo
 
   // 데이터 타입 세팅
   useEffect(() => {
@@ -76,7 +77,9 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
 
   useEffect(() => {
     if (!submitFlag) return;
-    getData(tbCoMetaTblClmnInfo);
+    if(tbCoMetaTblClmnInfo.editStatus !== 'deleted'){
+      getData(tbCoMetaTblClmnInfo);
+    }
   }, [submitFlag]);
 
   const listChange = useCallback(() => setTbCoMetaTblClmnInfo(rows), [rows]);
@@ -229,7 +232,8 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
   }, [flag]);
   return (
     <>
-      <TR key={`row-${rowIndex}`}>
+      <TR key={`row-${rowIndex}`} className={`trBackground-${tbCoMetaTblClmnInfo.editStatus}`}>
+
         {/* 번호 */}
         <TD
           key={`td-index-${rowIndex}`}
@@ -239,6 +243,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
         >
           {rowIndex + 1}
         </TD>
+
         {/* Key 여부 */}
         <TD colSpan={columns[1].colSpan} key={`td-pkYn-${rowIndex}`}>
           <Checkbox
@@ -361,6 +366,11 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
           ) : (
             <Typography variant="h5">{tbCoMetaTblClmnInfo.dataFormat}</Typography>
           )}
+        </TD>
+          
+        {/* 원천 변경 상태 */}
+        <TD>
+          <Typography variant="h5">{tbCoMetaTblClmnInfo.editStatus}</Typography>
         </TD>
       </TR>
     </>

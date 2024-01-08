@@ -1,5 +1,5 @@
 import { htmlTagReg } from '@/utils/RegularExpression';
-import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, Loader } from '@components/ui';
+import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, Loader, Label } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import {
@@ -31,6 +31,7 @@ import Close from '@mui/icons-material/Close';
 import { ValidType, menuIconSx } from '@/models/common/Constants';
 import { useTranslation } from 'react-i18next';
 import { cloneDeep } from 'lodash'
+import { text } from 'stream/consumers';
 
 export default function List() {
   /* 수집기준시간 */
@@ -65,6 +66,7 @@ export default function List() {
   // skypass 조회 api
   const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass, isFetching: isFetchingSkypass} = useSkypass(skypassNmSearch.skypassMemberNumber);
   
+  const [modalText, setModalText] = useState<any>([])
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
   const [wallet, setWallet] = useState<Wallet>();
@@ -121,18 +123,29 @@ export default function List() {
 
     // 유효성 검사 실패 시 종료
     const validation = () => {
+
       let searchError = false;
       if (
         skypassNmSearch.skypassMemberNumber.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === '' && 
-        searchInfo.engLname.replace(htmlTagReg, '').trim() === '' && 
-        searchInfo.engFname.replace(htmlTagReg, '').trim() === '' && 
-        searchInfo.korFname.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.korLname.replace(htmlTagReg, '').trim()
+        searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === '' &&
+        (searchInfo.engFname.replace(htmlTagReg, '').trim() === '' && searchInfo.engLname.replace(htmlTagReg, '').trim() === '') && 
+        (searchInfo.korFname.replace(htmlTagReg, '').trim() === '' && searchInfo.korLname.replace(htmlTagReg, '').trim() === '')
       ) {
         setOpen(true);
         searchError = true;
+        setModalText('검색 조건을 하나라도')
+      } else if((searchInfo.engFname.replace(htmlTagReg, '').trim() !== '' && searchInfo.engLname.replace(htmlTagReg, '').trim() === '') || 
+                (searchInfo.engFname.replace(htmlTagReg, '').trim() === '' && searchInfo.engLname.replace(htmlTagReg, '').trim() !== '')){
+        setOpen(true);
+        searchError = true;
+        setModalText('성과 이름을 모두 ')
+      } else if((searchInfo.korFname.replace(htmlTagReg, '').trim() !== '' && searchInfo.korLname.replace(htmlTagReg, '').trim() === '') || 
+                (searchInfo.korFname.replace(htmlTagReg, '').trim() === '' && searchInfo.korLname.replace(htmlTagReg, '').trim() !== '')){
+        setOpen(true);
+        searchError = true;
+        setModalText('성과 이름을 모두 ')
       }
+     
       return searchError;
     }
     if (validation()) return;
@@ -149,6 +162,22 @@ export default function List() {
     } 
   };
   
+  // 초기화 버튼
+  const onClear = () => {
+    setSearchInfo({    
+      searchType: '',
+      skypassMemberNumber: '',
+      mobilePhoneNumber: '',
+      korFname: '',
+      korLname: '',
+      engLname: '',
+      engFname: ''})
+    setSkypassNmSearch({
+      searchType: '',
+      skypassMemberNumber: ''
+    })
+  }
+
   useEffect(() => {
     if(searchInfo.searchType !== '') {
       refetchProfileCLvl() 
@@ -409,8 +438,8 @@ export default function List() {
               </div>{' '}
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.engLname}
-                  id="engLname"
+                  value={searchInfo.engFname}
+                  id="engFname"
                   appearance="Outline"
                   placeholder="ENG. - Last Name"
                   size="LG"
@@ -420,8 +449,8 @@ export default function List() {
               </div>
               <div className="componentWrapper" style={{ width: '100%' }}>
                 <TextField
-                  value={searchInfo.engFname}
-                  id="engFname"
+                  value={searchInfo.engLname}
+                  id="engLname"
                   appearance="Outline"
                   placeholder="ENG. - First Name"
                   size="LG"
@@ -431,20 +460,29 @@ export default function List() {
               </div>
             </Stack>
           </Stack>
-          <Button
-            priority="Primary"
-            appearance="Contained"
-            size="LG"
-            style={{ minHeight: '72px' }}
-            onClick={handleSearch}
-          >
-            검색
-          </Button>
-        
+          <Stack >
+            <Button
+              priority="Primary"
+              appearance="Contained"
+              size="LG"
+              style={{ minHeight: '72px' }}
+              onClick={handleSearch}
+            >
+              <span className="searchIcon"></span>
+              검색
+            </Button>
+            <Button
+              size="LG"
+              style={{ minHeight: '72px' }}
+              onClick={onClear}
+            >
+              초기화
+            </Button>
+          </Stack>
         </Stack>
         <Modal open={isOpen} onClose={() => setOpen(false)}>
-          <Modal.Header>오류</Modal.Header>
-          <Modal.Body>검색 조건을 입력해주세요</Modal.Body>
+          <Modal.Header>알림</Modal.Header>
+          <Modal.Body>{modalText} 입력 후 검색해 주세요.</Modal.Body>
           <Modal.Footer>
             <Button
               priority="Primary"
@@ -1297,6 +1335,9 @@ export default function List() {
                       </div>
                       )}
                       <div className="right_modal_table_wrap">
+                      <div style={{ marginBottom: '-10px' }}>
+                        <Label style={{ left: '20px', bottom: '20px' }}>총 <span className="total">{profileList.length}</span> 건</Label>
+                      </div>
                         <div className="right_modal_table_inner height-100">
                           <table id="skypassSearch15">
                             <colgroup>
@@ -1361,9 +1402,9 @@ export default function List() {
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {/* {searchText && list..toLowerCase().includes(searchText.toLowerCase())
-                                        ? searchHighlight(list.birthDatev, searchText)
-                                        : list.birthDatev} */}
+                                      {searchText && list.birthDatev.slice(0, 4).includes(searchText)
+                                        ? searchHighlight(list.birthDatev.slice(0, 4), searchText)
+                                        : list.birthDatev.slice(0, 4)}
                                     </div>
                                   </td>
                                   <td>

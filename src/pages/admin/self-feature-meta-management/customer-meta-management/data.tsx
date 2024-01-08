@@ -33,9 +33,10 @@ export const customerMetaInfoColumn: Column[] = [
   { headerName: '컬럼 논리명', field: 'metaTblClmnLogiNm', colSpan: 2 },
   { headerName: '컬럼 설명', field: 'metaTblClmnDesc', colSpan: 2 },
   { headerName: '데이터타입', field: 'dtpCd', colSpan: 1 },
-  { headerName: '변경여부', field: 'changeYn', colSpan: 0.8 }, // 수정 요망
+  { headerName: '변경여부', field: 'changeYn', colSpan: 0.8 }, 
   { headerName: '변경 데이터타입', field: 'chgDtpCd', colSpan: 1.2 },
   { headerName: '변경 데이터형식', field: 'dataFormat', colSpan: 1 },
+  { headerName: '원천 변경 상태', field: 'editStatus', colSpan: 1 }
 ];
 
 export const customerMetaTableColumn: Column[] = [
@@ -48,8 +49,10 @@ export const customerMetaTableColumn: Column[] = [
   { headerName: '데이터타입', field: 'dtpCd', colSpan: 1.3 },
   { headerName: '변경여부', field: 'changeYn', colSpan: 1 }, // 수정 요망
   { headerName: '변경 데이터타입', field: 'chgDtpCd', colSpan: 1.1 },
-  { headerName: '변경 데이터형식', field: 'dataFormat', colSpan: 1.1 },
+  { headerName: '변경 데이터형식', field: 'dataFormat', colSpan: 1.1 },    
+  { headerName: '원천 변경 상태', field: 'editStatus', colSpan: 1 }
 ];
+
 export const customerMetaRegColumn: Column[] = [
   { headerName: 'Key 여부', field: 'pkYn', colSpan: 0.5 },
   { headerName: '사용 여부', field: 'clmnUseYn', colSpan: 0.5 },
@@ -73,4 +76,5 @@ export const initTbCoMetaTblInfo: TbCoMetaTbInfo = {
   metaTblUseYn: '',
   rtmTblYn: '',
   topicId: '',
+  editStatus: ''
 };

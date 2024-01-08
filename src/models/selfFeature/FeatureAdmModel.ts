@@ -94,6 +94,7 @@ export interface TbCoMetaTbInfo extends RowsInfo {
   metaTblUseYn: string;
   rtmTblYn: string;
   topicId: string;
+  editStatus: string;
 }
 // Master Profile 검색 조건 Props
 export interface MstrProfSearchInfoProps {
