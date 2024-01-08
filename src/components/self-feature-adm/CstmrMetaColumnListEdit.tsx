@@ -370,7 +370,22 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
           
         {/* 원천 변경 상태 */}
         <TD>
-          <Typography variant="h5">{tbCoMetaTblClmnInfo.editStatus}</Typography>
+          {tbCoMetaTblClmnInfo.editStatus === 'none' && (
+            <Typography variant="h5">변경없음</Typography>
+          ) 
+        }
+          {tbCoMetaTblClmnInfo.editStatus === 'edited' && (
+            <Typography variant="h5">변경</Typography>
+            )
+        }
+          {tbCoMetaTblClmnInfo.editStatus === 'added' && (
+            <Typography variant="h5">추가</Typography>
+            )
+        }
+           {tbCoMetaTblClmnInfo.editStatus === 'deleted' && (
+            <Typography variant="h5">삭제</Typography>
+            )
+        } 
         </TD>
       </TR>
     </>
