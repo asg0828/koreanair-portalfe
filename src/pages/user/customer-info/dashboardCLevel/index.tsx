@@ -103,12 +103,6 @@ export default function List() {
       )
     );
   };
-  
-// useEffect(()=> {
-//   if(skypassNmSearch.skypassMemberNumber !== '' && skypassNmSearch.searchType === ''){
-//     setSkypassNmSearch({ ...skypassNmSearch, skypassMemberNumber: '' })
-//   }
-// }, [skypassNmSearch.searchType]) 
 
   const onchangeModalInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -119,7 +113,10 @@ export default function List() {
   const retrieveFamilyInfo = () => {
     setOpenFamilyInfo(true);
   };
-
+ 
+  const retrieveMileDtl = () => {
+    setOpenMileDtl(true)
+  }
   /* 검색 버튼 */
   const handleSearch =() => {
 
@@ -207,6 +204,9 @@ export default function List() {
   // 등록가족 상세 버튼 모달 state
   const [isOpenFamilyInfo, setOpenFamilyInfo] = useState(false);
 
+  // 마일리지 상세 버튼 모달 state
+  const [openMileDtl, setOpenMileDtl] = useState(false)
+
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
     const { id, value } = e.target;
@@ -245,11 +245,6 @@ export default function List() {
   ) => {
     setSkypassNmSearch({ searchType: 'B', skypassMemberNumber: String(value)})
   };
-
-  /*  */
-  // useEffect(() => {
-  //   setSelectedSkypass(skypass?.find((item) => item.skypassMemberNumber === searchInfo.skypassSelect));
-  // }, [searchInfo.skypassSelect]);
 
   {/* CLevel 모달 */}
   const dispatch = useAppDispatch();
@@ -620,14 +615,63 @@ export default function List() {
                 <div className="value">{selectedSkypass?.effectiveFrom.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</div>
               </div>
               <div className="item">
-                <div className="key">잔여 마일리지</div>
-                <div className="value">{selectedSkypass?.remainMileage}</div>
+                <div className="key">적립 마일리지</div>
+                <div className="value">{selectedSkypass?.totalAccrued}</div>
               </div>
               <div className="item">
-                <div className="key">소멸예정 마일리지</div>
-                <div className="value">{selectedSkypass?.expiredMileages[0]?.expiredMileage}</div>
+                <div className="key">사용 마일리지</div>
+                <div className="value">{selectedSkypass?.totalRedeemed}</div>
+              </div>
+              <div className="item">
+                <div className="key">잔여 마일리지</div>
+                <div className="value">{selectedSkypass?.remainMileage} <Button style={{ float: 'right'}} onClick={retrieveMileDtl}>상세</Button></div>
+              </div>
+              <div className="item">
+                <div className="key">PLCC 카드보유</div>
+                <div className="value">{selectedSkypass?.isPlccCard}</div>
               </div>
             </div>
+            <Modal size={70} open={openMileDtl} onClose={() => setOpenMileDtl(false)}>
+                  <Modal.Header>잔여 마일리지 상세</Modal.Header>
+                  <Modal.Body>
+                    <Label>
+                      {t('common.label.countingUnit.total')}
+                      <span className="total">{` ${family.length} `}</span>
+                      {t('common.label.countingUnit.thing')}
+                    </Label>
+                    <Table variant="vertical" size="normal" align="center" className={`verticalTable`}>
+                      <div className="verticalTableDiv">
+                      <THead className='verticalTableDivHeader'>
+                        <TR>
+                          <TH>
+                            유효기간
+                          </TH>
+                          <TH>
+                            마일리지
+                          </TH>
+                        </TR>
+                      </THead>
+                      {selectedSkypass.expiredMileages.length > 0 ? (selectedSkypass.expiredMileages.map((list) =>(
+                        <TR>
+                          <TD className='verticalTableTD'>{list.expiration.length === 4 ? list.expiration.replace(/(\d{2})(\d{2})/, '20$1-$2') : '평생'}</TD>
+                          <TD className='verticalTableTD'>{list.remainMileage}</TD>
+                        </TR>
+                      ))) : (<NoResult/>)} 
+                      </div>
+                    </Table>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      priority="Primary"
+                      appearance="Contained"
+                      onClick={() => {
+                        setOpenMileDtl(false);
+                      }}
+                    >
+                      확인
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
             <div style={{ position: 'relative' }} className="dashBoardBox n3">
               <h5 style={{ fontWeight: '400', position: 'absolute', right: 30, top: 10, color: 'gray' }}>
                 {batchDate} 기준
@@ -669,12 +713,12 @@ export default function List() {
                         <TR>
                           <TD className='verticalTableTD'>{list.relationship}</TD>
                           <TD className='verticalTableTD'>{list.korFName}{list.korGName}</TD>
-                          <TD className='verticalTableTD'>{list.engFName} {list.engGName}</TD>
+                          <TD className='verticalTableTD'>{list.engFName}{list.engGName}</TD>
                           <TD className='verticalTableTD'>{list.memberStatus}</TD>
-                          <TD className='verticalTableTD'>{list.dateOfBirth}</TD>
+                          <TD className='verticalTableTD'>{list.dateOfBirth?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</TD>
                           <TD className='verticalTableTD'>{list.skypassNumber}</TD>
                           <TD className='verticalTableTD'>{list.memberStatusNm}</TD>
-                          <TD className='verticalTableTD'>{list.createdDate}</TD>
+                          <TD className='verticalTableTD'>{list.createdDate?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</TD>
                         </TR>
                       ))) : (<NoResult/>)} 
 
@@ -1414,10 +1458,11 @@ export default function List() {
                                 <tr style={{cursor: 'pointer'}} onClick={()=>searchProfile(list.skypassMemberNumber)}>
                                   <td>
                                     <div className="ellipsis1">
-                                      {' '}
-                                      {searchText && list.korLname && list.korFname && (list?.korLname.includes(searchText) || list?.korFname.includes(searchText))
-                                        ? searchHighlight((list.korLname+list.korFname), searchText)
-                                        : (list.korLname + list.korFname)}
+                                      {searchText &&
+                                        ((list?.korLname ?? '-') + (list?.korFname ?? '-')).includes(searchText)
+                                          ? searchHighlight((list.korLname + list.korFname), searchText)
+                                          : ((list?.korLname ?? '-') || '-') + ((list?.korFname ?? '-') || '-')
+                                      }
                                     </div>
                                   </td>
                                   <td>
