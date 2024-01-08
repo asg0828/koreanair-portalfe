@@ -1,8 +1,9 @@
 import { htmlTagReg } from '@/utils/RegularExpression';
-import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, Loader, Label } from '@components/ui';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, Loader, TR, TD, THead, TH, Table, Label } from '@components/ui';
+import { useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
 import {
+  familyColumn,
   initFamily,
   initProfile, initSkypass,
 } from '../dashboard/data';
@@ -642,9 +643,42 @@ export default function List() {
                 >
                   등록가족 상세
                 </Button>
-                <Modal open={isOpenFamilyInfo} onClose={() => setOpenFamilyInfo(false)}>
-                  <Modal.Header>등록가족 상세 페이지</Modal.Header>
-                  <Modal.Body>등록가족 상세 페이지</Modal.Body>
+                <Modal size={70} open={isOpenFamilyInfo} onClose={() => setOpenFamilyInfo(false)}>
+                  <Modal.Header>등록가족 상세</Modal.Header>
+                  <Modal.Body>
+                    <Label>
+                      {t('common.label.countingUnit.total')}
+                      <span className="total">{` ${family.length} `}</span>
+                      {t('common.label.countingUnit.thing')}
+                    </Label>
+                    <Table variant="vertical" size="normal" align="center" className={`verticalTable`}>
+                      <div className="verticalTableDiv">
+                      <THead className='verticalTableDivHeader'>
+                        <TR>
+                        {familyColumn.map((column, index) => (
+                          <TH 
+                            key={`header-${index}`}
+                            colSpan={column.colSpan ? column.colSpan : undefined}>
+                              {column.headerName}
+                            </TH>
+                        ))}
+                        </TR>
+                      </THead>
+                      {family.map((list) =>(
+                        <TR>
+                          <TD className='verticalTableTD'>{list.relationship}</TD>
+                          <TD className='verticalTableTD'>{list.korFName}{list.korGName}</TD>
+                          <TD className='verticalTableTD'>{list.engFName} {list.engGName}</TD>
+                          <TD className='verticalTableTD'>{list.memberStatus}</TD>
+                          <TD className='verticalTableTD'>{list.dateOfBirth}</TD>
+                          <TD className='verticalTableTD'>{list.skypassNumber}</TD>
+                          <TD className='verticalTableTD'>{list.memberStatusNm}</TD>
+                          <TD className='verticalTableTD'>{list.createdDate}</TD>
+                        </TR>
+                      ))}
+                      </div>
+                    </Table>
+                  </Modal.Body>
                   <Modal.Footer>
                     <Button
                       priority="Primary"
