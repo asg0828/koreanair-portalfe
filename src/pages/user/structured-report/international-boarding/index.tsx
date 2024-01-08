@@ -8,6 +8,9 @@ import { ColumnsInfo } from '@models/components/Table';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import {PageModel} from "@models/model/PageModel";
+
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
 
 const periods = [
   { period: '0 year', text: '올해' },
@@ -18,21 +21,21 @@ const periods = [
 ];
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'Rank', field: 'Rank', colSpan: 0.7 },
-  { headerName: 'One ID', field: 'oneId', colSpan: 1.3 },
-  { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
-  { headerName: '이름', field: 'name', colSpan: 2 },
-  { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 0.7 },
-  { headerName: '국제선 수입금액', field: 'IntlIncomeAmount', colSpan: 1 },
-  { headerName: '국제선 보너스 항공권 탑승 횟수', field: 'IntlBonusBoardingCount', colSpan: 1 },
-  { headerName: '국제선 FR 탑승횟수', field: 'IntlFrCount', colSpan: 1 },
-  { headerName: '국제선 PR 탑승횟수', field: 'IntlPrCount', colSpan: 1 },
-  { headerName: '국제선 평균 탑승 주기', field: 'avgBoardingIntervalForIntl', colSpan: 1 },
-  { headerName: '국제선 최다 탑승 O&D', field: 'MostFrequentedOnDForIntl', colSpan: 1 },
+  { headerName: 'Rank', field: 'rank', colSpan: 0.7 },
+  { headerName: 'One ID', field: 'mergeTargetOneidNo', colSpan: 1.3 },
+  { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
+  { headerName: '이름', field: 'userNm', colSpan: 2 },
+  { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 0.7 },
+  { headerName: '국제선 수입금액', field: 'intTktNoFscNettKrwAmt', colSpan: 1 },
+  { headerName: '국제선 보너스 항공권 탑승 횟수', field: 'intBonusTktBoardCnt', colSpan: 1 },
+  { headerName: '국제선 FR 탑승횟수', field: 'frClsBuyCnt', colSpan: 1 },
+  { headerName: '국제선 PR 탑승횟수', field: 'prClsBuyCnt', colSpan: 1 },
+  { headerName: '국제선 평균 탑승 주기', field: 'intAvgBoardCycle', colSpan: 1 },
+  { headerName: '국제선 최다 탑승 O&D', field: 'intMstBordOndApoRteCd1', colSpan: 1 },
 ];
 
-const initSortedColumn = 'IntlFrCount';
-const initSortedDirection = 'asc';
+const initSortedColumn = 'frClsBuyCnt';
+const initSortedDirection = 'desc';
 
 const List = () => {
   const { toast } = useToast();
@@ -40,6 +43,7 @@ const List = () => {
   const [criteria, setCriteria] = useState('0 year');
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
   const { data: response, isError, refetch } = useIntlBoardingTop100List(criteria);
@@ -171,6 +175,7 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
+        page={page}
         enableSort={true}
         clickable={true}
         showPageSizeSelect={false}

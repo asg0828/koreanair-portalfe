@@ -1,4 +1,4 @@
-import { useDomesticBoardingTop100List } from '@/hooks/queries/useReportQueries';
+import {useDomesticBoardingTop100List, useIntlUpgradeTop100List} from '@/hooks/queries/useReportQueries';
 import { SortDirection } from '@/models/common/Design';
 import SearchForm from '@components/form/SearchForm';
 import DataGrid from '@components/grid/DataGrid';
@@ -8,41 +8,40 @@ import { ColumnsInfo } from '@models/components/Table';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import {PageModel} from "@models/model/PageModel";
+
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'Rank', field: 'Rank', colSpan: 1 },
-  { headerName: 'One ID', field: 'oneId', colSpan: 1 },
-  { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
-  { headerName: '이름', field: 'name', colSpan: 1 },
-  { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1.2 },
-  { headerName: 'Upgrade 소진 마일리지', field: 'mileageSpentForUpgrade', colSpan: 1.1 },
-  { headerName: '마일리지 FR Upgrade횟수', field: 'frUpgradeCountByMileage', colSpan: 1 },
-  { headerName: '마일리지 PR Upgrade횟수', field: 'prUpgradeCountByMileage', colSpan: 1 },
-  { headerName: '국제선 탑승횟수', field: 'intlBoardingCount', colSpan: 1.1 },
-  { headerName: '국제선 FR 탑승횟수', field: 'intlFrCount', colSpan: 1 },
-  { headerName: '국제선 PR 탑승횟수', field: 'intlPrCount', colSpan: 1 },
+  { headerName: 'Rank', field: 'rank', colSpan: 1 },
+  { headerName: 'One ID', field: 'mergeSourceOneidNo', colSpan: 1 },
+  { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
+  { headerName: '이름', field: 'userNm', colSpan: 1 },
+  { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 1.2 },
+  { headerName: 'Upgrade 소진 마일리지', field: 'upgradeRdmMile', colSpan: 1.1 },
+  { headerName: '마일리지 FR Upgrade횟수', field: 'frMileUpgradeCnt', colSpan: 1 },
+  { headerName: '마일리지 PR Upgrade횟수', field: 'prMileUpgradeCnt', colSpan: 1 },
+  { headerName: '국제선 탑승횟수', field: 'intBoardCnt', colSpan: 1.1 },
+  { headerName: '국제선 FR 탑승횟수', field: 'intFrClsBoardCnt', colSpan: 1 },
+  { headerName: '국제선 PR 탑승횟수', field: 'intPrClsBoardCnt', colSpan: 1 },
 ];
 
-const initSortedColumn = 'mileageSpentForUpgrade';
-const initSortedDirection = 'asc';
+const initSortedColumn = 'upgradeRdmMile';
+const initSortedDirection = 'desc';
 
 const List = () => {
   const { toast } = useToast();
   const [showPopup, setShowPopup] = useState(false);
-  const [criteria, setCriteria] = useState('0 year');
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
-  const { data: response, isError, refetch } = useDomesticBoardingTop100List(criteria);
+  const { data: response, isError, refetch } = useIntlUpgradeTop100List();
 
   const toggleModal = () => {
     setShowPopup(!showPopup);
   };
-
-  const handleSearch = useCallback(() => {
-    refetch();
-  }, [refetch]);
 
   const handleSortChange = (order: SortDirection, index: number) => {
     if (order) {
@@ -87,6 +86,7 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
+        page={page}
         enableSort={true}
         clickable={true}
         showPageSizeSelect={false}

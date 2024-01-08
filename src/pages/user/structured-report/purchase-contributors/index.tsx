@@ -8,6 +8,9 @@ import { ColumnsInfo } from '@models/components/Table';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import DashboardPopup from './dashboardPopUp';
+import {PageModel} from "@models/model/PageModel";
+
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
 
 const periods = [
   { period: '0 year', text: '올해' },
@@ -31,7 +34,7 @@ const columns: Array<ColumnsInfo> = [
   { headerName: 'PR 구매횟수', field: 'prClsBuynt', colSpan: 0.9 },
 ];
 
-const initSortedColumn = 'purchaseAmount';
+const initSortedColumn = 'tktBuyKrwAmt';
 const initSortedDirection = 'desc';
 
 const List = () => {
@@ -40,6 +43,7 @@ const List = () => {
   const [criteria, setCriteria] = useState('0 year');
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
   const { data: response, isError, refetch } = usePurchaseContributionList(criteria);
@@ -171,6 +175,7 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
+        page={page}
         enableSort={true}
         clickable={true}
         showPageSizeSelect={false}
