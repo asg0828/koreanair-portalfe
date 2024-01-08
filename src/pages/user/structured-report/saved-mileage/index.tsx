@@ -8,6 +8,9 @@ import { ColumnsInfo } from '@models/components/Table';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import {PageModel} from "@models/model/PageModel";
+
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
 
 const periods = [
   { period: '0 year', text: '올해' },
@@ -18,21 +21,21 @@ const periods = [
 ];
 
 const columns: Array<ColumnsInfo> = [
-  { headerName: 'Rank', field: 'Rank', colSpan: 1 },
-  { headerName: 'One ID', field: 'oneId', colSpan: 1 },
-  { headerName: '회원번호', field: 'memberNumber', colSpan: 1 },
-  { headerName: '이름', field: 'name', colSpan: 1 },
-  { headerName: 'VIP 회원 분류', field: 'vipYn', colSpan: 1 },
-  { headerName: '총 적립 마일리지', field: 'totalMileage', colSpan: 1 },
-  { headerName: '총 적립 마일리지(항공 탑승)', field: 'totalFlightMileage', colSpan: 1 },
+  { headerName: 'Rank', field: 'rank', colSpan: 1 },
+  { headerName: 'One ID', field: 'mergeSourceOneidNo', colSpan: 1 },
+  { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
+  { headerName: '이름', field: 'userNm', colSpan: 1 },
+  { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 1 },
+  { headerName: '총 적립 마일리지', field: 'ttlAcrlMile', colSpan: 1 },
+  { headerName: '총 적립 마일리지(항공 탑승)', field: 'fltBoardTtlAcrlMile', colSpan: 1 },
   { headerName: '총 적립 마일리지(항공 이외)', field: 'totalEtcMileage', colSpan: 1 },
-  { headerName: '잔여 마일리지', field: 'availableMileage', colSpan: 1 },
-  { headerName: '잔여 마일리지(가족합산)', field: 'familyAvailableMileage', colSpan: 1 },
-  { headerName: '마일리지 제휴카드(PLCC) 보유여부', field: 'mileagePartnerCardYn', colSpan: 1.2 },
+  { headerName: '잔여 마일리지', field: 'remainMile', colSpan: 1 },
+  { headerName: '잔여 마일리지(가족합산)', field: 'fmlyPoolingRmnMile', colSpan: 1 },
+  { headerName: '마일리지 제휴카드(PLCC) 보유여부', field: 'skypassPartnerPlccHoldYn', colSpan: 1.2 },
 ];
 
-const initSortedColumn = 'totalMileage';
-const initSortedDirection = 'asc';
+const initSortedColumn = 'ttlAcrlMile';
+const initSortedDirection = 'desc';
 
 const List = () => {
   const { toast } = useToast();
@@ -40,6 +43,7 @@ const List = () => {
   const [criteria, setCriteria] = useState('0 year');
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
   const { data: response, isError, refetch } = useTotalMileageTop100List(criteria);
@@ -171,6 +175,7 @@ const List = () => {
       <DataGrid
         columns={columns}
         rows={rows}
+        page={page}
         enableSort={true}
         clickable={true}
         showPageSizeSelect={false}

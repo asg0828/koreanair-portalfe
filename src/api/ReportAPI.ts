@@ -49,3 +49,21 @@ export const getTotalMileageTop100List = (criteria: string) => {
     method: Method.GET,
   });
 };
+
+export const getBonusTicketTop100List = () => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.REPORT_BONUS_TICKET_TOP100}`,
+    method: Method.GET,
+  });
+};
+
+
+export const getIntlUpgradeTop100List = () => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.REPORT_INTL_UPGRADE_TOP100}`,
+    method: Method.GET,
+  });
+};
+
