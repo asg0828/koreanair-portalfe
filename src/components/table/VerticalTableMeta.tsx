@@ -159,7 +159,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     const { isNullable, remarks, dataType, ...rest } = data;
     data = {
       baseTimeYn: rest.baseTimeYn === undefined ? 'N' : rest.baseTimeYn,
-      clmnUseYn: rest.clmnUseYn ? rest.clmnUseYn : 'Y',
+      clmnUseYn: rest.clmnUseYn ? rest.clmnUseYn : 'N',
       dtpCd: rest.dtpCd,
       metaTblClmnLogiNm: rest.metaTblClmnLogiNm,
       metaTblClmnPhysNm: rest.metaTblClmnPhysNm,
@@ -196,14 +196,8 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       else if (colList.filter((e) => e.changeYn === 'Y').find((e) => e.chgDtpCd === ('' || 'null' || null)))
         checkValidation = '변경 데이터 타입을 입력해주세요.';
       else if (
-        colList
-          .filter((e) => e.changeYn === 'Y')
-          .filter((e) => e.chgDtpCd === 'timestamp')
-          .find((e) => e.dataFormat === ('' || null || 'null'))
-      )
-        checkValidation = '변경 데이터 형식을 입력해주세요.';
-
-
+        colList.filter((e) => e.changeYn === 'Y').filter((e) => e.chgDtpCd === 'timestamp').find((e) => e.dataFormat === ('' || null || 'null')))
+          checkValidation = '변경 데이터 형식을 입력해주세요.';
       if (checkValidation !== '') {
         setSubmitFlag(false);
         toast({

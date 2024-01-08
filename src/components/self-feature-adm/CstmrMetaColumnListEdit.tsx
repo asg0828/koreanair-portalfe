@@ -104,7 +104,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
     (rowIndex: number, field: string) => {
       // 체크 여부에 따라서
       setTbCoMetaTblClmnInfo((tbCoMetaTblClmnInfo) => {
-        if (field === 'changeYn' && tbCoMetaTblClmnInfo.changeYn === 'Y') {
+        if (field === 'changeYn' && (tbCoMetaTblClmnInfo.changeYn === 'Y' || !tbCoMetaTblClmnInfo.changeYn) && tbCoMetaTblClmnInfo.chgDtpCd !== '') {
           return {
             ...tbCoMetaTblClmnInfo,
             changeYn: 'N',
@@ -318,7 +318,8 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
             checked={
               tbCoMetaTblClmnInfo.changeYn === 'Y' ||
               tbCoMetaTblClmnInfo.baseTimeYn === 'Y' ||
-              tbCoMetaTblClmnInfo.chgDtpCd !== (null || '')
+              (tbCoMetaTblClmnInfo.chgDtpCd !== null && 
+              tbCoMetaTblClmnInfo.chgDtpCd !== '')
             }
             disabled={tbCoMetaTblClmnInfo.baseTimeYn === 'Y'}
             value={tbCoMetaTblClmnInfo.changeYn}
