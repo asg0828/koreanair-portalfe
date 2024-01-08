@@ -28,7 +28,6 @@ const columns: Array<ColumnsInfo> = [
   { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 1 },
   { headerName: '총 적립 마일리지', field: 'ttlAcrlMile', colSpan: 1 },
   { headerName: '총 적립 마일리지(항공 탑승)', field: 'fltBoardTtlAcrlMile', colSpan: 1 },
-  { headerName: '총 적립 마일리지(항공 이외)', field: 'totalEtcMileage', colSpan: 1 },
   { headerName: '잔여 마일리지', field: 'remainMile', colSpan: 1 },
   { headerName: '잔여 마일리지(가족합산)', field: 'fmlyPoolingRmnMile', colSpan: 1 },
   { headerName: '마일리지 제휴카드(PLCC) 보유여부', field: 'skypassPartnerPlccHoldYn', colSpan: 1.2 },
@@ -47,6 +46,29 @@ const List = () => {
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
   const { data: response, isError, refetch } = useTotalMileageTop100List(criteria);
+
+  const newColumn: ColumnsInfo = {
+    headerName: '총 적립 마일리지(항공 이외)',
+    field: 'nonFlightMileage',
+    colSpan: 1,
+  };
+
+  const updatedRows = rows.map((row : any) => {
+    const ttlAcrlMile = row.ttlAcrlMile || 0;
+    const fltBoardTtlAcrlMile = row.fltBoardTtlAcrlMile || 0;
+
+    return {
+      ...row,
+      nonFlightMileage: ttlAcrlMile - fltBoardTtlAcrlMile,
+    };
+  });
+
+  const columnIndexToInsert = columns.findIndex((column) => column.field === 'fltBoardTtlAcrlMile') + 1;
+  const updatedColumns = [
+    ...columns.slice(0, columnIndexToInsert),
+    newColumn, // 새로운 열
+    ...columns.slice(columnIndexToInsert),
+  ];
 
   const createPeriodButton = (period: any, text: string, periodSelect: any) => {
     const isSelected = period === criteria;
@@ -173,8 +195,8 @@ const List = () => {
       </SearchForm>
 
       <DataGrid
-        columns={columns}
-        rows={rows}
+        columns={updatedColumns}
+        rows={updatedRows}
         page={page}
         enableSort={true}
         clickable={true}
