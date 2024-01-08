@@ -236,6 +236,18 @@ const skyPassList: SkypassList[] = [
   { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'F', birthV: '1988', skypassNo: '153455555506' },
   { korName: '김대한', engName: 'Daehan-Kim', sexCode: 'F', birthV: '2000', skypassNo: '123455555509' },
 ];
+
+const familyColumn : Column[] =[ 
+  {headerName: '관계', field: 'relationship'},
+  {headerName: '가족성명(한글)', field: 'korFName'},  
+  {headerName: '가족성명(영문)', field: 'engFName'},  
+  {headerName: '회원상태', field: 'memberStatus'}, 
+  {headerName: '생년월일', field: 'dateOfBirth'},
+  {headerName: '회원번호', field: 'skypassNumber'},
+  {headerName: '회원등급', field: 'memberStatusNm'},
+  {headerName: '등록일', field: 'createdDate'},
+]
+
 export {
   analysisIndexList,
   analysisResultData,
@@ -256,5 +268,6 @@ export {
   skyPassList,
   initProfile,
   initSkypass,
-  initFamily
+  initFamily,
+  familyColumn
 };
