@@ -27,14 +27,14 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '이름', field: 'userNm', colSpan: 2 },
   { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 0.7 },
   { headerName: '국제선 수입금액', field: 'intTktNoFscNettKrwAmt', colSpan: 1 },
+  { headerName: '국제선 탑승횟수', field: 'intBoardCnt', colSpan: 1 },
   { headerName: '국제선 보너스 항공권 탑승 횟수', field: 'intBonusTktBoardCnt', colSpan: 1 },
-  { headerName: '국제선 FR 탑승횟수', field: 'frClsBuyCnt', colSpan: 1 },
-  { headerName: '국제선 PR 탑승횟수', field: 'prClsBuyCnt', colSpan: 1 },
+  { headerName: '국제선 FR탑승횟수 + PR 탑승횟수', field: 'frClsBuyCnt', colSpan: 1 },
   { headerName: '국제선 평균 탑승 주기', field: 'intAvgBoardCycle', colSpan: 1 },
   { headerName: '국제선 최다 탑승 O&D', field: 'intMstBordOndApoRteCd1', colSpan: 1 },
 ];
 
-const initSortedColumn = 'frClsBuyCnt';
+const initSortedColumn = 'intBoardCnt';
 const initSortedDirection = 'desc';
 
 const List = () => {

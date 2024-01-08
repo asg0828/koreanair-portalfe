@@ -92,7 +92,6 @@ const CustomerMetaManagementDetail = () => {
                 className="width-100"
                 onChange={onSearchChangeHandler}
                 value={tbCoMetaTbInfo.dbNm}
-                placeholder="검색어를 입력하세요."
                 id="dbNm"
               />
             </TD>
@@ -105,7 +104,6 @@ const CustomerMetaManagementDetail = () => {
                 className="width-100"
                 onChange={onSearchChangeHandler}
                 value={tbCoMetaTbInfo.metaTblPhysNm}
-                placeholder="검색어를 입력하세요."
                 id="metaTblPhysNm"
               />
             </TD>
@@ -117,7 +115,6 @@ const CustomerMetaManagementDetail = () => {
                 className="width-100"
                 onChange={onSearchChangeHandler}
                 value={tbCoMetaTbInfo.metaTblLogiNm}
-                placeholder="검색어를 입력하세요."
                 id="metaTblLogiNm"
               />
             </TD>
@@ -131,7 +128,6 @@ const CustomerMetaManagementDetail = () => {
                 className="width-100"
                 onChange={onSearchChangeHandler}
                 value={tbCoMetaTbInfo.metaTblDesc}
-                placeholder="검색어를 입력하세요."
                 id="metaTblDesc"
               />
             </TD>

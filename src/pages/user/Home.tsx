@@ -22,6 +22,7 @@ import { Stack, Tag, Typography, useToast } from '@components/ui';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import parse from 'html-react-parser';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -287,7 +288,7 @@ const Home = () => {
                   <Link to={`${MainLink.FAQ}?faqId=${item.faqId}`}>
                     <div className="question ellipsis1">{item.qstn}</div>
                     <div className="answer">
-                      <div className="ellipsis1" dangerouslySetInnerHTML={{ __html: item.answ }}></div>
+                      <div className="ellipsis1">{parse(item.answ)}</div>
                     </div>
                   </Link>
                 </div>

@@ -47,21 +47,49 @@ const CustomerMetaManagementReg = () => {
 
   // 검색 버튼 
   const searchTblColumns = () => {
-    tblLogicList();
+
+    if(searchInfo.dbNm === '' || searchInfo.dbNm === 'null' ){
+      dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '알림',
+        content: '데이터베이스명은 필수값입니다.',
+      }))
+    } else if(searchInfo.metaTblPhysNm === '' || searchInfo.metaTblPhysNm === 'null') {
+      dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '알림',
+        content: '테이블 물리명은 필수값입니다.',
+      }) )
+    } else {
+      tblLogicList();
+    }
   };
 
   // 초기화 버튼
   const onClear = () => {
-    setSearchInfo({
-      ...searchInfo,
-      metaTblPhysNm: '',
-      dbNm: '',
-      metaTblDesc: '',
-      metaTblLogiNm: '',
-      metaTblDvCd: 'ATTR',
-      metaTblUseYn: 'Y',
-      rtmTblYn: 'N',
-    });
+    dispatch(
+      openModal({
+        type: ModalType.CONFIRM,
+        title: '알림',
+        content: '입력중인 data가 소실될 수 있습니다. 초기화를 진행 하시겠습니까?',
+        onConfirm: () => {
+          setSearchInfo({
+            ...searchInfo,
+            metaTblPhysNm: '',
+            dbNm: '',
+            metaTblDesc: '',
+            metaTblLogiNm: '',
+            metaTblDvCd: 'ATTR',
+            metaTblUseYn: 'Y',
+            rtmTblYn: 'N',
+          });
+          setTblColumns([])
+          setTablePhyList([])
+        },
+      })
+    );
   };
 
   /* select state 관리 */
@@ -70,26 +98,29 @@ const CustomerMetaManagementReg = () => {
     value: SelectValue<{}, false>,
     id?: String
   ) => {
-    if (value !== null && id === 'metaTblPhysNm' && searchInfo.metaTblPhysNm !== 'null') {
+    if (value !== null && id === 'metaTblPhysNm' && searchInfo.metaTblPhysNm !== ('null' || '')) {
       dispatch(
         openModal({
           type: ModalType.CONFIRM,
           title: '알림',
-          content: '입력중인 data가 있습니다. 테이블을 변경하시겠습니까?',
+          content: '입력중인 data가 소실될 수 있습니다. 테이블을 변경하시겠습니까?',
           onConfirm: () => {
             setSearchInfo({ ...searchInfo, [`${id}`]: String(value) });
+            setTblColumns([])
           },
         })
       );
-    } else if (value !== null && id === 'dbNm' && searchInfo.dbNm !== 'null' && searchInfo.metaTblPhysNm !== 'null') {
+    } else if (value !== null && id === 'dbNm' && searchInfo.dbNm !== 'null'  && searchInfo.metaTblPhysNm !== ('null' || '')) {
+
       if (searchInfo.dbNm !== value) {
         dispatch(
           openModal({
             type: ModalType.CONFIRM,
             title: '알림',
-            content: '입력중인 data가 있습니다. 데이터 베이스를 변경하시겠습니까?',
+            content: '입력중인 data가 소실될 수 있습니다. 데이터 베이스를 변경하시겠습니까?',
             onConfirm: () => {
               setSearchInfo({ ...searchInfo, [`${id}`]: String(value) });
+              setTblColumns([])
             },
           })
         );
@@ -221,7 +252,6 @@ const CustomerMetaManagementReg = () => {
                 className="width-100"
                 onChange={onSearchChangeHandler}
                 value={searchInfo.metaTblLogiNm}
-                placeholder="검색어를 입력하세요."
                 id="metaTblLogiNm"
               />
             </TD>
@@ -235,7 +265,6 @@ const CustomerMetaManagementReg = () => {
                 className="width-100"
                 onChange={onSearchChangeHandler}
                 value={searchInfo.metaTblDesc}
-                placeholder="검색어를 입력하세요."
                 id="metaTblDesc"
                 key="metaTblDesc"
               />
