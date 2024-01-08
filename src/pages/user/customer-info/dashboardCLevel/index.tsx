@@ -1,4 +1,5 @@
 import { htmlTagReg } from '@/utils/RegularExpression';
+import NoResult from '@/components/emptyState/NoData';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, Loader, TR, TD, THead, TH, Table, Label } from '@components/ui';
 import { useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
@@ -664,7 +665,7 @@ export default function List() {
                         ))}
                         </TR>
                       </THead>
-                      {family.map((list) =>(
+                      {family.length > 0 ? (family.map((list) =>(
                         <TR>
                           <TD className='verticalTableTD'>{list.relationship}</TD>
                           <TD className='verticalTableTD'>{list.korFName}{list.korGName}</TD>
@@ -675,7 +676,9 @@ export default function List() {
                           <TD className='verticalTableTD'>{list.memberStatusNm}</TD>
                           <TD className='verticalTableTD'>{list.createdDate}</TD>
                         </TR>
-                      ))}
+                      ))) : (<NoResult/>)} 
+
+                      
                       </div>
                     </Table>
                   </Modal.Body>
@@ -1412,15 +1415,15 @@ export default function List() {
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && (list.korLname+list.korFname).toLowerCase().includes(searchText.toLowerCase())
+                                      {searchText && list.korLname && list.korFname && (list?.korLname.includes(searchText) || list?.korFname.includes(searchText))
                                         ? searchHighlight((list.korLname+list.korFname), searchText)
-                                        : (list.korLname+list.korFname)}
+                                        : (list.korLname + list.korFname)}
                                     </div>
                                   </td>
                                   <td>
                                     <div className="ellipsis1">
                                       {' '}
-                                      {searchText && (list.engLname + list.engFname).toLowerCase().includes(searchText.toLowerCase())
+                                      {searchText && list.engLname && list.engFname && (list.engLname + list.engFname).toLowerCase().includes(searchText.toLowerCase())
                                         ? searchHighlight((list.engLname + list.engFname), searchText)
                                         : (list.engLname + list.engFname)}
                                     </div>
