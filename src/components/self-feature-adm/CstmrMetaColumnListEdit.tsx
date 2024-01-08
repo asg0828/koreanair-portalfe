@@ -104,21 +104,26 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
     (rowIndex: number, field: string) => {
       // 체크 여부에 따라서
       setTbCoMetaTblClmnInfo((tbCoMetaTblClmnInfo) => {
-        if (field === 'changeYn' && (tbCoMetaTblClmnInfo.changeYn === 'Y' || !tbCoMetaTblClmnInfo.changeYn) && tbCoMetaTblClmnInfo.chgDtpCd !== '') {
+        if ((tbCoMetaTblClmnInfo.changeYn === 'Y' || !tbCoMetaTblClmnInfo.changeYn) && tbCoMetaTblClmnInfo.chgDtpCd !== '') {
           return {
             ...tbCoMetaTblClmnInfo,
             changeYn: 'N',
             dataFormat: null,
             chgDtpCd: '',
           };
-        } else if (field === 'changeYn') {
+        } else if(tbCoMetaTblClmnInfo.changeYn === 'Y' && tbCoMetaTblClmnInfo.chgDtpCd === '') {
+          return {
+            ...tbCoMetaTblClmnInfo,
+            changeYn: 'N',
+            dataFormat: null,
+            chgDtpCd: '',
+          };
+        } else {
           return {
             ...tbCoMetaTblClmnInfo,
             changeYn: 'Y',
           };
-        } else {
-          return tbCoMetaTblClmnInfo;
-        }
+        } 
       });
     },
     [setTbCoMetaTblClmnInfo]
