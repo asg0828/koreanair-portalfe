@@ -26,18 +26,19 @@ export default function DataConversion() {
 
   // refetch1
   const handleSearch1 = () => {
-    if (Object.values({ ...searchInfo }).every((value) => value === '')) {
+    if (Object.values({ ...searchInfo }).every((value) => value === '' || value === ' ')) {
       setOpen(true);
     } else {
       if(searchInfo.inptEmail === '' && searchInfo.inptPhone !== '') {setSearchInfo({...searchInfo, inptEmail: ' '})
+      searchFetch()
     } else if (searchInfo.inptPhone === '' && searchInfo.inptEmail !== ''){ setSearchInfo({...searchInfo, inptPhone: ' '})}
       searchFetch()
     }
   };
 
-  const searchFetch = useCallback(() => {
+  const searchFetch = () => {
     refetch1();
-  }, [searchInfo])
+  }
 
   // refetch2
   const handleSearch2 = () => {
@@ -51,8 +52,15 @@ export default function DataConversion() {
   /* input state관리1 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
-    if (id === 'inptPhone' || id === 'inptEmail') setSearchInfo({ ...searchInfo, [id]: value });
-    else {
+    if (id === 'inptPhone' && searchInfo.inptEmail === ''){
+      setSearchInfo({ inptEmail: ' ', [id]: value });
+    }else if(id === 'inptPhone' && searchInfo.inptEmail !== ''){
+      setSearchInfo({ ...searchInfo, [id]: value });
+    } else if(id === 'inptEmail' && searchInfo.inptPhone === ''){
+      setSearchInfo({ inptPhone: ' ', [id]: value });
+    } else if(id === 'inptEmail' && searchInfo.inptPhone !== ''){
+      setSearchInfo({ ...searchInfo, [id]: value });
+    } else {
       setSearchInfo2({ ...searchInfo2, [id]: value });
     }
   }

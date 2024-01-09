@@ -1019,8 +1019,12 @@ export default function List() {
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>Itinerary Details</th>
-                        <th>Ticket No.</th>
+                        <th>티켓번호</th>
+                        <th>편명</th>
+                        <th>BKG CLS</th>
+                        <th>출발일</th>
+                        <th>??</th>
+                        <th>구간</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1076,7 +1080,7 @@ export default function List() {
                             setIsListView3({ open: true, contents: 'call' });
                           }}
                         >
-                          통화
+                          상담
                         </button>
                       </div>
                       <div className="value">
@@ -1092,7 +1096,7 @@ export default function List() {
                             setIsListView3({ open: true, contents: 'internet' });
                           }}
                         >
-                          채팅상담
+                          캠페인
                         </button>
                       </div>
                       <div className="value">
@@ -1100,7 +1104,10 @@ export default function List() {
                       </div>
                     </Stack>
                   </div>
-                  <div className="item middle" style={{ flex: '1' }}>
+                
+                </Stack>
+                <Stack justifyContent="Between" gap="LG">
+                <div className="item middle" style={{ flex: '1' }}>
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">
                         <button
@@ -1116,17 +1123,15 @@ export default function List() {
                       </div>
                     </Stack>
                   </div>
-                </Stack>
-                <Stack justifyContent="Between" gap="LG">
                   <div className="item middle" style={{ flex: '1' }}>
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3({ open: true, contents: 'sms' });
+                            setIsListView3({ open: true, contents: 'tms' });
                           }}
                         >
-                          SMS
+                          TMS
                         </button>
                       </div>
                       <div className="value">
@@ -1134,65 +1139,39 @@ export default function List() {
                       </div>
                     </Stack>
                   </div>
-                  <div className="item middle" style={{ flex: '1' }}>
-                    <Stack justifyContent="Between" alignItems={'cencter'}>
-                      <div className="key">
-                        <button
-                          onClick={() => {
-                            setIsListView3({ open: true, contents: 'email' });
-                          }}
-                        >
-                          E-mail
-                        </button>
-                      </div>
-                      <div className="value">
-                        <span className="num">{cnt?.email}</span>
-                      </div>
-                    </Stack>
-                  </div>
-                  <div className="item middle" style={{ flex: '1' }}>
-                    <Stack justifyContent="Between" alignItems={'cencter'}>
-                      <div className="key">
-                        <button
-                          onClick={() => {
-                            setIsListView3({ open: true, contents: 'sns' });
-                          }}
-                        >
-                          SNS
-                        </button>
-                      </div>
-                      <div className="value">
-                        <span className="num">{cnt?.sns}</span>
-                      </div>
-                    </Stack>
-                  </div>
+                  
+            
                 </Stack>
               </div>
               {isListView3.open && isListView3.contents === 'call' && (
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>발송일</th>
-                        <th>휴대폰번호</th>
-                        <th>발송상태</th>
-                        <th>상태</th>
+                        <th>상담 채널</th>
+                        <th>최근 상담일</th>
                       </tr>
                     </thead>
                     <tbody>
                       {calls.map((item, index) => (
-                        <tr>
-                          <td>{item?.date}</td>
-                          <td>{item?.phoneNumber}</td>
-                          <td>{item?.counselor}</td>
-                          <td>{item?.status}</td>
-                        </tr>
+                        <>
+                          <tr>
+                            <td>서비스 센터</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>챗봇</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>채팅</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                        </>
                       ))}
                     </tbody>
                   </table>
@@ -1202,27 +1181,35 @@ export default function List() {
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
                       <tr className="width-100">
-                        <th>날짜</th>
-                        <th>채널</th>
-                        <th>티켓번호</th>
-                        <th>도착지</th>
+                        <th>캠페인 채널</th>
+                        <th>최근 발송일</th>
                       </tr>
                     </thead>
                     <tbody>
                       {internets.map((item, index) => (
-                        <tr>
-                          <td>{item?.date}</td>
-                          <td>{item?.channel}</td>
-                          <td>{item?.ticketNum}</td>
-                          <td>{item?.arrival}</td>
-                        </tr>
+                        <>
+                          <tr>
+                            <td>카카오알림톡</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>SMS/LMS</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>APP PUSH</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>E-MAIL</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                        </>
                       ))}
                     </tbody>
                   </table>
@@ -1232,30 +1219,31 @@ export default function List() {
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>횟수</th>
-                        <th>날짜</th>
-                        <th>채널</th>
-                        <th>타입</th>
-                        <th>내용</th>
+                        <th>VOC 유형</th>
+                        <th>최근 VOC 접수일</th>
                       </tr>
                     </thead>
                     <tbody>
                       {vocs.map((item, index) => (
+                      <>
                         <tr>
-                          <td>{item?.cnt}</td>
+                          <td>불만</td>
                           <td>{item?.date}</td>
-                          <td>{item?.channel}</td>
-                          <td>{item?.type}</td>
-                          <td>{item?.content}</td>
                         </tr>
+                        <tr>
+                          <td>제언</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                        <tr>
+                          <td>Disruption</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                      </>
                       ))}
                     </tbody>
                   </table>
@@ -1265,30 +1253,35 @@ export default function List() {
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>횟수</th>
-                        <th>날짜</th>
-                        <th>휴대폰번호</th>
-                        <th>타입</th>
-                        <th>내용</th>
+                        <th>TMS 발송 채널</th>
+                        <th>최근 발송일</th>
                       </tr>
                     </thead>
                     <tbody>
                       {smss.map((item, index) => (
-                        <tr>
-                          <td>{item?.sendCnt}</td>
-                          <td>{item?.date}</td>
-                          <td>{item?.phoneNum}</td>
-                          <td>{item?.status}</td>
-                          <td>{item?.content}</td>
-                        </tr>
+                        <>
+                          <tr>
+                            <td>카카오알림톡</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>SMS</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>APP PUSH</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                          <tr>
+                            <td>E-MAIL</td>
+                            <td>{item?.date}</td>
+                          </tr>
+                        </>
                       ))}
                     </tbody>
                   </table>
@@ -1325,7 +1318,7 @@ export default function List() {
                 </div>
               )}
 
-              {isListView3.open && isListView3.contents === 'sns' && (
+              {isListView3.open && isListView3.contents === 'tms' && (
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
