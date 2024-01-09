@@ -453,7 +453,7 @@ const MasterProfileManagementEdit = () => {
       });
 
       // 상세로 redirect
-      navigate(`../${SelfFeatPgPpNm.DETL}`, { state: { row: { mstrSgmtRuleId: updateMstrProfInfoRes.result } } });
+	  navigate(`../${SelfFeatPgPpNm.DETL}?rslnRuleId=${rslnRuleId}&mstrSgmtRuleId=${updateMstrProfInfoRes.result}`)
     }
   }, [updateMstrProfInfoRes, updateMstrProfInfoSucc, updateMstrProfInfoErr]);
 
