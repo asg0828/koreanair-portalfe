@@ -1,6 +1,7 @@
 import { uploadFile } from '@/api/FileAPI';
 import { ValidType } from '@/models/common/Constants';
 import { getFileDownloadPath } from '@/utils/ApiUtil';
+import { exceptTagReg } from '@/utils/RegularExpression';
 import { useToast } from '@ke-design/components';
 import { Editor } from '@tinymce/tinymce-react';
 import { ForwardedRef, forwardRef, useImperativeHandle, useRef } from 'react';
@@ -21,7 +22,7 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(({ content,
   useImperativeHandle(ref, () => editorRef.current.editor);
 
   const handleEditorChange = (cn: string, editor: any) => {
-    onEditorChange && onEditorChange(cn, editor);
+    onEditorChange && onEditorChange(cn.replace(exceptTagReg, ''), editor);
   };
 
   return (
