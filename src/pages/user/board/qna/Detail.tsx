@@ -140,7 +140,7 @@ const Detail = () => {
       openModal({
         type: ModalType.CONFIRM,
         title: '삭제',
-        content: t('common.modal.message.deleteAnserConfirm'),
+        content: t('board:modal.message.deleteAnserConfirm'),
         onConfirm: cdMutate,
       })
     );

@@ -55,14 +55,12 @@ const SubRejectModal = ({
         // 팝업 오픈시
         if (isOpen) {
             if (!sessionInfo.userEmail) {
-                console.log("no session info email")
                 return
             }
             setUserEmail(sessionInfo.userEmail)
             // 승인 요청 case만 check
             let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && (item.status === SubFeatStatus.REQ))
             if (isEmpty(approval)) {
-                console.log("no approval Id")
                 return
             }
             setApprovalId(approval[0].id)
@@ -109,7 +107,6 @@ const SubRejectModal = ({
     // 반려 API 호출
     const rejectSubmissionApproval = () => {
         if (isEmpty(userEmail)) {
-            console.log("no session info email")
             toast({
                 type: ValidType.ERROR,
                 content: '반려 중 에러가 발생했습니다',
@@ -117,7 +114,6 @@ const SubRejectModal = ({
             return
         }
         if (!approvalId) {
-            console.log("no approval Id")
             toast({
                 type: ValidType.ERROR,
                 content: '반려 중 에러가 발생했습니다',

@@ -90,7 +90,6 @@ const CustFeatParentChildListModal = ({
             });
         } else {
             if (response) {
-                console.log(response)
                 //setCustFeatParentChildList()
             }
         }

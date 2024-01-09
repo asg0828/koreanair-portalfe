@@ -405,7 +405,6 @@ const SelfFeatureDetail = () => {
 					}
 				}
 			}).catch((err) => {
-				console.log(err)
 			})
 			return featureSeGrp
 		})
@@ -813,7 +812,6 @@ const SelfFeatureDetail = () => {
 	// 승인요청 API 호출
 	const insertSubmissionRequest = () => {
 		if (!sessionInfo.userEmail) {
-			console.log("no session info email")
 			toast({
 				type: ValidType.ERROR,
 				content: '승인 요청 중 에러가 발생했습니다',
@@ -860,7 +858,6 @@ const SelfFeatureDetail = () => {
 	// 승인요청 취소 API 호출
 	const cancelRequestSubmission = () => {
 		if (!sessionInfo.userEmail) {
-			console.log("no session info email")
 			toast({
 				type: ValidType.ERROR,
 				content: '승인요청 취소 중 에러가 발생했습니다',
@@ -1045,7 +1042,6 @@ const SelfFeatureDetail = () => {
 			}
 			runScheduleByManuallyMutate()
 		} else {
-			console.log("no custFeatRuleId! please check custFeatRuleId")
 			toast({
 				type: ValidType.ERROR,
 				content: '수동 실행 중 에러가 발생했습니다.',

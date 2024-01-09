@@ -422,7 +422,7 @@ const MasterProfileManagementReg = () => {
         content: '등록되었습니다.',
       });
       // 상세로 redirect
-      navigate(`../${SelfFeatPgPpNm.DETL}`, { state: { row: { mstrSgmtRuleId: createMstrProfInfoRes.result } } });
+	    navigate(`../${SelfFeatPgPpNm.DETL}?rslnRuleId=${rslnRuleId}&mstrSgmtRuleId=${createMstrProfInfoRes.result}`)
     }
   }, [createMstrProfInfoRes, createMstrProfInfoSucc, createMstrProfInfoErr]);
 

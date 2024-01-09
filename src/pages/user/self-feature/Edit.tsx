@@ -682,7 +682,6 @@ const SelfFeatureEdit = () => {
 					}
 				}
 			}).catch((err) => {
-				console.log(err)
 			})
 			return featureSeGrp
 		})
@@ -1195,7 +1194,6 @@ const SelfFeatureEdit = () => {
 			}
 			runScheduleByManuallyMutate()
 		} else {
-			console.log("no custFeatRuleId! please check custFeatRuleId")
 			toast({
 				type: ValidType.ERROR,
 				content: '수동 실행 중 에러가 발생했습니다.',
