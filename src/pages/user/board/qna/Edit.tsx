@@ -301,13 +301,11 @@ const Edit = () => {
                   <Radio
                     label={t('board:label.useY')}
                     value="Y"
-                    defaultChecked={values.useYn === 'Y'}
                     {...register('useYn')}
                   />
                   <Radio
                     label={t('board:label.useN')}
                     value="N"
-                    defaultChecked={values.useYn === 'N'}
                     {...register('useYn')}
                   />
                 </TD>
