@@ -67,8 +67,19 @@ const initFamily : FamilyMembers[] = [
     skypassNumber: '',
     currentMileage: 0,
     createdDate: '',
+    memberLevel: ''
   }
 ]
+
+const initSearchInfoC : any = {
+  searchType: '',
+  skypassMemberNumber: '',
+  mobilePhoneNumber: '',
+  korFname: '',
+  korLname: '',
+  engLname: '',
+  engFname: ''
+}
 const matchedProfile: any[] = [
   { name: '홍홍동', skypassNm: '11122' },
   { name: '이순신', skypassNm: '33344' },
@@ -269,5 +280,6 @@ export {
   initProfile,
   initSkypass,
   initFamily,
-  familyColumn
+  familyColumn,
+  initSearchInfoC
 };
