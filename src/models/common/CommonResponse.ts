@@ -16,7 +16,6 @@ export class StatusCode {
   public static readonly SUCCESS = 'SUCCESS';
   public static readonly FAIL = 'FAIL';
 
-  public static readonly WRONG_EMAIL_OR_PASSWORD = 'WRONG_EMAIL_OR_PASSWORD';
   public static readonly LOCK = 'lock';
 
   public static readonly UNKNOWN_ERROR = 'UNKNOWN_ERROR';
