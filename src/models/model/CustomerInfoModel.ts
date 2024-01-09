@@ -98,6 +98,7 @@ export interface FamilyMembers {
   skypassNumber: string
   currentMileage: number
   createdDate: string
+  memberLevel: string
 }
 export interface FamilyList {
   relationship: string;

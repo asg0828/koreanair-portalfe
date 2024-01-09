@@ -1,5 +1,6 @@
 import { useProfile, useSkypass } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
+import NoResult from '@/components/emptyState/NoData';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, TR, TD, THead, TH, Table, Label } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
@@ -60,7 +61,7 @@ export default function List() {
   const { refetch: refetchProfile, data: responseProfile, isError: isErrorProfile } = useProfile(searchInfo);
   // skypass 조회 api
   const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass} = useSkypass(searchSkypassNm);
-
+  const [key, setKey] = useState(Date.now());
 
   const validation = () => {
     // 검색 조건 자체는 두개다 들어가도 가능
@@ -80,6 +81,11 @@ export default function List() {
   const retrieveFamilyInfo = () => {
     setOpenFamilyInfo(true);
   };
+
+  // 스카이패스 마일리지 모달 오픈 버튼
+  const retrieveMileDtl = () => {
+    setOpenMileDtl(true)
+  }
 
   const handleSearch = useCallback(() => {
     // 유효성 검사 실패 시 종료
@@ -115,6 +121,7 @@ export default function List() {
   useEffect(() => {
     if(searchInfo.searchType !== ''){
       refetchProfile();
+      setKey(Date.now());
       setSearchInfo({...searchInfo, searchType: ''})
     }
   }, [searchInfo.searchType])
@@ -135,6 +142,9 @@ export default function List() {
 
   // 등록가족 상세 버튼 모달 state
   const [isOpenFamilyInfo, setOpenFamilyInfo] = useState(false);
+
+  // 마일리지 상세 버튼 모달 state
+  const [openMileDtl, setOpenMileDtl] = useState(false)
 
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
@@ -179,12 +189,13 @@ export default function List() {
         setSearchSkypassNm(responseProfile?.data.skypassInfos[0]?.skypassMemberNumber)
       }
     }
-  }, [responseProfile, isErrorProfile]);
+  }, [responseProfile, isErrorProfile, key]);
 
   useEffect(() => { 
     if(searchSkypassNm !== '' && profile?.skypassInfos[0]?.skypassMemberNumber !== '') {
       refetchSkypass()
       setSearchInfo({...searchInfo, searchType: ''})
+      setKey(Date.now());
     }
   }, [searchSkypassNm])
 
@@ -203,12 +214,12 @@ export default function List() {
         setFamily(responseSkypass.data.familyMembers)
       }
     }
-  }, [isErrorSkypass, responseSkypass]);
+  }, [isErrorSkypass, responseSkypass, key]);
 
 	useEffect(() => {
 		reset()
-
 	}, [])
+
   const reset = () => {
 		setProfile((state: Profile) => {
 			let rtn = cloneDeep(state)
@@ -226,6 +237,8 @@ export default function List() {
 			rtn = cloneDeep(initSkypass)
 			return rtn
 		})
+    setSearchInfo({ skypassMemberNumber: '', oneidNo: '', searchType: '' })
+    setSearchSkypassNm('')
   }
 
   return (
@@ -399,13 +412,54 @@ export default function List() {
               </div>
               <div className="item">
                 <div className="key">잔여 마일리지</div>
-                <div className="value">{selectedSkypass?.remainMileage}</div>
+                <div className="value">{selectedSkypass?.remainMileage} <Button style={{ float: 'right'}} onClick={retrieveMileDtl}>상세</Button></div>
               </div>
               <div className="item">
-                <div className="key">소멸예정 마일리지</div>
-                <div className="value">{selectedSkypass?.expiredMileages[0]?.expiredMileage}</div>
+                <div className="key">PLCC 카드보유</div>
+                <div className="value">{selectedSkypass?.isPlccCard}</div>
               </div>
             </div>
+            <Modal size={70} open={openMileDtl} onClose={() => setOpenMileDtl(false)}>
+              <Modal.Header>잔여 마일리지 상세</Modal.Header>
+              <Modal.Body>
+                <Label>
+                  {t('common.label.countingUnit.total')}
+                  <span className="total">{` ${selectedSkypass.expiredMileages.length} `}</span>
+                  {t('common.label.countingUnit.thing')}
+                </Label>
+                <Table variant="vertical" size="normal" align="center" className={`verticalTable`}>
+                  <div className="verticalTableDiv">
+                  <THead className='verticalTableDivHeader'>
+                    <TR>
+                      <TH>
+                        유효기간
+                      </TH>
+                      <TH>
+                        마일리지
+                      </TH>
+                    </TR>
+                  </THead>
+                  {selectedSkypass.expiredMileages.length > 0 ? (selectedSkypass.expiredMileages.map((list) =>(
+                    <TR>
+                      <TD className='verticalTableTD'>{list.expiration.length === 4 ? list.expiration.replace(/(\d{2})(\d{2})/, '20$1-$2') : '평생'}</TD>
+                      <TD className='verticalTableTD'>{list.remainMileage}</TD>
+                    </TR>
+                  ))) : (<NoResult/>)} 
+                  </div>
+                </Table>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  priority="Primary"
+                  appearance="Contained"
+                  onClick={() => {
+                    setOpenMileDtl(false);
+                  }}
+                >
+                  확인
+                </Button>
+              </Modal.Footer>
+            </Modal>
             <div style={{ position: 'relative' }} className="dashBoardBox n3">
               <h5 style={{ fontWeight: '400', position: 'absolute', right: 30, top: 10, color: 'gray' }}>
                 {batchDate} 기준
@@ -443,7 +497,7 @@ export default function List() {
                         ))}
                         </TR>
                       </THead>
-                      {family.map((list) =>(
+                      {family.length > 0 ?  (family.map((list) =>(
                         <TR>
                           <TD className='verticalTableTD'>{list.relationship}</TD>
                           <TD className='verticalTableTD'>{list.korFName}{list.korGName}</TD>
@@ -454,7 +508,7 @@ export default function List() {
                           <TD className='verticalTableTD'>{list.memberStatusNm}</TD>
                           <TD className='verticalTableTD'>{list.createdDate}</TD>
                         </TR>
-                      ))}
+                        ))) : (<NoResult/>)} 
                       </div>
                     </Table>
                   </Modal.Body>
@@ -563,8 +617,13 @@ export default function List() {
                       <col width="auto" />
                     </colgroup>
                     <thead>
-                      <tr>
-                        <th>예약</th>
+                    <tr>
+                        <th>예약번호</th>
+                        <th>편명</th>
+                        <th>BKG CLS</th>
+                        <th>출발일</th>
+                        <th>구간</th>
+                        <th>예약상태</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -605,11 +664,21 @@ export default function List() {
                 <div className="hideContents">
                   <table>
                     <colgroup>
-                      <col width="auto" />
+                      <col width="15%" />
+                      <col width="20%" />           
+                      <col width="20%" />
+                      <col width="15%" />
+                      <col width="10%" />
+                      <col width="20%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>E-TKT</th>
+                        <th>티켓번호</th>
+                        <th>편명</th>
+                        <th>BKG CLS</th>
+                        <th>출발일</th>
+                        <th>순서</th>
+                        <th>구간</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -746,13 +815,19 @@ export default function List() {
                 <div className="hideContents">
                   <table>
                     <colgroup>
-                      <col width="70%" />
-                      <col width="30%" />
+                      <col width="25%" />
+                      <col width="15%" />
+                      <col width="20%" />
+                      <col width="15%" />
+                      <col width="25%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>Itinerary Details</th>
-                        <th>Ticket No.</th>
+                        <th>탑승일</th>
+                        <th>편명</th>
+                        <th>구간</th>
+                        <th>CBN CLS</th>
+                        <th>티켓번호</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -808,7 +883,7 @@ export default function List() {
                             setIsListView3({ open: true, contents: 'call' });
                           }}
                         >
-                          통화
+                          상담
                         </button>
                       </div>
                       <div className="value">
@@ -824,7 +899,7 @@ export default function List() {
                             setIsListView3({ open: true, contents: 'internet' });
                           }}
                         >
-                          채팅상담
+                          캠페인
                         </button>
                       </div>
                       <div className="value">
@@ -832,6 +907,8 @@ export default function List() {
                       </div>
                     </Stack>
                   </div>
+                </Stack>
+                <Stack justifyContent="Between" gap="LG">
                   <div className="item middle" style={{ flex: '1' }}>
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">
@@ -848,53 +925,19 @@ export default function List() {
                       </div>
                     </Stack>
                   </div>
-                </Stack>
-                <Stack justifyContent="Between" gap="LG">
                   <div className="item middle" style={{ flex: '1' }}>
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3({ open: true, contents: 'sms' });
+                            setIsListView3({ open: true, contents: 'tms' });
                           }}
                         >
-                          SMS
+                          TMS
                         </button>
                       </div>
                       <div className="value">
                         <span className="num">{cnt?.sms}</span>
-                      </div>
-                    </Stack>
-                  </div>
-                  <div className="item middle" style={{ flex: '1' }}>
-                    <Stack justifyContent="Between" alignItems={'cencter'}>
-                      <div className="key">
-                        <button
-                          onClick={() => {
-                            setIsListView3({ open: true, contents: 'email' });
-                          }}
-                        >
-                          E-mail
-                        </button>
-                      </div>
-                      <div className="value">
-                        <span className="num">{cnt?.email}</span>
-                      </div>
-                    </Stack>
-                  </div>
-                  <div className="item middle" style={{ flex: '1' }}>
-                    <Stack justifyContent="Between" alignItems={'cencter'}>
-                      <div className="key">
-                        <button
-                          onClick={() => {
-                            setIsListView3({ open: true, contents: 'sns' });
-                          }}
-                        >
-                          SNS
-                        </button>
-                      </div>
-                      <div className="value">
-                        <span className="num">{cnt?.sns}</span>
                       </div>
                     </Stack>
                   </div>
@@ -903,28 +946,32 @@ export default function List() {
               {isListView3.open && isListView3.contents === 'call' && (
                 <div className="hideContents">
                   <table className="centerTable">
-                    <colgroup>
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
+                  <colgroup>
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>발송일</th>
-                        <th>휴대폰번호</th>
-                        <th>발송상태</th>
-                        <th>상태</th>
+                        <th>상담 채널</th>
+                        <th>최근 상담일</th>
                       </tr>
                     </thead>
                     <tbody>
                       {calls.map((item, index) => (
+                      <>
                         <tr>
+                          <td>서비스 센터</td>
                           <td>{item?.date}</td>
-                          <td>{item?.phoneNumber}</td>
-                          <td>{item?.counselor}</td>
-                          <td>{item?.status}</td>
                         </tr>
+                        <tr>
+                          <td>챗봇</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                        <tr>
+                          <td>채팅</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                      </>
                       ))}
                     </tbody>
                   </table>
@@ -933,28 +980,36 @@ export default function List() {
               {isListView3.open && isListView3.contents === 'internet' && (
                 <div className="hideContents">
                   <table className="centerTable">
-                    <colgroup>
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
+                  <colgroup>
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
                       <tr className="width-100">
-                        <th>날짜</th>
-                        <th>채널</th>
-                        <th>티켓번호</th>
-                        <th>도착지</th>
+                        <th>캠페인 채널</th>
+                        <th>최근 발송일</th>
                       </tr>
                     </thead>
                     <tbody>
                       {internets.map((item, index) => (
+                      <>
                         <tr>
+                          <td>카카오알림톡</td>
                           <td>{item?.date}</td>
-                          <td>{item?.channel}</td>
-                          <td>{item?.ticketNum}</td>
-                          <td>{item?.arrival}</td>
                         </tr>
+                        <tr>
+                          <td>SMS/LMS</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                        <tr>
+                          <td>APP PUSH</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                        <tr>
+                          <td>E-MAIL</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                      </>
                       ))}
                     </tbody>
                   </table>
@@ -963,101 +1018,39 @@ export default function List() {
               {isListView3.open && isListView3.contents === 'voc' && (
                 <div className="hideContents">
                   <table className="centerTable">
-                    <colgroup>
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
+                  <colgroup>
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>횟수</th>
-                        <th>날짜</th>
-                        <th>채널</th>
-                        <th>타입</th>
-                        <th>내용</th>
+                        <th>VOC 유형</th>
+                        <th>최근 VOC 접수일</th>
                       </tr>
                     </thead>
                     <tbody>
                       {vocs.map((item, index) => (
+                      <>
                         <tr>
-                          <td>{item?.cnt}</td>
+                          <td>불만</td>
                           <td>{item?.date}</td>
-                          <td>{item?.channel}</td>
-                          <td>{item?.type}</td>
-                          <td>{item?.content}</td>
                         </tr>
+                        <tr>
+                          <td>제언</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                        <tr>
+                          <td>Disruption</td>
+                          <td>{item?.date}</td>
+                        </tr>
+                      </>
                       ))}
                     </tbody>
                   </table>
                 </div>
               )}
-              {isListView3.open && isListView3.contents === 'sms' && (
-                <div className="hideContents">
-                  <table className="centerTable">
-                    <colgroup>
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                      <col width="20%" />
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>횟수</th>
-                        <th>날짜</th>
-                        <th>휴대폰번호</th>
-                        <th>타입</th>
-                        <th>내용</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {smss.map((item, index) => (
-                        <tr>
-                          <td>{item?.sendCnt}</td>
-                          <td>{item?.date}</td>
-                          <td>{item?.phoneNum}</td>
-                          <td>{item?.status}</td>
-                          <td>{item?.content}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              {isListView3.open && isListView3.contents === 'email' && (
-                <div className="hideContents">
-                  <table className="centerTable">
-                    <colgroup>
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>날짜</th>
-                        <th>횟수</th>
-                        <th>상담자</th>
-                        <th>내용</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {emails.map((item, index) => (
-                        <tr>
-                          <td>{item?.date}</td>
-                          <td>{item?.useCnt}</td>
-                          <td>{item?.counselor}</td>
-                          <td>{item?.content}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-
-              {isListView3.open && isListView3.contents === 'sns' && (
+            
+              {isListView3.open && isListView3.contents === 'tms' && (
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>

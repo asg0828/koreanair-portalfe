@@ -6,7 +6,7 @@ import { SelectValue } from '@mui/base/useSelect';
 import {
   familyColumn,
   initFamily,
-  initProfile, initSkypass,
+  initProfile, initSearchInfoC, initSkypass,
 } from '../dashboard/data';
 import {
   Profile,
@@ -33,7 +33,6 @@ import Close from '@mui/icons-material/Close';
 import { ValidType, menuIconSx } from '@/models/common/Constants';
 import { useTranslation } from 'react-i18next';
 import { cloneDeep } from 'lodash'
-import { text } from 'stream/consumers';
 
 export default function List() {
   /* 수집기준시간 */
@@ -42,32 +41,25 @@ export default function List() {
   const batchDate = `${yesterday.getFullYear()}-${(`0` + (yesterday.getMonth() + 1)).slice(-2)}-${(
     `0` + yesterday.getDate()
   ).slice(-2)}`;
-  // skypass 조회용 변수 
+
+  // skypass 조회용 변수 (searchType: B 만 검색가능)
   const [skypassNmSearch, setSkypassNmSearch] = useState<any>({
     searchType: '',
     skypassMemberNumber: ''
   })
   /* 프로필 */
   const [profile, setProfile] = useState<Profile>(initProfile);
-  /* 검색 결과가 많은 경우 모달에 뿌려줄 리스트 */
+  /* 검색 결과가 많은 경우 모달에 뿌려줄 리스트(화면 우측 파란 < 버튼) */
   const [profileList, setProfileList] = useState<Array<ProfileList>>([]);
   /* 검색 조건 */
-  const [searchInfo, setSearchInfo] = useState<any>({
-    searchType: '',
-    skypassMemberNumber: '',
-    mobilePhoneNumber: '',
-    korFname: '',
-    korLname: '',
-    engLname: '',
-    engFname: '',
-  });
+  const [searchInfo, setSearchInfo] = useState<any>(initSearchInfoC);
   // profile 조회 api
   const { refetch: refetchProfile, data: responseProfile, isError: isErrorProfile } = useProfile(skypassNmSearch);
   // profileList 조회(CLevel) api
   const { refetch: refetchProfileCLvl, data: responseProfileCLvl, isError: isErrorProfileCLvl, isFetching: isFetchingCLvl} = useProfileCLevel(searchInfo);
   // skypass 조회 api
   const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass, isFetching: isFetchingSkypass} = useSkypass(skypassNmSearch.skypassMemberNumber);
-  
+  const [key, setKey] = useState(Date.now());
   const [modalText, setModalText] = useState<any>([])
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
@@ -89,8 +81,10 @@ export default function List() {
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { toast } = useToast();
   
+  // CLevel용 검색 state
   const [searchText, setSearchText] = useState<any>();
 
+  // CLevel용 검색 하이라이트 효과 함수 
   const searchHighlight = (text: any, search: any) => {
     const regex = new RegExp(`(${search})`, 'gi');
     return text.split(regex).map((part: any, index: number) =>
@@ -104,6 +98,7 @@ export default function List() {
     );
   };
 
+  // CLevel용 팝업 검색창 onChange 함수 
   const onchangeModalInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setSearchText(value);
@@ -114,6 +109,7 @@ export default function List() {
     setOpenFamilyInfo(true);
   };
  
+  // 스카이패스 마일리지 모달 오픈 버튼
   const retrieveMileDtl = () => {
     setOpenMileDtl(true)
   }
@@ -149,6 +145,7 @@ export default function List() {
     }
     if (validation()) return;
 
+    // searchType 세팅
     if(skypassNmSearch.skypassMemberNumber !== ''){
       setSkypassNmSearch({...skypassNmSearch, searchType: 'B'})
       setProfileList([])
@@ -177,11 +174,14 @@ export default function List() {
     })
   }
 
+  // api 호출 useEffect
   useEffect(() => {
     if(searchInfo.searchType !== '') {
       refetchProfileCLvl() 
+      setKey(Date.now());
     } else if(skypassNmSearch.searchType !== ''){
       refetchProfile()
+      setKey(Date.now());
       setSkypassNmSearch({...skypassNmSearch, searchType: '' })      
     }
   }, [searchInfo, skypassNmSearch])
@@ -207,6 +207,7 @@ export default function List() {
   // 마일리지 상세 버튼 모달 state
   const [openMileDtl, setOpenMileDtl] = useState(false)
 
+  // 검색 조건 onChange 함수(skypassMemberNumber와 나머지 조건의 검색 api가 다르기 때문에 searchType을 초기화 -> searchType으로 검색버튼 클릭 시 다른 api를 태움)
   const onchangeInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     clearInterval(intervalId.current as number);
     const { id, value } = e.target;
@@ -220,14 +221,20 @@ export default function List() {
     }
   };
 
+  // skypassNmSearch의 searchType이 있을 경우 api호출 후 searchType 초기화
   useEffect(() => { 
     if(skypassNmSearch.skypassMemberNumber !== '' && skypassNmSearch.searchType !== '') {
       refetchSkypass()
+      setKey(Date.now());
       setSearchInfo({...searchInfo, searchType: ''})
     }
   }, [skypassNmSearch])
+
+  // My trips(예약, E-TKT) 항목
   const [isListView1, setIsListView1] = useState({ open: false, contents: '' });
+  // Boarding history 항목
   const [isListView2, setIsListView2] = useState(false);
+  // communication records(상담, 캠페인, VOC, TMS) 항목
   const [isListView3, setIsListView3] = useState({ open: false, contents: '' });
 
   // 클릭 더보기 리스트 교체 함수
@@ -246,14 +253,13 @@ export default function List() {
     setSkypassNmSearch({ searchType: 'B', skypassMemberNumber: String(value)})
   };
 
-  {/* CLevel 모달 */}
+  /* CLevel 모달 */
   const dispatch = useAppDispatch();
   const cLevelModal = useAppSelector(selectCLevelModal());
   const toggleDropMenu = (e: React.MouseEvent<Element>) => {
     e.stopPropagation();
     dispatch(setCLevelModal(!cLevelModal));
   };
-  {/* CLevel 모달 */}
 
 
   // 프로필 조회(핸드폰번호, 이름)
@@ -280,7 +286,7 @@ export default function List() {
       }
 
     }
-  }, [responseProfileCLvl, isErrorProfileCLvl, searchInfo.searchType]);
+  }, [responseProfileCLvl, isErrorProfileCLvl, searchInfo.searchType, key]);
 
   // 프로필 조회(skypassNumber)
   useEffect(() => {
@@ -293,12 +299,12 @@ export default function List() {
       setSkypass([])
       setFamily([])
       setSelectedSkypass(initSkypass)
-    } else {
+    } else { 
       if (responseProfile?.data) {
         setProfile(responseProfile?.data);
       }
     }
-  }, [responseProfile, isErrorProfile]);
+  }, [responseProfile, isErrorProfile, key]);
 
     // skypass 조회
     useEffect(() => {
@@ -312,7 +318,7 @@ export default function List() {
           setSkypass(responseSkypass?.data);
         }
       }
-    }, [isErrorSkypass, responseSkypass]);
+    }, [isErrorSkypass, responseSkypass, key]);
 
   /* 모달 행 클릭 함수(searchInfo 변경 후 profile 조회 api 호출 및 모달 닫기) */
   const searchProfile = (skypassMemberNumber: string) => {
@@ -320,11 +326,12 @@ export default function List() {
     dispatch(setCLevelModal(false));
   }
 
-  /* profileList(중복된 검색 결과가 있는 경우)가 존재하는 경우 profile api 조회*/
+  /* profileList(중복된 검색 결과가 있는 경우)가 존재하는 경우 profile api 조회 */
   useEffect(() => {
     if(searchInfo.skypassMemberNumber !== '' && !cLevelModal && searchInfo.searchType !== '' ){
       refetchProfile()
       refetchSkypass()
+      setKey(Date.now());
     }
   }, [cLevelModal, searchInfo, profileList])
 
@@ -343,15 +350,17 @@ export default function List() {
         setFamily(responseSkypass.data.familyMembers)
       }
     }
-  }, [isErrorSkypass, responseSkypass]);
+  }, [isErrorSkypass, responseSkypass, key]);
   
   /* 로딩바 */
   const { t } = useTranslation()
 
+  // CLevel 페이지와 일반 360 Dashboard페이지 간 이동 시 같은 메뉴 아래에 있고 변수 명이 같아 clean-up 함수 필수
   useEffect(() => {
 		reset()
-
 	}, [])
+
+  // Clean-up 함수 
   const reset = () => {
 		setProfile((state: Profile) => {
 			let rtn = cloneDeep(state)
@@ -369,6 +378,8 @@ export default function List() {
 			rtn = cloneDeep(initSkypass)
 			return rtn
 		})
+    setSearchInfo(initSearchInfoC)
+    setSkypassNmSearch({skypassNmSearch: '', searchType: ''})
   }
 
   return (
@@ -553,7 +564,6 @@ export default function List() {
                       // .reduce((pre, cur, idx) => (idx === 1 ? pre + '-****-' : pre + cur), '')
                       }
                   </div>{' '}
-                  {/* 가운데 번호 마스킹(*) 필요 */}
                 </div>
                 <div className="item">
                   <div className="key">이메일</div>
@@ -636,7 +646,7 @@ export default function List() {
                   <Modal.Body>
                     <Label>
                       {t('common.label.countingUnit.total')}
-                      <span className="total">{` ${family.length} `}</span>
+                      <span className="total">{` ${selectedSkypass.expiredMileages.length} `}</span>
                       {t('common.label.countingUnit.thing')}
                     </Label>
                     <Table variant="vertical" size="normal" align="center" className={`verticalTable`}>
@@ -717,12 +727,10 @@ export default function List() {
                           <TD className='verticalTableTD'>{list.memberStatus}</TD>
                           <TD className='verticalTableTD'>{list.dateOfBirth?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</TD>
                           <TD className='verticalTableTD'>{list.skypassNumber}</TD>
-                          <TD className='verticalTableTD'>{list.memberStatusNm}</TD>
+                          <TD className='verticalTableTD'>{list.memberLevel}</TD>
                           <TD className='verticalTableTD'>{list.createdDate?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</TD>
                         </TR>
-                      ))) : (<NoResult/>)} 
-
-                      
+                        ))) : (<NoResult/>)} 
                       </div>
                     </Table>
                   </Modal.Body>
@@ -832,7 +840,12 @@ export default function List() {
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>예약</th>
+                        <th>예약번호</th>
+                        <th>편명</th>
+                        <th>BKG CLS</th>
+                        <th>출발일</th>
+                        <th>구간</th>
+                        <th>예약상태</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -873,11 +886,21 @@ export default function List() {
                 <div className="hideContents">
                   <table>
                     <colgroup>
-                      <col width="auto" />
+                      <col width="15%" />
+                      <col width="20%" />           
+                      <col width="20%" />
+                      <col width="15%" />
+                      <col width="10%" />
+                      <col width="20%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>E-TKT</th>
+                        <th>티켓번호</th>
+                        <th>편명</th>
+                        <th>BKG CLS</th>
+                        <th>출발일</th>
+                        <th>순서</th>
+                        <th>구간</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1014,17 +1037,19 @@ export default function List() {
                 <div className="hideContents">
                   <table>
                     <colgroup>
-                      <col width="70%" />
-                      <col width="30%" />
+                      <col width="25%" />
+                      <col width="15%" />
+                      <col width="20%" />
+                      <col width="15%" />
+                      <col width="25%" />
                     </colgroup>
                     <thead>
                       <tr>
-                        <th>티켓번호</th>
+                        <th>탑승일</th>
                         <th>편명</th>
-                        <th>BKG CLS</th>
-                        <th>출발일</th>
-                        <th>??</th>
                         <th>구간</th>
+                        <th>CBN CLS</th>
+                        <th>티켓번호</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1249,7 +1274,7 @@ export default function List() {
                   </table>
                 </div>
               )}
-              {isListView3.open && isListView3.contents === 'sms' && (
+              {isListView3.open && isListView3.contents === 'tms' && (
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
@@ -1282,36 +1307,6 @@ export default function List() {
                             <td>{item?.date}</td>
                           </tr>
                         </>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              {isListView3.open && isListView3.contents === 'email' && (
-                <div className="hideContents">
-                  <table className="centerTable">
-                    <colgroup>
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>날짜</th>
-                        <th>횟수</th>
-                        <th>상담자</th>
-                        <th>내용</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {emails.map((item, index) => (
-                        <tr>
-                          <td>{item?.date}</td>
-                          <td>{item?.useCnt}</td>
-                          <td>{item?.counselor}</td>
-                          <td>{item?.content}</td>
-                        </tr>
                       ))}
                     </tbody>
                   </table>
