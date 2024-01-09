@@ -376,13 +376,11 @@ const List = () => {
                 <TD colSpan={2} align="left">
                   <Radio
                     label={t('management:label.use')}
-                    defaultChecked={values?.useYn === 'Y' || values?.useYn === null}
                     value="Y"
                     {...register('useYn')}
                   />
                   <Radio
                     label={t('management:label.unuse')}
-                    defaultChecked={values?.useYn === 'N'}
                     value="N"
                     {...register('useYn')}
                   />

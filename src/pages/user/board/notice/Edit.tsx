@@ -236,35 +236,15 @@ const Edit = () => {
               {t('board:label.useYn')}
             </TH>
             <TD colSpan={2} align="left">
-              <Radio
-                label={t('board:label.useY')}
-                value="Y"
-                defaultChecked={values.useYn === 'Y'}
-                {...register('useYn')}
-              />
-              <Radio
-                label={t('board:label.useN')}
-                value="N"
-                defaultChecked={values.useYn === 'N'}
-                {...register('useYn')}
-              />
+              <Radio label={t('board:label.useY')} value="Y" {...register('useYn')} />
+              <Radio label={t('board:label.useN')} value="N" {...register('useYn')} />
             </TD>
             <TH colSpan={1} align="right">
               {t('board:label.importantYn')}
             </TH>
             <TD colSpan={2} align="left">
-              <Radio
-                label={t('board:label.important')}
-                value="Y"
-                defaultChecked={values.importantYn === 'Y'}
-                {...register('importantYn')}
-              />
-              <Radio
-                label={t('board:label.normal')}
-                value="N"
-                defaultChecked={values.importantYn === 'N'}
-                {...register('importantYn')}
-              />
+              <Radio label={t('board:label.important')} value="Y" {...register('importantYn')} />
+              <Radio label={t('board:label.normal')} value="N" {...register('importantYn')} />
             </TD>
           </TR>
           <TR className="height-100">
