@@ -71,7 +71,6 @@ const ClacValid = ({
         setFormulaCaseChecked(!formulaCaseChecked)
 
         if (!formulaCaseChecked) {
-            //console.log("checked")
             setCustFeatRuleCalc((state: TbRsCustFeatRuleCalc) => {
                 let rtn = cloneDeep(state)
                 rtn.formula = ""

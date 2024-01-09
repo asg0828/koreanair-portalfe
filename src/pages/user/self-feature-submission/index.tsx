@@ -80,7 +80,6 @@ const SfSubmissionRequest = () => {
     }, [userEmail])
     const retrieveSubmissions = () => {
 		if (!sessionInfo.userEmail) {
-			console.log("no session info email")
 			toast({
 				type: ValidType.ERROR,
 				content: '조회 중 에러가 발생했습니다',

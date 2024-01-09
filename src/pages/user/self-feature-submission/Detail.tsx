@@ -419,7 +419,6 @@ const SfSubmissionRequestDetail = () => {
                     }
                 }
             }).catch((err) => {
-                console.log(err)
             })
             return featureSeGrp
         })
@@ -796,7 +795,6 @@ const SfSubmissionRequestDetail = () => {
     // 승인 API 호출
     const approveSubmissionApproval = () => {
         if (!sessionInfo.userEmail) {
-            console.log("no session info email")
             toast({
                 type: ValidType.ERROR,
                 content: '승인 중 에러가 발생했습니다',
@@ -831,7 +829,6 @@ const SfSubmissionRequestDetail = () => {
         setUserEmail(sessionInfo.userEmail)
         let approval = sfSubmissionApprovalList.filter((item: SfSubmissionApproval) => (item.approver === sessionInfo.userEmail) && item.status === SubFeatStatus.REQ)
         if (isEmpty(approval)) {
-            console.log("no approval Id")
             toast({
                 type: ValidType.ERROR,
                 content: '승인 중 에러가 발생했습니다',
@@ -882,7 +879,6 @@ const SfSubmissionRequestDetail = () => {
             }
             runScheduleByManuallyMutate()
         } else {
-            console.log("no custFeatRuleId! please check custFeatRuleId")
             toast({
                 type: ValidType.ERROR,
                 content: '수동 실행 중 에러가 발생했습니다.',

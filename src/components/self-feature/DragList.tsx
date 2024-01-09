@@ -107,7 +107,6 @@ const DragList = ({
         let featList: Array<TbRsCustFeatRule> = cloneDeep(featureRules)
         let tempFeatList: Array<FeatAccordian> = []
         // while (featList.length !== 0) {
-        //     console.log(categoryOption)
         categoryOption.map((category: any) => {
             featList = distinctFeatList(tempFeatList, featList, category.cdvNm, category.cdv)
             return category
@@ -145,7 +144,6 @@ const DragList = ({
         let featList: Array<TbRsCustFeatRule> = cloneDeep(srchFeatRsltList)
         let tempFeatList: Array<FeatAccordian> = []
         // while (featList.length !== 0) {
-        //     console.log(categoryOption)
         categoryOption.map((category: any) => {
             featList = distinctFeatList(tempFeatList, featList, category.cdvNm, category.cdv)
             return category
