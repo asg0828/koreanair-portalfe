@@ -74,7 +74,7 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
     if (qmError || qmResponse?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
-        content: t('common.quickMenu.toast.error'),
+        content: t('common.quickMenu.toast.error.list'),
       });
     } else if (qmIsSuccess) {
       if (qmResponse?.data) {

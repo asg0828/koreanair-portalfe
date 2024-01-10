@@ -104,14 +104,24 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
     (rowIndex: number, field: string) => {
       // 체크 여부에 따라서
       setTbCoMetaTblClmnInfo((tbCoMetaTblClmnInfo) => {
-        if ((tbCoMetaTblClmnInfo.changeYn === 'Y' || !tbCoMetaTblClmnInfo.changeYn) && tbCoMetaTblClmnInfo.chgDtpCd !== '') {
+        /*
+          변경 여부 클릭 시
+          체크 할 경우 - 변경데이터타입 select show => changeYn을 Y로 setting
+          체크를 풀 경우 - 변경데이터타입 select 및 변경데이터형식 비우기 => changeYn = N, dataFormat = null, chgDtpCd = ''  setting
+
+          수정 초기값의 경우 tbCoMetaTblClmnInfo.changeYn === undefined / tbCoMetaTblClmnInfo.chgDtpCd === null
+        */
+        if (
+          (!tbCoMetaTblClmnInfo.changeYn || tbCoMetaTblClmnInfo.changeYn === 'Y') 
+          && (tbCoMetaTblClmnInfo.chgDtpCd && tbCoMetaTblClmnInfo.chgDtpCd !== '')
+        ) {
           return {
             ...tbCoMetaTblClmnInfo,
             changeYn: 'N',
             dataFormat: null,
             chgDtpCd: '',
           };
-        } else if(tbCoMetaTblClmnInfo.changeYn === 'Y' && tbCoMetaTblClmnInfo.chgDtpCd === '') {
+        } else if(tbCoMetaTblClmnInfo.changeYn === 'Y') {
           return {
             ...tbCoMetaTblClmnInfo,
             changeYn: 'N',
