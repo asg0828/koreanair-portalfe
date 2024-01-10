@@ -31,13 +31,12 @@ const List = () => {
   const contextPath = useAppSelector(selectContextPath());
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const paramFaqId: string = searchParams.get('faqId') || '';
   const beforeParams: FaqParams = location?.state?.params;
   const beforePage: PageModel = location?.state?.page;
   const [params, setParams] = useState(beforeParams || initFaqParams);
   const [page, setPage] = useState<PageModel>(beforePage || initPage);
   const [rows, setRows] = useState<Array<FaqModel>>([]);
-  const [faqId, setFaqId] = useState<string>('');
+  const [faqId, setFaqId] = useState<string>(searchParams.get('faqId') || '');
   const [dFaqId, setDFaqId] = useState<string>('');
   const { data: response, isSuccess, isError, refetch } = useFaqList(params, page);
   const { data: gResponse, isSuccess: gIsSuccess, isError: gIsError, refetch: gRefetch } = useFaqById(faqId);
@@ -61,7 +60,7 @@ const List = () => {
   const goToEdit = (nFaqId: string) => {
     navigate(`./edit`, {
       state: {
-        faqId: faqId,
+        faqId: nFaqId,
         params: params,
       },
     });
@@ -109,6 +108,9 @@ const List = () => {
   };
 
   const handleClick = (nFaqId: string) => {
+    if (faqId === nFaqId) {
+      nFaqId = '';
+    }
     setFaqId(nFaqId);
   };
 
@@ -137,10 +139,6 @@ const List = () => {
         );
         setRows(response.data.contents);
         setPage(response.data.page);
-
-        if (paramFaqId) {
-          setFaqId(paramFaqId);
-        }
       }
     }
   }, [response, isSuccess, isError, toast]);
@@ -210,7 +208,7 @@ const List = () => {
       </SearchForm>
 
       <AccordionGrid
-        defaultValue={paramFaqId}
+        value={faqId}
         rows={rows}
         page={page}
         onClick={handleClick}
