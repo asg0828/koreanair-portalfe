@@ -74,9 +74,9 @@ export const featListColumns = [
 // Feature 선후행 관계 table header
 export const featPrntClidListColumns = [
     { headerName: 'Feature 명', field: 'name', colSpan: 4 },
-    { headerName: '진행 상태', field: 'submissionStatus', colSpan: 2 },
-    { headerName: '선행 Feature', field: 'parentNames', colSpan: 1 },
-    { headerName: '후행 Feature', field: 'childNames', colSpan: 1 },
+    { headerName: '진행 상태', field: 'submissionStatusNm', colSpan: 2 },
+    { headerName: '선행 Feature', field: 'parentNames', colSpan: 4 },
+    { headerName: '후행 Feature', field: 'childNames', colSpan: 4},
 ]
 // 배치 실행 결과 샘플 확인 팝업 table header
 export const querySampleDataListColumns = [
