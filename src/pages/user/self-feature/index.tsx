@@ -52,8 +52,11 @@ const SelfFeature = () => {
 	const sessionInfo = useAppSelector(selectSessionInfo())
 	const userId = useAppSelector(selectSessionInfo()).userId || ''
 	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
+	// 선후행관계 > 모든 승인권자 , sql 등록 > 1차 승인권자만
 	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
+	const { data: cmmCodeEditAuthRes } = useAuthCommCodes(CommonCode.EDIT_AUTH)
 	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
+	const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회
 	const { data: mstrProfListRes, isError: mstrProfListErr, refetch: mstrProfListRefetch } = useMstrProfList(initMstrProfSearchInfoProps)
 	// rslnRuleId parameter
@@ -95,8 +98,10 @@ const SelfFeature = () => {
 		  content: t('common.toast.error.read'),
 		});
 	  } else if (userInfoSucc) {
-		let t = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
-		if (t.length > 0) setIsAllAuth(true)
+		let all = cmmCodeAllAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
+		if (all.length > 0) setIsAllAuth(true)
+		let edit = cmmCodeEditAuthRes?.result.filter((auth: any) => auth.cdv === userInfoRes.data.groupCode)
+		if (edit.length > 0) setIsEditAuth(true)
 	  }
 	}, [userInfoRes, userInfoSucc, userInfoErr])
 	// master segement rule Id setting
@@ -262,15 +267,12 @@ const SelfFeature = () => {
 
 	return (
 		<Stack direction="Vertical" gap="LG" className="height-100">
-			{/* 관리자인 경우만 노출 */}
-			{/* 
-				isAllAuth &&
-				<Stack direction="Horizontal" gap="MD" justifyContent="End">
-					<Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.PRNTCHLD)}>
-					Feature 연결 관계
-					</Button>
-				</Stack> 
-			*/}
+			{isAllAuth &&
+			<Stack direction="Horizontal" gap="MD" justifyContent="End">
+				<Button priority="Normal" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.PRNTCHLD)}>
+				Feature 연결 관계
+				</Button>
+			</Stack> }
 			{/* 검색 영역 */}
 			<form onSubmit={onsubmitHandler}>
 				<Stack direction="Vertical" gap="LG">
@@ -387,7 +389,7 @@ const SelfFeature = () => {
 							신규 등록
 						</Button>
 						{/* 관리자인 경우만 노출 */}
-						{isAllAuth &&
+						{isEditAuth &&
 							<Button priority="Primary" appearance="Contained" size="LG" onClick={() => onClickPageMovHandler(SelfFeatPgPpNm.SQL_REG)}>
 								<AddIcon />
 								SQL 신규 등록
