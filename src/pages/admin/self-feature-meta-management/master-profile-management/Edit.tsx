@@ -235,6 +235,102 @@ const MasterProfileManagementEdit = () => {
           );
           return table;
         });
+        const validation = () => {
+          // 포커스 초기화
+          // attrRef.current.targetRef = '';
+          // attrRef.current.findIndexRef = 0;
+          // behvRef.current.targetRef = '';
+          // behvRef.current.findIndexRef = 0;
+          let searchError = false;
+          // validation
+          const validationTool = (check: string) => {
+            if (check.replace(htmlTagReg, '').replace(htmlSpeReg, '').trim() === '') return true;
+            else return false;
+          };
+          let checkValidation = '';
+  
+          // 등록 validation
+          if (validationTool(mstrSgmtRule.mstrSgmtRuleNm)) {
+            // masterProfileRef?.current.firstElementChild.focus();
+            checkValidation = 'MasterProfile은 필수 입력값입니다.';
+          } else if (validationTool(mstrSgmtRule.mstrSgmtRuleDesc)) {
+            // descriptionRef?.current.firstElementChild.focus();
+            checkValidation = 'Description은 필수 입력값입니다.';
+          } else {
+            if (attrMstrSgmtRuleAttrTblList.length < 1) {
+              checkValidation = `Fact 정보 테이블은 최소 1개 이상 등록되어야 합니다.`;
+            } else if (behvMstrSgmtRuleAttrTblList.length < 1) {
+              checkValidation = `Base Fact 정보 테이블은 최소 1개 이상 등록되어야 합니다.`;
+            }
+            let attrClmnList = mstrSgmtRuleAttrClmnList.filter((i) => i.sgmtDvCd === DivisionTypes.ATTR);
+            let behvClmnList = mstrSgmtRuleAttrClmnList.filter((i) => i.sgmtDvCd === DivisionTypes.BEHV);
+            attrClmnList.map((item) => {
+              if (item.mstrSgmtRuleClmnId === '') {
+                let tableLogiNm = attrMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+                checkValidation = `${tableLogiNm} 속성 테이블의 컬럼항목을 확인해주세요`;
+              }
+              return item;
+            });
+            if (checkValidation === '') {
+              behvClmnList.map((item) => {
+                if (item.mstrSgmtRuleClmnId === '') {
+                  let tableLogiNm = behvMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+                  checkValidation = `${tableLogiNm} 행동 테이블의 컬럼항목을 확인해주세요`;
+                }
+                return item;
+              });
+            }
+            attrMstrSgmtRuleAttrTblList.map((item, index) => {
+              if (checkValidation === '') {
+                let tableLogiNm = attrMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+                if (item.mstrSgmtRuleTblId === '')
+                  checkValidation = `${index + 1}번째 속성 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
+                else if (item.mstrJoinKeyClmnNm === '')
+                  checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
+                else if (item.attrJoinKeyClmnNm === '')
+                  checkValidation = `${tableLogiNm} 테이블의 속성 조인키 확인해주세요`;
+                else if (
+                  attrClmnList.filter((col) => col.mstrSgmtRuleTblId === item.mstrSgmtRuleTblId && col.baseTimeYn !== 'Y')
+                    .length < 1
+                ) {
+                  checkValidation = `${tableLogiNm} 테이블의 최소1개이상 컬럼항목을 추가해주세요`;
+                }
+              }
+              return item;
+            });
+            if (checkValidation === '') {
+              behvMstrSgmtRuleAttrTblList.map((item, index) => {
+                if (checkValidation === '') {
+                  let tableLogiNm = behvMetaTbList.find((i) => i.metaTblId === item.mstrSgmtRuleTblId)?.metaTblLogiNm;
+                  if (item.mstrSgmtRuleTblId === '')
+                    checkValidation = `${index + 1}번째 행동 테이블을 확인해주세요`; //'Description은 필수 입력값입니다.';
+                  else if (item.mstrJoinKeyClmnNm === '')
+                    checkValidation = `${tableLogiNm} 테이블의 마스터 조인키 확인해주세요`;
+                  else if (item.attrJoinKeyClmnNm === '')
+                    checkValidation = `${tableLogiNm} 테이블의 속성 조인키 확인해주세요`;
+                  else if (
+                    behvClmnList.filter(
+                      (col) => col.mstrSgmtRuleTblId === item.mstrSgmtRuleTblId && col.baseTimeYn !== 'Y'
+                    ).length < 1
+                  ) {
+                    checkValidation = `${tableLogiNm} 테이블의 최소1개이상 컬럼항목을 추가해주세요`;
+                  }
+                }
+                return item;
+              });
+            }
+          }
+          if (checkValidation !== '') {
+            toast({
+              type: 'Error',
+              content: checkValidation,
+            });
+            searchError = true;
+          }
+          return searchError;
+        };
+  
+        if (validation()) return;
         setMstrSgmtFormData(() => mstrSgmtFormData);
         updateMstrProfInfoMutate();
       }

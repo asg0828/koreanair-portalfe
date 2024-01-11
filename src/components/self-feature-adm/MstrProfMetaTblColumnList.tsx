@@ -4,7 +4,7 @@ import {
   TbRsMstrSgmtRuleAttrClmn,
   TbRsMstrSgmtRuleAttrTbl,
 } from '@/models/selfFeature/FeatureAdmModel';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { cloneDeep } from 'lodash';
 import { SelectValue } from '@mui/base/useSelect';
 
@@ -17,6 +17,7 @@ import {
 } from '@/pages/admin/self-feature-meta-management/master-profile-management/data';
 import ConfirmModal from '../modal/ConfirmModal';
 import { ModalType } from '@/models/selfFeature/FeatureCommon';
+import { FixedSizeList } from 'react-window';
 
 const MstrProfMetaTblColumnList = ({
   editMode,
@@ -91,7 +92,7 @@ const MstrProfMetaTblColumnList = ({
     }
   }, [metaTblInfo?.clmnAllChocYn]);
   // 등록 및 수정시 컬럼 추가할 경우 필요
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!metaTblClmnList || metaTblClmnList.length < 1) {
       setTmpMetaTblClmnList(() => []);
     } else {
@@ -108,7 +109,8 @@ const MstrProfMetaTblColumnList = ({
       setIsOpenConfirmModal(() => true);
       return;
     }
-    if (0 < metaTblClmnAllList.length && metaTblClmnAllList.length < tmpMetaTblClmnList.length + 1) {
+    let allList = metaTblClmnAllList.filter(item => item.baseTimeYn !== 'Y')
+    if (0 < allList.length && allList.length < tmpMetaTblClmnList.length + 1) {
       setIsAddIconShow(false);
       setModalType(ModalType.ALERT);
       setConfirmModalTit('Master Profile 등록');
@@ -263,7 +265,7 @@ const MstrProfMetaTblColumnList = ({
   };
   // 컬럼 항목 선택 select
   const onChangeClmnhandler = (
-    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    e: React.ChangeEvent<HTMLSelectElement> | React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
     value: SelectValue<{}, false>,
     index: number,
   ) => {
@@ -353,7 +355,7 @@ const MstrProfMetaTblColumnList = ({
         return [...keepList, ...updtList, ...baseTimeCol];
       });
   }
-  
+
   return (
     <Stack
       direction="Vertical"
@@ -515,78 +517,87 @@ const MstrProfMetaTblColumnList = ({
           </Stack>
           {isColListShow &&
             tmpMetaTblClmnList.length > 0 &&
-            tmpMetaTblClmnList.map((clmnInfo: TbCoMetaTblClmnInfo, index: number) => {
-              // 현재 설정된 메타테이블 컬럼 정보 순회하며 등록 가능한 컬럼 setting
-              let mstrSgmtRuleClmnOption: Array<TbCoMetaTblClmnInfo> = [];
-              for (let i = 0; i < metaTblClmnAllList.length; i++) {
-                let item = metaTblClmnAllList[i];
-                let hasItem = false;
-                if (metaTblClmnList && metaTblClmnList?.length > 0) {
-                  for (let j = 0; j < metaTblClmnList.length; j++) {
-                    let item2 = metaTblClmnList[j];
-                    if (item.metaTblClmnId === item2.metaTblClmnId) {
-                      hasItem = true;
-                      break;
+            <FixedSizeList
+              width='100%'
+              height={300}
+              itemCount={tmpMetaTblClmnList.length}
+              itemSize={80}
+            >
+              {({ index, style }) => {
+                let clmnInfo = tmpMetaTblClmnList[index]
+                // 현재 설정된 메타테이블 컬럼 정보 순회하며 등록 가능한 컬럼 setting
+                let mstrSgmtRuleClmnOption: Array<TbCoMetaTblClmnInfo> = [];
+                for (let i = 0; i < metaTblClmnAllList.length; i++) {
+                  let item = metaTblClmnAllList[i];
+                  let hasItem = false;
+                  if (metaTblClmnList && metaTblClmnList?.length > 0) {
+                    for (let j = 0; j < metaTblClmnList.length; j++) {
+                      let item2 = metaTblClmnList[j];
+                      if (item.metaTblClmnId === item2.metaTblClmnId) {
+                        hasItem = true;
+                        break;
+                      }
                     }
                   }
-                }
-                if (item.metaTblClmnId === clmnInfo.metaTblClmnId) hasItem = false;
+                  if (item.metaTblClmnId === clmnInfo.metaTblClmnId) hasItem = false;
 
-                if (!hasItem) mstrSgmtRuleClmnOption.push(cloneDeep(item));
-              }
-              return (
-                <Stack key={index} direction="Horizontal" gap="LG">
-                  <RemoveIcon
-                    onClick={() => {
-                      onClickRemoveColInfo(index);
-                    }}
-                  />
-                  <Stack
-                    className="width-100"
-                    key={index}
-                    direction="Horizontal"
-                    gap="LG"
-                    style={{
-                      border: '1px solid rgb(218, 218, 218)',
-                      borderRadius: '5px',
-                      background: 'white',
-                      color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
-                      padding: '1rem',
-                    }}
-                  >
-                    <Select
-                      // ref={clmnRef[index]}
-                      style={{
-                        width: '40%',
-                        color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
+                  if (!hasItem) mstrSgmtRuleClmnOption.push(cloneDeep(item));
+                }
+                return (
+                  <Stack key={index} direction="Horizontal" gap="LG" style={style} >
+                    <RemoveIcon
+                      onClick={() => {
+                        onClickRemoveColInfo(index);
                       }}
-                      value={clmnInfo.metaTblClmnPhysNm}
-                      appearance="Outline"
-                      placeholder="선택"
-                      className="width-100"
-                      onChange={(e, value) => value && onChangeClmnhandler(e, value, index)}
-                    >
-                      {mstrSgmtRuleClmnOption
-                        .filter((e) => e.baseTimeYn !== 'Y')
-                        .map((item, index) => (
-                          <SelectOption
-                            key={index}
-                            value={item.metaTblClmnPhysNm}
-                          >{`${item.metaTblClmnLogiNm} [${item.metaTblClmnPhysNm}]`}</SelectOption>
-                        ))}
-                    </Select>
-                    <TextField
-                      style={{
-                        width: '40%',
-                        color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
-                      }}
-                      value={clmnInfo.metaTblClmnDesc}
-                      onChange={(e) => onChangeClmnDescHandler(e, index)}
                     />
+                    <Stack
+                      className="width-100"
+                      key={index}
+                      direction="Horizontal"
+                      gap="LG"
+                      style={{
+                        border: '1px solid rgb(218, 218, 218)',
+                        borderRadius: '5px',
+                        background: 'white',
+                        color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
+                        padding: '1rem',
+                      }}
+                    >
+                      <select
+                        className='self-feature-selectbox'
+                        // ref={clmnRef[index]}
+                        style={{
+                          width: '40%',
+                          color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
+                        }}
+                        value={clmnInfo.metaTblClmnPhysNm}
+                        onChange={(e) => e.target.value && onChangeClmnhandler(e, e.target.value, index)}
+                      >
+                        <option value="" selected disabled hidden>선택</option>
+                        {mstrSgmtRuleClmnOption
+                          .filter((e) => e.baseTimeYn !== 'Y')
+                          .map((item, index) => (
+                            <option
+                              key={index}
+                              value={item.metaTblClmnPhysNm}
+                            >{`${item.metaTblClmnLogiNm} [${item.metaTblClmnPhysNm}]`}
+                            </option>
+                          ))}
+                      </select>
+                      <TextField
+                        style={{
+                          width: '40%',
+                          color: divisionType === DivisionTypes.ATTR ? '#00b21e' : '#00256c',
+                        }}
+                        value={clmnInfo.metaTblClmnDesc}
+                        onChange={(e) => onChangeClmnDescHandler(e, index)}
+                      />
+                    </Stack>
                   </Stack>
-                </Stack>
-              );
-            })}
+                )
+              }}
+            </FixedSizeList>
+          }
         </>
       )}
       {/* 등록 및 수정 */}
