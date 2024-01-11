@@ -44,8 +44,8 @@ const List = () => {
     { headerName: t('management:label.deptNm'), field: 'deptNm', colSpan: 1 },
     { headerName: t('management:label.userAuthNm'), field: 'apldUserAuthNm', colSpan: 1 },
     { headerName: t('management:label.mgrAuthNm'), field: 'apldMgrAuthNm', colSpan: 1 },
-    { headerName: t('management:label.lastLogDt'), field: 'lastLogDt', colSpan: 1 },
-    { headerName: t('management:label.employmentYn'), field: 'useYn', colSpan: 1 },
+    { headerName: t('management:label.lastLogDt'), field: 'lastLogDt', colSpan: 1.4 },
+    { headerName: t('management:label.employmentYn'), field: 'useYn', colSpan: 0.6 },
   ];
 
   const goToDetail = (row: UserModel, index: number) => {

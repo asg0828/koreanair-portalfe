@@ -5,12 +5,12 @@ import DataGrid from '@components/grid/DataGrid';
 import { Button, Stack, TD, TH, TR, useToast } from '@components/ui';
 import { ValidType } from '@models/common/Constants';
 import { ColumnsInfo } from '@models/components/Table';
+import { PageModel } from '@models/model/PageModel';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import DashboardPopup from './dashboardPopUp';
-import {PageModel} from "@models/model/PageModel";
 
-const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount: 100, totalPage: 1 };
 
 const periods = [
   { period: '0 year', text: '올해' },
@@ -26,10 +26,10 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
   { headerName: '이름', field: 'userNm', colSpan: 1 },
   { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 1 },
-  { headerName: '구매금액', field: 'tktBuyKrwAmt', colSpan: 0.9 },
+  { headerName: '구매금액(원)', field: 'tktBuyKrwAmt', colSpan: 0.9 },
   { headerName: '구매횟수', field: 'tktBuyCnt', colSpan: 0.7 },
-  { headerName: '국내선 구매금액', field: 'domTktNoFscBuyKrwAmt', colSpan: 1 },
-  { headerName: '국제선 구매금액', field: 'intTktNoFscBuyKrwAmt', colSpan: 1 },
+  { headerName: '국내선 구매금액(원)', field: 'domTktNoFscBuyKrwAmt', colSpan: 1 },
+  { headerName: '국제선 구매금액(원)', field: 'intTktNoFscBuyKrwAmt', colSpan: 1 },
   { headerName: 'FR 구매횟수', field: 'frClsBuyCnt', colSpan: 0.9 },
   { headerName: 'PR 구매횟수', field: 'prClsBuynt', colSpan: 0.9 },
 ];
@@ -135,11 +135,9 @@ const List = () => {
   const sortRows = (row: Array<any>, sortColumn: string, sortDirection: SortDirection) => {
     const aValue = sortDirection === 'asc' ? 1 : -1;
     return row.sort(
-        (a: any, b: any) =>
-            aValue *
-            (typeof a[sortColumn] === 'string'
-                ? a[sortColumn].localeCompare(b[sortColumn])
-                : a[sortColumn] - b[sortColumn])
+      (a: any, b: any) =>
+        aValue *
+        (typeof a[sortColumn] === 'string' ? a[sortColumn].localeCompare(b[sortColumn]) : a[sortColumn] - b[sortColumn])
     );
   };
 
@@ -184,6 +182,7 @@ const List = () => {
         onSortChange={handleSortChange}
         sortedColumn={sortedColumn}
         sortedDirection={sortedDirection}
+        isMultiSelected={false}
       />
       <Modal
         isOpen={showPopup}

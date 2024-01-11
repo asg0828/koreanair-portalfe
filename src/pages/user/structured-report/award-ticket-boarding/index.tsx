@@ -1,15 +1,15 @@
-import {useBonusTicketTop100List, useDomesticBoardingTop100List} from '@/hooks/queries/useReportQueries';
+import { useBonusTicketTop100List } from '@/hooks/queries/useReportQueries';
 import { SortDirection } from '@/models/common/Design';
 import DataGrid from '@components/grid/DataGrid';
-import { Button, Stack, TD, TH, TR, useToast } from '@components/ui';
+import { useToast } from '@components/ui';
 import { ValidType } from '@models/common/Constants';
 import { ColumnsInfo } from '@models/components/Table';
+import { PageModel } from '@models/model/PageModel';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import {PageModel} from "@models/model/PageModel";
 
-const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount: 100, totalPage: 1 };
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 1 },
@@ -61,9 +61,7 @@ const List = () => {
     return row.sort(
       (a: any, b: any) =>
         aValue *
-        (typeof a[sortColumn] === 'string'
-          ? a[sortColumn].localeCompare(b[sortColumn])
-          : a[sortColumn] - b[sortColumn])
+        (typeof a[sortColumn] === 'string' ? a[sortColumn].localeCompare(b[sortColumn]) : a[sortColumn] - b[sortColumn])
     );
   };
 
@@ -95,6 +93,7 @@ const List = () => {
         onSortChange={handleSortChange}
         sortedColumn={sortedColumn}
         sortedDirection={sortedDirection}
+        isMultiSelected={false}
       />
       <Modal
         isOpen={showPopup}

@@ -1,7 +1,8 @@
 import {
   getBonusTicketTop100List,
   getDomesticBoardingTop100List,
-  getIntlBoardingTop100List, getIntlUpgradeTop100List,
+  getIntlBoardingTop100List,
+  getIntlUpgradeTop100List,
   getPurchaseContributionTop100List,
   getReportVipList,
   getTotalMileageTop100List,
@@ -10,7 +11,11 @@ import { PageModel } from '@models/model/PageModel';
 import { useQuery } from '@tanstack/react-query';
 
 export const useVipList = (page: PageModel, sortedColumn: string, sortedDirection: string = '') => {
-  return useQuery(['/report/vip'], () => getReportVipList(page, sortedColumn, sortedDirection));
+  return useQuery(
+    ['/report/vip', sortedColumn, sortedDirection],
+    () => getReportVipList(page, sortedColumn, sortedDirection),
+    { suspense: false }
+  );
 };
 
 export const usePurchaseContributionList = (criteria: string) => {
