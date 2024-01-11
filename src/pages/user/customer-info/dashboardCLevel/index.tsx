@@ -121,10 +121,10 @@ export default function List() {
 
       let searchError = false;
       if (
-        skypassNmSearch.skypassMemberNumber.replace(htmlTagReg, '').trim() === '' &&
-        searchInfo.mobilePhoneNumber.replace(htmlTagReg, '').trim() === '' &&
-        (searchInfo.engFname.replace(htmlTagReg, '').trim() === '' && searchInfo.engLname.replace(htmlTagReg, '').trim() === '') && 
-        (searchInfo.korFname.replace(htmlTagReg, '').trim() === '' && searchInfo.korLname.replace(htmlTagReg, '').trim() === '')
+        skypassNmSearch.skypassMemberNumber?.replace(htmlTagReg, '').trim() === '' &&
+        searchInfo.mobilePhoneNumber?.replace(htmlTagReg, '').trim() === '' &&
+        (searchInfo.engFname?.replace(htmlTagReg, '').trim() === '' && searchInfo.engLname?.replace(htmlTagReg, '').trim() === '') && 
+        (searchInfo.korFname?.replace(htmlTagReg, '').trim() === '' && searchInfo.korLname?.replace(htmlTagReg, '').trim() === '')
       ) {
         setOpen(true);
         searchError = true;
@@ -379,7 +379,7 @@ export default function List() {
 			return rtn
 		})
     setSearchInfo(initSearchInfoC)
-    setSkypassNmSearch({skypassNmSearch: '', searchType: ''})
+    setSkypassNmSearch({skypassMemberNumber: '', searchType: ''})
   }
 
   return (
@@ -638,7 +638,7 @@ export default function List() {
               </div>
               <div className="item">
                 <div className="key">PLCC 카드보유</div>
-                <div className="value">{selectedSkypass?.isPlccCard}</div>
+                <div className="value">{selectedSkypass?.isPlccCard ? 'Y' : 'N'}</div>
               </div>
             </div>
             <Modal size={70} open={openMileDtl} onClose={() => setOpenMileDtl(false)}>
@@ -1503,8 +1503,5 @@ export default function List() {
       </div>
     </Stack>
   );
-}
-function setSelectedSkypass(initSkypass: Skypass) {
-  throw new Error('Function not implemented.');
 }
 
