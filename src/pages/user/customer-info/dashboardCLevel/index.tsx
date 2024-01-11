@@ -637,8 +637,11 @@ export default function List() {
                 <div className="value">{selectedSkypass?.remainMileage} <Button style={{ float: 'right'}} onClick={retrieveMileDtl}>상세</Button></div>
               </div>
               <div className="item">
-                <div className="key">PLCC 카드보유</div>
-                <div className="value">{selectedSkypass?.isPlccCard ? 'Y' : 'N'}</div>
+                <div className="key">PLCC 카드보유</div>{
+                  selectedSkypass?.skypassMemberNumber !== '' && (
+                    <div className="value">{selectedSkypass?.isPlccCard ? 'Y' : 'N'}</div>
+                  )
+                }
               </div>
             </div>
             <Modal size={70} open={openMileDtl} onClose={() => setOpenMileDtl(false)}>
