@@ -109,9 +109,12 @@ const MstrProfMetaTblColumnList = ({
       setIsOpenConfirmModal(() => true);
       return;
     }
+    
     let allList = metaTblClmnAllList.filter(item => item.baseTimeYn !== 'Y')
+
+    if (0 < allList.length && allList.length === tmpMetaTblClmnList.length + 1) setIsAddIconShow(false)
+
     if (0 < allList.length && allList.length < tmpMetaTblClmnList.length + 1) {
-      setIsAddIconShow(false);
       setModalType(ModalType.ALERT);
       setConfirmModalTit('Master Profile 등록');
       setConfirmModalCont('더이상 컬럼을 추가할 수 없습니다.');
