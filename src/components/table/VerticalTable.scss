@@ -26,6 +26,11 @@
       visibility: hidden;
     }
   }
+  .icon_sort {
+    right: 2px !important;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 }
 
 .verticalTableDiv {
