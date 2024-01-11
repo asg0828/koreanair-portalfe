@@ -14,6 +14,7 @@ import { cloneDeep } from 'lodash';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CstmrMetaColumnListPost from '../self-feature-adm/CstmrMetaColumnListPost';
+import { FixedSizeList as List } from 'react-window';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -247,17 +248,26 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
         )}
         {tbCoMetaTblClmnInfoList?.length > 0 ? (
           <TBody clickable={clickable}>
-            {tbCoMetaTblClmnInfoList.map((row, rowIndex) => (
+            <List
+            height={400}
+            itemCount={tbCoMetaTblClmnInfoList?.length}
+            itemSize={35}
+            width='100%'
+            > 
+            {({ index, style }) => (
+            <div style={style}>
               <CstmrMetaColumnListPost
                 columns={columns}
-                rows={row}
-                rowIndex={rowIndex}
+                rows={tbCoMetaTblClmnInfoList[index]}
+                rowIndex={index}
                 flag={flag}
                 getFlag={getFlag}
                 submitFlag={submitFlag}
                 getData={getData}
-              />
-            ))}
+              />          </div>
+          )}
+      </List>
+                      
           </TBody>
         ) : (
           <TBody className="no-data-wrap">

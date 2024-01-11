@@ -13,6 +13,7 @@ import { Button, Modal, Stack, TBody, TH, THead, TR, Table, useToast } from '@co
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CstmrMetaColumnListEdit from '../self-feature-adm/CstmrMetaColumnListEdit';
+import { FixedSizeList as List } from 'react-window';
 
 export interface VerticalTableProps {
   columns: Array<ColumnsInfo>;
@@ -216,6 +217,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
       updateMutate()
     }
   }, [tbCoMetaTblClmnInfoListPost]);
+
   return (
     <>
       <Table
@@ -244,19 +246,29 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
           </THead>
         )}
         {tbCoMetaTblClmnInfoList?.length > 0 ? (
-          <TBody clickable={clickable}>
-            {tbCoMetaTblClmnInfoList.map((row, rowIndex) => (
-              <CstmrMetaColumnListEdit
-                columns={columns}
-                rows={row}
-                rowIndex={rowIndex}
-                flag={flag}
-                getFlag={getFlag}
-                submitFlag={submitFlag}
-                getData={getData}
-              />
-            ))}
-          </TBody>
+        <TBody>
+          <List
+          height={400}
+          itemCount={tbCoMetaTblClmnInfoList?.length}
+          itemSize={35}
+          width='100%'
+          > 
+          {({ index, style }) => (
+          <div style={style}>
+            <CstmrMetaColumnListEdit
+              columns={columns}
+              rows={tbCoMetaTblClmnInfoList[index]}
+              rowIndex={index}
+              flag={flag}
+              getFlag={getFlag}
+              submitFlag={submitFlag}
+              getData={getData}
+            />   
+          </div>
+          )}
+      </List>
+    </TBody>
+
         ) : (
           <TBody className="no-data-wrap">
             <NoResult />

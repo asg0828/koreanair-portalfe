@@ -25,7 +25,6 @@ const DataGridMeta: React.FC<DatagridProps> = ({
   list,
 }) => {
   const { t } = useTranslation();
-
   return (
     <Stack className="dataGridWrap" direction="Vertical" gap="MD">
       <Stack className="total-layout">

@@ -3,13 +3,8 @@ import HorizontalTable from '@/components/table/HorizontalTable';
 import { Select, SelectOption, TD, TH, TR, TextField, useToast, Stack, Modal, Button } from '@components/ui';
 import { useCallback, useEffect, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import {  customerMetaTableColumn, initTbCoMetaTblInfo } from './data';
-import {
-  useMetaTableDetail,
-  useSchemaList,
-  useTableColumns,
-  useTableInfo,
-} from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
+import { customerMetaTableColumn } from './data';
+import { useSchemaList, useTableColumns, useTableInfo } from '@/hooks/queries/self-feature/useSelfFeatureAdmQueries';
 import DataGridTblColumn from '@/components/grid/DataGridTblColumn';
 import { ModalType } from '@/models/common/Constants';
 import { openModal } from '@/reducers/modalSlice';
@@ -47,7 +42,6 @@ const CustomerMetaManagementReg = () => {
 
   // 검색 버튼 
   const searchTblColumns = () => {
-
     if(searchInfo.dbNm === '' || searchInfo.dbNm === 'null' ){
       dispatch(
       openModal({
@@ -111,7 +105,6 @@ const CustomerMetaManagementReg = () => {
         })
       );
     } else if (value !== null && id === 'dbNm' && searchInfo.dbNm !== 'null'  && searchInfo.metaTblPhysNm !== ('null' || '')) {
-
       if (searchInfo.dbNm !== value) {
         dispatch(
           openModal({
