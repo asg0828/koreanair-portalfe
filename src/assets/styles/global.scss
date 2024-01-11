@@ -1468,15 +1468,17 @@ svg {
   cursor: pointer;
   border-radius: 0.125rem;
   border-color: rgb(218, 218, 218);
-  height: 2rem;
+  height: 2.75rem;
+  font-size: 1rem;
 }
 
 .self-feature-selectbox:hover {
   border-color: rgb(162, 210, 235);
 }
 
-@media screen and (max-width: 1652px) {
+@media screen and (min-width: 66.75rem) {
   .self-feature-selectbox {
-    height: 2.75rem;
+    font-size: 0.875rem;
+    height: 2rem;
   }
 }
