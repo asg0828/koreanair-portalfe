@@ -5,12 +5,12 @@ import DataGrid from '@components/grid/DataGrid';
 import { Button, Stack, TD, TH, TR, useToast } from '@components/ui';
 import { ValidType } from '@models/common/Constants';
 import { ColumnsInfo } from '@models/components/Table';
+import { PageModel } from '@models/model/PageModel';
 import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import {PageModel} from "@models/model/PageModel";
 
-const initPage: PageModel = { page: 1, pageSize: 100, totalCount:100,totalPage: 1};
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount: 100, totalPage: 1 };
 
 const periods = [
   { period: '0 year', text: '올해' },
@@ -26,7 +26,7 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
   { headerName: '이름', field: 'userNm', colSpan: 2 },
   { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 1 },
-  { headerName: '국내선 수익금액', field: 'domTktNoFscNettKrwAmt', colSpan: 1 },
+  { headerName: '국내선 수익금액(원)', field: 'domTktNoFscNettKrwAmt', colSpan: 1 },
   { headerName: '국내선 탑승횟수', field: 'domBoardCnt', colSpan: 1 },
   { headerName: '국내선 보너스 항공권 탑승횟수', field: 'domBonusTktBoardCnt', colSpan: 1 },
   { headerName: '국내선 PR 탑승횟수', field: 'domPrClsBoardCnt', colSpan: 1 },
@@ -134,11 +134,9 @@ const List = () => {
   const sortRows = (row: Array<any>, sortColumn: string, sortDirection: SortDirection) => {
     const aValue = sortDirection === 'asc' ? 1 : -1;
     return row.sort(
-        (a: any, b: any) =>
-            aValue *
-            (typeof a[sortColumn] === 'string'
-                ? a[sortColumn].localeCompare(b[sortColumn])
-                : a[sortColumn] - b[sortColumn])
+      (a: any, b: any) =>
+        aValue *
+        (typeof a[sortColumn] === 'string' ? a[sortColumn].localeCompare(b[sortColumn]) : a[sortColumn] - b[sortColumn])
     );
   };
 
@@ -183,6 +181,7 @@ const List = () => {
         onSortChange={handleSortChange}
         sortedColumn={sortedColumn}
         sortedDirection={sortedDirection}
+        isMultiSelected={false}
       />
       <Modal
         isOpen={showPopup}

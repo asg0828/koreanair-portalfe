@@ -9,7 +9,6 @@ import { PageModel, initPage } from '@models/model/PageModel';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import DashboardPopup from './dashboardPopUp';
-import Watermark from '@uiw/react-watermark';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 0.5 },
@@ -70,11 +69,13 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        if (sortedColumn === 'scheduledIntlFlightDate') {
+        if (sortedColumn === 'scheduledIntlFlightDate' && sortedDirection) {
+          const oValue = sortedDirection === 'asc' ? 1 : -1;
           setRows(
             response.data.contents.sort(
               (a: any, b: any) =>
-                a.scheduledIntlFlightDate - b.scheduledIntlFlightDate || b.intLastBoardDatev - a.intLastBoardDatev
+                oValue * (a.scheduledIntlFlightDate - b.scheduledIntlFlightDate) ||
+                oValue * (b.intLastBoardDatev - a.intLastBoardDatev)
             )
           );
         } else {
@@ -100,6 +101,7 @@ const List = () => {
         onSortChange={handleSortChange}
         sortedColumn={sortedColumn}
         sortedDirection={sortedDirection}
+        isMultiSelected={false}
       />
       <Modal
         isOpen={showPopup}
