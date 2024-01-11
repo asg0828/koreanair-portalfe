@@ -75,7 +75,8 @@ const List = () => {
             response.data.contents.sort(
               (a: any, b: any) =>
                 oValue * (a.scheduledIntlFlightDate - b.scheduledIntlFlightDate) ||
-                b.intLastBoardDatev - a.intLastBoardDatev
+                b.intLastBoardDatev - a.intLastBoardDatev ||
+                oValue * (a.rank - b.rank)
             )
           );
         } else {
