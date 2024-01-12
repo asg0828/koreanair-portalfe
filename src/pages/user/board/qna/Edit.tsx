@@ -61,7 +61,7 @@ const Edit = () => {
   const codeList = useAppSelector(selectCodeList(GroupCodeType.QNA_TYPE));
   const statCodeList = useAppSelector(selectCodeList(GroupCodeType.QNA_STAT));
   const { data: response, isSuccess, isError } = useQnaById(values.qnaId);
-  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateQna(values.qnaId, values);
+  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateQna();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -84,12 +84,14 @@ const Edit = () => {
   };
 
   const onSubmit = (data: UpdatedQnaModel) => {
+    data.cn = data.cn.replace(/src=".*"/, '');
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.update'),
         content: t('common.modal.message.updateConfirm'),
-        onConfirm: mutate,
+        onConfirm: () => mutate(data),
       })
     );
   };
@@ -298,16 +300,8 @@ const Edit = () => {
                   {t('board:label.useYn')}
                 </TH>
                 <TD colSpan={5} align="left">
-                  <Radio
-                    label={t('board:label.useY')}
-                    value="Y"
-                    {...register('useYn')}
-                  />
-                  <Radio
-                    label={t('board:label.useN')}
-                    value="N"
-                    {...register('useYn')}
-                  />
+                  <Radio label={t('board:label.useY')} value="Y" {...register('useYn')} />
+                  <Radio label={t('board:label.useN')} value="N" {...register('useYn')} />
                 </TD>
               </TR>
             </>

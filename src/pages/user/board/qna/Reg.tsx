@@ -52,7 +52,7 @@ const Reg = () => {
   });
   const values = getValues();
   const codeList = useAppSelector(selectCodeList(GroupCodeType.QNA_TYPE));
-  const { data: response, isSuccess, isError, mutate } = useCreateQna(values);
+  const { data: response, isSuccess, isError, mutate } = useCreateQna();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -75,12 +75,14 @@ const Reg = () => {
   };
 
   const onSubmit = (data: CreatedQnaModel) => {
+    data.cn = data.cn.replace(/src=".*"/, '');
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.create'),
         content: t('common.modal.message.createConfirm'),
-        onConfirm: mutate,
+        onConfirm: () => mutate(data),
       })
     );
   };
@@ -218,16 +220,8 @@ const Reg = () => {
                 {t('board:label.useYn')}
               </TH>
               <TD colSpan={5} align="left">
-                <Radio
-                  label={t('board:label.useY')}
-                  value="Y"
-                  {...register('useYn')}
-                />
-                <Radio
-                  label={t('board:label.useN')}
-                  value="N"
-                  {...register('useYn')}
-                />
+                <Radio label={t('board:label.useY')} value="Y" {...register('useYn')} />
+                <Radio label={t('board:label.useN')} value="N" {...register('useYn')} />
               </TD>
             </TR>
           )}

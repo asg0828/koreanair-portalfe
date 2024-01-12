@@ -19,9 +19,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const Reg = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const location = useLocation();
   const params: DataroomParams = location?.state?.params;
   const page: PageModel = location?.state?.page;
@@ -46,7 +46,7 @@ const Reg = () => {
     },
   });
   const values = getValues();
-  const { data: response, isSuccess, isError, mutate } = useCreateDataroom(values);
+  const { data: response, isSuccess, isError, mutate } = useCreateDataroom();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -69,12 +69,14 @@ const Reg = () => {
   };
 
   const onSubmit = (data: CreatedDataroomModel) => {
+    data.cn = data.cn.replace(/src=".*"/, '');
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.create'),
         content: t('common.modal.message.createConfirm'),
-        onConfirm: mutate,
+        onConfirm: () => mutate(data),
       })
     );
   };
@@ -181,16 +183,8 @@ const Reg = () => {
               {t('board:label.useYn')}
             </TH>
             <TD colSpan={5} align="left">
-              <Radio
-                label={t('board:label.useY')}
-                value="Y"
-                {...register('useYn')}
-              />
-              <Radio
-                label={t('board:label.useN')}
-                value="N"
-                {...register('useYn')}
-              />
+              <Radio label={t('board:label.useY')} value="Y" {...register('useYn')} />
+              <Radio label={t('board:label.useN')} value="N" {...register('useYn')} />
             </TD>
           </TR>
           <TR className="height-100">

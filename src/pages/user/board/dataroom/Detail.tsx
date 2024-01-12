@@ -90,6 +90,15 @@ const Detail = () => {
     }
   };
 
+  const handleChangeContent = (content: string) => {
+    setDataroomModel((prevState) => {
+      if (prevState) {
+        prevState.cn = content;
+      }
+      return prevState ? { ...prevState } : undefined;
+    });
+  };
+
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
@@ -136,7 +145,11 @@ const Detail = () => {
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={dataroomModel?.cn} disabled />
+              <TinyEditor
+                disabled
+                content={dataroomModel?.cn}
+                onEditorChange={(content, editor) => handleChangeContent(content)}
+              />
             </TD>
           </TR>
           <TR>

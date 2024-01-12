@@ -50,7 +50,7 @@ const Reg = () => {
     },
   });
   const values = getValues();
-  const { data: response, isSuccess, isError, mutate } = useCreateNotice(values);
+  const { data: response, isSuccess, isError, mutate } = useCreateNotice();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -73,12 +73,14 @@ const Reg = () => {
   };
 
   const onSubmit = (data: CreatedNoticeModel) => {
+    data.cn = data.cn.replace(/src=".*"/, '');
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.create'),
         content: t('common.modal.message.createConfirm'),
-        onConfirm: mutate,
+        onConfirm: () => mutate(data),
       })
     );
   };
@@ -185,31 +187,15 @@ const Reg = () => {
               {t('board:label.useYn')}
             </TH>
             <TD colSpan={2} align="left">
-              <Radio
-                label={t('board:label.useY')}
-                value="Y"
-                {...register('useYn')}
-              />
-              <Radio
-                label={t('board:label.useN')}
-                value="N"
-                {...register('useYn')}
-              />
+              <Radio label={t('board:label.useY')} value="Y" {...register('useYn')} />
+              <Radio label={t('board:label.useN')} value="N" {...register('useYn')} />
             </TD>
             <TH colSpan={1} align="right">
               {t('board:label.importantYn')}
             </TH>
             <TD colSpan={2} align="left">
-              <Radio
-                label={t('board:label.important')}
-                value="Y"
-                {...register('importantYn')}
-              />
-              <Radio
-                label={t('board:label.normal')}
-                value="N"
-                {...register('importantYn')}
-              />
+              <Radio label={t('board:label.important')} value="Y" {...register('importantYn')} />
+              <Radio label={t('board:label.normal')} value="N" {...register('importantYn')} />
             </TD>
           </TR>
           <TR className="height-100">
