@@ -1,4 +1,4 @@
-import { Button, DatePicker, Stack, TD, TH, TR, TextField, Radio, useToast, Loader } from '@ke-design/components';
+import { Button, DatePicker, Stack, TD, TH, TR, TextField, Radio, useToast, Loader, SelectOption, Select } from '@ke-design/components';
 import { useCallback, useEffect, useState } from 'react';
 import HorizontalTable from '@/components/table/HorizontalTable';
 import { errLogColumn, errLogData } from '../one-id-main/data';
@@ -129,13 +129,16 @@ export default function OneIdErrorHistory() {
             </TH>
 
             <TD colSpan={2}>
-              <TextField
+              {/* <TextField
                 className="width-100"
                 placeholder="검색어를 입력하세요."
                 id="errorNm"
                 value={searchInfo.errorNm}
                 onChange={onSearchChangeHandler}
-              />
+              /> */}
+              <Select >
+                <SelectOption value={undefined} placeholder={undefined}></SelectOption>
+              </Select>
             </TD>
             <TH colSpan={1} align="right">
               상세에러코드

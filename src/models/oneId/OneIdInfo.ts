@@ -121,6 +121,7 @@ export interface oneidHistorySearch {
   bfChgBirthDtv: string;
   creationStartDate: string;
   creationEndDate: string;
+  skypassMemberNumber: string;
 }
 export interface oneidMasterSearch {
   oneidNo: string;

@@ -40,6 +40,7 @@ export default function OneIdMasterHistory() {
     creationEndDate: '',
     bfChgEmailAdrsHashValue: '',
     bfChgMblfonNoInfoHashVlu: '',
+    skypassMemberNumber:''
   });
   const [searchInfo2, setSearchInfo2] = useState<oneidMasterSearch>({
     oneidNo: '',
@@ -271,7 +272,7 @@ export default function OneIdMasterHistory() {
                     id="bfChgEngFname"
                     onChange={onSearchChangeHandler}
                     placeholder="성을 입력하세요."
-                    value={searchInfo.skypassMemeberNum}
+                    value={searchInfo.skypassMemberNumber}
                   />
                 </TD>
                 <TH colSpan={1} align="right">
