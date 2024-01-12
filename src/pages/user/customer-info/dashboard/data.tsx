@@ -3,26 +3,18 @@ import {
   AnalysisResultData,
   BoardingList,
   Call,
-  CartData,
   Cnt,
   Column,
-  ContributeData,
   Email,
   Etkt,
   FamilyMembers,
-  Ffp,
-  HomepageData,
-  Internet,
   Pnr,
-  PnrData,
   Preference,
   Profile,
   Skypass,
   SkypassList,
   Sms,
   Sns,
-  Voc,
-  VocData,
   Wallet,
 } from '@/models/model/CustomerInfoModel';
 
@@ -209,23 +201,6 @@ const callData: Call[] = [
   },
 ];
 
-const internetData: Internet[] = [
-  {
-    date: '21AUG23',
-    channel: '대한항공 홈페이지',
-    ticketNum: '1802414158807',
-    arrival: '푸꾸옥',
-  },
-  {
-    date: '20AUG13',
-    channel: '네이버 항공권',
-    ticketNum: '1802414158807',
-    arrival: '다낭',
-  },
-];
-
-const vocData: Voc[] = [{ cnt: 3, date: '21AUG23', channel: '유입채널', type: '타입', content: '' }];
-
 const smsData: Sms[] = [{ date: '21AUG23', sendCnt: 2, phoneNum: '010-1234-1234', status: '답변대기', content: '' }];
 
 const snsData: Sns[] = [
@@ -272,9 +247,6 @@ export {
   emailData,
   boardingListData,
   callData,
-  internetData,
-  vocData,
-  smsData,
   matchedProfile,
   skyPassList,
   initProfile,
