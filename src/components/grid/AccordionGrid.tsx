@@ -6,7 +6,7 @@ import { useAppSelector } from '@/hooks/useRedux';
 import { ContextPath, ValidType } from '@/models/common/Constants';
 import { RowsInfo } from '@/models/components/Table';
 import { FileModel } from '@/models/model/FileModel';
-import { PageModel, PageProps, initPage, pageSizeList } from '@/models/model/PageModel';
+import { PageModel, initPage, pageSizeList } from '@/models/model/PageModel';
 import { selectContextPath, selectSessionInfo } from '@/reducers/authSlice';
 import { openPopup } from '@/utils/FuncUtil';
 import {
@@ -26,23 +26,27 @@ import { ReactNode, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import './AccordionGrid.scss';
 
-export interface AccordionGridProps extends PageProps {
+export interface AccordionGridProps {
   value?: string;
   buttonChildren?: ReactNode;
   rows?: Array<RowsInfo>;
+  page?: PageModel;
   onClick?: (faqId: string) => void;
   onUpdate?: (faqId: string) => void;
   onDelete?: (faqId: string) => void;
+  onChangePage?: (pageSize: any) => void;
+  onChange?: (rows: any) => void;
 }
 
 const AccordionGrid: React.FC<AccordionGridProps> = ({
   value,
   buttonChildren,
-  rows,
+  rows = [],
   page,
   onClick,
   onUpdate,
   onDelete,
+  onChangePage,
   onChange,
 }) => {
   const { t } = useTranslation();
@@ -51,7 +55,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
   const sessionInfo = useAppSelector(selectSessionInfo());
   const [pages, setPages] = useState<PageModel>(initPage);
 
-  const handleChange = (key: string, value: any) => {
+  const handleChangePage = (key: string, value: any) => {
     setPages((prevState) => {
       const state = {
         ...prevState,
@@ -60,7 +64,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
       if (key === 'pageSize') {
         state.page = 0;
       }
-      onChange && onChange(state);
+      onChangePage && onChangePage(state);
       return state;
     });
   };
@@ -81,6 +85,14 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
     }
   };
 
+  const handleChangeContent = (content: string, data: any) => {
+    const newRows = [...rows];
+    const index = newRows.findIndex((item) => item.faqId === data.faqId);
+    data.answ = content;
+    newRows.splice(index, 1, data);
+    onChange && onChange(newRows);
+  };
+
   useEffect(() => {
     page && setPages(page);
   }, [page]);
@@ -98,7 +110,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
           size="LG"
           className="select-page"
           value={pages.pageSize}
-          onChange={(e, value) => value && handleChange('pageSize', value)}
+          onChange={(e, value) => value && handleChangePage('pageSize', value)}
         >
           {pageSizeList.map((pageSize) => (
             <SelectOption value={pageSize}>{`${pageSize} ${t('common.label.countingUnit.thing')}`}</SelectOption>
@@ -139,11 +151,17 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                   <Stack className="width-100">
                     <Typography variant="body1" className="answer"></Typography>
                     <Stack direction="Vertical" className="width-100">
-                      <TinyEditor content={row.answ} disabled />
+                      <TinyEditor
+                        disabled
+                        content={row.answ}
+                        onEditorChange={(content, editor) => handleChangeContent(content, row)}
+                      />
                       <Stack gap="MD" direction="Vertical" className="attach_file_list_wrap">
                         {row.fileLinks?.length > 0 && (
                           <Stack direction="Vertical" className="attach_file_list_item">
-                            <Typography variant="body2" className="attach_file_title">파일 링크</Typography>
+                            <Typography variant="body2" className="attach_file_title">
+                              파일 링크
+                            </Typography>
                             <ul className="attachFileList">
                               {row.fileLinks.map((fileLink: string) => (
                                 <li>
@@ -155,7 +173,9 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
                         )}
                         {row.fileList?.length > 0 && (
                           <Stack direction="Vertical" className="attach_file_list_item">
-                            <Typography variant="body2" className="attach_file_title">첨부파일</Typography>
+                            <Typography variant="body2" className="attach_file_title">
+                              첨부파일
+                            </Typography>
                             <ul className="attachFileList">
                               {row.fileList.map((file: FileModel) => (
                                 <li>
@@ -189,7 +209,7 @@ const AccordionGrid: React.FC<AccordionGridProps> = ({
           className="pagination"
           page={pages.page}
           totalPages={pages.totalPage}
-          onChangePage={(value) => handleChange('page', value)}
+          onChangePage={(value) => handleChangePage('page', value)}
         />
         <Stack justifyContent="End" gap="SM" className="width-100">
           {buttonChildren}

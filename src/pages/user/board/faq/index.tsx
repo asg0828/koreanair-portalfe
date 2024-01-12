@@ -114,6 +114,10 @@ const List = () => {
     setFaqId(nFaqId);
   };
 
+  const handleChangeRows = (newRows: Array<FaqModel>) => {
+    setRows(newRows);
+  };
+
   useDidMountEffect(() => {
     refetch();
   }, [page.page, page.pageSize]);
@@ -212,7 +216,8 @@ const List = () => {
         rows={rows}
         page={page}
         onClick={handleClick}
-        onChange={handlePage}
+        onChangePage={handlePage}
+        onChange={handleChangeRows}
         onUpdate={goToEdit}
         onDelete={handleDelete}
         buttonChildren={

@@ -42,6 +42,24 @@ export const downloadFile = async (fileId: string, fileNm?: string) => {
   }
 };
 
+export const downloadImage = async (fileId: string) => {
+  const response = await callApiForFile({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.FILE}/download/${fileId}`,
+    method: Method.GET,
+    config: {
+      isFile: true,
+    },
+  });
+
+  if (response?.successOrNot === 'N') {
+    return '';
+  } else {
+    const blobURL = window.URL.createObjectURL(response.data);
+    return blobURL;
+  }
+};
+
 export const deleteFile = (fileId: string) => {
   return callApiForFile({
     service: Service.KAL_BE,

@@ -56,7 +56,7 @@ const Edit = () => {
   const values = getValues();
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FAQ_TYPE));
   const { data: response, isSuccess, isError } = useFaqById(values.faqId);
-  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFaq(values.faqId, values);
+  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFaq();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -80,12 +80,14 @@ const Edit = () => {
   };
 
   const onSubmit = (data: UpdatedFaqModel) => {
+    data.qstn = data.qstn.replace(/src=".*"/, '');
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.create'),
         content: t('common.modal.message.createConfirm'),
-        onConfirm: mutate,
+        onConfirm: () => mutate(data),
       })
     );
   };
@@ -259,16 +261,8 @@ const Edit = () => {
               {t('board:label.useYn')}
             </TH>
             <TD colSpan={2} align="left">
-              <Radio
-                label={t('board:label.useY')}
-                value="Y"
-                {...register('useYn')}
-              />
-              <Radio
-                label={t('board:label.useN')}
-                value="N"
-                {...register('useYn')}
-              />
+              <Radio label={t('board:label.useY')} value="Y" {...register('useYn')} />
+              <Radio label={t('board:label.useN')} value="N" {...register('useYn')} />
             </TD>
           </TR>
           <TR className="height-100">

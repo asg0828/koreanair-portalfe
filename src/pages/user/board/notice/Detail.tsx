@@ -90,6 +90,15 @@ const Detail = () => {
     }
   };
 
+  const handleChangeContent = (content: string) => {
+    setNoticeModel((prevState) => {
+      if (prevState) {
+        prevState.cn = content;
+      }
+      return prevState ? { ...prevState } : undefined;
+    });
+  };
+
   useEffect(() => {
     if (isError || response?.successOrNot === 'N') {
       toast({
@@ -143,7 +152,11 @@ const Detail = () => {
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={noticeModel?.cn} disabled />
+              <TinyEditor
+                disabled
+                content={noticeModel?.cn}
+                onEditorChange={(content, editor) => handleChangeContent(content)}
+              />
             </TD>
           </TR>
           <TR>

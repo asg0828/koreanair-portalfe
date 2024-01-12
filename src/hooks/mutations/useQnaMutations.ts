@@ -2,12 +2,12 @@ import { createQna, deleteQna, updateQna } from '@/api/QnaAPI';
 import { CreatedQnaModel, UpdatedQnaModel } from '@/models/model/QnaModel';
 import { useMutation } from '@tanstack/react-query';
 
-export const useCreateQna = (createdQna: CreatedQnaModel) => {
-  return useMutation(() => createQna(createdQna));
+export const useCreateQna = () => {
+  return useMutation((createdQna: CreatedQnaModel) => createQna(createdQna));
 };
 
-export const useUpdateQna = (qnaId: string, updatedQna: UpdatedQnaModel) => {
-  return useMutation(() => updateQna(qnaId, updatedQna));
+export const useUpdateQna = () => {
+  return useMutation((updatedQna: UpdatedQnaModel) => updateQna(updatedQna.qnaId, updatedQna));
 };
 
 export const useDeleteQna = (qnaId: string) => {

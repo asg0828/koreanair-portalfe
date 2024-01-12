@@ -2,12 +2,14 @@ import { createDataroom, deleteDataroom, updateDataroom } from '@/api/DataroomAP
 import { CreatedDataroomModel, UpdatedDataroomModel } from '@/models/model/DataroomModel';
 import { useMutation } from '@tanstack/react-query';
 
-export const useCreateDataroom = (createdDataroom: CreatedDataroomModel) => {
-  return useMutation(() => createDataroom(createdDataroom));
+export const useCreateDataroom = () => {
+  return useMutation((createdDataroom: CreatedDataroomModel) => createDataroom(createdDataroom));
 };
 
-export const useUpdateDataroom = (dataId: string, updatedDataroom: UpdatedDataroomModel) => {
-  return useMutation(() => updateDataroom(dataId, updatedDataroom));
+export const useUpdateDataroom = () => {
+  return useMutation((updatedDataroom: UpdatedDataroomModel) =>
+    updateDataroom(updatedDataroom.dataId, updatedDataroom)
+  );
 };
 
 export const useDeleteDataroom = (dataId: string) => {

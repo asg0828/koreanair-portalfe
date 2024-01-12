@@ -57,12 +57,7 @@ const Edit = () => {
   });
   const values = getValues();
   const { data: response, isSuccess, isError } = useNoticeById(values.noticeId);
-  const {
-    data: uResponse,
-    isSuccess: uIsSuccess,
-    isError: uIsError,
-    mutate,
-  } = useUpdateNotice(values.noticeId, values);
+  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateNotice();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -85,12 +80,14 @@ const Edit = () => {
   };
 
   const onSubmit = (data: UpdatedNoticeModel) => {
+    data.cn = data.cn.replace(/src=".*"/, '');
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.update'),
         content: t('common.modal.message.updateConfirm'),
-        onConfirm: mutate,
+        onConfirm: () => mutate(data),
       })
     );
   };

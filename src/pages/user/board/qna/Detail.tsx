@@ -54,7 +54,7 @@ const Detail = () => {
   const values = getValues();
   const { data: response, isSuccess, isError, refetch } = useQnaById(qnaId);
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteQna(qnaId);
-  const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateQna(values);
+  const { data: cResponse, isSuccess: cIsSuccess, isError: cIsError, mutate: cMutate } = useCreateQna();
   const { data: cdResponse, isSuccess: cdIsSuccess, isError: cdIsError, mutate: cdMutate } = useDeleteQna(cQnaId);
 
   const {
@@ -76,12 +76,7 @@ const Detail = () => {
   });
   const uValues = uGetValues();
 
-  const {
-    data: cuResponse,
-    isSuccess: cuIsSuccess,
-    isError: cuIsError,
-    mutate: cuMutate,
-  } = useUpdateQna(uValues.qnaId, uValues);
+  const { data: cuResponse, isSuccess: cuIsSuccess, isError: cuIsError, mutate: cuMutate } = useUpdateQna();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -147,11 +142,11 @@ const Detail = () => {
   };
 
   const onCreateCommentSubmit = (data: CreatedQnaModel) => {
-    cMutate();
+    cMutate(data);
   };
 
-  const onUpdateCommentSubmit = (data: CreatedQnaModel) => {
-    cuMutate();
+  const onUpdateCommentSubmit = (data: UpdatedQnaModel) => {
+    cuMutate(data);
   };
 
   const handleFileDownload = async (fileId: string, fileNm: string) => {
@@ -168,6 +163,15 @@ const Detail = () => {
         content: t('common.toast.error.download'),
       });
     }
+  };
+
+  const handleChangeContent = (content: string) => {
+    setQnaModel((prevState) => {
+      if (prevState) {
+        prevState.cn = content;
+      }
+      return prevState ? { ...prevState } : undefined;
+    });
   };
 
   useEffect(() => {
@@ -271,7 +275,11 @@ const Detail = () => {
           </TR>
           <TR className="height-100">
             <TD colSpan={4} className="content">
-              <TinyEditor content={qnaModel?.cn} disabled />
+              <TinyEditor
+                disabled
+                content={qnaModel?.cn}
+                onEditorChange={(content, editor) => handleChangeContent(content)}
+              />
             </TD>
           </TR>
           <TR>

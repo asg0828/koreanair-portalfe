@@ -53,12 +53,7 @@ const Edit = () => {
   });
   const values = getValues();
   const { data: response, isSuccess, isError } = useDataroomById(values.dataId);
-  const {
-    data: uResponse,
-    isSuccess: uIsSuccess,
-    isError: uIsError,
-    mutate,
-  } = useUpdateDataroom(values.dataId, values);
+  const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateDataroom();
 
   const goToList = useCallback(() => {
     navigate('..', {
@@ -81,12 +76,14 @@ const Edit = () => {
   };
 
   const onSubmit = (data: UpdatedDataroomModel) => {
+    data.cn = data.cn.replace(/src=".*"/, '');
+
     dispatch(
       openModal({
         type: ModalType.CONFIRM,
         title: t('common.modal.title.update'),
         content: t('common.modal.message.updateConfirm'),
-        onConfirm: mutate,
+        onConfirm: () => mutate(data),
       })
     );
   };
@@ -232,16 +229,8 @@ const Edit = () => {
               {t('board:label.useYn')}
             </TH>
             <TD colSpan={5} align="left">
-              <Radio
-                label={t('board:label.useY')}
-                value="Y"
-                {...register('useYn')}
-              />
-              <Radio
-                label={t('board:label.useN')}
-                value="N"
-                {...register('useYn')}
-              />
+              <Radio label={t('board:label.useY')} value="Y" {...register('useYn')} />
+              <Radio label={t('board:label.useN')} value="N" {...register('useYn')} />
             </TD>
           </TR>
           <TR className="height-100">
