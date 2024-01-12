@@ -1,4 +1,4 @@
-import { useProfile, useSkypass } from '@/hooks/queries/useCustomerInfoQueires';
+import { useCampHis, useCosHis, useProfile, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
 import NoResult from '@/components/emptyState/NoData';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, TR, TD, THead, TH, Table, Label } from '@components/ui';
@@ -15,12 +15,14 @@ import {
   Etkt,
   BoardingList,
   Voc,
-  Internet,
   Call,
   Sms,
   Sns,
   Email,
   FamilyMembers,
+  Campaign,
+  Consulting,
+  Tms,
 } from '@/models/model/CustomerInfoModel';
 import { ValidType } from '@/models/common/Constants';
 import { cloneDeep } from 'lodash'
@@ -38,10 +40,12 @@ export default function List() {
   const [pnr, setPnr] = useState<Array<Pnr>>([]);
   const [etkt, setEtkt] = useState<Array<Etkt>>([]);
   const [boardingLists, setBoardingLists] = useState<Array<BoardingList>>([]);
-  const [calls, setCalls] = useState<Array<Call>>([]);
-  const [vocs, setVocs] = useState<Array<Voc>>([]);
-  const [internets, setInternets] = useState<Array<Internet>>([]);
-  const [smss, setSmss] = useState<Array<Sms>>([]);
+
+  const [campaign, setCampaign] = useState<Campaign>();
+  const [consulting, setConsulting] = useState<Consulting>();
+  const [tms, setTms] = useState<Tms>()
+  const [voc, setVoc] = useState<Voc>();
+
   const [snss, setSnss] = useState<Array<Sns>>([]);
   const [emails, setEmails] = useState<Array<Email>>([]);
   const [rows, setRows] = useState<Array<any>>([]);
@@ -51,6 +55,7 @@ export default function List() {
     searchType: '',
   });
   const [selectedSkypass, setSelectedSkypass] = useState<Skypass>(initSkypass);
+  const [ oneIdno, setOneIdno] = useState<any>('')
   const intervalId = useRef<number | NodeJS.Timer | null>(null);
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -61,6 +66,15 @@ export default function List() {
   const { refetch: refetchProfile, data: responseProfile, isError: isErrorProfile } = useProfile(searchInfo);
   // skypass 조회 api
   const { refetch: refetchSkypass, data: responseSkypass, isError: isErrorSkypass} = useSkypass(searchSkypassNm);
+  // 캠페인 조회 api
+  const { refetch: refetchCamp, data: responseCamp, isError: isErrorCamp } = useCampHis(oneIdno);
+  // 상담 정보 조회 api
+  const { refetch: refetchCos, data: responseCos, isError: isErrorCos } = useCosHis(oneIdno)
+  // TMS 정보 조회 api
+  const { refetch: refetchTms, data: responseTms, isError: isErrorTms } = useTmsHis(oneIdno)
+  // Voc 정보 조회 api
+  const { refetch: refetchVoc, data: responseVoc, isError: isErrorVoc } = useVocHis(oneIdno)
+
   const [key, setKey] = useState(Date.now());
 
   const validation = () => {
@@ -186,6 +200,7 @@ export default function List() {
     } else {
       if (responseProfile) {
         setProfile(responseProfile?.data);
+        setOneIdno(responseProfile?.data.skypassInfos[0]?.oneidNo)
         setSearchSkypassNm(responseProfile?.data.skypassInfos[0]?.skypassMemberNumber)
       }
     }
@@ -198,6 +213,15 @@ export default function List() {
       setKey(Date.now());
     }
   }, [searchSkypassNm])
+
+  useEffect(() => {
+    if(oneIdno !== '') {
+      refetchCamp()
+      refetchCos()
+      refetchTms()
+      refetchVoc()
+    }
+  }, [oneIdno])
 
   // skypass 조회
   useEffect(() => {
@@ -215,6 +239,62 @@ export default function List() {
       }
     }
   }, [isErrorSkypass, responseSkypass, key]);
+
+  // 캠페인 조회
+  useEffect(() => {
+    if (isErrorCamp || responseCamp?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseCamp?.message,
+      });
+    } else {
+      if (responseCamp) {
+        setCampaign(responseCamp.data)
+      }
+    }
+  }, [responseCamp, isErrorCamp, key]);
+
+  // 상담 조회
+  useEffect(() => {
+    if (isErrorCos || responseCos?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseCos?.message,
+      });
+    } else {
+      if (responseCos) {
+        setConsulting(responseCos.data)
+      }
+    }
+  }, [responseCos, isErrorCos, key]);
+
+  // tms 조회
+  useEffect(() => {
+    if (isErrorTms || responseTms?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseTms?.message,
+      });
+    } else {
+      if (responseTms) {
+        setTms(responseTms.data)
+      }
+    }
+  }, [responseTms, isErrorTms, key]);
+
+  // voc 조회
+  useEffect(() => {
+    if (isErrorVoc || responseVoc?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseVoc?.message,
+      });
+    } else {
+      if (responseVoc) {
+        setVoc(responseVoc.data)
+      }
+    }
+  }, [responseVoc, isErrorVoc, key]);
 
 	useEffect(() => {
 		reset()
@@ -239,6 +319,7 @@ export default function List() {
 		})
     setSearchInfo({ skypassMemberNumber: '', oneidNo: '', searchType: '' })
     setSearchSkypassNm('')
+    setOneIdno('')
   }
 
   return (
@@ -409,6 +490,14 @@ export default function List() {
               <div className="item">
                 <div className="key">현등급최초시작일</div>
                 <div className="value">{selectedSkypass?.effectiveFrom.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</div>
+              </div>
+              <div className="item">
+                <div className="key">적립 마일리지</div>
+                <div className="value">{selectedSkypass?.totalAccrued}</div>
+              </div>
+              <div className="item">
+                <div className="key">사용 마일리지</div>
+                <div className="value">{selectedSkypass?.totalRedeemed}</div>
               </div>
               <div className="item">
                 <div className="key">잔여 마일리지</div>
@@ -883,7 +972,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3({ open: true, contents: 'call' });
+                            setIsListView3({ open: true, contents: 'consulting' });
                           }}
                         >
                           상담
@@ -899,7 +988,7 @@ export default function List() {
                       <div className="key">
                         <button
                           onClick={() => {
-                            setIsListView3({ open: true, contents: 'internet' });
+                            setIsListView3({ open: true, contents: 'campaign' });
                           }}
                         >
                           캠페인
@@ -946,7 +1035,7 @@ export default function List() {
                   </div>
                 </Stack>
               </div>
-              {isListView3.open && isListView3.contents === 'call' && (
+              {isListView3.open && isListView3.contents === 'consulting' && (
                 <div className="hideContents">
                   <table className="centerTable">
                   <colgroup>
@@ -960,27 +1049,23 @@ export default function List() {
                       </tr>
                     </thead>
                     <tbody>
-                      {calls.map((item, index) => (
-                      <>
                         <tr>
                           <td>서비스 센터</td>
-                          <td>{item?.date}</td>
+                          <td>{consulting?.lastServiceCenterUseDatev}</td>
                         </tr>
                         <tr>
                           <td>챗봇</td>
-                          <td>{item?.date}</td>
+                          <td>{consulting?.lastChatbotUseDatev}</td>
                         </tr>
                         <tr>
                           <td>채팅</td>
-                          <td>{item?.date}</td>
+                          <td>{consulting?.lastChatUseDatev}</td>
                         </tr>
-                      </>
-                      ))}
                     </tbody>
                   </table>
                 </div>
               )}
-              {isListView3.open && isListView3.contents === 'internet' && (
+              {isListView3.open && isListView3.contents === 'campaign' && (
                 <div className="hideContents">
                   <table className="centerTable">
                   <colgroup>
@@ -994,26 +1079,22 @@ export default function List() {
                       </tr>
                     </thead>
                     <tbody>
-                      {internets.map((item, index) => (
-                      <>
                         <tr>
                           <td>카카오알림톡</td>
-                          <td>{item?.date}</td>
+                          <td>{campaign?.lastCmpgnKakaotalkSndDtim}</td>
                         </tr>
                         <tr>
                           <td>SMS/LMS</td>
-                          <td>{item?.date}</td>
+                          <td>{campaign?.lastCmpgnKakaotalkSndDtim}</td>
                         </tr>
                         <tr>
                           <td>APP PUSH</td>
-                          <td>{item?.date}</td>
+                          <td>{campaign?.lastCampaignApshSndDtim}</td>
                         </tr>
                         <tr>
                           <td>E-MAIL</td>
-                          <td>{item?.date}</td>
+                          <td>{campaign?.lastCampaignEmailSendDtim}</td>
                         </tr>
-                      </>
-                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -1032,22 +1113,18 @@ export default function List() {
                       </tr>
                     </thead>
                     <tbody>
-                      {vocs.map((item, index) => (
-                      <>
                         <tr>
                           <td>불만</td>
-                          <td>{item?.date}</td>
+                          <td>{voc?.vocComplainLastRctDatev}</td>
                         </tr>
                         <tr>
                           <td>제언</td>
-                          <td>{item?.date}</td>
+                          <td>{voc?.vocSuggestLastRctDatev}</td>
                         </tr>
                         <tr>
                           <td>Disruption</td>
-                          <td>{item?.date}</td>
+                          <td>{voc?.vocDisruptionLastRctDatev}</td>
                         </tr>
-                      </>
-                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -1057,28 +1134,32 @@ export default function List() {
                 <div className="hideContents">
                   <table className="centerTable">
                     <colgroup>
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
-                      <col width="25%" />
+                      <col width="50%" />
+                      <col width="50%" />
                     </colgroup>
                     <thead>
-                      <tr>
-                        <th>날짜</th>
-                        <th>횟수</th>
-                        <th>상담자</th>
-                        <th>채널</th>
+                      <tr className="width-100">
+                        <th>캠페인 채널</th>
+                        <th>최근 발송일</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {snss.map((item, index) => (
                         <tr>
-                          <td>{item?.date}</td>
-                          <td>{item?.useCnt}</td>
-                          <td>{item?.counselor}</td>
-                          <td>{item?.channel}</td>
+                          <td>카카오알림톡</td>
+                          <td>{tms?.lastTmsKakaoTalkSendDtim}</td>
                         </tr>
-                      ))}
+                        <tr>
+                          <td>SMS/LMS</td>
+                          <td>{tms?.lastTmsSmsSendDatetime}</td>
+                        </tr>
+                        <tr>
+                          <td>APP PUSH</td>
+                          <td>{tms?.lastTmsAppPushSendDtim}</td>
+                        </tr>
+                        <tr>
+                          <td>E-MAIL</td>
+                          <td>{tms?.lastTmsEmailSendDatetime}</td>
+                        </tr>
                     </tbody>
                   </table>
                 </div>
@@ -1088,7 +1169,7 @@ export default function List() {
                 className={'viewMore ' + (isListView3.open ? 'true' : 'false')}
                 onClick={(event) => {
                   if (isListView3.contents === '') {
-                    setIsListView3({ open: !isListView3.open, contents: 'call' });
+                    setIsListView3({ open: !isListView3.open, contents: 'consulting' });
                   } else {
                     setIsListView3({ open: !isListView3.open, contents: '' });
                   }

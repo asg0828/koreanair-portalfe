@@ -31,10 +31,6 @@ export enum PortalApiURL {
   POPULAR_FEATURE = '/user-mgmt/v1/user-popular-features',
   DATASET = '/biz-meta/v1/table-specs',
   CUSTOMER = '/customer-info/v1/customer',
-  SKYPASS_PROFILE = '/cdp360/v1/skypassno',
-  MOBILE = '/cdp360/v1/mobile',
-  ENGNAME = '/cdp360/v1/engname',
-  KORNAME = '/cdp360/v1/korname',
 }
 
 export enum SelfFeatureCmmApiURL {

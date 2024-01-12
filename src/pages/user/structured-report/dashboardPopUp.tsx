@@ -19,8 +19,6 @@ import {
   Etkt,
   BoardingList,
   Voc,
-  Internet,
-  Call,
   Sms,
   Sns,
   Email,
