@@ -7,6 +7,7 @@ import DataGrid from '@/components/grid/DataGrid';
 import { PageModel, initPage } from '@/models/model/PageModel';
 import { useErrorLog } from '@/hooks/queries/useOneIdQueries';
 import { useTranslation } from 'react-i18next';
+import { SelectValue } from '@mui/base/useSelect';
 
 //남은 작업: api 요청 후 반환 받은 데이터 인터페이스에 넣고 뿌려주기(1개)
 export default function OneIdErrorHistory() {
@@ -21,7 +22,40 @@ export default function OneIdErrorHistory() {
     uciId: '',
     pnrNumber: '',
   });
+  const errorNmList = [
+    'PARAM-SKY-MERGE', 
+    'VALIDATE-ODS', 
+    'PARAM-SKY', 
+    'SKIP-MERGE', 
+    'CLEANSING', 
+    'SKIP-SKY-QUIT',
+    'PARAM-SKY-RETRO',
+    'NULL-SKY-QUIT',
+    'SKIP-ODS',
+    'SKIP-SKY-CREATE',
+    'SKIP-SKY',
+    'NULL-ODS-FQTV',
+    'NULL-COMN-RETRO',
+    'SKYPASS-MQ-ERROR']
 
+  const detailErrorNmList = [
+    'NoSatisfiedKeyRule',
+    'mergeHistoryIsNull',
+    'commonPnr',
+    'cleanseName',
+    'MergedSkypassNo',
+    'cleanseKoreanName',
+    'cleanseMobile',
+    'IllegalArgument',
+    'PaxMappingIsNull',
+    'cleanseEmail',
+    'convertOdsBirthDate',
+    'cleanseDate',
+    'exceptionMerge',
+    'DuplicatedSkypassMemberNumber',
+    'UciId',
+    'PnrNo'
+  ]
   const { toast } = useToast();
   const [isChanged, setIsChanged] = useState(false);
   const [page, setPage] = useState<PageModel>(initPage);
@@ -52,6 +86,7 @@ export default function OneIdErrorHistory() {
       }
     }
   }, [response, isError, toast]);
+
   /* input state관리 */
   function onSearchChangeHandler(e: React.ChangeEvent<HTMLInputElement>) {
     const { id, value } = e.target;
@@ -119,6 +154,15 @@ export default function OneIdErrorHistory() {
   /* 로딩바 */
   const { t } = useTranslation()
 
+  /* select 입력 함수 */
+  const onchangeSelectHandler = (
+    e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+    value: SelectValue<{}, false>,
+    id?: String
+  ) => {
+    setSearchInfo({ ...searchInfo, [`${id}`]: value });
+  };
+  
   return (
     <Stack direction="Vertical" gap="LG" className="width-100">
       <form onSubmit={onsubmitHandler}>
@@ -136,21 +180,45 @@ export default function OneIdErrorHistory() {
                 value={searchInfo.errorNm}
                 onChange={onSearchChangeHandler}
               /> */}
-              <Select >
-                <SelectOption value={undefined} placeholder={undefined}></SelectOption>
+              <Select  
+                id="errorNm"
+                className="width-100"
+                appearance="Outline"
+                placeholder='전체' 
+                value={searchInfo.errorNm}
+                onChange={(
+                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                  value: SelectValue<{}, false>
+                ) => {
+                  onchangeSelectHandler(e, value, 'errorNm');
+                }}
+              >
+                {errorNmList.map((list)=>
+                  <SelectOption value={list}>{list}</SelectOption>
+                )}
               </Select>
             </TD>
             <TH colSpan={1} align="right">
               상세에러코드
             </TH>
             <TD colSpan={5}>
-              <TextField
+              <Select  
                 id="detailErrorNm"
                 className="width-100"
-                placeholder="검색어를 입력하세요."
+                appearance="Outline"
+                placeholder='전체' 
                 value={searchInfo.detailErrorNm}
-                onChange={onSearchChangeHandler}
-              />
+                onChange={(
+                  e: React.MouseEvent | React.KeyboardEvent | React.FocusEvent | null,
+                  value: SelectValue<{}, false>
+                ) => {
+                  onchangeSelectHandler(e, value, 'detailErrorNm');
+                }}
+              >
+                {detailErrorNmList.map((list)=>
+                  <SelectOption value={list}>{list}</SelectOption>
+                )}
+              </Select>
             </TD>
           </TR>
 

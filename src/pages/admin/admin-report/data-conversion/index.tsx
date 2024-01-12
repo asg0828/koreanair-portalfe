@@ -204,7 +204,7 @@ export default function DataConversion() {
       </Stack>
 
       <Stack direction="Vertical">
-        <Typography variant="h4">2. Double Metaphone</Typography>
+        <Typography variant="h4">2. Soundex</Typography>
         <HorizontalTable>
           <TR>
             <TH>영문 이름 + 성</TH>
@@ -225,7 +225,7 @@ export default function DataConversion() {
                 변환
               </Button>
             </TD>
-            <TH>Double Metaphone 변환 결과</TH>
+            <TH>Soundex 변환 결과</TH>
             <TD style={{ width: '40%' }}>{afConvertDoubleMetaphone}</TD>
           </TR>
         </HorizontalTable>

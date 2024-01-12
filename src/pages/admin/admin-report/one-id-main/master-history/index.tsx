@@ -192,6 +192,7 @@ export default function OneIdMasterHistory() {
       creationEndDate: '',
       bfChgEmailAdrsHashValue: '',
       bfChgMblfonNoInfoHashVlu: '',
+      skypassMemberNumber:''
     });
   }
 
@@ -229,7 +230,7 @@ export default function OneIdMasterHistory() {
                 <TH colSpan={1} align="right">
                   OneId 번호
                 </TH>
-                <TD colSpan={2}>
+                <TD colSpan={5}>
                   <TextField
                     className="width-100"
                     onChange={onSearchChangeHandler}
@@ -241,7 +242,7 @@ export default function OneIdMasterHistory() {
                 <TH colSpan={1} align="right">
                   OneID변경이유코드
                 </TH>
-                <TD colSpan={2}>
+                <TD colSpan={2.001}>
                   <Select
                     appearance="Outline"
                     placeholder="전체"
@@ -269,9 +270,9 @@ export default function OneIdMasterHistory() {
                 <TD colSpan={5}>
                   <TextField
                     className="width-100"
-                    id="bfChgEngFname"
+                    id="skypassMemberNumber"
                     onChange={onSearchChangeHandler}
-                    placeholder="성을 입력하세요."
+                    placeholder="Skypass 번호를 입력하세요."
                     value={searchInfo.skypassMemberNumber}
                   />
                 </TD>
