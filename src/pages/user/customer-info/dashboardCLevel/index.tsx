@@ -18,7 +18,6 @@ import {
   Etkt,
   BoardingList,
   Voc,
-  Internet,
   Call,
   Sms,
   Sns,
@@ -71,7 +70,6 @@ export default function List() {
   const [boardingLists, setBoardingLists] = useState<Array<BoardingList>>([]);
   const [calls, setCalls] = useState<Array<Call>>([]);
   const [vocs, setVocs] = useState<Array<Voc>>([]);
-  const [internets, setInternets] = useState<Array<Internet>>([]);
   const [smss, setSmss] = useState<Array<Sms>>([]);
   const [snss, setSnss] = useState<Array<Sns>>([]);
   const [emails, setEmails] = useState<Array<Email>>([]);
@@ -1185,22 +1183,15 @@ export default function List() {
                       </tr>
                     </thead>
                     <tbody>
-                      {calls.map((item, index) => (
-                        <>
                           <tr>
                             <td>서비스 센터</td>
-                            <td>{item?.date}</td>
                           </tr>
                           <tr>
                             <td>챗봇</td>
-                            <td>{item?.date}</td>
                           </tr>
                           <tr>
                             <td>채팅</td>
-                            <td>{item?.date}</td>
                           </tr>
-                        </>
-                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -1219,26 +1210,18 @@ export default function List() {
                       </tr>
                     </thead>
                     <tbody>
-                      {internets.map((item, index) => (
-                        <>
                           <tr>
                             <td>카카오알림톡</td>
-                            <td>{item?.date}</td>
                           </tr>
                           <tr>
                             <td>SMS/LMS</td>
-                            <td>{item?.date}</td>
                           </tr>
                           <tr>
                             <td>APP PUSH</td>
-                            <td>{item?.date}</td>
                           </tr>
                           <tr>
                             <td>E-MAIL</td>
-                            <td>{item?.date}</td>
                           </tr>
-                        </>
-                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -1257,22 +1240,15 @@ export default function List() {
                       </tr>
                     </thead>
                     <tbody>
-                      {vocs.map((item, index) => (
-                      <>
                         <tr>
                           <td>불만</td>
-                          <td>{item?.date}</td>
                         </tr>
                         <tr>
                           <td>제언</td>
-                          <td>{item?.date}</td>
                         </tr>
                         <tr>
                           <td>Disruption</td>
-                          <td>{item?.date}</td>
                         </tr>
-                      </>
-                      ))}
                     </tbody>
                   </table>
                 </div>
