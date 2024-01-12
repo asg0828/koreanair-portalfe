@@ -8,7 +8,7 @@ import { ColumnsInfo } from '@models/components/Table';
 import { PageModel } from '@models/model/PageModel';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import DashboardPopup from './dashboardPopUp';
+import DashboardPopup from '../dashboardPopUp';
 
 const initPage: PageModel = { page: 1, pageSize: 100, totalCount: 100, totalPage: 1 };
 
@@ -47,7 +47,7 @@ const List = () => {
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
   const { data: response, isError, refetch } = usePurchaseContributionList(criteria);
-
+  const [skypassNumber, setSkypassNumber] = useState<any>('');
   const toggleModal = () => {
     setShowPopup(!showPopup);
   };
@@ -155,6 +155,10 @@ const List = () => {
     }
   }, [response, isError, toast]);
 
+  // 행 클릭 조회 함수
+  const getClickRow = (rowData: any) => {
+    setSkypassNumber(rowData.skypassMemberNumber);
+  };
   return (
     <>
       <SearchForm onSearch={handleSearch} showClearButton={false} showSearchButton={false}>
@@ -178,7 +182,10 @@ const List = () => {
         clickable={true}
         showPageSizeSelect={false}
         showPagination={false}
-        onClick={toggleModal}
+        onClick={(rowData : any) => {
+          toggleModal(); 
+          getClickRow(rowData);
+        }}
         onSortChange={handleSortChange}
         sortedColumn={sortedColumn}
         sortedDirection={sortedDirection}
@@ -195,7 +202,7 @@ const List = () => {
           },
         }}
       >
-        <DashboardPopup closeModal={toggleModal} />
+        <DashboardPopup skypassMemberNumber ={skypassNumber} closeModal={toggleModal} />
       </Modal>
     </>
   );

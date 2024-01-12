@@ -5,7 +5,7 @@ import { useToast } from '@components/ui';
 import { ValidType } from '@models/common/Constants';
 import { ColumnsInfo } from '@models/components/Table';
 import { PageModel } from '@models/model/PageModel';
-import DashboardPopup from '@pages/user/structured-report/purchase-contributors/dashboardPopUp';
+import DashboardPopup from '@pages/user/structured-report/dashboardPopUp';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
@@ -79,6 +79,12 @@ const List = () => {
     }
   }, [response, isError, toast]);
 
+  // 행 클릭 조회 함수
+  const [skypassNumber, setSkypassNumber] = useState<any>('');
+  const getClickRow = (rowData: any) => {
+    setSkypassNumber(rowData.skypassMemberNumber);
+  };
+  
   return (
     <>
       <DataGrid
@@ -89,7 +95,10 @@ const List = () => {
         clickable={true}
         showPageSizeSelect={false}
         showPagination={false}
-        onClick={toggleModal}
+        onClick={(rowData : any) => {
+          toggleModal(); 
+          getClickRow(rowData);
+        }}
         onSortChange={handleSortChange}
         sortedColumn={sortedColumn}
         sortedDirection={sortedDirection}
@@ -106,7 +115,7 @@ const List = () => {
           },
         }}
       >
-        <DashboardPopup closeModal={toggleModal} />
+        <DashboardPopup skypassMemberNumber={skypassNumber} closeModal={toggleModal} />
       </Modal>
     </>
   );

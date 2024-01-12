@@ -125,6 +125,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                         key={`${column.field}-${sortedDirection}`}
                         defaultDirection={sortedColumn === column.field ? sortedDirection : undefined}
                         onChangeSortDirection={(order) => handleChangeSortDirection(order, index)}
+                        className="icon_sort"
                       />
                     )}
                   </TH>

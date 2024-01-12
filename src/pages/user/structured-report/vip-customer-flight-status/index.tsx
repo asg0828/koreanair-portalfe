@@ -8,7 +8,7 @@ import { ColumnsInfo } from '@models/components/Table';
 import { PageModel, initPage } from '@models/model/PageModel';
 import { useCallback, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import DashboardPopup from './dashboardPopUp';
+import DashboardPopup from '../dashboardPopUp';
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 0.5 },
@@ -31,7 +31,6 @@ const List = () => {
     page: 0,
     pageSize: 50,
   });
-
   const [rows, setRows] = useState<any>([]);
   const { data: response, isError, refetch } = useVipList(page, sortedColumn, sortedDirection);
 
@@ -87,6 +86,11 @@ const List = () => {
     }
   }, [response, isError, toast]);
 
+  // 행 클릭 조회 함수
+  const [skypassNumber, setSkypassNumber] = useState<any>('');
+  const getClickRow = (rowData: any) => {
+    setSkypassNumber(rowData.skypassMemberNumber);
+  };
   return (
     <>
       <DataGrid
@@ -97,12 +101,15 @@ const List = () => {
         showPageSizeSelect={true}
         showPagination={true}
         page={page}
-        onClick={toggleModal}
+        onClick={(rowData : any) => {
+          toggleModal(); 
+          getClickRow(rowData);
+        }}
         onChange={handlePage}
         onSortChange={handleSortChange}
         sortedColumn={sortedColumn}
         sortedDirection={sortedDirection}
-        isMultiSelected={false}
+        isMultiSelected={false} 
       />
       <Modal
         isOpen={showPopup}
@@ -115,7 +122,7 @@ const List = () => {
           },
         }}
       >
-        <DashboardPopup closeModal={toggleModal} />
+        <DashboardPopup skypassMemberNumber={skypassNumber} closeModal={toggleModal} />
       </Modal>
     </>
   );
