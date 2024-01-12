@@ -67,6 +67,7 @@ export const adminMenulist: Array<MenuInfo> = [
   { menuNm: 'OneID 마스터 History', menuUrl: '/admin/admin-report/one-id-main/master-history' },
   { menuNm: 'OneID PAX 매핑', menuUrl: '/admin/admin-report/one-id-main/pax-mapping' },
   { menuNm: '대리점 추정 모바일 번호', menuUrl: '/admin/admin-report/one-id-main/mobile-number' },
+  { menuNm: '대리점 추정 이메일', menuUrl: '/admin/admin-report/one-id-main/email' },
   { menuNm: 'OneID관계이력테이블', menuUrl: '/admin/admin-report/one-id-main/relationship-history-table' },
   { menuNm: 'One-ID 에러 이력', menuUrl: '/admin/admin-report/one-id-error-history' },
   { menuNm: 'One-ID Report', menuUrl: '/admin/admin-report/one-id-report' },
