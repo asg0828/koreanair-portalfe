@@ -525,7 +525,7 @@ const List = () => {
 
       <Stack gap="SM" justifyContent="End">
         <Button priority="Primary" appearance="Contained" size="LG" type="submit" form="form">
-          {t('common.button.reg')}
+          {t('common.button.save')}
         </Button>
       </Stack>
     </Stack>
