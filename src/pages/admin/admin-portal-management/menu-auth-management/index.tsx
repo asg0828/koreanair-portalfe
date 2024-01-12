@@ -218,7 +218,7 @@ const List = () => {
 
         <Stack gap="SM" justifyContent="End">
           <Button priority="Primary" appearance="Contained" size="LG" onClick={handleSave}>
-            {t('common.button.reg')}
+            {t('common.button.save')}
           </Button>
         </Stack>
       </Stack>

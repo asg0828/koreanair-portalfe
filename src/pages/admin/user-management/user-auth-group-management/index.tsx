@@ -250,7 +250,7 @@ const List = () => {
           {t('common.button.new')}
         </Button>
         <Button size="LG" type="submit">
-          {t('common.button.reg')}
+          {t('common.button.save')}
         </Button>
         <Button size="LG" onClick={handleDelete}>
           {t('common.button.delete')}
