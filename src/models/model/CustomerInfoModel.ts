@@ -160,19 +160,32 @@ export interface Call {
   status: string;
 }
 
-export interface Internet {
-  date: string;
-  channel: string;
-  ticketNum: string;
-  arrival: string;
+export interface Campaign {
+  oneidNo: string;
+  lastCampaignApshSndDtim: string;
+  lastCampaignEmailSendDtim: string;
+  lastCampaignSmsLmsSndDtim: string;
+  lastCmpgnKakaotalkSndDtim: string;
+}
+export interface Consulting {
+  lastChatUseDatev: string;
+  lastChatbotUseDatev: string;
+  lastServiceCenterUseDatev: string;
+  oneidNo: string;
 }
 
+export interface Tms {
+  lastTmsAppPushSendDtim: string;
+  lastTmsEmailSendDatetime: string;
+  lastTmsKakaoTalkSendDtim: string;
+  lastTmsSmsSendDatetime: string;
+  oneidNo: string;
+}
 export interface Voc {
-  cnt: number;
-  date: string;
-  channel: string;
-  type: string;
-  content: string;
+  oneidNo: string;
+  vocComplainLastRctDatev: string;
+  vocDisruptionLastRctDatev: string;
+  vocSuggestLastRctDatev: string;
 }
 
 export interface Sms {

@@ -30,7 +30,7 @@ export const getProfileCLevel = (searchInfo: any) => {
   });
 };
 
-// 스카이패스
+// 스카이패스 조회
 export const getSkypass = (skypassMemberNumber : string) => {
   return callApi({
     service: Service.KAL_BE,
@@ -44,88 +44,111 @@ export const getSkypass = (skypassMemberNumber : string) => {
   });
 };
 
-export const getTelephoneHis = () => {
+// Communication Records TMS 정보 조회
+export const getTmsHis = (oneidNo : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.CUSTOMER}/communication-tms`,
     method: Method.GET,
-    params: {},
-  });
-};
-export const getVocHis = () => {
-  return callApi({
-    service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
-    method: Method.GET,
-    params: {},
-  });
-};
-export const getSmsHis = () => {
-  return callApi({
-    service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
-    method: Method.GET,
-    params: {},
-  });
-};
-export const getInternetHis = () => {
-  return callApi({
-    service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
-    method: Method.GET,
-    params: {},
-  });
-};
-export const getEmailHis = () => {
-  return callApi({
-    service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
-    method: Method.GET,
-    params: {},
+    params: {
+      queryParams: {
+        oneidNo 
+      },
+    },
   });
 };
 
-export const getSnsHis = () => {
+// Communication Records VOC 정보 조회
+export const getVocHis = (oneidNo : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.CUSTOMER}/communication-voc`,
     method: Method.GET,
-    params: {},
-  });
-};
+    params: {
+          queryParams: {
+            oneidNo 
+          },
+        },
+      });
+    };
 
-export const getPnrHis = () => {
+// Communication Records 상담 정보 조회
+export const getCosHis = (oneidNo : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.CUSTOMER}/communication-cust-service`,
     method: Method.GET,
-    params: {},
-  });
-};
+    params: {
+          queryParams: {
+            oneidNo 
+          },
+        },
+      });
+    };
 
-export const getEtktHis = () => {
+// Communication Records 캠페인 정보 조회
+export const getCampHis = (oneidNo : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.CUSTOMER}/communication-campaign`,
     method: Method.GET,
-    params: {},
-  });
-};
+    params: {
+          queryParams: {
+            oneidNo 
+          },
+        },
+      });
+    };
 
-export const getBoardingCnt = () => {
-  return callApi({
-    service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
-    method: Method.GET,
-    params: {},
-  });
-};
 
-export const getPetCnt = () => {
+export const getPnrHis = (oneidNo : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.ONEID}`,
+    url: `${PortalApiURL.CUSTOMER}`,
     method: Method.GET,
-    params: {},
-  });
-};
+    params: {
+          queryParams: {
+            oneidNo 
+          },
+        },
+      });
+    };
+
+export const getEtktHis = (oneidNo : string) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.CUSTOMER}`,
+    method: Method.GET,
+    params: {
+          queryParams: {
+            oneidNo 
+          },
+        },
+      });
+    };
+
+export const getBoardingCnt = (oneidNo : string) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.CUSTOMER}`,
+    method: Method.GET,
+    params: {
+          queryParams: {
+            oneidNo 
+          },
+        },
+      });
+    };
+
+export const getPetCnt = (oneidNo : string) => {
+  return callApi({
+    service: Service.KAL_BE,
+    url: `${PortalApiURL.CUSTOMER}`,
+    method: Method.GET,
+    params: {
+          queryParams: {
+            oneidNo 
+          },
+        },
+      });
+    };

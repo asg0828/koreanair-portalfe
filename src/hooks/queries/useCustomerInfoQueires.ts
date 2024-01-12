@@ -1,16 +1,14 @@
 import {
   getBoardingCnt,
-  getEmailHis,
+  getCampHis,
+  getCosHis,
   getEtktHis,
-  getInternetHis,
   getPetCnt,
   getPnrHis,
   getProfile,
   getProfileCLevel,
   getSkypass,
-  getSmsHis,
-  getSnsHis,
-  getTelephoneHis,
+  getTmsHis,
   getVocHis,
 } from '@/api/CustomerInfoAPI';
 import { useQuery } from '@tanstack/react-query';
@@ -32,40 +30,40 @@ export const useSkypass = (skypassMemberNumber: string) => {
   return useQuery(['/customerInfo/skypassNumber'], () => getSkypass(skypassMemberNumber), { enabled: false });
 };
 
-export const useTelephoneHis = () => {
-  return useQuery(['/customerInfo/telephone'], () => getTelephoneHis(), { enabled: false });
-};
-export const useInternetHis = () => {
-  return useQuery(['/customerInfo/internet'], () => getInternetHis(), { enabled: false });
-};
-export const useVocHis = () => {
-  return useQuery(['/customerInfo/voc'], () => getVocHis(), { enabled: false });
+{/* Communication Records */}
+// TMS 정보 조회
+export const useTmsHis = (oneidNo : string) => {
+  return useQuery(['/customerInfo/tms'], () => getTmsHis(oneidNo), { enabled: false });
 };
 
-export const useSmsHis = () => {
-  return useQuery(['/customerInfo/sms'], () => getSmsHis(), { enabled: false });
+// 상담 정보 조회
+export const useCosHis = (oneidNo : string) => {
+  return useQuery(['/customerInfo/consulting'], () => getCosHis(oneidNo), { enabled: false });
 };
 
-export const useEmailHis = () => {
-  return useQuery(['/customerInfo/email'], () => getEmailHis(), { enabled: false });
+// VOC 정보 조회
+export const useVocHis = (oneidNo : string) => {
+  return useQuery(['/customerInfo/communication-voc'], () => getVocHis(oneidNo), { enabled: false });
 };
 
-export const useSnsHis = () => {
-  return useQuery(['customerInfo/sns'], () => getSnsHis(), { enabled: false });
+// 캠페인 정보 조회
+export const useCampHis = (oneidNo : string) => {
+  return useQuery(['/customerInfo/campaign'], () => getCampHis(oneidNo), { enabled: false });
+};
+{/* Communication Records */}
+
+export const usePnrHis = (oneidNo : string) => {
+  return useQuery(['customerInfo/pnr'], () => getPnrHis(oneidNo), { enabled: false });
 };
 
-export const usePnrHis = () => {
-  return useQuery(['customerInfo/pnr'], () => getPnrHis(), { enabled: false });
+export const useEtktHis = (oneidNo : string) => {
+  return useQuery(['customerInfo/Etkt'], () => getEtktHis(oneidNo), { enabled: false });
 };
 
-export const useEtktHis = () => {
-  return useQuery(['customerInfo/Etkt'], () => getEtktHis(), { enabled: false });
+export const useBoardingCnt = (oneidNo : string) => {
+  return useQuery(['customerInfo/boardingCnt'], () => getBoardingCnt(oneidNo), { enabled: false });
 };
 
-export const useBoardingCnt = () => {
-  return useQuery(['customerInfo/boardingCnt'], () => getBoardingCnt(), { enabled: false });
-};
-
-export const usePetCnt = () => {
-  return useQuery(['customerInfo/petCnt'], () => getPetCnt(), { enabled: false });
+export const usePetCnt = (oneidNo : string) => {
+  return useQuery(['customerInfo/petCnt'], () => getPetCnt(oneidNo), { enabled: false });
 };
