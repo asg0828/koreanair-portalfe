@@ -20,6 +20,7 @@ import DataConversion from '@pages/admin/admin-report/data-conversion';
 import OneIdErrorHistory from '@pages/admin/admin-report/one-id-error-history';
 import MasterHistory from '@pages/admin/admin-report/one-id-main/master-history';
 import MobileNumber from '@pages/admin/admin-report/one-id-main/mobile-number';
+import Email from '@pages/admin/admin-report/one-id-main/email'
 import PaxMapping from '@pages/admin/admin-report/one-id-main/pax-mapping';
 import RelationshipHistoryTable from '@pages/admin/admin-report/one-id-main/relationship-history-table';
 import Ctivoc from '@pages/admin/admin-report/one-id-report/ctivoc';
@@ -102,6 +103,7 @@ const adminRouter = [
         children: [
           { id: '/admin/admin-report/one-id-main/master-history', path: 'master-history', element: <MasterHistory /> },
           { id: '/admin/admin-report/one-id-main/mobile-number', path: 'mobile-number', element: <MobileNumber /> },
+          { id: '/admin/admin-report/one-id-main/email', path: 'email', element: <Email /> },
           { id: '/admin/admin-report/one-id-main/pax-mapping', path: 'pax-mapping', element: <PaxMapping /> },
           {
             id: '/admin/admin-report/one-id-main/relationship-history-table',

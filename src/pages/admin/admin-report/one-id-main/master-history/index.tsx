@@ -225,7 +225,7 @@ export default function OneIdMasterHistory() {
           <form>
             <HorizontalTable>
               <TR>
-                <TH colSpan={1.002} align="right">
+                <TH colSpan={1} align="right">
                   OneId 번호
                 </TH>
                 <TD colSpan={2}>
@@ -260,7 +260,21 @@ export default function OneIdMasterHistory() {
                     ))}
                   </Select>
                 </TD>
-                <TH colSpan={1.002} align="right">
+              </TR>
+              <TR>
+              <TH colSpan={1} align="right">
+                  Skypass 번호
+                </TH>
+                <TD colSpan={5}>
+                  <TextField
+                    className="width-100"
+                    id="bfChgEngFname"
+                    onChange={onSearchChangeHandler}
+                    placeholder="성을 입력하세요."
+                    value={searchInfo.skypassMemeberNum}
+                  />
+                </TD>
+                <TH colSpan={1} align="right">
                   조회기준
                 </TH>
                 <TD colSpan={2}>
@@ -281,7 +295,6 @@ export default function OneIdMasterHistory() {
                   />
                 </TD>
               </TR>
-
               <TR>
                 <TH colSpan={1} align="right">
                   한글이름
