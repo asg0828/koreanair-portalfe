@@ -4,7 +4,7 @@ import NoResult from '@/components/emptyState/NoData';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, TR, TD, THead, TH, Table, Label } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { familyColumn, initFamily, initProfile, initSkypass } from './data';
+import { familyColumn, initCampaign, initConsulting, initFamily, initProfile, initSkypass, initTms, initVoc } from './data';
 import {
   Profile,
   Skypass,
@@ -15,8 +15,6 @@ import {
   Etkt,
   BoardingList,
   Voc,
-  Call,
-  Sms,
   Sns,
   Email,
   FamilyMembers,
@@ -41,10 +39,10 @@ export default function List() {
   const [etkt, setEtkt] = useState<Array<Etkt>>([]);
   const [boardingLists, setBoardingLists] = useState<Array<BoardingList>>([]);
 
-  const [campaign, setCampaign] = useState<Campaign>();
-  const [consulting, setConsulting] = useState<Consulting>();
-  const [tms, setTms] = useState<Tms>()
-  const [voc, setVoc] = useState<Voc>();
+  const [campaign, setCampaign] = useState<Campaign>(initCampaign);
+  const [consulting, setConsulting] = useState<Consulting>(initConsulting);
+  const [tms, setTms] = useState<Tms>(initTms)
+  const [voc, setVoc] = useState<Voc>(initVoc);
 
   const [snss, setSnss] = useState<Array<Sns>>([]);
   const [emails, setEmails] = useState<Array<Email>>([]);
@@ -320,6 +318,10 @@ export default function List() {
     setSearchInfo({ skypassMemberNumber: '', oneidNo: '', searchType: '' })
     setSearchSkypassNm('')
     setOneIdno('')
+    setCampaign(initCampaign)
+    setConsulting(initConsulting)
+    setTms(initTms)
+    setVoc(initVoc)
   }
 
   return (
@@ -681,7 +683,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.pnr}</span>개
+                      {/* <span className="num">{cnt?.pnr}</span>개 */}
                     </div>
                   </Stack>
                 </div>
@@ -697,7 +699,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.eTkt}</span>개
+                      {/* <span className="num">{cnt?.eTkt}</span>개 */}
                     </div>
                   </Stack>
                 </div>
@@ -898,7 +900,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.boarding}</span>회
+                      {/* <span className="num">{cnt?.boarding}</span>회 */}
                     </div>
                   </Stack>
                 </div>
@@ -979,7 +981,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.call}</span>
+                        {/* <span className="num">{cnt?.call}</span> */}
                       </div>
                     </Stack>
                   </div>
@@ -1051,15 +1053,15 @@ export default function List() {
                     <tbody>
                         <tr>
                           <td>서비스 센터</td>
-                          <td>{consulting?.lastServiceCenterUseDatev}</td>
+                          <td>{consulting?.lastServiceCenterUseDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                         <tr>
                           <td>챗봇</td>
-                          <td>{consulting?.lastChatbotUseDatev}</td>
+                          <td>{consulting?.lastChatbotUseDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                         <tr>
                           <td>채팅</td>
-                          <td>{consulting?.lastChatUseDatev}</td>
+                          <td>{consulting?.lastChatUseDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                     </tbody>
                   </table>
@@ -1081,19 +1083,19 @@ export default function List() {
                     <tbody>
                         <tr>
                           <td>카카오알림톡</td>
-                          <td>{campaign?.lastCmpgnKakaotalkSndDtim}</td>
+                          <td>{campaign?.lastCmpgnKakaotalkSndDtim.slice(0, 10)}</td>
                         </tr>
                         <tr>
                           <td>SMS/LMS</td>
-                          <td>{campaign?.lastCmpgnKakaotalkSndDtim}</td>
+                          <td>{campaign?.lastCmpgnKakaotalkSndDtim.slice(0, 10)}</td>
                         </tr>
                         <tr>
                           <td>APP PUSH</td>
-                          <td>{campaign?.lastCampaignApshSndDtim}</td>
+                          <td>{campaign?.lastCampaignApshSndDtim.slice(0, 10)}</td>
                         </tr>
                         <tr>
                           <td>E-MAIL</td>
-                          <td>{campaign?.lastCampaignEmailSendDtim}</td>
+                          <td>{campaign?.lastCampaignEmailSendDtim.slice(0, 10)}</td>
                         </tr>
                     </tbody>
                   </table>
@@ -1115,15 +1117,15 @@ export default function List() {
                     <tbody>
                         <tr>
                           <td>불만</td>
-                          <td>{voc?.vocComplainLastRctDatev}</td>
+                          <td>{voc?.vocComplainLastRctDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                         <tr>
                           <td>제언</td>
-                          <td>{voc?.vocSuggestLastRctDatev}</td>
+                          <td>{voc?.vocSuggestLastRctDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                         <tr>
                           <td>Disruption</td>
-                          <td>{voc?.vocDisruptionLastRctDatev}</td>
+                          <td>{voc?.vocDisruptionLastRctDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                     </tbody>
                   </table>
@@ -1139,26 +1141,26 @@ export default function List() {
                     </colgroup>
                     <thead>
                       <tr className="width-100">
-                        <th>캠페인 채널</th>
+                        <th>TMS 발송 채널</th>
                         <th>최근 발송일</th>
                       </tr>
                     </thead>
                     <tbody>
                         <tr>
                           <td>카카오알림톡</td>
-                          <td>{tms?.lastTmsKakaoTalkSendDtim}</td>
+                          <td>{tms?.lastTmsKakaoTalkSendDtim.slice(0, 10)}</td>
                         </tr>
                         <tr>
                           <td>SMS/LMS</td>
-                          <td>{tms?.lastTmsSmsSendDatetime}</td>
+                          <td>{tms?.lastTmsSmsSendDatetime.slice(0, 10)}</td>
                         </tr>
                         <tr>
                           <td>APP PUSH</td>
-                          <td>{tms?.lastTmsAppPushSendDtim}</td>
+                          <td>{tms?.lastTmsAppPushSendDtim.slice(0, 10)}</td>
                         </tr>
                         <tr>
                           <td>E-MAIL</td>
-                          <td>{tms?.lastTmsEmailSendDatetime}</td>
+                          <td>{tms?.lastTmsEmailSendDatetime.slice(0, 10)}</td>
                         </tr>
                     </tbody>
                   </table>
@@ -1171,7 +1173,7 @@ export default function List() {
                   if (isListView3.contents === '') {
                     setIsListView3({ open: !isListView3.open, contents: 'consulting' });
                   } else {
-                    setIsListView3({ open: !isListView3.open, contents: '' });
+                    setIsListView3({ open: !isListView3.open, contents: isListView3.contents });
                   }
                 }}
               >

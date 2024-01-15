@@ -3,8 +3,10 @@ import {
   AnalysisResultData,
   BoardingList,
   Call,
+  Campaign,
   Cnt,
   Column,
+  Consulting,
   Email,
   Etkt,
   FamilyMembers,
@@ -15,6 +17,8 @@ import {
   SkypassList,
   Sms,
   Sns,
+  Tms,
+  Voc,
   Wallet,
 } from '@/models/model/CustomerInfoModel';
 
@@ -72,6 +76,37 @@ const initSearchInfoC : any = {
   engLname: '',
   engFname: ''
 }
+
+const initCampaign : Campaign = {
+  oneidNo: '',
+  lastCampaignApshSndDtim: '',
+  lastCampaignEmailSendDtim: '',
+  lastCampaignSmsLmsSndDtim: '',
+  lastCmpgnKakaotalkSndDtim: ''
+}
+
+const initConsulting : Consulting = {
+  lastChatUseDatev: '',
+  lastChatbotUseDatev: '',
+  lastServiceCenterUseDatev: '',
+  oneidNo: ''
+}
+
+const initTms : Tms = {
+  lastTmsAppPushSendDtim: '',
+  lastTmsEmailSendDatetime: '',
+  lastTmsKakaoTalkSendDtim: '',
+  lastTmsSmsSendDatetime: '',
+  oneidNo: ''
+}
+
+const initVoc : Voc = {
+  oneidNo: '',
+  vocComplain: '',
+  vocDisruptionLastRctDatev: '',
+  vocSuggestLastRctDatev: ''
+}
+
 const matchedProfile: any[] = [
   { name: '홍홍동', skypassNm: '11122' },
   { name: '이순신', skypassNm: '33344' },
@@ -253,5 +288,9 @@ export {
   initSkypass,
   initFamily,
   familyColumn,
-  initSearchInfoC
+  initSearchInfoC,
+  initCampaign,
+  initConsulting,
+  initTms,
+  initVoc
 };
