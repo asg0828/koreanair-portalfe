@@ -3,21 +3,20 @@ import { Column, ColumnChild } from '@/models/model/CustomerInfoModel';
 import {
   CtiVocData,
   DailyReportData,
-  ErrLogData,
   PaxData,
   RelationData,
 } from '@/models/oneId/OneIdInfo';
 
 const oneIdPaxColumn: Column[] = [
-  { headerName: 'NO', field: 'no' },
-  { headerName: 'OneID번호', field: 'oneidNo' },
-  { headerName: 'PNR번호', field: 'pnrNumber' },
-  { headerName: 'UCIID', field: 'uciid' },
-  { headerName: 'PotentialId', field: 'temporaryOneidNo' },
-  { headerName: '사용여부', field: 'useYn' },
-  { headerName: 'Skypass회원번호', field: 'skypassMemberNumber' },
-  { headerName: '최초생성일시', field: 'creationDate' },
-  { headerName: '최종갱신일시', field: 'lastUpdateDate' },
+  { headerName: 'NO', field: 'no', colSpan: 0.05 },
+  { headerName: 'OneID번호', field: 'oneidNo', colSpan: 0.2 },
+  { headerName: 'PNR번호', field: 'pnrNumber', colSpan: 0.1 },
+  { headerName: 'UCIID', field: 'uciid', colSpan: 0.1},
+  { headerName: 'PotentialId', field: 'temporaryOneidNo', colSpan: 0.2 },
+  { headerName: '사용여부', field: 'useYn', colSpan: 0.05 },
+  { headerName: 'Skypass회원번호', field: 'skypassMemberNumber', colSpan: 0.1 },
+  { headerName: '최초생성일시', field: 'creationDate', colSpan: 0.1 },
+  { headerName: '최종갱신일시', field: 'lastUpdateDate', colSpan: 0.1 }
 ];
 
 const onIdPaxData: PaxData[] = [
@@ -310,19 +309,19 @@ const relationData: RelationData[] = [
 
 // OneID 에러 이력 페이지 컬럼명
 const errLogColumn: Column[] = [
-  { headerName: 'No', field: 'no' },
-  { headerName: '에러코드', field: 'errorNm' },
-  { headerName: '상세에러코드', field: 'errCodeDtl' },
-  { headerName: 'OneID 등록 Channel코드', field: 'oneidRegisChnlCd' },
-  { headerName: 'PNR / Skypass번호', field: 'oneidFinalChgRelateNo' },
-  { headerName: 'SKYPASS 액션', field: 'skypassAct' },
-  { headerName: 'ODS Header', field: 'odsHeader' },
-  { headerName: 'ODS M_GID', field: 'odsMGid' },
-  { headerName: 'UCIID', field: 'uciid' },
-  { headerName: '상세내역', field: 'errorContents' },
-  { headerName: '처리여부', field: 'errorActionYn' },
-  { headerName: '최초 생성 일시', field: 'creationDate' },
-  { headerName: '최종 갱신 일시', field: 'lastUpdateDate' },
+  { headerName: 'No', field: 'no', colSpan: 0.05 },
+  { headerName: '에러코드', field: 'errorNm', colSpan: 0.1 },
+  { headerName: '상세에러코드', field: 'detailErrorNm', colSpan: 0.1 },
+  { headerName: 'OneID 등록 Channel코드', field: 'oneidRegisChnlCd', colSpan: 0.1 },
+  { headerName: 'PNR / Skypass번호', field: 'oneidFinalChgRelateNo', colSpan: 0.1 },
+  { headerName: 'SKYPASS 액션', field: 'skypassAct', colSpan: 0.1 },
+  { headerName: 'ODS Header', field: 'odsHeader', colSpan: 0.1 },
+  { headerName: 'ODS M_GID', field: 'odsMGid', colSpan: 0.1 },
+  { headerName: 'UCIID', field: 'uciid', colSpan: 0.1 },
+  { headerName: '상세내역', field: 'errorContents', colSpan: 0.2 },
+  { headerName: '처리여부', field: 'errorActionYn', colSpan: 0.05 },
+  { headerName: '최초 생성 일시', field: 'creationDate', colSpan: 0.1 },
+  { headerName: '최종 갱신 일시', field: 'lastUpdateDate', colSpan: 0.1 }
 ];
 
 const ctiVocColumn: ColumnChild[] = [
@@ -411,24 +410,6 @@ const ctiVocTotal = {
   oneidMultiHitCnt: 15,
   oneidOverHitCnt: 16,
 };
-
-const errLogData: ErrLogData[] = [
-  {
-    no: '1',
-    errorNm: 'error1',
-    errCodeDtl: 'error1-1',
-    oneidRegisChnlCd: 'oneId 채널 코드',
-    oneidFinalChgRelateNo: 'pnrsky-1',
-    uciid: 'uciid',
-    errorContents: '상세내역',
-    errorActionYn: 'Y',
-    creationDate: '2023-10-26',
-    lastUpdateDate: '2023-10-26',
-    skypassAct: '액션',
-    odsHeader: 'odsH',
-    odsMGid: 'odsMGid',
-  },
-];
 
 const oneIdDailyColumn: ColumnChild[] = [
   { headerName: 'No', field: 'no', colSpan: 1, rowSpan: 0.35 },
@@ -595,8 +576,6 @@ const oneIdSameColumn: Column[] = [
   { headerName: 'T-OneID paxMapping OneID', field: 'sourcePaxMappingOneIdNo', colSpan: 0.09 },
   { headerName: 'S-OneID paxMapping PnrNo', field: 'sourcePaxMappingPnrNo', colSpan: 0.09 },
   { headerName: 'S-OneID paxMapping Uci-IDNo', field: 'sourcePaxMappingUciIdNo', colSpan: 0.099 },
-
-
   { headerName: 'DOB', field: 'birthDatev', colSpan: 0.099 },
   { headerName: 'BoardYn', field: 'boardYn', colSpan: 0.099 },
   { headerName: 'e-mail', field: 'email', colSpan: 0.099 },
@@ -617,7 +596,6 @@ export {
   relationColumn,
   relationData,
   errLogColumn,
-  errLogData,
   oneIdDailyColumn,
   oneIdSameColumn,
   oneIdDailyData,

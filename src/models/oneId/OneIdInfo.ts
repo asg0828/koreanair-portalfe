@@ -91,7 +91,7 @@ export interface errorSearch {
 export interface ErrLogData {
   no: string;
   errorNm: string;
-  errCodeDtl: string;
+  detailErrorNm: string;
   oneidRegisChnlCd: string;
   [oneidFinalChgRelateNo: string]: string;
   uciid: string;
@@ -99,8 +99,6 @@ export interface ErrLogData {
   errorActionYn: string;
   creationDate: string;
   lastUpdateDate: string;
-
-  /* 컴럼명 확인 요망 */
   skypassAct: string;
   odsHeader: string;
   odsMGid: string;

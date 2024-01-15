@@ -1,7 +1,7 @@
 import { Button, DatePicker, Stack, TD, TH, TR, TextField, Radio, useToast, Loader, SelectOption, Select } from '@ke-design/components';
 import { useCallback, useEffect, useState } from 'react';
 import HorizontalTable from '@/components/table/HorizontalTable';
-import { errLogColumn, errLogData } from '../one-id-main/data';
+import { errLogColumn } from '../one-id-main/data';
 import { ErrLogData, errorSearch } from '@/models/oneId/OneIdInfo';
 import DataGrid from '@/components/grid/DataGrid';
 import { PageModel, initPage } from '@/models/model/PageModel';
@@ -351,7 +351,6 @@ export default function OneIdErrorHistory() {
       <DataGrid
         columns={errLogColumn}
         rows={row}
-        // rows={errLogData}
         enableSort={false}
         clickable={true}
         page={page}
