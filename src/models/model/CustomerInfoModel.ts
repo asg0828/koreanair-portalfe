@@ -99,6 +99,7 @@ export interface FamilyMembers {
   currentMileage: number
   createdDate: string
   memberLevel: string
+  familyGroupCode: string
 }
 export interface FamilyList {
   relationship: string;

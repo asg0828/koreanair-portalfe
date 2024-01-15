@@ -108,6 +108,7 @@ const List = () => {
   };
 
   const handleClick = (nFaqId: string) => {
+    rows.forEach((item: FaqModel) => (item.answ = ''));
     if (faqId === nFaqId) {
       nFaqId = '';
     }
@@ -141,6 +142,7 @@ const List = () => {
         response.data.contents.forEach(
           (item: FaqModel) => (item.codeNm = getCode(GroupCodeType.FAQ_TYPE, item.clCode)?.codeNm || '')
         );
+        response.data.contents.forEach((item: FaqModel) => (item.answ = ''));
         setRows(response.data.contents);
         setPage(response.data.page);
       }

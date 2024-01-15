@@ -369,6 +369,10 @@ export default function List() {
   // Communication records api 호출 
   useEffect(() => {
     if(oneIdno !== '') {
+      setCampaign(initCampaign)
+      setConsulting(initConsulting)
+      setTms(initTms)
+      setVoc(initVoc)
       refetchCamp()
       refetchCos()
       refetchTms()
@@ -749,7 +753,7 @@ export default function List() {
                           </TH>
                         </TR>
                       </THead>
-                      {selectedSkypass.expiredMileages.length > 0 ? (selectedSkypass.expiredMileages.map((list) =>(
+                      {selectedSkypass.expiredMileages.length > 0 ? (selectedSkypass.expiredMileages.filter((item) => item.remainMileage !== 0).map((list) =>(
                         <TR>
                           <TD className='verticalTableTD'>{list.expiration.length === 4 ? list.expiration.replace(/(\d{2})(\d{2})/, '20$1-$2') : '평생'}</TD>
                           <TD className='verticalTableTD'>{list.remainMileage}</TD>
@@ -843,7 +847,7 @@ export default function List() {
                 <div className="right">
                   합산가능<br/>마일리지
                   <span className="num">
-                    {family.map((a)=> a.currentMileage).reduce(function add(sum, curVal) { return sum + curVal }, 0)}
+                    {family.filter((list) => list.familyGroupCode !== '00').map((a)=> a.currentMileage).reduce(function add(sum, curVal) { return sum + curVal }, 0)}
                   </span>
                 </div>
               </div>
@@ -1197,7 +1201,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.call}</span>
+                        <span className="num">{Object.values(consulting).filter(value => value !== '').length === 0 ? 0 : Object.values(consulting).filter(value => value !== '').length - 1 }</span>
                       </div>
                     </Stack>
                   </div>
@@ -1213,7 +1217,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.internet}</span>
+                      <span className="num">{Object.values(campaign).filter(value => value !== '').length <= 0 ? 0 : Object.values(campaign).filter(value => value !== '').length - 1 }</span>
                       </div>
                     </Stack>
                   </div>
@@ -1231,7 +1235,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.voc}</span>
+                      <span className="num">{Object.values(voc).filter(value => value !== '').length === 0 ? 0 : Object.values(voc).filter(value => value !== '').length - 1 }</span>
                       </div>
                     </Stack>
                   </div>
@@ -1247,7 +1251,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{cnt?.sms}</span>
+                      <span className="num">{Object.values(tms).filter(value => value !== '').length === 0 ? 0 : Object.values(tms).filter(value => value !== '').length - 1 }</span>
                       </div>
                     </Stack>
                   </div>
