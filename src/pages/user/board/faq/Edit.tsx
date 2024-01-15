@@ -55,7 +55,7 @@ const Edit = () => {
   });
   const values = getValues();
   const codeList = useAppSelector(selectCodeList(GroupCodeType.FAQ_TYPE));
-  const { data: response, isSuccess, isError } = useFaqById(values.faqId);
+  const { data: response, isSuccess, isError } = useFaqById(values.faqId, 'edit');
   const { data: uResponse, isSuccess: uIsSuccess, isError: uIsError, mutate } = useUpdateFaq();
 
   const goToList = useCallback(() => {
