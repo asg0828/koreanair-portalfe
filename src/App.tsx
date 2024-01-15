@@ -17,7 +17,7 @@ import SessionUtil from '@utils/SessionUtil';
 import { Suspense, useCallback, useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
-import { RouterProvider } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 const App = () => {
   const { t } = useTranslation();
@@ -101,7 +101,7 @@ const App = () => {
           } else if (sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router) {
             return (
               <Watermark content={sessionInfo.userEmail} className="width-100" style={{ minHeight: '100vh' }}>
-                <RouterProvider router={router} />
+                <RouterProvider router={createBrowserRouter(router)} />
               </Watermark>
             );
           } else {
