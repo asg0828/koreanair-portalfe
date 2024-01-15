@@ -63,7 +63,8 @@ const initFamily : FamilyMembers[] = [
     skypassNumber: '',
     currentMileage: 0,
     createdDate: '',
-    memberLevel: ''
+    memberLevel: '',
+    familyGroupCode: ''
   }
 ]
 
