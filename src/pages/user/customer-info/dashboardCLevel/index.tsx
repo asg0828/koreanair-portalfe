@@ -972,22 +972,16 @@ export default function List() {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>
-                          <Stack justifyContent="Between" alignItems={'Start'}>
-                            <Stack direction="Vertical">
-                              {pnr.map((item, index) => (
-                                <Stack gap="MD">
-                                  <div>{item?.reservationNumber}</div>
-                                  <div>{item?.companyIdentification}{item?.productIdentification}</div>
-                                  <div>{item?.classOfService}</div>
-                                  <div>{item?.departureDate}</div>
-                                  <div>{item?.boardPointCityCode}{item?.offPointCityCode}</div>
-                                  <div>{item?.bookingStatus}</div>
-                                </Stack>
-                              ))}
-                            </Stack>
+                        {pnr.map((item, index) => (
+                          <Stack gap="MD">
+                            <td>{item?.reservationNumber}</td>
+                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
+                            <td>{item?.classOfService}</td>
+                            <td>{item?.departureDate}</td>
+                            <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
+                            <td>{item?.bookingStatus}</td>
                           </Stack>
-                        </td>
+                        ))}
                       </tr>
                     </tbody>
                   </table>
@@ -1016,24 +1010,16 @@ export default function List() {
                     </thead>
                     <tbody>
                       <tr>
-                        <td>
-                          <Stack justifyContent="Between" alignItems={'Start'}>
-                            {/* left */}
-                            <Stack direction="Vertical">
-                              {etkt.map((item, index) => (
-                                <Stack gap="MD">
-                                  <div>{item?.ticketNumber}</div>
-                                  <div>{item?.marketingCompany}{item?.flightNumber}</div>
-                                  <div>{item?.bookingClass}</div>
-                                  <div>{item?.departureDate}</div>
-                                  <div>{item?.cpnNumber}</div>
-                                  <div>{item?.boardPointLocationId}{item?.offPointLocationId}</div>
-                                </Stack>
-                              ))}
-                            </Stack>
-                            {/* left end */}
+                        {etkt.map((item, index) => (
+                          <Stack gap="MD">
+                            <td>{item?.ticketNumber}</td>
+                            <td>{item?.marketingCompany}{item?.flightNumber}</td>
+                            <td>{item?.bookingClass}</td>
+                            <td>{item?.departureDate}</td>
+                            <td>{item?.cpnNumber}</td>
+                            <td>{item?.boardPointLocationId}{item?.offPointLocationId}</td>
                           </Stack>
-                        </td>
+                        ))}
                       </tr>
                     </tbody>
                   </table>
@@ -1067,16 +1053,32 @@ export default function List() {
                     <Stack justifyContent="Between" alignItems={'cencter'}>
                       <div className="key">보유쿠폰</div>
                       <div className="value">
-                        <span className="num">{wallet?.coupon}</span>개
+                        <span className="num">{profile?.holdEcpnCnt + profile?.holdTktDiscCpnCnt + profile?.holdTktDiscountPlccCpnCnt}</span>개
                       </div>
                     </Stack>
                   </div>
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">항공권할인쿠폰보유여부</div>
+                    <div className="key">항공권할인Coupon보유개수</div>
                     <div className="value">
-                      <span className="num">{wallet?.promotion}</span>
+                      <span className="num">{profile?.holdTktDiscCpnCnt}</span>
+                    </div>
+                  </Stack>
+                </div>
+                <div className="item middle">
+                  <Stack justifyContent="Between" alignItems={'cencter'}>
+                    <div className="key">항공권할인PLCCCoupon보유개수</div>
+                    <div className="value">
+                      <span className="num">{profile?.holdTktDiscountPlccCpnCnt}</span>
+                    </div>
+                  </Stack>
+                </div>
+                <div className="item middle">
+                  <Stack justifyContent="Between" alignItems={'cencter'}>
+                    <div className="key">전자우대할인권보유개수</div>
+                    <div className="value">
+                      <span className="num">{profile?.holdEcpnCnt}</span>
                     </div>
                   </Stack>
                 </div>
@@ -1092,25 +1094,25 @@ export default function List() {
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">최다 탑승 좌석</div>
-                    <div className="value">{preference?.seat}</div>
+                    <div className="value">{profile?.intMostSetaType}</div>
                   </Stack>
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">선호 기내식</div>
-                    <div className="value">{preference?.meal}</div>
+                    <div className="value">{profile?.hiclsMenuPrefer}</div>
                   </Stack>
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">골프여행 선호지수</div>
-                    <div className="value">{preference?.meal}</div>
+                    <div className="value">{profile?.golfTrvlPrspFeatureValue}</div>
                   </Stack>
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
                     <div className="key">High Class 선호지수</div>
-                    <div className="value">{preference?.meal}</div>
+                    <div className="value">{profile?.prfrPrspFeatureValue}</div>
                   </Stack>
                 </div>
               </div>
@@ -1141,7 +1143,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{cnt?.boarding}</span>회
+                      <span className="num">{profile?.boardCnt}</span>회
                     </div>
                   </Stack>
                 </div>
@@ -1222,7 +1224,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                        <span className="num">{Object.values(consulting).filter(value => value !== '').length === 0 ? 0 : Object.values(consulting).filter(value => value !== '').length - 1 }</span>
+                        <span className="num">{profile?.talkUseCnt}</span>
                       </div>
                     </Stack>
                   </div>
@@ -1238,7 +1240,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                      <span className="num">{Object.values(campaign).filter(value => value !== '').length <= 0 ? 0 : Object.values(campaign).filter(value => value !== '').length - 1 }</span>
+                        <span className="num">{profile?.campaignSendCnt}</span>
                       </div>
                     </Stack>
                   </div>
@@ -1256,7 +1258,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                      <span className="num">{Object.values(voc).filter(value => value !== '').length === 0 ? 0 : Object.values(voc).filter(value => value !== '').length - 1 }</span>
+                        <span className="num">{profile?.vocCnt}</span>
                       </div>
                     </Stack>
                   </div>
@@ -1272,7 +1274,7 @@ export default function List() {
                         </button>
                       </div>
                       <div className="value">
-                      <span className="num">{Object.values(tms).filter(value => value !== '').length === 0 ? 0 : Object.values(tms).filter(value => value !== '').length - 1 }</span>
+                        <span className="num">{profile?.tmsSendCnt}</span>
                       </div>
                     </Stack>
                   </div>

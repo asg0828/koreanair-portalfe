@@ -46,6 +46,18 @@ export interface Profile {
   mobilePhoneNumber: string;
   emailAddress: string;
   oneidNo: string;
+  holdTktDiscCpnCnt: number;
+  holdTktDiscountPlccCpnCnt: number;
+  holdEcpnCnt: number;
+  intMostSetaType: string;
+  hiclsMenuPrefer: string;
+  golfTrvlPrspFeatureValue: number;
+  prfrPrspFeatureValue: number;
+  boardCnt: number;
+  talkUseCnt: number;
+  campaignSendCnt: number;
+  vocCnt: number;
+  tmsSendCnt: number;
   skypassInfos : SkypassInfo[]
 }
 
