@@ -160,7 +160,7 @@ const Detail = () => {
   }, [dResponse, dIsSuccess, dIsError, goToList, navigate, toast]);
 
   return (
-    <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100">
+    <Stack direction="Vertical" gap="MD" justifyContent="Between" className="height-100 width-100 detail-container">
       <Stack direction="Vertical" gap="MD" className="height-100">
         <Typography variant="h3">{t('bizMeta:header.basicInfo')}</Typography>
         <HorizontalTable>

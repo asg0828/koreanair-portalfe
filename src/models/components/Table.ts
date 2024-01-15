@@ -7,6 +7,7 @@ export interface ColumnsInfo {
   maxLength?: number;
   require?: boolean;
   align?: Align;
+  isTooltip?: boolean;
   render?: (rowIndex: number, field: any, maxLength?: number, require?: boolean) => any;
 }
 

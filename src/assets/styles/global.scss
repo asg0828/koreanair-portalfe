@@ -1482,3 +1482,9 @@ svg {
     height: 2rem;
   }
 }
+
+.detail-container {
+  div {
+    word-break:break-all;
+  }
+}

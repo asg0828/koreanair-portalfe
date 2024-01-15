@@ -50,8 +50,8 @@ const List = () => {
   const columns: Array<ColumnsInfo> = [
     { headerName: t('bizMeta:label.tableKoNm'), field: 'mtsKoNm', colSpan: 2.5, align: 'left' },
     { headerName: t('bizMeta:label.tableEnNm'), field: 'mtsEnNm', colSpan: 2.5, align: 'left' },
-    { headerName: t('bizMeta:label.tableDef'), field: 'mtsDef', colSpan: 2.5, align: 'left' },
-    { headerName: t('bizMeta:label.srcTbNm'), field: 'srcTbNm', colSpan: 2.5, align: 'left' },
+    { headerName: t('bizMeta:label.tableDef'), field: 'mtsDef', colSpan: 2.5, align: 'left', isTooltip: true },
+    { headerName: t('bizMeta:label.srcTbNm'), field: 'srcTbNm', colSpan: 2.5, align: 'left', isTooltip: true },
   ];
 
   const goToReg = () => {

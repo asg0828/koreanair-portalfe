@@ -258,7 +258,7 @@ const Detail = () => {
 
   return (
     <>
-      <Stack direction="Vertical" gap="MD" className="height-100 contentDeatilWrap">
+      <Stack direction="Vertical" gap="MD" className="height-100 contentDeatilWrap detail-container">
         <HorizontalTable className="height-100">
           <TR>
             <TH colSpan={4} className="headerName">
