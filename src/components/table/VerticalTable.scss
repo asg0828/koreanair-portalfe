@@ -3,41 +3,56 @@
   overflow-x: auto;
   white-space: nowrap;
   min-width: 100%;
-}
 
-.verticalTableTD {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-}
+  .verticalTableTD {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+  
+    div[data-radix-popper-content-wrapper] {
+      white-space: normal;
+      word-break:break-all;
+      max-width: 400px;
+      z-index: 999 !important;
 
-.verticalTableTH {
-  > div {
-    white-space: initial;
-    min-height: 43px !important;
-  }
-  overflow-x: hidden;
-  text-align: center;
-  word-break: keep-all;
-  width: 100px !important;
+      & > div {
+        max-width: 400px;
+      }
 
-  & > div > div {
-    &:nth-child(2) {
-      visibility: hidden;
+      &:hover {
+        visibility: hidden;
+      }
     }
   }
-  .icon_sort {
-    right: 2px !important;
-    top: 50%;
-    transform: translateY(-50%);
+
+  .verticalTableTH {
+    > div {
+      white-space: initial;
+      min-height: 43px !important;
+    }
+    overflow-x: hidden;
+    text-align: center;
+    word-break: keep-all;
+    width: 100px !important;
+  
+    & > div > div {
+      &:nth-child(2) {
+        visibility: hidden;
+      }
+    }
+    .icon_sort {
+      right: 2px !important;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
-}
-
-.verticalTableDiv {
-  width: inherit;
-  min-width: 100%;
-}
-
-.sortedColumn > div {
-  background-color: skyblue !important;
+  
+  .verticalTableDiv {
+    width: inherit;
+    min-width: 100%;
+  }
+  
+  .sortedColumn > div {
+    background-color: skyblue !important;
+  }
 }

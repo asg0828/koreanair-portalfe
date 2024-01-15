@@ -2,7 +2,7 @@ import NoResult from '@/components/emptyState/NoData';
 import { AlignCode, CheckedState, SortDirection } from '@/models/common/Design';
 import { ColumnsInfo, RowsInfo } from '@/models/components/Table';
 import '@components/table/VerticalTable.scss';
-import { Checkbox, Sort, TBody, TD, TH, THead, TR, Table, Typography } from '@components/ui';
+import { Checkbox, Sort, TBody, TD, TH, THead, TR, Table, Tooltip, Typography } from '@components/ui';
 import { ReactNode, useEffect, useState } from 'react';
 
 export interface VerticalTableProps {
@@ -13,12 +13,12 @@ export interface VerticalTableProps {
   enableSort?: boolean;
   clickable?: boolean;
   isMultiSelected?: boolean;
-  rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
   onClick?: Function;
   onSortChange?: Function;
   children?: ReactNode;
   sortedColumn?: string;
   sortedDirection?: SortDirection;
+  rowSelection?: (checkedIndexList: Array<number>, checkedList: Array<any>) => void;
 }
 
 const VerticalTable: React.FC<VerticalTableProps> = ({
@@ -29,15 +29,16 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
   enableSort = false,
   clickable = false,
   isMultiSelected = true,
-  rowSelection,
   onClick,
   onSortChange,
   sortedColumn,
   sortedDirection,
+  rowSelection,
 }) => {
   const isCheckbox = typeof rowSelection === 'function';
   const [isCheckedAll, setIsCheckedAll] = useState<boolean>(false);
   const [checkedIndexList, setCheckedIndexList] = useState<Array<number>>([]);
+  const [tooltipPosition, setTooltipPosition] = useState<string | null>(null);
 
   function formatNumber(value: number) {
     return new Intl.NumberFormat('ko-KR').format(value);
@@ -92,6 +93,14 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     onSortChange && onSortChange(order, index);
   };
 
+  const handleMouseOver = (rowIndex: number, columnIndex: number) => {
+    setTooltipPosition(`${rowIndex}:${columnIndex}`);
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipPosition(null);
+  };
+
   useEffect(() => {
     setIsCheckedAll(false);
     setCheckedIndexList([]);
@@ -101,7 +110,7 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
     <Table variant="vertical" size="normal" align="center" className={`verticalTable ${className}`}>
       <div className="verticalTableDiv">
         {showHeader && columns?.length > 0 && (
-          <THead className='verticalTableDivHeader'>
+          <THead className="verticalTableDivHeader">
             <TR>
               {isCheckbox && (
                 <TH colSpan={0.5}>
@@ -161,6 +170,8 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                         handleClick(row, rowIndex, !selected);
                         isCheckbox && rowSelection(resultList[0], resultList[1]);
                       }}
+                      onMouseOver={() => handleMouseOver(rowIndex, columnIndex)}
+                      onMouseLeave={handleMouseLeave}
                     >
                       {(() => {
                         if (columns[columnIndex].render) {
@@ -171,12 +182,26 @@ const VerticalTable: React.FC<VerticalTableProps> = ({
                             columns[columnIndex].require
                           );
                         } else {
-                          const columnData = columns[columnIndex];
-                          const data = row[columnData.field];
-                          if (typeof data === 'number' && columnData.field !== 'memberNumber') {
-                            return <Typography variant="body2">{formatNumber(data)}</Typography>;
+                          const column = columns[columnIndex];
+                          const data = row[column.field];
+                          const dataRender = typeof data === 'number' && column.field !== 'memberNumber' ? formatNumber(data) : data;
+
+                          if (columns[columnIndex].isTooltip) {
+                            return (
+                              <Tooltip
+                                align="start"
+                                shape="Round"
+                                delayDuration={0}
+                                sideOffset={10}
+                                content={dataRender}
+                                open={tooltipPosition === `${rowIndex}:${columnIndex}`}
+                              >
+                                <Typography variant="body2">{dataRender}</Typography>
+                              </Tooltip>
+                            );
+                          } else {
+                            return <Typography variant="body2">{dataRender}</Typography>;
                           }
-                          return <Typography variant="body2">{data}</Typography>;
                         }
                       })()}
                     </TD>

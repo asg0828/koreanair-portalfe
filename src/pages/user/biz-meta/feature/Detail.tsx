@@ -95,7 +95,7 @@ const Detail = () => {
 
   return (
     <>
-      <Stack direction="Vertical" gap="MD">
+      <Stack direction="Vertical" gap="MD" className="detail-container">
         <Typography variant="h3">{t('bizMeta:header.basicInfo')}</Typography>
         <HorizontalTable>
           <TR>
