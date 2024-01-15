@@ -102,7 +102,7 @@ const initTms : Tms = {
 
 const initVoc : Voc = {
   oneidNo: '',
-  vocComplain: '',
+  vocComplainLastRctDatev: '',
   vocDisruptionLastRctDatev: '',
   vocSuggestLastRctDatev: ''
 }
