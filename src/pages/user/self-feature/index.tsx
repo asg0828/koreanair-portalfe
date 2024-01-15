@@ -40,7 +40,7 @@ import { useAppSelector } from "@/hooks/useRedux";
 import { initMstrProfSearchInfoProps } from "@/pages/admin/self-feature-meta-management/master-profile-management/data";
 import { useMstrProfList } from "@/hooks/queries/self-feature/useSelfFeatureAdmQueries";
 import { useUserById } from "@/hooks/queries/useUserQueries";
-import { useAuthCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
+import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { useTranslation } from "react-i18next";
 
 const SelfFeature = () => {
@@ -53,8 +53,8 @@ const SelfFeature = () => {
 	const userId = useAppSelector(selectSessionInfo()).userId || ''
 	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
 	// 선후행관계 > 모든 승인권자 , sql 등록 > 1차 승인권자만
-	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
-	const { data: cmmCodeEditAuthRes } = useAuthCommCodes(CommonCode.EDIT_AUTH)
+	const { data: cmmCodeAllAuthRes } = useCommCodes(CommonCode.ALL_AUTH)//useAuthCommCodes(CommonCode.ALL_AUTH)
+	const { data: cmmCodeEditAuthRes } = useCommCodes(CommonCode.EDIT_AUTH)//useAuthCommCodes(CommonCode.EDIT_AUTH)
 	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
 	const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
 	// 사용될 rslnRuleId / mstrSgmtRuleId 조회

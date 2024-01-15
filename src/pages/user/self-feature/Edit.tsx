@@ -79,7 +79,7 @@ import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFe
 import {
 	ValidType,
 } from "@/models/common/Constants";
-import { useAuthCommCodes, useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
+import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { useFeatureAllList, useFeatureSeList, useFeatureTypList } from "@/hooks/queries/useFeatureQueries";
 import { FeatureAllParams, FeatureKeyType, FeatureSeparatesModel } from "@/models/model/FeatureModel";
 import { getFeatureSeList } from "@/api/FeatureAPI";
@@ -113,7 +113,7 @@ const SelfFeatureEdit = () => {
 
 	const userId = useAppSelector(selectSessionInfo()).userId || ''
 	const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
-	const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.ALL_AUTH)
+	const { data: cmmCodeAllAuthRes } = useCommCodes(CommonCode.ALL_AUTH)//useAuthCommCodes(CommonCode.ALL_AUTH)
 	const [isAllAuth, setIsAllAuth] = useState<Boolean>(false)
 
 	const [custFeatRuleId, setCustFeatRuleId] = useState<string>(queryParam.get("custFeatRuleId") || "")
