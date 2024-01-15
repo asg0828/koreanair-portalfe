@@ -39,7 +39,7 @@ const List = () => {
   const [faqId, setFaqId] = useState<string>(searchParams.get('faqId') || '');
   const [dFaqId, setDFaqId] = useState<string>('');
   const { data: response, isSuccess, isError, refetch } = useFaqList(params, page);
-  const { data: gResponse, isSuccess: gIsSuccess, isError: gIsError, refetch: gRefetch } = useFaqById(faqId);
+  const { data: gResponse, isSuccess: gIsSuccess, isError: gIsError, refetch: gRefetch } = useFaqById(faqId, 'detail');
   const { data: dResponse, isSuccess: dIsSuccess, isError: dIsError, mutate } = useDeleteFaq(dFaqId);
 
   const searchInfoList = [
