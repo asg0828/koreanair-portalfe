@@ -8,9 +8,7 @@ import {
   Column,
   Consulting,
   Email,
-  Etkt,
   FamilyMembers,
-  Pnr,
   Preference,
   Profile,
   Skypass,
@@ -87,8 +85,8 @@ const initCampaign : Campaign = {
 }
 
 const initConsulting : Consulting = {
-  lastChatUseDatev: '',
-  lastChatbotUseDatev: '',
+  lastChatTalkDatev: '',
+  lastChatbotTalkDatev: '',
   lastServiceCenterUseDatev: '',
   oneidNo: ''
 }
@@ -192,17 +190,6 @@ const cntData: Cnt[] = [
   },
 ];
 
-const pnrData: Pnr[] = [
-  { arrival: 'BOSICN', class: 'HL1', date: '27AUG23', engName: 'Gil-Dong Hong', reservationNum: '64G000', status: 'O' },
-  { arrival: 'BOSICN', class: 'HL1', date: '27AUG23', engName: 'Gil-Dong Hong', reservationNum: '64G000', status: 'O' },
-  { arrival: 'BOSICN', class: 'HL1', date: '27AUG23', engName: 'Gil-Dong Hong', reservationNum: '64G000', status: 'O' },
-];
-const eTktData: Etkt[] = [
-  { ticketNum: 'KE0092', arrival: 'BOSICN ', date: '27AUG23', status: 'O' },
-  { ticketNum: 'KE0092', arrival: 'BOSICN ', date: '27AUG23', status: 'O' },
-  { ticketNum: 'KE0092', arrival: 'BOSICN ', date: '27AUG23', status: 'O' },
-];
-
 const boardingListData: BoardingList[] = [
   {
     itinerary1: '64G000',
@@ -277,9 +264,7 @@ export {
   walletData,
   preferenceData,
   cntData,
-  pnrData,
   snsData,
-  eTktData,
   emailData,
   boardingListData,
   callData,

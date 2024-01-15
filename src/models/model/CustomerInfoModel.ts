@@ -130,19 +130,28 @@ export interface Cnt {
   sns: number;
 }
 export interface Pnr {
-  reservationNum: string;
-  engName: string;
-  class: string;
-  arrival: string;
-  date: string;
-  status: string;
+  reservationNumber: string;
+  surname: string;
+  givenname: string;
+  segNumber: string;
+  companyIdentification: string;
+  productIdentification: string;
+  classOfService: string;
+  departureDate: string;
+  boardPointCityCode: string;
+  offPointCityCode: string;
+  bookingStatus: string;
 }
 
 export interface Etkt {
-  ticketNum: string;
-  arrival: string;
-  date: string;
-  status: string;
+  ticketNumber: string;
+  marketingCompany: string;
+  flightNumber: string;
+  bookingClass: string;
+  departureDate: string;
+  cpnNumber: string;
+  boardPointLocationId: string;
+  offPointLocationId: string;
 }
 
 export interface BoardingList {
@@ -169,8 +178,8 @@ export interface Campaign {
   lastCmpgnKakaotalkSndDtim: string;
 }
 export interface Consulting {
-  lastChatUseDatev: string;
-  lastChatbotUseDatev: string;
+  lastChatbotTalkDatev: string;
+  lastChatTalkDatev: string;
   lastServiceCenterUseDatev: string;
   oneidNo: string;
 }

@@ -78,7 +78,7 @@ import FeatQueryRsltButton from "@/components/self-feature/FeatQueryRsltButton";
 import SubRejectModal from "@/components/self-feature-submission/modal/SubRejectModal";
 import { useApproverCandidate, useCustFeatRuleInfos, useCustFeatRules, useCustFeatSQLInfos, useDirectSQLYn, useGetTableandColumnMetaInfoByMstrSgmtRuleId, useSubmissionInfo, useSubmissionList } from "@/hooks/queries/self-feature/useSelfFeatureUserQueries";
 import { GroupCodeType, ValidType } from "@/models/common/Constants";
-import { useAuthCommCodes, useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
+import { useCommCodes } from "@/hooks/queries/self-feature/useSelfFeatureCmmQueries";
 import { FeatureSeparatesModel } from "@/models/model/FeatureModel";
 import { CodeModel } from "@/models/model/CodeModel";
 import { useAppSelector } from "@/hooks/useRedux";
@@ -103,7 +103,7 @@ const SfSubmissionRequestDetail = () => {
     const sessionInfo = useAppSelector(selectSessionInfo())
     const userId = useAppSelector(selectSessionInfo()).userId || ''
     const { data: userInfoRes, isSuccess: userInfoSucc, isError: userInfoErr } = useUserById(userId)
-    const { data: cmmCodeAllAuthRes } = useAuthCommCodes(CommonCode.EDIT_AUTH)
+    const { data: cmmCodeAllAuthRes } = useCommCodes(CommonCode.EDIT_AUTH)//useAuthCommCodes(CommonCode.EDIT_AUTH)
     const [isEditAuth, setIsEditAuth] = useState<Boolean>(false)
     const { toast } = useToast()
 

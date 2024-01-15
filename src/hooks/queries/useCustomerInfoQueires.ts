@@ -52,13 +52,17 @@ export const useCampHis = (oneidNo : string) => {
 };
 {/* Communication Records */}
 
-export const usePnrHis = (oneidNo : string) => {
-  return useQuery(['customerInfo/pnr'], () => getPnrHis(oneidNo), { enabled: false });
+
+{/* MY Trips */}
+export const usePnrHis = (skypassMemberNumber  : string) => {
+  return useQuery(['customerInfo/pnr'], () => getPnrHis(skypassMemberNumber), { enabled: false });
 };
 
-export const useEtktHis = (oneidNo : string) => {
-  return useQuery(['customerInfo/Etkt'], () => getEtktHis(oneidNo), { enabled: false });
+export const useEtktHis = (skypassMemberNumber  : string) => {
+  return useQuery(['customerInfo/Etkt'], () => getEtktHis(skypassMemberNumber), { enabled: false });
 };
+{/* MY Trips */}
+
 
 export const useBoardingCnt = (oneidNo : string) => {
   return useQuery(['customerInfo/boardingCnt'], () => getBoardingCnt(oneidNo), { enabled: false });

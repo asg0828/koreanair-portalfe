@@ -486,8 +486,8 @@ export default function DashBoardPopUp({ closeModal, skypassMemberNumber }: any)
                             <Stack direction="Vertical">
                               {pnr.map((item, index) => (
                                 <Stack gap="MD">
-                                  <div>{item?.reservationNum}</div>
-                                  <div>{item?.engName}</div>
+                                  {/* <div>{item?.reservationNum}</div>
+                                  <div>{item?.engName}</div> */}
                                 </Stack>
                               ))}
                             </Stack>
@@ -497,10 +497,10 @@ export default function DashBoardPopUp({ closeModal, skypassMemberNumber }: any)
                             <div>
                               {pnr.map((item, indx) => (
                                 <Stack gap="MD">
-                                  <div>{item.arrival}</div>
+                                  {/* <div>{item.arrival}</div>
                                   <div>{item.class}</div>
                                   <div>{item.date}</div>
-                                  <div>{item.status}</div>
+                                  <div>{item.status}</div> */}
                                 </Stack>
                               ))}
                             </div>
@@ -541,10 +541,10 @@ export default function DashBoardPopUp({ closeModal, skypassMemberNumber }: any)
                             <Stack direction="Vertical">
                               {etkt.map((item, index) => (
                                 <Stack gap="MD">
-                                  <div>{item?.ticketNum}</div>
+                                  {/* <div>{item?.ticketNum}</div>
                                   <div>{item?.date}</div>
                                   <div>{item?.arrival}</div>
-                                  <div>{item?.status}</div>
+                                  <div>{item?.status}</div> */}
                                 </Stack>
                               ))}
                             </Stack>
