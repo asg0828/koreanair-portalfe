@@ -101,27 +101,27 @@ export const getCampHis = (oneidNo : string) => {
     };
 
 
-export const getPnrHis = (oneidNo : string) => {
+export const getPnrHis = (skypassMemberNumber  : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.CUSTOMER}`,
+    url: `${PortalApiURL.CUSTOMER}/pnr`,
     method: Method.GET,
     params: {
           queryParams: {
-            oneidNo 
+            skypassMemberNumber  
           },
         },
       });
     };
 
-export const getEtktHis = (oneidNo : string) => {
+export const getEtktHis = (skypassMemberNumber  : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.CUSTOMER}`,
+    url: `${PortalApiURL.CUSTOMER}/ticket`,
     method: Method.GET,
     params: {
           queryParams: {
-            oneidNo 
+            skypassMemberNumber  
           },
         },
       });

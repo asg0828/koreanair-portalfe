@@ -1,4 +1,4 @@
-import { useCampHis, useCosHis, useProfile, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
+import { useCampHis, useCosHis, useEtktHis, usePnrHis, useProfile, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
 import NoResult from '@/components/emptyState/NoData';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, TR, TD, THead, TH, Table, Label } from '@components/ui';
@@ -72,6 +72,10 @@ export default function List() {
   const { refetch: refetchTms, data: responseTms, isError: isErrorTms } = useTmsHis(oneIdno)
   // Voc 정보 조회 api
   const { refetch: refetchVoc, data: responseVoc, isError: isErrorVoc } = useVocHis(oneIdno)
+  // pnr 정보 조회 api
+  const { refetch: refetchPnr, data: responsePnr, isError: isErrorPnr } = usePnrHis(searchSkypassNm)
+  // ticket 정보 조회 api
+  const { refetch: refetchEtkt, data: responseEtkt, isError: isErrorEtkt } = useEtktHis(searchSkypassNm)
 
   const [key, setKey] = useState(Date.now());
 
@@ -208,14 +212,18 @@ export default function List() {
     }
   }, [responseProfile, isErrorProfile, key]);
 
+  // skypass로 refetch 함수
   useEffect(() => { 
     if(searchSkypassNm !== '' && profile?.skypassInfos[0]?.skypassMemberNumber !== '') {
       refetchSkypass()
+      refetchEtkt()
+      refetchPnr()
       setSearchInfo({...searchInfo, searchType: ''})
       setKey(Date.now());
     }
   }, [searchSkypassNm])
 
+// skypass로 refetch 함수
   useEffect(() => {
     if(oneIdno !== '') {
       setCampaign(initCampaign)
@@ -301,6 +309,35 @@ export default function List() {
       }
     }
   }, [responseVoc, isErrorVoc, key]);
+
+  // pnr 조회
+  useEffect(() => {
+    if (isErrorPnr || responsePnr?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responsePnr?.message,
+      });
+    } else {
+      if (responsePnr) {
+        setPnr(responsePnr.data)
+      }
+    }
+  }, [responsePnr, isErrorPnr, key]);
+
+  // eticket 조회
+  useEffect(() => {
+    if (isErrorEtkt || responseEtkt?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseEtkt?.message,
+      });
+    } else {
+      if (responseEtkt) {
+        setEtkt(responseEtkt.data)
+      }
+    }
+  }, [responseEtkt, isErrorEtkt, key]);
+
 
 	useEffect(() => {
 		reset()
@@ -691,7 +728,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      {/* <span className="num">{cnt?.pnr}</span>개 */}
+                      <span className="num">{pnr?.length}</span>개
                     </div>
                   </Stack>
                 </div>
@@ -707,7 +744,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      {/* <span className="num">{cnt?.eTkt}</span>개 */}
+                      <span className="num">{etkt?.length}</span>개
                     </div>
                   </Stack>
                 </div>
@@ -732,29 +769,18 @@ export default function List() {
                       <tr>
                         <td>
                           <Stack justifyContent="Between" alignItems={'Start'}>
-                            {/* left */}
                             <Stack direction="Vertical">
                               {pnr.map((item, index) => (
                                 <Stack gap="MD">
-                                  <div>{item?.reservationNum}</div>
-                                  <div>{item?.engName}</div>
+                                  <div>{item?.reservationNumber}</div>
+                                  <div>{item?.companyIdentification}</div>
+                                  <div>{item?.classOfService}</div>
+                                  <div>{item?.departureDate}</div>
+                                  <div>{item?.segNumber}</div>
+                                  <div>{item?.bookingStatus}</div>
                                 </Stack>
                               ))}
                             </Stack>
-                            {/* left end */}
-
-                            {/* right */}
-                            <div>
-                              {pnr.map((item, indx) => (
-                                <Stack gap="MD">
-                                  <div>{item.arrival}</div>
-                                  <div>{item.class}</div>
-                                  <div>{item.date}</div>
-                                  <div>{item.status}</div>
-                                </Stack>
-                              ))}
-                            </div>
-                            {/* right end */}
                           </Stack>
                         </td>
                       </tr>
@@ -787,18 +813,18 @@ export default function List() {
                       <tr>
                         <td>
                           <Stack justifyContent="Between" alignItems={'Start'}>
-                            {/* left */}
                             <Stack direction="Vertical">
                               {etkt.map((item, index) => (
                                 <Stack gap="MD">
-                                  <div>{item?.ticketNum}</div>
-                                  <div>{item?.date}</div>
-                                  <div>{item?.arrival}</div>
-                                  <div>{item?.status}</div>
+                                  <div>{item?.ticketNumber}</div>
+                                  <div>{item?.marketingCompany}{item?.flightNumber}</div>
+                                  <div>{item?.bookingClass}</div>
+                                  <div>{item?.departureDate}</div>
+                                  <div>{item?.cpnNumber}</div>
+                                  <div>{item?.offPointLocationId}{item?.boardPointLocationId}</div>
                                 </Stack>
                               ))}
                             </Stack>
-                            {/* left end */}
                           </Stack>
                         </td>
                       </tr>
@@ -1065,11 +1091,11 @@ export default function List() {
                         </tr>
                         <tr>
                           <td>챗봇</td>
-                          <td>{consulting?.lastChatbotUseDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
+                          <td>{consulting?.lastChatbotTalkDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                         <tr>
                           <td>채팅</td>
-                          <td>{consulting?.lastChatUseDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
+                          <td>{consulting?.lastChatTalkDatev?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</td>
                         </tr>
                     </tbody>
                   </table>
