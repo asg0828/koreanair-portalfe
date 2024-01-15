@@ -127,7 +127,7 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(
         const newContent = content.replace(imageSrc, (str) => {
           return `id="${fileId}" ${str}`;
         });
-        onEditorChange && onEditorChange(newContent, editorRef.current.editor);
+        onEditorChange && onEditorChange(newContent, editorRef?.current?.editor);
       }
 
       return () => {
@@ -155,7 +155,7 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(
           });
         }
 
-        onEditorChange && onEditorChange(newContent, editorRef.current.editor);
+        onEditorChange && onEditorChange(newContent, editorRef?.current?.editor);
       }
 
       if (!isLoadedData && content) {

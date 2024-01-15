@@ -186,7 +186,7 @@ const useAuth = (sessionUtil: SessionUtil, sessionApis: SessionApis, sessionRequ
           dispatch(login(nSessionInfo));
           dispatch(setBaseMenuList(baseMenuList));
           dispatch(setMenuList(hierarchyMenuList));
-          setRouter(createBrowserRouter(nRouter));
+          setRouter(nRouter);
         } else {
           setIsError(true);
         }
