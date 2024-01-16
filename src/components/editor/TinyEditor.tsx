@@ -206,6 +206,7 @@ const TinyEditor = forwardRef<ForwardedRef<Editor>, TinyEditorProps>(
               'code help',
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           image_title: true,
+          convert_urls: false,
           file_picker_types: 'image',
           automatic_uploads: false,
           file_picker_callback: handleFilePicker,
