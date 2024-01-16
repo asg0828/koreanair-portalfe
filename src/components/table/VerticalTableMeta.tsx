@@ -9,7 +9,7 @@ import { CommonCode, CommonCodeInfo } from '@/models/selfFeature/FeatureCommon';
 import { openModal } from '@/reducers/modalSlice';
 import { htmlSpeReg, htmlTagReg } from '@/utils/RegularExpression';
 import '@components/table/VerticalTable.scss';
-import { Button, Modal, Stack, TBody, TH, THead, TR, Table, useToast } from '@components/ui';
+import { Button, Loader, Modal, Stack, TBody, TH, THead, TR, Table, useToast } from '@components/ui';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CstmrMetaColumnListEdit from '../self-feature-adm/CstmrMetaColumnListEdit';
@@ -68,6 +68,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
     data: uResponse,
     isSuccess: uIsSuccess,
     isError: uIsError,
+    isLoading: isLoading,
     mutate,
   } = useUpdateMetaTable(metaTblId, tbCoMetaTbInfo, tbCoMetaTblClmnInfoListPost);
   const updateMutate = useCallback(() => mutate(), uResponse?.result)
@@ -246,29 +247,19 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
           </THead>
         )}
         {tbCoMetaTblClmnInfoList?.length > 0 ? (
-        <TBody>
-          <List
-          height={400}
-          itemCount={tbCoMetaTblClmnInfoList?.length}
-          itemSize={35}
-          width='100%'
-          > 
-          {({ index, style }) => (
-          <div style={style}>
+        <TBody clickable={clickable}>
+          {tbCoMetaTblClmnInfoList.map((row, rowIndex) => (
             <CstmrMetaColumnListEdit
               columns={columns}
-              rows={tbCoMetaTblClmnInfoList[index]}
-              rowIndex={index}
+              rows={row}
+              rowIndex={rowIndex}
               flag={flag}
               getFlag={getFlag}
               submitFlag={submitFlag}
               getData={getData}
-            />   
-          </div>
-          )}
-      </List>
-    </TBody>
-
+            />
+          ))}
+        </TBody>
         ) : (
           <TBody className="no-data-wrap">
             <NoResult />
@@ -283,8 +274,21 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
           priority="Primary"
           appearance="Contained"
           size="LG"
-        >
-          수정
+          disabled={isLoading}
+          >
+            {isLoading ? 
+           <Loader 
+           style={{
+               backgroundColor: "rgb(235, 235, 235)", 
+               color: "rgb(185, 185, 185)", 
+               borderColor: "rgb(218, 218, 218)", 
+               width: "100%", 
+               height: "100%",
+           }} 
+           type="Bubble" 
+         /> 
+         : '수정'
+         }
         </Button>
         <Button onClick={goToList} style={{ width: 50 }} type="submit" priority="Normal" appearance="Outline" size="LG">
           목록
