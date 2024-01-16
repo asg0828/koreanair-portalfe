@@ -750,14 +750,12 @@ export default function List() {
                       <col width="auto" />
                     </colgroup>
                     <thead>
-                    <tr>
-                        <th>예약번호</th>
-                        <th>편명</th>
-                        <th>BKG CLS</th>
-                        <th>출발일</th>
-                        <th>구간</th>
-                        <th>예약상태</th>
-                      </tr>
+                      <th>예약번호</th>
+                      <th>편명</th>
+                      <th>BKG CLS</th>
+                      <th>출발일</th>
+                      <th>구간</th>
+                      <th>예약상태</th>
                     </thead>
                     <tbody>
                       <tr>
@@ -788,14 +786,12 @@ export default function List() {
                       <col width="20%" />
                     </colgroup>
                     <thead>
-                      <tr>
-                        <th>티켓번호</th>
-                        <th>편명</th>
-                        <th>BKG CLS</th>
-                        <th>출발일</th>
-                        <th>순서</th>
-                        <th>구간</th>
-                      </tr>
+                      <th>티켓번호</th>
+                      <th>편명</th>
+                      <th>BKG CLS</th>
+                      <th>출발일</th>
+                      <th>순서</th>
+                      <th>구간</th>
                     </thead>
                     <tbody>
                       <tr>

@@ -23,6 +23,7 @@ export interface VerticalTableProps {
   submitFlag: boolean;
   getFlag: (flag: string) => void;
   getData: (row: RowsInfo) => void;
+  isLoading?: boolean;
 }
 const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
   columns = [],
@@ -33,6 +34,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
   submitFlag,
   getFlag,
   getData,
+  isLoading
 }) => {
   const { toast } = useToast();
   const [timeFormat, setTimeFormat] = useState<Array<CommonCodeInfo>>([]);
@@ -266,6 +268,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
             onClick={() => ynChg(rowIndex, 'pkYn')}
             checked={tbCoMetaTblClmnInfo.pkYn === 'Y'}
             value={tbCoMetaTblClmnInfo.pkYn}
+            disabled={isLoading}
           ></Checkbox>
         </TD>
 
@@ -276,6 +279,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
             onClick={() => ynChg(rowIndex, 'clmnUseYn')}
             checked={tbCoMetaTblClmnInfo.clmnUseYn === 'Y'}
             value={tbCoMetaTblClmnInfo.clmnUseYn}
+            disabled={isLoading}
           ></Checkbox>
         </TD>
 
@@ -287,6 +291,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
             checked={flag === tbCoMetaTblClmnInfo.metaTblClmnPhysNm || tbCoMetaTblClmnInfo.baseTimeYn === 'Y'}
             value={tbCoMetaTblClmnInfo.metaTblClmnPhysNm}
             key={`radio-baseTimeYn-${rowIndex}`}
+            disabled={isLoading}
           />
         </TD>
 
@@ -305,6 +310,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
             key={`textField-metaTblLogiNm-${rowIndex}`}
             onChange={(e) => onChangeHandler(e, 'metaTblClmnLogiNm')}
             value={tbCoMetaTblClmnInfo.metaTblClmnLogiNm}
+            disabled={isLoading}
           />
         </TD>
 
@@ -318,6 +324,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
             key={`textField-metaTblClmnDesc-${rowIndex}`}
             onChange={(e) => onChangeHandler(e, 'metaTblClmnDesc')}
             value={tbCoMetaTblClmnInfo.metaTblClmnDesc}
+            disabled={isLoading}
           />
         </TD>
 
@@ -336,7 +343,7 @@ const CstmrMetaColumnListEdit: React.FC<VerticalTableProps> = ({
               (tbCoMetaTblClmnInfo.chgDtpCd !== null && 
               tbCoMetaTblClmnInfo.chgDtpCd !== '')
             }
-            disabled={tbCoMetaTblClmnInfo.baseTimeYn === 'Y'}
+            disabled={tbCoMetaTblClmnInfo.baseTimeYn === 'Y' || isLoading}
             value={tbCoMetaTblClmnInfo.changeYn}
             onClick={() => changeYnHandler(rowIndex, 'changeYn')}
           />
