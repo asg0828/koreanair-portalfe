@@ -43,8 +43,8 @@ const List = () => {
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
   const [page, setPage] = useState<PageModel>(initPage);
-  const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
-  const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
+  const [sortedColumn, setSortedColumn] = useState<string>('domBoardCnt');
+  const [sortedDirection, setSortedDirection] = useState<SortDirection>('desc');
   const { data: response, isError, refetch } = useDomesticBoardingTop100List(criteria);
 
   const createPeriodButton = (period: any, text: string, periodSelect: any) => {
@@ -148,8 +148,20 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setInitRows(JSON.parse(JSON.stringify(response.data.contents)));
-        setRows([...sortRows(response.data.contents, sortedColumn, sortedDirection)]);
+        if (sortedColumn === 'intBoardCnt' && sortedDirection) {
+          const oValue = sortedDirection === 'asc' ? 1 : -1;
+          setRows(
+              response.data.contents.sort(
+                  (a: any, b: any) =>
+                      oValue * (a.domBoardCnt - b.domBoardCnt) ||
+                      b.domTktNoFscNettKrwAmt - a.domTktNoFscNettKrwAmt ||
+                      oValue * (a.rank - b.rank)
+              )
+          );
+        } else {
+          setRows(response.data.contents);
+        }
+        setPage(response.data.page);
       }
     }
   }, [response, isError, toast]);
