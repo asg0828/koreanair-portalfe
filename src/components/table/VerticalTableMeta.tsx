@@ -257,6 +257,7 @@ const VerticalTableMeta: React.FC<VerticalTableProps> = ({
               getFlag={getFlag}
               submitFlag={submitFlag}
               getData={getData}
+              isLoading={isLoading}
             />
           ))}
         </TBody>

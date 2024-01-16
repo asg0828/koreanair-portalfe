@@ -961,25 +961,23 @@ export default function List() {
                       <col width="auto" />
                     </colgroup>
                     <thead>
-                      <tr>
                         <th>예약번호</th>
                         <th>편명</th>
                         <th>BKG CLS</th>
                         <th>출발일</th>
                         <th>구간</th>
                         <th>예약상태</th>
-                      </tr>
                     </thead>
                     <tbody>
                       <tr>
                         {pnr.map((item, index) => (
                           <Stack gap="MD">
-                            <td>{item?.reservationNumber}</td>
-                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
-                            <td>{item?.classOfService}</td>
-                            <td>{item?.departureDate}</td>
-                            <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
-                            <td>{item?.bookingStatus}</td>
+                            <td>1{item?.reservationNumber}</td>
+                            <td>1{item?.companyIdentification}{item?.productIdentification}</td>
+                            <td>2{item?.classOfService}</td>
+                            <td>2{item?.departureDate}</td>
+                            <td>3{item?.boardPointCityCode}{item?.offPointCityCode}</td>
+                            <td>4{item?.bookingStatus}</td>
                           </Stack>
                         ))}
                       </tr>
@@ -999,14 +997,12 @@ export default function List() {
                       <col width="20%" />
                     </colgroup>
                     <thead>
-                      <tr>
                         <th>티켓번호</th>
                         <th>편명</th>
                         <th>BKG CLS</th>
                         <th>출발일</th>
                         <th>순서</th>
                         <th>구간</th>
-                      </tr>
                     </thead>
                     <tbody>
                       <tr>
