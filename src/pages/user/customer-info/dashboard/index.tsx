@@ -752,18 +752,16 @@ export default function List() {
                       <th>예약상태</th>
                     </thead>
                     <tbody>
-                      <tr>
-                        {pnr.map((item, index) => (
-                          <Stack gap="MD">
-                            <td>{item?.reservationNumber}</td>
-                            <td>{item?.companyIdentification}</td>
-                            <td>{item?.classOfService}</td>
-                            <td>{item?.departureDate}</td>
-                            <td>{item?.segNumber}</td>
-                            <td>{item?.bookingStatus}</td>
-                          </Stack>
-                        ))}
-                      </tr>
+                      {pnr.map((item, index) => (
+                        <tr>
+                          <td>{item?.reservationNumber}</td>
+                          <td>{item?.companyIdentification}</td>
+                          <td>{item?.classOfService}</td>
+                          <td>{item?.departureDate}</td>
+                          <td>{item?.segNumber}</td>
+                          <td>{item?.bookingStatus}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -788,18 +786,16 @@ export default function List() {
                       <th>구간</th>
                     </thead>
                     <tbody>
-                      <tr>
                       {etkt.map((item, index) => (
-                        <Stack gap="MD">
+                        <tr>
                           <td>{item?.ticketNumber}</td>
                           <td>{item?.marketingCompany}{item?.flightNumber}</td>
                           <td>{item?.bookingClass}</td>
                           <td>{item?.departureDate}</td>
                           <td>{item?.cpnNumber}</td>
                           <td>{item?.offPointLocationId}{item?.boardPointLocationId}</td>
-                        </Stack>
+                        </tr>
                       ))}
-                      </tr>
                     </tbody>
                   </table>
                 </div>
@@ -947,13 +943,11 @@ export default function List() {
                     <tbody>
                       {boarding.map((item, index) => (
                         <tr>
-                          <Stack gap="MD">
-                            <td>{item?.localTimeBaseStdDatev}</td>
-                            <td>{item?.flightNumber}</td>
-                            <td>{item?.segApo}</td>
-                            <td>{item?.pnrSegNumber}</td>
-                            <td>{item?.ticketNumber}</td>
-                          </Stack>
+                          <td>{item?.localTimeBaseStdDatev}</td>
+                          <td>{item?.flightNumber}</td>
+                          <td>{item?.segApo}</td>
+                          <td>{item?.pnrSegNumber}</td>
+                          <td>{item?.ticketNumber}</td>
                         </tr>
                       ))}
                     </tbody>

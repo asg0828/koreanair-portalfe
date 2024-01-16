@@ -218,7 +218,7 @@ const VerticalTblColumn: React.FC<VerticalTableProps> = ({
   useEffect(() => {
     if (submitFlag) {
       setSubmitFlag(false);
-       mutate();
+      mutate();
     }
   }, [tbCoMetaTblClmnInfoListPost]);
   return (

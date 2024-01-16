@@ -166,6 +166,29 @@ export interface Etkt {
   offPointLocationId: string;
 }
 
+export interface NonMemPnr {
+  oneidNo: string;
+  ticketNumber: string;
+  flightNumber: string;
+  bookingClassCode: string;
+  bkgDtBsStdDatev: string;
+  pnrSegNumber: string;
+  segApo: string;
+}
+
+export interface NonMemEtkt {
+  oneidNo: string;
+  pnrNo: string;
+  engLname: string;
+  engFname: string;
+  flightNumber: string;
+  bookingClassCode: string;
+  bkgDtBsStdDatev: string;
+  pnrSegNumber: string;
+  segApo: string;
+  reservationStatusCode: string;
+}
+
 export interface Boarding {
   oneidNo: string;
   localTimeBaseStdDatev: string;
@@ -274,4 +297,12 @@ export interface SkypassList {
   sexCode: string;
   birthV: string;
   skypassNo: string;
+}
+
+export interface Etl {
+  boarding: string;
+  communication: string;
+  mytrips: string;
+  preference: string;
+  wallet: string;
 }

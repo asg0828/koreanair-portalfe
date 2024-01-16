@@ -17,10 +17,11 @@ import {
   Consulting,
   Tms,
   Boarding,
+  Etl,
 } from '@/models/model/CustomerInfoModel';
 import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { useBoardingHis, useCampHis, useCosHis, useEtktHis, useNonMemEtktHis, useNonMemPnrHis, usePnrHis, useProfile, useProfileCLevel, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
+import { useBoardingHis, useCampHis, useCosHis, useEtktHis, useEtl, useNonMemEtktHis, useNonMemPnrHis, usePnrHis, useProfile, useProfileCLevel, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
 import Close from '@mui/icons-material/Close';
 import { ValidType, menuIconSx } from '@/models/common/Constants';
 import { useTranslation } from 'react-i18next';
@@ -75,7 +76,8 @@ export default function List() {
   const { refetch: refetchNonMemPnr, data: responseNonMemPnr, isError: isErrorNonMemPnr } = useNonMemPnrHis(oneIdno)
   // 탑승 이력 조회 api
   const { refetch: refetchBoarding, data: responseBoarding, isError: isErrorBoarding } = useBoardingHis(oneIdno)
-
+  // etl 조회 api
+  const {refetch: refetchEtl, data: responseEtl, isError: isErrorEtl  } = useEtl()
 
   const [key, setKey] = useState(Date.now());
   const [modalText, setModalText] = useState<any>([])
@@ -89,8 +91,8 @@ export default function List() {
   const [consulting, setConsulting] = useState<Consulting>(initConsulting);
   const [tms, setTms] = useState<Tms>(initTms)
   const [voc, setVoc] = useState<Voc>(initVoc);
-
   
+  const [etl, setEtl] = useState<Etl>()
   // CLevel용 검색 state
   const [searchText, setSearchText] = useState<any>();
 
@@ -473,6 +475,26 @@ export default function List() {
     }
   }, [responseBoarding, isErrorBoarding, key]);
 
+  
+  // 배치 기준 시간 (Etl) 조회 api
+  useEffect(() => {
+    refetchEtl()
+  }, [])
+
+  // 배치 기준 시간 (Etl) 조회
+  useEffect(() => {
+    if (isErrorEtl || responseEtl?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseEtl?.message,
+      });
+    } else {
+      if (responseEtl) {
+        setEtl(responseEtl.data)
+      }
+    }
+  }, [responseEtl, isErrorEtl]);
+  
   /* 로딩바 */
   const { t } = useTranslation()
 
@@ -982,18 +1004,16 @@ export default function List() {
                         <th>예약상태</th>
                     </thead>
                     <tbody>
-                      <tr>
-                        {pnr.map((item, index) => (
-                          <Stack gap="MD">
-                            <td>{item?.reservationNumber}</td>
-                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
-                            <td>{item?.classOfService}</td>
-                            <td>{item?.departureDate}</td>
-                            <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
-                            <td>{item?.bookingStatus}</td>
-                          </Stack>
-                        ))}
-                      </tr>
+                      {pnr.map((item, index) => (
+                        <tr>
+                          <td>{item?.reservationNumber}</td>
+                          <td>{item?.companyIdentification}{item?.productIdentification}</td>
+                          <td>{item?.classOfService}</td>
+                          <td>{item?.departureDate}</td>
+                          <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
+                          <td>{item?.bookingStatus}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -1018,18 +1038,16 @@ export default function List() {
                         <th>구간</th>
                     </thead>
                     <tbody>
-                      <tr>
-                        {etkt.map((item, index) => (
-                          <Stack gap="MD">
-                            <td>{item?.ticketNumber}</td>
-                            <td>{item?.marketingCompany}{item?.flightNumber}</td>
-                            <td>{item?.bookingClass}</td>
-                            <td>{item?.departureDate}</td>
-                            <td>{item?.cpnNumber}</td>
-                            <td>{item?.boardPointLocationId}{item?.offPointLocationId}</td>
-                          </Stack>
-                        ))}
-                      </tr>
+                      {etkt.map((item, index) => (
+                        <tr>
+                          <td>{item?.ticketNumber}</td>
+                          <td>{item?.marketingCompany}{item?.flightNumber}</td>
+                          <td>{item?.bookingClass}</td>
+                          <td>{item?.departureDate}</td>
+                          <td>{item?.cpnNumber}</td>
+                          <td>{item?.boardPointLocationId}{item?.offPointLocationId}</td>
+                        </tr>
+                      ))}
                     </tbody>
                   </table>
                 </div>
@@ -1177,13 +1195,11 @@ export default function List() {
                     <tbody>
                       {boarding.map((item, index) => (
                         <tr>
-                          <Stack gap="MD">
-                            <td>{item?.localTimeBaseStdDatev}</td>
-                            <td>{item?.flightNumber}</td>
-                            <td>{item?.segApo}</td>
-                            <td>{item?.pnrSegNumber}</td>
-                            <td>{item?.ticketNumber}</td>
-                          </Stack>
+                          <td>{item?.localTimeBaseStdDatev}</td>
+                          <td>{item?.flightNumber}</td>
+                          <td>{item?.segApo}</td>
+                          <td>{item?.pnrSegNumber}</td>
+                          <td>{item?.ticketNumber}</td>
                         </tr>
                       ))}
                     </tbody>

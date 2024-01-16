@@ -167,3 +167,11 @@ export const getBoardingHis = (oneidNo : string) => {
         });
       };
   
+  export const getEtl = () => {
+    return callApi({
+      service: Service.KAL_BE,
+      url: `${PortalApiURL.CUSTOMER}/etl-log`,
+      method: Method.GET,
+        });
+      };
+  

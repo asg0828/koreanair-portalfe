@@ -3,6 +3,7 @@ import {
   getCampHis,
   getCosHis,
   getEtktHis,
+  getEtl,
   getNonMemEtktHis,
   getNonMemPnrHis,
   getPnrHis,
@@ -66,11 +67,11 @@ export const useEtktHis = (skypassMemberNumber  : string) => {
 
 {/* MY Trips 비회원용 */}
 export const useNonMemPnrHis = (oneidNo  : string) => {
-  return useQuery(['customerInfo/pnr'], () => getNonMemPnrHis(oneidNo), { enabled: false });
+  return useQuery(['customerInfo/NonMempnr'], () => getNonMemPnrHis(oneidNo), { enabled: false });
 };
 
 export const useNonMemEtktHis = (oneidNo  : string) => {
-  return useQuery(['customerInfo/Etkt'], () => getNonMemEtktHis(oneidNo), { enabled: false });
+  return useQuery(['customerInfo/NonMemEtkt'], () => getNonMemEtktHis(oneidNo), { enabled: false });
 };
 {/* MY Trips 비회원용 */}
 
@@ -80,5 +81,10 @@ export const useBoardingHis = (oneidNo : string) => {
 };
 {/* Boarding history  */}
 
+{/* 배치 기준 시간 */}
+export const useEtl = () => {
+  return useQuery(['customerInfo/etl'], () => getEtl());
+};
+{/* 배치 기준 시간 */}
 
 
