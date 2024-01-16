@@ -107,10 +107,10 @@ const Detail = () => {
         <HorizontalTable>
           <TR>
             <TH colSpan={1} align="right">
-              {t('management:label.bfUserAuthNm')}
+              {t('management:label.bfApldUserAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
-              {userModel?.bfUserAuthNm}
+              {userModel?.bfApldUserAuthNm}
             </TD>
             <TH colSpan={1} align="right">
               {t('management:label.apldUserAuthNm')}
@@ -121,10 +121,10 @@ const Detail = () => {
           </TR>
           <TR>
             <TH colSpan={1} align="right">
-              {t('management:label.bfMgrAuthNm')}
+              {t('management:label.bfApldMgrAuthNm')}
             </TH>
             <TD colSpan={2} align="left">
-              {userModel?.bfMgrAuthNm}
+              {userModel?.bfApldMgrAuthNm}
             </TD>
             <TH colSpan={1} align="right">
               {t('management:label.apldMgrAuthNm')}
