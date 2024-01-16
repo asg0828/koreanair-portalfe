@@ -31,7 +31,7 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '국내선 구매금액(원)', field: 'domTktNoFscBuyKrwAmt', colSpan: 1 },
   { headerName: '국제선 구매금액(원)', field: 'intTktNoFscBuyKrwAmt', colSpan: 1 },
   { headerName: 'FR 구매횟수', field: 'frClsBuyCnt', colSpan: 0.9 },
-  { headerName: 'PR 구매횟수', field: 'prClsBuynt', colSpan: 0.9 },
+  { headerName: 'PR 구매횟수', field: 'prClsBuyCnt', colSpan: 0.9 },
 ];
 
 const initSortedColumn = 'tktBuyKrwAmt';
