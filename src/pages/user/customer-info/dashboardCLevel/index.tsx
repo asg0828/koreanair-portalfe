@@ -687,11 +687,8 @@ export default function List() {
                 <div className="item">
                   <div className="key">이메일</div>
                   {profile?.emailAddress && (
-                    <div className="value">{`${'*'.repeat(profile?.emailAddress.split('@')[0].length)}@${
-                      profile?.emailAddress.split('@')[1]
-                    }`}</div>
+                    <div className="value">{`*****@${profile?.emailAddress.split('@')[1]}`}</div>
                   )}
-                  {/* @ 앞부분 마스킹(*) 필요 */}
                 </div>
                 <div className="item">
                   <div className="key">특이사항</div>
@@ -1457,12 +1454,10 @@ export default function List() {
                       {profileList.length >= 100 && (
                       <div className="right_modal_box_wrap">
                         <div className="box_inner_txt">
-                          <span className="point_txt">100명</span>을 초과하는 데이터입니다.
+                          검색결과가 <span className="point_txt">100건</span>을 초과합니다.
                         </div>
                         <div className="box_inner_sub">
-                          (추가 데이터 조회는 모달을 닫으신 후 Skypass Number 혹은
-                          <br />
-                          핸드폰번호로 조회해주시기 바랍니다.)
+                          정확한 검색을 위해 정보를 추가로 입력하여 조회해주시기 바랍니다.
                         </div>
                       </div>
                       )}

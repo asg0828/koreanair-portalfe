@@ -477,9 +477,7 @@ export default function List() {
                 <div className="item">
                   <div className="key">이메일</div>
                   {profile?.emailAddress && (
-                    <div className="value">{`${'*'.repeat(profile?.emailAddress.split('@')[0].length)}@${
-                      profile?.emailAddress.split('@')[1]
-                    }`}</div>
+                    <div className="value">{`*****@${profile?.emailAddress.split('@')[1]}`}</div>
                   )}
                 </div>
                 <div className="item">
