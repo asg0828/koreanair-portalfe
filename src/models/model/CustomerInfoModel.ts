@@ -166,13 +166,13 @@ export interface Etkt {
   offPointLocationId: string;
 }
 
-export interface BoardingList {
-  itinerary1: string;
-  itinerary2: string;
-  itinerary3: string;
-  itinerary4: string;
-  itinerary5: string;
-  ticketNo: string;
+export interface Boarding {
+  oneidNo: string;
+  localTimeBaseStdDatev: string;
+  flightNumber: string;
+  segApo: string;
+  ticketNumber: string;
+  pnrSegNumber: string;
 }
 
 export interface Call {

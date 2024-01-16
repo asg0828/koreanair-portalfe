@@ -17,12 +17,12 @@ import {
   Cnt,
   Pnr,
   Etkt,
-  BoardingList,
   Voc,
   Sms,
   Sns,
   Email,
   FamilyMembers,
+  Boarding,
 } from '@/models/model/CustomerInfoModel';
 import { ValidType } from '@/models/common/Constants';
 
@@ -47,12 +47,8 @@ export default function DashBoardPopUp({ closeModal, skypassMemberNumber }: any)
   const [cnt, setCnt] = useState<Cnt>();
   const [pnr, setPnr] = useState<Array<Pnr>>([]);
   const [etkt, setEtkt] = useState<Array<Etkt>>([]);
-  const [boardingLists, setBoardingLists] = useState<Array<BoardingList>>([]);
-  const [vocs, setVocs] = useState<Array<Voc>>([]);
-  const [smss, setSmss] = useState<Array<Sms>>([]);
+  const [boarding, setBoarding] = useState<Array<Boarding>>([]);
   const [snss, setSnss] = useState<Array<Sns>>([]);
-  const [emails, setEmails] = useState<Array<Email>>([]);
-  const [rows, setRows] = useState<Array<any>>([]);
   const [searchInfo, setSearchInfo] = useState<any>({ skypassMemberNumber: skypassMemberNumber, searchType: 'B' });
   /* 로딩바 */
   const { t } = useTranslation()
@@ -674,35 +670,22 @@ export default function DashBoardPopUp({ closeModal, skypassMemberNumber }: any)
                       <col width="25%" />
                     </colgroup>
                     <thead>
-                      <tr>
-                        <th>탑승일</th>
-                        <th>편명</th>
-                        <th>구간</th>
-                        <th>CBN CLS</th>
-                        <th>티켓번호</th>
-                      </tr>
+                      <th>탑승일</th>
+                      <th>편명</th>
+                      <th>구간</th>
+                      <th>CBN CLS</th>
+                      <th>티켓번호</th>
                     </thead>
                     <tbody>
-                      {boardingLists.map((item, index) => (
+                    {boarding.map((item, index) => (
                         <tr>
-                          <td>
-                            <Stack justifyContent="Between" alignItems={'Start'}>
-                              <Stack gap="MD">
-                                <div>{item?.itinerary1}</div>
-                                <div>{item?.itinerary2}</div>
-                                <div>{item?.itinerary3}</div>
-                                <div>{item?.itinerary4}</div>
-                                <div>{item?.itinerary5}</div>
-                              </Stack>
-                            </Stack>
-                          </td>
-                          <td>
-                            <Stack justifyContent="Between" alignItems={'Start'}>
-                              <Stack gap="MD">
-                                <div>{item?.ticketNo}</div>
-                              </Stack>
-                            </Stack>
-                          </td>
+                          <Stack gap="MD">
+                            <td>{item?.localTimeBaseStdDatev}</td>
+                            <td>{item?.flightNumber}</td>
+                            <td>{item?.segApo}</td>
+                            <td>{item?.pnrSegNumber}</td>
+                            <td>{item?.ticketNumber}</td>
+                          </Stack>
                         </tr>
                       ))}
                     </tbody>
