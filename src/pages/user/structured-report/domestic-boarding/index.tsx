@@ -115,7 +115,6 @@ const List = () => {
     setCriteria(period);
     setSortedColumn(initSortedColumn);
     setSortedDirection(initSortedDirection);
-    setRows([]);
   };
 
   const handleSortChange = (order: SortDirection, index: number) => {
