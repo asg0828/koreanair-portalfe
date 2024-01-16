@@ -127,10 +127,10 @@ export const getEtktHis = (skypassMemberNumber  : string) => {
       });
     };
 
-export const getBoardingCnt = (oneidNo : string) => {
+export const getBoardingHis = (oneidNo : string) => {
   return callApi({
     service: Service.KAL_BE,
-    url: `${PortalApiURL.CUSTOMER}`,
+    url: `${PortalApiURL.CUSTOMER}/boarding-history`,
     method: Method.GET,
     params: {
           queryParams: {
@@ -140,15 +140,30 @@ export const getBoardingCnt = (oneidNo : string) => {
       });
     };
 
-export const getPetCnt = (oneidNo : string) => {
-  return callApi({
-    service: Service.KAL_BE,
-    url: `${PortalApiURL.CUSTOMER}`,
-    method: Method.GET,
-    params: {
-          queryParams: {
-            oneidNo 
+
+  export const getNonMemPnrHis = (oneidNo  : string) => {
+    return callApi({
+      service: Service.KAL_BE,
+      url: `${PortalApiURL.CUSTOMER}/mytrips-booking`,
+      method: Method.GET,
+      params: {
+            queryParams: {
+              oneidNo  
+            },
           },
-        },
-      });
-    };
+        });
+      };
+  
+  export const getNonMemEtktHis = (oneidNo  : string) => {
+    return callApi({
+      service: Service.KAL_BE,
+      url: `${PortalApiURL.CUSTOMER}/mytrips-etkt`,
+      method: Method.GET,
+      params: {
+            queryParams: {
+              oneidNo  
+            },
+          },
+        });
+      };
+  

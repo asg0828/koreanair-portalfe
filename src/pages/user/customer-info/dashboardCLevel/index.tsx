@@ -8,25 +8,19 @@ import { familyColumn,
 import {
   Profile,
   Skypass,
-  Wallet,
-  Preference,
-  Cnt,
   Pnr,
   Etkt,
-  BoardingList,
   Voc,
-  Sms,
-  Sns,
-  Email,
   ProfileList,
   FamilyMembers,
   Campaign,
   Consulting,
   Tms,
+  Boarding,
 } from '@/models/model/CustomerInfoModel';
 import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { useCampHis, useCosHis, useEtktHis, usePnrHis, useProfile, useProfileCLevel, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
+import { useBoardingHis, useCampHis, useCosHis, useEtktHis, useNonMemEtktHis, useNonMemPnrHis, usePnrHis, useProfile, useProfileCLevel, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
 import Close from '@mui/icons-material/Close';
 import { ValidType, menuIconSx } from '@/models/common/Constants';
 import { useTranslation } from 'react-i18next';
@@ -71,32 +65,30 @@ export default function List() {
   const { refetch: refetchTms, data: responseTms, isError: isErrorTms } = useTmsHis(oneIdno)
   // Voc 정보 조회 api
   const { refetch: refetchVoc, data: responseVoc, isError: isErrorVoc } = useVocHis(oneIdno)
-  // pnr 정보 조회 api
+  // 회원 pnr 정보 조회 api
   const { refetch: refetchPnr, data: responsePnr, isError: isErrorPnr } = usePnrHis(skypassNmSearch.skypassMemberNumber)
-  // ticket 정보 조회 api
+  // 회원 ticket 정보 조회 api
   const { refetch: refetchEtkt, data: responseEtkt, isError: isErrorEtkt } = useEtktHis(skypassNmSearch.skypassMemberNumber)
+  // 비회원 ticket 정보 조회 api
+  const { refetch: refetchNonMemEtkt, data: responseNonMemEtkt, isError: isErrorNonMemEtkt } = useNonMemEtktHis(oneIdno)
+  // 비회원 pnr 정보 조회 api
+  const { refetch: refetchNonMemPnr, data: responseNonMemPnr, isError: isErrorNonMemPnr } = useNonMemPnrHis(oneIdno)
+  // 탑승 이력 조회 api
+  const { refetch: refetchBoarding, data: responseBoarding, isError: isErrorBoarding } = useBoardingHis(oneIdno)
+
 
   const [key, setKey] = useState(Date.now());
   const [modalText, setModalText] = useState<any>([])
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
-  const [wallet, setWallet] = useState<Wallet>();
-  const [preference, setPreference] = useState<Preference>();
-  const [cnt, setCnt] = useState<Cnt>();
   const [pnr, setPnr] = useState<Array<Pnr>>([]);
   const [etkt, setEtkt] = useState<Array<Etkt>>([]);
-  const [boardingLists, setBoardingLists] = useState<Array<BoardingList>>([]);
+  const [boarding, setBoarding] = useState<Array<Boarding>>([]);
 
   const [campaign, setCampaign] = useState<Campaign>(initCampaign);
   const [consulting, setConsulting] = useState<Consulting>(initConsulting);
   const [tms, setTms] = useState<Tms>(initTms)
   const [voc, setVoc] = useState<Voc>(initVoc);
-
-  const [smss, setSmss] = useState<Array<Sms>>([]);
-  const [snss, setSnss] = useState<Array<Sns>>([]);
-  const [emails, setEmails] = useState<Array<Email>>([]);
-  const [rows, setRows] = useState<Array<any>>([]);
-  
 
   
   // CLevel용 검색 state
@@ -379,6 +371,7 @@ export default function List() {
       refetchCos()
       refetchTms()
       refetchVoc()
+      refetchBoarding()
     }
   }, [oneIdno])
 
@@ -465,6 +458,20 @@ export default function List() {
       }
     }
   }, [responseEtkt, isErrorEtkt, key]);
+  
+  // boarding 조회
+  useEffect(() => {
+    if (isErrorBoarding || responseBoarding?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseBoarding?.message,
+      });
+    } else {
+      if (responseBoarding) {
+        setBoarding(responseBoarding.data)
+      }
+    }
+  }, [responseBoarding, isErrorBoarding, key]);
 
   /* 로딩바 */
   const { t } = useTranslation()
@@ -492,6 +499,15 @@ export default function List() {
 			rtn = cloneDeep(initSkypass)
 			return rtn
 		})
+    setPnr((prevState)=> {
+      return cloneDeep([])
+    })
+    setBoarding((prevState)=> {
+      return cloneDeep([])
+    })
+    setEtkt((prevState)=> {
+      return cloneDeep([])
+    })
     setSearchInfo(initSearchInfoC)
     setSkypassNmSearch({skypassMemberNumber: '', searchType: ''})
     setOneIdno('')
@@ -969,12 +985,12 @@ export default function List() {
                       <tr>
                         {pnr.map((item, index) => (
                           <Stack gap="MD">
-                            <td>1{item?.reservationNumber}</td>
-                            <td>1{item?.companyIdentification}{item?.productIdentification}</td>
-                            <td>2{item?.classOfService}</td>
-                            <td>2{item?.departureDate}</td>
-                            <td>3{item?.boardPointCityCode}{item?.offPointCityCode}</td>
-                            <td>4{item?.bookingStatus}</td>
+                            <td>{item?.reservationNumber}</td>
+                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
+                            <td>{item?.classOfService}</td>
+                            <td>{item?.departureDate}</td>
+                            <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
+                            <td>{item?.bookingStatus}</td>
                           </Stack>
                         ))}
                       </tr>
@@ -1152,35 +1168,22 @@ export default function List() {
                       <col width="25%" />
                     </colgroup>
                     <thead>
-                      <tr>
-                        <th>탑승일</th>
-                        <th>편명</th>
-                        <th>구간</th>
-                        <th>CBN CLS</th>
-                        <th>티켓번호</th>
-                      </tr>
+                      <th>탑승일</th>
+                      <th>편명</th>
+                      <th>구간</th>
+                      <th>CBN CLS</th>
+                      <th>티켓번호</th>
                     </thead>
                     <tbody>
-                      {boardingLists.map((item, index) => (
+                      {boarding.map((item, index) => (
                         <tr>
-                          <td>
-                            <Stack justifyContent="Between" alignItems={'Start'}>
-                              <Stack gap="MD">
-                                <div>{item?.itinerary1}</div>
-                                <div>{item?.itinerary2}</div>
-                                <div>{item?.itinerary3}</div>
-                                <div>{item?.itinerary4}</div>
-                                <div>{item?.itinerary5}</div>
-                              </Stack>
-                            </Stack>
-                          </td>
-                          <td>
-                            <Stack justifyContent="Between" alignItems={'Start'}>
-                              <Stack gap="MD">
-                                <div>{item?.ticketNo}</div>
-                              </Stack>
-                            </Stack>
-                          </td>
+                          <Stack gap="MD">
+                            <td>{item?.localTimeBaseStdDatev}</td>
+                            <td>{item?.flightNumber}</td>
+                            <td>{item?.segApo}</td>
+                            <td>{item?.pnrSegNumber}</td>
+                            <td>{item?.ticketNumber}</td>
+                          </Stack>
                         </tr>
                       ))}
                     </tbody>

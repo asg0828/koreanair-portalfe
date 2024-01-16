@@ -1,9 +1,10 @@
 import {
-  getBoardingCnt,
+  getBoardingHis,
   getCampHis,
   getCosHis,
   getEtktHis,
-  getPetCnt,
+  getNonMemEtktHis,
+  getNonMemPnrHis,
   getPnrHis,
   getProfile,
   getProfileCLevel,
@@ -53,7 +54,7 @@ export const useCampHis = (oneidNo : string) => {
 {/* Communication Records */}
 
 
-{/* MY Trips */}
+{/* MY Trips 회원용 */}
 export const usePnrHis = (skypassMemberNumber  : string) => {
   return useQuery(['customerInfo/pnr'], () => getPnrHis(skypassMemberNumber), { enabled: false });
 };
@@ -61,13 +62,23 @@ export const usePnrHis = (skypassMemberNumber  : string) => {
 export const useEtktHis = (skypassMemberNumber  : string) => {
   return useQuery(['customerInfo/Etkt'], () => getEtktHis(skypassMemberNumber), { enabled: false });
 };
-{/* MY Trips */}
+{/* MY Trips 회원용 */}
 
-
-export const useBoardingCnt = (oneidNo : string) => {
-  return useQuery(['customerInfo/boardingCnt'], () => getBoardingCnt(oneidNo), { enabled: false });
+{/* MY Trips 비회원용 */}
+export const useNonMemPnrHis = (oneidNo  : string) => {
+  return useQuery(['customerInfo/pnr'], () => getNonMemPnrHis(oneidNo), { enabled: false });
 };
 
-export const usePetCnt = (oneidNo : string) => {
-  return useQuery(['customerInfo/petCnt'], () => getPetCnt(oneidNo), { enabled: false });
+export const useNonMemEtktHis = (oneidNo  : string) => {
+  return useQuery(['customerInfo/Etkt'], () => getNonMemEtktHis(oneidNo), { enabled: false });
 };
+{/* MY Trips 비회원용 */}
+
+{/* Boarding history  */}
+export const useBoardingHis = (oneidNo : string) => {
+  return useQuery(['customerInfo/boardingHis'], () => getBoardingHis(oneidNo), { enabled: false });
+};
+{/* Boarding history  */}
+
+
+
