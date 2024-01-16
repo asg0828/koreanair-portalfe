@@ -26,11 +26,11 @@ const columns: Array<ColumnsInfo> = [
   { headerName: '회원번호', field: 'skypassMemberNumber', colSpan: 1 },
   { headerName: '이름', field: 'userNm', colSpan: 2 },
   { headerName: 'VIP 회원 분류', field: 'skypassVipTypeName', colSpan: 0.7 },
-  { headerName: '국제선 수입금액(원)', field: 'intTktNoFscNettKrwAmt', colSpan: 1 },
+  { headerName: '국제선 수익금액(원)', field: 'intTktNoFscNettKrwAmt', colSpan: 1 },
   { headerName: '국제선 탑승횟수', field: 'intBoardCnt', colSpan: 1 },
   { headerName: '국제선 보너스 항공권 탑승 횟수', field: 'intBonusTktBoardCnt', colSpan: 1 },
   { headerName: '국제선 FR탑승횟수 + PR 탑승횟수', field: 'frClsBuyCnt', colSpan: 1 },
-  { headerName: '국제선 평균 탑승 주기(일)', field: 'intAvgBoardCycle', colSpan: 1 },
+  { headerName: '국제선 평균 여행 주기(일)', field: 'intAvgBoardCycle', colSpan: 1 },
   { headerName: '국제선 최다 탑승 O&D', field: 'intMstBordOndApoRteCd1', colSpan: 1 },
 ];
 
@@ -44,8 +44,8 @@ const List = () => {
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
   const [page, setPage] = useState<PageModel>(initPage);
-  const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
-  const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
+  const [sortedColumn, setSortedColumn] = useState<string>('intBoardCnt');
+  const [sortedDirection, setSortedDirection] = useState<SortDirection>('desc');
   const { data: response, isError, refetch } = useIntlBoardingTop100List(criteria);
 
   const createPeriodButton = (period: any, text: string, periodSelect: any) => {
@@ -149,8 +149,20 @@ const List = () => {
       });
     } else {
       if (response?.data) {
-        setInitRows(JSON.parse(JSON.stringify(response.data.contents)));
-        setRows([...sortRows(response.data.contents, sortedColumn, sortedDirection)]);
+        if (sortedColumn === 'intBoardCnt' && sortedDirection) {
+          const oValue = sortedDirection === 'asc' ? 1 : -1;
+          setRows(
+              response.data.contents.sort(
+                  (a: any, b: any) =>
+                      oValue * (a.intBoardCnt - b.intBoardCnt) ||
+                      b.intTktNoFscNettKrwAmt - a.intTktNoFscNettKrwAmt ||
+                      oValue * (a.rank - b.rank)
+              )
+          );
+        } else {
+          setRows(response.data.contents);
+        }
+        setPage(response.data.page);
       }
     }
   }, [response, isError, toast]);
