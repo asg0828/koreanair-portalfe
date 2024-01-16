@@ -81,9 +81,13 @@ const UserSelectModal = ({
   };
 
   const handleClickFile = (deptItem: any) => {
-    const deptItemList = Array.from(getNodeChildrenDeptCodeRecursive(deptItem));
-    const prevUsers = userData.filter((item: UserModel) => deptItemList.includes(item.deptCode));
-    setPrevRows(prevUsers);
+    if (deptItem.isSelected) {
+      const deptItemList = Array.from(getNodeChildrenDeptCodeRecursive(deptItem));
+      const prevUsers = userData.filter((item: UserModel) => deptItemList.includes(item.deptCode));
+      setPrevRows(prevUsers);
+    } else {
+      setPrevRows(userData);
+    }
   };
 
   const handleAddUsers = () => {

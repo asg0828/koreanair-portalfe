@@ -62,9 +62,13 @@ const DeptSelectModal = ({
   };
 
   const handleClickFile = (deptItem: any) => {
-    const deptItemList = Array.from(getNodeChildrenDeptCodeRecursive(deptItem));
-    const prevDepts = deptData.filter((item: UserModel) => deptItemList.includes(item.deptCode));
-    setPrevRows(prevDepts);
+    if (deptItem.isSelected) {
+      const deptItemList = Array.from(getNodeChildrenDeptCodeRecursive(deptItem));
+      const prevDepts = deptData.filter((item: UserModel) => deptItemList.includes(item.deptCode));
+      setPrevRows(prevDepts);
+    } else {
+      setPrevRows(deptData);
+    }
   };
 
   const handleConfirm = () => {
