@@ -147,6 +147,7 @@ const List = () => {
       });
     } else {
       if (response?.data) {
+        setInitRows(JSON.parse(JSON.stringify(response.data.contents)));
         if (sortedColumn === 'domBoardCnt' && sortedDirection) {
           const oValue = sortedDirection === 'asc' ? 1 : -1;
           setRows(
@@ -154,7 +155,7 @@ const List = () => {
                   (a: any, b: any) =>
                       oValue * (a.domBoardCnt - b.domBoardCnt) ||
                       b.domTktNoFscNettKrwAmt - a.domTktNoFscNettKrwAmt ||
-                      oValue * (a.rank - b.rank)
+                      oValue * (b.rank - a.rank)
               )
           );
         } else {
