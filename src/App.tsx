@@ -55,7 +55,7 @@ const App = () => {
     }
   }, [contextPath, dispatch]);
 
-  if (!isLoaded && !authorizationCode) {
+  if (isLoaded && !authorizationCode) {
     localStorage.setItem('accessPathname', pathname);
   }
 
