@@ -202,6 +202,7 @@ export default function List() {
       setConsulting(initConsulting)
       setTms(initTms)
       setVoc(initVoc)
+      setSelectedSkypass(initSkypass)
     } else {
       if (responseProfile) {
         setProfile(responseProfile?.data);
@@ -944,14 +945,14 @@ export default function List() {
                       </colgroup>
                       <thead>
                         <th>예약번호</th>
-                        <th>영문이름</th>
+                        {/* <th>영문이름</th> */}
                       </thead>
                       <tbody>
                         <tr>
                           <td>{list?.reservationNumber}</td>
-                          <td> {list.givenname && (list.givenname.endsWith("MR") || list.givenname.endsWith("MS"))
+                          {/* <td> {list.givenname && (list.givenname.endsWith("MR") || list.givenname.endsWith("MS"))
                             ? list.givenname.substring(0, list.givenname.length - 2) : list.givenname}{list.surname}
-                          </td>
+                          </td> */}
                         </tr>
                       </tbody>
                     </table>
@@ -969,7 +970,7 @@ export default function List() {
                       <tbody>
                         {list?.pnrList?.map((item) => (
                           <tr>
-                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
+                            <td>{item?.companyIdentification}{item?.productIdentification?.toString().padStart(4, '0')}</td>
                             <td>{item?.classOfService}</td>
                             <td>{item?.departureDate}</td>
                             <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
@@ -990,12 +991,12 @@ export default function List() {
                       </colgroup>
                       <thead>
                         <th>예약번호</th>
-                        <th>영문이름</th>
+                        {/* <th>영문이름</th> */}
                       </thead>
                       <tbody>
                         <tr>
                           <td>{list?.pnrNo}</td>
-                          <td>{list?.engLname}{list?.engFname}</td>
+                          {/* <td>{list?.engLname}{list?.engFname}</td> */}
                         </tr>
                       </tbody>
                     </table>
@@ -1055,7 +1056,6 @@ export default function List() {
                           <col width="20%" />
                         </colgroup>
                         <thead>
-                          <th>티켓번호</th>
                           <th>편명</th>
                           <th>BKG CLS</th>
                           <th>출발일</th>
@@ -1065,8 +1065,7 @@ export default function List() {
                         <tbody>
                           {list?.etktList?.map((item) => (
                             <tr>
-                              <td>{list.ticketNumber}</td>
-                              <td>{item?.marketingCompany}{item?.flightNumber}</td>
+                              <td>{item?.marketingCompany}{item?.flightNumber.toString().padStart(4, '0')}</td>
                               <td>{item?.bookingClass}</td>
                               <td>{item?.departureDate}</td>
                               <td>{item?.cpnNumber}</td>
@@ -1103,7 +1102,6 @@ export default function List() {
                           <col width="20%" />
                         </colgroup>
                         <thead>
-                          <th>티켓번호</th>
                           <th>편명</th>
                           <th>BKG CLS</th>
                           <th>출발일</th>
@@ -1113,7 +1111,6 @@ export default function List() {
                         <tbody>
                           {list?.etktList?.map((item) => (
                             <tr>
-                              <td>{list?.ticketNumber}</td>
                               <td>{item?.flightNumber}</td>
                               <td>{item?.bookingClassCode}</td>
                               <td>{item?.bkgDtBsStdDatev}</td>

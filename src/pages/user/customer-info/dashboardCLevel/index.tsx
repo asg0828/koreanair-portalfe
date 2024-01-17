@@ -324,6 +324,8 @@ export default function List() {
         //   type: ValidType.ERROR,
         //   content: responseSkypass?.message,
         // });
+        setSelectedSkypass(initSkypass)
+        setFamily(initFamily)
       } else {
         if (responseSkypass) {
           setSkypass(responseSkypass?.data);
@@ -351,6 +353,7 @@ export default function List() {
     if (isErrorSkypass || responseSkypass?.successOrNot === 'N') {
       setSelectedSkypass(initSkypass)
       setFamily(initFamily)
+      setSkypass([])
       // toast({
       //   type: ValidType.ERROR,
       //   content: responseSkypass?.message,
@@ -1030,7 +1033,7 @@ export default function List() {
               </div>
               {isListView1.open && isListView1.contents === 'pnr' && (
                 <div className="hideContents">
-                  {pnr.map((list) => (
+                  {pnr.length > 0 && pnr.map((list) => (
                     <>
                       <table>
                         <colgroup>
@@ -1038,14 +1041,14 @@ export default function List() {
                         </colgroup>
                         <thead>
                           <th>예약번호</th>
-                          <th>영문이름</th>
+                          {/* <th>영문이름</th> */}
                         </thead>
                         <tbody>
                           <tr>
                             <td>{list?.reservationNumber}</td>
-                            <td> {list.givenname && (list.givenname.endsWith("MR") || list.givenname.endsWith("MS"))
-                            ? list.givenname.substring(0, list.givenname.length - 2) : list.givenname}{list.surname}
-                            </td>
+                            {/* <td> {list.givenname && (list.givenname.endsWith("MR") || list.givenname.endsWith("MS"))
+                            ? list.givenname.substring(0, list.givenname.length - 2) : list.givenname}{list?.surname}
+                            </td> */}
                           </tr>
                         </tbody>
                       </table>
@@ -1064,7 +1067,7 @@ export default function List() {
                       <tbody>
                         {list.pnrList.map((item, index) => (
                           <tr>
-                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
+                            <td>{item?.companyIdentification}{item?.productIdentification?.toString().padStart(4, '0')}</td>
                             <td>{item?.classOfService}</td>
                             <td>{item?.departureDate}</td>
                             <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
@@ -1106,7 +1109,6 @@ export default function List() {
                           <col width="20%" />
                         </colgroup>
                         <thead>
-                          <th>티켓번호</th>
                           <th>편명</th>
                           <th>BKG CLS</th>
                           <th>출발일</th>
@@ -1116,8 +1118,7 @@ export default function List() {
                         <tbody>
                           {list.etktList.map((item :Etkt) => (
                             <tr>
-                              <td>{list.ticketNumber}</td>
-                              <td>{item?.marketingCompany}{item?.flightNumber}</td>
+                              <td>{item?.marketingCompany}{item?.flightNumber.toString().padStart(4, '0')}</td>
                               <td>{item?.bookingClass}</td>
                               <td>{item?.departureDate}</td>
                               <td>{item?.cpnNumber}</td>
