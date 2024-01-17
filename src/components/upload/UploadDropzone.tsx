@@ -27,7 +27,7 @@ const UploadDropzone = ({ fileCl = '', fileList = [], uploadFiles }: UploadDropz
   const { isDragActive, getRootProps, getInputProps } = useDropzone({
     onDropRejected: handleDropRejected,
     onDrop: handleDrop,
-    maxSize: 1024 * 1024 * 5,
+    maxSize: 1024 * 1024 * 500,
     maxFiles: 10,
   });
   const [fileId, setFileId] = useState<string>('');
