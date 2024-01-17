@@ -14,7 +14,7 @@ import SessionApis from '@api/common/SessionApis';
 import { Toaster, useToast } from '@components/ui';
 import Watermark from '@uiw/react-watermark';
 import SessionUtil from '@utils/SessionUtil';
-import { Suspense, useCallback, useEffect } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useTranslation } from 'react-i18next';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
@@ -23,6 +23,7 @@ const App = () => {
   const { t } = useTranslation();
   const { toast } = useToast();
   const dispatch = useAppDispatch();
+  const [isLoaded, setIsLoaded] = useState(false);
   const contextPath = useAppSelector(selectContextPath());
   const pathname = window.location.pathname + window.location.search;
   const sessionUtil = new SessionUtil();
@@ -54,19 +55,27 @@ const App = () => {
     }
   }, [contextPath, dispatch]);
 
-  if (!authorizationCode) {
+  if (isLoaded && !authorizationCode) {
     localStorage.setItem('accessPathname', pathname);
-    initContextPath();
   }
 
   useEffect(() => {
     if (sessionRequestInfo) {
       initContextPath();
     }
+
+    return () => {
+      setIsLoaded(true);
+    };
   }, [sessionRequestInfo, initContextPath, dispatch]);
 
   useEffect(() => {
-    if (contextPath !== ContextPath.UNAUTHORIZED && router) {
+    if (
+      contextPath !== ContextPath.UNAUTHORIZED &&
+      sessionRequestInfo.googleAccessToken &&
+      sessionInfo.sessionId &&
+      router
+    ) {
       window.history.pushState({}, '', localStorage.getItem('accessPathname'));
     }
   }, [contextPath, router]);
