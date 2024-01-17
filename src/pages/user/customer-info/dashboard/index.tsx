@@ -330,12 +330,17 @@ export default function List() {
           });
         }
 
-        const result = Object.entries(groupedData).map(([key, value]) => ({
-          "reservationNumber": key.slice(0, 6),
-          "givenname" : key,
-          "surname": key,
-          "pnrList": value
-        }));
+        const result = Object.entries(groupedData).map(([key, value]) => {
+          const surname = value[0].surname;
+          const givenname = value[0].givenname;
+          const ticketNumber = value[0].reservationNumber;
+          return {
+            "reservationNumber": ticketNumber,
+            "surname": surname,
+            "givenname": givenname,
+            "pnrList": value
+          };
+        });
         setPnr(result)
       }
     }
@@ -352,7 +357,7 @@ export default function List() {
       if (responseEtkt) {
         const groupedData: { [key: string]: any } = {};
         for (const item of responseEtkt.data) {
-          const key = item.ticketNumber + item.surname + item.givenname;
+          const key = item.ticketNumber;
           if (!groupedData[key]) {
             groupedData[key] = [];
           }
@@ -368,13 +373,8 @@ export default function List() {
         }
 
         const result = Object.entries(groupedData).map(([key, value]) => {
-          const surname = value[0].surname;
-          const givenname = value[0].givenname;
-          const ticketNumber = value[0].reservationNumber;
           return {
-            "ticketNumber": ticketNumber,
-            "surname": surname,
-            "givenname": givenname,
+            "ticketNumber": key,
             "etktList": value
           };
         });
@@ -823,7 +823,7 @@ export default function List() {
                       <tbody>
                         <tr>
                           <td>{list?.reservationNumber}</td>
-                          <td>{list.givenname.substring(0, list.givenname.length - 2)}{list.surname}</td>
+                          <td>{list?.givenname.substring(0, list.givenname.length - 2)}{list.surname}</td>
                         </tr>
                       </tbody>
                     </table>
@@ -850,6 +850,7 @@ export default function List() {
                         ))}
                       </tbody>
                     </table>
+                    <br/>
                   </>
                   )
                   )}
@@ -892,7 +893,7 @@ export default function List() {
                         <tbody>
                           {list.etktList.map((item :Etkt) => (
                             <tr>
-                               <td>{list.ticketNumber}</td>
+                              <td>{list.ticketNumber}</td>
                               <td>{item?.marketingCompany}{item?.flightNumber}</td>
                               <td>{item?.bookingClass}</td>
                               <td>{item?.departureDate}</td>
@@ -902,6 +903,7 @@ export default function List() {
                           ))}
                         </tbody>
                       </table>
+                      <br/>
                     </>
                   ))}
                 </div>

@@ -432,8 +432,8 @@ export default function List() {
     }
   }, [responseVoc, isErrorVoc, key]);
 
-  // pnr 조회
-  useEffect(() => {
+   // pnr 조회
+   useEffect(() => {
     if (isErrorPnr || responsePnr?.successOrNot === 'N') {
       toast({
         type: ValidType.ERROR,
@@ -441,7 +441,36 @@ export default function List() {
       });
     } else {
       if (responsePnr) {
-        setPnr(responsePnr.data)
+        const groupedData: { [key: string]: any } = {};
+        for (const item of responsePnr.data) {
+          const key = item.reservationNumber + item.givenname;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push({
+            "segNumber": item.segNumber,
+            "companyIdentification": item.companyIdentification,
+            "productIdentification": item.productIdentification,
+            "classOfService": item.classOfService,
+            "departureDate": item.departureDate,
+            "boardPointCityCode": item.boardPointCityCode,
+            "offPointCityCode": item.offPointCityCode,
+            "bookingStatus": item.bookingStatus
+          });
+        }
+
+        const result = Object.entries(groupedData).map(([key, value]) => {
+          const surname = value[0].surname;
+          const givenname = value[0].givenname;
+          const ticketNumber = value[0].reservationNumber;
+          return {
+            "reservationNumber": ticketNumber,
+            "surname": surname,
+            "givenname": givenname,
+            "pnrList": value
+          };
+        });
+        setPnr(result)
       }
     }
   }, [responsePnr, isErrorPnr, key]);
@@ -455,7 +484,30 @@ export default function List() {
       });
     } else {
       if (responseEtkt) {
-        setEtkt(responseEtkt.data)
+        const groupedData: { [key: string]: any } = {};
+        for (const item of responseEtkt.data) {
+          const key = item.ticketNumber;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push({
+            "flightNumber": item.flightNumber,
+            "bookingClass": item.bookingClass,
+            "marketingCompany": item.marketingCompany,
+            "departureDate": item.departureDate,
+            "cpnNumber": item.cpnNumber,
+            "boardPointLocationId": item.boardPointLocationId,
+            "offPointLocationId": item.offPointLocationId
+          });
+        }
+
+        const result = Object.entries(groupedData).map(([key, value]) => {
+          return {
+            "ticketNumber": key,
+            "etktList": value
+          };
+        });
+        setEtkt(result)
       }
     }
   }, [responseEtkt, isErrorEtkt, key]);
@@ -1014,6 +1066,7 @@ export default function List() {
                         ))}
                       </tbody>
                     </table>
+                    <br/>
                   </>
                   )
                   )}
@@ -1066,6 +1119,7 @@ export default function List() {
                           ))}
                         </tbody>
                       </table>
+                      <br/>
                     </>
                   ))}
                 </div>
