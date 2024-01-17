@@ -1,10 +1,10 @@
-import { useCampHis, useCosHis, useEtktHis, usePnrHis, useProfile, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
+import { useCampHis, useCosHis, useEtktHis, useEtl, usePnrHis, useProfile, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
 import NoResult from '@/components/emptyState/NoData';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, TR, TD, THead, TH, Table, Label } from '@components/ui';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { SelectValue } from '@mui/base/useSelect';
-import { familyColumn, initCampaign, initConsulting, initFamily, initProfile, initSkypass, initTms, initVoc } from './data';
+import { familyColumn, initCampaign, initConsulting, initFamily, initProfile, initSkypass, initTms, initVoc, initEtl } from './data';
 import {
   Profile,
   Skypass,
@@ -16,10 +16,14 @@ import {
   Consulting,
   Tms,
   Boarding,
+  Etl,
+  EtktList,
+  PnrList,
 } from '@/models/model/CustomerInfoModel';
 import { ValidType } from '@/models/common/Constants';
 import { cloneDeep } from 'lodash'
 import { useTranslation } from 'react-i18next';
+import HorizontalTable from '@/components/table/HorizontalTable';
 export default function List() {
   const today = new Date();
   const yesterday = new Date(today.setDate(today.getDate() - 1));
@@ -27,17 +31,18 @@ export default function List() {
   const [profile, setProfile] = useState<Profile>(initProfile);
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
-  const [pnr, setPnr] = useState<Array<Pnr>>([]);
-  const [etkt, setEtkt] = useState<Array<Etkt>>([]);
+  const [pnr, setPnr] = useState<Array<PnrList>>([]);
+  const [etkt, setEtkt] = useState<Array<EtktList>>([]);
   const [boarding, setBoarding] = useState<Array<Boarding>>([]);
   const [campaign, setCampaign] = useState<Campaign>(initCampaign);
   const [consulting, setConsulting] = useState<Consulting>(initConsulting);
   const [tms, setTms] = useState<Tms>(initTms)
   const [voc, setVoc] = useState<Voc>(initVoc);
+  const [etl, setEtl] = useState<Etl>(initEtl)
   const [searchInfo, setSearchInfo] = useState<any>({
     skypassMemberNumber: '',
     oneidNo: '',
-    searchType: '',
+    searchType: '', 
   });
   const [selectedSkypass, setSelectedSkypass] = useState<Skypass>(initSkypass);
   const [ oneIdno, setOneIdno] = useState<any>('')
@@ -63,6 +68,8 @@ export default function List() {
   const { refetch: refetchPnr, data: responsePnr, isError: isErrorPnr } = usePnrHis(searchSkypassNm)
   // ticket 정보 조회 api
   const { refetch: refetchEtkt, data: responseEtkt, isError: isErrorEtkt } = useEtktHis(searchSkypassNm)
+  // etl 조회 api
+  const {refetch: refetchEtl, data: responseEtl, isError: isErrorEtl  } = useEtl()
 
   const [key, setKey] = useState(Date.now());
 
@@ -159,13 +166,6 @@ export default function List() {
   const [isListView2, setIsListView2] = useState(false);
   const [isListView3, setIsListView3] = useState({ open: false, contents: '' });
 
-  // 클릭 더보기 리스트 교체 함수
-  const listClickChange = (flag: string) => {
-    // 눌렀을때 -> LIST에 값이 들어감                                                       -> STATE변화 (열어줘야됨)
-    // LIST에 값이 있는 상태로 누르면(다시 누르면) -> LIST가 비워짐      -> STATE변화(닫아줘야됨)
-    // LIST에 값이 있는 상태로 다른걸 누르면 -> LIST가 다른걸로 채워짐  -> STATE변화(다른걸 열어줘야됨/ 열어주되 LIST를 갈아끼워줘야됨 )
-    // LIST를 STATE로 관리하고 값을 넣었다 뺐다 하면서 USEeFFECT로 열고 닫고 해주면 될거같은데 -> 값이 변화하면 무조건 LIST가 열리게 값 변화가 없으면 닫기
-  };
 
   /* select 입력 함수 */
   const onchangeSelectHandler = (
@@ -194,7 +194,13 @@ export default function List() {
       if (responseProfile) {
         setProfile(responseProfile?.data);
         setOneIdno(responseProfile?.data.skypassInfos[0]?.oneidNo)
-        setSearchSkypassNm(responseProfile?.data.skypassInfos[0]?.skypassMemberNumber)
+        // 회원 비회원 분기 
+        if(responseProfile?.data.skypassInfos[0]){
+          setSearchSkypassNm(responseProfile?.data.skypassInfos[0]?.skypassMemberNumber)
+        } else{
+          // 배치 기준 시간 (Etl) 조회 api
+          refetchEtl()
+        }
       }
     }
   }, [responseProfile, isErrorProfile, key]);
@@ -306,7 +312,31 @@ export default function List() {
       });
     } else {
       if (responsePnr) {
-        setPnr(responsePnr.data)
+        const groupedData: { [key: string]: any } = {};
+        for (const item of responsePnr.data) {
+          const key = item.reservationNumber + item.givenname;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push({
+            "segNumber": item.segNumber,
+            "companyIdentification": item.companyIdentification,
+            "productIdentification": item.productIdentification,
+            "classOfService": item.classOfService,
+            "departureDate": item.departureDate,
+            "boardPointCityCode": item.boardPointCityCode,
+            "offPointCityCode": item.offPointCityCode,
+            "bookingStatus": item.bookingStatus
+          });
+        }
+
+        const result = Object.entries(groupedData).map(([key, value]) => ({
+          "reservationNumber": key.slice(0, 6),
+          "givenname" : key,
+          "surname": key,
+          "pnrList": value
+        }));
+        setPnr(result)
       }
     }
   }, [responsePnr, isErrorPnr, key]);
@@ -320,11 +350,52 @@ export default function List() {
       });
     } else {
       if (responseEtkt) {
-        setEtkt(responseEtkt.data)
+        const groupedData: { [key: string]: any } = {};
+        for (const item of responseEtkt.data) {
+          const key = item.ticketNumber + item.surname + item.givenname;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push({
+            "flightNumber": item.flightNumber,
+            "bookingClass": item.bookingClass,
+            "marketingCompany": item.marketingCompany,
+            "departureDate": item.departureDate,
+            "cpnNumber": item.cpnNumber,
+            "boardPointLocationId": item.boardPointLocationId,
+            "offPointLocationId": item.offPointLocationId
+          });
+        }
+
+        const result = Object.entries(groupedData).map(([key, value]) => {
+          const surname = value[0].surname;
+          const givenname = value[0].givenname;
+          const ticketNumber = value[0].reservationNumber;
+          return {
+            "ticketNumber": ticketNumber,
+            "surname": surname,
+            "givenname": givenname,
+            "etktList": value
+          };
+        });
+        setEtkt(result)
       }
     }
   }, [responseEtkt, isErrorEtkt, key]);
 
+  // 배치 기준 시간 (Etl) 조회
+  useEffect(() => {
+    if (isErrorEtl || responseEtl?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseEtl?.message,
+      });
+    } else {
+      if (responseEtl) {
+        setEtl(responseEtl.data)
+      }
+    }
+  }, [responseEtl, isErrorEtl]);
 
 	useEffect(() => {
 		reset()
@@ -697,7 +768,7 @@ export default function List() {
           <Stack className="width-100" gap="LG" alignItems="Start">
             <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
               <h5 style={{ fontWeight: '400', position: 'absolute', right: 20, top: 10, color: 'gray' }}>
-                {batchDate} 기준
+                { ( oneIdno !== '' && searchSkypassNm === '') ? `${etl?.mytrips.slice(0, 10)}` : `${batchDate}` }기준
               </h5>
               <div className="top">
                 MY Trips
@@ -739,65 +810,100 @@ export default function List() {
               </div>
               {isListView1.open && isListView1.contents === 'pnr' && (
                 <div className="hideContents">
-                  <table>
-                    <colgroup>
-                      <col width="auto" />
-                    </colgroup>
-                    <thead>
-                      <th>예약번호</th>
-                      <th>편명</th>
-                      <th>BKG CLS</th>
-                      <th>출발일</th>
-                      <th>구간</th>
-                      <th>예약상태</th>
-                    </thead>
-                    <tbody>
-                      {pnr.map((item, index) => (
+                  {pnr.map((list) => (
+                  <>
+                    <table>
+                      <colgroup>
+                        <col width="auto" />
+                      </colgroup>
+                      <thead>
+                        <th>예약번호</th>
+                        <th>영문이름</th>
+                      </thead>
+                      <tbody>
                         <tr>
-                          <td>{item?.reservationNumber}</td>
-                          <td>{item?.companyIdentification}</td>
-                          <td>{item?.classOfService}</td>
-                          <td>{item?.departureDate}</td>
-                          <td>{item?.segNumber}</td>
-                          <td>{item?.bookingStatus}</td>
+                          <td>{list?.reservationNumber}</td>
+                          <td>{list.givenname.substring(0, list.givenname.length - 2)}{list.surname}</td>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                      </tbody>
+                    </table>
+                    <table>
+                      <colgroup>
+                        <col width="auto" />
+                      </colgroup>
+                      <thead>
+                        <th>편명</th>
+                        <th>BKG CLS</th>
+                        <th>출발일</th>
+                        <th>구간</th>
+                        <th>예약상태</th>
+                      </thead>
+                      <tbody>
+                        {list.pnrList.map((item, index) => (
+                          <tr>
+                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
+                            <td>{item?.classOfService}</td>
+                            <td>{item?.departureDate}</td>
+                            <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
+                            <td>{item?.bookingStatus}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
+                  )
+                  )}
                 </div>
               )}
               {isListView1.open && isListView1.contents === 'etkt' && (
                 <div className="hideContents">
-                  <table>
-                    <colgroup>
-                      <col width="15%" />
-                      <col width="20%" />           
-                      <col width="20%" />
-                      <col width="15%" />
-                      <col width="10%" />
-                      <col width="20%" />
-                    </colgroup>
-                    <thead>
-                      <th>티켓번호</th>
-                      <th>편명</th>
-                      <th>BKG CLS</th>
-                      <th>출발일</th>
-                      <th>순서</th>
-                      <th>구간</th>
-                    </thead>
-                    <tbody>
-                      {etkt.map((item, index) => (
-                        <tr>
-                          <td>{item?.ticketNumber}</td>
-                          <td>{item?.marketingCompany}{item?.flightNumber}</td>
-                          <td>{item?.bookingClass}</td>
-                          <td>{item?.departureDate}</td>
-                          <td>{item?.cpnNumber}</td>
-                          <td>{item?.offPointLocationId}{item?.boardPointLocationId}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  {etkt.map((list) => (
+                    <>
+                      <table>
+                        <colgroup>
+                          <col width="auto" />
+                        </colgroup>
+                        <thead>
+                          <th>티켓번호</th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{list.ticketNumber}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table>
+                        <colgroup>
+                          <col width="15%" />
+                          <col width="20%" />           
+                          <col width="20%" />
+                          <col width="15%" />
+                          <col width="10%" />
+                          <col width="20%" />
+                        </colgroup>
+                        <thead>
+                          <th>티켓번호</th>
+                          <th>편명</th>
+                          <th>BKG CLS</th>
+                          <th>출발일</th>
+                          <th>순서</th>
+                          <th>구간</th>
+                        </thead>
+                        <tbody>
+                          {list.etktList.map((item :Etkt) => (
+                            <tr>
+                               <td>{list.ticketNumber}</td>
+                              <td>{item?.marketingCompany}{item?.flightNumber}</td>
+                              <td>{item?.bookingClass}</td>
+                              <td>{item?.departureDate}</td>
+                              <td>{item?.cpnNumber}</td>
+                              <td>{item?.boardPointLocationId}{item?.offPointLocationId}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  ))}
                 </div>
               )}
               <button
@@ -817,7 +923,7 @@ export default function List() {
             <Stack className="width-50" gap="LG">
               <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
                 <h5 style={{ fontWeight: '400', position: 'absolute', right: 20, top: 10, color: 'gray' }}>
-                  {batchDate} 기준
+                { ( oneIdno !== '' && searchSkypassNm === '') ? `${etl?.wallet.slice(0, 10)}` : `${batchDate}` }기준
                 </h5>
                 <div className="top">
                   Wallet
@@ -835,7 +941,7 @@ export default function List() {
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">항공권할인Coupon보유개수</div>
+                    <div className="key">유효 promotion coupon</div>
                     <div className="value">
                       <span className="num">{profile?.holdTktDiscCpnCnt}</span>
                     </div>
@@ -843,24 +949,24 @@ export default function List() {
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">항공권할인PLCCCoupon보유개수</div>
+                    <div className="key">전자우대할인권</div>
                     <div className="value">
-                      <span className="num">{profile?.holdTktDiscountPlccCpnCnt}</span>
+                      <span className="num">{profile?.holdEcpnCnt}</span>
                     </div>
                   </Stack>
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">전자우대할인권보유개수</div>
+                    <div className="key">카드사 쿠폰</div>
                     <div className="value">
-                      <span className="num">{profile?.holdEcpnCnt}</span>
+                      <span className="num">{profile?.holdTktDiscountPlccCpnCnt}</span>
                     </div>
                   </Stack>
                 </div>
               </div>
               <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
                 <h5 style={{ fontWeight: '400', position: 'absolute', right: 20, top: 10, color: 'gray' }}>
-                  {batchDate} 기준
+                { ( oneIdno !== '' && searchSkypassNm === '') ? `${etl?.preference.slice(0, 10)}` : `${batchDate}` }기준
                 </h5>
                 <div className="top">
                   Preference
@@ -899,7 +1005,7 @@ export default function List() {
           <Stack className="width-100" gap="LG" alignItems="Start">
             <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
               <h5 style={{ fontWeight: '400', position: 'absolute', right: 20, top: 10, color: 'gray' }}>
-                {batchDate} 기준
+              { ( oneIdno !== '' && searchSkypassNm === '') ? `${etl?.boarding.slice(0, 10)}` : `${batchDate}` }기준
               </h5>
               <div className="top">
                 Boarding history
@@ -946,7 +1052,7 @@ export default function List() {
                           <td>{item?.localTimeBaseStdDatev}</td>
                           <td>{item?.flightNumber}</td>
                           <td>{item?.segApo}</td>
-                          <td>{item?.pnrSegNumber}</td>
+                          <td>{item?.cabinClassCode}</td>
                           <td>{item?.ticketNumber}</td>
                         </tr>
                       ))}
@@ -967,7 +1073,7 @@ export default function List() {
             </div>
             <div style={{ position: 'relative' }} className="dashBoardBox under width-50">
               <h5 style={{ fontWeight: '400', position: 'absolute', right: 20, top: 10, color: 'gray' }}>
-                {batchDate} 기준
+              { ( oneIdno !== '' && searchSkypassNm === '') ? `${etl?.communication.slice(0, 10)}` : `${batchDate}` }기준
               </h5>
               <div className="top">communication records</div>
               <div className="itemWrap">

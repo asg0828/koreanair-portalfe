@@ -141,10 +141,13 @@ export interface Cnt {
   email: number;
   sns: number;
 }
-export interface Pnr {
+export interface PnrList {
   reservationNumber: string;
   surname: string;
   givenname: string;
+  pnrList: Pnr[];
+}
+export interface Pnr {
   segNumber: string;
   companyIdentification: string;
   productIdentification: string;
@@ -155,12 +158,15 @@ export interface Pnr {
   bookingStatus: string;
 }
 
-export interface Etkt {
+export interface EtktList {
   ticketNumber: string;
+  etktList: Etkt[]
+}
+export interface Etkt {
+  departureDate: string;
   marketingCompany: string;
   flightNumber: string;
   bookingClass: string;
-  departureDate: string;
   cpnNumber: string;
   boardPointLocationId: string;
   offPointLocationId: string;
@@ -196,6 +202,7 @@ export interface Boarding {
   segApo: string;
   ticketNumber: string;
   pnrSegNumber: string;
+  cabinClassCode: string;
 }
 
 export interface Call {

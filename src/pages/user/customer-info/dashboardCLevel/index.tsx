@@ -18,6 +18,8 @@ import {
   Tms,
   Boarding,
   Etl,
+  EtktList,
+  PnrList,
 } from '@/models/model/CustomerInfoModel';
 import { selectCLevelModal, setCLevelModal } from '@/reducers/menuSlice';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
@@ -76,23 +78,20 @@ export default function List() {
   const { refetch: refetchNonMemPnr, data: responseNonMemPnr, isError: isErrorNonMemPnr } = useNonMemPnrHis(oneIdno)
   // 탑승 이력 조회 api
   const { refetch: refetchBoarding, data: responseBoarding, isError: isErrorBoarding } = useBoardingHis(oneIdno)
-  // etl 조회 api
-  const {refetch: refetchEtl, data: responseEtl, isError: isErrorEtl  } = useEtl()
-
+  
   const [key, setKey] = useState(Date.now());
   const [modalText, setModalText] = useState<any>([])
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
-  const [pnr, setPnr] = useState<Array<Pnr>>([]);
-  const [etkt, setEtkt] = useState<Array<Etkt>>([]);
+  const [pnr, setPnr] = useState<Array<PnrList>>([]);
+  const [etkt, setEtkt] = useState<Array<EtktList>>([]);
   const [boarding, setBoarding] = useState<Array<Boarding>>([]);
 
   const [campaign, setCampaign] = useState<Campaign>(initCampaign);
   const [consulting, setConsulting] = useState<Consulting>(initConsulting);
   const [tms, setTms] = useState<Tms>(initTms)
   const [voc, setVoc] = useState<Voc>(initVoc);
-  
-  const [etl, setEtl] = useState<Etl>()
+
   // CLevel용 검색 state
   const [searchText, setSearchText] = useState<any>();
 
@@ -476,24 +475,7 @@ export default function List() {
   }, [responseBoarding, isErrorBoarding, key]);
 
   
-  // 배치 기준 시간 (Etl) 조회 api
-  useEffect(() => {
-    refetchEtl()
-  }, [])
 
-  // 배치 기준 시간 (Etl) 조회
-  useEffect(() => {
-    if (isErrorEtl || responseEtl?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseEtl?.message,
-      });
-    } else {
-      if (responseEtl) {
-        setEtl(responseEtl.data)
-      }
-    }
-  }, [responseEtl, isErrorEtl]);
   
   /* 로딩바 */
   const { t } = useTranslation()
@@ -991,65 +973,101 @@ export default function List() {
               </div>
               {isListView1.open && isListView1.contents === 'pnr' && (
                 <div className="hideContents">
-                  <table>
-                    <colgroup>
-                      <col width="auto" />
-                    </colgroup>
-                    <thead>
-                        <th>예약번호</th>
-                        <th>편명</th>
-                        <th>BKG CLS</th>
-                        <th>출발일</th>
-                        <th>구간</th>
-                        <th>예약상태</th>
-                    </thead>
-                    <tbody>
-                      {pnr.map((item, index) => (
-                        <tr>
-                          <td>{item?.reservationNumber}</td>
-                          <td>{item?.companyIdentification}{item?.productIdentification}</td>
-                          <td>{item?.classOfService}</td>
-                          <td>{item?.departureDate}</td>
-                          <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
-                          <td>{item?.bookingStatus}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  {pnr.map((list) => (
+                    <>
+                      <table>
+                        <colgroup>
+                          <col width="auto" />
+                        </colgroup>
+                        <thead>
+                          <th>예약번호</th>
+                          <th>영문이름</th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{list?.reservationNumber}</td>
+                            <td>{list.givenname.substring(0, list.givenname.length - 2)}{list.surname}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table>
+                      <colgroup>
+                        <col width="auto" />
+                      </colgroup>
+                      <thead>
+                          <th>예약번호</th>
+                          <th>편명</th>
+                          <th>BKG CLS</th>
+                          <th>출발일</th>
+                          <th>구간</th>
+                          <th>예약상태</th>
+                      </thead>
+                      <tbody>
+                        {list.pnrList.map((item, index) => (
+                          <tr>
+                            <td>{item?.companyIdentification}{item?.productIdentification}</td>
+                            <td>{item?.classOfService}</td>
+                            <td>{item?.departureDate}</td>
+                            <td>{item?.boardPointCityCode}{item?.offPointCityCode}</td>
+                            <td>{item?.bookingStatus}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </>
+                  )
+                  )}
                 </div>
               )}
               {isListView1.open && isListView1.contents === 'etkt' && (
                 <div className="hideContents">
-                  <table>
-                    <colgroup>
-                      <col width="15%" />
-                      <col width="20%" />           
-                      <col width="20%" />
-                      <col width="15%" />
-                      <col width="10%" />
-                      <col width="20%" />
-                    </colgroup>
-                    <thead>
-                        <th>티켓번호</th>
-                        <th>편명</th>
-                        <th>BKG CLS</th>
-                        <th>출발일</th>
-                        <th>순서</th>
-                        <th>구간</th>
-                    </thead>
-                    <tbody>
-                      {etkt.map((item, index) => (
-                        <tr>
-                          <td>{item?.ticketNumber}</td>
-                          <td>{item?.marketingCompany}{item?.flightNumber}</td>
-                          <td>{item?.bookingClass}</td>
-                          <td>{item?.departureDate}</td>
-                          <td>{item?.cpnNumber}</td>
-                          <td>{item?.boardPointLocationId}{item?.offPointLocationId}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                 {etkt.map((list) => (
+                    <>
+                      <table>
+                        <colgroup>
+                          <col width="auto" />
+                        </colgroup>
+                        <thead>
+                          <th>티켓번호</th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{list.ticketNumber}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table>
+                        <colgroup>
+                          <col width="15%" />
+                          <col width="20%" />           
+                          <col width="20%" />
+                          <col width="15%" />
+                          <col width="10%" />
+                          <col width="20%" />
+                        </colgroup>
+                        <thead>
+                          <th>티켓번호</th>
+                          <th>편명</th>
+                          <th>BKG CLS</th>
+                          <th>출발일</th>
+                          <th>순서</th>
+                          <th>구간</th>
+                        </thead>
+                        <tbody>
+                          {list.etktList.map((item :Etkt) => (
+                            <tr>
+                              <td>{list.ticketNumber}</td>
+                              <td>{item?.marketingCompany}{item?.flightNumber}</td>
+                              <td>{item?.bookingClass}</td>
+                              <td>{item?.departureDate}</td>
+                              <td>{item?.cpnNumber}</td>
+                              <td>{item?.offPointLocationId}{item?.boardPointLocationId}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </>
+                  ))}
                 </div>
               )}
               <button
@@ -1087,7 +1105,7 @@ export default function List() {
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">항공권할인Coupon보유개수</div>
+                    <div className="key">유효 promotion coupon</div>
                     <div className="value">
                       <span className="num">{profile?.holdTktDiscCpnCnt}</span>
                     </div>
@@ -1095,17 +1113,17 @@ export default function List() {
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">항공권할인PLCCCoupon보유개수</div>
+                    <div className="key">전자우대할인권</div>
                     <div className="value">
-                      <span className="num">{profile?.holdTktDiscountPlccCpnCnt}</span>
+                      <span className="num">{profile?.holdEcpnCnt}</span>
                     </div>
                   </Stack>
                 </div>
                 <div className="item middle">
                   <Stack justifyContent="Between" alignItems={'cencter'}>
-                    <div className="key">전자우대할인권보유개수</div>
+                    <div className="key">카드사 쿠폰</div>
                     <div className="value">
-                      <span className="num">{profile?.holdEcpnCnt}</span>
+                      <span className="num">{profile?.holdTktDiscountPlccCpnCnt}</span>
                     </div>
                   </Stack>
                 </div>
@@ -1198,7 +1216,7 @@ export default function List() {
                           <td>{item?.localTimeBaseStdDatev}</td>
                           <td>{item?.flightNumber}</td>
                           <td>{item?.segApo}</td>
-                          <td>{item?.pnrSegNumber}</td>
+                          <td>{item?.cabinClassCode}</td>
                           <td>{item?.ticketNumber}</td>
                         </tr>
                       ))}

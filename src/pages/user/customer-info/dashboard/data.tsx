@@ -2,6 +2,9 @@ import {
   Campaign,
   Column,
   Consulting,
+  Etkt,
+  EtktList,
+  Etl,
   FamilyMembers,
   Profile,
   Skypass,
@@ -107,6 +110,13 @@ const initVoc : Voc = {
   vocSuggestLastRctDatev: ''
 }
 
+const initEtl : Etl = {
+  boarding: '',
+  communication: '',
+  mytrips: '',
+  preference: '',
+  wallet: ''
+}
 
 const familyColumn : Column[] =[ 
   {headerName: '관계', field: 'relationship'},
@@ -128,5 +138,6 @@ export {
   initCampaign,
   initConsulting,
   initTms,
-  initVoc
+  initVoc,
+  initEtl,
 };
