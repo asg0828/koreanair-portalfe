@@ -187,7 +187,33 @@ export default function List() {
   ) => {
     setSearchSkypassNm(String(value))
   };
-
+  // 월 영문 변환 함수 
+  function convertMonthToAbbreviation(dateString : string) {
+    const monthAbbreviations: { [key: string]: string } = {
+      '01': 'JAN',
+      '02': 'FEB',
+      '03': 'MAR',
+      '04': 'APR',
+      '05': 'MAY',
+      '06': 'JUN',
+      '07': 'JUL',
+      '08': 'AUG',
+      '09': 'SEP',
+      '10': 'OCT',
+      '11': 'NOV',
+      '12': 'DEC'
+    };
+  
+    const month = dateString.substring(2, 2);
+    const monthAbbreviation = monthAbbreviations[month];
+  
+    if (monthAbbreviation) {
+      return dateString.replace(month, monthAbbreviation);
+    } else {
+      return dateString;
+    }
+  }
+  
   // 프로필 조회
   useEffect(() => {
     if (isErrorProfile || responseProfile?.successOrNot === 'N') {
@@ -330,18 +356,18 @@ export default function List() {
       if (responsePnr) {
         const groupedData: { [key: string]: any } = {};
         for (const item of responsePnr.data) {
-          const key = item.reservationNumber + item.givenname;
+          const key = item.reservationNumber;
           if (!groupedData[key]) {
             groupedData[key] = [];
           }
           groupedData[key].push({
-            "reservationNumber": item.reservationNumber,
             "surname": item.surname,
             "givenname": item.givenname,
             "segNumber": item.segNumber,
             "companyIdentification": item.companyIdentification,
             "productIdentification": item.productIdentification,
             "classOfService": item.classOfService,
+            // "departureDate": convertMonthToAbbreviation(item.departureDate),
             "departureDate": item.departureDate,
             "boardPointCityCode": item.boardPointCityCode,
             "offPointCityCode": item.offPointCityCode,
@@ -350,16 +376,12 @@ export default function List() {
         }
 
         const result = Object.entries(groupedData).map(([key, value]) => {
-          const { reservationNumber, surname, givenname, ...rest } = value[0];
           return {
-            "reservationNumber": reservationNumber,
-            "surname": surname,
-            "givenname": givenname,
-            "pnrList": rest
+            "reservationNumber": key,
+            "pnrList": value
           };
         });
         setPnr(result)
-        console.log(result)
         setPnrCnt(responsePnr.data.length)
       }
     }
@@ -384,6 +406,7 @@ export default function List() {
             "flightNumber": item.flightNumber,
             "bookingClass": item.bookingClass,
             "marketingCompany": item.marketingCompany,
+            // "departureDate": convertMonthToAbbreviation(item.departureDate),
             "departureDate": item.departureDate,
             "cpnNumber": item.cpnNumber,
             "boardPointLocationId": item.boardPointLocationId,
@@ -501,12 +524,9 @@ export default function List() {
         }
 
         const result = Object.entries(groupedData).map(([key, value]) => {
-          const { pnrNo, engLname, engFname, ...rest } = value[0];
           return {
-            "pnrNo": pnrNo,
-            "engLname": engLname,
-            "engFname": engFname,
-            "pnrList": rest
+            "pnrNo": key,
+            "pnrList": value
           };
         });
         setPnrNonMem(result)

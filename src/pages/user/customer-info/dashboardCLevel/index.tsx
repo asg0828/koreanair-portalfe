@@ -448,11 +448,13 @@ export default function List() {
       if (responsePnr) {
         const groupedData: { [key: string]: any } = {};
         for (const item of responsePnr.data) {
-          const key = item.reservationNumber + item.givenname;
+          const key = item.reservationNumber;
           if (!groupedData[key]) {
             groupedData[key] = [];
           }
           groupedData[key].push({
+            "surname": item.surname,
+            "givenname": item.givenname,
             "segNumber": item.segNumber,
             "companyIdentification": item.companyIdentification,
             "productIdentification": item.productIdentification,
@@ -465,12 +467,9 @@ export default function List() {
         }
 
         const result = Object.entries(groupedData).map(([key, value]) => {
-          const { reservationNumber, surname, givenname, ...rest } = value[0];
           return {
-            "reservationNumber": reservationNumber,
-            "surname": surname,
-            "givenname": givenname,
-            "pnrList": rest
+            "reservationNumber": key,
+            "pnrList": value
           };
         });
         setPnr(result)
