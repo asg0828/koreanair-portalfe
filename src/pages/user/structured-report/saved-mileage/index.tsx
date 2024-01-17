@@ -7,6 +7,9 @@ import { ColumnsInfo } from '@models/components/Table';
 import DashboardPopup from '@pages/user/structured-report/dashboardPopUp';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import {PageModel} from "@models/model/PageModel";
+
+const initPage: PageModel = { page: 1, pageSize: 100, totalCount: 100, totalPage: 1 };
 
 const columns: Array<ColumnsInfo> = [
   { headerName: 'Rank', field: 'rank', colSpan: 1 },
@@ -30,6 +33,7 @@ const List = () => {
   const [criteria, setCriteria] = useState('0 year');
   const [initRows, setInitRows] = useState<any>([]);
   const [rows, setRows] = useState<any>([]);
+  const [page, setPage] = useState<PageModel>(initPage);
   const [sortedColumn, setSortedColumn] = useState<string>(initSortedColumn);
   const [sortedDirection, setSortedDirection] = useState<SortDirection>(initSortedDirection);
   const { data: response, isError, refetch } = useTotalMileageTop100List(criteria);
@@ -110,6 +114,7 @@ const List = () => {
       <DataGrid
         columns={updatedColumns}
         rows={updatedRows}
+        page={page}
         enableSort={true}
         clickable={true}
         showPageSizeSelect={false}

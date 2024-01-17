@@ -149,7 +149,20 @@ const List = () => {
     } else {
       if (response?.data) {
         setInitRows(JSON.parse(JSON.stringify(response.data.contents)));
-        setRows([...sortRows(response.data.contents, sortedColumn, sortedDirection)]);
+        if (sortedColumn === 'intBoardCnt' && sortedDirection) {
+          const oValue = sortedDirection === 'asc' ? 1 : -1;
+          setRows(
+              response.data.contents.sort(
+                  (a: any, b: any) =>
+                      oValue * (a.tktBuyKrwAmt - b.tktBuyKrwAmt) ||
+                      b.tktBuyCnt - a.tktBuyCnt ||
+                      oValue * (b.rank - a.rank)
+              )
+          );
+        } else {
+          setRows(response.data.contents);
+        }
+        setPage(response.data.page);
       }
     }
   }, [response, isError, toast]);
