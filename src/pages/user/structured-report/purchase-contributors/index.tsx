@@ -149,7 +149,7 @@ const List = () => {
     } else {
       if (response?.data) {
         setInitRows(JSON.parse(JSON.stringify(response.data.contents)));
-        if (sortedColumn === 'intBoardCnt' && sortedDirection) {
+        if (sortedColumn === 'tktBuyKrwAmt' && sortedDirection) {
           const oValue = sortedDirection === 'asc' ? 1 : -1;
           setRows(
               response.data.contents.sort(
