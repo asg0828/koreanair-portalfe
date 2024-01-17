@@ -1,4 +1,4 @@
-import { useCampHis, useCosHis, useEtktHis, useEtl, usePnrHis, useProfile, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
+import { useBoardingHis, useCampHis, useCosHis, useEtktHis, useEtl, useNonMemEtktHis, useNonMemPnrHis, usePnrHis, useProfile, useSkypass, useTmsHis, useVocHis } from '@/hooks/queries/useCustomerInfoQueires';
 import { htmlTagReg } from '@/utils/RegularExpression';
 import NoResult from '@/components/emptyState/NoData';
 import { Button, Modal, Select, Stack, TextField, Typography, useToast, SelectOption, TR, TD, THead, TH, Table, Label } from '@components/ui';
@@ -70,7 +70,13 @@ export default function List() {
   const { refetch: refetchEtkt, data: responseEtkt, isError: isErrorEtkt } = useEtktHis(searchSkypassNm)
   // etl 조회 api
   const {refetch: refetchEtl, data: responseEtl, isError: isErrorEtl  } = useEtl()
-
+  // 비회원 ticket 정보 조회 api
+  const { refetch: refetchNonMemEtkt, data: responseNonMemEtkt, isError: isErrorNonMemEtkt } = useNonMemEtktHis(oneIdno)
+  // 비회원 pnr 정보 조회 api
+  const { refetch: refetchNonMemPnr, data: responseNonMemPnr, isError: isErrorNonMemPnr } = useNonMemPnrHis(oneIdno)
+  // 탑승 이력 조회 api
+  const { refetch: refetchBoarding, data: responseBoarding, isError: isErrorBoarding } = useBoardingHis(oneIdno)
+  
   const [key, setKey] = useState(Date.now());
 
   const validation = () => {
@@ -227,6 +233,7 @@ export default function List() {
       refetchCos()
       refetchTms()
       refetchVoc()
+      refetchBoarding()
     }
   }, [oneIdno])
 
@@ -382,6 +389,21 @@ export default function List() {
       }
     }
   }, [responseEtkt, isErrorEtkt, key]);
+  
+  // boarding 조회
+  useEffect(() => {
+    if (isErrorBoarding || responseBoarding?.successOrNot === 'N') {
+      toast({
+        type: ValidType.ERROR,
+        content: responseBoarding?.message,
+      });
+    } else {
+      if (responseBoarding) {
+        setBoarding(responseBoarding.data)
+      }
+    }
+  }, [responseBoarding, isErrorBoarding, key]);
+
 
   // 배치 기준 시간 (Etl) 조회
   useEffect(() => {
