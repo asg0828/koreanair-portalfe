@@ -98,10 +98,15 @@ const App = () => {
             return <ErrorPage />;
           } else if (unauthorized) {
             return <Unauthorized />;
-          } else if (sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router) {
+          } else if (
+            contextPath !== ContextPath.UNAUTHORIZED &&
+            sessionRequestInfo.googleAccessToken &&
+            sessionInfo.sessionId &&
+            router
+          ) {
             return (
               <Watermark content={sessionInfo.userEmail} className="width-100" style={{ minHeight: '100vh' }}>
-                <RouterProvider router={createBrowserRouter(router)} />
+                <RouterProvider key={sessionInfo.sessionId} router={createBrowserRouter(router)} />
               </Watermark>
             );
           } else {
