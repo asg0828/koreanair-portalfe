@@ -84,7 +84,9 @@ export default function List() {
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
   const [pnr, setPnr] = useState<Array<PnrList>>([]);
+  const [pnrCnt, setPnrCnt] = useState(0)
   const [etkt, setEtkt] = useState<Array<EtktList>>([]);
+  const [etktCnt, setEtktCnt] = useState(0)  
   const [boarding, setBoarding] = useState<Array<Boarding>>([]);
 
   const [campaign, setCampaign] = useState<Campaign>(initCampaign);
@@ -471,6 +473,7 @@ export default function List() {
           };
         });
         setPnr(result)
+        setPnrCnt(responsePnr.data.length)
       }
     }
   }, [responsePnr, isErrorPnr, key]);
@@ -508,6 +511,7 @@ export default function List() {
           };
         });
         setEtkt(result)
+        setEtktCnt(responseEtkt.data.length)
       }
     }
   }, [responseEtkt, isErrorEtkt, key]);
@@ -1002,7 +1006,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{pnr?.flat().length}</span>개
+                      <span className="num">{pnrCnt}</span>개
                     </div>
                   </Stack>
                 </div>
@@ -1018,7 +1022,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{etkt?.flat().length}</span>개
+                      <span className="num">{etktCnt}</span>개
                     </div>
                   </Stack>
                 </div>
@@ -1038,7 +1042,9 @@ export default function List() {
                         <tbody>
                           <tr>
                             <td>{list?.reservationNumber}</td>
-                            <td>{list.givenname.substring(0, list.givenname.length - 2)}{list.surname}</td>
+                            <td> {list.givenname && (list.givenname.endsWith("MR") || list.givenname.endsWith("MS"))
+                            ? list.givenname.substring(0, list.givenname.length - 2) : list.givenname}{list.surname}
+                            </td>
                           </tr>
                         </tbody>
                       </table>

@@ -32,7 +32,9 @@ export default function List() {
   const [skypass, setSkypass] = useState<Array<Skypass>>([]);
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
   const [pnr, setPnr] = useState<Array<PnrList>>([]);
+  const [pnrCnt, setPnrCnt] = useState(0)
   const [etkt, setEtkt] = useState<Array<EtktList>>([]);
+  const [etktCnt, setEtktCnt] = useState(0)     
   const [boarding, setBoarding] = useState<Array<Boarding>>([]);
   const [campaign, setCampaign] = useState<Campaign>(initCampaign);
   const [consulting, setConsulting] = useState<Consulting>(initConsulting);
@@ -180,7 +182,6 @@ export default function List() {
   ) => {
     setSearchSkypassNm(String(value))
   };
-  
 
   // 프로필 조회
   useEffect(() => {
@@ -206,6 +207,8 @@ export default function List() {
         } else{
           // 배치 기준 시간 (Etl) 조회 api
           refetchEtl()
+          refetchNonMemEtkt()
+          refetchNonMemPnr()
         }
       }
     }
@@ -349,6 +352,7 @@ export default function List() {
           };
         });
         setPnr(result)
+        setPnrCnt(responsePnr.data.length)
       }
     }
   }, [responsePnr, isErrorPnr, key]);
@@ -386,10 +390,11 @@ export default function List() {
           };
         });
         setEtkt(result)
+        setEtktCnt(responseEtkt.data.length)
       }
     }
   }, [responseEtkt, isErrorEtkt, key]);
-  
+
   // boarding 조회
   useEffect(() => {
     if (isErrorBoarding || responseBoarding?.successOrNot === 'N') {
@@ -418,6 +423,9 @@ export default function List() {
       }
     }
   }, [responseEtl, isErrorEtl]);
+
+  // 비회원 조회 
+
 
 	useEffect(() => {
 		reset()
@@ -809,7 +817,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{pnr?.flat().length}</span>개
+                      <span className="num">{pnrCnt}</span>개
                     </div>
                   </Stack>
                 </div>
@@ -825,7 +833,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{etkt?.flat().length}</span>개
+                      <span className="num">{etktCnt}</span>개
                     </div>
                   </Stack>
                 </div>
@@ -845,7 +853,9 @@ export default function List() {
                       <tbody>
                         <tr>
                           <td>{list?.reservationNumber}</td>
-                          <td>{list?.givenname.substring(0, list.givenname.length - 2)}{list.surname}</td>
+                          <td> {list.givenname && (list.givenname.endsWith("MR") || list.givenname.endsWith("MS"))
+                            ? list.givenname.substring(0, list.givenname.length - 2) : list.givenname}{list.surname}
+                          </td>
                         </tr>
                       </tbody>
                     </table>
