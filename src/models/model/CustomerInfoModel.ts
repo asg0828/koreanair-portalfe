@@ -171,10 +171,12 @@ export interface Etkt {
   boardPointLocationId: string;
   offPointLocationId: string;
 }
-
-export interface NonMemPnr {
-  oneidNo: string;
+export interface NonMemEtktList  {
   ticketNumber: string;
+  etktList : NonMemEtkt[]
+}
+export interface NonMemEtkt {
+  oneidNo: string;
   flightNumber: string;
   bookingClassCode: string;
   bkgDtBsStdDatev: string;
@@ -182,11 +184,14 @@ export interface NonMemPnr {
   segApo: string;
 }
 
-export interface NonMemEtkt {
-  oneidNo: string;
+export interface NonMemPnrList {
   pnrNo: string;
   engLname: string;
   engFname: string;
+  pnrList : NonMemPnr[]
+}
+export interface NonMemPnr {
+  oneidNo: string;
   flightNumber: string;
   bookingClassCode: string;
   bkgDtBsStdDatev: string;

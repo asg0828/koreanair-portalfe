@@ -275,10 +275,10 @@ export default function List() {
   useEffect(() => { 
     if( searchInfo.searchType !== '')   {
       if (isErrorProfileCLvl || responseProfileCLvl?.successOrNot === 'N') {
-        toast({
-          type: ValidType.ERROR,
-          content: responseProfileCLvl?.message
-        });
+        // toast({
+        //   type: ValidType.ERROR,
+        //   content: responseProfileCLvl?.message
+        // });
         setProfile(initProfile)
         setSkypass([])
         setSelectedSkypass(initSkypass)
@@ -300,10 +300,10 @@ export default function List() {
   // 프로필 조회(skypassNumber)
   useEffect(() => {
     if (isErrorProfile || responseProfile?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseProfile?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseProfile?.message,
+      // });
       setProfile(initProfile)
       setSkypass([])
       setFamily([])
@@ -320,10 +320,10 @@ export default function List() {
     // skypass 조회
     useEffect(() => {
       if (isErrorSkypass || responseSkypass?.successOrNot === 'N') {
-        toast({
-          type: ValidType.ERROR,
-          content: responseSkypass?.message,
-        });
+        // toast({
+        //   type: ValidType.ERROR,
+        //   content: responseSkypass?.message,
+        // });
       } else {
         if (responseSkypass) {
           setSkypass(responseSkypass?.data);
@@ -351,10 +351,10 @@ export default function List() {
     if (isErrorSkypass || responseSkypass?.successOrNot === 'N') {
       setSelectedSkypass(initSkypass)
       setFamily(initFamily)
-      toast({
-        type: ValidType.ERROR,
-        content: responseSkypass?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseSkypass?.message,
+      // });
     } else {
       if (responseSkypass) {
         setSelectedSkypass(responseSkypass.data)
@@ -381,10 +381,10 @@ export default function List() {
   // 캠페인 조회
   useEffect(() => {
     if (isErrorCamp || responseCamp?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseCamp?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseCamp?.message,
+      // });
     } else {
       if (responseCamp) {
         setCampaign(responseCamp.data)
@@ -395,10 +395,10 @@ export default function List() {
   // 상담 조회
   useEffect(() => {
     if (isErrorCos || responseCos?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseCos?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseCos?.message,
+      // });
     } else {
       if (responseCos) {
         setConsulting(responseCos.data)
@@ -409,10 +409,10 @@ export default function List() {
   // tms 조회
   useEffect(() => {
     if (isErrorTms || responseTms?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseTms?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseTms?.message,
+      // });
     } else {
       if (responseTms) {
         setTms(responseTms.data)
@@ -423,10 +423,10 @@ export default function List() {
   // voc 조회
   useEffect(() => {
     if (isErrorVoc || responseVoc?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseVoc?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseVoc?.message,
+      // });
     } else {
       if (responseVoc) {
         setVoc(responseVoc.data)
@@ -437,10 +437,10 @@ export default function List() {
    // pnr 조회
    useEffect(() => {
     if (isErrorPnr || responsePnr?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responsePnr?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responsePnr?.message,
+      // });
     } else {
       if (responsePnr) {
         const groupedData: { [key: string]: any } = {};
@@ -462,14 +462,12 @@ export default function List() {
         }
 
         const result = Object.entries(groupedData).map(([key, value]) => {
-          const surname = value[0].surname;
-          const givenname = value[0].givenname;
-          const ticketNumber = value[0].reservationNumber;
+          const { reservationNumber, surname, givenname, ...rest } = value[0];
           return {
-            "reservationNumber": ticketNumber,
+            "reservationNumber": reservationNumber,
             "surname": surname,
             "givenname": givenname,
-            "pnrList": value
+            "pnrList": rest
           };
         });
         setPnr(result)
@@ -481,10 +479,10 @@ export default function List() {
   // eticket 조회
   useEffect(() => {
     if (isErrorEtkt || responseEtkt?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseEtkt?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseEtkt?.message,
+      // });
     } else {
       if (responseEtkt) {
         const groupedData: { [key: string]: any } = {};
@@ -519,10 +517,10 @@ export default function List() {
   // boarding 조회
   useEffect(() => {
     if (isErrorBoarding || responseBoarding?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseBoarding?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseBoarding?.message,
+      // });
     } else {
       if (responseBoarding) {
         setBoarding(responseBoarding.data)
@@ -575,6 +573,9 @@ export default function List() {
     setConsulting(initConsulting)
     setTms(initTms)
     setVoc(initVoc)
+    setPnrCnt(0)
+    setEtktCnt(0)
+
   }
 
   return (

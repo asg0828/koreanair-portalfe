@@ -19,6 +19,9 @@ import {
   Etl,
   EtktList,
   PnrList,
+  NonMemEtkt,
+  NonMemEtktList,
+  NonMemPnrList,
 } from '@/models/model/CustomerInfoModel';
 import { ValidType } from '@/models/common/Constants';
 import { cloneDeep } from 'lodash'
@@ -33,8 +36,10 @@ export default function List() {
   const [family, setFamily] = useState<Array<FamilyMembers>>([]);
   const [pnr, setPnr] = useState<Array<PnrList>>([]);
   const [pnrCnt, setPnrCnt] = useState(0)
+  const [pnrNonMem, setPnrNonMem] = useState<Array<NonMemPnrList>>([])
   const [etkt, setEtkt] = useState<Array<EtktList>>([]);
   const [etktCnt, setEtktCnt] = useState(0)     
+  const [etktNonMem, setEtktNonMem] = useState<Array<NonMemEtktList>>([])
   const [boarding, setBoarding] = useState<Array<Boarding>>([]);
   const [campaign, setCampaign] = useState<Campaign>(initCampaign);
   const [consulting, setConsulting] = useState<Consulting>(initConsulting);
@@ -73,9 +78,9 @@ export default function List() {
   // etl 조회 api
   const {refetch: refetchEtl, data: responseEtl, isError: isErrorEtl  } = useEtl()
   // 비회원 ticket 정보 조회 api
-  const { refetch: refetchNonMemEtkt, data: responseNonMemEtkt, isError: isErrorNonMemEtkt } = useNonMemEtktHis(oneIdno)
+  const { refetch: refetchNonMemEtkt, data: responseNonMemEtkt, isError: isErrorNonMemEtkt } = useNonMemEtktHis(searchInfo.oneidNo)
   // 비회원 pnr 정보 조회 api
-  const { refetch: refetchNonMemPnr, data: responseNonMemPnr, isError: isErrorNonMemPnr } = useNonMemPnrHis(oneIdno)
+  const { refetch: refetchNonMemPnr, data: responseNonMemPnr, isError: isErrorNonMemPnr } = useNonMemPnrHis(searchInfo.oneidNo)
   // 탑승 이력 조회 api
   const { refetch: refetchBoarding, data: responseBoarding, isError: isErrorBoarding } = useBoardingHis(oneIdno)
   
@@ -186,10 +191,10 @@ export default function List() {
   // 프로필 조회
   useEffect(() => {
     if (isErrorProfile || responseProfile?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseProfile?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseProfile?.message,
+      // });
       setProfile(initProfile)
       setSkypass([])
       setFamily([])
@@ -200,12 +205,12 @@ export default function List() {
     } else {
       if (responseProfile) {
         setProfile(responseProfile?.data);
-        setOneIdno(responseProfile?.data.skypassInfos[0]?.oneidNo)
         // 회원 비회원 분기 
-        if(responseProfile?.data.skypassInfos[0]){
+        if(responseProfile?.data?.skypassInfos?.length > 0){
+          setOneIdno(responseProfile?.data.skypassInfos[0]?.oneidNo)
           setSearchSkypassNm(responseProfile?.data.skypassInfos[0]?.skypassMemberNumber)
         } else{
-          // 배치 기준 시간 (Etl) 조회 api
+          // 비회원 조회
           refetchEtl()
           refetchNonMemEtkt()
           refetchNonMemPnr()
@@ -245,10 +250,10 @@ export default function List() {
     if (isErrorSkypass || responseSkypass?.successOrNot === 'N') {
       setSelectedSkypass(initSkypass)
       setFamily(initFamily)
-      toast({
-        type: ValidType.ERROR,
-        content: responseSkypass?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseSkypass?.message,
+      // });
     } else {
       if (responseSkypass) {
         setSelectedSkypass(responseSkypass.data)
@@ -260,10 +265,10 @@ export default function List() {
   // 캠페인 조회
   useEffect(() => {
     if (isErrorCamp || responseCamp?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseCamp?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseCamp?.message,
+      // });
     } else {
       if (responseCamp) {
         setCampaign(responseCamp.data)
@@ -274,10 +279,10 @@ export default function List() {
   // 상담 조회
   useEffect(() => {
     if (isErrorCos || responseCos?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseCos?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseCos?.message,
+      // });
     } else {
       if (responseCos) {
         setConsulting(responseCos.data)
@@ -288,10 +293,10 @@ export default function List() {
   // tms 조회
   useEffect(() => {
     if (isErrorTms || responseTms?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseTms?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseTms?.message,
+      // });
     } else {
       if (responseTms) {
         setTms(responseTms.data)
@@ -302,10 +307,10 @@ export default function List() {
   // voc 조회
   useEffect(() => {
     if (isErrorVoc || responseVoc?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseVoc?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseVoc?.message,
+      // });
     } else {
       if (responseVoc) {
         setVoc(responseVoc.data)
@@ -316,10 +321,10 @@ export default function List() {
   // pnr 조회
   useEffect(() => {
     if (isErrorPnr || responsePnr?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responsePnr?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responsePnr?.message,
+      // });
     } else {
       if (responsePnr) {
         const groupedData: { [key: string]: any } = {};
@@ -329,6 +334,9 @@ export default function List() {
             groupedData[key] = [];
           }
           groupedData[key].push({
+            "reservationNumber": item.reservationNumber,
+            "surname": item.surname,
+            "givenname": item.givenname,
             "segNumber": item.segNumber,
             "companyIdentification": item.companyIdentification,
             "productIdentification": item.productIdentification,
@@ -341,14 +349,12 @@ export default function List() {
         }
 
         const result = Object.entries(groupedData).map(([key, value]) => {
-          const surname = value[0].surname;
-          const givenname = value[0].givenname;
-          const ticketNumber = value[0].reservationNumber;
+          const { reservationNumber, surname, givenname, ...rest } = value[0];
           return {
-            "reservationNumber": ticketNumber,
+            "reservationNumber": reservationNumber,
             "surname": surname,
             "givenname": givenname,
-            "pnrList": value
+            "pnrList": rest
           };
         });
         setPnr(result)
@@ -360,10 +366,10 @@ export default function List() {
   // eticket 조회
   useEffect(() => {
     if (isErrorEtkt || responseEtkt?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseEtkt?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseEtkt?.message,
+      // });
     } else {
       if (responseEtkt) {
         const groupedData: { [key: string]: any } = {};
@@ -398,10 +404,10 @@ export default function List() {
   // boarding 조회
   useEffect(() => {
     if (isErrorBoarding || responseBoarding?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseBoarding?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseBoarding?.message,
+      // });
     } else {
       if (responseBoarding) {
         setBoarding(responseBoarding.data)
@@ -413,19 +419,99 @@ export default function List() {
   // 배치 기준 시간 (Etl) 조회
   useEffect(() => {
     if (isErrorEtl || responseEtl?.successOrNot === 'N') {
-      toast({
-        type: ValidType.ERROR,
-        content: responseEtl?.message,
-      });
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseEtl?.message,
+      // });
     } else {
       if (responseEtl) {
-        setEtl(responseEtl.data)
+        setPnrNonMem(responseEtl.data)
       }
     }
   }, [responseEtl, isErrorEtl]);
 
-  // 비회원 조회 
+  // 비회원 Etkt 조회
+  useEffect(() => {
+    if (isErrorNonMemEtkt || responseNonMemEtkt?.successOrNot === 'N') {
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseNonMemEtkt?.message,
+      // });
+    } else {
+      if (responseNonMemEtkt) {
 
+        const groupedData: { [key: string]: any } = {};
+        for (const item of responseNonMemEtkt.data) {
+          const key = item.ticketNumber;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push({
+            'oneidNo': item.oneidNo,
+            'flightNumber': item.flightNumber,
+            'bookingClassCode': item.bookingClassCode,
+            'bkgDtBsStdDatev': item.bkgDtBsStdDatev,
+            'pnrSegNumber': item.pnrSegNumber,
+            'segApo': item.segApo,
+          });
+        }
+
+        const result = Object.entries(groupedData).map(([key, value]) => {
+          return {
+            "ticketNumber": key,
+            "etktList": value
+          };
+        });
+
+        setEtktCnt(responseNonMemEtkt.data.length)
+        setEtktNonMem(result)
+      }
+    }
+  }, [responseNonMemEtkt, isErrorNonMemEtkt]);
+
+  // 비회원 Pnr 조회
+  useEffect(() => {
+    if (isErrorNonMemPnr || responseNonMemPnr?.successOrNot === 'N') {
+      // toast({
+      //   type: ValidType.ERROR,
+      //   content: responseNonMemPnr?.message,
+      // });
+    } else {
+      if (responseNonMemPnr) {
+        const groupedData: { [key: string]: any } = {};
+        for (const item of responseNonMemPnr.data) {
+          const key = item.pnrNo;
+          if (!groupedData[key]) {
+            groupedData[key] = [];
+          }
+          groupedData[key].push({
+            'pnrNo': item.pnrNo,
+            'engLname': item.engLname,
+            'engFname': item.engFname,
+            'oneidNo': item.oneidNo,
+            'flightNumber': item.flightNumber,
+            'bookingClassCode': item.bookingClassCode,
+            'bkgDtBsStdDatev': item.bkgDtBsStdDatev,
+            'pnrSegNumber': item.pnrSegNumber,
+            'segApo': item.segApo,
+            'reservationStatusCode': item.reservationStatusCode,
+          });
+        }
+
+        const result = Object.entries(groupedData).map(([key, value]) => {
+          const { pnrNo, engLname, engFname, ...rest } = value[0];
+          return {
+            "pnrNo": pnrNo,
+            "engLname": engLname,
+            "engFname": engFname,
+            "pnrList": rest
+          };
+        });
+        setPnrNonMem(result)
+        setPnrCnt(responseNonMemPnr.data.length)
+      }
+    }
+  }, [responseNonMemPnr, isErrorNonMemPnr]);
 
 	useEffect(() => {
 		reset()
@@ -457,6 +543,12 @@ export default function List() {
     setEtkt((prevState)=> {
       return cloneDeep([])
     })
+    setPnrNonMem((prevState)=> {
+      return cloneDeep([])
+    })
+    setEtktNonMem((prevState)=> {
+      return cloneDeep([])
+    })
     setSearchInfo({ skypassMemberNumber: '', oneidNo: '', searchType: '' })
     setSearchSkypassNm('')
     setOneIdno('')
@@ -464,6 +556,9 @@ export default function List() {
     setConsulting(initConsulting)
     setTms(initTms)
     setVoc(initVoc)
+    setEtl(initEtl)
+    setPnrCnt(0)
+    setEtktCnt(0)
   }
 
   return (
@@ -840,7 +935,7 @@ export default function List() {
               </div>
               {isListView1.open && isListView1.contents === 'pnr' && (
                 <div className="hideContents">
-                  {pnr.map((list) => (
+                  {pnr.length > 0 && pnr.map((list) => (
                   <>
                     <table>
                       <colgroup>
@@ -886,11 +981,55 @@ export default function List() {
                   </>
                   )
                   )}
+                   {pnrNonMem.length > 0 && pnrNonMem.map((list) => (
+                  <>
+                    <table>
+                      <colgroup>
+                        <col width="auto" />
+                      </colgroup>
+                      <thead>
+                        <th>예약번호</th>
+                        <th>영문이름</th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>{list?.pnrNo}</td>
+                          <td>{list?.engLname}{list?.engFname}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <table>
+                      <colgroup>
+                        <col width="auto" />
+                      </colgroup>
+                      <thead>
+                        <th>편명</th>
+                        <th>BKG CLS</th>
+                        <th>출발일</th>
+                        <th>구간</th>
+                        <th>예약상태</th>
+                      </thead>
+                      <tbody>
+                        {list.pnrList.map((item, index) => (
+                          <tr>
+                            <td>{item?.flightNumber}</td>
+                            <td>{item?.bookingClassCode}</td>
+                            <td>{item?.bkgDtBsStdDatev}</td>
+                            <td>{item?.segApo}</td>
+                            <td>{item?.reservationStatusCode}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                    <br/>
+                  </>
+                  )
+                  )}
                 </div>
               )}
               {isListView1.open && isListView1.contents === 'etkt' && (
                 <div className="hideContents">
-                  {etkt.map((list) => (
+                  {etkt.length > 0 && etkt.map((list) => (
                     <>
                       <table>
                         <colgroup>
@@ -923,7 +1062,7 @@ export default function List() {
                           <th>구간</th>
                         </thead>
                         <tbody>
-                          {list.etktList.map((item :Etkt) => (
+                          {list.etktList.map((item) => (
                             <tr>
                               <td>{list.ticketNumber}</td>
                               <td>{item?.marketingCompany}{item?.flightNumber}</td>
@@ -931,6 +1070,54 @@ export default function List() {
                               <td>{item?.departureDate}</td>
                               <td>{item?.cpnNumber}</td>
                               <td>{item?.boardPointLocationId}{item?.offPointLocationId}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      <br/>
+                    </>
+                  ))}
+                  {etktNonMem.length > 0 && etktNonMem.map((list) => (
+                    <>
+                      <table>
+                        <colgroup>
+                          <col width="auto" />
+                        </colgroup>
+                        <thead>
+                          <th>티켓번호</th>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{list.ticketNumber}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table>
+                        <colgroup>
+                          <col width="15%" />
+                          <col width="20%" />           
+                          <col width="20%" />
+                          <col width="15%" />
+                          <col width="10%" />
+                          <col width="20%" />
+                        </colgroup>
+                        <thead>
+                          <th>티켓번호</th>
+                          <th>편명</th>
+                          <th>BKG CLS</th>
+                          <th>출발일</th>
+                          <th>순서</th>
+                          <th>구간</th>
+                        </thead>
+                        <tbody>
+                          {list.etktList.map((item) => (
+                            <tr>
+                              <td>{list.ticketNumber}</td>
+                              <td>{item?.flightNumber}</td>
+                              <td>{item?.bookingClassCode}</td>
+                              <td>{item?.bkgDtBsStdDatev}</td>
+                              <td>{item?.pnrSegNumber}</td>
+                              <td>{item?.segApo}</td>
                             </tr>
                           ))}
                         </tbody>
