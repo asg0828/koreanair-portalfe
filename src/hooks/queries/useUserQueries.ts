@@ -11,6 +11,6 @@ export const useUserList = (params: UserParams, page: PageModel) => {
   return useQuery(['/user/list'], () => getUserList(params, page));
 };
 
-export const useUserById = (userId: string) => {
-  return useQuery(['/user', userId], () => getUserById(userId), { enabled: !!userId });
+export const useUserById = (userId: string, option?: any) => {
+  return useQuery(['/user', userId], () => getUserById(userId), { enabled: !!userId, ...option });
 };
