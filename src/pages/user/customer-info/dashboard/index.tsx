@@ -358,6 +358,7 @@ export default function List() {
           };
         });
         setPnr(result)
+        console.log(result)
         setPnrCnt(responsePnr.data.length)
       }
     }
@@ -966,7 +967,7 @@ export default function List() {
                         <th>예약상태</th>
                       </thead>
                       <tbody>
-                        {list.pnrList.map((item, index) => (
+                        {list?.pnrList?.map((item) => (
                           <tr>
                             <td>{item?.companyIdentification}{item?.productIdentification}</td>
                             <td>{item?.classOfService}</td>
@@ -1010,7 +1011,7 @@ export default function List() {
                         <th>예약상태</th>
                       </thead>
                       <tbody>
-                        {list.pnrList.map((item, index) => (
+                        {list?.pnrList?.map((item) => (
                           <tr>
                             <td>{item?.flightNumber}</td>
                             <td>{item?.bookingClassCode}</td>
@@ -1040,7 +1041,7 @@ export default function List() {
                         </thead>
                         <tbody>
                           <tr>
-                            <td>{list.ticketNumber}</td>
+                            <td>{list?.ticketNumber}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -1062,7 +1063,7 @@ export default function List() {
                           <th>구간</th>
                         </thead>
                         <tbody>
-                          {list.etktList.map((item) => (
+                          {list?.etktList?.map((item) => (
                             <tr>
                               <td>{list.ticketNumber}</td>
                               <td>{item?.marketingCompany}{item?.flightNumber}</td>
@@ -1088,7 +1089,7 @@ export default function List() {
                         </thead>
                         <tbody>
                           <tr>
-                            <td>{list.ticketNumber}</td>
+                            <td>{list?.ticketNumber}</td>
                           </tr>
                         </tbody>
                       </table>
@@ -1110,9 +1111,9 @@ export default function List() {
                           <th>구간</th>
                         </thead>
                         <tbody>
-                          {list.etktList.map((item) => (
+                          {list?.etktList?.map((item) => (
                             <tr>
-                              <td>{list.ticketNumber}</td>
+                              <td>{list?.ticketNumber}</td>
                               <td>{item?.flightNumber}</td>
                               <td>{item?.bookingClassCode}</td>
                               <td>{item?.bkgDtBsStdDatev}</td>
