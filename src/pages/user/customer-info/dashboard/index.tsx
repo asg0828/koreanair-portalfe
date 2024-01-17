@@ -406,8 +406,8 @@ export default function List() {
             "flightNumber": item.flightNumber,
             "bookingClass": item.bookingClass,
             "marketingCompany": item.marketingCompany,
-            // "departureDate": convertMonthToAbbreviation(item.departureDate),
-            "departureDate": item.departureDate,
+            "departureDate": convertMonthToAbbreviation(item.departureDate),
+            // "departureDate": item.departureDate,
             "cpnNumber": item.cpnNumber,
             "boardPointLocationId": item.boardPointLocationId,
             "offPointLocationId": item.offPointLocationId

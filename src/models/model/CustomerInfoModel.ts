@@ -143,11 +143,11 @@ export interface Cnt {
 }
 export interface PnrList {
   reservationNumber: string;
-  surname: string;
-  givenname: string;
   pnrList: Pnr[];
 }
 export interface Pnr {
+  surname: string;
+  givenname: string;
   segNumber: string;
   companyIdentification: string;
   productIdentification: string;
@@ -186,11 +186,11 @@ export interface NonMemEtkt {
 
 export interface NonMemPnrList {
   pnrNo: string;
-  engLname: string;
-  engFname: string;
   pnrList : NonMemPnr[]
 }
 export interface NonMemPnr {
+  engLname: string;
+  engFname: string;
   oneidNo: string;
   flightNumber: string;
   bookingClassCode: string;
