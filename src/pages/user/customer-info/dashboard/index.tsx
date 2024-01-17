@@ -787,7 +787,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{pnr?.length}</span>개
+                      <span className="num">{pnr?.flat().length}</span>개
                     </div>
                   </Stack>
                 </div>
@@ -803,7 +803,7 @@ export default function List() {
                       </button>
                     </div>
                     <div className="value">
-                      <span className="num">{etkt?.length}</span>개
+                      <span className="num">{etkt?.flat().length}</span>개
                     </div>
                   </Stack>
                 </div>
