@@ -204,16 +204,38 @@ export default function List() {
       '12': 'DEC'
     };
   
-    const month = dateString.substring(2, 2);
+    const month = dateString.substring(2, 4);
     const monthAbbreviation = monthAbbreviations[month];
-  
     if (monthAbbreviation) {
       return dateString.replace(month, monthAbbreviation);
     } else {
       return dateString;
     }
   }
+
+  // 가족 관계 변환 함수 
+  const convertFamilyRelation = (familyGroupCode : string) => {
+    const code: {[key: string]: string}  = {
+      '03': 'Grandparent', 
+      '51': 'Maternal Grandparent',
+      '05': 'Parent', 
+      '07': 'Parent of Spouse',
+      '10': 'Spouse', 
+      '20': 'Brother/Sister', 
+      '30': 'Child', 
+      '35': 'Grandchild', 
+      '40': 'Daughter/Son-in-Law',
+      '60': 'Child of Daughter' 
+    }
+    const relationship = code[familyGroupCode];;
   
+    if(relationship){
+      return relationship
+    } else {
+      return familyGroupCode
+    }
+  }
+
   // 프로필 조회
   useEffect(() => {
     if (isErrorProfile || responseProfile?.successOrNot === 'N') {
@@ -264,6 +286,12 @@ export default function List() {
       setConsulting(initConsulting)
       setTms(initTms)
       setVoc(initVoc)
+      setFamily(initFamily)
+      setSelectedSkypass(initSkypass)
+      setEtl(initEtl)
+      setSkypass([])
+      setBoarding([]) 
+      
       refetchCamp()
       refetchCos()
       refetchTms()
@@ -367,8 +395,7 @@ export default function List() {
             "companyIdentification": item.companyIdentification,
             "productIdentification": item.productIdentification,
             "classOfService": item.classOfService,
-            // "departureDate": convertMonthToAbbreviation(item.departureDate),
-            "departureDate": item.departureDate,
+            "departureDate": convertMonthToAbbreviation(item.departureDate),
             "boardPointCityCode": item.boardPointCityCode,
             "offPointCityCode": item.offPointCityCode,
             "bookingStatus": item.bookingStatus
@@ -407,7 +434,6 @@ export default function List() {
             "bookingClass": item.bookingClass,
             "marketingCompany": item.marketingCompany,
             "departureDate": convertMonthToAbbreviation(item.departureDate),
-            // "departureDate": item.departureDate,
             "cpnNumber": item.cpnNumber,
             "boardPointLocationId": item.boardPointLocationId,
             "offPointLocationId": item.offPointLocationId
@@ -842,16 +868,16 @@ export default function List() {
                         ))}
                         </TR>
                       </THead>
-                      {family.length > 0 ?  (family.map((list) =>(
+                      {family.length > 0 ?  (family?.map((list) =>(
                         <TR>
-                          <TD className='verticalTableTD'>{list.relationship}</TD>
+                          <TD className='verticalTableTD'>{list?.familyGroupCode && convertFamilyRelation(list?.familyGroupCode)}</TD>
                           <TD className='verticalTableTD'>{list.korFName}{list.korGName}</TD>
                           <TD className='verticalTableTD'>{list.engFName} {list.engGName}</TD>
                           <TD className='verticalTableTD'>{list.memberStatus}</TD>
-                          <TD className='verticalTableTD'>{list.dateOfBirth}</TD>
+                          <TD className='verticalTableTD'>{list.dateOfBirth?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</TD>
                           <TD className='verticalTableTD'>{list.skypassNumber}</TD>
                           <TD className='verticalTableTD'>{list.memberStatusNm}</TD>
-                          <TD className='verticalTableTD'>{list.createdDate}</TD>
+                          <TD className='verticalTableTD'>{list.createdDate?.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3')}</TD>
                         </TR>
                         ))) : (<NoResult/>)} 
                       </div>
@@ -897,9 +923,9 @@ export default function List() {
                   <tbody>
                     {family &&
                       family.length > 0 &&
-                      family.map((list: any) => (
+                      family?.map((list: any) => (
                         <tr>
-                          <td>{list.relationship}</td>
+                          <td>{list?.familyGroupCode && convertFamilyRelation(list?.familyGroupCode)}</td>
                           <td>{list.skypassNumber}</td>
                           <td>{list.engFName} &nbsp;{list.engGName}</td>
                         </tr>
@@ -1068,12 +1094,7 @@ export default function List() {
                       </table>
                       <table>
                         <colgroup>
-                          <col width="15%" />
-                          <col width="20%" />           
-                          <col width="20%" />
-                          <col width="15%" />
-                          <col width="10%" />
-                          <col width="20%" />
+                          <col width="auto" />
                         </colgroup>
                         <thead>
                           <th>편명</th>
@@ -1114,12 +1135,7 @@ export default function List() {
                       </table>
                       <table>
                         <colgroup>
-                          <col width="15%" />
-                          <col width="20%" />           
-                          <col width="20%" />
-                          <col width="15%" />
-                          <col width="10%" />
-                          <col width="20%" />
+                          <col width="auto" />
                         </colgroup>
                         <thead>
                           <th>편명</th>

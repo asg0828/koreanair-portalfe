@@ -262,6 +262,55 @@ export default function List() {
     setSkypassNmSearch({ searchType: 'B', skypassMemberNumber: String(value)})
   };
 
+ // 월 영문 변환 함수 
+ function convertMonthToAbbreviation(dateString : string) {
+  const monthAbbreviations: { [key: string]: string } = {
+    '01': 'JAN',
+    '02': 'FEB',
+    '03': 'MAR',
+    '04': 'APR',
+    '05': 'MAY',
+    '06': 'JUN',
+    '07': 'JUL',
+    '08': 'AUG',
+    '09': 'SEP',
+    '10': 'OCT',
+    '11': 'NOV',
+    '12': 'DEC'
+  };
+
+  const month = dateString.substring(2, 4);
+  const monthAbbreviation = monthAbbreviations[month];
+  if (monthAbbreviation) {
+    return dateString.replace(month, monthAbbreviation);
+  } else {
+    return dateString;
+  }
+}
+
+ // 가족 관계 변환 함수 
+ const convertFamilyRelation = (familyGroupCode : string) => {
+  const code: {[key: string]: string}  = {
+    '00': 'Member',
+    '03': 'Grandparent', 
+    '51': 'Maternal Grandparent',
+    '05': 'Parent', 
+    '07': 'Parent of Spouse',
+    '10': 'Spouse', 
+    '20': 'Brother/Sister', 
+    '30': 'Child', 
+    '35': 'Grandchild', 
+    '40': 'Daughter/Son-in-Law',
+    '60': 'Child of Daughter' 
+  }
+  const relationship = code[familyGroupCode];;
+
+  if(relationship){
+    return relationship
+  } else {
+    return familyGroupCode
+  }
+}
   /* CLevel 모달 */
   const dispatch = useAppDispatch();
   const cLevelModal = useAppSelector(selectCLevelModal());
@@ -459,7 +508,7 @@ export default function List() {
             "companyIdentification": item.companyIdentification,
             "productIdentification": item.productIdentification,
             "classOfService": item.classOfService,
-            "departureDate": item.departureDate,
+            "departureDate": convertMonthToAbbreviation(item.departureDate),
             "boardPointCityCode": item.boardPointCityCode,
             "offPointCityCode": item.offPointCityCode,
             "bookingStatus": item.bookingStatus
@@ -497,7 +546,7 @@ export default function List() {
             "flightNumber": item.flightNumber,
             "bookingClass": item.bookingClass,
             "marketingCompany": item.marketingCompany,
-            "departureDate": item.departureDate,
+            "departureDate": convertMonthToAbbreviation(item.departureDate),
             "cpnNumber": item.cpnNumber,
             "boardPointLocationId": item.boardPointLocationId,
             "offPointLocationId": item.offPointLocationId
@@ -917,9 +966,9 @@ export default function List() {
                         ))}
                         </TR>
                       </THead>
-                      {family.length > 0 ? (family.map((list) =>(
+                      {family.length > 0 ? (family?.map((list) =>(
                         <TR>
-                          <TD className='verticalTableTD'>{list.relationship}</TD>
+                          <TD className='verticalTableTD'>{list?.familyGroupCode && convertFamilyRelation(list?.familyGroupCode)}</TD>
                           <TD className='verticalTableTD'>{list.korFName}{list.korGName}</TD>
                           <TD className='verticalTableTD'>{list.engFName}{list.engGName}</TD>
                           <TD className='verticalTableTD'>{list.memberStatus}</TD>
@@ -972,9 +1021,9 @@ export default function List() {
                   <tbody>
                     {family &&
                       family.length > 0 &&
-                      family.map((list: any) => (
+                      family?.map((list: any) => (
                         <tr>
-                          <td>{list.relationship}</td>
+                          <td>{list?.familyGroupCode && convertFamilyRelation(list?.familyGroupCode)}</td>
                           <td>{list.skypassNumber}</td>
                           <td>{list.engFName} &nbsp;{list.engGName}</td>
                         </tr>
