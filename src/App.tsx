@@ -24,7 +24,7 @@ const App = () => {
   const { toast } = useToast();
   const dispatch = useAppDispatch();
   const contextPath = useAppSelector(selectContextPath());
-  const pathname = window.location.pathname + window.location.search;
+  const accessPathname = localStorage.getItem('accessPathname') || window.location.pathname + window.location.search;
   const sessionUtil = new SessionUtil();
   const sessionApis = new SessionApis();
   const searchParameters = new URLSearchParams(window.location.search);
@@ -39,7 +39,6 @@ const App = () => {
   } = useAuth(sessionUtil, sessionApis, sessionRequestInfo);
 
   const initContextPath = useCallback(() => {
-    const accessPathname = localStorage.getItem('accessPathname') || '';
     if (contextPath === ContextPath.UNAUTHORIZED) {
       if (accessPathname.startsWith(ContextPath.ADMIN)) {
         dispatch(setContextPath(ContextPath.ADMIN));
@@ -52,12 +51,7 @@ const App = () => {
         setBaseApiUrl('/fo');
       }
     }
-  }, [contextPath, dispatch]);
-
-  if (!authorizationCode) {
-    localStorage.setItem('accessPathname', pathname);
-    initContextPath();
-  }
+  }, [accessPathname, contextPath, dispatch]);
 
   useEffect(() => {
     if (sessionRequestInfo) {
@@ -66,10 +60,10 @@ const App = () => {
   }, [sessionRequestInfo, initContextPath, dispatch]);
 
   useEffect(() => {
-    if (contextPath !== ContextPath.UNAUTHORIZED && router) {
-      window.history.pushState({}, '', localStorage.getItem('accessPathname'));
+    if (!sessionInfo.sessionId && !authorizationCode) {
+      localStorage.setItem('accessPathname', accessPathname);
     }
-  }, [contextPath, router]);
+  }, [accessPathname, authorizationCode, sessionInfo, initContextPath]);
 
   useEffect(() => {
     if (oIsError) {
@@ -98,7 +92,15 @@ const App = () => {
             return <ErrorPage />;
           } else if (unauthorized) {
             return <Unauthorized />;
-          } else if (sessionRequestInfo.googleAccessToken && sessionInfo.sessionId && router) {
+          } else if (
+            contextPath !== ContextPath.UNAUTHORIZED &&
+            sessionRequestInfo.googleAccessToken &&
+            sessionInfo.sessionId &&
+            router
+          ) {
+            localStorage.removeItem('accessPathname');
+            window.history.pushState(null, '', accessPathname);
+            
             return (
               <Watermark content={sessionInfo.userEmail} className="width-100" style={{ minHeight: '100vh' }}>
                 <RouterProvider router={createBrowserRouter(router)} />
