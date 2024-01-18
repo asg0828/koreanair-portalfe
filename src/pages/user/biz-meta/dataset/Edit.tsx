@@ -406,7 +406,6 @@ const Edit = () => {
                   <TextField
                     className="width-100"
                     {...register('srcTbNm', {
-                      pattern: { value: tbColReg, message: t('common.validate.requiredEn') },
                       maxLength: { value: 1000, message: t('common.validate.maxLength') },
                       validate: (value) => (value === value?.trim() ? true : t('common.validate.trim')),
                       setValueAs: (value: string) => value.toUpperCase().trim(),
