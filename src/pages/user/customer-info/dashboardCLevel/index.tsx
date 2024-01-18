@@ -297,10 +297,10 @@ export default function List() {
     '05': 'Parent', 
     '07': 'Parent of Spouse',
     '10': 'Spouse', 
-    '20': 'Brother/Sister', 
+    '20': 'Brother/ Sister', 
     '30': 'Child', 
     '35': 'Grandchild', 
-    '40': 'Daughter/Son-in-Law',
+    '40': 'Daughter/ Son-in-Law',
     '60': 'Child of Daughter' 
   }
   const relationship = code[familyGroupCode];;

@@ -87,9 +87,9 @@ const List = () => {
   }, [response, isError, toast]);
 
   // 행 클릭 조회 함수
-  const [skypassNumber, setSkypassNumber] = useState<any>('');
+  const [oneIdNo, setOneIdNo] = useState<any>('')
   const getClickRow = (rowData: any) => {
-    setSkypassNumber(rowData.skypassMemberNumber);
+    setOneIdNo(rowData.mergeTargetOneidNo)
   };
   return (
     <>
@@ -122,7 +122,7 @@ const List = () => {
           },
         }}
       >
-        <DashboardPopup skypassMemberNumber={skypassNumber} closeModal={toggleModal} />
+        <DashboardPopup oneIdNo={oneIdNo} />
       </Modal>
     </>
   );
