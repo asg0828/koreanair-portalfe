@@ -198,7 +198,7 @@ const AdminHome = () => {
           <Stack direction="Vertical" className="box2-1 shadowBox1">
             <Typography variant="h3" style={{ marginBottom: '12px' }}>
               {t('home:label.usersByDepartment')}{' '}
-              <span style={{ fontSize: '12px', color: '#333', fontWeight: 'normal' }}>{t('home:label.oneWeek')}</span>
+              <span className="oneWeek">{t('home:label.oneWeek')}</span>
             </Typography>
             {loginUserDept && (
               <ol>

@@ -19,10 +19,10 @@ import { initNoticeParams } from '@/pages/user/board/notice';
 import { selectSessionInfo } from '@/reducers/authSlice';
 import { getCode } from '@/reducers/codeSlice';
 import { Stack, Tag, Typography, useToast } from '@components/ui';
+import parse from 'html-react-parser';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import parse from 'html-react-parser';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -201,6 +201,7 @@ const Home = () => {
 
             <Link to="." className="box5">
               <Typography variant="h3">{t('home:label.averageDailyUsers')}</Typography>
+              <span className="oneWeek absolute">{t('home:label.oneWeek')}</span>
               <Stack justifyContent={'End'}>
                 <div className="home_icon_03"></div>
               </Stack>
