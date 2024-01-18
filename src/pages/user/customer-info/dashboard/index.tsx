@@ -216,6 +216,7 @@ export default function List() {
   // 가족 관계 변환 함수 
   const convertFamilyRelation = (familyGroupCode : string) => {
     const code: {[key: string]: string}  = {
+      '00': 'Member',
       '03': 'Grandparent', 
       '51': 'Maternal Grandparent',
       '05': 'Parent', 

@@ -1105,7 +1105,6 @@ export default function List() {
                         <col width="auto" />
                       </colgroup>
                       <thead>
-                          <th>예약번호</th>
                           <th>편명</th>
                           <th>BKG CLS</th>
                           <th>출발일</th>
@@ -1149,12 +1148,7 @@ export default function List() {
                       </table>
                       <table>
                         <colgroup>
-                          <col width="15%" />
-                          <col width="20%" />           
-                          <col width="20%" />
-                          <col width="15%" />
-                          <col width="10%" />
-                          <col width="20%" />
+                          <col width="auto" />
                         </colgroup>
                         <thead>
                           <th>편명</th>
