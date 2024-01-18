@@ -87,8 +87,8 @@ const List = () => {
     { headerName: t('bizMeta:label.featureKoNm'), field: 'featureKoNm', colSpan: 1.9, align: 'left' },
     { headerName: t('bizMeta:label.featureEnNm'), field: 'featureEnNm', colSpan: 1.9, align: 'left' },
     { headerName: t('bizMeta:label.def'), field: 'featureDef', colSpan: 2, align: 'left', isTooltip: true },
-    { headerName: t('bizMeta:label.enrUserNm'), field: 'enrUserNm', colSpan: 1 },
     { headerName: t('bizMeta:label.enrDeptNm'), field: 'enrDeptNm', colSpan: 1.2 },
+    { headerName: t('bizMeta:label.enrUserNm'), field: 'enrUserNm', colSpan: 1 },
   ];
 
   const goToReg = () => {
@@ -336,23 +336,6 @@ const List = () => {
         </TR>
         <TR>
           <TH colSpan={1} align="right">
-            {t('bizMeta:label.enrUserNm')}
-          </TH>
-          <TD colSpan={2}>
-            <Stack gap="SM" className="width-100">
-              <TextField
-                className="width-100"
-                size="MD"
-                onChange={(e) => handleChangeParams('enrUserNm', e.target.value)}
-                value={params.enrUserNm}
-                disabled
-              />
-              <Button appearance="Contained" priority="Normal" shape="Square" size="MD" onClick={handleUserSelectModal}>
-                <span className="searchIcon"></span>
-              </Button>
-            </Stack>
-          </TD>
-          <TH colSpan={1} align="right">
             {t('bizMeta:label.enrDeptNm')}
           </TH>
           <TD colSpan={2}>
@@ -365,6 +348,23 @@ const List = () => {
                 disabled
               />
               <Button appearance="Contained" priority="Normal" shape="Square" size="MD" onClick={handleDeptSelectModal}>
+                <span className="searchIcon"></span>
+              </Button>
+            </Stack>
+          </TD>
+          <TH colSpan={1} align="right">
+            {t('bizMeta:label.enrUserNm')}
+          </TH>
+          <TD colSpan={2}>
+            <Stack gap="SM" className="width-100">
+              <TextField
+                className="width-100"
+                size="MD"
+                onChange={(e) => handleChangeParams('enrUserNm', e.target.value)}
+                value={params.enrUserNm}
+                disabled
+              />
+              <Button appearance="Contained" priority="Normal" shape="Square" size="MD" onClick={handleUserSelectModal}>
                 <span className="searchIcon"></span>
               </Button>
             </Stack>
